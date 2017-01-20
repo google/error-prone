@@ -54,4 +54,21 @@ public class FinallyTest {
   public void testNegativeCase2() throws Exception {
     compilationHelper.addSourceFile("FinallyNegativeCase2.java").doTest();
   }
+
+  @Test
+  public void lambda() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    try {",
+            "    } catch (Throwable t) {",
+            "  } finally {",
+            "      Runnable r = () -> { return; };",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

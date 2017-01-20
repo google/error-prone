@@ -35,9 +35,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
-import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.JCTree.JCBreak;
 import com.sun.tools.javac.tree.JCTree.JCContinue;
 import com.sun.tools.javac.util.Name;
@@ -121,19 +119,21 @@ public class Finally extends BugChecker
      */
     @Override
     public boolean matches(T tree, VisitorState state) {
-
-      TreePath path = state.getPath();
-      Tree prevTree = path.getLeaf();
-
-      while (path != null && path.getLeaf().getKind() != Kind.METHOD
-          && path.getLeaf().getKind() != Kind.COMPILATION_UNIT) {
-        prevTree = path.getLeaf();
-        path = path.getParentPath();
-
-        MatchResult mr = (matchAncestor(path.getLeaf(), prevTree));
+      Tree prevTree = null;
+      for (Tree leaf : state.getPath()) {
+        switch (leaf.getKind()) {
+          case METHOD:
+          case LAMBDA_EXPRESSION:
+          case CLASS:
+            return false;
+          default:
+            break;
+        }
+        MatchResult mr = matchAncestor(leaf, prevTree);
         if (mr != MatchResult.KEEP_LOOKING) {
           return mr == MatchResult.FOUND_ERROR;
         }
+        prevTree = leaf;
       }
 
       return false;
