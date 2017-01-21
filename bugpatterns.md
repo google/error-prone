@@ -415,6 +415,9 @@ Truth Library assert is called on a constant.
 __[TypeParameterUnusedInFormals](bugpattern/TypeParameterUnusedInFormals)__<br>
 Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution.
 
+__[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
+Creation of a Set/HashSet/HashMap of java.net.URL. equals() and hashCode() of java.net.URL class make blocking internet connections.
+
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
 
