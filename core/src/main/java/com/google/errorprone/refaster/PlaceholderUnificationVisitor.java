@@ -236,8 +236,13 @@ abstract class PlaceholderUnificationVisitor
   }
 
   static boolean equivalentExprs(Unifier unifier, JCExpression expr1, JCExpression expr2) {
-    return Types.instance(unifier.getContext()).isSameType(expr2.type, expr1.type)
-        && expr2.toString().equals(expr1.toString());
+    try {
+      return Types.instance(unifier.getContext()).isSameType(expr2.type, expr1.type)
+          && expr2.toString().equals(expr1.toString());
+    } catch (NullPointerException e) {
+      throw new RuntimeException(
+          "Types are: " + expr2 + " " + expr2.type + " and " + expr1 + " " + expr1.type, e);
+    }
   }
 
   /**

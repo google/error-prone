@@ -62,6 +62,7 @@ import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
 import com.google.errorprone.bugpatterns.FunctionalInterfaceClash;
 import com.google.errorprone.bugpatterns.FunctionalInterfaceMethodChanged;
+import com.google.errorprone.bugpatterns.FutureReturnValueIgnored;
 import com.google.errorprone.bugpatterns.FuturesGetCheckedIllegalExceptionType;
 import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
@@ -357,6 +358,7 @@ public class BuiltInCheckerSuppliers {
           Finally.class,
           FragmentInjection.class,
           FragmentNotInstantiable.class,
+          FutureReturnValueIgnored.class,
           FunctionalInterfaceClash.class,
           GetClassOnEnum.class,
           ImmutableAnnotationChecker.class,

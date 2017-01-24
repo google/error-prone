@@ -42,7 +42,7 @@ import com.sun.source.tree.MethodInvocationTree;
   category = ANDROID,
   severity = ERROR
 )
-public class RectIntersectReturnValueIgnored extends AbstractReturnValueIgnored {
+public final class RectIntersectReturnValueIgnored extends AbstractReturnValueIgnored {
   @Override
   public Matcher<? super MethodInvocationTree> specializedMatcher() {
     return instanceMethod().onExactClass("android.graphics.Rect").named("intersect");
