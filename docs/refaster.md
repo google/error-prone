@@ -18,8 +18,8 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 public class StringIsEmpty {
   @BeforeTemplate
-  boolean equalsEmptyString(String s) {
-  	return s.equals("");
+  boolean equalsEmptyString(String string) {
+  	return string.equals("");
   }
 
   @BeforeTemplate
@@ -35,7 +35,7 @@ public class StringIsEmpty {
 }
 ```
 
-Refaster templates are any class with multiple methods with the same return type and list of arguments. One of the methods should be annotated `@AfterTemplate`, and every other method should be annotated with `@BeforeTemplate`. With this template, any code calling `String#equals` passing in the empty string literal, or calling `String#length` and comparing it to 0 will be replaced by a call to `String#isEmpty`. Notably, no matter how the String expression is generated, Refaster will do the replacement:
+Refaster templates are any class with multiple methods with the same return type and list of arguments with the same name. One of the methods should be annotated `@AfterTemplate`, and every other method should be annotated with `@BeforeTemplate`. With this template, any code calling `String#equals` passing in the empty string literal, or calling `String#length` and comparing it to 0 will be replaced by a call to `String#isEmpty`. Notably, no matter how the String expression is generated, Refaster will do the replacement:
 
 ```java
 boolean b = someChained().methodCall().returningAString().length() == 0;
