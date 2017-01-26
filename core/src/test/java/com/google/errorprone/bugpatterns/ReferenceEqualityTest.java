@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.common.io.ByteStreams;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,6 +40,8 @@ public class ReferenceEqualityTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ReferenceEquality.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringTestHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new ReferenceEquality(), getClass());
 
   @Test
   public void negative_const() throws Exception {
@@ -146,6 +149,54 @@ public class ReferenceEqualityTest {
             "  boolean f(Optional<Integer> a, Optional<Integer> b) {",
             "    // BUG: Diagnostic contains: a.equals(b)",
             "    return a == b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_equalWithOr() throws Exception {
+    refactoringTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            "  boolean f(Optional<Integer> a, Optional<Integer> b) {",
+            "    return a == b || (a.equals(b));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            "  boolean f(Optional<Integer> a, Optional<Integer> b) {",
+            "    return a.equals(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_equalWithOr_objectsEquals() throws Exception {
+    refactoringTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.common.base.Optional;",
+            "import com.google.common.base.Objects;",
+            "class Test {",
+            "  boolean f(Optional<Integer> a, Optional<Integer> b) {",
+            "    boolean eq = a == b || Objects.equal(a, b);",
+            "    return a == b || (java.util.Objects.equals(a, b));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.base.Optional;",
+            "import com.google.common.base.Objects;",
+            "class Test {",
+            "  boolean f(Optional<Integer> a, Optional<Integer> b) {",
+            "    boolean eq = Objects.equal(a, b);",
+            "    return java.util.Objects.equals(a, b);",
             "  }",
             "}")
         .doTest();

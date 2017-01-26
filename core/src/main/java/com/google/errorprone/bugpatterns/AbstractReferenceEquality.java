@@ -18,17 +18,29 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TreeVisitor;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Abstract implementation of a BugPattern that detects the use of reference equality to compare
@@ -40,6 +52,17 @@ import com.sun.source.util.TreePath;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public abstract class AbstractReferenceEquality extends BugChecker implements BinaryTreeMatcher {
+
+  private static final Matcher<ExpressionTree> EQUALS_STATIC_METHODS =
+      anyOf(
+          staticMethod().onClass("com.google.common.base.Objects").named("equal"),
+          staticMethod().onClass("java.util.Objects").named("equals"));
+
+  private static final Matcher<ExpressionTree> OBJECT_INSTANCE_EQUALS =
+      instanceMethod()
+          .onDescendantOf("java.lang.Object")
+          .named("equals")
+          .withParameters("java.lang.Object");
 
   protected abstract boolean matchArgument(ExpressionTree tree, VisitorState state);
 
@@ -69,6 +92,12 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
   protected void addFixes(Description.Builder builder, BinaryTree tree, VisitorState state) {
     ExpressionTree lhs = tree.getLeftOperand();
     ExpressionTree rhs = tree.getRightOperand();
+
+    Optional<Fix> fixToReplaceOrStatement = inOrStatementWithEqualsCheck(state, tree);
+    if (fixToReplaceOrStatement.isPresent()) {
+      builder.addFix(fixToReplaceOrStatement.get());
+      return;
+    }
 
     // Swap the order (e.g. rhs.equals(lhs) if the rhs is a non-null constant, and the lhs is not
     if (ASTHelpers.constValue(lhs) == null && ASTHelpers.constValue(rhs) != null) {
@@ -104,8 +133,76 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
     }
   }
 
+  private static Optional<Fix> inOrStatementWithEqualsCheck(VisitorState state, BinaryTree tree) {
+    // Only attempt to handle a == b || a.equals(b);
+    if (tree.getKind() == Kind.NOT_EQUAL_TO) {
+      return Optional.empty();
+    }
+
+    ExpressionTree lhs = tree.getLeftOperand();
+    ExpressionTree rhs = tree.getRightOperand();
+
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    if (parent.getKind() != Kind.CONDITIONAL_OR) {
+      return Optional.empty();
+    }
+    BinaryTree p = (BinaryTree) parent;
+
+    if (p.getLeftOperand() != tree) {
+      // a == b is on the RHS, ignore this construction
+      return Optional.empty();
+    }
+
+    // If the other half of this or statement is foo.equals(bar) or Objects.equals(foo, bar)
+    // replace the or statement with the other half as already written.
+    ExpressionTree otherExpression = skipParens(p.getRightOperand());
+    if (!(otherExpression instanceof MethodInvocationTree)) {
+      return Optional.empty();
+    }
+    MethodInvocationTree other = (MethodInvocationTree) otherExpression;
+
+    // a == b || Objects.equals(a, b) => Objects.equals(a, b)
+    if (EQUALS_STATIC_METHODS.matches(otherExpression, state)) {
+      List<? extends ExpressionTree> arguments = other.getArguments();
+      if (treesMatch(arguments.get(0), arguments.get(1), lhs, rhs)) {
+        return Optional.of(SuggestedFix.replace(parent, state.getSourceForNode(otherExpression)));
+      }
+    }
+
+    // a == b || a.equals(b) => a.equals(b)
+    if (OBJECT_INSTANCE_EQUALS.matches(otherExpression, state)) {
+      if (treesMatch(ASTHelpers.getReceiver(other), other.getArguments().get(0), lhs, rhs)) {
+        return Optional.of(SuggestedFix.replace(parent, state.getSourceForNode(otherExpression)));
+      }
+    }
+    return Optional.empty();
+  }
+
   private Nullness getNullness(ExpressionTree expr, VisitorState state) {
     TreePath pathToExpr = new TreePath(state.getPath(), expr);
     return state.getNullnessAnalysis().getNullness(pathToExpr, state.context);
+  }
+
+  private static boolean treesMatch(
+      ExpressionTree lhs1, ExpressionTree rhs1, ExpressionTree lhs2, ExpressionTree rhs2) {
+    return (ASTHelpers.sameVariable(lhs1, lhs2) && ASTHelpers.sameVariable(rhs1, rhs2))
+        || (ASTHelpers.sameVariable(lhs1, rhs2) && ASTHelpers.sameVariable(rhs1, lhs2));
+  }
+
+  private static final TreeVisitor<ExpressionTree, Void> SKIP_PARENS =
+      new SimpleTreeVisitor<ExpressionTree, Void>() {
+        @Override
+        protected ExpressionTree defaultAction(Tree node, Void v) {
+          return node instanceof ExpressionTree ? (ExpressionTree) node : null;
+        }
+
+        @Override
+        public ExpressionTree visitParenthesized(ParenthesizedTree node, Void v) {
+          return node.getExpression().accept(this, null);
+        }
+      };
+
+  private static ExpressionTree skipParens(ExpressionTree tree) {
+    return tree.accept(SKIP_PARENS, null);
   }
 }
