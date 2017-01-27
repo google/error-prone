@@ -127,6 +127,7 @@ import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
+import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.RedundantThrows;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
@@ -383,6 +384,7 @@ public class BuiltInCheckerSuppliers {
           OperatorPrecedence.class,
           OverridesGuiceInjectableMethod.class,
           PreconditionsInvalidPlaceholder.class,
+          ProtocolBufferOrdinal.class,
           ProtoFieldPreconditionsCheckNotNull.class,
           ReferenceEquality.class,
           RequiredModifiersChecker.class,
