@@ -34,22 +34,12 @@ public class MustBeClosedCheckerNegativeCases {
     Closeable mustBeClosedAnnotatedMethod() {
       return new Closeable();
     }
-
-    void negativeCase1() {
-      // This is fine since it is called from the same class that annotates the method.
-      mustBeClosedAnnotatedMethod();
-    }
   }
 
   class MustBeClosedAnnotatedConstructor extends Closeable {
 
     @MustBeClosed
     MustBeClosedAnnotatedConstructor() {}
-
-    void negativeCase2() {
-      // This is fine since it is called from the same class that annotates the constructor.
-      new MustBeClosedAnnotatedConstructor();
-    }
   }
 
   void negativeCase3() {

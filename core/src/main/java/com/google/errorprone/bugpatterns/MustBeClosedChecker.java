@@ -37,7 +37,6 @@ import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
@@ -55,7 +54,8 @@ import javax.lang.model.element.ElementKind;
   name = "MustBeClosedChecker",
   summary =
       "Invocations of methods or constructors annotated with @MustBeClosed must occur within"
-          + " the resource variable initializer of a try-with-resources statement.",
+          + " the resource variable initializer of a try-with-resources statement, or the return"
+          + " statement of another method annotated with @MustBeClosed.",
   explanation =
       "Methods or constructors annotated with @MustBeClosed require that the returned"
           + " resource is closed. This is enforced by checking that invocations occur"
@@ -130,12 +130,6 @@ public class MustBeClosedChecker extends BugChecker
     if (!HAS_MUST_BE_CLOSED_ANNOTATION.matches(tree, state)) {
       // Ignore invocations of methods and constructors that are not annotated with
       // {@link MustBeClosed}.
-      return NO_MATCH;
-    }
-
-    if (getSymbol(state.findEnclosing(ClassTree.class)).equals(getSymbol(tree).enclClass())) {
-      // Do not enforce the check for uses of the annotated method or constructor that occur in
-      // the same class that defines them.
       return NO_MATCH;
     }
 

@@ -44,12 +44,22 @@ public class MustBeClosedCheckerPositiveCases {
     Closeable mustBeClosedAnnotatedMethod() {
       return new Closeable();
     }
+
+    void sameClass() {
+      // BUG: Diagnostic contains:
+      mustBeClosedAnnotatedMethod();
+    }
   }
 
   class MustBeClosedAnnotatedConstructor extends Closeable {
 
     @MustBeClosed
     MustBeClosedAnnotatedConstructor() {}
+
+    void sameClass() {
+      // BUG: Diagnostic contains:
+      new MustBeClosedAnnotatedConstructor();
+    }
   }
 
   static interface Lambda {
