@@ -57,6 +57,7 @@ import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
 import com.google.errorprone.bugpatterns.EqualsHashCode;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
+import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.FilesLinesLeak;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
@@ -412,6 +413,7 @@ public class BuiltInCheckerSuppliers {
           EmptyIfStatement.class,
           EmptySetMultibindingContributions.class,
           EmptyTopLevelDeclaration.class,
+          ExpectedExceptionChecker.class,
           HardCodedSdCardPath.class,
           InjectedConstructorAnnotations.class,
           InvalidTargetingOnScopingAnnotation.class,
