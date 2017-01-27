@@ -143,6 +143,7 @@ import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
+import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
@@ -442,6 +443,7 @@ public class BuiltInCheckerSuppliers {
           StaticAccessedFromInstance.class,
           StaticOrDefaultInterfaceMethod.class,
           StringEquality.class,
+          TestExceptionChecker.class,
           ThrowsUncheckedException.class,
           UnlockMethodChecker.class,
           UnnecessaryStaticImport.class,
