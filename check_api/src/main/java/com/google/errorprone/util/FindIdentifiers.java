@@ -319,6 +319,12 @@ public final class FindIdentifiers {
           break;
         case METHOD_INVOCATION: // JLS 8.8.7.1 explicit constructor invocation
           MethodSymbol methodSym = ASTHelpers.getSymbol((MethodInvocationTree) tree);
+          if (methodSym == null) {
+            // sometimes javac can't resolve the symbol. In this case just assume that we are
+            // in a static context - this is a safe approximation in our context (checking
+            // visibility)
+            return true;
+          }
           if (methodSym.isConstructor()
               && (Objects.equals(methodSym.owner, enclosingClass)
                   || Objects.equals(methodSym.owner, directSuperClass))) {
