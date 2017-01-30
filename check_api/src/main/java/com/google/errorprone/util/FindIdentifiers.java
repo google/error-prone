@@ -18,6 +18,7 @@ package com.google.errorprone.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
@@ -25,6 +26,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ForLoopTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -36,6 +38,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Scope;
@@ -63,6 +66,7 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
@@ -215,6 +219,89 @@ public final class FindIdentifiers {
         .stream()
         .filter(var -> isVisible(var, state.getPath()))
         .collect(Collectors.toCollection(LinkedHashSet::new));
+  }
+
+  /**
+   * Finds all variable declarations which are unused at this point in the AST (i.e. they might be
+   * used further on).
+   */
+  public static ImmutableSet<VarSymbol> findUnusedIdentifiers(VisitorState state) {
+    ImmutableSet.Builder<VarSymbol> definedVariables = ImmutableSet.builder();
+    ImmutableSet.Builder<Symbol> usedSymbols = ImmutableSet.builder();
+    Tree prev = state.getPath().getLeaf();
+    for (Tree curr : state.getPath().getParentPath()) {
+      createFindIdentifiersScanner(usedSymbols, prev).scan(curr, null);
+      switch (curr.getKind()) {
+        case BLOCK:
+          // If we see a block then walk over each statement to see if it defines a variable
+          for (StatementTree statement : ((BlockTree) curr).getStatements()) {
+            if (statement.equals(prev)) {
+              // break if we see the tree we have just processed so that we only consider things
+              // declared/used before us in the tree
+              break;
+            }
+            addIfVariable(statement, definedVariables);
+          }
+          break;
+        case FOR_LOOP:
+          ForLoopTree forLoop = (ForLoopTree) curr;
+          forLoop.getInitializer().stream().forEach(t -> addIfVariable(t, definedVariables));
+          break;
+        case ENHANCED_FOR_LOOP:
+          EnhancedForLoopTree enhancedFor = (EnhancedForLoopTree) curr;
+          addIfVariable(enhancedFor.getVariable(), definedVariables);
+          break;
+        default:
+          break;
+      }
+      prev = curr;
+    }
+    return ImmutableSet.copyOf(Sets.difference(definedVariables.build(), usedSymbols.build()));
+  }
+
+  /** Find the set of all identifiers referenced within this Tree */
+  public static ImmutableSet<Symbol> findReferencedIdentifiers(Tree tree) {
+    ImmutableSet.Builder<Symbol> builder = ImmutableSet.builder();
+    createFindIdentifiersScanner(builder, null).scan(tree, null);
+    return builder.build();
+  }
+
+  /**
+   * Finds all identifiers in a tree. Takes an optional stop point as its argument: the depth-first
+   * walk will stop if this node is encountered.
+   */
+  private static final TreeScanner<Void, Void> createFindIdentifiersScanner(
+      ImmutableSet.Builder<Symbol> builder, @Nullable Tree stoppingPoint) {
+    return new TreeScanner<Void, Void>() {
+      @Override
+      public Void scan(Tree tree, Void unused) {
+        return Objects.equals(stoppingPoint, tree) ? null : super.scan(tree, unused);
+      }
+
+      @Override
+      public Void scan(Iterable<? extends Tree> iterable, Void unused) {
+        if (stoppingPoint != null && iterable != null) {
+          ImmutableList.Builder<Tree> builder = ImmutableList.builder();
+          for (Tree t : iterable) {
+            if (stoppingPoint.equals(t)) {
+              break;
+            }
+            builder.add(t);
+          }
+          iterable = builder.build();
+        }
+        return super.scan(iterable, unused);
+      }
+
+      @Override
+      public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
+        Symbol symbol = ASTHelpers.getSymbol(identifierTree);
+        if (symbol != null) {
+          builder.add(symbol);
+        }
+        return null;
+      }
+    };
   }
 
   private static boolean isVisible(VarSymbol var, final TreePath path) {
