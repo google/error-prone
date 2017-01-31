@@ -25,8 +25,12 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Attribute;
@@ -50,7 +54,7 @@ import javax.lang.model.element.Modifier;
   name = "ForOverride",
   summary =
       "Method annotated @ForOverride must be protected or package-private and only invoked from "
-          + "declaring class",
+          + "declaring class, or from an override of the method",
   explanation =
       "A method that overrides a @ForOverride method should not be invoked directly. Instead, it"
           + " should be invoked only from the class in which it was declared. For example, if"
@@ -75,6 +79,21 @@ public class ForOverrideChecker extends BugChecker
 
     if (method.isStatic() || method.isConstructor() || currentClass == null) {
       return Description.NO_MATCH;
+    }
+    // allow super.foo() calls to @ForOverride methods from overriding methods
+    if (isSuperCall(currentClass, tree, state)) {
+      MethodTree currentMethod = findDirectMethod(state.getPath());
+      // currentMethod might be null if we are in a field initializer
+      if (currentMethod != null) {
+        // MethodSymbol.overrides doesn't check that names match, so we need to do that first.
+        if (currentMethod.getName().equals(method.name)) {
+          MethodSymbol currentMethodSymbol = ASTHelpers.getSymbol(currentMethod);
+          if (currentMethodSymbol.overrides(
+              method, (TypeSymbol) method.owner, state.getTypes(), true)) {
+            return Description.NO_MATCH;
+          }
+        }
+      }
     }
 
     List<MethodSymbol> overriddenMethods = getOverriddenMethods(state, method);
@@ -114,6 +133,47 @@ public class ForOverrideChecker extends BugChecker
     }
 
     return Description.NO_MATCH;
+  }
+
+  /**
+   * Returns the method that 'directly' contains the leaf element of the given path.
+   *
+   * <p>By 'direct', we mean that if the leaf is part of a field initializer of a class, then it is
+   * considered to not be part of any method.
+   */
+  private static MethodTree findDirectMethod(TreePath path) {
+    while (true) {
+      path = path.getParentPath();
+      if (path != null) {
+        Tree leaf = path.getLeaf();
+        if (leaf instanceof MethodTree) {
+          return (MethodTree) leaf;
+        }
+        // if we find a ClassTree before a MethodTree, we must be an initializer
+        if (leaf instanceof ClassTree) {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
+  }
+
+  /** Returns true if this method invocation is of the form {@code super.foo()} */
+  private static boolean isSuperCall(Type type, MethodInvocationTree tree, VisitorState state) {
+    if (tree.getMethodSelect().getKind() == Kind.MEMBER_SELECT) {
+      MemberSelectTree select = (MemberSelectTree) tree.getMethodSelect();
+      if (select.getExpression().getKind() == Kind.IDENTIFIER) {
+        IdentifierTree ident = (IdentifierTree) select.getExpression();
+        return ident.getName().contentEquals("super");
+      } else if (select.getExpression().getKind() == Kind.MEMBER_SELECT) {
+        MemberSelectTree subSelect = (MemberSelectTree) select.getExpression();
+
+        return subSelect.getIdentifier().contentEquals("super")
+            && ASTHelpers.isSameType(ASTHelpers.getType(subSelect.getExpression()), type, state);
+      }
+    }
+    return false;
   }
 
   /**
