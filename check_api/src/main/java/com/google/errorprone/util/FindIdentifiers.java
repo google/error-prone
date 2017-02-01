@@ -42,10 +42,12 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Scope;
+import com.sun.tools.javac.code.Scope.WriteableScope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
@@ -264,6 +266,32 @@ public final class FindIdentifiers {
     ImmutableSet.Builder<Symbol> builder = ImmutableSet.builder();
     createFindIdentifiersScanner(builder, null).scan(tree, null);
     return builder.build();
+  }
+
+  /** Finds all the visible fields declared or inherited in the target class */
+  public static List<VarSymbol> findAllFields(Type classType, VisitorState state) {
+    // TODO(andrewrice): Switch collector to ImmutableList.toImmutableList() when released
+    return state
+        .getTypes()
+        .closure(classType)
+        .stream()
+        .flatMap(
+            type -> {
+              TypeSymbol tsym = type.tsym;
+              if (tsym == null) {
+                return ImmutableList.<VarSymbol>of().stream();
+              }
+              WriteableScope scope = tsym.members();
+              if (scope == null) {
+                return ImmutableList.<VarSymbol>of().stream();
+              }
+              return ImmutableList.copyOf(scope.getSymbols(VarSymbol.class::isInstance))
+                  .reverse()
+                  .stream()
+                  .map(v -> (VarSymbol) v)
+                  .filter(v -> isVisible(v, state.getPath()));
+            })
+        .collect(Collectors.toCollection(ArrayList::new));
   }
 
   /**
