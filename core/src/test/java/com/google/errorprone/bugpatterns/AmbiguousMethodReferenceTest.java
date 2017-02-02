@@ -50,6 +50,71 @@ public class AmbiguousMethodReferenceTest {
   }
 
   @Test
+  public void suppressedAtClass() {
+    testHelper
+        .addSourceLines(
+            "A.java", //
+            "@SuppressWarnings(\"AmbiguousMethodReference\")",
+            "public class A {",
+            "  interface B {}",
+            "  interface C {}",
+            "  interface D {}",
+            "",
+            "  B c(D d) {",
+            "    return null;",
+            "  }",
+            "  static B c(A a, D d) {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressedAtMethod() {
+    testHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  interface B {}",
+            "  interface C {}",
+            "  interface D {}",
+            "",
+            "  @SuppressWarnings(\"AmbiguousMethodReference\")",
+            "  B c(D d) {",
+            "    return null;",
+            "  }",
+            "  // BUG: Diagnostic contains: c(D)",
+            "  static B c(A a, D d) {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressedAtBothMethods() {
+    testHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  interface B {}",
+            "  interface C {}",
+            "  interface D {}",
+            "",
+            "  @SuppressWarnings(\"AmbiguousMethodReference\")",
+            "  B c(D d) {",
+            "    return null;",
+            "  }",
+            "  @SuppressWarnings(\"AmbiguousMethodReference\")",
+            "  static B c(A a, D d) {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeDifferentNames() {
     testHelper
         .addSourceLines(
