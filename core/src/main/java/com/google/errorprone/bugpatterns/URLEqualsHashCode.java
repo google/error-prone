@@ -77,6 +77,9 @@ public class URLEqualsHashCode extends BugChecker implements NewClassTreeMatcher
     @Override
     public boolean matches(Tree tree, VisitorState state) {
       Symbol sym = state.getSymbolFromString(clazz);
+      if (sym == null) {
+        return false;
+      }
       Type type = ASTHelpers.getType(tree);
       if (!ASTHelpers.isSubtype(type, sym.type, state)) {
         return false;
