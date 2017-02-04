@@ -38,7 +38,7 @@ import com.sun.source.tree.MethodInvocationTree;
  */
 @BugPattern(
   name = "ProtocolBufferOrdinal",
-  summary = "#ordinal() value on Protocol Buffer Enum can change if enumeration order of changed",
+  summary = "ordinal() value of Protocol Buffer Enum can change if enumeration order is changed",
   explanation =
       "Shuffling of values in a Protocol Buffer enum can change the ordinal value of the enum "
           + "member. Since changing tag number isn't advisable in protos, use #getNumber() "
