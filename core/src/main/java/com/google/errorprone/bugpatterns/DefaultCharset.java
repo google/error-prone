@@ -357,10 +357,9 @@ public class DefaultCharset extends BugChecker
   /** Convert a boolean append mode to a StandardOpenOption. */
   private String toAppendMode(SuggestedFix.Builder fix, Tree appendArg, VisitorState state) {
     // recognize constants to try to avoid `true ? CREATE, APPEND : CREATE`
-    Object value = ASTHelpers.constValue(appendArg);
-    // const booleans are represented as ints
-    if (value instanceof Integer) {
-      if ((int) value == 1) {
+    Boolean value = ASTHelpers.constValue(appendArg, Boolean.class);
+    if (value != null) {
+      if (value) {
         fix.addStaticImport("java.nio.file.StandardOpenOption.APPEND");
         fix.addStaticImport("java.nio.file.StandardOpenOption.CREATE");
         return ", CREATE, APPEND";

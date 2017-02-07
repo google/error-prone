@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.android;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.errorprone.BugPattern.Category.ANDROID;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -135,10 +136,8 @@ public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
         @Override
         public Boolean visitReturn(ReturnTree node, Void unused) {
           ExpressionTree returnExpression = node.getExpression();
-          Object returnValue = constValue(returnExpression);
-          // Return statement is not a problem (return false) if the return value is not constant
-          // (const value is null), or if it returns false.
-          return returnValue == null ? false : !Integer.valueOf(0).equals(returnValue);
+          Boolean returnValue = constValue(returnExpression, Boolean.class);
+          return firstNonNull(returnValue, false);
         }
 
         @Override

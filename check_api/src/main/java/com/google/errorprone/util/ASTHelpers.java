@@ -68,6 +68,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
@@ -676,14 +677,20 @@ public class ASTHelpers {
   /** Returns the compile-time constant value of a tree if it has one, or {@code null}. */
   @Nullable
   public static Object constValue(Tree tree) {
-    if (tree instanceof JCLiteral) {
-      return ((JCLiteral) tree).value;
-    }
+    tree = TreeInfo.skipParens((JCTree) tree);
     Type type = ASTHelpers.getType(tree);
-    if (type != null) {
-      return type.constValue();
+    Object value;
+    if (tree instanceof JCLiteral) {
+      value = ((JCLiteral) tree).value;
+    } else if (type != null) {
+      value = type.constValue();
+    } else {
+      return null;
     }
-    return null;
+    if (type.hasTag(TypeTag.BOOLEAN) && value instanceof Integer) {
+      return ((Integer) value) == 1;
+    }
+    return value;
   }
 
   /** Returns the compile-time constant value of a tree if it is of type clazz, or {@code null}. */
