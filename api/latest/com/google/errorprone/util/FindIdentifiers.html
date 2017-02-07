@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -131,16 +131,35 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/FindIdentifiers.html#findAllFields-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">findAllFields</a></span>(com.sun.tools.javac.code.Type&nbsp;classType,
+             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Finds all the visible fields declared or inherited in the target class</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/util/LinkedHashSet.html?is-external=true" title="class or interface in java.util">LinkedHashSet</a>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/FindIdentifiers.html#findAllIdents-com.google.errorprone.VisitorState-">findAllIdents</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Finds the set of all bare variable identifiers in scope at the current location.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/FindIdentifiers.html#findIdent-java.lang.String-com.google.errorprone.VisitorState-">findIdent</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Finds a declaration with the given name that is in scope at the current location.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/FindIdentifiers.html#findReferencedIdentifiers-com.sun.source.tree.Tree-">findReferencedIdentifiers</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
+<div class="block">Find the set of all identifiers referenced within this Tree</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/FindIdentifiers.html#findUnusedIdentifiers-com.google.errorprone.VisitorState-">findUnusedIdentifiers</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Finds all variable declarations which are unused at this point in the AST (i.e.</div>
 </td>
 </tr>
 </table>
@@ -179,7 +198,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <a name="findAllIdents-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>findAllIdents</h4>
 <pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/LinkedHashSet.html?is-external=true" title="class or interface in java.util">LinkedHashSet</a>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;&nbsp;findAllIdents(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
@@ -191,6 +210,38 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 
  <p>We do not report variables that would require a qualfied access. We also do not handle
  wildcard imports.</div>
+</li>
+</ul>
+<a name="findUnusedIdentifiers-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>findUnusedIdentifiers</h4>
+<pre>public static&nbsp;com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;&nbsp;findUnusedIdentifiers(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block">Finds all variable declarations which are unused at this point in the AST (i.e. they might be
+ used further on).</div>
+</li>
+</ul>
+<a name="findReferencedIdentifiers-com.sun.source.tree.Tree-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>findReferencedIdentifiers</h4>
+<pre>public static&nbsp;com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol&gt;&nbsp;findReferencedIdentifiers(com.sun.source.tree.Tree&nbsp;tree)</pre>
+<div class="block">Find the set of all identifiers referenced within this Tree</div>
+</li>
+</ul>
+<a name="findAllFields-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>findAllFields</h4>
+<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;&nbsp;findAllFields(com.sun.tools.javac.code.Type&nbsp;classType,
+                                                                            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block">Finds all the visible fields declared or inherited in the target class</div>
 </li>
 </ul>
 </li>

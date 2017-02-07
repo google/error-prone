@@ -11,6 +11,8 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: InsecureCipherMode_
+
 ## The problem
 This checker looks for usages of standard cryptographic algorithms in
 configurations that are prone to vulnerabilities. There are currently three

@@ -182,7 +182,12 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/JUnit4TestNotRun.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></span>(com.sun.source.tree.MethodTree&nbsp;methodTree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Matches if:
- 1) The method appears to be a JUnit 3 test case.</div>
+
+ 
+   The method is public, void, and has no parameters,
+   The method is not annotated with <code>@Test</code>, <code>@Before</code>, <code>@After</code>,
+       <code>@BeforeClass</code>, or <code>@AfterClass</code>,
+   The enclosing class has an <code>@RunWith</code> annotation and does not extend TestCase.</div>
 </td>
 </tr>
 </table>
@@ -247,10 +252,20 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethod(com.sun.source.tree.MethodTree&nbsp;methodTree,
                                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Matches if:
- 1) The method appears to be a JUnit 3 test case.
- 2) The method is not annotated with @Test, @Before, @After, @BeforeClass, or @AfterClass.
- 3) The enclosing class has an @RunWith annotation and does not extend TestCase. This marks
-    that the test is intended to run with JUnit 4.</div>
+
+ <ol>
+   <li>The method is public, void, and has no parameters,
+   <li>The method is not annotated with <code>@Test</code>, <code>@Before</code>, <code>@After</code>,
+       <code>@BeforeClass</code>, or <code>@AfterClass</code>,
+   <li>The enclosing class has an <code>@RunWith</code> annotation and does not extend TestCase. This
+       marks that the test is intended to run with JUnit 4, and
+   <li> Either:
+       <ol type="a">
+         <li>The method body contains a method call with a name that contains "assert",
+             "verify", "check", "fail", or "expect".
+       </ol>
+
+ </ol></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>

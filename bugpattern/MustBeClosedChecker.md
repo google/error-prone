@@ -1,6 +1,6 @@
 ---
 title: MustBeClosedChecker
-summary: Invocations of methods or constructors annotated with @MustBeClosed must occur within the resource variable initializer of a try-with-resources statement.
+summary: Invocations of methods or constructors annotated with @MustBeClosed must occur within the resource variable initializer of a try-with-resources statement, or the return statement of another method annotated with @MustBeClosed.
 layout: bugpattern
 category: JDK
 severity: ERROR
@@ -69,12 +69,22 @@ public class MustBeClosedCheckerPositiveCases {
     Closeable mustBeClosedAnnotatedMethod() {
       return new Closeable();
     }
+
+    void sameClass() {
+      // BUG: Diagnostic contains:
+      mustBeClosedAnnotatedMethod();
+    }
   }
 
   class MustBeClosedAnnotatedConstructor extends Closeable {
 
     @MustBeClosed
     MustBeClosedAnnotatedConstructor() {}
+
+    void sameClass() {
+      // BUG: Diagnostic contains:
+      new MustBeClosedAnnotatedConstructor();
+    }
   }
 
   static interface Lambda {
@@ -190,22 +200,12 @@ public class MustBeClosedCheckerNegativeCases {
     Closeable mustBeClosedAnnotatedMethod() {
       return new Closeable();
     }
-
-    void negativeCase1() {
-      // This is fine since it is called from the same class that annotates the method.
-      mustBeClosedAnnotatedMethod();
-    }
   }
 
   class MustBeClosedAnnotatedConstructor extends Closeable {
 
     @MustBeClosed
     MustBeClosedAnnotatedConstructor() {}
-
-    void negativeCase2() {
-      // This is fine since it is called from the same class that annotates the constructor.
-      new MustBeClosedAnnotatedConstructor();
-    }
   }
 
   void negativeCase3() {

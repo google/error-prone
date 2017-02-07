@@ -12,9 +12,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-JUnit 3 required that test methods be named in a special way to be run as part of a test case. JUnit 4 requires that test methods be annotated with @Test. The test method that triggered this error is named like a JUnit 3 test, but is in a JUnit 4 test class.  Thus, it will not be run unless you annotate it with @Test.
-
-If you intend for this test method not to run, please add both an @Test and an @Ignore annotation to make it clear that you are purposely disabling it.
+Unlike in JUnit 3, JUnit 4 tests will not be run unless annotated with @Test. The test method that triggered this error looks like it was meant to be a test, but was not so annotated, so it will not be run. If you intend for this test method not to run, please add both an @Test and an @Ignore annotation to make it clear that you are purposely disabling it. If this is a helper method and not a test, consider reducing its visibility to non-public, if possible.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("JUnit4TestNotRun")` annotation to the enclosing element.

@@ -75,7 +75,7 @@ __[FilesLinesLeak](bugpattern/FilesLinesLeak)__<br>
 The stream returned by Files.lines should be closed using try-with-resources
 
 __[ForOverride](bugpattern/ForOverride)__<br>
-Method annotated @ForOverride must be protected or package-private and only invoked from declaring class
+Method annotated @ForOverride must be protected or package-private and only invoked from declaring class, or from an override of the method
 
 __[FormatString](bugpattern/FormatString)__<br>
 Invalid printf-style format string
@@ -189,7 +189,7 @@ __[MoreThanOneInjectableConstructor](bugpattern/MoreThanOneInjectableConstructor
 This class has more than one @Inject-annotated constructor. Please remove the @Inject annotation from all but one of them.
 
 __[MustBeClosedChecker](bugpattern/MustBeClosedChecker)__<br>
-Invocations of methods or constructors annotated with @MustBeClosed must occur within the resource variable initializer of a try-with-resources statement.
+Invocations of methods or constructors annotated with @MustBeClosed must occur within the resource variable initializer of a try-with-resources statement, or the return statement of another method annotated with @MustBeClosed.
 
 __[NonCanonicalStaticImport](bugpattern/NonCanonicalStaticImport)__<br>
 Static import of type uses non-canonical name
@@ -331,6 +331,9 @@ Subclasses of Fragment must be instantiable via Class#newInstance(): the class m
 __[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
 Overloads will be ambiguous when passing lambda arguments
 
+__[FutureReturnValueIgnored](bugpattern/FutureReturnValueIgnored)__<br>
+Return value of methods returning Future must be checked.
+
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
 
@@ -396,6 +399,9 @@ Preconditions only accepts the %s placeholder in error message strings
 
 __[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
 Protobuf fields cannot be null, so this check is redundant
+
+__[ProtocolBufferOrdinal](bugpattern/ProtocolBufferOrdinal)__<br>
+ordinal() value of Protocol Buffer Enum can change if enumeration order is changed
 
 __[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
 Comparison using reference equality instead of value equality
@@ -524,6 +530,9 @@ This code declares a binding for a common value type without a Qualifier annotat
 __[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
 Empty top-level type declaration
 
+__[ExpectedExceptionChecker](bugpattern/ExpectedExceptionChecker)__<br>
+Calls to ExpectedException#expect should always be followed by exactly one statement.
+
 __[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
 Hardcoded reference to /sdcard
 
@@ -544,6 +553,9 @@ A static variable or method should not be accessed from an object instance
 
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
+
+__[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
+Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
 
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
