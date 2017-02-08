@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -31,9 +32,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -115,7 +114,7 @@ public class ImmutableModification extends BugChecker implements MethodInvocatio
           .build();
 
   static final Matcher<ExpressionTree> MATCHER =
-      Matchers.<ExpressionTree>anyOf(
+      Matchers.anyOf(
           ILLEGAL
               .asMap()
               .entrySet()
@@ -125,7 +124,7 @@ public class ImmutableModification extends BugChecker implements MethodInvocatio
                       instanceMethod()
                           .onDescendantOf(e.getKey())
                           .withNameMatching(Pattern.compile(Joiner.on('|').join(e.getValue()))))
-              .collect(Collectors.toCollection(ArrayList::new)));
+              .collect(toImmutableList()));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

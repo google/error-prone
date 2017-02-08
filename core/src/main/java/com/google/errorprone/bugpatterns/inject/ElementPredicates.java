@@ -17,15 +17,14 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.auto.common.MoreElements.asType;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static javax.lang.model.util.ElementFilter.constructorsIn;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -75,7 +74,7 @@ public final class ElementPredicates {
         .stream()
         .filter(constructor -> hasAnyOfAnnotation(constructor, annotations))
         .sorted(Comparator.comparing((e -> e.getSimpleName().toString())))
-        .collect(Collectors.toCollection(ArrayList::new));
+        .collect(toImmutableList());
   }
 
   private static boolean hasAnyOfAnnotation(ExecutableElement input, List<String> annotations) {

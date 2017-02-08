@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
@@ -41,10 +42,8 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
@@ -116,7 +115,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
             .stream()
             .map(TypeVariableSymbol::getSimpleName)
             .map(Object::toString)
-            .collect(Collectors.toCollection(LinkedHashSet::new));
+            .collect(toImmutableSet());
     String constValue = valueArgumentFromCompatibleWithAnnotation(annoTree);
 
     if (constValue == null || constValue.isEmpty()) {

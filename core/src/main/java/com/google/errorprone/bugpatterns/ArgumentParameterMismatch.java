@@ -15,6 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
@@ -26,7 +27,6 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Checks the lexical similarity between method parameter names and the argument names at call
@@ -68,13 +68,11 @@ public class ArgumentParameterMismatch extends AbstractArgumentParameterChecker 
    */
   private static final Function<VisitorState, ImmutableSet<PotentialReplacement>>
       POTENTIAL_REPLACEMENTS_FUNCTION =
-          state -> {
-            return ImmutableSet.copyOf(
-                FindIdentifiers.findAllIdents(state)
-                    .stream()
-                    .map(ArgumentParameterMismatch::potentialReplacement)
-                    .collect(Collectors.toSet()));
-          };
+          state ->
+              FindIdentifiers.findAllIdents(state)
+                  .stream()
+                  .map(ArgumentParameterMismatch::potentialReplacement)
+                  .collect(toImmutableSet());
 
   private static PotentialReplacement potentialReplacement(VarSymbol sym) {
     return PotentialReplacement.create(

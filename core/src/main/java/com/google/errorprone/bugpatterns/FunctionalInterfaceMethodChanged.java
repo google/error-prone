@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static java.util.stream.Collectors.toCollection;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -41,7 +41,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Types;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 
@@ -75,7 +74,7 @@ public class FunctionalInterfaceMethodChanged extends BugChecker implements Meth
               .map(ASTHelpers::getSymbol)
               .map(TypeSymbol.class::cast)
               .map(types::findDescriptorSymbol) // TypeSymbol to single abstract method of the type
-              .collect(toCollection(HashSet::new));
+              .collect(toImmutableSet());
 
       // We designate an override of a superinterface SAM "behavior preserving" if it just
       // calls the SAM of this interface.

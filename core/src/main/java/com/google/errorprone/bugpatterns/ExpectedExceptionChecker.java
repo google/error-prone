@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JUNIT;
@@ -25,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterators;
@@ -173,7 +173,7 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
         .filter(t -> !JUnitMatchers.containsTestMethod(t))
         .map(
             t -> fixStatement(SuggestedFix.builder().merge(baseFix), t, exceptionClass, newAsserts))
-        .collect(toCollection(ArrayList::new));
+        .collect(toImmutableList());
   }
 
   private static Fix fixStatement(

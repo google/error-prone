@@ -15,13 +15,12 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static java.util.stream.Collectors.toCollection;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -58,10 +57,9 @@ public class ArgumentParameterSimilarityMetrics {
       // Degenerate case of names which contain only underscore
       return ImmutableSet.of(name);
     }
-    // TODO(andrewrice): switch over to toImmutableSet if guava provides it in future
     return Arrays.stream(UNDERSCORES_OR_CASE_TRANSITIONS.split(name))
         .map(String::toLowerCase)
-        .collect(toCollection(HashSet::new));
+        .collect(toImmutableSet());
   }
 
   private ArgumentParameterSimilarityMetrics() {}

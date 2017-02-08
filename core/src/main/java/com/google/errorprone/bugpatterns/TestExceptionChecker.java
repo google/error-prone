@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -42,9 +43,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.Tag;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -80,7 +79,7 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
             .stream()
             .filter(t -> !JUnitMatchers.containsTestMethod(t))
             .map(s -> buildFix(state, SuggestedFix.builder().merge(baseFix), expectedException, s))
-            .collect(Collectors.toCollection(ArrayList::new));
+            .collect(toImmutableList());
     if (!fixes.isEmpty()) {
       description.addAllFixes(fixes);
     } else {

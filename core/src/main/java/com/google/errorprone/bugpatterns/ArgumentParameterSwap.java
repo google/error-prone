@@ -15,6 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
@@ -29,7 +30,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 /**
@@ -94,13 +94,11 @@ public class ArgumentParameterSwap extends AbstractArgumentParameterChecker {
               default:
                 return ImmutableSet.of();
             }
-            // TODO(eaftan): Switch to ImmutableSet.toImmutableSet()
-            return ImmutableSet.copyOf(
-                args.stream()
-                    .filter(expr -> VALID_KINDS.contains(expr.getKind()))
-                    .map(ArgumentParameterSwap::potentialReplacement)
-                    .filter(s -> s != null)
-                    .collect(Collectors.toSet()));
+            return args.stream()
+                .filter(expr -> VALID_KINDS.contains(expr.getKind()))
+                .map(ArgumentParameterSwap::potentialReplacement)
+                .filter(s -> s != null)
+                .collect(toImmutableSet());
           };
 
   @Nullable
