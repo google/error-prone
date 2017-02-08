@@ -16,9 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -28,16 +30,13 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Description.Builder;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CaseTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.SwitchTree;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCSwitch;
 import com.sun.tools.javac.tree.TreeInfo;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -49,30 +48,34 @@ import javax.lang.model.element.ElementKind;
 )
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 
+  public static final int MAX_CASES_TO_PRINT = 5;
+
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
-    TypeSymbol switchType = ((JCSwitch) tree).getExpression().type.tsym;
-
-    if (switchType.getKind() != ElementKind.ENUM) {
+    Type switchType = ASTHelpers.getType(tree.getExpression());
+    if (switchType.asElement().getKind() != ElementKind.ENUM) {
       return Description.NO_MATCH;
     }
-
-    if (hasDefaultCase(tree)) {
+    // default case is present
+    if (tree.getCases().stream().anyMatch(c -> c.getExpression() == null)) {
       return Description.NO_MATCH;
     }
-
-    Set<String> unhandled =
-        Sets.difference(ASTHelpers.enumValues(switchType), collectEnumSwitchCases(tree));
+    ImmutableSet<String> handled =
+        tree.getCases()
+            .stream()
+            .map(CaseTree::getExpression)
+            .filter(IdentifierTree.class::isInstance)
+            .map(e -> ((IdentifierTree) e).getName().toString())
+            .collect(toImmutableSet());
+    Set<String> unhandled = Sets.difference(ASTHelpers.enumValues(switchType.asElement()), handled);
     if (unhandled.isEmpty()) {
       return Description.NO_MATCH;
     }
-
     Description.Builder description = buildDescription(tree).setMessage(buildMessage(unhandled));
     buildFixes(tree, state, unhandled, description);
     return description.build();
   }
 
-  /** Adds suggested fixes. */
   private void buildFixes(
       SwitchTree tree, VisitorState state, Set<String> unhandled, Builder description) {
 
@@ -100,59 +103,22 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
    * Build the diagnostic message.
    *
    * <p>Examples:
+   *
    * <ul>
-   * <li>Non-exhaustive switch, expected cases for: FOO
-   * <li>Non-exhaustive switch, expected cases for: FOO, BAR, BAZ, and 42 others.
+   *   <li>Non-exhaustive switch, expected cases for: FOO
+   *   <li>Non-exhaustive switch, expected cases for: FOO, BAR, BAZ, and 42 others.
    * </ul>
    */
   private String buildMessage(Set<String> unhandled) {
-    final int maxCasesToPrint = 5;
-
     StringBuilder message = new StringBuilder("Non-exhaustive switch, expected cases for: ");
-
-    boolean tooManyCasesToPrint = unhandled.size() > maxCasesToPrint;
-    int numberToShow = tooManyCasesToPrint
-        ? 3 // if there are too many to print, only show three examples.
-        : unhandled.size();
-
-    Iterator<String> it = unhandled.iterator();
-    for (int i = 0; i < numberToShow; ++i) {
-      if (i != 0) {
-        message.append(", ");
-      }
-      message.append(it.next());
-    }
-
-    if (tooManyCasesToPrint) {
+    int numberToShow =
+        unhandled.size() > MAX_CASES_TO_PRINT
+            ? 3 // if there are too many to print, only show three examples.
+            : unhandled.size();
+    message.append(unhandled.stream().limit(numberToShow).collect(Collectors.joining(", ")));
+    if (numberToShow < unhandled.size()) {
       message.append(String.format(", and %d others", unhandled.size() - numberToShow));
     }
     return message.toString();
-  }
-
-  /** Return the enum values handled by the given switch statement's cases. */
-  private static LinkedHashSet<String> collectEnumSwitchCases(SwitchTree tree) {
-    LinkedHashSet<String> cases = new LinkedHashSet<>();
-    for (CaseTree caseTree : tree.getCases()) {
-      ExpressionTree pat = caseTree.getExpression();
-      if (pat instanceof IdentifierTree) {
-        cases.add(((IdentifierTree) pat).getName().toString());
-      }
-    }
-    return cases;
-  }
-
-  /** Return true if the switch has a 'default' case. */
-  private static boolean hasDefaultCase(SwitchTree tree) {
-    for (CaseTree caseTree : tree.getCases()) {
-      if (isDefaultCase(caseTree)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /** The 'default' case is represented in the AST as a CaseTree with a null expression. */
-  private static boolean isDefaultCase(CaseTree tree) {
-    return tree.getExpression() == null;
   }
 }
