@@ -154,6 +154,7 @@ import com.google.errorprone.bugpatterns.TryFailThrowable;
 import com.google.errorprone.bugpatterns.TypeParameterQualifier;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
 import com.google.errorprone.bugpatterns.URLEqualsHashCode;
+import com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
 import com.google.errorprone.bugpatterns.UnsynchronizedOverridesSynchronized;
@@ -392,6 +393,7 @@ public class BuiltInCheckerSuppliers {
           SynchronizeOnNonFinalField.class,
           TruthConstantAsserts.class,
           TypeParameterUnusedInFormals.class,
+          UnnecessaryDefaultInEnumSwitch.class,
           UnsynchronizedOverridesSynchronized.class,
           URLEqualsHashCode.class,
           WaitNotInLoop.class);
