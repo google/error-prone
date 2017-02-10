@@ -92,6 +92,7 @@ import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
+import com.google.errorprone.bugpatterns.MissingDefault;
 import com.google.errorprone.bugpatterns.MissingFail;
 import com.google.errorprone.bugpatterns.MissingOverride;
 import com.google.errorprone.bugpatterns.MisusedWeekYear;
@@ -426,6 +427,7 @@ public class BuiltInCheckerSuppliers {
           LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
           MethodCanBeStatic.class,
+          MissingDefault.class,
           MixedArrayDimensions.class,
           MoreThanOneQualifier.class,
           MultiVariableDeclaration.class,
