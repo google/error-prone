@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
@@ -47,6 +48,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -143,13 +145,17 @@ public class DefaultCharset extends BugChecker
               .forClass(InputStreamReader.class.getName())
               .withParameters(ImmutableList.of(Suppliers.typeFromClass(InputStream.class))));
 
-  private static final Matcher<ExpressionTree> INVOCATION =
-      anyOf(
-          instanceMethod().onExactClass(String.class.getName()).withSignature("getBytes()"),
-          staticMethod()
-              .onClass(com.google.common.io.Files.class.getName())
-              .named("newWriter")
-              .withParameters("java.lang.String"));
+  private static final Matcher<ExpressionTree> BYTESTRING_COPY_FROM =
+      staticMethod().onClass("com.google.protobuf.ByteString").named("copyFrom");
+
+  private static final Matcher<ExpressionTree> STRING_GET_BYTES =
+      instanceMethod().onExactClass(String.class.getName()).withSignature("getBytes()");
+
+  private static final Matcher<ExpressionTree> FILE_NEW_WRITER =
+      staticMethod()
+          .onClass(com.google.common.io.Files.class.getName())
+          .named("newWriter")
+          .withParameters("java.lang.String");
 
   private static final Matcher<ExpressionTree> PRINT_WRITER =
       anyOf(
@@ -169,36 +175,80 @@ public class DefaultCharset extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!state.isAndroidCompatible() && INVOCATION.matches(tree, state)) {
+    if (state.isAndroidCompatible()) {
+      return NO_MATCH;
+    }
+    if (STRING_GET_BYTES.matches(tree, state)) {
+      Description.Builder description = buildDescription(tree);
+      Tree parent = state.getPath().getParentPath().getLeaf();
+      if (parent instanceof ExpressionTree
+          && BYTESTRING_COPY_FROM.matches((ExpressionTree) parent, state)) {
+        byteStringFixes(description, tree, (ExpressionTree) parent, state);
+      } else {
+        appendCharsets(description, tree, tree.getMethodSelect(), tree.getArguments(), state);
+      }
+      return description.build();
+    }
+    if (FILE_NEW_WRITER.matches(tree, state)) {
       Description.Builder description = buildDescription(tree);
       appendCharsets(description, tree, tree.getMethodSelect(), tree.getArguments(), state);
       return description.build();
     }
-    return Description.NO_MATCH;
+    return NO_MATCH;
+  }
+
+  private static void byteStringFixes(
+      Description.Builder description,
+      MethodInvocationTree tree,
+      ExpressionTree parent,
+      VisitorState state) {
+    description.addFix(byteStringFix(tree, parent, state, ".copyFromUtf8(", "").build());
+
+    SuggestedFix.Builder builder =
+        byteStringFix(
+            tree, parent, state, ".copyFrom(", ", " + CharsetFix.DEFAULT_CHARSET_FIX.replacement());
+    CharsetFix.DEFAULT_CHARSET_FIX.addImport(builder, state);
+    description.addFix(builder.build());
+  }
+
+  private static SuggestedFix.Builder byteStringFix(
+      MethodInvocationTree tree,
+      ExpressionTree parent,
+      VisitorState state,
+      String prefix,
+      String suffix) {
+    return SuggestedFix.builder()
+        .replace(
+            state.getEndPosition(ASTHelpers.getReceiver(parent)),
+            ((JCTree) tree).getStartPosition(),
+            prefix)
+        .replace(
+            state.getEndPosition(ASTHelpers.getReceiver(tree)), state.getEndPosition(tree), suffix);
   }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (!state.isAndroidCompatible()) {
-      if (CTOR.matches(tree, state)) {
-        Description.Builder description = buildDescription(tree);
-        appendCharsets(description, tree, tree.getIdentifier(), tree.getArguments(), state);
-        return description.build();
-      }
-      if (FILE_READER.matches(tree, state)) {
-        return handleFileReader(tree, state);
-      }
-      if (FILE_WRITER.matches(tree, state)) {
-        return handleFileWriter(tree, state);
-      }
-      if (PRINT_WRITER.matches(tree, state)) {
-        return handlePrintWriter(tree, state);
-      }
-      if (PRINT_WRITER_OUTPUTSTREAM.matches(tree, state)) {
-        return handlePrintWriterOutputStream(tree, state);
-      }
+    if (state.isAndroidCompatible()) {
+      return NO_MATCH;
     }
-    return Description.NO_MATCH;
+    if (CTOR.matches(tree, state)) {
+      Description.Builder description = buildDescription(tree);
+      appendCharsets(description, tree, tree.getIdentifier(), tree.getArguments(), state);
+      return description.build();
+    }
+    if (FILE_READER.matches(tree, state)) {
+      return handleFileReader(tree, state);
+    }
+    if (FILE_WRITER.matches(tree, state)) {
+      return handleFileWriter(tree, state);
+    }
+    if (PRINT_WRITER.matches(tree, state)) {
+      return handlePrintWriter(tree, state);
+    }
+    if (PRINT_WRITER_OUTPUTSTREAM.matches(tree, state)) {
+      return handlePrintWriterOutputStream(tree, state);
+    }
+    return NO_MATCH;
   }
 
   boolean shouldUseGuava(VisitorState state) {
@@ -462,4 +512,3 @@ public class DefaultCharset extends BugChecker
     return description.build();
   }
 }
-

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
 import org.junit.Before;
@@ -395,6 +396,52 @@ public class DefaultCharsetTest {
             "    PrintWriter pw4 = new PrintWriter(new File(\"test\"), UTF_8.name());",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void byteString() throws IOException {
+    refactoringTest()
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.protobuf.ByteString;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    ByteString.copyFrom(\"hello\".getBytes());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.protobuf.ByteString;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    ByteString.copyFromUtf8(\"hello\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void byteStringDefaultCharset() throws IOException {
+    refactoringTest()
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.protobuf.ByteString;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    ByteString.copyFrom(\"hello\".getBytes());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.protobuf.ByteString;",
+            "import java.nio.charset.Charset;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    ByteString.copyFrom(\"hello\", Charset.defaultCharset());",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 }
