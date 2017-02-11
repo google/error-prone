@@ -15,6 +15,8 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
@@ -59,7 +61,7 @@ public final class ThrowsUncheckedExceptionTest {
             "interface Test {",
             "  void f();",
             "}")
-        .doTest();
+        .doTest(TEXT_MATCH);
   }
 
   @Test

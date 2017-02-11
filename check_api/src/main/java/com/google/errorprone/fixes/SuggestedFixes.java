@@ -398,7 +398,7 @@ public class SuggestedFixes {
     List<? extends ExpressionTree> trees = tree.getThrows();
     if (toDelete.size() == trees.size()) {
       return SuggestedFix.replace(
-          getThrowsPosition(tree, state), state.getEndPosition(getLast(trees)), "");
+          getThrowsPosition(tree, state) - 1, state.getEndPosition(getLast(trees)), "");
     }
     String replacement =
         FluentIterable.from(tree.getThrows())
