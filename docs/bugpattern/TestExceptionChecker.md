@@ -14,3 +14,16 @@ public void testRemoveFails() {
   list.remove(0);
 }
 ```
+
+To avoid this issue, prefer `assertThrows`:
+
+```java
+@Test
+public void testRemoveFails() {
+  AppendOnlyList list = new AppendOnlyList();
+  list.add(0, "a");
+  assertThrows(UnsupportedOperationException.class, () -> {
+    list.remove(0);
+  });
+}
+```

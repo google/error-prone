@@ -10,8 +10,26 @@ public void testRemoveFails() {
   AppendOnlyList list = new AppendOnlyList();
   list.add(0, "a");
   thrown.expect(UnsupportedOperationException.class);
+  thrown.expectMessage("hello");
   list.remove(0); // throws
   assertThat(list).hasSize(1); // never executed
+}
+```
+
+To avoid this issue, prefer `assertThrows` or `expectThrows`:
+
+```java
+@Test
+public void testRemoveFails() {
+  AppendOnlyList list = new AppendOnlyList();
+  list.add(0, "a");
+  UnsupportedOperationException thrown = expectThrows(
+      UnsupportedOperationException.class,
+      () -> {
+        list.remove(0);
+      });
+  assertThat(thrown).hasMessage().contains("hello");
+  assertThat(list).hasSize(1);
 }
 ```
 
