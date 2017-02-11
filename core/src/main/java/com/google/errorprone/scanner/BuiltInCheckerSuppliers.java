@@ -58,6 +58,7 @@ import com.google.errorprone.bugpatterns.EqualsHashCode;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
+import com.google.errorprone.bugpatterns.FallThrough;
 import com.google.errorprone.bugpatterns.FilesLinesLeak;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
@@ -275,6 +276,7 @@ public class BuiltInCheckerSuppliers {
           ConstantOverflow.class,
           DeadException.class,
           EqualsNaN.class,
+          FallThrough.class,
           FilesLinesLeak.class,
           ForOverrideChecker.class,
           FormatString.class,
