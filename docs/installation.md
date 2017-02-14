@@ -156,6 +156,23 @@ Ideally, you should find out about failed Error Prone checks as you code in ecli
 
 For now, Eclipse users should use the Findbugs eclipse plugin instead, as it catches many of the same issues.
 
+# Command Line
+
+To use Error Prone from the command line as a javac replacement:
+
+```
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant/2.0.15/error_prone_ant-2.0.15.jar
+java -Xbootclasspath/p:error_prone_ant-2.0.15.jar com.google.errorprone.ErrorProneCompiler Test.java
+```
+
+```
+Test.java:1: error: [InfiniteRecursion] This method always recurses, and will cause a StackOverflowError
+class Test { void f() { f(); } }
+                        ^
+    (see http://errorprone.info/bugpattern/InfiniteRecursion)
+```
+
+
 # My build system isn't listed here
 
 If you're an end-user of the build system, you can [file a bug to request integration](https://github.com/google/error-prone/issues).
