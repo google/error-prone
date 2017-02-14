@@ -35,8 +35,8 @@ To make annotation implementations immutable, ensure:
     capturing state from a mutable enclosing instance. If it is an anonymous
     class, convert it to a named member class so it can be made static.
 
-TIP: annotating the declaration of an enum with `@Immutable` is unnecessary --
-Error Prone assumes annotations are immutable by default.
+TIP: annotating the declaration of an annotation with `@Immutable` is
+unnecessary -- Error Prone assumes annotations are immutable by default.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("ImmutableAnnotationChecker")` annotation to the enclosing element.

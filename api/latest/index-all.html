@@ -907,6 +907,10 @@
 <dd>
 <div class="block">Analyzes trees for references to their enclosing instance.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/Reachability.html#canCompleteNormally-com.sun.source.tree.StatementTree-">canCompleteNormally(StatementTree)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.html" title="class in com.google.errorprone.util">Reachability</a></dt>
+<dd>
+<div class="block">Returns true if the given statement can complete normally, as defined by JLS 14.21.</div>
+</dd>
 <dt><a href="com/google/errorprone/annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations"><span class="typeNameLink">CanIgnoreReturnValue</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
 <dd>
 <div class="block">Indicates that the return value of the annotated method can be safely ignored.</div>
@@ -2084,6 +2088,10 @@
 <h2 class="title">F</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Factory.html#Factory--">Factory()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Factory.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Factory</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/FallThrough.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">FallThrough</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FallThrough.html#FallThrough--">FallThrough()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FallThrough.html" title="class in com.google.errorprone.bugpatterns">FallThrough</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/GuavaSelfEquals.html#fieldFix-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">fieldFix(Tree, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/GuavaSelfEquals.html" title="class in com.google.errorprone.bugpatterns">GuavaSelfEquals</a></dt>
 <dd>&nbsp;</dd>
@@ -4441,7 +4449,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.SwitchTreeMatcher.html#matchSwitch-com.sun.source.tree.SwitchTree-com.google.errorprone.VisitorState-">matchSwitch(SwitchTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.SwitchTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.SwitchTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FallThrough.html#matchSwitch-com.sun.source.tree.SwitchTree-com.google.errorprone.VisitorState-">matchSwitch(SwitchTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FallThrough.html" title="class in com.google.errorprone.bugpatterns">FallThrough</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html#matchSwitch-com.sun.source.tree.SwitchTree-com.google.errorprone.VisitorState-">matchSwitch(SwitchTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">MissingCasesInEnumSwitch</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingDefault.html#matchSwitch-com.sun.source.tree.SwitchTree-com.google.errorprone.VisitorState-">matchSwitch(SwitchTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingDefault.html" title="class in com.google.errorprone.bugpatterns">MissingDefault</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html#matchSwitch-com.sun.source.tree.SwitchTree-com.google.errorprone.VisitorState-">matchSwitch(SwitchTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryDefaultInEnumSwitch</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.SynchronizedTreeMatcher.html#matchSynchronized-com.sun.source.tree.SynchronizedTree-com.google.errorprone.VisitorState-">matchSynchronized(SynchronizedTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.SynchronizedTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.SynchronizedTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -4510,6 +4524,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ElementsCountedInLoop.html#matchWhileLoop-com.sun.source.tree.WhileLoopTree-com.google.errorprone.VisitorState-">matchWhileLoop(WhileLoopTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ElementsCountedInLoop.html" title="class in com.google.errorprone.bugpatterns">ElementsCountedInLoop</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.WildcardTreeMatcher.html#matchWildcard-com.sun.source.tree.WildcardTree-com.google.errorprone.VisitorState-">matchWildcard(WildcardTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.WildcardTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.WildcardTreeMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html#MAX_CASES_TO_PRINT">MAX_CASES_TO_PRINT</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">MissingCasesInEnumSwitch</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WildcardImport.html#MAX_MEMBER_IMPORTS">MAX_MEMBER_IMPORTS</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WildcardImport.html" title="class in com.google.errorprone.bugpatterns">WildcardImport</a></dt>
 <dd>
@@ -4684,6 +4700,10 @@
 <dt><a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MissingCasesInEnumSwitch</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html#MissingCasesInEnumSwitch--">MissingCasesInEnumSwitch()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">MissingCasesInEnumSwitch</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/MissingDefault.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MissingDefault</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingDefault.html#MissingDefault--">MissingDefault()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingDefault.html" title="class in com.google.errorprone.bugpatterns">MissingDefault</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MissingFail</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
@@ -5305,6 +5325,12 @@
 <dd>
 <div class="block">The <code>Range</code> to be replaced.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/Reachability.html" title="class in com.google.errorprone.util"><span class="typeNameLink">Reachability</span></a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
+<dd>
+<div class="block">An implementation of JLS 14.21 reachability.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/Reachability.html#Reachability--">Reachability()</a></span> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.html" title="class in com.google.errorprone.util">Reachability</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/apply/FileSource.html#readFile-java.lang.String-">readFile(String)</a></span> - Method in interface com.google.errorprone.apply.<a href="com/google/errorprone/apply/FileSource.html" title="interface in com.google.errorprone.apply">FileSource</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/apply/FsFileSource.html#readFile-java.lang.String-">readFile(String)</a></span> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/FsFileSource.html" title="class in com.google.errorprone.apply">FsFileSource</a></dt>
@@ -6267,6 +6293,10 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#UnlockMethodChecker--">UnlockMethodChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">UnlockMethodChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Bindings.html#unmodifiable--">unmodifiable()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">UnnecessaryDefaultInEnumSwitch</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html#UnnecessaryDefaultInEnumSwitch--">UnnecessaryDefaultInEnumSwitch()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryDefaultInEnumSwitch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">UnnecessaryStaticImport</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>

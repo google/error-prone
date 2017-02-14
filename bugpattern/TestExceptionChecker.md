@@ -29,5 +29,18 @@ public void testRemoveFails() {
 }
 ```
 
+To avoid this issue, prefer `assertThrows`:
+
+```java
+@Test
+public void testRemoveFails() {
+  AppendOnlyList list = new AppendOnlyList();
+  list.add(0, "a");
+  assertThrows(UnsupportedOperationException.class, () -> {
+    list.remove(0);
+  });
+}
+```
+
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("TestExceptionChecker")` annotation to the enclosing element.

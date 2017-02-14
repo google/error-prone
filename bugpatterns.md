@@ -71,6 +71,9 @@ Exception created but not thrown
 __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 == NaN always returns false; use the isNaN methods instead
 
+__[FallThrough](bugpattern/FallThrough)__<br>
+Switch case may fall through
+
 __[FilesLinesLeak](bugpattern/FilesLinesLeak)__<br>
 The stream returned by Files.lines should be closed using try-with-resources
 
@@ -424,6 +427,9 @@ Declaring a type parameter that is only used in the return type is a misuse of g
 __[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
 Creation of a Set/HashSet/HashMap of java.net.URL. equals() and hashCode() of java.net.URL class make blocking internet connections.
 
+__[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
+Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
+
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
 
@@ -535,6 +541,9 @@ Calls to ExpectedException#expect should always be followed by exactly one state
 
 __[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
 Hardcoded reference to /sdcard
+
+__[MissingDefault](bugpattern/MissingDefault)__<br>
+The Google Java Style Guide requires each switch statement includes a default statement group, even if it contains no code.
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
