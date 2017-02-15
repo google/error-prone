@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import java.io.IOException;
 import org.junit.Test;
@@ -218,6 +219,58 @@ public class ExpectedExceptionCheckerTest {
             "    });",
             "  }",
             "}")
+        .doTest();
+  }
+
+  // https://github.com/hamcrest/JavaHamcrest/issues/27
+  @Test
+  public void isA_hasCauseThat() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.io.IOException;",
+            "import java.nio.file.*;",
+            "import org.junit.Test;",
+            "import org.junit.Rule;",
+            "import org.hamcrest.CoreMatchers;",
+            "import org.junit.rules.ExpectedException;",
+            "class ExceptionTest {",
+            "  @Rule ExpectedException thrown = ExpectedException.none();",
+            "  @Test",
+            "  public void test() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    thrown.expect(IOException.class);",
+            "    thrown.expectCause(CoreMatchers.isA(IOException.class));",
+            "    Files.readAllBytes(p);",
+            "    assertThat(Files.exists(p)).isFalse();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import static org.junit.Assert.expectThrows;",
+            "",
+            "import java.io.IOException;",
+            "import java.nio.file.*;",
+            "import org.hamcrest.CoreMatchers;",
+            "import org.junit.Rule;",
+            "import org.junit.Test;",
+            "import org.junit.rules.ExpectedException;",
+            "class ExceptionTest {",
+            "  @Rule ExpectedException thrown = ExpectedException.none();",
+            "  @Test",
+            "  public void test() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    IOException thrown =",
+            "        expectThrows(IOException.class, () -> Files.readAllBytes(p));",
+            "    assertThat(thrown).hasCauseThat().isInstanceOf(IOException.class);",
+            "    assertThat(Files.exists(p)).isFalse();",
+            "  }",
+            "}")
+        // TODO(cushon): remove this once we update to a version of Truth that includes
+        // hasCauseThat()
+        .allowBreakingChanges()
         .doTest();
   }
 }

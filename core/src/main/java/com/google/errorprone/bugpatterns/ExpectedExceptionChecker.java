@@ -23,6 +23,7 @@ import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -68,6 +69,11 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
           instanceMethod()
               .onExactClass("org.junit.rules.ExpectedException")
               .withNameMatching(Pattern.compile("expect.*")));
+
+  static final Matcher<ExpressionTree> IS_A =
+      staticMethod()
+          .onClassAny("org.hamcrest.Matchers", "org.hamcrest.CoreMatchers")
+          .withSignature("<T>isA(java.lang.Class<T>)");
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -115,11 +121,21 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
           }
           break;
         case "expectCause":
-          fix.addStaticImport("org.hamcrest.MatcherAssert.assertThat");
-          newAsserts.add(
-              String.format(
-                  "assertThat(thrown.getCause(), %s);",
-                  state.getSourceForNode(getOnlyElement(args))));
+          ExpressionTree matcher = getOnlyElement(expectation.getArguments());
+          if (IS_A.matches(matcher, state)) {
+            fix.addStaticImport("com.google.common.truth.Truth.assertThat");
+            newAsserts.add(
+                String.format(
+                    "assertThat(thrown).hasCauseThat().isInstanceOf(%s);",
+                    state.getSourceForNode(
+                        getOnlyElement(((MethodInvocationTree) matcher).getArguments()))));
+          } else {
+            fix.addStaticImport("org.hamcrest.MatcherAssert.assertThat");
+            newAsserts.add(
+                String.format(
+                    "assertThat(thrown.getCause(), %s);",
+                    state.getSourceForNode(getOnlyElement(args))));
+          }
           break;
         case "expectMessage":
           if (isSubtype(
