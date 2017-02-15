@@ -149,6 +149,7 @@ import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
+import com.google.errorprone.bugpatterns.ThrowNull;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
@@ -341,6 +342,7 @@ public class BuiltInCheckerSuppliers {
           StringBuilderInitWithChar.class,
           SuppressWarningsDeprecated.class,
           ThrowIfUncheckedKnownChecked.class,
+          ThrowNull.class,
           TruthSelfEquals.class,
           TryFailThrowable.class,
           TypeParameterQualifier.class,
