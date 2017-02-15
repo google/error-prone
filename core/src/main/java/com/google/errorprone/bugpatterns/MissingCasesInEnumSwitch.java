@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -44,7 +44,7 @@ import javax.lang.model.element.ElementKind;
   name = "MissingCasesInEnumSwitch",
   summary = "The Google Java Style Guide requires switch statements to have an explicit default",
   category = JDK,
-  severity = WARNING
+  severity = ERROR
 )
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 
