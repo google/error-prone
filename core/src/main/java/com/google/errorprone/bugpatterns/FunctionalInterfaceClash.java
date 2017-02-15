@@ -29,6 +29,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -41,7 +42,9 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -59,6 +62,9 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     Multimap<String, MethodSymbol> methods = HashMultimap.create();
     for (Symbol sym : types.membersClosure(getType(tree), /*skipInterface=*/ false).getSymbols()) {
       if (!(sym instanceof MethodSymbol)) {
+        continue;
+      }
+      if (isBugCheckerSuppressed((MethodSymbol) sym)) {
         continue;
       }
       MethodSymbol msym = (MethodSymbol) sym;
@@ -138,5 +144,11 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     } catch (CompletionFailure e) {
       return false;
     }
+  }
+
+  private boolean isBugCheckerSuppressed(MethodSymbol method) {
+    SuppressWarnings suppression = ASTHelpers.getAnnotation(method, SuppressWarnings.class);
+    return suppression != null
+        && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
   }
 }

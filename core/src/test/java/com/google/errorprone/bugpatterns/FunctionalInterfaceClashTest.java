@@ -201,4 +201,19 @@ public class FunctionalInterfaceClashTest {
         .setArgs(Arrays.asList("-cp", libJar.toString()))
         .doTest();
   }
+
+  public void suppressWarningsOnMethod() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.SuppressWarnings;",
+            "import java.util.function.Function;",
+            "import java.util.function.Consumer;",
+            "public class Test {",
+            "  @SuppressWarnings(\"FunctionalInterfaceClash\")",
+            "  void foo(Consumer<String> x) {}",
+            "  void foo(Function<String, String> c) {}",
+            "}")
+        .doTest();
+  }
 }
