@@ -25,6 +25,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -68,14 +69,14 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
 
     // Ignore f-bounds.
     // e.g.: <T extends Enum<T>> T unsafeEnumDeserializer();
-    if (retType.bound != null && TypeParameterFinder.visit(retType.bound).contains(retType)) {
+    if (retType.bound != null && TypeParameterFinder.visit(retType.bound).contains(retType.tsym)) {
       return Description.NO_MATCH;
     }
 
     // Ignore cases where the type parameter is used in the declaration of a formal parameter.
     // e.g.: <T> T noop(T t);
     for (VarSymbol formalParam : methodSymbol.getParameters()) {
-      if (TypeParameterFinder.visit(formalParam.type).contains(retType)) {
+      if (TypeParameterFinder.visit(formalParam.type).contains(retType.tsym)) {
         return Description.NO_MATCH;
       }
     }
@@ -89,13 +90,13 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
    */
   private static class TypeParameterFinder extends Types.DefaultTypeVisitor<Void, Void> {
 
-    static Set<Type.TypeVar> visit(Type type) {
+    static Set<Symbol.TypeSymbol> visit(Type type) {
       TypeParameterFinder visitor = new TypeParameterFinder();
       type.accept(visitor, null);
       return visitor.seen;
     }
 
-    private final Set<Type.TypeVar> seen = new HashSet<Type.TypeVar>();
+    private final Set<Symbol.TypeSymbol> seen = new HashSet<>();
 
     @Override
     public Void visitClassType(Type.ClassType type, Void unused) {
@@ -136,7 +137,7 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
     @Override
     public Void visitTypeVar(Type.TypeVar type, Void unused) {
       // only visit f-bounds once:
-      if (!seen.add(type)) {
+      if (!seen.add(type.tsym)) {
         return null;
       }
       if (type.bound != null) {

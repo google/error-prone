@@ -215,4 +215,24 @@ public class TypeParameterUnusedInFormalsTest {
             "}")
         .doTest();
   }
+
+  // regression test for b/35385704
+  @Test
+  public void typeAnnotation() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Target;",
+            "@Target(ElementType.TYPE_USE)",
+            "@interface A {}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  <T> T f(@A T x) {",
+            "    return x;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
