@@ -21,10 +21,9 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.concurrent.UnlockMethod;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
@@ -84,10 +83,11 @@ public class HeldLockAnalyzer {
    * Analyzes a method body, tracking the set of held locks and checking accesses to guarded
    * members.
    */
-  public static void analyze(VisitorState state, LockEventListener listener) {
+  public static void analyze(
+      VisitorState state, LockEventListener listener, Predicate<Tree> isSuppressed) {
     HeldLockSet locks = HeldLockSet.empty();
     locks = handleMonitorGuards(state, locks);
-    new LockScanner(state, listener).scan(state.getPath(), locks);
+    new LockScanner(state, listener, isSuppressed).scan(state.getPath(), locks);
   }
 
   // Don't use Class#getName() for inner classes, we don't want `Monitor$Guard`
@@ -119,12 +119,15 @@ public class HeldLockAnalyzer {
 
     private final VisitorState visitorState;
     private final LockEventListener listener;
+    private final Predicate<Tree> isSuppressed;
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
-    private LockScanner(VisitorState visitorState, LockEventListener listener) {
+    private LockScanner(
+        VisitorState visitorState, LockEventListener listener, Predicate<Tree> isSuppressed) {
       this.visitorState = visitorState;
       this.listener = listener;
+      this.isSuppressed = isSuppressed;
     }
 
     @Override
@@ -213,36 +216,9 @@ public class HeldLockAnalyzer {
       return null;
     }
 
-    private static final Set<String> SUPPRESSION_NAMES = getSuppressionNames();
-
-    private static Set<String> getSuppressionNames() {
-      BugPattern bugpattern = GuardedByChecker.class.getAnnotation(BugPattern.class);
-      return ImmutableSet.<String>builder()
-          .add(bugpattern.altNames())
-          .add(bugpattern.name())
-          .build();
-    }
-
-    /**
-     * Returns true if the given tree is annotated with {@code @SuppressWarnings} and the list
-     * of suppressions includes GuardedBy.
-     */
-    private static boolean isSuppressed(Tree node) {
-      SuppressWarnings suppression = ASTHelpers.getAnnotation(node, SuppressWarnings.class);
-      if (suppression == null) {
-        return false;
-      }
-      for (String suppressed : suppression.value()) {
-        if (SUPPRESSION_NAMES.contains(suppressed)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
     @Override
     public Void visitVariable(VariableTree node, HeldLockSet locks) {
-      if (!isSuppressed(node)) {
+      if (!isSuppressed.apply(node)) {
         return super.visitVariable(node, locks);
       } else {
         return null;

@@ -42,8 +42,6 @@ import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Filter;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -266,9 +264,7 @@ public class ImmutableAnalysis {
       ClassSymbol classSym,
       ClassType classType,
       VarSymbol var) {
-    SuppressWarnings suppression = ASTHelpers.getAnnotation(var, SuppressWarnings.class);
-    if (suppression != null
-        && !Collections.disjoint(Arrays.asList(suppression.value()), bugChecker.allNames())) {
+    if (bugChecker.isSuppressed(var)) {
       return Violation.absent();
     }
     if (ASTHelpers.hasAnnotation(var, LazyInit.class, state)) {

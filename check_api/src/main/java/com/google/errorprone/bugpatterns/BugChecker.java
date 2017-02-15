@@ -26,6 +26,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -78,8 +79,11 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.tools.javac.code.Symbol;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -178,6 +182,26 @@ public abstract class BugChecker implements Suppressible, Serializable {
   @Override
   public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
     return info.customSuppressionAnnotations();
+  }
+
+  /**
+   * Returns true if the given tree is annotated with a {@code @SuppressWarnings} that disables this
+   * bug checker.
+   */
+  public boolean isSuppressed(Tree tree) {
+    SuppressWarnings suppression = ASTHelpers.getAnnotation(tree, SuppressWarnings.class);
+    return suppression != null
+        && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
+  }
+
+  /**
+   * Returns true if the given symbol is annotated with a {@code @SuppressWarnings} that disables
+   * this bug checker.
+   */
+  public boolean isSuppressed(Symbol symbol) {
+    SuppressWarnings suppression = ASTHelpers.getAnnotation(symbol, SuppressWarnings.class);
+    return suppression != null
+        && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
   }
 
   public static interface AnnotationTreeMatcher extends Suppressible {

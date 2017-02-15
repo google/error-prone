@@ -26,7 +26,6 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.StreamSupport.stream;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -40,10 +39,8 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Types;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -76,7 +73,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
         continue;
       }
       MethodSymbol msym = getSymbol((MethodTree) member);
-      if (isBugCheckerSuppressed(msym)) {
+      if (isSuppressed(msym)) {
         continue;
       }
       List<MethodSymbol> clash = methods.remove(methodReferenceDescriptor(types, msym));
@@ -112,18 +109,5 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
     sym.params().stream().map(p -> Signatures.descriptor(p.type, types)).forEachOrdered(sb::append);
     sb.append(")");
     return sb.toString();
-  }
-
-  private static final Set<String> SUPPRESSION_NAMES = getSuppressionNames();
-
-  private static Set<String> getSuppressionNames() {
-    BugPattern bugpattern = AmbiguousMethodReference.class.getAnnotation(BugPattern.class);
-    return ImmutableSet.<String>builder().add(bugpattern.altNames()).add(bugpattern.name()).build();
-  }
-
-  private static boolean isBugCheckerSuppressed(MethodSymbol method) {
-    SuppressWarnings suppressWarnings = method.getAnnotation(SuppressWarnings.class);
-    return suppressWarnings != null
-        && Arrays.stream(suppressWarnings.value()).anyMatch(SUPPRESSION_NAMES::contains);
   }
 }
