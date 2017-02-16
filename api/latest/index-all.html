@@ -255,7 +255,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AmbiguousMethodReference.html#AmbiguousMethodReference--">AmbiguousMethodReference()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AmbiguousMethodReference.html" title="class in com.google.errorprone.bugpatterns">AmbiguousMethodReference</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html#analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-">analyze(VisitorState, HeldLockAnalyzer.LockEventListener)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html" title="class in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html#analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-com.google.common.base.Predicate-">analyze(VisitorState, HeldLockAnalyzer.LockEventListener, Predicate&lt;Tree&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html" title="class in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer</a></dt>
 <dd>
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
  members.</div>
@@ -3519,6 +3519,16 @@
 <dd>
 <div class="block">see <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/OptionChecker.html?is-external=true#isSupportedOption-java.lang.String-" title="class or interface in javax.tools"><code>OptionChecker.isSupportedOption(String)</code></a></div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.html#isSuppressed-com.sun.source.tree.Tree-">isSuppressed(Tree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
+<dd>
+<div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this
+ bug checker.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.html#isSuppressed-com.sun.tools.javac.code.Symbol-">isSuppressed(Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
+<dd>
+<div class="block">Returns true if the given symbol is annotated with a <code>@SuppressWarnings</code> that disables
+ this bug checker.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/Scanner.html#isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.VisitorState-">isSuppressed(Suppressible, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a></dt>
 <dd>
 <div class="block">Returns true if this checker should be suppressed on the current tree path.</div>
@@ -4466,6 +4476,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.ThrowTreeMatcher.html#matchThrow-com.sun.source.tree.ThrowTree-com.google.errorprone.VisitorState-">matchThrow(ThrowTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.ThrowTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ThrowTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/Finally.html#matchThrow-com.sun.source.tree.ThrowTree-com.google.errorprone.VisitorState-">matchThrow(ThrowTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/Finally.html" title="class in com.google.errorprone.bugpatterns">Finally</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThrowNull.html#matchThrow-com.sun.source.tree.ThrowTree-com.google.errorprone.VisitorState-">matchThrow(ThrowTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThrowNull.html" title="class in com.google.errorprone.bugpatterns">ThrowNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.TryTreeMatcher.html#matchTry-com.sun.source.tree.TryTree-com.google.errorprone.VisitorState-">matchTry(TryTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.TryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TryTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -5997,6 +6009,10 @@
 <div class="block">Catches no-op calls to <code>Throwables.throwIfUnchecked</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThrowIfUncheckedKnownChecked.html#ThrowIfUncheckedKnownChecked--">ThrowIfUncheckedKnownChecked()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThrowIfUncheckedKnownChecked.html" title="class in com.google.errorprone.bugpatterns">ThrowIfUncheckedKnownChecked</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ThrowNull.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ThrowNull</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThrowNull.html#ThrowNull--">ThrowNull()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThrowNull.html" title="class in com.google.errorprone.bugpatterns">ThrowNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Throws.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Throws</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>

@@ -3,7 +3,7 @@ title: MissingCasesInEnumSwitch
 summary: The Google Java Style Guide requires switch statements to have an explicit default
 layout: bugpattern
 category: JDK
-severity: WARNING
+severity: ERROR
 ---
 
 <!--

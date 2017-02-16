@@ -176,6 +176,9 @@ This pattern will silently corrupt certain byte sequences from the serialized pr
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in `android.R.string` have names that do not match their content
 
+__[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
+The Google Java Style Guide requires switch statements to have an explicit default
+
 __[MisusedWeekYear](bugpattern/MisusedWeekYear)__<br>
 Use of &quot;YYYY&quot; (week year) in a date pattern without &quot;ww&quot; (week in year). You probably meant to use &quot;yyyy&quot; (year) instead.
 
@@ -265,6 +268,9 @@ Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot
 
 __[ThrowIfUncheckedKnownChecked](bugpattern/ThrowIfUncheckedKnownChecked)__<br>
 throwIfUnchecked(knownCheckedException) is a no-op.
+
+__[ThrowNull](bugpattern/ThrowNull)__<br>
+Throwing &#39;null&#39; always results in a NullPointerException being thrown.
 
 __[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
 An object is tested for equality to itself using Truth Libraries.
@@ -363,9 +369,6 @@ Floating-point comparison without error tolerance
 
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
-
-__[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
-The Google Java Style Guide requires switch statements to have an explicit default
 
 __[MissingFail](bugpattern/MissingFail)__<br>
 Not calling fail() when expecting an exception masks bugs

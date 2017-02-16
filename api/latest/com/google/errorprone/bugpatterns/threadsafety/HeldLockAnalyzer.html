@@ -175,8 +175,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html#analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-">analyze</a></span>(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-       <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html#analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-com.google.common.base.Predicate-">analyze</a></span>(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+       <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener,
+       com.google.common.base.Predicate&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed)</code>
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
  members.</div>
 </td>
@@ -220,14 +221,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-">
+<a name="analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-com.google.common.base.Predicate-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>analyze</h4>
 <pre>public static&nbsp;void&nbsp;analyze(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-                           <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener)</pre>
+                           <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener,
+                           com.google.common.base.Predicate&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed)</pre>
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
  members.</div>
 </li>

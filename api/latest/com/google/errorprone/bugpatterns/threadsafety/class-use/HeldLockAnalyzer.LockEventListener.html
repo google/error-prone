@@ -104,8 +104,9 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><span class="typeNameLabel">HeldLockAnalyzer.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html#analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-">analyze</a></span>(<a href="../../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-       <a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener)</code>
+<td class="colLast"><span class="typeNameLabel">HeldLockAnalyzer.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html#analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-com.google.common.base.Predicate-">analyze</a></span>(<a href="../../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+       <a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener,
+       com.google.common.base.Predicate&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed)</code>
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
  members.</div>
 </td>
