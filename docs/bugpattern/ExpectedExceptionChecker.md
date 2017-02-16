@@ -16,9 +16,11 @@ public void testRemoveFails() {
 }
 ```
 
-To avoid this issue, prefer `assertThrows` or `expectThrows`:
+To avoid this issue, prefer JUnit's `assertThrows()` or `expectThrows()` API:
 
 ```java
+import static org.junit.Assert.expectThrows;
+
 @Test
 public void testRemoveFails() {
   AppendOnlyList list = new AppendOnlyList();
