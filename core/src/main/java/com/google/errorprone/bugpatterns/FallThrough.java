@@ -43,12 +43,8 @@ import java.util.regex.Pattern;
 )
 public class FallThrough extends BugChecker implements SwitchTreeMatcher {
 
-  // TODO(cushon): be more prescriptive about using "fall through"
   private static final Pattern FALL_THROUGH_PATTERN =
-      Pattern.compile("fall.*through|break|continue|fallthru", Pattern.CASE_INSENSITIVE);
-
-  private static final Pattern PRECISE_FALL_THROUGH_PATTERN =
-      Pattern.compile("fall.*through", Pattern.CASE_INSENSITIVE);
+      Pattern.compile("\\bfalls?.?through\\b", Pattern.CASE_INSENSITIVE);
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
@@ -75,7 +71,7 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
               .trim();
       if (completes && !FALL_THROUGH_PATTERN.matcher(comments).find()) {
         state.reportMatch(describeMatch(next, SuggestedFix.prefixWith(next, "// fall through\n")));
-      } else if (!completes && PRECISE_FALL_THROUGH_PATTERN.matcher(comments).find()) {
+      } else if (!completes && FALL_THROUGH_PATTERN.matcher(comments).find()) {
         SuggestedFix deleteFallThroughComment =
             SuggestedFix.replace(state.getEndPosition(caseTree), next.getStartPosition(), "\n");
         state.reportMatch(
