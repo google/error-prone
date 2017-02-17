@@ -370,7 +370,7 @@ public class SuggestedFixes {
    * Renames the given {@link VariableTree} and its usages in the current compilation unit to {@code
    * replacement}.
    */
-  public static Fix renameVariable(
+  public static SuggestedFix renameVariable(
       VariableTree tree, final String replacement, VisitorState state) {
     String name = tree.getName().toString();
     int typeLength = state.getSourceForNode(tree.getType()).length();
