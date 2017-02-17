@@ -301,6 +301,9 @@ public class ReachabilityTest {
       {
         "throw new AssertionError();",
       },
+      {
+        "for (;;) {}",
+      },
     };
     return Arrays.stream(parameters).map(x -> new Object[] {x}).collect(toList());
   }

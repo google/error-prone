@@ -73,4 +73,22 @@ public class FallThroughTest {
             "}")
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void foreverLoop() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(int x) {",
+            "    switch (x) {",
+            "      case 1:",
+            "        for (;;) {}",
+            "      case 2:",
+            "        break;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

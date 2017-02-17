@@ -300,7 +300,7 @@ public class Reachability {
         scan(that.getStatement());
       }
       // (1)
-      if (!Objects.equals(condValue, true)) {
+      if (that.getCondition() != null && !Objects.equals(condValue, true)) {
         return true;
       }
       // (2)
