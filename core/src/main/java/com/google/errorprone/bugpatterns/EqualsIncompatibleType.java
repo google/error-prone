@@ -94,6 +94,10 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
       argumentType = ASTHelpers.getType(invocationTree.getArguments().get(0));
     }
 
+    if (receiverType == null || argumentType == null) {
+      return Description.NO_MATCH;
+    }
+
     // If one type can be cast into the other, we don't flag the equality test.
     if (ASTHelpers.isCastable(receiverType, argumentType, state)) {
       return Description.NO_MATCH;
