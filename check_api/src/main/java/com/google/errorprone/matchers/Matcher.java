@@ -22,9 +22,11 @@ import java.io.Serializable;
 
 /**
  * Define a predicate on a {@link Tree}, which also accesses the state of AST traversal.
+ *
  * @param <T> a javac AST node
  * @author alexeagle@google.com (Alex Eagle)
  */
+@FunctionalInterface
 public interface Matcher<T extends Tree> extends Serializable {
   boolean matches(T t, VisitorState state);
 }
