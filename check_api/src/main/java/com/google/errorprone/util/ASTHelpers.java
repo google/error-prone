@@ -677,6 +677,9 @@ public class ASTHelpers {
   /** Returns the compile-time constant value of a tree if it has one, or {@code null}. */
   @Nullable
   public static Object constValue(Tree tree) {
+    if (tree == null) {
+      return null;
+    }
     tree = TreeInfo.skipParens((JCTree) tree);
     Type type = ASTHelpers.getType(tree);
     Object value;
