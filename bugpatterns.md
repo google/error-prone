@@ -1,6 +1,6 @@
 ---
 title: Bug Patterns
-layout: master
+layout: bugpatterns
 ---
 
 
