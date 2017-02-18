@@ -93,10 +93,16 @@ public class AppliedFix {
           lineNumberReader.readLine();
         }
         // TODO: this is over-simplified; need a failing test case
-        snippet = lineNumberReader.readLine().trim();
-        // snip comment from line
-        if (snippet.contains("//")) {
-          snippet = snippet.substring(0, snippet.indexOf("//")).trim();
+        snippet = lineNumberReader.readLine();
+        if (snippet == null) {
+          // The file's last line was removed.
+          snippet = "";
+        } else {
+          snippet = snippet.trim();
+          // snip comment from line
+          if (snippet.contains("//")) {
+            snippet = snippet.substring(0, snippet.indexOf("//")).trim();
+          }
         }
         if (snippet.isEmpty()) {
           isRemoveLine = true;

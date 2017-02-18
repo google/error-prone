@@ -15,6 +15,8 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
@@ -240,5 +242,19 @@ public class RemoveUnusedImportsTest {
             "}")
         .expectUnchanged()
         .doTest();
+  }
+
+  @Test
+  public void unusedInPackageInfo() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/com/example/package-info.java",
+            "package com.example;",
+            "import java.util.Map;")
+        .addOutputLines(
+            "out/com/example/package-info.java",
+            "package com.example;",
+            "") // The package statement's trailing newline is retained
+        .doTest(TEXT_MATCH);
   }
 }
