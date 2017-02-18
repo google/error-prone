@@ -51,6 +51,7 @@ import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
+import com.google.errorprone.bugpatterns.DoNotCallChecker;
 import com.google.errorprone.bugpatterns.ElementsCountedInLoop;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
@@ -278,6 +279,7 @@ public class BuiltInCheckerSuppliers {
           CompileTimeConstantChecker.class,
           ConstantOverflow.class,
           DeadException.class,
+          DoNotCallChecker.class,
           EqualsNaN.class,
           FallThrough.class,
           FilesLinesLeak.class,
