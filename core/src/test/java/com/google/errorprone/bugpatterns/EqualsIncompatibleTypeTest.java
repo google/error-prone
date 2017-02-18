@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,5 +43,19 @@ public class EqualsIncompatibleTypeTest {
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("EqualsIncompatibleTypeNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void testPrimitiveBoxingIntoObject() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void something(boolean b, Object o) {",
+            "     o.equals(b);",
+            "  }",
+            "}")
+        .setArgs(Arrays.asList("-source", "1.6", "-target", "1.6"))
+        .doTest();
   }
 }

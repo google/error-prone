@@ -99,7 +99,10 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     }
 
     // If one type can be cast into the other, we don't flag the equality test.
-    if (ASTHelpers.isCastable(receiverType, argumentType, state)) {
+    // Note: we do this precisely in this order to allow primitive values to be checked pre-1.7:
+    // 1.6: java.lang.Object can't be cast to primitives
+    // 1.7: java.lang.Object can be cast to primitives (implicitly through the boxed primitive type)
+    if (ASTHelpers.isCastable(argumentType, receiverType, state)) {
       return Description.NO_MATCH;
     }
 
