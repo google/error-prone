@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.Objects.requireNonNull;
 
 import com.sun.source.tree.AssertTree;
@@ -32,9 +33,11 @@ import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.LabeledStatementTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
@@ -45,6 +48,7 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.HashSet;
 import java.util.List;
@@ -54,7 +58,11 @@ import java.util.Set;
 /** An implementation of JLS 14.21 reachability. */
 public class Reachability {
 
-  /** Returns true if the given statement can complete normally, as defined by JLS 14.21. */
+  /**
+   * Returns true if the given statement can complete normally, as defined by JLS 14.21.
+   *
+   * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
+   */
   public static boolean canCompleteNormally(StatementTree statement) {
     return statement.accept(new CanCompleteNormallyVisitor(), null);
   }
@@ -129,7 +137,24 @@ public class Reachability {
     /* An expression statement can complete normally iff it is reachable. */
     @Override
     public Boolean visitExpressionStatement(ExpressionStatementTree tree, Void unused) {
+      if (isSystemExit(tree.getExpression())) {
+        // The spec doesn't have any special handling for {@code System.exit}, but in practice it
+        // cannot complete normally
+        return false;
+      }
       return true;
+    }
+
+    private boolean isSystemExit(ExpressionTree expression) {
+      if (!(expression instanceof MethodInvocationTree)) {
+        return false;
+      }
+      MethodSymbol sym = getSymbol((MethodInvocationTree) expression);
+      if (sym == null) {
+        return false;
+      }
+      return sym.owner.getQualifiedName().contentEquals("java.lang.System")
+          && sym.getSimpleName().contentEquals("exit");
     }
 
     /*
