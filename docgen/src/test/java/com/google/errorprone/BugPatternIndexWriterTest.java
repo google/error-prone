@@ -112,7 +112,7 @@ public class BugPatternIndexWriterTest {
         .isEqualTo(
             "---\n"
                 + "title: Bug Patterns\n"
-                + "layout: master\n"
+                + "layout: bugpatterns\n"
                 + "---\n\n\n"
                 + "# Bug patterns\n"
                 + "\n"

@@ -104,7 +104,7 @@ public class BugPatternIndexWriter {
       Map<String, String> frontmatterData =
           ImmutableMap.<String, String>builder()
               .put("title", "Bug Patterns")
-              .put("layout", "master")
+              .put("layout", "bugpatterns")
               .build();
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
