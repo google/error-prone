@@ -40,8 +40,9 @@ import javax.lang.model.element.ElementKind;
   name = "MissingDefault",
   category = JDK,
   summary =
-      "The Google Java Style Guide requires each switch statement includes a default statement"
-          + " group, even if it contains no code.",
+      "The Google Java Style Guide requires that each switch statement includes a default statement"
+          + " group, even if it contains no code. (This requirement is lifted for any switch"
+          + " statement that covers all values of an enum.)",
   severity = WARNING
 )
 public class MissingDefault extends BugChecker implements SwitchTreeMatcher {

@@ -1,8 +1,13 @@
 The [Google Java Style Guide §4.8.4.3][style] requires each switch statement to
-includes a `default` statement group, even if it contains no code. Without it,
-the reader does not always know whether execution might silently "fall out" of
-the entire block, having executed no code within it. This is undesirable for
-most of the same reasons silent fall-through is undesirable.
+includes a `default` statement group, even if it contains no code.
+
+NOTE: A switch statement for an `enum` type may omit the `default` statement
+group, if it includes explicit cases covering all possible values of that type.
+See [MissingCasesInEnumSwitch] for more information.
+
+Without a default, the reader does not always know whether execution might
+silently "fall out" of the entire block, having executed no code within it. This
+is undesirable for most of the same reasons silent fall-through is undesirable.
 
 If the unhandled cases should be impossible, add a `default` clause that throws
 `AssertionError`:
@@ -33,3 +38,5 @@ switch (state) {
 ```
 
 [style]: https://google.github.io/styleguide/javaguide.html#s4.8.4-switch
+
+[MissingCasesInEnumSwitch]: http://errorprone.info/bugpattern/MissingCasesInEnumSwitch

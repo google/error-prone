@@ -25,16 +25,12 @@ import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Description.Builder;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeInfo;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
@@ -42,7 +38,7 @@ import javax.lang.model.element.ElementKind;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "MissingCasesInEnumSwitch",
-  summary = "The Google Java Style Guide requires switch statements to have an explicit default",
+  summary = "Switches on enum types should either handle all values, or have a default case.",
   category = JDK,
   severity = ERROR
 )
@@ -71,32 +67,7 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
     if (unhandled.isEmpty()) {
       return Description.NO_MATCH;
     }
-    Description.Builder description = buildDescription(tree).setMessage(buildMessage(unhandled));
-    buildFixes(tree, state, unhandled, description);
-    return description.build();
-  }
-
-  private void buildFixes(
-      SwitchTree tree, VisitorState state, Set<String> unhandled, Builder description) {
-
-    int idx = state.getEndPosition(tree) - 1; // preserve closing '}'
-
-    StringBuilder sb = new StringBuilder();
-    for (String label : unhandled) {
-      sb.append(String.format("case %s: ", label));
-    }
-    sb.append("break;\n");
-    description.addFix(SuggestedFix.replace(idx, idx, sb.toString()));
-
-    description.addFix(
-        SuggestedFix.replace(
-            idx,
-            idx,
-            String.format(
-                "default: throw new AssertionError(\"unexpected case: \" + %s);\n",
-                state.getSourceForNode(TreeInfo.skipParens((JCTree) tree.getExpression())))));
-
-    description.addFix(SuggestedFix.replace(idx, idx, "default: break;\n"));
+    return buildDescription(tree).setMessage(buildMessage(unhandled)).build();
   }
 
   /**
@@ -110,7 +81,9 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
    * </ul>
    */
   private String buildMessage(Set<String> unhandled) {
-    StringBuilder message = new StringBuilder("Non-exhaustive switch, expected cases for: ");
+    StringBuilder message =
+        new StringBuilder(
+            "Non-exhaustive switch; either add a default or handle the remaining cases: ");
     int numberToShow =
         unhandled.size() > MAX_CASES_TO_PRINT
             ? 3 // if there are too many to print, only show three examples.
