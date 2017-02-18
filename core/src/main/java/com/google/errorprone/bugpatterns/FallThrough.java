@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -29,6 +30,7 @@ import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Reachability;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.regex.Pattern;
@@ -63,17 +65,18 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
       // reported an error if that statement wasn't reachable, and the answer is
       // independent of any preceding statements.
       boolean completes = Reachability.canCompleteNormally(getLast(caseTree.stats));
+      int caseEndPosition = caseEndPosition(state, caseTree);
       String comments =
           state
               .getSourceCode()
-              .subSequence(state.getEndPosition(caseTree), next.getStartPosition())
+              .subSequence(caseEndPosition, next.getStartPosition())
               .toString()
               .trim();
       if (completes && !FALL_THROUGH_PATTERN.matcher(comments).find()) {
         state.reportMatch(describeMatch(next, SuggestedFix.prefixWith(next, "// fall through\n")));
       } else if (!completes && FALL_THROUGH_PATTERN.matcher(comments).find()) {
         SuggestedFix deleteFallThroughComment =
-            SuggestedFix.replace(state.getEndPosition(caseTree), next.getStartPosition(), "\n");
+            SuggestedFix.replace(caseEndPosition, next.getStartPosition(), "\n");
         state.reportMatch(
             buildDescription(next)
                 .addFix(deleteFallThroughComment)
@@ -82,5 +85,17 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
       }
     }
     return NO_MATCH;
+  }
+
+  private static int caseEndPosition(VisitorState state, JCTree.JCCase caseTree) {
+    // if the statement group is a single block statement, handle fall through comments at the
+    // end of the block
+    if (caseTree.stats.size() == 1) {
+      JCTree.JCStatement only = getOnlyElement(caseTree.stats);
+      if (only.hasTag(JCTree.Tag.BLOCK)) {
+        return state.getEndPosition(getLast(((BlockTree) only).getStatements()));
+      }
+    }
+    return state.getEndPosition(caseTree);
   }
 }

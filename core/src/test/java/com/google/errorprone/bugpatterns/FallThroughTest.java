@@ -91,4 +91,24 @@ public class FallThroughTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void commentInBlock() throws IOException {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(int x) {",
+            "    switch (x) {",
+            "      case 1: {",
+            "        System.err.println();",
+            "        // fall through",
+            "      }",
+            "      case 2:",
+            "        break;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
