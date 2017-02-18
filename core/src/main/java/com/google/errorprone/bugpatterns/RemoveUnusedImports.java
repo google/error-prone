@@ -56,7 +56,8 @@ import javax.annotation.Nullable;
   summary = "Unused imports",
   explanation = "This import is unused.",
   category = JDK,
-  severity = SUGGESTION
+  severity = SUGGESTION,
+  documentSuppression = false
 )
 public final class RemoveUnusedImports extends BugChecker implements CompilationUnitTreeMatcher {
   @Override

@@ -36,7 +36,8 @@ import com.sun.source.tree.ImportTree;
   name = "NonCanonicalStaticMemberImport",
   summary = "Static import of member uses non-canonical name",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  documentSuppression = false
 )
 public class NonCanonicalStaticMemberImport extends BugChecker implements ImportTreeMatcher {
 
