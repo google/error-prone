@@ -51,5 +51,3 @@ class Two extends One {}
 An import of `CONST` should always refer to it using the canonical name
 `a.One.CONST`, not `a.Two.CONST`.
 
-## Suppression
-Suppress false positives by adding an `@SuppressWarnings("NonCanonicalStaticMemberImport")` annotation to the enclosing element.

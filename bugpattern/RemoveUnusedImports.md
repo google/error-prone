@@ -14,5 +14,3 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 ## The problem
 This import is unused.
 
-## Suppression
-Suppress false positives by adding an `@SuppressWarnings("RemoveUnusedImports")` annotation to the enclosing element.

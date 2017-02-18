@@ -52,5 +52,3 @@ public class D {
 }
 ```
 
-## Suppression
-Suppress false positives by adding an `@SuppressWarnings("WildcardImport")` annotation to the enclosing element.

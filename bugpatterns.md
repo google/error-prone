@@ -1,6 +1,6 @@
 ---
 title: Bug Patterns
-layout: bugpatterns
+layout: master
 ---
 
 
@@ -415,6 +415,9 @@ Comparison using reference equality instead of value equality
 __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
+__[SimpleDateFormatConstant](bugpattern/SimpleDateFormatConstant)__<br>
+SimpleDateFormat is not thread-safe, and should not be used as a constant field.
+
 __[StaticGuardedByInstance](bugpattern/StaticGuardedByInstance)__<br>
 Writes to static fields should not be guarded by instance locks
 
@@ -423,6 +426,9 @@ Synchronizing on non-final fields is not safe: if the field is ever updated, dif
 
 __[TruthConstantAsserts](bugpattern/TruthConstantAsserts)__<br>
 Truth Library assert is called on a constant.
+
+__[TypeParameterShadowing](bugpattern/TypeParameterShadowing)__<br>
+Type parameter declaration overrides another type parameter already declared
 
 __[TypeParameterUnusedInFormals](bugpattern/TypeParameterUnusedInFormals)__<br>
 Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution.
