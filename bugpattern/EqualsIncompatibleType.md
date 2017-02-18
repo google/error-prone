@@ -215,6 +215,11 @@ public class EqualsIncompatibleTypeNegativeCases {
     b3.equals(null);
   }
 
+  void checks(Object o, boolean[] bools, boolean bool) {
+    o.equals(bool);
+    o.equals(bools[0]);
+  }
+
   void checkStaticEquals(A a, B1 b1, B2 b2, B3 b3) {
     java.util.Objects.equals(a, a);
     java.util.Objects.equals(a, b1);

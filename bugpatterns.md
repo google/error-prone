@@ -68,6 +68,9 @@ Dagger @Provides methods may not return null unless annotated with @Nullable
 __[DeadException](bugpattern/DeadException)__<br>
 Exception created but not thrown
 
+__[DoNotCall](bugpattern/DoNotCall)__<br>
+This method should not be called.
+
 __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 == NaN always returns false; use the isNaN methods instead
 
@@ -177,7 +180,7 @@ __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in `android.R.string` have names that do not match their content
 
 __[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
-The Google Java Style Guide requires switch statements to have an explicit default
+Switches on enum types should either handle all values, or have a default case.
 
 __[MisusedWeekYear](bugpattern/MisusedWeekYear)__<br>
 Use of &quot;YYYY&quot; (week year) in a date pattern without &quot;ww&quot; (week in year). You probably meant to use &quot;yyyy&quot; (year) instead.
@@ -552,7 +555,7 @@ __[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
 Hardcoded reference to /sdcard
 
 __[MissingDefault](bugpattern/MissingDefault)__<br>
-The Google Java Style Guide requires each switch statement includes a default statement group, even if it contains no code.
+The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name

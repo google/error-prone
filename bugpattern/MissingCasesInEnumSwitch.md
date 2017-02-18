@@ -1,6 +1,6 @@
 ---
 title: MissingCasesInEnumSwitch
-summary: The Google Java Style Guide requires switch statements to have an explicit default
+summary: Switches on enum types should either handle all values, or have a default case.
 layout: bugpattern
 category: JDK
 severity: ERROR
