@@ -20,7 +20,7 @@ The author's intent isn't clear. There are three possibilities:
 
 2.  The code intentionally 'falls out' of the switch on the default case, and
     execution continues below. This could be made clear by adding: \
-    `default: // intentionally continue below`
+    `default: // fall out`
 
 3.  The code has a bug, and the missing cases should have been handled.
 
