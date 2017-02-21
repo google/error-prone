@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 
 import com.google.common.base.Predicate;
@@ -33,6 +34,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -68,6 +70,13 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
       allOf(
           instanceMethod().anyClass().named("equals").withParameters("java.lang.Object"),
           isSameType(BOOLEAN_TYPE));
+
+  private static final Matcher<Tree> ASSERT_FALSE_MATCHER =
+      toType(
+          MethodInvocationTree.class,
+          anyOf(
+              instanceMethod().anyClass().named("assertFalse"),
+              staticMethod().anyClass().named("assertFalse")));
 
   @Override
   public Description matchMethodInvocation(
@@ -137,6 +146,12 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
         // with the receiver that implements an override of java.lang.Object.equals().
         return Description.NO_MATCH;
       }
+    }
+
+    // Ignore callsites wrapped inside assertFalse:
+    // assertFalse(objOfReceiverType.equals(objOfArgumentType))
+    if (ASSERT_FALSE_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)) {
+      return Description.NO_MATCH;
     }
 
     // When we reach this point, we know that the two following facts hold:
