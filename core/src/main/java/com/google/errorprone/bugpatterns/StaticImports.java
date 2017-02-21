@@ -196,8 +196,6 @@ final class StaticImports {
         continue;
       }
       switch ((int) (member.flags() & Flags.AccessFlags)) {
-        case Flags.PUBLIC:
-          break;
         case Flags.PRIVATE:
           continue OUTER;
         case 0:
@@ -205,6 +203,8 @@ final class StaticImports {
           if (member.packge() != pkg) {
             continue OUTER;
           }
+          break;
+        case Flags.PUBLIC:
         default:
           break;
       }

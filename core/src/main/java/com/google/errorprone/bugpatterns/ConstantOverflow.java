@@ -158,6 +158,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
                   || (lhs instanceof Integer && lhs.intValue() == Integer.MAX_VALUE)) {
                 return null;
               }
+              break;
             default:
               break;
           }
