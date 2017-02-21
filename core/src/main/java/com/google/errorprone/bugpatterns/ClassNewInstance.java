@@ -60,7 +60,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
   name = "ClassNewInstance",
   category = JDK,
   summary =
-      "Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()",
+      "Class.newInstance() bypasses exception checking; prefer"
+          + " getDeclaredConstructor().newInstance()",
   severity = WARNING
 )
 public class ClassNewInstance extends BugChecker implements MethodInvocationTreeMatcher {
@@ -77,7 +78,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     fix.replace(
         state.getEndPosition(ASTHelpers.getReceiver(tree)),
         state.getEndPosition(tree),
-        String.format(".getConstructor().newInstance()"));
+        String.format(".getDeclaredConstructor().newInstance()"));
     boolean fixedExceptions = fixExceptions(state, fix);
     if (!fixedExceptions) {
       fixThrows(state, fix);

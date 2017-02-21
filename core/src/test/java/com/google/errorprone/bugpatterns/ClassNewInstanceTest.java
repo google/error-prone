@@ -54,7 +54,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (InstantiationException e1) {",
             "      e1.printStackTrace();",
             "    } catch (IllegalAccessException e2) {",
@@ -87,7 +87,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (InstantiationException e) {",
             "    } catch (ReflectiveOperationException e) {",
             "      // ¯\\_(ツ)_/¯",
@@ -118,7 +118,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (ReflectiveOperationException e) {",
             "      e.printStackTrace();",
             "    }",
@@ -146,7 +146,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (ReflectiveOperationException e0) {",
             "      e0.printStackTrace();",
             "    }",
@@ -174,7 +174,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (ReflectiveOperationException e) {",
             "      e.printStackTrace();",
             "    }",
@@ -197,7 +197,7 @@ public class ClassNewInstanceTest {
             "out/Test.java",
             "class Test {",
             "  void f() throws Exception {",
-            "    getClass().getConstructor().newInstance();",
+            "    getClass().getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .doTest();
@@ -217,7 +217,7 @@ public class ClassNewInstanceTest {
             "out/Test.java",
             "class Test {",
             "  void f() throws ReflectiveOperationException {",
-            "    getClass().getConstructor().newInstance();",
+            "    getClass().getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .doTest();
@@ -241,7 +241,7 @@ public class ClassNewInstanceTest {
             "      throws InstantiationException, IllegalAccessException,"
                 + " InvocationTargetException,",
             "          NoSuchMethodException {",
-            "    getClass().getConstructor().newInstance();",
+            "    getClass().getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .doTest();
@@ -254,7 +254,7 @@ public class ClassNewInstanceTest {
             "in/Test.java",
             "class Test {",
             "  void f() throws Exception {",
-            "    getClass().getConstructor().newInstance();",
+            "    getClass().getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .expectUnchanged()
@@ -280,7 +280,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() throws IOException {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (ReflectiveOperationException e) {}",
             "  }",
             "}")
@@ -294,7 +294,7 @@ public class ClassNewInstanceTest {
             "Test.java",
             "class Test {",
             "  void f() throws Exception {",
-            "    getClass().getConstructor().newInstance();",
+            "    getClass().getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .expectUnchanged()
@@ -322,7 +322,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (ReflectiveOperationException e) {",
             "      // uh oh",
             "    }",
@@ -345,8 +345,8 @@ public class ClassNewInstanceTest {
             "out/Test.java",
             "class Test {",
             "  void f() throws Exception {",
-            "    getClass().getConstructor().newInstance().getClass().getConstructor()"
-                + ".newInstance();",
+            "    getClass().getDeclaredConstructor().newInstance()"
+                + ".getClass().getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .doTest();
@@ -371,9 +371,9 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() throws Exception {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (ReflectiveOperationException e) {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    }",
             "  }",
             "}")
@@ -397,7 +397,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() throws Exception {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } finally {}",
             "  }",
             "}")
@@ -429,11 +429,11 @@ public class ClassNewInstanceTest {
                 + " InvocationTargetException,",
             "          NoSuchMethodException {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (InstantiationException e) {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (ReflectiveOperationException e) {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    }",
             "  }",
             "}")
@@ -466,7 +466,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  Object f() {",
             "    try {",
-            "      return getClass().getConstructor().newInstance();",
+            "      return getClass().getDeclaredConstructor().newInstance();",
             "    } catch (ReflectiveOperationException ex) {",
             "      // Suppress exception.",
             "    } catch (ExceptionInInitializerError ex) {",
@@ -503,9 +503,9 @@ public class ClassNewInstanceTest {
                 + " InvocationTargetException,",
             "          NoSuchMethodException {",
             "    try {",
-            "      return getClass().getConstructor().newInstance();",
+            "      return getClass().getDeclaredConstructor().newInstance();",
             "    } catch (ReflectiveOperationException ex) {",
-            "      return getClass().getConstructor().newInstance();",
+            "      return getClass().getDeclaredConstructor().newInstance();",
             "    }",
             "  }",
             "}")
@@ -533,7 +533,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f() {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (InstantiationException e) {",
             "      // InstantiationException",
             "    } catch (ReflectiveOperationException | NullPointerException e) {",
@@ -565,7 +565,7 @@ public class ClassNewInstanceTest {
             "class Test {",
             "  void f(Exception e) {",
             "    try {",
-            "      getClass().getConstructor().newInstance();",
+            "      getClass().getDeclaredConstructor().newInstance();",
             "    } catch (InstantiationException e1) {",
             "      // one",
             "    } catch (IllegalAccessException e1) {",
