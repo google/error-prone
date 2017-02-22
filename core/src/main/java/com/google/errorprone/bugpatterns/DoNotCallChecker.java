@@ -34,8 +34,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.Collections;
-import java.util.EnumSet;
 import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -55,14 +53,19 @@ public class DoNotCallChecker extends BugChecker
       return NO_MATCH;
     }
     if (hasAnnotation(tree, DoNotCall.class, state)) {
-      if (Collections.disjoint(
-          symbol.getModifiers(), EnumSet.of(Modifier.FINAL, Modifier.ABSTRACT))) {
+      if (symbol.getModifiers().contains(Modifier.ABSTRACT)) {
+        return NO_MATCH;
+      }
+      if (symbol.getModifiers().contains(Modifier.FINAL)) {
+        return NO_MATCH;
+      }
+      if (symbol.owner.enclClass().getModifiers().contains(Modifier.FINAL)) {
+        return NO_MATCH;
+      }
         return buildDescription(tree)
             .setMessage("Methods annotated with @DoNotCall should be final.")
             .addFix(SuggestedFixes.addModifiers(tree, state, Modifier.FINAL))
             .build();
-      }
-      return NO_MATCH;
     }
     return findSuperMethods(symbol, state.getTypes())
         .stream()

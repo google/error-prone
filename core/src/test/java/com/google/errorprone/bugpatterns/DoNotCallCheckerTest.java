@@ -130,4 +130,16 @@ public class DoNotCallCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void finalClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "public final class Test {",
+            "  @DoNotCall public void f() {}",
+            "}")
+        .doTest();
+  }
 }
