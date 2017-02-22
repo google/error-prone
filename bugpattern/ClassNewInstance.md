@@ -1,6 +1,6 @@
 ---
 title: ClassNewInstance
-summary: Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
+summary: Class.newInstance() bypasses exception checking; prefer getDeclaredConstructor().newInstance()
 layout: bugpattern
 category: JDK
 severity: WARNING

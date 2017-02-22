@@ -176,6 +176,9 @@ Abstract and default methods are not injectable with javax.inject.Inject
 __[LiteByteStringUtf8](bugpattern/LiteByteStringUtf8)__<br>
 This pattern will silently corrupt certain byte sequences from the serialized protocol message. Use ByteString or byte[] directly
 
+__[LoopConditionChecker](bugpattern/LoopConditionChecker)__<br>
+Loop condition is never modified in loop body.
+
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in `android.R.string` have names that do not match their content
 
@@ -314,7 +317,7 @@ __[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
 Inner class is non-static but does not reference enclosing class
 
 __[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
-Class.newInstance() bypasses exception checking; prefer getConstructor().newInstance()
+Class.newInstance() bypasses exception checking; prefer getDeclaredConstructor().newInstance()
 
 __[DefaultCharset](bugpattern/DefaultCharset)__<br>
 Implicit use of the platform default charset, which can result in e.g. non-ASCII characters being silently replaced with &#39;?&#39; in many environments
@@ -378,6 +381,9 @@ Not calling fail() when expecting an exception masks bugs
 
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
+
+__[MutableConstantField](bugpattern/MutableConstantField)__<br>
+Field is constant (named CONSTANT_CASE), but field type is mutable
 
 __[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
 Compound assignments to bytes, shorts, chars, and floats hide dangerous casts

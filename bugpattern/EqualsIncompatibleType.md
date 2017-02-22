@@ -220,6 +220,10 @@ public class EqualsIncompatibleTypeNegativeCases {
     o.equals(bools[0]);
   }
 
+  void checkJUnit(B1 b1, B2 b2) {
+    org.junit.Assert.assertFalse(b1.equals(b2));
+  }
+
   void checkStaticEquals(A a, B1 b1, B2 b2, B3 b3) {
     java.util.Objects.equals(a, a);
     java.util.Objects.equals(a, b1);
