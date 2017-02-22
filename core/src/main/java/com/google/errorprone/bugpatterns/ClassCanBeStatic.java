@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -42,7 +43,6 @@ import javax.lang.model.element.NestingKind;
           + " of its enclosing class. An inner class that is made non-static unnecessarily"
           + " uses more memory and does not make the intent of the class clear.",
   category = JDK,
-  
   severity = WARNING
 )
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
@@ -51,22 +51,32 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
   public Description matchClass(final ClassTree tree, final VisitorState state) {
     final ClassSymbol currentClass = ASTHelpers.getSymbol(tree);
     if (currentClass == null || !currentClass.hasOuterInstance()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     if (currentClass.getNestingKind() != NestingKind.MEMBER) {
       // local or anonymous classes can't be static
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
-    if (currentClass.owner.enclClass().hasOuterInstance()) {
-      // class is nested inside an inner class, so it can't be static
-      return Description.NO_MATCH;
+    switch (currentClass.owner.enclClass().getNestingKind()) {
+      case TOP_LEVEL:
+        break;
+      case MEMBER:
+        // class is nested inside an inner class, so it can't be static
+        if (currentClass.owner.enclClass().hasOuterInstance()) {
+          return NO_MATCH;
+        }
+        break;
+      case LOCAL:
+      case ANONYMOUS:
+        // members of local and anonymous classes can't be static
+        return NO_MATCH;
     }
     if (tree.getExtendsClause() != null
         && ASTHelpers.getType(tree.getExtendsClause()).tsym.hasOuterInstance()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     if (CanBeStaticAnalyzer.referencesOuter(tree, currentClass, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return describeMatch(tree, SuggestedFixes.addModifiers(tree, state, Modifier.STATIC));
   }

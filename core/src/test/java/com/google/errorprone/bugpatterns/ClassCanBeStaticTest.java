@@ -309,4 +309,36 @@ public class ClassCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nestedInAnonymous() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  static Runnable r =",
+            "    new Runnable() {",
+            "      class Inner {",
+            "      }",
+            "      public void run() {}",
+            "    };",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nestedInLocal() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  static void f() {",
+            "    class Outer {",
+            "      class Inner {",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
