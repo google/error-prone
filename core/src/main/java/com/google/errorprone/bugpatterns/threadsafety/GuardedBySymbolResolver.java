@@ -23,9 +23,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -34,7 +32,6 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -95,16 +92,11 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     // TODO(cushon): consider disallowing this? It's the only case where the lock description
     // isn't legal java.
     if (name.equals("itself")) {
-      if (decl instanceof VariableTree) {
-        name = ((VariableTree) decl).getName().toString();
-      } else if (decl instanceof MethodTree) {
-        name = ((MethodTree) decl).getName().toString();
-      } else if (decl instanceof JCIdent) {
-        name = ((JCIdent) decl).getName().toString();
-      } else {
+      Symbol sym = ASTHelpers.getSymbol(decl);
+      if (sym == null) {
         throw new IllegalGuardedBy(decl.getClass().toString());
       }
-      return getField(enclosingClass, name);
+      return sym;
     }
 
     Symbol.VarSymbol field = getField(enclosingClass, name);

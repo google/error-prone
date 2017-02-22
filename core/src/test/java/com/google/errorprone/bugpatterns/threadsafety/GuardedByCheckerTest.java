@@ -293,6 +293,30 @@ public class GuardedByCheckerTest {
   }
 
   @Test
+  public void i541() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import java.util.List;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Itself {",
+            "  @GuardedBy(\"itself\")",
+            "  List<String> xs;",
+            "  void f() {",
+            "    // BUG: Diagnostic contains:",
+            "    // should be guarded by 'this.xs'",
+            "    this.xs.add(\"\");",
+            "    synchronized (this.xs) { this.xs.add(\"\"); }",
+            "    synchronized (this.xs) { xs.add(\"\"); }",
+            "    synchronized (xs) { this.xs.add(\"\"); }",
+            "    synchronized (xs) { xs.add(\"\"); }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testCtor() throws Exception {
     compilationHelper
         .addSourceLines(
