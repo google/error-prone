@@ -44,7 +44,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
 
 @BugPattern(
@@ -180,13 +179,20 @@ public class TypeParameterShadowing extends BugChecker
 
   private static List<TypeVariableSymbol> typeVariablesEnclosing(Symbol sym) {
     List<TypeVariableSymbol> typeVarScopes = new ArrayList<>();
+    outer:
     while (!sym.isStatic()) {
       sym = sym.owner;
-      if (sym.getKind() == ElementKind.PACKAGE) {
-        break;
+      switch (sym.getKind()) {
+        case PACKAGE:
+          break outer;
+        case METHOD:
+        case CLASS:
+          typeVarScopes.addAll(sym.getTypeParameters());
+          break;
+        default: // fall out
       }
-      typeVarScopes.addAll(sym.getTypeParameters());
     }
     return typeVarScopes;
   }
+
 }

@@ -288,4 +288,28 @@ public class TypeParameterShadowingTest {
             "  }",
             "}");
   }
+
+  // don't try to read type parameters off the enclosing local variable declaration
+  @Test
+  public void symbolWithoutTypeParameters() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "package foo.bar;",
+            "import java.util.Map;",
+            "import java.util.Comparator;",
+            "class Test {",
+            "  static Comparator<Map.Entry<Integer, String>> ENTRY_COMPARATOR =",
+            "    new Comparator<Map.Entry<Integer, String>>() {",
+            "      public int compare(",
+            "          Map.Entry<Integer, String> o1, Map.Entry<Integer, String> o2) {",
+            "        return 0;",
+            "      }",
+            "      private <T extends Comparable> int c(T o1, T o2) {",
+            "        return 0;",
+            "      }",
+            "    };",
+            "}")
+        .doTest();
+  }
 }
