@@ -144,6 +144,7 @@ import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SelfComparison;
 import com.google.errorprone.bugpatterns.SelfEquality;
 import com.google.errorprone.bugpatterns.SelfEquals;
+import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.SimpleDateFormatConstant;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
 import com.google.errorprone.bugpatterns.StaticAccessedFromInstance;
@@ -402,6 +403,7 @@ public class BuiltInCheckerSuppliers {
           ProtoFieldPreconditionsCheckNotNull.class,
           ReferenceEquality.class,
           RequiredModifiersChecker.class,
+          ShortCircuitBoolean.class,
           SimpleDateFormatConstant.class,
           StaticGuardedByInstance.class,
           SynchronizeOnNonFinalField.class,
