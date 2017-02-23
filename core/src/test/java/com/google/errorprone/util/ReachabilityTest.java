@@ -308,8 +308,10 @@ public class ReachabilityTest {
         "System.exit(1);", //
       },
       {
-        "System.exit(1);", //
-        "throw new AssertionError();",
+        "{", //
+        "  System.exit(1);",
+        "  throw new AssertionError();",
+        "}",
       },
     };
     return Arrays.stream(parameters).map(x -> new Object[] {x}).collect(toList());
