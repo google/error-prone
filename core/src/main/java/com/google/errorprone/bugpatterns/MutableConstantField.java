@@ -41,7 +41,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
   name = "MutableConstantField",
   category = JDK,
-  summary = "Field is constant (named CONSTANT_CASE), but field type is mutable",
+  summary = "Field is constant (named CONSTANT_CASE), but field's declared type is mutable",
   severity = WARNING
 )
 public final class MutableConstantField extends BugChecker implements VariableTreeMatcher {
