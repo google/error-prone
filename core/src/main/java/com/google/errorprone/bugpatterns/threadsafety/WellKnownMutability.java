@@ -128,6 +128,7 @@ final class WellKnownMutability {
         .add(java.lang.String.class)
         .add(java.lang.annotation.Annotation.class)
         .add(java.math.BigDecimal.class)
+        .add(java.math.BigInteger.class)
         .add(java.net.InetAddress.class)
         .add(java.util.Locale.class)
         .add(java.util.regex.Pattern.class)
