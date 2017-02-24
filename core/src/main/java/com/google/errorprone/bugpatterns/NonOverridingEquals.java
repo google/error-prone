@@ -109,9 +109,11 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
     // this is a type-specific helper method and give advice to either inline it or rename it.
     if (enclosingClassOverridesEquals.matches(methodTree, state)) {
       return buildDescription(methodTree)
-          .setMessage(MESSAGE_BASE + "; if this is a type-specific helper for a method that does "
-              + "override Object.equals, either inline it into the callers or rename it to avoid "
-              + "ambiguity in overload resolution")
+          .setMessage(
+              MESSAGE_BASE
+                  + "; if this is a type-specific helper for a method that does"
+                  + " override Object.equals, either inline it into the callers or rename it to"
+                  + " avoid ambiguity")
           .build();
     }
 
