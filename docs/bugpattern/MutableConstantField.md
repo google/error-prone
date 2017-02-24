@@ -1,8 +1,34 @@
-The [Google Java Style Guide §5.2.4][style] requires every constant to be named
-`CONSTANT_CASE` and defines it by an object which is deeply immutable and whose
-methods have no detectable side effects. If you've initialized a constant with
-an immutable type, e.g. `ImmutableList`, then its type should be `ImmutableList`
-as well and not `List`, as immutability is not an implementation detail (like
-`ArrayList`) but semantics.
+For constant field declarations, you should use the immutable type (such as
+`ImmutableList`) instead of the general collection interface type (such as
+`List`). This communicates to your callers important [semantic
+guarantees][javadoc].
 
-[style]: https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names
+This is consistent with [Effective Java Item 52][ej52], which says to refer to
+objects by their interfaces. Guava's immutable collection classes offer
+meaningful behavioral guarantees -- they are not merely a specific
+implementation as in the case of, say, `ArrayList`. They should be treated as
+interfaces in every important sense of the word.
+
+That is, prefer this:
+
+```java
+static final ImmutableList<String> COUNTRIES =
+    ImmutableList.of("Denmark", "Norway", "Sweden");
+```
+
+to this:
+
+```java
+static final List<String> COUNTRIES =
+    ImmutableList.of("Denmark", "Norway", "Sweden");
+```
+
+TIP: Using the immutable type for the field declaration allows Error Prone to
+prevent accidental attempts to modify the collection at compile-time (see
+[`ImmutableModification`]).
+
+[`ImmutableModification`]: https:errorprone.info/bugpattern/ImmutableModification
+
+[ej52]: https://books.google.com/books?id=ka2VUBqHiWkC
+
+[javadoc]: https://google.github.io/guava/releases/21.0/api/docs/com/google/common/collect/ImmutableCollection.html

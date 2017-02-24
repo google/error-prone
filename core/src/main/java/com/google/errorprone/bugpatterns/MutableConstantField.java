@@ -41,7 +41,9 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
   name = "MutableConstantField",
   category = JDK,
-  summary = "Field is constant (named CONSTANT_CASE), but field's declared type is mutable",
+  summary =
+      "Constant field declarations should use the immutable type (such as ImmutableList) instead of"
+          + " the general collection interface type (such as List)",
   severity = WARNING
 )
 public final class MutableConstantField extends BugChecker implements VariableTreeMatcher {
