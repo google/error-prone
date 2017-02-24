@@ -89,15 +89,19 @@ public class Reachability {
     /* A break statement cannot complete normally. */
     @Override
     public Boolean visitBreak(BreakTree tree, Void unused) {
-      breaks.add(requireNonNull(((JCTree.JCBreak) tree).target));
+      breaks.add(skipLabel(requireNonNull(((JCTree.JCBreak) tree).target)));
       return false;
     }
 
     /* A continue statement cannot complete normally. */
     @Override
     public Boolean visitContinue(ContinueTree tree, Void unused) {
-      continues.add(requireNonNull(((JCTree.JCContinue) tree).target));
+      continues.add(skipLabel(requireNonNull(((JCTree.JCContinue) tree).target)));
       return false;
+    }
+
+    private Tree skipLabel(JCTree tree) {
+      return tree.hasTag(JCTree.Tag.LABELLED) ? ((JCTree.JCLabeledStatement) tree).body : tree;
     }
 
     @Override

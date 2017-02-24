@@ -313,6 +313,14 @@ public class ReachabilityTest {
         "  throw new AssertionError();",
         "}",
       },
+      {
+        "l:", //
+        "do {",
+        "  break l;",
+        "} while (true);",
+        "System.err.println();",
+        "// BUG: Diagnostic contains:",
+      },
     };
     return Arrays.stream(parameters).map(x -> new Object[] {x}).collect(toList());
   }
