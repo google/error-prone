@@ -424,6 +424,9 @@ Comparison using reference equality instead of value equality
 __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
+__[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
+Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
+
 __[SimpleDateFormatConstant](bugpattern/SimpleDateFormatConstant)__<br>
 SimpleDateFormat is not thread-safe, and should not be used as a constant field.
 
