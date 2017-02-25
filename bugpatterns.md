@@ -143,9 +143,6 @@ This method always recurses, and will cause a StackOverflowError
 __[InjectMoreThanOneScopeAnnotationOnClass](bugpattern/InjectMoreThanOneScopeAnnotationOnClass)__<br>
 A class can be annotated with at most one scope annotation.
 
-__[InsecureCryptoUsage](bugpattern/InsecureCryptoUsage)__<br>
-A standard cryptographic operation is used in a mode that is prone to vulnerabilities
-
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
 
@@ -383,7 +380,7 @@ __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
 
 __[MutableConstantField](bugpattern/MutableConstantField)__<br>
-Field is constant (named CONSTANT_CASE), but field type is mutable
+Constant field declarations should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
 
 __[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
 Compound assignments to bytes, shorts, chars, and floats hide dangerous casts
@@ -497,6 +494,9 @@ Scoping and qualifier annotations must have runtime retention.
 
 __[InjectedConstructorAnnotations](bugpattern/InjectedConstructorAnnotations)__<br>
 Injected constructors cannot be optional nor have binding annotations
+
+__[InsecureCryptoUsage](bugpattern/InsecureCryptoUsage)__<br>
+A standard cryptographic operation is used in a mode that is prone to vulnerabilities
 
 __[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOrRuleAnnotation)__<br>
 jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation
