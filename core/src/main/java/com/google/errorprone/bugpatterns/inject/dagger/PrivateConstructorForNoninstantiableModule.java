@@ -50,7 +50,6 @@ import com.sun.source.tree.Tree;
           + " component.  Adding a private constructor clearly conveys that the module will not be"
           + " used as an instance.",
   category = DAGGER,
-  
   severity = SUGGESTION
 )
 public class PrivateConstructorForNoninstantiableModule extends BugChecker

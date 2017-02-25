@@ -52,7 +52,6 @@ import java.util.Objects;
   category = JDK,
   summary = "String formatting inside print method",
   severity = ERROR,
-  
   linkType = CUSTOM,
   link = "example.com/bugpattern/MyCustomCheck"
 )

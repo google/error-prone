@@ -63,7 +63,6 @@ import com.sun.tools.javac.util.Name;
           + " try-catch block will be ignored. Consider using try-with-resources instead.",
   category = JDK,
   severity = WARNING,
-  
   generateExamplesFromTestCases = false
 )
 public class Finally extends BugChecker
@@ -217,10 +216,8 @@ public class Finally extends BugChecker
     }
   }
 
-  /**
-   * Match throw statements that are not caught.
-   */
-  private class FinallyThrowMatcher extends FinallyCompletionMatcher<ThrowTree> {
+  /** Match throw statements that are not caught. */
+  private static class FinallyThrowMatcher extends FinallyCompletionMatcher<ThrowTree> {
     @Override
     protected MatchResult matchAncestor(Tree tree, Tree prevTree) {
       if (tree instanceof TryTree) {

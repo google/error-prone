@@ -49,7 +49,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
           + "If you believe the `return null` path can never be taken, please throw a "
           + "`RuntimeException` instead. Otherwise, please annotate the method with `@Nullable`.",
   category = DAGGER,
-  
   severity = ERROR
 )
 public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {

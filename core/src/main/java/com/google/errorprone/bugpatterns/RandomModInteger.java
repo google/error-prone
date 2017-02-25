@@ -31,9 +31,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 
-/**
- * @author Louis Wasserman
- */
+/** @author Louis Wasserman */
 @BugPattern(
   name = "RandomModInteger",
   summary = "Use Random.nextInt(int).  Random.nextInt() % n can have negative results",
@@ -46,7 +44,6 @@ import com.sun.source.tree.Tree.Kind;
           + "inclusive, but you must use random.nextInt(n) to get that behavior.  If the original "
           + "behavior is truly desired, use `(random.nextBoolean() ? 1 : -1) * random.nextInt(n)`.",
   severity = SeverityLevel.ERROR,
-  
   category = Category.JDK
 )
 public class RandomModInteger extends BugChecker implements BinaryTreeMatcher {

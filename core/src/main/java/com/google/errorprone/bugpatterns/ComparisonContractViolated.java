@@ -57,9 +57,7 @@ import com.sun.tools.javac.code.Types;
 import java.util.EnumSet;
 import java.util.Set;
 
-/**
- * @author Louis Wasserman
- */
+/** @author Louis Wasserman */
 @BugPattern(
   name = "ComparisonContractViolated",
   summary = "This comparison method violates the contract",
@@ -74,7 +72,6 @@ import java.util.Set;
           + " arbitrarily."
   ,
   severity = SeverityLevel.ERROR,
-
   category = Category.JDK
 )
 public class ComparisonContractViolated extends BugChecker implements MethodTreeMatcher {

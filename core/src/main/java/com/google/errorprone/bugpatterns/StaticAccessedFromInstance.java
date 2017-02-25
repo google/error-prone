@@ -50,7 +50,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
           + "of the object instance on which this variable or method is being invoked.",
   category = JDK,
   severity = WARNING,
-  
   altNames = {"static", "static-access"}
 )
 public class StaticAccessedFromInstance extends BugChecker implements MemberSelectTreeMatcher {

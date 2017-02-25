@@ -52,7 +52,6 @@ import com.sun.source.tree.Tree;
           + " constructors exist, injection frameworks can't reliably choose between them.",
   category = INJECT,
   severity = ERROR,
-  
   altNames = {"inject-constructors", "InjectMultipleAtInjectConstructors"}
 )
 public class MoreThanOneInjectableConstructor extends BugChecker implements AnnotationTreeMatcher {

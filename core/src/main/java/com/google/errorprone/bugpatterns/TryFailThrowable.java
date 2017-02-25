@@ -71,22 +71,23 @@ import java.util.List;
  *   // empty or only comments
  * }
  * </pre>
- * *
- * Matches all static methods named "fail" and starting with "assert" from
- * the following classes:
+ *
+ * * Matches all static methods named "fail" and starting with "assert" from the following classes:
+ *
  * <ul>
- * <li>{@code org.junit.Assert},
- * <li>{@code junit.framework.Assert},
- * <li>{@code junit.framework.TestCase} - which overrides the methods from Assert in order to
- * deprecate them,
- * <li>{@code com.google.testing.util.MoreAsserts} and
- * <li>every class whose name ends with "MoreAsserts".
+ *   <li>{@code org.junit.Assert},
+ *   <li>{@code junit.framework.Assert},
+ *   <li>{@code junit.framework.TestCase} - which overrides the methods from Assert in order to
+ *       deprecate them,
+ *   <li>{@code com.google.testing.util.MoreAsserts} and
+ *   <li>every class whose name ends with "MoreAsserts".
  * </ul>
  *
  * Possible improvements/generalizations of this matcher:
+ *
  * <ul>
- * <li>support multiple catch() blocks
- * <li>support MoreAsserts
+ *   <li>support multiple catch() blocks
+ *   <li>support MoreAsserts
  * </ul>
  *
  * @author adamwos@google.com (Adam Wos)
@@ -108,7 +109,6 @@ import java.util.List;
           + "logic in your catch block to ensure that the AssertionError that was caught is not "
           + "the same one thrown by the call to `fail()` or `assert*()`.",
   category = JUNIT,
-  
   severity = ERROR
 )
 public class TryFailThrowable extends BugChecker implements TryTreeMatcher {

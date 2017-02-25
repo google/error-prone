@@ -41,7 +41,6 @@ import java.util.regex.Pattern;
   name = "FormatString",
   summary = "Invalid printf-style format string",
   category = JDK,
-  
   severity = ERROR
 )
 public class FormatString extends BugChecker implements MethodInvocationTreeMatcher {

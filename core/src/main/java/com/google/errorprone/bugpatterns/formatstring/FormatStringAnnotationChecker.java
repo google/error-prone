@@ -45,7 +45,7 @@ import java.util.List;
   severity = ERROR,
 
   suppressibility = Suppressibility.SUPPRESS_WARNINGS
-  )
+)
 public final class FormatStringAnnotationChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher {
 

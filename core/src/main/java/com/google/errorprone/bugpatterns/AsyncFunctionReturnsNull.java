@@ -32,7 +32,6 @@ import com.google.errorprone.BugPattern;
           + "a Future with an output of null, instead return immediateFuture(null).",
   category = GUAVA,
   severity = ERROR,
-  
   generateExamplesFromTestCases = false
 )
 public final class AsyncFunctionReturnsNull extends AbstractAsyncTypeReturnsNull {

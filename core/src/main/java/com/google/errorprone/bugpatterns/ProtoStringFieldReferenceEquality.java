@@ -36,7 +36,6 @@ import com.sun.source.tree.Tree.Kind;
 
 @BugPattern(
   category = ONE_OFF,
-  
   name = "ProtoStringFieldReferenceEquality",
   severity = ERROR,
   summary = "Comparing protobuf fields of type String using reference equality",
