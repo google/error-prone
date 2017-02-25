@@ -409,7 +409,6 @@ public class BuiltInCheckerSuppliers {
           TruthConstantAsserts.class,
           TypeParameterShadowing.class,
           TypeParameterUnusedInFormals.class,
-          UnnecessaryDefaultInEnumSwitch.class,
           UnsynchronizedOverridesSynchronized.class,
           URLEqualsHashCode.class,
           WaitNotInLoop.class);
@@ -470,6 +469,7 @@ public class BuiltInCheckerSuppliers {
           TestExceptionChecker.class,
           ThrowsUncheckedException.class,
           UnlockMethodChecker.class,
+          UnnecessaryDefaultInEnumSwitch.class,
           UnnecessaryStaticImport.class,
           UseBinds.class,
           VarChecker.class,
