@@ -445,9 +445,6 @@ Declaring a type parameter that is only used in the return type is a misuse of g
 __[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
 Creation of a Set/HashSet/HashMap of java.net.URL. equals() and hashCode() of java.net.URL class make blocking internet connections.
 
-__[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
-Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
-
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
 
@@ -586,6 +583,9 @@ String comparison using reference equality instead of value equality
 
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
+
+__[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
+Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
 
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
