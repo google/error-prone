@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.Arrays;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -56,6 +57,21 @@ public class EqualsIncompatibleTypeTest {
             "  }",
             "}")
         .setArgs(Arrays.asList("-source", "1.6", "-target", "1.6"))
+        .doTest();
+  }
+
+  @Ignore("https://github.com/google/error-prone/issues/547")
+  @Test
+  public void i547() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  interface B {}",
+            "  <T extends B> void t(T x) {",
+            "    x.equals(\"foo\");",
+            "  }",
+            "}")
         .doTest();
   }
 }
