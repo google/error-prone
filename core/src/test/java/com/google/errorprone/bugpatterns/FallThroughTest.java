@@ -111,4 +111,21 @@ public class FallThroughTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void emptyBlock() throws IOException {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(char c, boolean b) {",
+            "    switch (c) {",
+            "      case 'a': {}",
+            "      // fall through",
+            "      default:",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

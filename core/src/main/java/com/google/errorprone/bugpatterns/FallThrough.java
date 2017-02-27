@@ -93,7 +93,10 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
     if (caseTree.stats.size() == 1) {
       JCTree.JCStatement only = getOnlyElement(caseTree.stats);
       if (only.hasTag(JCTree.Tag.BLOCK)) {
-        return state.getEndPosition(getLast(((BlockTree) only).getStatements()));
+        BlockTree blockTree = (BlockTree) only;
+        if (!blockTree.getStatements().isEmpty()) {
+          return state.getEndPosition(getLast(blockTree.getStatements()));
+        }
       }
     }
     return state.getEndPosition(caseTree);
