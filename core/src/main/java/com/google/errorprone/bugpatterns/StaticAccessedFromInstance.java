@@ -43,11 +43,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
   name = "StaticAccessedFromInstance",
-  summary = "A static variable or method should not be accessed from an object instance",
-  explanation =
-      "A static variable or method should never be accessed from an instance.  This "
-          + "hides the fact that the variable or method is static and does not depend on the value "
-          + "of the object instance on which this variable or method is being invoked.",
+  summary = "A static variable or method should be qualified with a class name, not expression",
   category = JDK,
   severity = WARNING,
   altNames = {"static", "static-access"}
