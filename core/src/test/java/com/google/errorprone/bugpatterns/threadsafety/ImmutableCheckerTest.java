@@ -1280,4 +1280,16 @@ public class ImmutableCheckerTest {
             "@Immutable public class Test extends SuperFieldSuppressionTest {}")
         .doTest();
   }
+
+  @Test
+  public void rawClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class Test {",
+            "  final Class clazz = Test.class;",
+            "}")
+        .doTest();
+  }
 }

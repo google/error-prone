@@ -316,7 +316,8 @@ public class ImmutableAnalysis {
    */
   Violation immutableInstantiation(
       ImmutableSet<String> immutableTyParams, ImmutableAnnotationInfo annotation, Type type) {
-    if (type.tsym.getTypeParameters().size() != type.getTypeArguments().size()) {
+    if (!annotation.containerOf().isEmpty()
+        && type.tsym.getTypeParameters().size() != type.getTypeArguments().size()) {
       return Violation.of(
           String.format(
               "'%s' required immutable instantiation of '%s', but was raw",
