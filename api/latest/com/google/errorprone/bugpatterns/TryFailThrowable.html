@@ -132,22 +132,23 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Try
    // empty or only comments
  }
  </pre>
- *
- Matches all static methods named "fail" and starting with "assert" from
- the following classes:
+
+ * Matches all static methods named "fail" and starting with "assert" from the following classes:
+
  <ul>
- <li><code>org.junit.Assert</code>,
- <li><code>junit.framework.Assert</code>,
- <li><code>junit.framework.TestCase</code> - which overrides the methods from Assert in order to
- deprecate them,
- <li><code>com.google.testing.util.MoreAsserts</code> and
- <li>every class whose name ends with "MoreAsserts".
+   <li><code>org.junit.Assert</code>,
+   <li><code>junit.framework.Assert</code>,
+   <li><code>junit.framework.TestCase</code> - which overrides the methods from Assert in order to
+       deprecate them,
+   <li><code>com.google.testing.util.MoreAsserts</code> and
+   <li>every class whose name ends with "MoreAsserts".
  </ul>
 
  Possible improvements/generalizations of this matcher:
+
  <ul>
- <li>support multiple catch() blocks
- <li>support MoreAsserts
+   <li>support multiple catch() blocks
+   <li>support MoreAsserts
  </ul></div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>

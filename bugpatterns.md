@@ -576,7 +576,7 @@ __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
 
 __[StaticAccessedFromInstance](bugpattern/StaticAccessedFromInstance)__<br>
-A static variable or method should not be accessed from an object instance
+A static variable or method should be qualified with a class name, not expression
 
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
