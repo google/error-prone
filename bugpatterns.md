@@ -575,7 +575,7 @@ Injection frameworks currently don&#39;t understand Qualifiers in TYPE_PARAMETER
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
 
-__[StaticAccessedFromInstance](bugpattern/StaticAccessedFromInstance)__<br>
+__[StaticQualifiedUsingExpression](bugpattern/StaticQualifiedUsingExpression)__<br>
 A static variable or method should be qualified with a class name, not expression
 
 __[StringEquality](bugpattern/StringEquality)__<br>

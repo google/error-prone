@@ -1,5 +1,5 @@
 ---
-title: StaticAccessedFromInstance
+title: StaticQualifiedUsingExpression
 summary: A static variable or method should be qualified with a class name, not expression
 layout: bugpattern
 category: JDK
@@ -11,7 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-_Alternate names: static, static-access_
+_Alternate names: static, static-access, StaticAccessedFromInstance_
 
 ## The problem
 To refer to a static member of another class, we typically *qualify* that member
@@ -62,12 +62,12 @@ situation. To prevent it, always qualify static method calls using a class name,
 never an expression.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("StaticAccessedFromInstance")` annotation to the enclosing element.
+Suppress false positives by adding an `@SuppressWarnings("StaticQualifiedUsingExpression")` annotation to the enclosing element.
 
 ----------
 
 ### Positive examples
-__StaticAccessedFromInstancePositiveCase1.java__
+__StaticQualifiedUsingExpressionPositiveCase1.java__
 
 {% highlight java %}
 /*
@@ -90,18 +90,21 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.math.BigDecimal;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-
+/** @author eaftan@google.com (Eddie Aftandilian) */
 class MyClass {
-  
+
   static int STATIC_FIELD = 42;
-  static int staticMethod() { return 42; }
-  
+
+  static int staticMethod() {
+    return 42;
+  }
+
   int FIELD = 42;
-  int method() { return 42; }
-  
+
+  int method() {
+    return 42;
+  }
+
   static class StaticInnerClass {
     static final MyClass myClass = new MyClass();
   }
@@ -111,38 +114,39 @@ class MyStaticClass {
   static MyClass myClass = new MyClass();
 }
 
-public class StaticAccessedFromInstancePositiveCase1 {
-  
+public class StaticQualifiedUsingExpressionPositiveCase1 {
+
   public static int staticVar1 = 1;
-  private StaticAccessedFromInstancePositiveCase1 next;
-  
+  private StaticQualifiedUsingExpressionPositiveCase1 next;
+
   public static int staticTestMethod() {
     return 1;
   }
-  
+
   public static Object staticTestMethod2() {
     return new Object();
   }
-  
+
   public static Object staticTestMethod3(Object x) {
     return null;
   }
-  
+
   public void test1() {
-    StaticAccessedFromInstancePositiveCase1 testObj = new StaticAccessedFromInstancePositiveCase1();
+    StaticQualifiedUsingExpressionPositiveCase1 testObj =
+        new StaticQualifiedUsingExpressionPositiveCase1();
     int i;
-    
+
     // BUG: Diagnostic contains: variable staticVar1
-    // i = StaticAccessedFromInstancePositiveCase1.staticVar1 
+    // i = StaticQualifiedUsingExpressionPositiveCase1.staticVar1
     i = this.staticVar1;
     // BUG: Diagnostic contains: variable staticVar1
-    // i = StaticAccessedFromInstancePositiveCase1.staticVar1
+    // i = StaticQualifiedUsingExpressionPositiveCase1.staticVar1
     i = testObj.staticVar1;
-    // BUG: Diagnostic contains: variable staticVar1 
-    // i = StaticAccessedFromInstancePositiveCase1.staticVar1
+    // BUG: Diagnostic contains: variable staticVar1
+    // i = StaticQualifiedUsingExpressionPositiveCase1.staticVar1
     i = testObj.next.next.next.staticVar1;
   }
-  
+
   public void test2() {
     int i;
     Integer integer = new Integer(1);
@@ -150,11 +154,11 @@ public class StaticAccessedFromInstancePositiveCase1 {
     // i = Integer.MAX_VALUE
     i = integer.MAX_VALUE;
   }
-    
+
   public void test3() {
     String s1 = new String();
     // BUG: Diagnostic contains: method valueOf
-    // String s2 = String.valueOf(10) 
+    // String s2 = String.valueOf(10)
     String s2 = s1.valueOf(10);
     // BUG: Diagnostic contains: method valueOf
     // s2 = String.valueOf(10)
@@ -163,13 +167,13 @@ public class StaticAccessedFromInstancePositiveCase1 {
     // int i = staticTestMethod()
     int i = this.staticTestMethod();
     // BUG: Diagnostic contains: method staticTestMethod2
-    // String s3 = staticTestMethod2().toString 
+    // String s3 = staticTestMethod2().toString
     String s3 = this.staticTestMethod2().toString();
     // BUG: Diagnostic contains: method staticTestMethod
-    // i = staticTestMethod() 
+    // i = staticTestMethod()
     i = this.next.next.next.staticTestMethod();
   }
-  
+
   public void test4() {
     BigDecimal decimal = new BigDecimal(1);
     // BUG: Diagnostic contains: method valueOf
@@ -177,41 +181,44 @@ public class StaticAccessedFromInstancePositiveCase1 {
     BigDecimal decimal2 = decimal.valueOf(1);
   }
 
-  public static MyClass hiding; 
-  
+  public static MyClass hiding;
+
   public void test5(MyClass hiding) {
     // BUG: Diagnostic contains: method staticTestMethod3
-    // Object o = staticTestMethod3(this.toString()) 
+    // Object o = staticTestMethod3(this.toString())
     Object o = this.staticTestMethod3(this.toString());
     // BUG: Diagnostic contains: variable myClass
-    // x = StaticInnerClass.myClass.FIELD; 
+    // x = StaticInnerClass.myClass.FIELD;
     int x = new MyClass.StaticInnerClass().myClass.FIELD;
     // BUG: Diagnostic contains: variable STATIC_FIELD
-    // x = MyClass.STATIC_FIELD; 
+    // x = MyClass.STATIC_FIELD;
     x = new MyClass.StaticInnerClass().myClass.STATIC_FIELD;
     // BUG: Diagnostic contains: variable hiding
-    // StaticAccessedFromInstancePositiveCase1.hiding = hiding;
+    // StaticQualifiedUsingExpressionPositiveCase1.hiding = hiding;
     this.hiding = hiding;
     // BUG: Diagnostic contains: variable STATIC_FIELD
-    // x = MyClass.STATIC_FIELD; 
+    // x = MyClass.STATIC_FIELD;
     x = MyStaticClass.myClass.STATIC_FIELD;
     // BUG: Diagnostic contains: method staticMethod
     // x = MyClass.staticMethod();
     x = MyStaticClass.myClass.staticMethod();
-    
+
     x = MyStaticClass.myClass.FIELD;
     x = MyStaticClass.myClass.method();
   }
-  
+
   static class Bar {
     static int baz = 0;
-    static int baz() { return 42; }
+
+    static int baz() {
+      return 42;
+    }
   }
-  
+
   static class Foo {
     static Bar bar;
   }
-  
+
   static void test6() {
     Foo foo = new Foo();
     // BUG: Diagnostic contains: method baz
@@ -225,13 +232,13 @@ public class StaticAccessedFromInstancePositiveCase1 {
     // x = Bar.baz;
     x = Foo.bar.baz;
   }
-  
+
   static class C<T extends String> {
     static int foo() {
       return 42;
     }
   }
-  
+
   public void test7() {
     // BUG: Diagnostic contains: method foo
     // x = C.foo();
@@ -240,7 +247,7 @@ public class StaticAccessedFromInstancePositiveCase1 {
 }
 {% endhighlight %}
 
-__StaticAccessedFromInstancePositiveCase2.java__
+__StaticQualifiedUsingExpressionPositiveCase2.java__
 
 {% highlight java %}
 /*
@@ -261,31 +268,26 @@ __StaticAccessedFromInstancePositiveCase2.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.common.base.Objects;
-import java.math.BigDecimal;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public class StaticAccessedFromInstancePositiveCase2 {
-  
+/** @author eaftan@google.com (Eddie Aftandilian) */
+public class StaticQualifiedUsingExpressionPositiveCase2 {
+
   private static class TestClass {
     public static int staticTestMethod() {
       return 1;
     }
   }
-  
+
   public int test1() {
     // BUG: Diagnostic contains: method staticTestMethod
     // return TestClass.staticTestMethod()
     return new TestClass().staticTestMethod();
   }
-
 }
 {% endhighlight %}
 
 ### Negative examples
-__StaticAccessedFromInstanceNegativeCases.java__
+__StaticQualifiedUsingExpressionNegativeCases.java__
 
 {% highlight java %}
 /*
@@ -306,40 +308,35 @@ __StaticAccessedFromInstanceNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.List;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public class StaticAccessedFromInstanceNegativeCases {
-  
+/** @author eaftan@google.com (Eddie Aftandilian) */
+public class StaticQualifiedUsingExpressionNegativeCases {
+
   public static int staticVar1 = 1;
-  
-  public static void staticTestMethod() { 
-  }
 
-  
+  public static void staticTestMethod() {}
+
   public void test1() {
     Integer i = Integer.MAX_VALUE;
     i = Integer.valueOf(10);
   }
-  
+
   public void test2() {
     int i = staticVar1;
-    i = StaticAccessedFromInstanceNegativeCases.staticVar1;    
+    i = StaticQualifiedUsingExpressionNegativeCases.staticVar1;
   }
-  
+
   public void test3() {
     test1();
     this.test1();
-    new StaticAccessedFromInstanceNegativeCases().test1();
+    new StaticQualifiedUsingExpressionNegativeCases().test1();
     staticTestMethod();
   }
 
   public void test4() {
     Class<?> klass = String[].class;
   }
-  
+
   @SuppressWarnings("static")
   public void testJavacAltname() {
     this.staticTestMethod();
