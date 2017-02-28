@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -314,11 +313,10 @@ public class TypeParameterShadowingTest {
         .doTest();
   }
 
-  @Ignore("b/35809355")
   @Test
-  public void b35809355() throws Exception {
-    compilationHelper
-        .addSourceLines(
+  public void lambdaParameterDesugaring() throws Exception {
+    refactoring
+        .addInputLines(
             "in/A.java",
             "import java.util.function.Consumer;",
             "class A<T> {",
@@ -329,6 +327,46 @@ public class TypeParameterShadowingTest {
             "    abstract void g(Consumer<T> c);",
             "  }",
             "}")
+        .addOutputLines(
+            "out/A.java",
+            "import java.util.function.Consumer;",
+            "class A<T> {",
+            "  abstract class B<T2> {",
+            "    void f() {",
+            "      g(t -> {});",
+            "    }",
+            "    abstract void g(Consumer<T2> c);",
+            "  }",
+            "}")
         .doTest();
   }
+
+  @Test
+  public void typesWithBounds() throws Exception {
+    refactoring
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.function.Predicate;",
+            "class Test<T> {",
+            "  <B extends Object & Comparable> void something(B b) {",
+            "    class Foo<B extends Object & Comparable> implements Predicate<B> {",
+            "        public boolean test(B b) { return false; }",
+            "    }",
+            "    new Foo<>();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.util.function.Predicate;",
+            "class Test<T> {",
+            "  <B extends Object & Comparable> void something(B b) {",
+            "    class Foo<B2 extends Object & Comparable> implements Predicate<B2> {",
+            "      public boolean test(B2 b) { return false; }",
+            "    }",
+            "    new Foo<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
 }

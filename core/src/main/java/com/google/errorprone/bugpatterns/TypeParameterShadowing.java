@@ -60,7 +60,7 @@ public class TypeParameterShadowing extends BugChecker
     if (tree.getTypeParameters().isEmpty()) {
       return Description.NO_MATCH;
     }
-    return findDuplicatesOf(tree, tree.getTypeParameters());
+    return findDuplicatesOf(tree, tree.getTypeParameters(), state);
   }
 
   @Override
@@ -68,11 +68,11 @@ public class TypeParameterShadowing extends BugChecker
     if (tree.getTypeParameters().isEmpty()) {
       return Description.NO_MATCH;
     }
-    return findDuplicatesOf(tree, tree.getTypeParameters());
+    return findDuplicatesOf(tree, tree.getTypeParameters(), state);
   }
 
   private Description findDuplicatesOf(
-      Tree tree, List<? extends TypeParameterTree> typeParameters) {
+      Tree tree, List<? extends TypeParameterTree> typeParameters, VisitorState state) {
 
     Symbol symbol = ASTHelpers.getSymbol(tree);
     if (symbol == null) {
@@ -118,7 +118,8 @@ public class TypeParameterShadowing extends BugChecker
                     tree,
                     typeParameters,
                     v.name,
-                    replacementTypeVarName(v.name, typeVarsInScope)))
+                    replacementTypeVarName(v.name, typeVarsInScope),
+                    state))
         .forEach(fixBuilder::merge);
 
     descriptionBuilder.addFix(fixBuilder.build());
@@ -151,7 +152,8 @@ public class TypeParameterShadowing extends BugChecker
       Tree sourceTree,
       List<? extends TypeParameterTree> typeParameters,
       Name typeVariable,
-      String typeVarReplacement) {
+      String typeVarReplacement,
+      VisitorState state) {
 
     TypeParameterTree matchingTypeParam =
         typeParameters.stream().filter(t -> t.getName().contentEquals(typeVariable)).collect(
@@ -169,8 +171,22 @@ public class TypeParameterShadowing extends BugChecker
             new TreeScanner() {
               @Override
               public void visitIdent(JCTree.JCIdent tree) {
-                if (Objects.equal(ASTHelpers.getSymbol(tree), typeVariableSymbol)) {
-                  fixBuilder.replace(tree, typeVarReplacement);
+                Symbol identSym = ASTHelpers.getSymbol(tree);
+                if (Objects.equal(identSym, typeVariableSymbol)) {
+                  // Lambda parameters can be desugared early, so we need to make sure the source
+                  // is there. In the example below, we would try to suggest replacing the node 't'
+                  // with T2, since the compiler desugars to g((T t) -> false). The extra condition
+                  // prevents us from doing that.
+
+                  // Foo<T> {
+                  //   <G> void g(Predicate<G> p) {},
+                  //   <T> void blah() {
+                  //     g(t -> false);
+                  //   }
+                  // }
+                  if (Objects.equal(state.getSourceForNode(tree), name)) {
+                    fixBuilder.replace(tree, typeVarReplacement);
+                  }
                 }
               }
             });
