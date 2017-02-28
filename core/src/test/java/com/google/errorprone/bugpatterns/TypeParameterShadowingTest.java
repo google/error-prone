@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -309,6 +310,24 @@ public class TypeParameterShadowingTest {
             "        return 0;",
             "      }",
             "    };",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("b/35809355")
+  @Test
+  public void b35809355() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "in/A.java",
+            "import java.util.function.Consumer;",
+            "class A<T> {",
+            "  abstract class B<T> {",
+            "    void f() {",
+            "      g(t -> {});",
+            "    }",
+            "    abstract void g(Consumer<T> c);",
+            "  }",
             "}")
         .doTest();
   }
