@@ -16,40 +16,35 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.List;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public class StaticAccessedFromInstanceNegativeCases {
-  
+/** @author eaftan@google.com (Eddie Aftandilian) */
+public class StaticQualifiedUsingExpressionNegativeCases {
+
   public static int staticVar1 = 1;
-  
-  public static void staticTestMethod() { 
-  }
 
-  
+  public static void staticTestMethod() {}
+
   public void test1() {
     Integer i = Integer.MAX_VALUE;
     i = Integer.valueOf(10);
   }
-  
+
   public void test2() {
     int i = staticVar1;
-    i = StaticAccessedFromInstanceNegativeCases.staticVar1;    
+    i = StaticQualifiedUsingExpressionNegativeCases.staticVar1;
   }
-  
+
   public void test3() {
     test1();
     this.test1();
-    new StaticAccessedFromInstanceNegativeCases().test1();
+    new StaticQualifiedUsingExpressionNegativeCases().test1();
     staticTestMethod();
   }
 
   public void test4() {
     Class<?> klass = String[].class;
   }
-  
+
   @SuppressWarnings("static")
   public void testJavacAltname() {
     this.staticTestMethod();

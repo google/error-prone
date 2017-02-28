@@ -22,33 +22,31 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
-public class StaticAccessedFromInstanceTest {
+public class StaticQualifiedUsingExpressionTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(StaticAccessedFromInstance.class, getClass());
+        CompilationTestHelper.newInstance(StaticQualifiedUsingExpression.class, getClass());
   }
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.addSourceFile("StaticAccessedFromInstancePositiveCase1.java").doTest();
+    compilationHelper.addSourceFile("StaticQualifiedUsingExpressionPositiveCase1.java").doTest();
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
-    compilationHelper.addSourceFile("StaticAccessedFromInstancePositiveCase2.java").doTest();
+    compilationHelper.addSourceFile("StaticQualifiedUsingExpressionPositiveCase2.java").doTest();
   }
 
   @Test
   public void testNegativeCases() throws Exception {
-    compilationHelper.addSourceFile("StaticAccessedFromInstanceNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("StaticQualifiedUsingExpressionNegativeCases.java").doTest();
   }
 
 }

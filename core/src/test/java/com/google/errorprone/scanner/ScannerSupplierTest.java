@@ -41,7 +41,7 @@ import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
-import com.google.errorprone.bugpatterns.StaticAccessedFromInstance;
+import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StringEquality;
 import java.util.Collections;
 import java.util.Map;
@@ -57,11 +57,11 @@ public class ScannerSupplierTest {
 
   @Test
   public void fromBugCheckerClassesWorks() {
-    ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(
-        ArrayEquals.class,
-        StaticAccessedFromInstance.class);
+    ScannerSupplier ss =
+        ScannerSupplier.fromBugCheckerClasses(
+            ArrayEquals.class, StaticQualifiedUsingExpression.class);
 
-    assertScanner(ss).hasEnabledChecks(ArrayEquals.class, StaticAccessedFromInstance.class);
+    assertScanner(ss).hasEnabledChecks(ArrayEquals.class, StaticQualifiedUsingExpression.class);
   }
 
   @Test
@@ -70,15 +70,16 @@ public class ScannerSupplierTest {
         ScannerSupplier.fromBugCheckerInfos(
             ImmutableList.of(
                 BugCheckerInfo.create(ArrayEquals.class),
-                BugCheckerInfo.create(StaticAccessedFromInstance.class)));
+                BugCheckerInfo.create(StaticQualifiedUsingExpression.class)));
 
-    assertScanner(ss).hasEnabledChecks(ArrayEquals.class, StaticAccessedFromInstance.class);
+    assertScanner(ss).hasEnabledChecks(ArrayEquals.class, StaticQualifiedUsingExpression.class);
   }
 
   @Test
   public void plusWorks() {
     ScannerSupplier ss1 =
-        ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class, StaticAccessedFromInstance.class);
+        ScannerSupplier.fromBugCheckerClasses(
+            ArrayEquals.class, StaticQualifiedUsingExpression.class);
     ScannerSupplier ss2 =
         ScannerSupplier.fromBugCheckerClasses(
             BadShiftAmount.class, PreconditionsCheckNotNull.class);
@@ -86,7 +87,7 @@ public class ScannerSupplierTest {
     assertScanner(ss1.plus(ss2))
         .hasEnabledChecks(
             ArrayEquals.class,
-            StaticAccessedFromInstance.class,
+            StaticQualifiedUsingExpression.class,
             BadShiftAmount.class,
             PreconditionsCheckNotNull.class);
   }
@@ -94,7 +95,8 @@ public class ScannerSupplierTest {
   @Test
   public void plusDoesntAllowDuplicateChecks() {
     ScannerSupplier ss1 =
-        ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class, StaticAccessedFromInstance.class);
+        ScannerSupplier.fromBugCheckerClasses(
+            ArrayEquals.class, StaticQualifiedUsingExpression.class);
     ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class);
 
     IllegalArgumentException expected =
@@ -106,7 +108,7 @@ public class ScannerSupplierTest {
   public void filterWorks() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
-            ArrayEquals.class, BadShiftAmount.class, StaticAccessedFromInstance.class);
+            ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class);
 
     assertScanner(ss.filter(input -> input.canonicalName().equals("BadShiftAmount")))
         .hasEnabledChecks(BadShiftAmount.class);
@@ -132,10 +134,9 @@ public class ScannerSupplierTest {
   @Test
   public void applyOverridesEnablesCheck() throws Exception {
     ScannerSupplier ss =
-        ScannerSupplier
-            .fromBugCheckerClasses(
-                ArrayEquals.class, BadShiftAmount.class, StaticAccessedFromInstance.class)
-        .filter(Predicates.alwaysFalse());    // disables all checks
+        ScannerSupplier.fromBugCheckerClasses(
+                ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class)
+            .filter(Predicates.alwaysFalse()); // disables all checks
 
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
         ImmutableList.of("-Xep:ArrayEquals", "-Xep:BadShiftAmount"));
@@ -148,7 +149,7 @@ public class ScannerSupplierTest {
   public void applyOverridesEnableAllChecks() throws Exception {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
-                ArrayEquals.class, BadShiftAmount.class, StaticAccessedFromInstance.class)
+                ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class)
             .filter(Predicates.alwaysFalse()); // disables all checks
 
     assertScanner(ss).hasEnabledChecks(); // Empty scanner
@@ -158,20 +159,20 @@ public class ScannerSupplierTest {
 
     assertScanner(ss.applyOverrides(epOptions))
         .hasEnabledChecks(
-            ArrayEquals.class, BadShiftAmount.class, StaticAccessedFromInstance.class);
+            ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class);
 
     epOptions =
         ErrorProneOptions.processArgs(
             ImmutableList.of("-XepAllDisabledChecksAsWarnings", "-Xep:ArrayEquals:OFF"));
 
     assertScanner(ss.applyOverrides(epOptions))
-        .hasEnabledChecks(BadShiftAmount.class, StaticAccessedFromInstance.class);
+        .hasEnabledChecks(BadShiftAmount.class, StaticQualifiedUsingExpression.class);
 
     // The 'AllDisabledChecks' flag doesn't populate through to additional plugins
     assertScanner(
             ss.applyOverrides(epOptions)
                 .plus(ScannerSupplier.fromBugCheckerClasses(DivZero.class).filter(t -> false)))
-        .hasEnabledChecks(BadShiftAmount.class, StaticAccessedFromInstance.class);
+        .hasEnabledChecks(BadShiftAmount.class, StaticQualifiedUsingExpression.class);
   }
 
   @Test

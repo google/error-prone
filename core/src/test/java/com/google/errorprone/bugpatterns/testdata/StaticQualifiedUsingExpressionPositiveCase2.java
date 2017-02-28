@@ -16,24 +16,19 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.common.base.Objects;
-import java.math.BigDecimal;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-public class StaticAccessedFromInstancePositiveCase2 {
-  
+/** @author eaftan@google.com (Eddie Aftandilian) */
+public class StaticQualifiedUsingExpressionPositiveCase2 {
+
   private static class TestClass {
     public static int staticTestMethod() {
       return 1;
     }
   }
-  
+
   public int test1() {
     // BUG: Diagnostic contains: method staticTestMethod
     // return TestClass.staticTestMethod()
     return new TestClass().staticTestMethod();
   }
-
 }

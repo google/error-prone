@@ -18,18 +18,21 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.math.BigDecimal;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
-
+/** @author eaftan@google.com (Eddie Aftandilian) */
 class MyClass {
-  
+
   static int STATIC_FIELD = 42;
-  static int staticMethod() { return 42; }
-  
+
+  static int staticMethod() {
+    return 42;
+  }
+
   int FIELD = 42;
-  int method() { return 42; }
-  
+
+  int method() {
+    return 42;
+  }
+
   static class StaticInnerClass {
     static final MyClass myClass = new MyClass();
   }
@@ -39,38 +42,39 @@ class MyStaticClass {
   static MyClass myClass = new MyClass();
 }
 
-public class StaticAccessedFromInstancePositiveCase1 {
-  
+public class StaticQualifiedUsingExpressionPositiveCase1 {
+
   public static int staticVar1 = 1;
-  private StaticAccessedFromInstancePositiveCase1 next;
-  
+  private StaticQualifiedUsingExpressionPositiveCase1 next;
+
   public static int staticTestMethod() {
     return 1;
   }
-  
+
   public static Object staticTestMethod2() {
     return new Object();
   }
-  
+
   public static Object staticTestMethod3(Object x) {
     return null;
   }
-  
+
   public void test1() {
-    StaticAccessedFromInstancePositiveCase1 testObj = new StaticAccessedFromInstancePositiveCase1();
+    StaticQualifiedUsingExpressionPositiveCase1 testObj =
+        new StaticQualifiedUsingExpressionPositiveCase1();
     int i;
-    
+
     // BUG: Diagnostic contains: variable staticVar1
-    // i = StaticAccessedFromInstancePositiveCase1.staticVar1 
+    // i = StaticQualifiedUsingExpressionPositiveCase1.staticVar1
     i = this.staticVar1;
     // BUG: Diagnostic contains: variable staticVar1
-    // i = StaticAccessedFromInstancePositiveCase1.staticVar1
+    // i = StaticQualifiedUsingExpressionPositiveCase1.staticVar1
     i = testObj.staticVar1;
-    // BUG: Diagnostic contains: variable staticVar1 
-    // i = StaticAccessedFromInstancePositiveCase1.staticVar1
+    // BUG: Diagnostic contains: variable staticVar1
+    // i = StaticQualifiedUsingExpressionPositiveCase1.staticVar1
     i = testObj.next.next.next.staticVar1;
   }
-  
+
   public void test2() {
     int i;
     Integer integer = new Integer(1);
@@ -78,11 +82,11 @@ public class StaticAccessedFromInstancePositiveCase1 {
     // i = Integer.MAX_VALUE
     i = integer.MAX_VALUE;
   }
-    
+
   public void test3() {
     String s1 = new String();
     // BUG: Diagnostic contains: method valueOf
-    // String s2 = String.valueOf(10) 
+    // String s2 = String.valueOf(10)
     String s2 = s1.valueOf(10);
     // BUG: Diagnostic contains: method valueOf
     // s2 = String.valueOf(10)
@@ -91,13 +95,13 @@ public class StaticAccessedFromInstancePositiveCase1 {
     // int i = staticTestMethod()
     int i = this.staticTestMethod();
     // BUG: Diagnostic contains: method staticTestMethod2
-    // String s3 = staticTestMethod2().toString 
+    // String s3 = staticTestMethod2().toString
     String s3 = this.staticTestMethod2().toString();
     // BUG: Diagnostic contains: method staticTestMethod
-    // i = staticTestMethod() 
+    // i = staticTestMethod()
     i = this.next.next.next.staticTestMethod();
   }
-  
+
   public void test4() {
     BigDecimal decimal = new BigDecimal(1);
     // BUG: Diagnostic contains: method valueOf
@@ -105,41 +109,44 @@ public class StaticAccessedFromInstancePositiveCase1 {
     BigDecimal decimal2 = decimal.valueOf(1);
   }
 
-  public static MyClass hiding; 
-  
+  public static MyClass hiding;
+
   public void test5(MyClass hiding) {
     // BUG: Diagnostic contains: method staticTestMethod3
-    // Object o = staticTestMethod3(this.toString()) 
+    // Object o = staticTestMethod3(this.toString())
     Object o = this.staticTestMethod3(this.toString());
     // BUG: Diagnostic contains: variable myClass
-    // x = StaticInnerClass.myClass.FIELD; 
+    // x = StaticInnerClass.myClass.FIELD;
     int x = new MyClass.StaticInnerClass().myClass.FIELD;
     // BUG: Diagnostic contains: variable STATIC_FIELD
-    // x = MyClass.STATIC_FIELD; 
+    // x = MyClass.STATIC_FIELD;
     x = new MyClass.StaticInnerClass().myClass.STATIC_FIELD;
     // BUG: Diagnostic contains: variable hiding
-    // StaticAccessedFromInstancePositiveCase1.hiding = hiding;
+    // StaticQualifiedUsingExpressionPositiveCase1.hiding = hiding;
     this.hiding = hiding;
     // BUG: Diagnostic contains: variable STATIC_FIELD
-    // x = MyClass.STATIC_FIELD; 
+    // x = MyClass.STATIC_FIELD;
     x = MyStaticClass.myClass.STATIC_FIELD;
     // BUG: Diagnostic contains: method staticMethod
     // x = MyClass.staticMethod();
     x = MyStaticClass.myClass.staticMethod();
-    
+
     x = MyStaticClass.myClass.FIELD;
     x = MyStaticClass.myClass.method();
   }
-  
+
   static class Bar {
     static int baz = 0;
-    static int baz() { return 42; }
+
+    static int baz() {
+      return 42;
+    }
   }
-  
+
   static class Foo {
     static Bar bar;
   }
-  
+
   static void test6() {
     Foo foo = new Foo();
     // BUG: Diagnostic contains: method baz
@@ -153,13 +160,13 @@ public class StaticAccessedFromInstancePositiveCase1 {
     // x = Bar.baz;
     x = Foo.bar.baz;
   }
-  
+
   static class C<T extends String> {
     static int foo() {
       return 42;
     }
   }
-  
+
   public void test7() {
     // BUG: Diagnostic contains: method foo
     // x = C.foo();

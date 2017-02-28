@@ -147,7 +147,7 @@ import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.SimpleDateFormatConstant;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
-import com.google.errorprone.bugpatterns.StaticAccessedFromInstance;
+import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
@@ -463,7 +463,7 @@ public class BuiltInCheckerSuppliers {
           RemoveUnusedImports.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOrQualifierAnnotationRetention.class,
-          StaticAccessedFromInstance.class,
+          StaticQualifiedUsingExpression.class,
           StaticOrDefaultInterfaceMethod.class,
           StringEquality.class,
           TestExceptionChecker.class,
