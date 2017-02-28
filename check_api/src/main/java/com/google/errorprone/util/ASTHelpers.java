@@ -460,24 +460,21 @@ public class ASTHelpers {
    */
   public static Set<MethodSymbol> findMatchingMethods(
       Name name, final Predicate<MethodSymbol> predicate, Type startClass, Types types) {
-    final Filter<Symbol> filter = new Filter<Symbol>() {
-      @Override
-      public boolean accepts(Symbol symbol) {
-        if (!(symbol instanceof MethodSymbol)) {
-          return false;
-        }
-        return predicate.apply((MethodSymbol) symbol);
-      }
-    };
+    Filter<Symbol> matchesMethodPredicate =
+        sym -> sym instanceof MethodSymbol && predicate.apply((MethodSymbol) sym);
+
     Set<MethodSymbol> matchingMethods = new HashSet<>();
     // Iterate over all classes and interfaces that startClass inherits from.
     for (Type superClass : types.closure(startClass)) {
-      TypeSymbol superClassSymbol = superClass.tsym;
       // Iterate over all the methods declared in superClass.
-      for (Symbol symbol :
-          superClassSymbol.members().getSymbolsByName(name, filter, NON_RECURSIVE)) {
-        // By definition of the filter, we know that the symbol is a MethodSymbol.
-        matchingMethods.add((MethodSymbol) symbol);
+      TypeSymbol superClassSymbol = superClass.tsym;
+      Scope superClassSymbols = superClassSymbol.members();
+      if (superClassSymbols != null) { // Can be null if superClass is a type variable
+        for (Symbol symbol :
+            superClassSymbols.getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE)) {
+          // By definition of the filter, we know that the symbol is a MethodSymbol.
+          matchingMethods.add((MethodSymbol) symbol);
+        }
       }
     }
     return matchingMethods;
