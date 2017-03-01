@@ -92,6 +92,7 @@ import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
 import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
+import com.google.errorprone.bugpatterns.LiteralClassName;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
@@ -388,6 +389,7 @@ public class BuiltInCheckerSuppliers {
           IterableAndIterator.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnitAmbiguousTestClass.class,
+          LiteralClassName.class,
           MissingFail.class,
           MissingOverride.class,
           MutableConstantField.class,
