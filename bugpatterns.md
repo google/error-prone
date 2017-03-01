@@ -376,6 +376,9 @@ Floating-point comparison without error tolerance
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
 
+__[LiteralClassName](bugpattern/LiteralClassName)__<br>
+Using Class.forName is unnecessary if the class is available at compile-time.
+
 __[MissingFail](bugpattern/MissingFail)__<br>
 Not calling fail() when expecting an exception masks bugs
 
