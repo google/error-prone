@@ -37,6 +37,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Processor;
@@ -293,10 +294,9 @@ public class BaseErrorProneCompiler {
     }
   }
 
-  /**
-   * Registers our message bundle.
-   */
+  /** Registers our message bundle. */
   public static void setupMessageBundle(Context context) {
-    JavacMessages.instance(context).add("com.google.errorprone.errors");
+    ResourceBundle bundle = ResourceBundle.getBundle("com.google.errorprone.errors");
+    JavacMessages.instance(context).add(l -> bundle);
   }
 }
