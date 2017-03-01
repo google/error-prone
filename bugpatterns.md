@@ -334,6 +334,9 @@ An equality test between objects with incompatible types always returns false
 __[Finally](bugpattern/Finally)__<br>
 If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
 
+__[FloatingPointLiteralPrecision](bugpattern/FloatingPointLiteralPrecision)__<br>
+Floating point literal loses precision
+
 __[FragmentInjection](bugpattern/FragmentInjection)__<br>
 Classes extending PreferenceActivity must implement isValidFragment such that it does not unconditionally return true to prevent vulnerability to fragment injection attacks.
 
