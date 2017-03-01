@@ -61,6 +61,10 @@ public class LiteralClassName extends BugChecker implements MethodInvocationTree
     if (className == null) {
       return NO_MATCH;
     }
+    if (className.startsWith("[")) {
+      // TODO(cushon): consider handling arrays
+      return NO_MATCH;
+    }
     Type type = state.getTypeFromString(className);
     if (type == null) {
       return NO_MATCH;

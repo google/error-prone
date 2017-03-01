@@ -73,4 +73,18 @@ public class LiteralClassNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void arrays() throws IOException {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    Class<?> c = Class.forName(\"[B\");",
+            "    c = Class.forName(\"B\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
