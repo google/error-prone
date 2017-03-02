@@ -103,4 +103,19 @@ public class ReturnValueIgnoredTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void stream() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains:",
+            "    \"\".codePoints().count();",
+            "    \"\".codePoints().forEach(i -> {});",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

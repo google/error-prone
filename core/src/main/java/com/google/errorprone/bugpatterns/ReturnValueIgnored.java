@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
@@ -49,12 +50,14 @@ import java.util.Set;
   severity = ERROR
 )
 public class ReturnValueIgnored extends AbstractReturnValueIgnored {
-  /** A set of types which this checker should examine method calls on. */
-  // There are also some high-priority return value ignored checks in FindBugs for various
-  // threading constructs which do not return the same type as the receiver.
-  // This check does not deal with them, since the fix is less straightforward.
-  // See a list of the FindBugs checks here:
-  // http://code.google.com/searchframe#Fccnll6ERQ0/trunk/findbugs/src/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
+  /**
+   * A set of types which this checker should examine method calls on.
+   *
+   * <p>There are also some high-priority return value ignored checks in FindBugs for various
+   * threading constructs which do not return the same type as the receiver. This check does not
+   * deal with them, since the fix is less straightforward. See a list of the FindBugs checks here:
+   * http://code.google.com/searchframe#Fccnll6ERQ0/trunk/findbugs/src/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
+   */
   private static final Set<String> typesToCheck =
       new HashSet<>(
           Arrays.asList(
@@ -62,19 +65,34 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               "java.math.BigInteger",
               "java.math.BigDecimal",
               "java.nio.file.Path"));
+
   /**
-   * Return a matcher for method invocations in which the method being called is on an instance of a
-   * type in the typesToCheck set and returns the same type (e.g. String.trim() returns a String).
+   * Matches method invocations in which the method being called is on an instance of a type in the
+   * typesToCheck set and returns the same type (e.g. String.trim() returns a String).
    */
+  private static final Matcher<ExpressionTree> RETURNS_SAME_TYPE =
+      allOf(methodReceiverHasType(typesToCheck), methodReturnsSameTypeAsReceiver());
+
+  /**
+   * Methods in {@link java.util.function} are pure, and their returnvalues should not be discarded.
+   */
+  private static final Matcher<MethodInvocationTree> FUNCTIONAL_METHOD =
+      (tree, state) -> {
+        Symbol.MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+        return symbol != null
+            && symbol.owner.packge().getQualifiedName().contentEquals("java.util.function");
+      };
+
+  /**
+   * The return value of stream methods should always be checked (except for forEach and
+   * forEachOrded, which are void-returning and will not be checked by AbstractReturnValueIgnored).
+   */
+  private static final Matcher<ExpressionTree> STREAM_METHOD =
+      instanceMethod().onDescendantOf("java.util.stream.BaseStream");
+
   @Override
   public Matcher<? super MethodInvocationTree> specializedMatcher() {
-    return anyOf(
-        allOf(methodReceiverHasType(typesToCheck), methodReturnsSameTypeAsReceiver()),
-        (tree, state) -> {
-          Symbol.MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-          return symbol != null
-              && symbol.owner.packge().getQualifiedName().contentEquals("java.util.function");
-        });
+    return anyOf(RETURNS_SAME_TYPE, FUNCTIONAL_METHOD, STREAM_METHOD);
   }
 
   /** Matches method invocations that return the same type as the receiver object. */
