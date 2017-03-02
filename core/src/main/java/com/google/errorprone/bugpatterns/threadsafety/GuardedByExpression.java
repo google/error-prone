@@ -26,8 +26,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Names;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -151,8 +150,6 @@ public abstract class GuardedByExpression {
       return ThisLiteral.INSTANCE;
     }
 
-    private final Map<Symbol, VarSymbol> syntheticOuterFields = new HashMap<>();
-
     /**
      * Synthesizes the {@link GuardedByExpression} for an enclosing class access. The
      * access is represented as a chain of field accesses from an instance of the current class to
@@ -186,16 +183,38 @@ public abstract class GuardedByExpression {
         if (curr == null) {
           break;
         }
-        VarSymbol var = syntheticOuterFields.get(curr);
-        if (var == null) {
-          var = new VarSymbol(
-              Flags.SYNTHETIC, names.fromString(ENCLOSING_INSTANCE_NAME), curr.type, curr);
-          syntheticOuterFields.put(curr, var);
-        }   
-        base = select(base, var);
+        base = select(base, new EnclosingInstanceSymbol(names, curr));
       } while (!curr.equals(enclosing));
       checkGuardedBy(curr != null , "Expected an enclosing class.");
       return base;
+    }
+
+    private static class EnclosingInstanceSymbol extends VarSymbol {
+
+      public EnclosingInstanceSymbol(Names names, Symbol curr) {
+        super(
+            Flags.SYNTHETIC,
+            names.fromString(GuardedByExpression.ENCLOSING_INSTANCE_NAME),
+            curr.type,
+            curr);
+      }
+
+      @Override
+      public int hashCode() {
+        return Objects.hash(ENCLOSING_INSTANCE_NAME, owner.hashCode());
+      }
+
+      @Override
+      public boolean equals(Object other) {
+        if (!(other instanceof VarSymbol)) {
+          return false;
+        }
+        VarSymbol that = (VarSymbol) other;
+        if (!that.getSimpleName().contentEquals(ENCLOSING_INSTANCE_NAME)) {
+          return false;
+        }
+        return owner.equals(that.owner);
+      }
     }
 
     ClassLiteral classLiteral(Symbol clazz) {
