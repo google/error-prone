@@ -302,4 +302,21 @@ public class ArgumentParameterSwapTest {
         .addSourceLines("Enum.java", "enum Enum {", "  C(0);", "  Enum(final int i) {}", "}")
         .doTest();
   }
+
+  // Regression test for #490
+  @Test
+  public void i490() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.Optional;",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            "  Test(ImmutableMap<?, ?> map, Optional<?> optional) {}",
+            "  Test g() {",
+            "    return new Test(ImmutableMap.of(), Optional.empty());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

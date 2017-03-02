@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.MethodType;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -214,7 +213,7 @@ abstract class AbstractArgumentParameterChecker extends BugChecker
     if (replacement instanceof VarSymbol) {
       replacementType = replacement.asType();
     } else if (replacement instanceof MethodSymbol) {
-      replacementType = ((MethodType) (replacement.asType())).getReturnType();
+      replacementType = replacement.asType().getReturnType();
     } else {
       return false;
     }
