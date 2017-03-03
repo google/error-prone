@@ -39,12 +39,14 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
+import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StringEquality;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Supplier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -197,6 +199,30 @@ public class ScannerSupplierTest {
     assertScanner(ss.applyOverrides(epOptions))
         .hasSeverities(ImmutableMap.of("ArrayEquals", SeverityLevel.ERROR));
     assertScanner(ss.applyOverrides(epOptions)).hasEnabledChecks(UnsuppressibleArrayEquals.class);
+  }
+
+  @Test
+  public void applyOverridesDisableErrorsOnlyForEnabledChecks() {
+    Supplier<ScannerSupplier> filteredScanner =
+        () ->
+            ScannerSupplier.fromBugCheckerClasses(
+                    BadShiftAmount.class,
+                    UnsuppressibleArrayEquals.class,
+                    EqualsIncompatibleType.class)
+                .filter(p -> !p.checkerClass().equals(EqualsIncompatibleType.class));
+
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(ImmutableList.of("-XepAllErrorsAsWarnings"));
+
+    assertScanner(filteredScanner.get().applyOverrides(epOptions))
+        .hasEnabledChecks(UnsuppressibleArrayEquals.class, BadShiftAmount.class);
+
+    epOptions =
+        ErrorProneOptions.processArgs(
+            ImmutableList.of("-XepAllErrorsAsWarnings", "-Xep:BadShiftAmount:OFF"));
+
+    assertScanner(filteredScanner.get().applyOverrides(epOptions))
+        .hasEnabledChecks(UnsuppressibleArrayEquals.class);
   }
 
   @Test
