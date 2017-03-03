@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -78,7 +77,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
 
   // Class name, whether it uses SIZE or LENGTH, whether or not the class has an appropriate
   // isEmpty() method
-  private static final Table<String, MethodName, Boolean> CLASSES =
+  private static final ImmutableTable<String, MethodName, Boolean> CLASSES =
       ImmutableTable.<String, MethodName, Boolean>builder()
           .put("com.google.common.collect.FluentIterable", MethodName.SIZE, true)
           .put("com.google.common.collect.Multimap", MethodName.SIZE, true)
@@ -91,9 +90,9 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
           .put("java.lang.String", MethodName.LENGTH, true)
           .put("java.lang.StringBuilder", MethodName.LENGTH, false)
           .put("java.lang.StringBuffer", MethodName.LENGTH, false)
-      .build();
+          .build();
 
-  private static final Table<String, MethodName, Boolean> STATIC_CLASSES =
+  private static final ImmutableTable<String, MethodName, Boolean> STATIC_CLASSES =
       ImmutableTable.<String, MethodName, Boolean>builder()
           .put("com.google.common.collect.Iterables", MethodName.SIZE, true)
           .build();
