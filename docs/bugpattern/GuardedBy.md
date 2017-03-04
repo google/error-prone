@@ -42,8 +42,8 @@ java.util.concurrent Lock.
 An implicit lock is acquired using the built in synchronization features of the
 language. Adding the 'synchronized' modifier to an instance method causes the
 implicit lock of the enclosing instance to be acquired for the duration of the
-method. Adding the 'synchronized' modifier to a static method is similar,
-except the implicit lock of the Class object is acquired instead.
+method. Adding the 'synchronized' modifier to a static method is similar, except
+the implicit lock of the Class object is acquired instead.
 
 The Locks defined in java.util.concurrent are acquired with explicit
 lock()/unlock() methods. The use of these methods in Java should always
@@ -55,7 +55,6 @@ execution paths.
 ### Lock expression syntax
 
 The following syntax can be used to describe a lock:
-
 
 <table><tr><td><code>
 
@@ -112,8 +111,7 @@ javax.annotation.concurrent.GuardedBy
 The @GuardedBy annotation is used to document that a member (a field or a
 method) can only be accessed when the specified lock is held.
 
-@GuardedBy can be used with both implicit locks and java.util.concurrent
-Locks.
+@GuardedBy can be used with both implicit locks and java.util.concurrent Locks.
 
 ```java
 final Lock lock = new ReentrantLock();
@@ -138,7 +136,7 @@ com.google.errorprone.bugpatterns.threadsafety.annotations.LockMethod
 
 The method to which this annotation is applied acquires one or more locks. The
 caller will hold the locks when the function finishes execution.
- 
+
 This annotation does not apply to implicit locks, which cannot be acquired
 without being released in the same method.
 
@@ -156,7 +154,7 @@ com.google.errorprone.bugpatterns.threadsafety.annotations.UnlockMethod
 The method to which this annotation is applied releases one or more locks. The
 caller must hold the locks when the function is entered, and will not hold them
 when it completes.
- 
+
 This annotation does not apply to implicit locks, which cannot be released
 without being acquired in the same method.
 
@@ -213,10 +211,10 @@ class Transaction {
 }
 ```
 
-In this example, the analysis is unable to guarantee that callers of the
-Handler created in 'handle' will be holding the required lock. The analysis is
-purely intra-procedural, so it is unable to observe that the only caller
-(runHandler) does in fact hold the necessary lock.
+In this example, the analysis is unable to guarantee that callers of the Handler
+created in 'handle' will be holding the required lock. The analysis is purely
+intra-procedural, so it is unable to observe that the only caller (runHandler)
+does in fact hold the necessary lock.
 
 #### False negatives with aliasing
 
@@ -238,6 +236,5 @@ class Names {
 The analysis does not track aliasing, so it's possible to circumvent the safety
 it provides by copying references to guarded members.
 
-In the example, the guarded field 'names' can be accessed via a copy even if
-the required lock is not held.
-
+In the example, the guarded field 'names' can be accessed via a copy even if the
+required lock is not held.
