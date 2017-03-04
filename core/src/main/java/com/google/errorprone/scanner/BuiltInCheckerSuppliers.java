@@ -81,6 +81,7 @@ import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
+import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
 import com.google.errorprone.bugpatterns.IterableAndIterator;
 import com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation;
@@ -307,6 +308,7 @@ public class BuiltInCheckerSuppliers {
           InfiniteRecursion.class,
           InjectOnFinalField.class,
           InvalidPatternSyntax.class,
+          InvalidTimeZoneID.class,
           IsInstanceOfClass.class,
           IsLoggableTagLength.class,
           JavaxInjectOnAbstractMethod.class,
