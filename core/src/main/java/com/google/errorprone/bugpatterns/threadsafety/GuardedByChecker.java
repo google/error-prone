@@ -41,8 +41,8 @@ import com.sun.tools.javac.code.Type;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "GuardedByChecker",
-  altNames = "GuardedBy",
+  name = "GuardedBy",
+  altNames = "GuardedByChecker",
   summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
   category = JDK,
   severity = ERROR
@@ -177,7 +177,7 @@ public class GuardedByChecker extends GuardedByValidator
     }
     return null;
   }
-  
+
   private boolean enclosingInstance(GuardedByExpression expr) {
     while (expr.kind() == Kind.SELECT) {
       expr = ((Select) expr).base();
