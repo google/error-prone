@@ -53,7 +53,7 @@ import javax.tools.StandardLocation;
  * Helps test Error Prone bug checkers and compilations.
  */
 public class CompilationTestHelper {
-  private static final List<String> DEFAULT_ARGS =
+  private static final ImmutableList<String> DEFAULT_ARGS =
       ImmutableList.of(
           "-encoding",
           "UTF-8",
