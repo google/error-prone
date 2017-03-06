@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.METHOD;
+import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.base.Predicate;
@@ -36,6 +37,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
@@ -56,7 +58,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    if (!classTree.getKind().equals(CLASS)) {
+    if (!classTree.getKind().equals(CLASS) || isInPrivateScope(state)) {
       return NO_MATCH;
     }
 
@@ -102,5 +104,21 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
     }
     return describeMatch(
         classTree, addMembers(classTree, state, "private " + classTree.getSimpleName() + "() {}"));
+  }
+
+  private static boolean isInPrivateScope(VisitorState state) {
+    TreePath treePath = state.getPath();
+    do {
+      Tree currentLeaf = treePath.getLeaf();
+      if (ClassTree.class.isInstance(currentLeaf)) {
+        ClassTree currentClassTree = (ClassTree) currentLeaf;
+        if (currentClassTree.getModifiers().getFlags().contains(PRIVATE)) {
+          return true;
+        }
+      }
+      treePath = treePath.getParentPath();
+    } while (treePath != null);
+
+    return false;
   }
 }

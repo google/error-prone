@@ -46,6 +46,39 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
+  public void privateClassesGetLeftAlone() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "final class Test {",
+            "  private static class Blah {",
+            "    static void blah() {}",
+            "  }",
+            "  private Test() {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void privateScopedClassesGetLeftAlone() throws IOException {
+    System.out.println("privateScopedClassesGetLeftAlone - privateScopedClassesGetLeftAlone");
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "final class Test {",
+            "  private static class Blah {",
+            "    static class Bleh {",
+            "      static void bleh() {}",
+            "    }",
+            "  }",
+            "  private Test() {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void utilityClassesGetAPrivateConstructor_onlyFields() throws IOException {
     testHelper
         .addInputLines(
