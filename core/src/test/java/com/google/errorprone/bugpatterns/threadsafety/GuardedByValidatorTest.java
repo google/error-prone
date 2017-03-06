@@ -22,14 +22,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link GuardedByValidator}Test */
+/** {@link GuardedByChecker} annotation syntax GuardedByValidationResult test */
 @RunWith(JUnit4.class)
 public class GuardedByValidatorTest {
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(GuardedByValidator.class, getClass());
+    compilationHelper = CompilationTestHelper.newInstance(GuardedByChecker.class, getClass());
   }
 
   @Test

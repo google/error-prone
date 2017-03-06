@@ -219,7 +219,6 @@ import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMe
 import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
-import com.google.errorprone.bugpatterns.threadsafety.GuardedByValidator;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableEnumChecker;
@@ -297,7 +296,6 @@ public class BuiltInCheckerSuppliers {
           GetClassOnAnnotation.class,
           GetClassOnClass.class,
           GuardedByChecker.class,
-          GuardedByValidator.class,
           GuavaSelfEquals.class,
           HashtableContains.class,
           IdentityBinaryExpression.class,

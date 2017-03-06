@@ -23,11 +23,13 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
@@ -47,7 +49,7 @@ import com.sun.tools.javac.code.Type;
   category = JDK,
   severity = ERROR
 )
-public class GuardedByChecker extends GuardedByValidator
+public class GuardedByChecker extends BugChecker
     implements VariableTreeMatcher, MethodTreeMatcher, LambdaExpressionTreeMatcher {
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
@@ -61,7 +63,7 @@ public class GuardedByChecker extends GuardedByValidator
       return NO_MATCH;
     }
     analyze(state);
-    return GuardedByValidator.validate(this, tree, state);
+    return validate(tree, state);
   }
 
   @Override
@@ -84,7 +86,7 @@ public class GuardedByChecker extends GuardedByValidator
     // for a local or a parameter, but they won't have @GuardedBy annotations.
     //
     // Field initializers (like constructors) are not checked for accesses of guarded fields.
-    return GuardedByValidator.validate(this, tree, state);
+    return validate(tree, state);
   }
 
   protected Description checkGuardedAccess(
@@ -213,5 +215,16 @@ public class GuardedByChecker extends GuardedByValidator
       return;
     }
     state.reportMatch(description);
+  }
+
+  /** Validates that {@code @GuardedBy} strings can be resolved. */
+  Description validate(Tree tree, VisitorState state) {
+    GuardedByValidationResult result = GuardedByUtils.isGuardedByValid(tree, state);
+    if (result.isValid()) {
+      return Description.NO_MATCH;
+    }
+    return buildDescription(tree)
+        .setMessage(String.format("Invalid @GuardedBy expression: %s", result.message()))
+        .build();
   }
 }
