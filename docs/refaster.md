@@ -70,10 +70,10 @@ TIP: These instructions are valid as of the most recent snapshot at HEAD, and ar
 Use the error prone javac jar and the error_prone_refaster jar to compile the refaster template:
 
 ```shell
-wget http://repo1.maven.org/maven2/com/google/errorprone/javac/9-dev-r3297-1/javac-9-dev-r3297-1.jar
-wget https://oss.sonatype.org/content/repositories/snapshots/com/google/errorprone/error_prone_refaster/2.0.16-SNAPSHOT/error_prone_refaster-2.0.16-20170121.005350-7.jar
+wget http://repo1.maven.org/maven2/com/google/errorprone/javac/9-dev-r3297-4/javac-9-dev-r3297-4.jar
+wget http://repo1.maven.org/maven2/com/google/errorprone/error_prone_refaster/2.0.18/error_prone_refaster-2.0.18.jar
 
-java -cp javac-9-dev-r3297-1.jar:error_prone_refaster-2.0.16-20170121.005350-7.jar \
+java -cp javac-9-dev-r3297-4.jar:error_prone_refaster-2.0.18.jar \
   com.google.errorprone.refaster.RefasterRuleCompiler \
   StringIsEmpty.java --out `pwd`/myrule.refaster
  ```
