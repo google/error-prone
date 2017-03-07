@@ -205,6 +205,7 @@ import com.google.errorprone.bugpatterns.inject.QualifierOnMethodWithoutProvides
 import com.google.errorprone.bugpatterns.inject.QualifierWithTypeUse;
 import com.google.errorprone.bugpatterns.inject.ScopeAnnotationOnInterfaceOrAbstractClass;
 import com.google.errorprone.bugpatterns.inject.ScopeOrQualifierAnnotationRetention;
+import com.google.errorprone.bugpatterns.inject.dagger.AndroidInjectionBeforeSuper;
 import com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions;
 import com.google.errorprone.bugpatterns.inject.dagger.MultibindsInsteadOfMultibindings;
 import com.google.errorprone.bugpatterns.inject.dagger.PrivateConstructorForNoninstantiableModule;
@@ -266,6 +267,7 @@ public class BuiltInCheckerSuppliers {
   /** A list of all checks with severity ERROR that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_ERRORS =
       getSuppliers(
+          AndroidInjectionBeforeSuper.class,
           ArrayEquals.class,
           ArrayHashCode.class,
           ArrayToString.class,
