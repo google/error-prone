@@ -36,7 +36,7 @@ cd /full/path/to/your/source/root
 patch -p0 -u -i error-prone.patch
 ```
 
-NOTE: These are the flags as currently present at the latest snapshot at HEAD. This feature is experimental, and subject to change. If you have any feedback about this process, please let us know via the [Google Group][grp]
+NOTE: This feature is experimental, and subject to change. If you have any feedback about this process, please let us know via the [Google Group][grp]
 
 [MissingOverride]: ../bugpattern/MissingOverride
 [DefaultCharset]: ../bugpattern/DefaultCharset
