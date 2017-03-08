@@ -58,7 +58,10 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    if (!classTree.getKind().equals(CLASS) || isInPrivateScope(state)) {
+    if (!classTree.getKind().equals(CLASS)
+        || classTree.getExtendsClause() != null
+        || !classTree.getImplementsClause().isEmpty()
+        || isInPrivateScope(state)) {
       return NO_MATCH;
     }
 

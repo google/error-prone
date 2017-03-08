@@ -61,8 +61,50 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
+  public void subClassesGetLeftAlone() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Foo.java", //
+            "public class Foo<E> {",
+            "  private E entity;",
+            "  public E getEntity() {",
+            "    return entity;",
+            "  }",
+            "  public void setEntity(E anEntity) {",
+            "    entity = anEntity;",
+            "  }",
+            "  public static class BooleanFoo extends Foo<Boolean> {",
+            "    private static final long serialVersionUID = 123456789012L;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void implementingClassesGetLeftAlone() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Foo.java", //
+            "import java.io.Serializable;",
+            "public class Foo {",
+            "  private int entity;",
+            "  public int getEntity() {",
+            "    return entity;",
+            "  }",
+            "  public void setEntity(int anEntity) {",
+            "    entity = anEntity;",
+            "  }",
+            "  public static class Bar implements Serializable {",
+            "    private static final long serialVersionUID = 123456789012L;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void privateScopedClassesGetLeftAlone() throws IOException {
-    System.out.println("privateScopedClassesGetLeftAlone - privateScopedClassesGetLeftAlone");
     testHelper
         .addInputLines(
             "in/Test.java", //
