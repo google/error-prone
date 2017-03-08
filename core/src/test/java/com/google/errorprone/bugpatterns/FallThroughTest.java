@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
-import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
 import org.junit.Test;
@@ -40,38 +38,6 @@ public class FallThroughTest {
   @Test
   public void negative() throws IOException {
     testHelper.addSourceFile("FallThroughNegativeCases.java").doTest();
-  }
-
-  @Test
-  public void unnecessaryFallThrough() throws IOException {
-    // make sure the "fall through" comment gets deleted
-    BugCheckerRefactoringTestHelper.newInstance(new FallThrough(), getClass())
-        .addInputLines(
-            "in/Test.java",
-            "class Test {",
-            "  void f(int x) {",
-            "    switch (x) {",
-            "      case 1:",
-            "        break;",
-            "      // fall through",
-            "      case 2:",
-            "        break;",
-            "    }",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Test.java",
-            "class Test {",
-            "  void f(int x) {",
-            "    switch (x) {",
-            "      case 1:",
-            "        break;",
-            "case 2:",
-            "        break;",
-            "    }",
-            "  }",
-            "}")
-        .doTest(TEXT_MATCH);
   }
 
   @Test

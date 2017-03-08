@@ -27,7 +27,6 @@ import com.google.common.collect.PeekingIterator;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.BlockTree;
@@ -65,21 +64,22 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
       // reported an error if that statement wasn't reachable, and the answer is
       // independent of any preceding statements.
       boolean completes = Reachability.canCompleteNormally(getLast(caseTree.stats));
-      int caseEndPosition = caseEndPosition(state, caseTree);
       String comments =
           state
               .getSourceCode()
-              .subSequence(caseEndPosition, next.getStartPosition())
+              .subSequence(caseEndPosition(state, caseTree), next.getStartPosition())
               .toString()
               .trim();
       if (completes && !FALL_THROUGH_PATTERN.matcher(comments).find()) {
-        state.reportMatch(describeMatch(next, SuggestedFix.prefixWith(next, "// fall through\n")));
-      } else if (!completes && FALL_THROUGH_PATTERN.matcher(comments).find()) {
-        SuggestedFix deleteFallThroughComment =
-            SuggestedFix.replace(caseEndPosition, next.getStartPosition(), "\n");
         state.reportMatch(
             buildDescription(next)
-                .addFix(deleteFallThroughComment)
+                .setMessage(
+                    "Switch case may fall through; add a `// fall through` comment if it was"
+                        + " deliberate")
+                .build());
+      } else if (!completes && FALL_THROUGH_PATTERN.matcher(comments).find()) {
+        state.reportMatch(
+            buildDescription(next)
                 .setMessage("Switch case has 'fall through' comment, but does not fall through")
                 .build());
       }
