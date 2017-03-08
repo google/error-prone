@@ -17,6 +17,9 @@ after we've vetted them against Google's codebase.
 
 ## On by default : ERROR
 
+__[AndroidInjectionBeforeSuper](bugpattern/AndroidInjectionBeforeSuper)__<br>
+AndroidInjection.inject() should always be invoked before calling super.lifecycleMethod()
+
 __[ArrayEquals](bugpattern/ArrayEquals)__<br>
 Reference equality used to compare arrays
 
@@ -101,11 +104,8 @@ Calling getClass() on an annotation may return a proxy class
 __[GetClassOnClass](bugpattern/GetClassOnClass)__<br>
 Calling getClass() on an object of type Class returns the Class object for java.lang.Class; you probably meant to operate on the object directly
 
-__[GuardedByChecker](bugpattern/GuardedByChecker)__<br>
+__[GuardedBy](bugpattern/GuardedBy)__<br>
 Checks for unguarded accesses to fields and methods with @GuardedBy annotations
-
-__[GuardedByValidator](bugpattern/GuardedByValidator)__<br>
-Invalid @GuardedBy expression
 
 __[GuavaSelfEquals](bugpattern/GuavaSelfEquals)__<br>
 An object is tested for equality to itself using Guava Libraries
@@ -145,6 +145,9 @@ A class can be annotated with at most one scope annotation.
 
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
+
+__[InvalidTimeZoneID](bugpattern/InvalidTimeZoneID)__<br>
+Invalid time zone identifier. TimeZone.getTimeZone(String) will silently return GMT instead of the time zone you intended.
 
 __[IsInstanceOfClass](bugpattern/IsInstanceOfClass)__<br>
 The argument to Class#isInstance(Object) should not be a Class
