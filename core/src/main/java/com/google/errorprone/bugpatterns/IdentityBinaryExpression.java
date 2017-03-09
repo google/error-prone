@@ -19,46 +19,100 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.toType;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Tree;
+import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "IdentityBinaryExpression",
   category = JDK,
-  summary = "Writing \"a && a\", \"a || a\", \"a & a\", or \"a | a\" is equivalent to \"a\".",
-  explanation = "Writing `a && a`, `a || a`, `a & a`, or `a | a` is equivalent to `a`.",
+  summary = "A binary expression where both operands are the same is usually incorrect.",
   severity = ERROR
 )
 public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMatcher {
+
+  private static final Matcher<Tree> ASSERTION =
+      toType(
+          ExpressionTree.class,
+          staticMethod()
+              .anyClass()
+              .withNameMatching(Pattern.compile("assertTrue|assertFalse|assertThat")));
+
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
-    String opName;
+    if (constValue(tree.getLeftOperand()) != null) {
+      switch (tree.getKind()) {
+        case LEFT_SHIFT: // bit field initialization, e.g. `1 << 1`, `1 << 2`, ...
+        case DIVIDE: // aspect ratios, e.g. `1.0f / 1.0f`, `2.0f / 3.0f`, ...
+        case MINUS: // character arithmetic, e.g. `'A' - 'A'`, `'B' - 'A'`, ...
+          return NO_MATCH;
+        default: // fall out
+      }
+    }
+    String replacement;
     switch (tree.getKind()) {
-      case CONDITIONAL_AND:
-        opName = "&&";
+      case DIVIDE:
+        replacement = "1";
         break;
-      case CONDITIONAL_OR:
-        opName = "||";
+      case MINUS:
+      case REMAINDER:
+        replacement = "0";
+        break;
+      case GREATER_THAN_EQUAL:
+      case LESS_THAN_EQUAL:
+      case EQUAL_TO:
+        if (ASSERTION.matches(state.getPath().getParentPath().getLeaf(), state)) {
+          return NO_MATCH;
+        }
+        replacement = "true";
+        break;
+      case LESS_THAN:
+      case GREATER_THAN:
+      case NOT_EQUAL_TO:
+      case XOR:
+        if (ASSERTION.matches(state.getPath().getParentPath().getLeaf(), state)) {
+          return NO_MATCH;
+        }
+        replacement = "false";
         break;
       case AND:
-        opName = "&";
-        break;
       case OR:
-        opName = "|";
+      case CONDITIONAL_AND:
+      case CONDITIONAL_OR:
+        replacement = state.getSourceForNode(tree.getLeftOperand());
         break;
+      case LEFT_SHIFT:
+      case RIGHT_SHIFT:
+      case UNSIGNED_RIGHT_SHIFT:
+        replacement = null; // ¯\_(ツ)_/¯
+        break;
+      case MULTIPLY:
+      case PLUS:
       default:
         return NO_MATCH;
     }
     if (!tree.getLeftOperand().toString().equals(tree.getRightOperand().toString())) {
       return NO_MATCH;
     }
-    return buildDescription(tree)
-        .setMessage(String.format("Writing `a %s a` is equivalent to `a`", opName))
-        .build();
+    Description.Builder description = buildDescription(tree);
+    if (replacement != null) {
+      description.setMessage(
+          String.format(
+              "A binary expression where both operands are the same is usually incorrect;"
+                  + " the value of this expression is always `%s`.",
+              replacement));
+    }
+    return description.build();
   }
 }

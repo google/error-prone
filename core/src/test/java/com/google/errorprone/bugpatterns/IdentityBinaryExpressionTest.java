@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
+import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -93,4 +94,62 @@ public class IdentityBinaryExpressionTest {
             "}")
         .doTest();
   }
+
+
+  @Test
+  public void negativeLiteral() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", "class Test {", "  double f() {", "    return 1.0 / 1.0;", "  }", "}")
+        .doTest();
+  }
+
+  @Test
+  public void fixes() throws IOException {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java", //
+            "class Test {",
+            "  void f(int a) {",
+            "    // BUG: Diagnostic contains: always `1`",
+            "    int r = a / a;",
+            "    // BUG: Diagnostic contains: always `0`",
+            "    r = a - a;",
+            "    // BUG: Diagnostic contains: always `0`",
+            "    r = a % a;",
+            "    // BUG: Diagnostic contains: always `true`",
+            "    boolean b = a >= a;",
+            "    // BUG: Diagnostic contains: always `true`",
+            "    b = a == a;",
+            "    // BUG: Diagnostic contains: always `true`",
+            "    b = a <= a;",
+            "    // BUG: Diagnostic contains: always `false`",
+            "    b = a > a;",
+            "    // BUG: Diagnostic contains: always `false`",
+            "    b = a < a;",
+            "    // BUG: Diagnostic contains: always `false`",
+            "    b = a != a;",
+            "    // BUG: Diagnostic contains: always `false`",
+            "    b = b ^ b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeAssert() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.assertTrue;",
+            "import static org.junit.Assert.assertFalse;",
+            "class Test {",
+            "  void f(int x) {",
+            "    assertTrue(x == x);",
+            "    assertFalse(x != x);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
+
