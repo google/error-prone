@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Verify;
+import com.google.common.collect.Iterables;
 import com.google.common.io.ByteStreams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
@@ -706,6 +707,104 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "  static final int A = 42;",
             "  // BUG: Diagnostic contains: Boolean(false)",
             "  static final boolean B = false;",
+            "}")
+        .doTest();
+  }
+
+  /** A {@link BugChecker} that prints the result type of the first argument in method calls. */
+  @BugPattern(
+    name = "PrintResultTypeOfFirstArgument",
+    category = Category.ONE_OFF,
+    severity = SeverityLevel.ERROR,
+    summary = "Prints the type of the first argument in method calls"
+  )
+  public static class PrintResultTypeOfFirstArgument extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      List<? extends ExpressionTree> arguments = tree.getArguments();
+      if (arguments.isEmpty()) {
+        return Description.NO_MATCH;
+      }
+      return buildDescription(tree)
+          .setMessage(ASTHelpers.getResultType(Iterables.getFirst(arguments, null)).toString())
+          .build();
+    }
+  }
+
+  @Test
+  public void getResultType_findsConcreteType_withGenericMethodCall() {
+    CompilationTestHelper.newInstance(PrintResultTypeOfFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract <T> T get(T obj);",
+            "  abstract void target(Object param);",
+            "  private void test() {",
+            "    // BUG: Diagnostic contains: java.lang.Integer",
+            "    target(get(1));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void getResultType_findsIntType_withPrimitiveInt() {
+    CompilationTestHelper.newInstance(PrintResultTypeOfFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(int i);",
+            "  private void test(int j) {",
+            "    // BUG: Diagnostic contains: int",
+            "    target(j);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void getResultType_findsConstructedType_withConstructor() {
+    CompilationTestHelper.newInstance(PrintResultTypeOfFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(String s);",
+            "  private void test() {",
+            "    // BUG: Diagnostic contains: java.lang.String",
+            "    target(new String());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void getResultType_findsNullType_withNull() {
+    CompilationTestHelper.newInstance(PrintResultTypeOfFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(String s);",
+            "  private void test() {",
+            "    // BUG: Diagnostic contains: <nulltype>",
+            "    target(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void getResultType_findsConcreteType_withGenericConstructorCall() {
+    CompilationTestHelper.newInstance(PrintResultTypeOfFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class GenericTest<T> {}",
+            "abstract class Test {",
+            "  abstract void target(Object param);",
+            "  private void test() {",
+            "    // BUG: Diagnostic contains: GenericTest<java.lang.String>",
+            "    target(new GenericTest<String>());",
+            "  }",
             "}")
         .doTest();
   }

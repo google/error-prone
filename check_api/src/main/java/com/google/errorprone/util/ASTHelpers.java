@@ -16,6 +16,7 @@
 
 package com.google.errorprone.util;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 
 import com.google.common.base.CharMatcher;
@@ -303,20 +304,35 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns the type of a receiver of a method call expression.
-   * Precondition: the expressionTree corresponds to a method call.
+   * Returns the type that this expression tree will evaluate to. If its a literal, an identifier,
+   * or a member select this is the actual type, if its a method invocation then its the return type
+   * of the method (after instantiating generic types), if its a constructor then its the type of
+   * the returned class.
+   *
+   * <p>TODO(andrewrice) consider replacing {@code getReturnType} with this method
+   *
+   * @param expressionTree the tree to evaluate
+   * @return the result type of this tree or null if unable to resolve it
+   */
+  public static Type getResultType(ExpressionTree expressionTree) {
+    Type type = ASTHelpers.getType(expressionTree);
+    return firstNonNull(type.getReturnType(), type);
+  }
+
+  /**
+   * Returns the type of a receiver of a method call expression. Precondition: the expressionTree
+   * corresponds to a method call.
    *
    * <p>Examples:
-   * <pre>
-   * {@code
-   *    a.b.foo() ==> type of a.b
-   *    a.bar().foo() ==> type of a.bar()
-   *    this.foo() ==> type of this
-   *    foo() ==> type of this
-   *    TheClass.aStaticMethod() ==> TheClass
-   *    aStaticMethod() ==> type of class in which method is defined
-   * }
-   * </pre>
+   *
+   * <pre>{@code
+   * a.b.foo() ==> type of a.b
+   * a.bar().foo() ==> type of a.bar()
+   * this.foo() ==> type of this
+   * foo() ==> type of this
+   * TheClass.aStaticMethod() ==> TheClass
+   * aStaticMethod() ==> type of class in which method is defined
+   * }</pre>
    */
   public static Type getReceiverType(ExpressionTree expressionTree) {
     if (expressionTree instanceof JCFieldAccess) {
