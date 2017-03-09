@@ -18,6 +18,7 @@ package dagger.android;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Service;
 
 /**
  * Stub class for {@code dagger.android.AndroidInjection}. ErrorProne isn't an Android project and
@@ -27,4 +28,6 @@ public final class AndroidInjection {
   public static void inject(Activity activity) {}
 
   public static void inject(Fragment fragment) {}
+
+  public static void inject(Service service) {}
 }

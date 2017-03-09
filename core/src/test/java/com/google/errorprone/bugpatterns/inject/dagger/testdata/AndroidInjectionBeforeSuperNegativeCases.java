@@ -18,7 +18,10 @@ package com.google.errorprone.bugpatterns.inject.dagger.testdata;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Service;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import dagger.android.AndroidInjection;
 
 final class AndroidInjectionBeforeSuperNegativeCases {
@@ -67,6 +70,19 @@ final class AndroidInjectionBeforeSuperNegativeCases {
     public void onAttach(Activity activity) {
       AndroidInjection.inject(this);
       super.onAttach(activity);
+    }
+  }
+
+  public class CorrectOrderService extends Service {
+    @Override
+    public void onCreate() {
+      AndroidInjection.inject(this);
+      super.onCreate();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+      return null;
     }
   }
 }

@@ -61,6 +61,7 @@ public final class AndroidInjectionBeforeSuper extends BugChecker implements Met
         "android.support.v4.app.Fragment",
         "onAttach",
         "dagger.android.support.AndroidSupportInjection"),
+    SERVICE("android.app.Service", "onCreate", "dagger.android.AndroidInjection"),
     ;
 
     private final String lifecycleMethod;
