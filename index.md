@@ -53,6 +53,5 @@ its type int is not compatible with its collection's type argument Short
 Doug Lea, on learning of [a bug we discovered in
 ConcurrentHashMap](https://bugs.openjdk.java.net/browse/JDK-8176402):
 
-> Definitely embarrassing.
->
-> I guess I'm back to liking Error Prone even though it sometimes annoys me :-)
+> Definitely embarrassing. I guess I'm back to liking Error Prone even though
+> it sometimes annoys me :-)
