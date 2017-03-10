@@ -144,7 +144,6 @@ import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SelfComparison;
-import com.google.errorprone.bugpatterns.SelfEquality;
 import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.SimpleDateFormatConstant;
@@ -345,7 +344,6 @@ public class BuiltInCheckerSuppliers {
           SelfAssignment.class,
           SelfComparison.class,
           SelfEquals.class,
-          SelfEquality.class,
           SizeGreaterThanOrEqualsZero.class,
           StreamToString.class,
           StringBuilderInitWithChar.class,

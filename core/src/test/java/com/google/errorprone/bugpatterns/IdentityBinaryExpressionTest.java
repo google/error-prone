@@ -95,12 +95,16 @@ public class IdentityBinaryExpressionTest {
         .doTest();
   }
 
-
   @Test
   public void negativeLiteral() {
     compilationHelper
         .addSourceLines(
-            "Test.java", "class Test {", "  double f() {", "    return 1.0 / 1.0;", "  }", "}")
+            "Test.java", //
+            "class Test {",
+            "  double f() {",
+            "    return 1.0 / 1.0;",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -111,25 +115,25 @@ public class IdentityBinaryExpressionTest {
             "in/Test.java", //
             "class Test {",
             "  void f(int a) {",
-            "    // BUG: Diagnostic contains: always `1`",
+            "    // BUG: Diagnostic contains: equivalent to `1`",
             "    int r = a / a;",
-            "    // BUG: Diagnostic contains: always `0`",
+            "    // BUG: Diagnostic contains: equivalent to `0`",
             "    r = a - a;",
-            "    // BUG: Diagnostic contains: always `0`",
+            "    // BUG: Diagnostic contains: equivalent to `0`",
             "    r = a % a;",
-            "    // BUG: Diagnostic contains: always `true`",
+            "    // BUG: Diagnostic contains: equivalent to `true`",
             "    boolean b = a >= a;",
-            "    // BUG: Diagnostic contains: always `true`",
+            "    // BUG: Diagnostic contains: equivalent to `true`",
             "    b = a == a;",
-            "    // BUG: Diagnostic contains: always `true`",
+            "    // BUG: Diagnostic contains: equivalent to `true`",
             "    b = a <= a;",
-            "    // BUG: Diagnostic contains: always `false`",
+            "    // BUG: Diagnostic contains: equivalent to `false`",
             "    b = a > a;",
-            "    // BUG: Diagnostic contains: always `false`",
+            "    // BUG: Diagnostic contains: equivalent to `false`",
             "    b = a < a;",
-            "    // BUG: Diagnostic contains: always `false`",
+            "    // BUG: Diagnostic contains: equivalent to `false`",
             "    b = a != a;",
-            "    // BUG: Diagnostic contains: always `false`",
+            "    // BUG: Diagnostic contains: equivalent to `false`",
             "    b = b ^ b;",
             "  }",
             "}")
@@ -151,5 +155,34 @@ public class IdentityBinaryExpressionTest {
             "}")
         .doTest();
   }
-}
 
+  @Test
+  public void isNan() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  boolean f(float a, Float b, double c, Double d) {",
+            "    boolean r = false;",
+            "    // BUG: Diagnostic contains: equivalent to `Float.isNan(a)`",
+            "    r |= a == a;",
+            "    // BUG: Diagnostic contains: equivalent to `!Float.isNan(a)`",
+            "    r |= a != a;",
+            "    // BUG: Diagnostic contains: equivalent to `Float.isNan(b)`",
+            "    r |= b == b;",
+            "    // BUG: Diagnostic contains: equivalent to `!Float.isNan(b)`",
+            "    r |= b != b;",
+            "    // BUG: Diagnostic contains: equivalent to `Double.isNan(c)`",
+            "    r |= c == c;",
+            "    // BUG: Diagnostic contains: equivalent to `!Double.isNan(c)`",
+            "    r |= c != c;",
+            "    // BUG: Diagnostic contains: equivalent to `Double.isNan(d)`",
+            "    r |= d == d;",
+            "    // BUG: Diagnostic contains: equivalent to `!Double.isNan(d)`",
+            "    r |= d != d;",
+            "    return r;",
+            "  }",
+            "}")
+        .doTest();
+  }
+}
