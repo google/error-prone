@@ -257,15 +257,15 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void canOverrideByAltname() throws Exception {
+  public void cantOverrideByAltname() throws Exception {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(DisableableChecker.class)).build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
-    Result exitCode = compiler.compile(new String[]{"-Xep:foo:OFF"},
-        sources);
-    assertThat(exitCode).isEqualTo(Result.OK);
+    Result exitCode = compiler.compile(new String[] {"-Xep:foo:OFF"}, sources);
+    assertThat(exitCode).isEqualTo(Result.CMDERR);
+    assertThat(output.toString()).contains("foo is not a valid checker name");
   }
 
   @Test
