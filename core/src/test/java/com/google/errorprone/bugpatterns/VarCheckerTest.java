@@ -310,4 +310,20 @@ public class VarCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nonFinalTWR() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.io.InputStream;",
+            "class Test {",
+            "  public void x() {",
+            "    try (InputStream is = null) {",
+            "    } catch (Exception e) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

@@ -89,10 +89,11 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
       if (Source.instance(state.context).allowEffectivelyFinalInInnerClasses()) {
         // In Java 8, the final modifier is never necessary on locals/parameters because
         // effectively final variables can be used anywhere a final variable is required.
-        return buildDescription(tree)
-            .setMessage(UNNECESSARY_FINAL)
-            .addFix(SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL))
-            .build();
+        Fix fix = SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL);
+        // The fix may be null for TWR variables that were not explicitly final
+        if (fix != null) {
+          return buildDescription(tree).setMessage(UNNECESSARY_FINAL).addFix(fix).build();
+        }
       }
       return Description.NO_MATCH;
     }
