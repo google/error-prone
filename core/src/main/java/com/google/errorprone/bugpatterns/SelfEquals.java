@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
 import static com.google.errorprone.matchers.Matchers.sameArgument;
+import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
@@ -46,6 +47,7 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 /** @author bhagwani@google.com (Sumit Bhagwani) */
@@ -56,6 +58,11 @@ import javax.annotation.Nullable;
   severity = ERROR
 )
 public class SelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
+
+  private static final Matcher<Tree> ASSERTION =
+      toType(
+          MethodInvocationTree.class,
+          staticMethod().anyClass().withNameMatching(Pattern.compile("assertTrue|assertThat")));
 
   private static final Matcher<MethodInvocationTree> INSTANCE_MATCHER =
       allOf(
@@ -74,6 +81,9 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (ASSERTION.matches(state.getPath().getParentPath().getLeaf(), state)) {
+      return NO_MATCH;
+    }
     List<? extends ExpressionTree> args = tree.getArguments();
     ExpressionTree toReplace;
     if (INSTANCE_MATCHER.matches(tree, state)) {

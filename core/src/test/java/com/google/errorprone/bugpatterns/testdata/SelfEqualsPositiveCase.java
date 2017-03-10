@@ -75,12 +75,10 @@ public class SelfEqualsPositiveCase {
   }
 
   public void testAssertTrue(SelfEqualsPositiveCase obj) {
-    // BUG: Diagnostic contains:
     Assert.assertTrue(obj.equals(obj));
   }
 
   public void testAssertThat(SelfEqualsPositiveCase obj) {
-    // BUG: Diagnostic contains:
     assertThat(obj.equals(obj)).isTrue();
   }
 
