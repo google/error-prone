@@ -18,40 +18,46 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
+import static com.google.errorprone.matchers.Matchers.sameArgument;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCBlock;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import java.util.List;
+import javax.annotation.Nullable;
 
-/**
- * Points out if an object is tested for equality to itself.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/** @author bhagwani@google.com (Sumit Bhagwani) */
 @BugPattern(
   name = "SelfEquals",
-  summary = "An object is tested for equality to itself",
+  summary = "Testing an object for equality with itself will always be true.",
   category = JDK,
   severity = ERROR
 )
 public class SelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
-  /**
-   * Matches calls to any instance method called "equals" with exactly one argument in which the
-   * receiver is the same reference as the argument.
-   *
-   * Example: foo.equals(foo)
-   */
-  private static final Matcher<MethodInvocationTree> EQUALS_MATCHER =
+  private static final Matcher<MethodInvocationTree> INSTANCE_MATCHER =
       allOf(
           instanceMethod()
               .onDescendantOf("java.lang.Object")
@@ -59,31 +65,70 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
               .withParameters("java.lang.Object"),
           receiverSameAsArgument(0));
 
-  @Override
-  public Description matchMethodInvocation(
-      MethodInvocationTree methodInvocationTree, VisitorState state) {
-    if (!EQUALS_MATCHER.matches(methodInvocationTree, state)) {
-      return Description.NO_MATCH;
-    }
+  private static final Matcher<MethodInvocationTree> STATIC_MATCHER =
+      allOf(
+          anyOf(
+              staticMethod().onClass("com.google.common.base.Objects").named("equal"),
+              staticMethod().onClass("java.util.Objects").named("equals")),
+          sameArgument(0, 1));
 
-    return describe(methodInvocationTree, state);
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    List<? extends ExpressionTree> args = tree.getArguments();
+    ExpressionTree toReplace;
+    if (INSTANCE_MATCHER.matches(tree, state)) {
+      toReplace = args.get(0);
+    } else if (STATIC_MATCHER.matches(tree, state)) {
+      if (args.get(0).getKind() == Kind.IDENTIFIER && args.get(1).getKind() != Kind.IDENTIFIER) {
+        toReplace = args.get(0);
+      } else {
+        toReplace = args.get(1);
+      }
+    } else {
+      return NO_MATCH;
+    }
+    Description.Builder description = buildDescription(tree);
+    Fix fix = fieldFix(toReplace, state);
+    if (fix != null) {
+      description.addFix(fix);
+    }
+    return description.build();
   }
-  
-  private Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    /**
-     * Cases:
-     * <ol>
-     * <li>foo.equals(foo) ==> foo.equals(other.foo)</li>
-     * <li>foo.equals(this.foo) ==> foo.equals(other.foo)</li>
-     * <li>this.foo.equals(foo) ==> this.foo.equals(other.foo)</li>
-     * <li>this.foo.equals(this.foo) ==> this.foo.equals(other.foo)</li>
-     * </ol>
-     */
-    GuavaSelfEquals.verifyArgsType(methodInvocationTree);
-    List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
-    // Choose argument to replace.
-    ExpressionTree toReplace = args.get(0);
-    Fix fix = GuavaSelfEquals.generateFix(methodInvocationTree, state, toReplace);
-    return describeMatch(methodInvocationTree, fix);
+
+  @Nullable
+  protected static Fix fieldFix(Tree toReplace, VisitorState state) {
+    TreePath path = state.getPath();
+    while (path != null
+        && path.getLeaf().getKind() != Kind.CLASS
+        && path.getLeaf().getKind() != Kind.BLOCK) {
+      path = path.getParentPath();
+    }
+    if (path == null) {
+      return null;
+    }
+    List<? extends JCTree> members;
+    // Must be block or class
+    if (path.getLeaf().getKind() == Kind.CLASS) {
+      members = ((JCClassDecl) path.getLeaf()).getMembers();
+    } else {
+      members = ((JCBlock) path.getLeaf()).getStatements();
+    }
+    for (JCTree jcTree : members) {
+      if (jcTree.getKind() == Kind.VARIABLE) {
+        JCVariableDecl declaration = (JCVariableDecl) jcTree;
+        TypeSymbol variableTypeSymbol =
+            state.getTypes().erasure(ASTHelpers.getType(declaration)).tsym;
+
+        if (ASTHelpers.getSymbol(toReplace).isMemberOf(variableTypeSymbol, state.getTypes())) {
+          if (toReplace.getKind() == Kind.IDENTIFIER) {
+            return SuggestedFix.prefixWith(toReplace, declaration.getName() + ".");
+          } else {
+            return SuggestedFix.replace(
+                ((JCFieldAccess) toReplace).getExpression(), declaration.getName().toString());
+          }
+        }
+      }
+    }
+    return null;
   }
 }

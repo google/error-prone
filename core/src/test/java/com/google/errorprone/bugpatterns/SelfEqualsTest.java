@@ -24,6 +24,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Unit tests for {@link SelfEquals} bug pattern.
+ *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @RunWith(JUnit4.class)
@@ -54,9 +55,33 @@ public class SelfEqualsTest {
             "  <T> boolean f() {",
             "    T t = null;",
             "    int y = 0;",
-            "    // BUG: Diagnostic contains: return true;",
+            "    // BUG: Diagnostic contains:",
             "    return t.equals(t);",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testPositiveCase_guava() throws Exception {
+    compilationHelper.addSourceFile("GuavaSelfEqualsPositiveCase.java").doTest();
+  }
+
+  @Test
+  public void testNegativeCase_guava() throws Exception {
+    compilationHelper.addSourceFile("GuavaSelfEqualsNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void enclosingStatement() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Objects;",
+            "class Test {",
+            "  Object a = new Object();",
+            "  // BUG: Diagnostic contains:",
+            "  boolean b = Objects.equal(a, a);",
             "}")
         .doTest();
   }

@@ -71,7 +71,6 @@ import com.google.errorprone.bugpatterns.FuturesGetCheckedIllegalExceptionType;
 import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
 import com.google.errorprone.bugpatterns.GetClassOnEnum;
-import com.google.errorprone.bugpatterns.GuavaSelfEquals;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.ImmutableModification;
@@ -298,7 +297,6 @@ public class BuiltInCheckerSuppliers {
           GetClassOnAnnotation.class,
           GetClassOnClass.class,
           GuardedByChecker.class,
-          GuavaSelfEquals.class,
           HashtableContains.class,
           IdentityBinaryExpression.class,
           ImmutableChecker.class,

@@ -116,7 +116,7 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
     } else {
       return Description.NO_MATCH;
     }
-    Fix fix = GuavaSelfEquals.fieldFix(toReplace, state);
+    Fix fix = SelfEquals.fieldFix(toReplace, state);
     if (fix != null) {
       description.addFix(fix);
     }

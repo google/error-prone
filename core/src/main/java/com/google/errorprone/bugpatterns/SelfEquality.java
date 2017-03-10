@@ -91,7 +91,7 @@ public class SelfEquality extends BugChecker implements BinaryTreeMatcher {
       toReplace = rightOperand;
     }
 
-    Fix fix = GuavaSelfEquals.fieldFix(toReplace, state);
+    Fix fix = SelfEquals.fieldFix(toReplace, state);
     if (fix == null) {
       // No good replacement, let's try something else!
 

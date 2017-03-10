@@ -70,17 +70,17 @@ public class SelfEqualsPositiveCase {
       return false;
     }
     SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
-    // BUG: Diagnostic contains: An object is tested for equality to itself
+    // BUG: Diagnostic contains:
     return equals(this);
   }
 
   public void testAssertTrue(SelfEqualsPositiveCase obj) {
-    // BUG: Diagnostic contains: An object is tested for equality to itself
+    // BUG: Diagnostic contains:
     Assert.assertTrue(obj.equals(obj));
   }
 
   public void testAssertThat(SelfEqualsPositiveCase obj) {
-    // BUG: Diagnostic contains: An object is tested for equality to itself
+    // BUG: Diagnostic contains:
     assertThat(obj.equals(obj)).isTrue();
   }
 
@@ -106,7 +106,7 @@ public class SelfEqualsPositiveCase {
 
   public void testSub() {
     SubClass sc = new SubClass();
-    // BUG: Diagnostic contains: An object is tested for equality to itself
+    // BUG: Diagnostic contains:
     sc.equals(sc);
   }
 }
