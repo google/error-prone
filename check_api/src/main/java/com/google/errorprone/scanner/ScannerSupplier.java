@@ -138,7 +138,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     Map<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
     if (severityOverrides.isEmpty()
         && !errorProneOptions.isEnableAllChecks()
-        && !errorProneOptions.isDropErrorsToWarnings()) {
+        && !errorProneOptions.isDropErrorsToWarnings()
+        && !errorProneOptions.isDisableAllChecks()) {
       return this;
     }
 
@@ -159,6 +160,14 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
           .filter(
               c -> c.defaultSeverity() == SeverityLevel.ERROR && c.suppressibility().disableable())
           .forEach(c -> severities.put(c.canonicalName(), SeverityLevel.WARNING));
+    }
+
+    if (errorProneOptions.isDisableAllChecks()) {
+      getAllChecks()
+          .values()
+          .stream()
+          .filter(c -> c.suppressibility().disableable())
+          .forEach(c -> disabled.add(c.canonicalName()));
     }
 
     // Process overrides

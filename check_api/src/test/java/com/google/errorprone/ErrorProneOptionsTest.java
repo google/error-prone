@@ -124,6 +124,13 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesDisableAllChecks() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepDisableAllChecks"});
+    assertThat(options.isDisableAllChecks()).isTrue();
+  }
+
+  @Test
   public void recognizesPatch() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(

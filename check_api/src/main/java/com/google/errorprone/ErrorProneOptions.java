@@ -49,6 +49,7 @@ public class ErrorProneOptions {
   private static final String PATCH_OUTPUT_LOCATION = "-XepPatchLocation:";
   private static final String ERRORS_AS_WARNINGS_FLAG = "-XepAllErrorsAsWarnings";
   private static final String ENABLE_ALL_CHECKS = "-XepAllDisabledChecksAsWarnings";
+  private static final String DISABLE_ALL_CHECKS = "-XepDisableAllChecks";
   private static final String IGNORE_UNKNOWN_CHECKS_FLAG = "-XepIgnoreUnknownCheckNames";
   private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
       "-XepDisableWarningsInGeneratedCode";
@@ -64,12 +65,17 @@ public class ErrorProneOptions {
             || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG)
             || option.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG)
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
-            || option.equals(ENABLE_ALL_CHECKS);
+            || option.equals(ENABLE_ALL_CHECKS)
+            || option.equals(DISABLE_ALL_CHECKS);
     return isSupported ? 0 : -1;
   }
 
   public boolean isEnableAllChecks() {
     return enableAllChecks;
+  }
+
+  public boolean isDisableAllChecks() {
+    return disableAllChecks;
   }
 
   /**
@@ -139,6 +145,7 @@ public class ErrorProneOptions {
   private final boolean disableWarningsInGeneratedCode;
   private final boolean dropErrorsToWarnings;
   private final boolean enableAllChecks;
+  private final boolean disableAllChecks;
   private final PatchingOptions patchingOptions;
 
   private ErrorProneOptions(
@@ -148,6 +155,7 @@ public class ErrorProneOptions {
       boolean disableWarningsInGeneratedCode,
       boolean dropErrorsToWarnings,
       boolean enableAllChecks,
+      boolean disableAllChecks,
       PatchingOptions patchingOptions) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
@@ -155,6 +163,7 @@ public class ErrorProneOptions {
     this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
     this.dropErrorsToWarnings = dropErrorsToWarnings;
     this.enableAllChecks = enableAllChecks;
+    this.disableAllChecks = disableAllChecks;
     this.patchingOptions = patchingOptions;
   }
 
@@ -187,6 +196,7 @@ public class ErrorProneOptions {
     private boolean disableWarningsInGeneratedCode = false;
     private boolean dropWarningsToErrors = false;
     private boolean enableAllChecks = false;
+    private boolean disableAllChecks = false;
     private Map<String, Severity> severityMap = new HashMap<>();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
 
@@ -210,6 +220,12 @@ public class ErrorProneOptions {
       this.enableAllChecks = enableAllChecks;
     }
 
+    public void setDisableAllChecks(boolean disableAllChecks) {
+      // Discard previously set severities so that the DisableAllChecks flag is position sensitive.
+      severityMap.clear();
+      this.disableAllChecks = disableAllChecks;
+    }
+
     public PatchingOptions.Builder patchingOptionsBuilder() {
       return patchingOptionsBuilder;
     }
@@ -222,6 +238,7 @@ public class ErrorProneOptions {
           disableWarningsInGeneratedCode,
           dropWarningsToErrors,
           enableAllChecks,
+          disableAllChecks,
           patchingOptionsBuilder.build());
     }
   }
@@ -265,6 +282,9 @@ public class ErrorProneOptions {
           break;
         case ENABLE_ALL_CHECKS:
           builder.setEnableAllChecks(true);
+          break;
+        case DISABLE_ALL_CHECKS:
+          builder.setDisableAllChecks(true);
           break;
         default:
           if (arg.startsWith(CUSTOM_ENABLEMENT_PREFIX)) {
