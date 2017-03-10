@@ -43,7 +43,10 @@ package com.google.errorprone.bugpatterns.inject.dagger.testdata;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Service;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import dagger.android.AndroidInjection;
 
 final class AndroidInjectionBeforeSuperPositiveCases {
@@ -85,6 +88,20 @@ final class AndroidInjectionBeforeSuperPositiveCases {
       AndroidInjection.inject(this);
     }
   }
+
+  public class WrongOrderService extends Service {
+    @Override
+    public void onCreate() {
+      super.onCreate();
+      // BUG: Diagnostic contains: AndroidInjectionBeforeSuper
+      AndroidInjection.inject(this);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+      return null;
+    }
+  }
 }
 {% endhighlight %}
 
@@ -112,7 +129,10 @@ package com.google.errorprone.bugpatterns.inject.dagger.testdata;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Service;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import dagger.android.AndroidInjection;
 
 final class AndroidInjectionBeforeSuperNegativeCases {
@@ -161,6 +181,19 @@ final class AndroidInjectionBeforeSuperNegativeCases {
     public void onAttach(Activity activity) {
       AndroidInjection.inject(this);
       super.onAttach(activity);
+    }
+  }
+
+  public class CorrectOrderService extends Service {
+    @Override
+    public void onCreate() {
+      AndroidInjection.inject(this);
+      super.onCreate();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+      return null;
     }
   }
 }

@@ -123,7 +123,7 @@ __[HashtableContains](bugpattern/HashtableContains)__<br>
 contains() is a legacy method that is equivalent to containsValue()
 
 __[IdentityBinaryExpression](bugpattern/IdentityBinaryExpression)__<br>
-Writing &quot;a &amp;&amp; a&quot;, &quot;a || a&quot;, &quot;a &amp; a&quot;, or &quot;a | a&quot; is equivalent to &quot;a&quot;.
+A binary expression where both operands are the same is usually incorrect.
 
 __[Immutable](bugpattern/Immutable)__<br>
 Type declaration annotated with @Immutable is not immutable
