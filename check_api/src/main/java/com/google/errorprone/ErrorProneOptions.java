@@ -194,7 +194,7 @@ public class ErrorProneOptions {
   private static class Builder {
     private boolean ignoreUnknownChecks = false;
     private boolean disableWarningsInGeneratedCode = false;
-    private boolean dropWarningsToErrors = false;
+    private boolean dropErrorsToWarnings = false;
     private boolean enableAllChecks = false;
     private boolean disableAllChecks = false;
     private Map<String, Severity> severityMap = new HashMap<>();
@@ -208,8 +208,13 @@ public class ErrorProneOptions {
       this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
     }
 
-    public void setDropWarningsToErrors(boolean dropWarningsToErrors) {
-      this.dropWarningsToErrors = dropWarningsToErrors;
+    public void setDropErrorsToWarnings(boolean dropErrorsToWarnings) {
+      severityMap
+          .entrySet()
+          .stream()
+          .filter(e -> e.getValue() == Severity.ERROR)
+          .forEach(e -> e.setValue(Severity.WARN));
+      this.dropErrorsToWarnings = dropErrorsToWarnings;
     }
 
     public void putSeverity(String checkName, Severity severity) {
@@ -236,7 +241,7 @@ public class ErrorProneOptions {
           outputArgs,
           ignoreUnknownChecks,
           disableWarningsInGeneratedCode,
-          dropWarningsToErrors,
+          dropErrorsToWarnings,
           enableAllChecks,
           disableAllChecks,
           patchingOptionsBuilder.build());
@@ -278,7 +283,7 @@ public class ErrorProneOptions {
           builder.setDisableWarningsInGeneratedCode(true);
           break;
         case ERRORS_AS_WARNINGS_FLAG:
-          builder.setDropWarningsToErrors(true);
+          builder.setDropErrorsToWarnings(true);
           break;
         case ENABLE_ALL_CHECKS:
           builder.setEnableAllChecks(true);
