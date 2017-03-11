@@ -11,6 +11,8 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: SelfEquality_
+
 ## The problem
 `a && a`, `a || a`, `a & a`, or `a | a`
 :   equivalent to `a`

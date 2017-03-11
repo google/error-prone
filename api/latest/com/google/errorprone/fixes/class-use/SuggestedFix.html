@@ -83,6 +83,12 @@
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns</a></td>
+<td class="colLast">
+<div class="block">Checks added to the java compiler which detect common bug patterns.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.fixes">com.google.errorprone.fixes</a></td>
 <td class="colLast">
 <div class="block">Support code for providing automated corrections for defects we find.</div>
@@ -93,6 +99,52 @@
 </li>
 <li class="blockList">
 <ul class="blockList">
+<li class="blockList"><a name="com.google.errorprone.bugpatterns">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a> in <a href="../../../../../com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a> that return <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>protected static <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
+<td class="colLast"><span class="typeNameLabel">AbstractTestExceptionChecker.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AbstractTestExceptionChecker.html#buildFix-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.tree.JCTree.JCExpression-java.util.List-">buildFix</a></span>(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+        <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
+        com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;expectedException,
+        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;? extends com.sun.source.tree.StatementTree&gt;&nbsp;statements)</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a> with parameters of type <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="typeNameLabel">TestExceptionChecker.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TestExceptionChecker.html#handleStatements-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.fixes.SuggestedFix-">handleStatements</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
+                <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;expectedException,
+                <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;baseFix)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected abstract <a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="typeNameLabel">AbstractTestExceptionChecker.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AbstractTestExceptionChecker.html#handleStatements-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.fixes.SuggestedFix-">handleStatements</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
+                <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;expectedException,
+                <a href="../../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;baseFix)</code>
+<div class="block">Handle a method annotated with <code>@Test(expected=...</code>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
 <li class="blockList"><a name="com.google.errorprone.fixes">
 <!--   -->
 </a>

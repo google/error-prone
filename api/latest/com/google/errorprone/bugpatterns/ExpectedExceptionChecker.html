@@ -74,7 +74,7 @@ var activeTableTab = "activeTableTab";
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested.classes.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">Nested</a>&nbsp;|&nbsp;</li>
+<li><a href="#nested.classes.inherited.from.class.com.google.errorprone.bugpatterns.AbstractExpectedExceptionChecker">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -103,7 +103,12 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BugChecker</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractExpectedExceptionChecker</a></li>
+<li>
+<ul class="inheritance">
 <li>com.google.errorprone.bugpatterns.ExpectedExceptionChecker</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -119,8 +124,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">ExpectedExceptionChecker</span>
-extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
+extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>cushon@google.com (Liam Miller-Cushon)</dd>
@@ -139,6 +143,13 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <!--   -->
 </a>
 <h3>Nested Class Summary</h3>
+<ul class="blockList">
+<li class="blockList"><a name="nested.classes.inherited.from.class.com.google.errorprone.bugpatterns.AbstractExpectedExceptionChecker">
+<!--   -->
+</a>
+<h3>Nested classes/interfaces inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></h3>
+<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.BaseFix.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker.BaseFix</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="nested.classes.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">
 <!--   -->
@@ -178,11 +189,22 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
-           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colFirst"><code>protected <a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">handleMatch</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
+           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;expectations,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.StatementTree&gt;&nbsp;suffix)</code>
+<div class="block">Handle a method that contains a use of <code>ExpectedException</code>.</div>
+</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.AbstractExpectedExceptionChecker">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></h3>
+<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#buildBaseFix-com.google.errorprone.VisitorState-java.util.List-">buildBaseFix</a>, <a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">
 <!--   -->
@@ -235,17 +257,27 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">
+<a name="handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>matchMethod</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethod(com.sun.source.tree.MethodTree&nbsp;tree,
-                               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<h4>handleMatch</h4>
+<pre>protected&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;handleMatch(com.sun.source.tree.MethodTree&nbsp;tree,
+                                  <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;expectations,
+                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.StatementTree&gt;&nbsp;suffix)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">AbstractExpectedExceptionChecker</a></code></span></div>
+<div class="block">Handle a method that contains a use of <code>ExpectedException</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">handleMatch</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>tree</code> - the method</dd>
+<dd><code>state</code> - the visitor state</dd>
+<dd><code>expectations</code> - the statements for the call to <code>thrown.except(...)</code>, and any
+     additional assertions</dd>
+<dd><code>suffix</code> - the statements after the assertions, which are expected to throw</dd>
 </dl>
 </li>
 </ul>
@@ -302,7 +334,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested.classes.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">Nested</a>&nbsp;|&nbsp;</li>
+<li><a href="#nested.classes.inherited.from.class.com.google.errorprone.bugpatterns.AbstractExpectedExceptionChecker">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

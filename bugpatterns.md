@@ -107,9 +107,6 @@ Calling getClass() on an object of type Class returns the Class object for java.
 __[GuardedBy](bugpattern/GuardedBy)__<br>
 Checks for unguarded accesses to fields and methods with @GuardedBy annotations
 
-__[GuavaSelfEquals](bugpattern/GuavaSelfEquals)__<br>
-An object is tested for equality to itself using Guava Libraries
-
 __[GuiceAssistedInjectScoping](bugpattern/GuiceAssistedInjectScoping)__<br>
 Scope annotation on implementation class of AssistedInject factory is not allowed
 
@@ -254,11 +251,8 @@ Variable assigned to itself
 __[SelfComparison](bugpattern/SelfComparison)__<br>
 An object is compared to itself
 
-__[SelfEquality](bugpattern/SelfEquality)__<br>
-Variable compared to itself
-
 __[SelfEquals](bugpattern/SelfEquals)__<br>
-An object is tested for equality to itself
+Testing an object for equality with itself will always be true.
 
 __[SizeGreaterThanOrEqualsZero](bugpattern/SizeGreaterThanOrEqualsZero)__<br>
 Comparison of a size &gt;= 0 is always true, did you intend to check for non-emptiness?
