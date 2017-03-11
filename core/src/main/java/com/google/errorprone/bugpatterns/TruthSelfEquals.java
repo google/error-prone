@@ -43,11 +43,9 @@ import java.util.regex.Pattern;
  */
 @BugPattern(
   name = "TruthSelfEquals",
-  summary = "An object is tested for equality to itself using Truth Libraries.",
-  explanation =
-      "The arguments to truth equality method are the same object, so it either always "
-          + "passes/fails the test.  Either change the arguments to point to different objects or "
-          + "consider using EqualsTester.",
+  summary =
+      "isEqualTo should not be used to test an object for equality with itself; the"
+          + " assertion will never fail.",
   category = TRUTH,
   severity = ERROR
 )
