@@ -148,4 +148,19 @@ public class MethodCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void innerClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  class Inner {",
+            "    private int incr(int x) {",
+            "      return x + 1;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

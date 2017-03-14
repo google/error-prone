@@ -53,6 +53,9 @@ public class MethodCanBeStatic extends BugChecker implements MethodTreeMatcher {
       // We conservatively warn only for private methods.
       return NO_MATCH;
     }
+    if (sym.owner.enclClass().hasOuterInstance()) {
+      return NO_MATCH;
+    }
     if (CanBeStaticAnalyzer.referencesOuter(tree, sym, state)) {
       return NO_MATCH;
     }
