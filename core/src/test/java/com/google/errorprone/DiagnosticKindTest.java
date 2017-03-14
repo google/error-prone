@@ -60,7 +60,6 @@ public class DiagnosticKindTest {
   public void setUp() {
     diagnosticHelper = new DiagnosticTestHelper();
     compilerBuilder = new ErrorProneTestCompiler.Builder()
-        .named("test")
         .listenToDiagnostics(diagnosticHelper.collector);
   }
 

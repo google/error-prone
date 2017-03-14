@@ -19,12 +19,8 @@ package com.google.errorprone;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.main.Main.Result;
-import com.sun.tools.javac.util.Context;
 import java.io.PrintWriter;
-import java.util.List;
-import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 /**
@@ -99,11 +95,6 @@ public class ErrorProneCompiler {
       return new ErrorProneCompiler(builder.build());
     }
 
-    public Builder named(String compilerName) {
-      builder.named(compilerName);
-      return this;
-    }
-
     public Builder redirectOutputTo(PrintWriter errOutput) {
       builder.redirectOutputTo(errOutput);
       return this;
@@ -126,18 +117,5 @@ public class ErrorProneCompiler {
 
   public Result run(String[] args) {
     return compiler.run(args);
-  }
-
-  public Result run(String[] argv, List<JavaFileObject> javaFileObjects) {
-    return compiler.run(argv, javaFileObjects);
-  }
-
-  public Result run(
-      String[] argv,
-      Context context,
-      JavaFileManager fileManager,
-      List<JavaFileObject> javaFileObjects,
-      Iterable<? extends Processor> processors) {
-    return compiler.run(argv, context, fileManager, javaFileObjects, processors);
   }
 }

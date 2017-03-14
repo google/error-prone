@@ -30,7 +30,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.main.Main.Result;
-import com.sun.tools.javac.util.Context;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOError;
@@ -286,8 +285,7 @@ public class CompilationTestHelper {
     if (checkWellFormed) {
       checkWellFormed(sources, args);
     }
-    Context context = new Context();
-    return compiler.run(args, context, fileManager, ImmutableList.copyOf(sources), null);
+    return compiler.run(args, fileManager, ImmutableList.copyOf(sources), null);
   }
 
   private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {

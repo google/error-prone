@@ -93,7 +93,6 @@ public class ErrorProneCompilerIntegrationTest {
     outputStream = new StringWriter();
     compilerBuilder =
         new ErrorProneTestCompiler.Builder()
-            .named("test")
             .report(BuiltInCheckerSuppliers.defaultChecks())
             .redirectOutputTo(new PrintWriter(outputStream, true))
             .listenToDiagnostics(diagnosticHelper.collector);
@@ -199,7 +198,7 @@ public class ErrorProneCompilerIntegrationTest {
                     getClass(),
                     "testdata/MultipleTopLevelClassesWithErrors.java",
                     "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
-    assertThat(outputStream.toString(), exitCode, is(Result.ABNORMAL));
+    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
         diagnosticMessage(CoreMatchers.<String>allOf(
             containsString("IllegalStateException: test123"),
@@ -480,7 +479,7 @@ public class ErrorProneCompilerIntegrationTest {
     name = "CrashOnReturn",
     explanation = "",
     summary = "",
-    
+
     severity = ERROR,
     category = ONE_OFF
   )
@@ -508,7 +507,7 @@ public class ErrorProneCompilerIntegrationTest {
                         "    return;",
                         "  }",
                         "}")));
-    assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.ABNORMAL);
+    assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.ERROR);
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
     Diagnostic<? extends JavaFileObject> diag =
         Iterables.getOnlyElement(diagnosticHelper.getDiagnostics());
@@ -554,7 +553,7 @@ public class ErrorProneCompilerIntegrationTest {
     summary = "Using 'return' is considered harmful",
     explanation = "Please refactor your code into continuation passing style.",
     category = ONE_OFF,
-    
+
     severity = ERROR
   )
   public static class CPSChecker extends BugChecker implements ReturnTreeMatcher {

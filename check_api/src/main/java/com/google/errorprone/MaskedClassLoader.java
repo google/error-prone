@@ -16,6 +16,9 @@
 
 package com.google.errorprone;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.sun.tools.javac.api.ClientCodeWrapper.Trusted;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
 import java.net.URL;
@@ -38,13 +41,7 @@ public class MaskedClassLoader extends ClassLoader {
         new Context.Factory<JavaFileManager>() {
           @Override
           public JavaFileManager make(Context c) {
-            return new JavacFileManager(c, true, null) {
-              @Override
-              protected ClassLoader getClassLoader(URL[] urls) {
-                return new URLClassLoader(
-                    urls, new MaskedClassLoader(JavacFileManager.class.getClassLoader()));
-              }
-            };
+            return new MaskedFileManager(c);
           }
         });
   }
@@ -60,6 +57,24 @@ public class MaskedClassLoader extends ClassLoader {
       return Class.forName(name);
     } else {
       throw new ClassNotFoundException(name);
+    }
+  }
+
+  @Trusted
+  static class MaskedFileManager extends JavacFileManager {
+
+    public MaskedFileManager(Context context) {
+      super(context, true, UTF_8);
+    }
+
+    public MaskedFileManager() {
+      this(new Context());
+    }
+
+    @Override
+    protected ClassLoader getClassLoader(URL[] urls) {
+      return new URLClassLoader(
+          urls, new MaskedClassLoader(JavacFileManager.class.getClassLoader()));
     }
   }
 }

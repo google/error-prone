@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.main.Main.Result;
-import com.sun.tools.javac.util.Context;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
@@ -47,11 +46,6 @@ public class ErrorProneTestCompiler {
 
     public Builder report(ScannerSupplier scannerSupplier) {
       wrappedCompilerBuilder.report(scannerSupplier);
-      return this;
-    }
-
-    public Builder named(String test) {
-      wrappedCompilerBuilder.named(test);
       return this;
     }
 
@@ -84,14 +78,13 @@ public class ErrorProneTestCompiler {
     return compile(new String[]{}, sources, processors);
   }
 
-  public Result compile(String[] args, List<JavaFileObject> sources, List<? extends Processor>
-      processors) {
-    Context context = new Context();
+  public Result compile(
+      String[] args, List<JavaFileObject> sources, List<? extends Processor> processors) {
     if (processors == null || processors.isEmpty()) {
       List<String> processedArgs =
           CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
       args = processedArgs.toArray(new String[0]);
     }
-    return compiler.run(args, context, fileManager, sources, processors);
+    return compiler.run(args, fileManager, sources, processors);
   }
 }
