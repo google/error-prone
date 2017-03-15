@@ -205,7 +205,6 @@ import com.google.errorprone.bugpatterns.inject.ScopeAnnotationOnInterfaceOrAbst
 import com.google.errorprone.bugpatterns.inject.ScopeOrQualifierAnnotationRetention;
 import com.google.errorprone.bugpatterns.inject.dagger.AndroidInjectionBeforeSuper;
 import com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions;
-import com.google.errorprone.bugpatterns.inject.dagger.MultibindsInsteadOfMultibindings;
 import com.google.errorprone.bugpatterns.inject.dagger.PrivateConstructorForNoninstantiableModule;
 import com.google.errorprone.bugpatterns.inject.dagger.ProvidesNull;
 import com.google.errorprone.bugpatterns.inject.dagger.UseBinds;
@@ -448,7 +447,6 @@ public class BuiltInCheckerSuppliers {
           MixedArrayDimensions.class,
           MoreThanOneQualifier.class,
           MultiVariableDeclaration.class,
-          MultibindsInsteadOfMultibindings.class,
           MultipleTopLevelClasses.class,
           NoAllocationChecker.class,
           NonCanonicalStaticMemberImport.class,
