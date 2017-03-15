@@ -327,6 +327,20 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
+  public void shouldNotDetectMethodsOnAbstractClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public abstract class Test {",
+            "  public void testDoSomething() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase1.java").doTest();
   }

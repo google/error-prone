@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
+import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
@@ -77,7 +78,8 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
           methodReturns(VOID_TYPE),
           methodHasParameters(),
           not(hasJUnitAnnotation),
-          enclosingClass(isJUnit4TestClass));
+          enclosingClass(isJUnit4TestClass),
+          not(enclosingClass(hasModifier(ABSTRACT))));
 
   protected boolean useExpandedHeuristic(VisitorState state) {
     return Options.instance(state.context).getBoolean("expandedTestNotRunHeuristic");
