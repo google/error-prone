@@ -32,6 +32,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
 
@@ -101,8 +103,8 @@ public class RestrictedApiChecker extends BugChecker
       }
     }
     boolean warn =
-        Matchers.enclosingNode(shouldAllowWithWarning(restriction)).matches(where, state);
-    boolean allow = Matchers.enclosingNode(shouldAllow(restriction)).matches(where, state);
+        Matchers.enclosingNode(shouldAllowWithWarning(restriction, state)).matches(where, state);
+    boolean allow = Matchers.enclosingNode(shouldAllow(restriction, state)).matches(where, state);
     if (warn && allow) {
       // TODO(bangert): Clarify this message if possible.
       return buildDescription(where)
@@ -127,19 +129,19 @@ public class RestrictedApiChecker extends BugChecker
   }
 
   // TODO(bangert): Memoize these if necessary.
-  private static Matcher<Tree> shouldAllow(RestrictedApi api) {
+  private static Matcher<Tree> shouldAllow(RestrictedApi api, VisitorState state) {
     try {
       return anyAnnotation(api.whitelistAnnotations());
     } catch (MirroredTypesException e) {
-      return anyAnnotation(e.getTypeMirrors());
+      return anyAnnotation(e.getTypeMirrors(), state);
     }
   }
 
-  private static Matcher<Tree> shouldAllowWithWarning(RestrictedApi api) {
+  private static Matcher<Tree> shouldAllowWithWarning(RestrictedApi api, VisitorState state) {
     try {
       return anyAnnotation(api.whitelistWithWarningAnnotations());
     } catch (MirroredTypesException e) {
-      return anyAnnotation(e.getTypeMirrors());
+      return anyAnnotation(e.getTypeMirrors(), state);
     }
   }
 
@@ -151,10 +153,18 @@ public class RestrictedApiChecker extends BugChecker
     return Matchers.anyOf(matchers);
   }
 
-  private static Matcher<Tree> anyAnnotation(List<? extends TypeMirror> mirrors) {
+  private static Matcher<Tree> anyAnnotation(
+      List<? extends TypeMirror> mirrors, VisitorState state) {
+    JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
     ArrayList<Matcher<Tree>> matchers = new ArrayList<>(mirrors.size());
     for (TypeMirror mirror : mirrors) {
-      matchers.add(Matchers.hasAnnotation(mirror.toString()));
+      TypeElement typeElem = (TypeElement) javacEnv.getTypeUtils().asElement(mirror);
+      String name = mirror.toString();
+      if (typeElem != null) {
+        // Get the binary name if possible ($ to separate nested members). See b/36160747
+        name = javacEnv.getElementUtils().getBinaryName(typeElem).toString();
+      }
+      matchers.add(Matchers.hasAnnotation(name));
     }
     return Matchers.anyOf(matchers);
   }

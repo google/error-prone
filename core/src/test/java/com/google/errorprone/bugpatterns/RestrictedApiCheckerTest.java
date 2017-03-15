@@ -162,4 +162,35 @@ public class RestrictedApiCheckerTest {
         .expectResult(Result.OK)
         .doTest();
   }
+
+  // Regression test for b/36160747
+  @Test
+  public void testAllowAllDefintionsInFile() {
+    helper
+        .addSourceLines(
+            "Testcase.java",
+            "",
+            "package separate.test;",
+            "",
+            "import com.google.errorprone.annotations.RestrictedApi;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Target;",
+            "",
+            "class Testcase {",
+            "   @Whitelist",
+            "   void caller() {",
+            "     restrictedMethod();",
+            "   }",
+            "   @RestrictedApi(",
+            "     explanation=\"test\",",
+            "     whitelistAnnotations = {Whitelist.class},",
+            "     link = \"foo\"",
+            "   )",
+            "   void restrictedMethod() {",
+            "   }",
+            "   @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})",
+            "   @interface Whitelist {}",
+            "}")
+        .doTest();
+  }
 }
