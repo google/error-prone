@@ -33,7 +33,7 @@ import javax.lang.model.element.Modifier;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "MethodCanBeStatic",
-  summary = "Private methods that do not reference the enclosing instance should be static",
+  summary = "A private method that does not reference the enclosing instance can be static",
   category = JDK,
   severity = SUGGESTION
 )
