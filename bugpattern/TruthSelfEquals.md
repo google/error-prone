@@ -1,6 +1,6 @@
 ---
 title: TruthSelfEquals
-summary: An object is tested for equality to itself using Truth Libraries.
+summary: isEqualTo should not be used to test an object for equality with itself; the assertion will never fail.
 layout: bugpattern
 category: TRUTH
 severity: ERROR
@@ -12,7 +12,18 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-The arguments to truth equality method are the same object, so it either always passes/fails the test.  Either change the arguments to point to different objects or consider using EqualsTester.
+If a test subject and the argument to `isEqualTo` are the same instance (e.g.
+`assertThat(x).isEqualTo(x)`), then the assertion will always pass. Truth
+implements `isEqualTo` using [`Objects#equal`] , which tests its arguments for
+reference equality and returns true without calling `equals()` if both arguments
+are the same instance.
+
+[`Objects#equals`]: https://google.github.io/guava/releases/21.0/api/docs/com/google/common/base/Objects.html#equal-java.lang.Object-java.lang.Object-
+
+To test the implementation of an `equals` method, use [Guava's
+EqualsTester][javadoc].
+
+[javadoc]: http://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("TruthSelfEquals")` annotation to the enclosing element.

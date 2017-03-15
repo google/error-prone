@@ -273,7 +273,7 @@ __[ThrowNull](bugpattern/ThrowNull)__<br>
 Throwing &#39;null&#39; always results in a NullPointerException being thrown.
 
 __[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
-An object is tested for equality to itself using Truth Libraries.
+isEqualTo should not be used to test an object for equality with itself; the assertion will never fail.
 
 __[TryFailThrowable](bugpattern/TryFailThrowable)__<br>
 Catching Throwable/Error masks failures from fail() or assert*() in the try block

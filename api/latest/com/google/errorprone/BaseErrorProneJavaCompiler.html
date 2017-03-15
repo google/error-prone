@@ -18,8 +18,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -166,7 +166,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCom
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -200,6 +200,12 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCom
    <a href="http://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;out,
    <a href="http://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;err,
    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;arguments)</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BaseErrorProneJavaCompiler.html#setupMessageBundle-com.sun.tools.javac.util.Context-">setupMessageBundle</a></span>(com.sun.tools.javac.util.Context&nbsp;context)</code>
+<div class="block">Registers our message bundle.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -305,7 +311,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCom
 <a name="getSourceVersions--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getSourceVersions</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/SourceVersion.html?is-external=true" title="class or interface in javax.lang.model">SourceVersion</a>&gt;&nbsp;getSourceVersions()</pre>
@@ -313,6 +319,16 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCom
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/Tool.html?is-external=true#getSourceVersions--" title="class or interface in javax.tools">getSourceVersions</a></code>&nbsp;in interface&nbsp;<code><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/Tool.html?is-external=true" title="class or interface in javax.tools">Tool</a></code></dd>
 </dl>
+</li>
+</ul>
+<a name="setupMessageBundle-com.sun.tools.javac.util.Context-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setupMessageBundle</h4>
+<pre>public static&nbsp;void&nbsp;setupMessageBundle(com.sun.tools.javac.util.Context&nbsp;context)</pre>
+<div class="block">Registers our message bundle.</div>
 </li>
 </ul>
 </li>
