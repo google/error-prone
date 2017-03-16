@@ -88,7 +88,7 @@
       <!-- Eclipse Public License 1.0 -->
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>4.13-SNAPSHOT</version>
     </dependency>
     <dependency>
       <!-- BSD New (3 clause) -->

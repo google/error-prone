@@ -21,8 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.MaskedClassLoader.MaskedFileManager;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.tools.javac.main.CommandLine;
 import com.sun.tools.javac.main.Main.Result;
 import java.io.BufferedWriter;
+import java.io.IOError;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -86,6 +89,11 @@ public class BaseErrorProneCompiler {
   }
 
   public Result run(String[] argv) {
+    try {
+      argv = CommandLine.parse(argv);
+    } catch (IOException e) {
+      throw new IOError(e);
+    }
     List<String> javacOpts = new ArrayList<>();
     List<String> sources = new ArrayList<>();
     for (String arg : argv) {

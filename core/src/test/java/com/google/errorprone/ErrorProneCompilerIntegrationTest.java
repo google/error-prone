@@ -28,6 +28,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteStreams;
@@ -50,6 +51,7 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.main.Main.Result;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -633,5 +635,39 @@ public class ErrorProneCompilerIntegrationTest {
       assertThat(out.toString()).contains("Using 'return' is considered harmful");
       assertThat(result).isEqualTo(Result.ERROR);
     }
+  }
+
+  @Test
+  public void paramsFiles() throws IOException {
+    Path dir = tmpFolder.newFolder("tmp").toPath();
+    Path source = dir.resolve("Test.java");
+    Files.write(
+        source,
+        Joiner.on('\n')
+            .join(
+                ImmutableList.of(
+                    "class Test {", //
+                    "  boolean f(Integer i, String s) {",
+                    "    return i.equals(s);",
+                    "  }",
+                    "}"))
+            .getBytes(UTF_8));
+    Path params = dir.resolve("params.txt");
+    Files.write(
+        params,
+        Joiner.on(' ')
+            .join(
+                ImmutableList.of(
+                    "-Xep:EqualsIncompatibleType:ERROR",
+                    source.toAbsolutePath().toAbsolutePath().toString()))
+            .getBytes(UTF_8));
+    StringWriter output = new StringWriter();
+    Result result =
+        ErrorProneCompiler.builder()
+            .redirectOutputTo(new PrintWriter(output, true))
+            .build()
+            .run(new String[] {"@" + params.toAbsolutePath().toString()});
+    assertThat(result).isEqualTo(Result.ERROR);
+    assertThat(output.toString()).contains("[EqualsIncompatibleType]");
   }
 }

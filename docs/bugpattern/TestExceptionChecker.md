@@ -1,3 +1,5 @@
+
+
 The use of `@Test(expected = FooException.class)` is strongly discouraged, since
 the test passes if *any* statement throws an exception of the expected type.
 
