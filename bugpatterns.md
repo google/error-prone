@@ -510,9 +510,6 @@ This method does not acquire the locks specified by its @LockMethod annotation
 __[LongLiteralLowerCaseSuffix](bugpattern/LongLiteralLowerCaseSuffix)__<br>
 Prefer &#39;L&#39; to &#39;l&#39; for the suffix to long literals
 
-__[MultibindsInsteadOfMultibindings](bugpattern/MultibindsInsteadOfMultibindings)__<br>
-`@Multibinds` is the new way to declare multibindings.
-
 __[NoAllocation](bugpattern/NoAllocation)__<br>
 @NoAllocation was specified on this method, but something was found that would trigger an allocation
 
@@ -605,7 +602,7 @@ __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
 
 __[MethodCanBeStatic](bugpattern/MethodCanBeStatic)__<br>
-Private methods that do not reference the enclosing instance should be static
+A private method that does not reference the enclosing instance can be static
 
 __[MixedArrayDimensions](bugpattern/MixedArrayDimensions)__<br>
 C-style array declarations should not be used
