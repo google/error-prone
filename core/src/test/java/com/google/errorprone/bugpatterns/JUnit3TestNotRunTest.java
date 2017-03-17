@@ -16,8 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
+import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,16 +29,145 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class JUnit3TestNotRunTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(JUnit3TestNotRun.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(JUnit3TestNotRun.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactorHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new JUnit3TestNotRun(), getClass());
 
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.addSourceFile("JUnit3TestNotRunPositiveCases.java").doTest();
+  }
+
+  @Test
+  public void misspelledTest() throws IOException {
+    refactorHelper
+        .addInputLines(
+            "in/PositiveCases.java",
+            "import junit.framework.TestCase;",
+            "import org.junit.Test;",
+            "public class PositiveCases extends TestCase {",
+            "  public void tesName1() {}",
+            "  public void ttestName2() {}",
+            "  public void teestName3() {}",
+            "  public void tstName4() {}",
+            "  public void tetName5() {}",
+            "  public void etstName6() {}",
+            "  public void tsetName7() {}",
+            "  public void teatName8() {}",
+            "  public void TestName9() {}",
+            "  public void TEST_NAME_10() {}",
+            "  public void tesname11() {}",
+            "}")
+        .addOutputLines(
+            "out/PositiveCases.java",
+            "import junit.framework.TestCase;",
+            "import org.junit.Test;",
+            "public class PositiveCases extends TestCase {",
+            "  public void testName1() {}",
+            "  public void testName2() {}",
+            "  public void testName3() {}",
+            "  public void testName4() {}",
+            "  public void testName5() {}",
+            "  public void testName6() {}",
+            "  public void testName7() {}",
+            "  public void testName8() {}",
+            "  public void testName9() {}",
+            "  public void test_NAME_10() {}",
+            "  public void testname11() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void substitutionShouldBeWellFormed() throws IOException {
+    refactorHelper
+        .addInputLines(
+            "in/PositiveCases.java",
+            "import junit.framework.TestCase;",
+            "import org.junit.Test;",
+            "public class PositiveCases extends TestCase {",
+            "  public void tesBasic() {}",
+            "  public    void    tesMoreSpaces(  )    {}",
+            "  @Test public void",
+            "      tesMultiline() {}",
+            "}")
+        .addOutputLines(
+            "out/PositiveCases.java",
+            "import junit.framework.TestCase;",
+            "import org.junit.Test;",
+            "public class PositiveCases extends TestCase {",
+            "  public void testBasic() {}",
+            "  public void testMoreSpaces() {}",
+            "  @Test public void testMultiline() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void privateNamedTest() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import junit.framework.TestCase;",
+            "public class Test extends TestCase {",
+            "  // BUG: Diagnostic contains: JUnit3TestNotRun",
+            "  private void testDoesStuff() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void privateMisspelledTest() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import junit.framework.TestCase;",
+            "public class Test extends TestCase {",
+            "  // BUG: Diagnostic contains: JUnit3TestNotRun",
+            "  private void tsetDoesStuff() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hasModifiersAndThrows() throws IOException {
+    refactorHelper
+        .addInputLines(
+            "in/DoesStuffTest.java",
+            "import junit.framework.TestCase;",
+            "import org.junit.Test;",
+            "public class DoesStuffTest extends TestCase {",
+            "  @Test private static void tsetDoesStuff() throws Exception {}",
+            "}")
+        .addOutputLines(
+            "out/DoesStuffTest.java",
+            "import junit.framework.TestCase;",
+            "import org.junit.Test;",
+            "public class DoesStuffTest extends TestCase {",
+            "  @Test public void testDoesStuff() throws Exception {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void noModifiers() throws IOException {
+    refactorHelper
+        .addInputLines(
+            "in/DoesStuffTest.java",
+            "import junit.framework.TestCase;",
+            "import org.junit.Test;",
+            "public class DoesStuffTest extends TestCase {",
+            "  void tsetDoesStuff() {}",
+            "}")
+        .addOutputLines(
+            "out/DoesStuffTest.java",
+            "import junit.framework.TestCase;",
+            "import org.junit.Test;",
+            "public class DoesStuffTest extends TestCase {",
+            "  public void testDoesStuff() {}",
+            "}")
+        .doTest();
   }
 
   @Test
