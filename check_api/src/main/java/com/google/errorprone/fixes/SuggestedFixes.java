@@ -40,6 +40,7 @@ import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.util.ErrorProneToken;
+import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
@@ -57,6 +58,7 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.parser.Tokens;
+import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -177,7 +179,7 @@ public class SuggestedFixes {
 
   /** Remove modifiers from the given class, method, or field declaration. */
   @Nullable
-  public static Fix removeModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
+  public static SuggestedFix removeModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
     Set<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
     ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
@@ -390,6 +392,31 @@ public class SuggestedFixes {
               }
             });
     return fix.build();
+  }
+
+  /** Be warned, only changes method name at the declaration. */
+  public static SuggestedFix renameMethod(
+      MethodTree tree, final String replacement, VisitorState state) {
+    // Search tokens from beginning of method tree to beginning of method body.
+    int basePos = ((JCTree) tree).getStartPosition();
+    int endPos =
+        tree.getBody() != null
+            ? ((JCTree) tree.getBody()).getStartPosition()
+            : state.getEndPosition(tree);
+    List<ErrorProneToken> methodTokens =
+        ErrorProneTokens.getTokens(
+            state.getSourceCode().subSequence(basePos, endPos).toString(), state.context);
+    for (ErrorProneToken token : methodTokens) {
+      if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(tree.getName())) {
+        int nameStartPosition = basePos + token.pos();
+        int nameEndPosition = basePos + token.endPos();
+        return SuggestedFix.builder()
+            .replace(nameStartPosition, nameEndPosition, replacement)
+            .build();
+      }
+    }
+    // Method name not found.
+    throw new AssertionError();
   }
 
   /** Deletes the given exceptions from a method's throws clause. */
