@@ -18,7 +18,12 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
+import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
+import static com.google.errorprone.fixes.SuggestedFixes.renameMethod;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit3TestClass;
+import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.JUnitMatchers.wouldRunInJUnit4;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
@@ -33,26 +38,21 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
 
 /** @author rburny@google.com (Radoslaw Burny) */
 @BugPattern(
   name = "JUnit3TestNotRun",
-  summary = "Test method will not be run; please prefix name with \"test\"",
-  explanation =
-      "JUnit 3 requires that test method names start with \"test\". The method that"
-          + " triggered this error looks like it is supposed to be the test, but either"
-          + " misspells the required prefix, or has @Test annotation, but no prefix."
-          + " As a consequence, JUnit 3 will ignore it.\n\n"
-          + "If you want to disable test on purpose, change the name to something more descriptive,"
-          + " like \"disabledTestSomething()\". You don't need @Test annotation, but if you want to"
-          + " keep it, add @Ignore too.",
+  summary =
+      "Test method will not be run; please correct method signature "
+          + "(Should be public, non-static, and method name should begin with \"test\").",
   category = JUNIT,
   severity = ERROR
 )
@@ -76,6 +76,13 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
       "[tT][eE][sS][tT]"   // miscapitalized
       );
 
+  private static final Matcher<MethodTree> LOOKS_LIKE_TEST_CASE =
+      allOf(
+          enclosingClass(isJUnit3TestClass),
+          not(isJunit3TestCase),
+          methodReturns(VOID_TYPE),
+          methodHasParameters());
+
   /**
    * Matches if:
    * 1) Method's name begins with misspelled variation of "test".
@@ -85,32 +92,45 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    Matcher<MethodTree> methodMatcher = allOf(
-        not(methodNameStartsWith("test")),
-        Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
-        methodReturns(VOID_TYPE),
-        methodHasParameters(),
-        enclosingClass(isJUnit3TestClass));
-    if (!methodMatcher.matches(methodTree, state)) {
-      return Description.NO_MATCH;
+    if (!LOOKS_LIKE_TEST_CASE.matches(methodTree, state)) {
+      return NO_MATCH;
     }
 
-    String name = methodTree.getName().toString();
-    String fixedName;
-    // regex.Matcher class name collides with errorprone.Matcher
-    java.util.regex.Matcher matcher = MISSPELLED_NAME.matcher(name);
-    if (matcher.lookingAt()) {
-      fixedName = matcher.replaceFirst("test");
-    } else if (wouldRunInJUnit4.matches(methodTree, state)) {
-      fixedName = "test" + name.substring(0, 1).toUpperCase() + name.substring(1);
-    } else {
-      return Description.NO_MATCH;
+    List<SuggestedFix> fixes = new ArrayList<>(0);
+
+    if (not(methodNameStartsWith("test")).matches(methodTree, state)) {
+      String fixedName = methodTree.getName().toString();
+      // N.B. regex.Matcher class name collides with errorprone.Matcher
+      java.util.regex.Matcher matcher = MISSPELLED_NAME.matcher(fixedName);
+      if (matcher.lookingAt()) {
+        fixedName = matcher.replaceFirst("test");
+      } else if (wouldRunInJUnit4.matches(methodTree, state)) {
+        fixedName = "test" + fixedName.substring(0, 1).toUpperCase() + fixedName.substring(1);
+      } else {
+        return NO_MATCH;
+      }
+      // Rename test method appropriately.
+      fixes.add(renameMethod(methodTree, fixedName, state));
     }
-    // We don't have start position for a method symbol, so we replace everything between result
-    // type and body.
-    JCMethodDecl decl = (JCMethodDecl) methodTree;
-    Fix fix = SuggestedFix.replace(
-        decl.restype.getStartPosition() + 4, decl.body.getStartPosition(), " " + fixedName + "() ");
-    return describeMatch(methodTree, fix);
+
+    // Make method public (if not already public).
+    fixes.add(addModifiers(methodTree, state, Modifier.PUBLIC));
+    // Remove any other visibility modifiers (if present).
+    fixes.add(removeModifiers(methodTree, state, Modifier.PRIVATE, Modifier.PROTECTED));
+    // Remove static modifier (if present).
+    // N.B. must occur in separate step because removeModifiers only removes one modifier at a time.
+    fixes.add(removeModifiers(methodTree, state, Modifier.STATIC));
+
+    return describeMatch(methodTree, mergeFixes(fixes));
+  }
+
+  private static Fix mergeFixes(List<SuggestedFix> fixesToMerge) {
+    Builder builderForResult = SuggestedFix.builder();
+    for (SuggestedFix fix : fixesToMerge) {
+      if (fix != null) {
+        builderForResult.merge(fix);
+      }
+    }
+    return builderForResult.build();
   }
 }

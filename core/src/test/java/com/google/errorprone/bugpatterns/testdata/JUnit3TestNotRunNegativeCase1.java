@@ -37,8 +37,10 @@ public class JUnit3TestNotRunNegativeCase1 extends TestCase {
   public void estimate() {}
 
   // different signature
-  private void tesPrivateHelper() {}
-  public boolean teslaInventedLightbulb() {return true;}
+  public boolean teslaInventedLightbulb() {
+    return true;
+  }
+
   public void tesselate(float f) {}
 
   // surrounding class is not a JUnit3 TestCase

@@ -23,69 +23,28 @@ import org.junit.Test;
  * @author rburny@google.com (Radoslaw Burny)
  */
 public class JUnit3TestNotRunPositiveCases extends TestCase {
-  // misspelled names
-  // BUG: Diagnostic contains: testName
-  public void tesName() {}
-
-  // BUG: Diagnostic contains: testNameStatic
+  // BUG: Diagnostic contains: JUnit3TestNotRun
   public static void tesNameStatic() {}
 
-  // BUG: Diagnostic contains: testName
-  public void ttestName() {}
-
-  // BUG: Diagnostic contains: testName
-  public void teestName() {}
-
-  // BUG: Diagnostic contains: testName
-  public void tstName() {}
-
-  // BUG: Diagnostic contains: testName
-  public void tetName() {}
-
-  // BUG: Diagnostic contains: testName
-  public void etstName() {}
-
-  // BUG: Diagnostic contains: testName
-  public void tsetName() {}
-
-  // BUG: Diagnostic contains: testName
-  public void teatName() {}
-
-  // BUG: Diagnostic contains: testName
-  public void TestName() {}
-
-  // BUG: Diagnostic contains: test_NAME
-  public void TEST_NAME() {}
-
   // These names are trickier to correct, but we should still indicate the bug
-  // BUG: Diagnostic contains: test
+  // BUG: Diagnostic contains: JUnit3TestNotRun
   public void tetsName() {}
 
-  // BUG: Diagnostic contains: test
+  // BUG: Diagnostic contains: JUnit3TestNotRun
   public void tesstName() {}
 
-  // BUG: Diagnostic contains: test
+  // BUG: Diagnostic contains: JUnit3TestNotRun
   public void tesetName() {}
 
-  // BUG: Diagnostic contains: test
+  // BUG: Diagnostic contains: JUnit3TestNotRun
   public void tesgName() {}
 
   // tentative - can cause false positives
-  // BUG: Diagnostic contains: testName
+  // BUG: Diagnostic contains: JUnit3TestNotRun
   public void textName() {}
 
   // test with @Test annotation not run by JUnit3
-  // BUG: Diagnostic contains: testName
-  @Test public void name() {}
-
-  // a few checks to verify the substitution is well-formed
-  // BUG: Diagnostic contains: void testBasic() {
-  public void tesBasic() {}
-
-  // BUG: Diagnostic contains: void testMoreSpaces() {
-  public    void    tesMoreSpaces(  )    {}
-
-  @Test public void
-  // BUG: Diagnostic contains: void testMultiline() {
-      tesMultiline() {}
+  @Test
+  // BUG: Diagnostic contains: JUnit3TestNotRun
+  public void name() {}
 }
