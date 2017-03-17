@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -45,7 +45,7 @@ import com.sun.tools.javac.comp.Resolve;
   name = "LiteralClassName",
   category = JDK,
   summary = "Using Class.forName is unnecessary if the class is available at compile-time.",
-  severity = WARNING
+  severity = SUGGESTION
 )
 public class LiteralClassName extends BugChecker implements MethodInvocationTreeMatcher {
 
