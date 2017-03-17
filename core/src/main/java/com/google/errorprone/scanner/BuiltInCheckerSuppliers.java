@@ -83,6 +83,7 @@ import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
 import com.google.errorprone.bugpatterns.IterableAndIterator;
+import com.google.errorprone.bugpatterns.IterablePathParameter;
 import com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation;
 import com.google.errorprone.bugpatterns.JUnit3FloatingPointComparisonWithoutDelta;
 import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
@@ -438,6 +439,7 @@ public class BuiltInCheckerSuppliers {
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
           InvalidTargetingOnScopingAnnotation.class,
+          IterablePathParameter.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JavaxInjectOnFinalField.class,
           LockMethodChecker.class,
