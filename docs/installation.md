@@ -62,7 +62,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
         <dependency>
           <groupId>com.google.errorprone</groupId>
           <artifactId>error_prone_core</artifactId>
-          <version>2.0.18</version>
+          <version>2.0.19</version>
         </dependency>
       </dependencies>
     </plugin>
@@ -161,8 +161,8 @@ For now, Eclipse users should use the Findbugs eclipse plugin instead, as it cat
 To use Error Prone from the command line as a javac replacement:
 
 ```
-wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant/2.0.18/error_prone_ant-2.0.18.jar
-java -Xbootclasspath/p:error_prone_ant-2.0.18.jar com.google.errorprone.ErrorProneCompiler Test.java
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant/2.0.19/error_prone_ant-2.0.19.jar
+java -Xbootclasspath/p:error_prone_ant-2.0.19.jar com.google.errorprone.ErrorProneCompiler Test.java
 ```
 
 ```
