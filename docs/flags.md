@@ -52,7 +52,7 @@ also be set:
           <showWarnings>true</showWarnings>
           <compilerArgs>
             <arg>-Xep:DeadException:WARN</arg>
-            <arg>-Xep:GuardedByValidator:OFF</arg>
+            <arg>-Xep:GuardedBy:OFF</arg>
           </compilerArgs>
         </configuration>
       </build>
