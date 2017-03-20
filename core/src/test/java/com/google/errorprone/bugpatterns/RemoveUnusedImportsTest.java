@@ -241,4 +241,16 @@ public class RemoveUnusedImportsTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void multipleTopLevelClasses() throws IOException {
+    CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
+        .addSourceLines(
+            "MultipleTopLevelClasses.java",
+            "import java.util.List;",
+            "import java.util.Set;",
+            "public class MultipleTopLevelClasses { List x; }",
+            "class Evil { Set x; }")
+        .doTest();
+  }
 }
