@@ -27,12 +27,15 @@ import com.google.errorprone.annotations.FormatString;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
@@ -47,17 +50,24 @@ import java.util.List;
   suppressibility = Suppressibility.SUPPRESS_WARNINGS
 )
 public final class FormatStringAnnotationChecker extends BugChecker
-    implements MethodInvocationTreeMatcher, MethodTreeMatcher {
+    implements MethodInvocationTreeMatcher, MethodTreeMatcher, NewClassTreeMatcher {
 
-  @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!ASTHelpers.hasAnnotation(ASTHelpers.getSymbol(tree), FormatMethod.class, state)) {
+  /**
+   * Matches a method or constructor invocation. The input symbol should match the invoked method or
+   * contructor and the args should be the parameters in the invocation.
+   */
+  private Description matchInvocation(
+      ExpressionTree tree,
+      MethodSymbol symbol,
+      List<? extends ExpressionTree> args,
+      VisitorState state) {
+    if (!ASTHelpers.hasAnnotation(symbol, FormatMethod.class, state)) {
       return Description.NO_MATCH;
     }
 
     Type stringType = state.getSymtab().stringType;
 
-    List<VarSymbol> params = ASTHelpers.getSymbol(tree).getParameters();
+    List<VarSymbol> params = symbol.getParameters();
     int firstStringIndex = -1;
     int formatString = -1;
     for (int i = 0; i < params.size(); i++) {
@@ -75,7 +85,6 @@ public final class FormatStringAnnotationChecker extends BugChecker
       formatString = firstStringIndex;
     }
 
-    List<? extends ExpressionTree> args = tree.getArguments();
     FormatStringValidation.ValidationResult result =
         StrictFormatStringValidation.validate(
             args.get(formatString), args.subList(formatString + 1, args.size()), state);
@@ -85,6 +94,16 @@ public final class FormatStringAnnotationChecker extends BugChecker
     } else {
       return Description.NO_MATCH;
     }
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    return matchInvocation(tree, ASTHelpers.getSymbol(tree), tree.getArguments(), state);
+  }
+
+  @Override
+  public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    return matchInvocation(tree, ASTHelpers.getSymbol(tree), tree.getArguments(), state);
   }
 
   @Override

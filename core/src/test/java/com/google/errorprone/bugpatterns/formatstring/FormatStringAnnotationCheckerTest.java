@@ -261,4 +261,22 @@ public class FormatStringAnnotationCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testMatches_failsForBadCallToConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "test/FormatStringTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "import com.google.errorprone.annotations.FormatString;",
+            "public class FormatStringTestCase {",
+            "  @FormatMethod public FormatStringTestCase(String s, Object... args) {}",
+            "  public static void createTestCase(String s, Object arg) {",
+            "    // BUG: Diagnostic contains: Format strings must be compile time constant or",
+            "    new FormatStringTestCase(s, arg);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
