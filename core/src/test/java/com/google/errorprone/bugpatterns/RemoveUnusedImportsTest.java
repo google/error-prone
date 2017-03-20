@@ -242,6 +242,28 @@ public class RemoveUnusedImportsTest {
         .doTest();
   }
 
+
+  @Test
+  public void atSee() throws IOException {
+    testHelper
+        .addInputLines(
+            "Lib.java",
+            "import java.nio.file.Path;",
+            "class Lib {",
+            "  static void f(Path... ps) {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Test.java",
+            "import java.nio.file.Path;",
+            "class Test {",
+            "  /** @see Lib#f(Path[]) */",
+            "  void f() {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
   @Test
   public void multipleTopLevelClasses() throws IOException {
     CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
