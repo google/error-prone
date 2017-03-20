@@ -27,25 +27,37 @@ import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.parser.UnicodeReader;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Position.LineMap;
 
 /** A utility for tokenizing and preserving comments. */
 public class ErrorProneTokens {
 
-  /** Returns the tokens for the given source text, including comments. */
-  public static ImmutableList<ErrorProneToken> getTokens(String source, Context context) {
-    if (source == null) {
-      return ImmutableList.of();
-    }
-    ScannerFactory fac = ScannerFactory.instance(context);
-    char[] buffer = source.toCharArray();
-    Scanner scanner =
-        new AccessibleScanner(fac, new CommentSavingTokenizer(fac, buffer, buffer.length));
+  private final CommentSavingTokenizer commentSavingTokenizer;
+  private final ScannerFactory scannerFactory;
+
+  public ErrorProneTokens(String source, Context context) {
+    scannerFactory = ScannerFactory.instance(context);
+    char[] buffer = source == null ? new char[] {} : source.toCharArray();
+    commentSavingTokenizer = new CommentSavingTokenizer(scannerFactory, buffer, buffer.length);
+  }
+
+  public LineMap getLineMap() {
+    return commentSavingTokenizer.getLineMap();
+  }
+
+  public ImmutableList<ErrorProneToken> getTokens() {
+    Scanner scanner = new AccessibleScanner(scannerFactory, commentSavingTokenizer);
     ImmutableList.Builder<ErrorProneToken> tokens = ImmutableList.builder();
     do {
       scanner.nextToken();
       tokens.add(new ErrorProneToken(scanner.token()));
     } while (scanner.token().kind != TokenKind.EOF);
     return tokens.build();
+  }
+  
+  /** Returns the tokens for the given source text, including comments. */
+  public static ImmutableList<ErrorProneToken> getTokens(String source, Context context) {
+    return new ErrorProneTokens(source, context).getTokens();
   }
 
   /** A {@link JavaTokenizer} that saves comments. */
