@@ -41,11 +41,11 @@ import java.lang.annotation.Target;
  * passed to the method:
  *
  * <ol>
- * <li>A format string is either:
- *     <ul>
- *     <li>A compile time constant value (see {@link CompileTimeConstant} for more info).
- *         <p>The following example is valid:
- *         <pre>{@code
+ *   <li>A format string is either:
+ *       <ul>
+ *         <li>A compile time constant value (see {@link CompileTimeConstant} for more info).
+ *             <p>The following example is valid:
+ *             <pre>{@code
  * public class Foo {
  *   static final String staticFinalLogMessage = "foo";
  *   &#064;FormatMethod void log(&#064;FormatString String format, Object... args) {}
@@ -55,8 +55,8 @@ import java.lang.annotation.Target;
  *   }
  * }
  * }</pre>
- *         <p>However the following would be invalid:
- *         <pre>{@code
+ *             <p>However the following would be invalid:
+ *             <pre>{@code
  * public class Foo{
  *   &#064;FormatMethod void log(&#064;FormatString String format, Object... args) {}
  *   void invalidLog(String notCompileTimeConstant) {
@@ -64,14 +64,14 @@ import java.lang.annotation.Target;
  *   }
  * }
  * }</pre>
- *     <li> An effectively final variable that was assigned to a compile time constant value. This
- *         is to permit the following common case:
- *         <pre>{@code
+ *         <li>An effectively final variable that was assigned to a compile time constant value.
+ *             This is to permit the following common case:
+ *             <pre>{@code
  * String format = "Some long format string: %s";
  * log(format, arg);
  * }</pre>
- *     <li>Another {@link FormatString} annotated parameter. Ex:
- *         <pre>{@code
+ *         <li>Another {@link FormatString} annotated parameter. Ex:
+ *             <pre>{@code
  * public class Foo {
  *   static final String staticFinalLogMessage = "foo";
  *   &#064;FormatMethod void log(&#064;FormatString String format, Object... args) {}
@@ -80,17 +80,16 @@ import java.lang.annotation.Target;
  *   }
  * }
  * }</pre>
- *     </ul>
- *
- * <li>The format string will be valid for the input format arguments. In the case that the actual
- *     format string parameter has a compile time constant value, this will compare the actual
- *     format string value to the types of the passed in format arguments to ensure validity. In the
- *     case that the actual format string parameter is a parameter that was annotated {@link
- *     FormatString} itself, this will ensure that the types of the arguments passed to the callee
- *     match the types of the arguments in the caller.
+ *       </ul>
+ *   <li>The format string will be valid for the input format arguments. In the case that the actual
+ *       format string parameter has a compile time constant value, this will compare the actual
+ *       format string value to the types of the passed in format arguments to ensure validity. In
+ *       the case that the actual format string parameter is a parameter that was annotated {@link
+ *       FormatString} itself, this will ensure that the types of the arguments passed to the callee
+ *       match the types of the arguments in the caller.
  * </ol>
  */
 @Documented
 @Retention(CLASS)
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 public @interface FormatMethod {}
