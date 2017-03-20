@@ -41,7 +41,10 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.code.Types.SimpleVisitor;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -178,11 +181,24 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
         if (base instanceof JCIdent) {
           sink.accept(((JCIdent) base).sym);
         }
-        /* Record uses inside method parameters. The javadoc tool doesn't use these, but
-         * IntelliJ does. */
+        // Record uses inside method parameters.
         if (symbolForReference instanceof MethodSymbol) {
           for (VarSymbol parameter : ((MethodSymbol) symbolForReference).getParameters()) {
-            sink.accept(types.erasure(parameter.type).tsym);
+            parameter.type.accept(
+                new SimpleVisitor<Void, Void>() {
+                  @Override
+                  public Void visitArrayType(ArrayType type, Void unused) {
+                    type.getComponentType().accept(this, null);
+                    return null;
+                  }
+
+                  @Override
+                  public Void visitType(Type type, Void unused) {
+                    sink.accept(types.erasure(type).tsym);
+                    return null;
+                  }
+                },
+                null);
           }
         }
         return null;
