@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
@@ -44,14 +44,16 @@ import java.util.Stack;
 /** See BugPattern annotation. */
 @BugPattern(
   name = "FutureReturnValueIgnored",
-  summary = "Return value of methods returning Future must be checked.",
+  summary =
+      "Return value of methods returning Future must be checked. Ignoring returned Futures "
+          + "suppresses exceptions thrown from the code that completes the Future.",
   explanation =
       "Methods that return `java.util.concurrent.Future` and its subclasses "
           + "generally indicate errors by returning a future that eventually fails.\n\n"
           + "If you don’t check the return value of these methods, you will never find out if they "
           + "threw an exception.",
   category = JDK,
-  severity = WARNING
+  severity = ERROR
 )
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<MethodInvocationTree> MATCHER =
