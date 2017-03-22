@@ -17,7 +17,6 @@
 package com.google.errorprone.fixes;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
@@ -34,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -275,18 +275,26 @@ public class SuggestedFix implements Fix {
       return this;
     }
 
-    /** Merges all edits from {@code other} into {@code this}. */
-    public Builder merge(Builder other) {
-      checkNotNull(other);
+    /**
+     * Merges all edits from {@code other} into {@code this}. If {@code other} is null, do nothing.
+     */
+    public Builder merge(@Nullable Builder other) {
+      if (other == null) {
+        return this;
+      }
       fixes.addAll(other.fixes);
       importsToAdd.addAll(other.importsToAdd);
       importsToRemove.addAll(other.importsToRemove);
       return this;
     }
 
-    /** Merges all edits from {@code other} into {@code this}. */
-    public Builder merge(SuggestedFix other) {
-      checkNotNull(other);
+    /**
+     * Merges all edits from {@code other} into {@code this}. If {@code other} is null, do nothing.
+     */
+    public Builder merge(@Nullable SuggestedFix other) {
+      if (other == null) {
+        return this;
+      }
       fixes.addAll(other.fixes);
       importsToAdd.addAll(other.importsToAdd);
       importsToRemove.addAll(other.importsToRemove);
