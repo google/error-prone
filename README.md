@@ -29,10 +29,9 @@ its type int is not compatible with its collection's type argument Short
 
 Our documentation is at [errorprone.info](http://errorprone.info).
 
-Error Prone works with [Bazel](http://bazel.io), [Maven]
-(http://maven.apache.org), [Ant](http://ant.apache.org), and [Gradle]
-(http://gradle.org). See our [installation instructions]
-(http://errorprone.info/docs/installation) for details.
+Error Prone works with [Bazel](http://bazel.io), [Maven](http://maven.apache.org), [Ant](http://ant.apache.org), and [Gradle](http://gradle.org).
+
+See our [installation instructions](http://errorprone.info/docs/installation) for details.
 
 ## Developing Error Prone
 
@@ -42,10 +41,7 @@ Developing and building Error Prone is documented on the [wiki]
 ## Links
 
 -   Mailing lists
-    -   [General discussion]
-        (https://groups.google.com/forum/#!forum/error-prone-discuss)
-    -   [Announcements]
-        (https://groups.google.com/forum/#!forum/error-prone-announce)
+    -   [General discussion](https://groups.google.com/forum/#!forum/error-prone-discuss)
+    -   [Announcements](https://groups.google.com/forum/#!forum/error-prone-announce)
 -   [Javadoc](http://errorprone.info/api/latest/)
--   Pre-release snapshots are available from [Sonatype's snapshot repository]
-    (https://oss.sonatype.org/content/repositories/snapshots/com/google/errorprone/).
+-   Pre-release snapshots are available from [Sonatype's snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/com/google/errorprone/).
