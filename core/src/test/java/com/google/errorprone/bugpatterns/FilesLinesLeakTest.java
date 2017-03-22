@@ -150,4 +150,23 @@ public class FilesLinesLeakTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void returnFromMustBeClosedMethod() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.MustBeClosed;",
+            "import java.io.IOException;",
+            "import java.nio.file.Files;",
+            "import java.nio.file.Path;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  @MustBeClosed",
+            "  Stream<String> f(Path p) throws IOException {",
+            "    return Files.lines(p);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

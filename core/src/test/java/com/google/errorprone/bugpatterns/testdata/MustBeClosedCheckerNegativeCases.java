@@ -75,4 +75,13 @@ public class MustBeClosedCheckerNegativeCases {
     // This is fine since the caller method is annotated.
     return new Foo().mustBeClosedAnnotatedMethod();
   }
+
+  void tryWithResources() {
+    Foo foo = new Foo();
+    Closeable closeable = foo.mustBeClosedAnnotatedMethod();
+    try {
+    } finally {
+      closeable.close();
+    }
+  }
 }

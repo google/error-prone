@@ -27,17 +27,13 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
-import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -46,7 +42,8 @@ import javax.lang.model.element.ElementKind;
   summary = "The stream returned by Files.lines should be closed using try-with-resources",
   severity = ERROR
 )
-public class FilesLinesLeak extends BugChecker implements MethodInvocationTreeMatcher {
+public class FilesLinesLeak extends AbstractMustBeClosedChecker
+    implements MethodInvocationTreeMatcher {
 
   public static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.staticMethod().onClass("java.nio.file.Files").named("lines");
@@ -56,10 +53,11 @@ public class FilesLinesLeak extends BugChecker implements MethodInvocationTreeMa
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
-    if (inTWR(state)) {
-      return NO_MATCH;
-    }
-    Description.Builder description = buildDescription(tree);
+    return super.matchNewClassOrMethodInvocation(tree, state);
+  }
+
+  @Override
+  protected void addFix(Description.Builder description, Tree tree, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof MemberSelectTree) {
       MemberSelectTree select = (MemberSelectTree) parent;
@@ -87,15 +85,5 @@ public class FilesLinesLeak extends BugChecker implements MethodInvocationTreeMa
       fix.addImport("java.util.stream.Stream");
       description.addFix(fix.build());
     }
-    return description.build();
-  }
-
-  private boolean inTWR(VisitorState state) {
-    TreePath path = state.getPath().getParentPath();
-    while (path.getLeaf().getKind() == Tree.Kind.CONDITIONAL_EXPRESSION) {
-      path = path.getParentPath();
-    }
-    Symbol sym = ASTHelpers.getSymbol(path.getLeaf());
-    return sym != null && sym.getKind() == ElementKind.RESOURCE_VARIABLE;
   }
 }
