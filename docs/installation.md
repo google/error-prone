@@ -4,9 +4,13 @@ layout: documentation
 ---
 
 Our goal is to make it simple to add Error Prone checks to your existing Java
-compilation. Please join our [mailing
+compilation. However, please note Error Prone requires JDK 8 or newer. It can be used to build java 6 and 7 code by setting the appropriate `-source` / `-target` / `-bootclasspath` flags.
+
+Please join our [mailing
 list](http://groups.google.com/group/error-prone-announce) to know when a new
 version is released!
+
+
 
 # Bazel
 
