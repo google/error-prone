@@ -273,4 +273,54 @@ public class ExpectedExceptionCheckerTest {
         .allowBreakingChanges()
         .doTest();
   }
+
+  @Test
+  public void typedMatcher() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.io.IOException;",
+            "import java.nio.file.*;",
+            "import org.junit.Test;",
+            "import org.junit.Rule;",
+            "import org.hamcrest.Matcher;",
+            "import org.junit.rules.ExpectedException;",
+            "class ExceptionTest {",
+            "  @Rule ExpectedException thrown = ExpectedException.none();",
+            "  Matcher<IOException> matcher;",
+            "  @Test",
+            "  public void test() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    thrown.expect(matcher);",
+            "    Files.readAllBytes(p);",
+            "    assertThat(Files.exists(p)).isFalse();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import static org.hamcrest.MatcherAssert.assertThat;",
+            "import static org.junit.Assert.expectThrows;",
+            "",
+            "import java.io.IOException;",
+            "import java.nio.file.*;",
+            "import org.hamcrest.Matcher;",
+            "import org.junit.Rule;",
+            "import org.junit.Test;",
+            "import org.junit.rules.ExpectedException;",
+            "class ExceptionTest {",
+            "  @Rule ExpectedException thrown = ExpectedException.none();",
+            "  Matcher<IOException> matcher;",
+            "  @Test",
+            "  public void test() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    IOException thrown =",
+            "        expectThrows(IOException.class, () -> Files.readAllBytes(p));",
+            "    assertThat(thrown, matcher);",
+            "    assertThat(Files.exists(p)).isFalse();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

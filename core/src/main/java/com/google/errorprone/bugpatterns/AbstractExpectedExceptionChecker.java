@@ -33,6 +33,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFix.Builder;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -45,6 +46,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,10 +114,19 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
       List<? extends ExpressionTree> args = invocation.getArguments();
       switch (symbol.getSimpleName().toString()) {
         case "expect":
-          if (isSubtype(getOnlyElement(symbol.getParameters()).asType(), symtab.classType, state)) {
+          Type type = ASTHelpers.getType(getOnlyElement(invocation.getArguments()));
+          if (isSubtype(type, symtab.classType, state)) {
             // expect(Class<?>)
             exceptionClass = state.getSourceForNode(getReceiver(getOnlyElement(args)));
-          } else {
+          } else if (isSubtype(type, state.getTypeFromString("org.hamcrest.Matcher"), state)) {
+            Type matcherType =
+                state.getTypes().asSuper(type, state.getSymbolFromString("org.hamcrest.Matcher"));
+            if (!matcherType.getTypeArguments().isEmpty()) {
+              Type matchType = getOnlyElement(matcherType.getTypeArguments());
+              if (isSubtype(matchType, symtab.throwableType, state)) {
+                exceptionClass = SuggestedFixes.qualifyType(state, fix, matchType);
+              }
+            }
             // expect(Matcher)
             fix.addStaticImport("org.hamcrest.MatcherAssert.assertThat");
             newAsserts.add(
