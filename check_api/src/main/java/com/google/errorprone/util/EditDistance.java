@@ -101,6 +101,26 @@ public class EditDistance {
   }
 
   /**
+   * Returns a normalized edit distance between 0 and 1. This is useful if you are comparing or
+   * aggregating distances of different pairs of strings
+   */
+  public static double getNormalizedEditDistance(
+      String source, String target, boolean caseSensitive) {
+
+    if (isEmptyOrWhitespace(source) && isEmptyOrWhitespace(target)) {
+      return 0.0;
+    }
+
+    return (double) getEditDistance(source, target, caseSensitive)
+        / (double) getWorstCaseEditDistance(source.length(), target.length());
+  }
+
+  /** Calculate the worst case distance between two strings with the given lengths */
+  public static int getWorstCaseEditDistance(int sourceLength, int targetLength) {
+    return Math.max(sourceLength, targetLength);
+  }
+
+  /**
    * Determines if a string is empty or consists only of whitespace
    * 
    * @param source The string to check

@@ -119,6 +119,12 @@
       <version>${guava.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <!-- MIT -->
+      <groupId>com.github.kevinstern</groupId>
+      <artifactId>software-and-algorithms</artifactId>
+      <version>1.0</version>
+    </dependency>
   </dependencies>
 
 </project>
