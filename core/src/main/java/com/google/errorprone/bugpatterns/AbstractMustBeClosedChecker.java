@@ -19,6 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.toType;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -55,11 +57,27 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   private static final Matcher<ExpressionTree> CLOSE_METHOD =
       instanceMethod().onDescendantOf("java.lang.AutoCloseable").named("close");
 
+  private static final Matcher<Tree> MOCKITO_MATCHER =
+      toType(
+          MethodInvocationTree.class, staticMethod().onClass("org.mockito.Mockito").named("when"));
+
   /**
    * Check that constructors and methods annotated with {@link MustBeClosed} occur within the
    * resource variable initializer of a try-with-resources statement.
    */
   protected Description matchNewClassOrMethodInvocation(Tree tree, VisitorState state) {
+    Description description = checkClosed(tree, state);
+    if (description == NO_MATCH) {
+      return NO_MATCH;
+    }
+    if (AbstractReturnValueIgnored.expectedExceptionTest(tree, state)
+        || MOCKITO_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)) {
+      return NO_MATCH;
+    }
+    return description;
+  }
+
+  private Description checkClosed(Tree tree, VisitorState state) {
     MethodTree callerMethodTree = enclosingMethod(state);
     if (state.getPath().getParentPath().getLeaf().getKind() == Tree.Kind.RETURN
         && callerMethodTree != null) {

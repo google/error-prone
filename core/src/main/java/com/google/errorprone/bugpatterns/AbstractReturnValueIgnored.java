@@ -132,7 +132,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   }
 
   /** Allow return values to be ignored in tests that expect an exception to be thrown. */
-  private static boolean expectedExceptionTest(MethodInvocationTree tree, VisitorState state) {
+  static boolean expectedExceptionTest(Tree tree, VisitorState state) {
     if (mockitoInvocation(tree, state)) {
       return true;
     }
@@ -200,14 +200,15 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    * Don't match the method that is invoked through {@code Mockito.verify(t)} or {@code
    * doReturn(val).when(t)}.
    */
-  private static boolean mockitoInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (tree instanceof JCMethodInvocation
-        && ((JCMethodInvocation) tree).getMethodSelect() instanceof JCFieldAccess) {
-      ExpressionTree receiver = ASTHelpers.getReceiver(tree);
-      if (MOCKITO_MATCHER.matches(receiver, state)) {
-        return true;
-      }
+  private static boolean mockitoInvocation(Tree tree, VisitorState state) {
+    if (!(tree instanceof JCMethodInvocation)) {
+      return false;
     }
-    return false;
+    JCMethodInvocation invocation = (JCMethodInvocation) tree;
+    if (!(invocation.getMethodSelect() instanceof JCFieldAccess)) {
+      return false;
+    }
+    ExpressionTree receiver = ASTHelpers.getReceiver(invocation);
+    return MOCKITO_MATCHER.matches(receiver, state);
   }
 }
