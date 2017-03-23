@@ -54,6 +54,9 @@ public class MethodMatchers {
   }
 
   public interface StaticMethodMatcher extends Matcher<ExpressionTree> {
+    /** Match on types with satisfy the given predicate. */
+    MethodClassMatcher onClass(TypePredicate predicate);
+
     /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String} */
     MethodClassMatcher onClass(String className);
     
