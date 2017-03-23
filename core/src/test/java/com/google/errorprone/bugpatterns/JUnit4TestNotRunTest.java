@@ -17,6 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -37,6 +39,10 @@ public class JUnit4TestNotRunTest {
   private final CompilationTestHelper expandedHeuristicCompilationHelper =
       CompilationTestHelper.newInstance(JUnit4TestNotRun.class, getClass())
           .setArgs(ImmutableList.of("-XDexpandedTestNotRunHeuristic=true"));
+
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new JUnit4TestNotRun(), getClass())
+          .setArgs("-XDexpandedTestNotRunHeuristic=true");
 
   @Test
   public void testPositiveCase1() throws Exception {
@@ -337,6 +343,110 @@ public class JUnit4TestNotRunTest {
             "public abstract class Test {",
             "  public void testDoSomething() {}",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void testTestFix() throws Exception {
+    refactoringHelper
+        .addInputLines(
+            "in/TestStuff.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  public void testDoSomething() {}",
+            "}")
+        .addOutputLines(
+            "out/TestStuff.java",
+            "import org.junit.Test;",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  @Test",
+            "  public void testDoSomething() {}",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void testIgnoreFix() throws Exception {
+    refactoringHelper
+        .addInputLines(
+            "in/TestStuff.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  public void testDoSomething() {}",
+            "}")
+        .addOutputLines(
+            "out/TestStuff.java",
+            "import org.junit.Ignore;",
+            "import org.junit.Test;",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  @Test @Ignore public void testDoSomething() {}",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void testPrivateFix() throws Exception {
+    refactoringHelper
+        .addInputLines(
+            "in/TestStuff.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  public void testDoSomething() {}",
+            "}")
+        .addOutputLines(
+            "out/TestStuff.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  private void testDoSomething() {}",
+            "}")
+        .setFixChooser(FixChoosers.THIRD)
+        .doTest();
+  }
+
+  @Test
+  public void ignoreFixComesFirstWhenTestEnabled() throws Exception {
+    refactoringHelper
+        .addInputLines(
+            "in/TestStuff.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  public void disabledTestDoSomething() {",
+            "    verify();",
+            "  }",
+            "  void verify() {}",
+            "}")
+        .addOutputLines(
+            "out/TestStuff.java",
+            "import org.junit.Ignore;",
+            "import org.junit.Test;",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  @Test @Ignore public void disabledTestDoSomething() {",
+            "    verify();",
+            "  }",
+            "  void verify() {}",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
 
