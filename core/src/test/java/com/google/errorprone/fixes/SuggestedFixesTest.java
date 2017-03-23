@@ -34,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.LinkTree;
@@ -485,4 +486,14 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
+  @Test
+  public void unusedImportInPackageInfo() throws IOException {
+	  CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
+        .addSourceLines(
+            "in/com/example/package-info.java",
+            "package com.example;",
+            "// BUG: Diagnostic contains: Did you mean to remove this line?",
+            "import java.util.Map;")
+        .doTest();
+  }
 }
