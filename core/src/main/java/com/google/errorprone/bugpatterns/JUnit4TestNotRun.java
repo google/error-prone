@@ -36,12 +36,11 @@ import static javax.lang.model.element.Modifier.STATIC;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers.JUnit4TestClassMatcher;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.util.Options;
@@ -66,7 +65,10 @@ import javax.lang.model.element.Modifier;
 )
 public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
-  private static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
+  private static final String TEST_CLASS = "org.junit.Test";
+  private static final String IGNORE_CLASS = "org.junit.Ignore";
+  private static final String TEST_ANNOTATION = "@Test ";
+  private static final String IGNORE_ANNOTATION = "@Ignore ";
   private static final JUnit4TestClassMatcher isJUnit4TestClass = new JUnit4TestClassMatcher();
 
 
@@ -112,7 +114,7 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
     // Method appears to be a JUnit 3 test case (name prefixed with "test"), probably a test.
     if (isJunit3TestCase.matches(methodTree, state)) {
-      return describeMatch(methodTree, prefixMethodWithTestAnnotation(methodTree, state));
+      return describeFixes(methodTree, state);
     }
 
     // TODO(b/34062183): Remove check for flag once cleanup complete.
@@ -126,29 +128,55 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
       // Method non-static and contains call(s) to testing method, probably a test.
       if (not(hasModifier(STATIC)).matches(methodTree, state) && containsTestMethod(methodTree)) {
-        return describeMatch(methodTree, prefixMethodWithTestAnnotation(methodTree, state));
+        return describeFixes(methodTree, state);
       }
     }
     return NO_MATCH;
   }
 
-  /*
-   * Add the @Test annotation.  If the method is static, also make the method non-static.
+  /**
+   * Returns a finding for the given method tree containing fixes:
+   *
+   * <ol>
+   *   <li>Add @Test, remove static modifier if present.
+   *   <li>Add @Test and @Ignore, remove static modifier if present.
+   *   <li>Change visibility to private (for local helper methods).
+   * </ol>
    */
-  private static Fix prefixMethodWithTestAnnotation(MethodTree methodTree, VisitorState state) {
-    if (Matchers.<MethodTree>hasModifier(Modifier.STATIC).matches(methodTree, state)) {
-      CharSequence methodSource = state.getSourceForNode(methodTree);
-      if (methodSource != null) {
-        String methodString = "@Test\n" + methodSource.toString().replaceFirst(" static ", " ");
-        return SuggestedFix.builder()
-            .addImport(JUNIT4_TEST_ANNOTATION)
-            .replace(methodTree, methodString)
+  private Description describeFixes(MethodTree methodTree, VisitorState state) {
+    SuggestedFix removeStatic = SuggestedFixes.removeModifiers(methodTree, state, Modifier.STATIC);
+    SuggestedFix testFix =
+        SuggestedFix.builder()
+            .merge(removeStatic)
+            .addImport(TEST_CLASS)
+            .prefixWith(methodTree, TEST_ANNOTATION)
             .build();
-      }
+    SuggestedFix ignoreFix =
+        SuggestedFix.builder()
+            .merge(testFix)
+            .addImport(IGNORE_CLASS)
+            .prefixWith(methodTree, IGNORE_ANNOTATION)
+            .build();
+
+    SuggestedFix visibilityFix =
+        SuggestedFix.builder()
+            .merge(SuggestedFixes.removeModifiers(methodTree, state, Modifier.PUBLIC))
+            .merge(SuggestedFixes.addModifiers(methodTree, state, Modifier.PRIVATE))
+            .build();
+
+    // Suggest @Ignore first if test method is named like a purposely disabled test.
+    String methodName = methodTree.getName().toString();
+    if (methodName.startsWith("disabl") || methodName.startsWith("ignor")) {
+      return buildDescription(methodTree)
+          .addFix(ignoreFix)
+          .addFix(testFix)
+          .addFix(visibilityFix)
+          .build();
     }
-    return SuggestedFix.builder()
-        .addImport(JUNIT4_TEST_ANNOTATION)
-        .prefixWith(methodTree, "@Test\n")
+    return buildDescription(methodTree)
+        .addFix(testFix)
+        .addFix(ignoreFix)
+        .addFix(visibilityFix)
         .build();
   }
 }
