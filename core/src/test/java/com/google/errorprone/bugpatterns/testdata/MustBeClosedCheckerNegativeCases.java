@@ -16,6 +16,10 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
+
 import com.google.errorprone.annotations.MustBeClosed;
 
 public class MustBeClosedCheckerNegativeCases {
@@ -66,7 +70,7 @@ public class MustBeClosedCheckerNegativeCases {
 
   @MustBeClosed
   Closeable positiveCase8() {
-    // This is fine since the caller method is annotated.
+    // This is fine since the caller method is annotatGed.
     return new MustBeClosedAnnotatedConstructor();
   }
 
@@ -82,6 +86,19 @@ public class MustBeClosedCheckerNegativeCases {
     try {
     } finally {
       closeable.close();
+    }
+  }
+
+  void mockitoWhen(Foo mockFoo) {
+    when(mockFoo.mustBeClosedAnnotatedMethod()).thenReturn(null);
+    doReturn(null).when(mockFoo).mustBeClosedAnnotatedMethod();
+  }
+
+  void testException() {
+    try {
+      ((Foo) null).mustBeClosedAnnotatedMethod();
+      fail();
+    } catch (NullPointerException e) {
     }
   }
 }

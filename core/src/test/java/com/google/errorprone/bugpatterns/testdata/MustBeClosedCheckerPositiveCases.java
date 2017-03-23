@@ -143,14 +143,4 @@ public class MustBeClosedCheckerPositiveCases {
     } finally {
     }
   }
-
-  void tryWithResources_wrongClose(Closeable other) {
-    Foo foo = new Foo();
-    // BUG: Diagnostic contains:
-    Closeable resource = foo.mustBeClosedAnnotatedMethod();
-    try {
-    } finally {
-      other.close();
-    }
-  }
 }
