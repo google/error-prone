@@ -28,6 +28,20 @@ public class MutableConstantFieldTest {
       CompilationTestHelper.newInstance(MutableConstantField.class, getClass());
 
   @Test
+  public void staticFinalIterableInitializedInDeclarationWithImmutableSetOf_suggestsFix() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static final ImmutableSet<String> COLORS =",
+            "  static final Iterable<String> COLORS =",
+            "      ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void staticFinalSetInitializedInDeclarationWithImmutableSetOf_suggestsFix() {
     testHelper
         .addSourceLines(
@@ -104,6 +118,19 @@ public class MutableConstantFieldTest {
   }
 
   @Test
+  public void staticFinalImmutableSetInitializedInDeclarationWithImmutableSet_doesNotSuggestFix() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "class Test {",
+            "  static final ImmutableSet<String> COLORS =",
+            "      ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void staticFinalSetInitializedInStaticBlock_doesNotSuggestFix() {
     testHelper
         .addSourceLines(
@@ -163,9 +190,10 @@ public class MutableConstantFieldTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableSet;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
             "class Test {",
-            "  static final ImmutableSet.Builder<String> MUTABLE = ImmutableSet.builder();",
+            "  static final List<String> MUTABLE = new ArrayList<>();",
             "}")
         .doTest();
   }
