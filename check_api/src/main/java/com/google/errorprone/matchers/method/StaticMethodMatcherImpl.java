@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.StaticMethodMatcher;
+import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
@@ -34,6 +35,11 @@ class StaticMethodMatcherImpl extends MethodMatcher implements StaticMethodMatch
       return Optional.absent();
     }
     return Optional.of(method);
+  }
+
+  @Override
+  public MethodClassMatcherImpl onClass(TypePredicate predicate) {
+    return new MethodClassMatcherImpl(this, predicate);
   }
 
   @Override
