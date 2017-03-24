@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
@@ -36,6 +37,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import java.util.stream.Stream;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -89,9 +91,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
   }
 
   private static boolean implementsImmutableInterface(ClassSymbol symbol) {
-    return symbol
-        .getInterfaces()
-        .stream()
-        .anyMatch(iface -> iface.asElement().getAnnotation(Immutable.class) != null);
+    return Streams.concat(symbol.getInterfaces().stream(), Stream.of(symbol.getSuperclass()))
+        .anyMatch(supertype -> supertype.asElement().getAnnotation(Immutable.class) != null);
   }
 }
