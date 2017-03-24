@@ -165,6 +165,7 @@ import com.google.errorprone.bugpatterns.TypeParameterQualifier;
 import com.google.errorprone.bugpatterns.TypeParameterShadowing;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
 import com.google.errorprone.bugpatterns.URLEqualsHashCode;
+import com.google.errorprone.bugpatterns.UngroupedOverloads;
 import com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
@@ -470,6 +471,7 @@ public class BuiltInCheckerSuppliers {
           StringEquality.class,
           TestExceptionChecker.class,
           ThrowsUncheckedException.class,
+          UngroupedOverloads.class,
           UnlockMethodChecker.class,
           UnnecessaryDefaultInEnumSwitch.class,
           UnnecessaryStaticImport.class,
