@@ -214,6 +214,9 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
     }
 
     public Fix build(List<? extends StatementTree> throwingStatements) {
+      if (throwingStatements.isEmpty()) {
+        return baseFix;
+      }
       SuggestedFix.Builder fix = SuggestedFix.builder().merge(baseFix);
       StringBuilder fixPrefix = new StringBuilder();
       if (newAsserts.isEmpty()) {
