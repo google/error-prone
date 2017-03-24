@@ -163,4 +163,47 @@ public class MethodCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negativeEnum() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "enum Test {",
+            "  VALUE {",
+            "    private void foo() {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeAnonymous() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  static void foo() {",
+            "    new Object() {",
+            "      private void foo() {}",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeLocal() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  static void foo() {",
+            "    class Local {",
+            "      private void foo() {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
