@@ -79,7 +79,10 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
             new TreeScanner<Void, Void>() {
               @Override
               public Void visitBlock(BlockTree block, Void unused) {
-                state.reportMatch(scanBlock(tree, block, state));
+                Description description = scanBlock(tree, block, state);
+                if (description != NO_MATCH) {
+                  state.reportMatch(description);
+                }
                 return super.visitBlock(block, unused);
               }
             },
