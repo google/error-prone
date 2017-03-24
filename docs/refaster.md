@@ -173,6 +173,13 @@ a variety of these "magic incantations" in the [`Refaster` class][refaster-javad
 for code patterns that you might wish to write in a `@BeforeTemplate` but don't
 technically compile as Java code.
 
+### `@UseImportPolicy`
+
+Refaster attempts to automatically infer how to import newly used classes and methods into refactored code, but the approach it uses to do so can be configured with the `@UseImportPolicy` annotation on the `@AfterTemplate` method.  (Note that Refaster will _not_ pay attention to how the class is imported or qualified in the original Refaster template!)  The `ImportPolicy` enum offers the following options:
+
+ * `IMPORT_TOP_LEVEL`, the default: imports the top-level class and explicitly qualifies references to nested classes.  For example, to refer to `java.util.Map.Entry`, Refaster will `import java.util.Map;` and refer to the type as `Map.Entry`.
+ * `IMPORT_CLASS_DIRECTLY` imports classes directly, whether nested in other classes or not: e.g. `import java.util.Map.Entry;`
+ * `STATIC_IMPORT_ALWAYS` static imports methods explicitly mentioned in the Refaster template, and refers to types themselves as in `IMPORT_TOP_LEVEL`.
 
 ### Placeholder methods
 
