@@ -37,6 +37,7 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -44,6 +45,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
@@ -72,8 +74,22 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
     if (tree.getBody() == null) {
       return NO_MATCH;
     }
+    tree.getBody()
+        .accept(
+            new TreeScanner<Void, Void>() {
+              @Override
+              public Void visitBlock(BlockTree block, Void unused) {
+                state.reportMatch(scanBlock(tree, block, state));
+                return super.visitBlock(block, unused);
+              }
+            },
+            null);
+    return NO_MATCH;
+  }
+
+  Description scanBlock(MethodTree tree, BlockTree block, VisitorState state) {
     PeekingIterator<? extends StatementTree> it =
-        Iterators.peekingIterator(tree.getBody().getStatements().iterator());
+        Iterators.peekingIterator(block.getStatements().iterator());
     while (it.hasNext() && !MATCHER.matches(it.peek(), state)) {
       it.next();
     }
@@ -213,8 +229,7 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
       }
       fix.prefixWith(throwingStatements.get(0), fixPrefix.toString());
       if (useExpressionLambda) {
-        fix.postfixWith(
-            ((ExpressionStatementTree) throwingStatements.get(0)).getExpression(), ")");
+        fix.postfixWith(((ExpressionStatementTree) throwingStatements.get(0)).getExpression(), ")");
         fix.postfixWith(getLast(throwingStatements), Joiner.on('\n').join(newAsserts));
       } else {
         fix.postfixWith(getLast(throwingStatements), "});\n" + Joiner.on('\n').join(newAsserts));
