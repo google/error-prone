@@ -352,4 +352,56 @@ public class CommentsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void
+      findCommentsForArguments_attachesCommentToArgument_whenCommentOnFollowingLineWithinCall() {
+    CompilationTestHelper.newInstance(PrintCommentsForArguments.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  Test(Object param1) {}",
+            "  void test(Object param1) {",
+            "    // BUG: Diagnostic contains: [[] param1 [// 1]]",
+            "    new Test(param1",
+            "             // 1",
+            "            );",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void findCommentsForArguments_ignoresNextLineComment_withLineCommentAfterInvocation() {
+    CompilationTestHelper.newInstance(PrintCommentsForArguments.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract Object target(Object param);",
+            "  void test(Object param) {",
+            "    // BUG: Diagnostic contains: [[] param [// 1]]",
+            "    target(param); // 1",
+            "    /* 2 */ int i;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void
+      findCommentsForArguments_attachesCommentToSecondArgument_whenFollowedByTreeContainingComma() {
+    CompilationTestHelper.newInstance(PrintCommentsForArguments.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object param1, Object param2);",
+            "  void test(Object param1, Object param2) {",
+            "    // BUG: Diagnostic contains: [[] param1 [], [] param2 [// 1]]",
+            "    target(param1, param2);  // 1",
+            "    // BUG: Diagnostic contains: [[] param1 [], [] param2 []]",
+            "    target(param1, param2);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
