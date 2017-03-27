@@ -139,8 +139,9 @@ public class ASTHelpers {
   }
 
   /**
-   * Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is
-   * of the wrong type, or if {@code tree} is null.
+   * Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is of
+   * the wrong type, if {@code tree} is null, or if the symbol cannot be found due to a compilation
+   * error.
    */
   // TODO(eaftan): refactor other code that accesses symbols to use this method
   public static Symbol getSymbol(Tree tree) {
@@ -175,7 +176,8 @@ public class ASTHelpers {
       return getSymbol(((ParameterizedTypeTree) tree).getType());
     }
     if (tree instanceof TypeParameterTree) {
-      return ((JCTypeParameter) tree).type.tsym;
+      Type type = ((JCTypeParameter) tree).type;
+      return type == null ? null : type.tsym;
     }
 
     return null;
