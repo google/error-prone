@@ -77,6 +77,9 @@ public class Comments {
     int endPosition = computeEndPosition(tree, sourceCode, state);
     CharSequence source = sourceCode.subSequence(startPosition, endPosition);
 
+    // The token position of the end of the method invocation
+    int invocationEnd = state.getEndPosition(tree) - startPosition;
+
     ErrorProneTokens errorProneTokens = new ErrorProneTokens(source.toString(), state.context);
     ImmutableList<ErrorProneToken> tokens = errorProneTokens.getTokens();
     LineMap lineMap = errorProneTokens.getLineMap();
@@ -85,6 +88,7 @@ public class Comments {
     TokenTracker tokenTracker = new TokenTracker(lineMap);
 
     argumentTracker.advance();
+    tokenLoop:
     for (ErrorProneToken token : tokens) {
       tokenTracker.advance(token);
       if (tokenTracker.atStartOfLine() && !tokenTracker.wasPreviousLineEmpty()) {
@@ -96,7 +100,13 @@ public class Comments {
             // unless the previous argument was not on the the previous line with it
             argumentTracker.addCommentToPreviousArgument(c);
           } else {
-            argumentTracker.addCommentToCurrentArgument(c);
+            // if the comment comes after the end of the invocation and its not on the same line
+            // as the final argument then we need to ignore it
+            if (c.getSourcePos(0) <= invocationEnd
+                || lineMap.getLineNumber(c.getSourcePos(0))
+                    <= lineMap.getLineNumber(argumentTracker.currentArgumentEndPosition)) {
+              argumentTracker.addCommentToCurrentArgument(c);
+            }
           }
         }
       } else {
@@ -105,6 +115,9 @@ public class Comments {
       if (token.pos() >= argumentTracker.currentArgumentEndPosition) {
         // We are between arguments so wait for a (lexed) comma to delimit them
         if (token.kind() == TokenKind.COMMA) {
+          if (!argumentTracker.hasMoreArguments()) {
+            break tokenLoop;
+          }
           argumentTracker.advance();
         }
       }
@@ -323,6 +336,10 @@ public class Comments {
 
     void addAllCommentsToCurrentArgument(Iterable<Comment> comments) {
       currentCommentedResultBuilder.addAllComment(comments, currentArgumentStartPosition);
+    }
+
+    public boolean hasMoreArguments() {
+      return argumentsIterator.hasNext();
     }
   }
 }
