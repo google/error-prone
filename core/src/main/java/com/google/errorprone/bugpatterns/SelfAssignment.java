@@ -34,8 +34,8 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.names.LevenshteinEditDistance;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.EditDistance;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -52,6 +52,7 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import java.util.Objects;
 
 /**
  * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
@@ -71,7 +72,7 @@ public class SelfAssignment extends BugChecker
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
     ExpressionTree expression = stripCheckNotNull(tree.getExpression(), state);
-    if(ASTHelpers.sameVariable(tree.getVariable(), expression)) {
+    if (ASTHelpers.sameVariable(tree.getVariable(), expression)) {
       return describeForAssignment(tree, state);
     }
     return Description.NO_MATCH;
@@ -188,8 +189,8 @@ public class SelfAssignment extends BugChecker
       int minEditDistance = Integer.MAX_VALUE;
       String replacement = null;
       for (JCVariableDecl var : method.params) {
-        if (var.type == type) {
-          int editDistance = EditDistance.getEditDistance(rhsName, var.name.toString());
+        if (Objects.equals(var.type, type)) {
+          int editDistance = LevenshteinEditDistance.getEditDistance(rhsName, var.name.toString());
           if (editDistance < minEditDistance) {
             // pick one with minimum edit distance
             minEditDistance = editDistance;
@@ -225,8 +226,9 @@ public class SelfAssignment extends BugChecker
       for (JCTree member : klass.getMembers()) {
         if (member.getKind() == VARIABLE) {
           JCVariableDecl var = (JCVariableDecl) member;
-          if (!Flags.isStatic(var.sym) && var.type == type) {
-            int editDistance = EditDistance.getEditDistance(lhsName, var.name.toString());
+          if (!Flags.isStatic(var.sym) && Objects.equals(var.type, type)) {
+            int editDistance =
+                LevenshteinEditDistance.getEditDistance(lhsName, var.name.toString());
             if (editDistance < minEditDistance) {
               // pick one with minimum edit distance
               minEditDistance = editDistance;

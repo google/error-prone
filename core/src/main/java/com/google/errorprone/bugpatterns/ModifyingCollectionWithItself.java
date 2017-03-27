@@ -40,8 +40,8 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.names.LevenshteinEditDistance;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.EditDistance;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -235,7 +235,8 @@ public class ModifyingCollectionWithItself extends BugChecker
         new Function<JCVariableDecl, Integer>() {
           @Override
           public Integer apply(JCVariableDecl jcVariableDecl) {
-            return EditDistance.getEditDistance(baseName, jcVariableDecl.name.toString());
+            return LevenshteinEditDistance.getEditDistance(
+                baseName, jcVariableDecl.name.toString());
           }
         });
   }

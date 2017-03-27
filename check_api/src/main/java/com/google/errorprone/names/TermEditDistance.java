@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.errorprone.util;
+package com.google.errorprone.names;
 
 import blogspot.software_and_algorithms.stern_library.optimization.HungarianAlgorithm;
 import com.google.common.collect.ImmutableList;
@@ -45,8 +45,8 @@ public class TermEditDistance {
 
   public TermEditDistance() {
     this(
-        (s, t) -> (double) EditDistance.getEditDistance(s, t, /*isCaseSensitive*/ false),
-        (s, t) -> (double) EditDistance.getWorstCaseEditDistance(s, t));
+        (s, t) -> (double) LevenshteinEditDistance.getEditDistance(s, t, /*isCaseSensitive*/ false),
+        (s, t) -> (double) LevenshteinEditDistance.getWorstCaseEditDistance(s, t));
   }
 
   public double getNormalizedEditDistance(String source, String target) {

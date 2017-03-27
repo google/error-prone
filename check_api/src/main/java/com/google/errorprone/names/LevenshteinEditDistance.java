@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.util;
+package com.google.errorprone.names;
 
 /**
- * A utility class for finding the edit distance between strings. 
- * The edit distance between two strings is the number of deletions, 
- * insertions, and substitutions required to transform the source to the target.
+ * A utility class for finding the Levenshtein edit distance between strings. The edit distance
+ * between two strings is the number of deletions, insertions, and substitutions required to 
+ * transform the source to the target. See 
+ * {@link https://en.wikipedia.org/wiki/Levenshtein_distance}.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class EditDistance {
+public class LevenshteinEditDistance {
 
-  private EditDistance() { /* disallow instantiation */ }
+  private LevenshteinEditDistance() {
+    /* disallow instantiation */
+  }
 
   /**
    * Returns the edit distance between two strings.
