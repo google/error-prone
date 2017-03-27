@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.util;
+package com.google.errorprone.names;
 
 import static com.google.common.truth.Truth.assertThat;
 
