@@ -187,6 +187,9 @@ public class VisitorState {
     if (isPrimitiveType(typeStr)) {
       return getPrimitiveType(typeStr);
     }
+    if (isVoidType(typeStr)) {
+      return getVoidType();
+    }
     Name typeName = getName(typeStr);
     try {
       ClassSymbol typeSymbol = getSymtab().classes.get(typeName);
@@ -378,10 +381,18 @@ public class VisitorState {
     }
   }
 
+  private Type getVoidType() {
+    return getSymtab().voidType;
+  }
+
   private static boolean isPrimitiveType(String typeStr) {
     return typeStr.equals("byte") || typeStr.equals("short") || typeStr.equals("int") ||
         typeStr.equals("long") || typeStr.equals("float") || typeStr.equals("double") ||
         typeStr.equals("boolean") || typeStr.equals("char");
+  }
+
+  private static boolean isVoidType(String typeStr) {
+    return typeStr.equals("void");
   }
 
   /** Returns true if the compilation is targeting Android. */

@@ -488,6 +488,26 @@ public class Matchers {
     };
   }
 
+  /** Matches an AST node if its type is either a primitive type or a {@code void} type. */
+  public static <T extends Tree> Matcher<T> isPrimitiveOrVoidType() {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T t, VisitorState state) {
+        return ((JCTree) t).type.isPrimitiveOrVoid();
+      }
+    };
+  }
+
+  /** Matches an AST node if its type is a {@code void} type. */
+  public static <T extends Tree> Matcher<T> isVoidType() {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T t, VisitorState state) {
+        return state.getTypes().isSameType(((JCTree) t).type, state.getSymtab().voidType);
+      }
+    };
+  }
+
   /**
    * Matches an AST node if its type is a primitive type, or a boxed version of a primitive type.
    */
@@ -808,7 +828,7 @@ public class Matchers {
    * Match a method that returns a non-primitive type.
    */
   public static Matcher<MethodTree> methodReturnsNonPrimitiveType() {
-    return methodReturns(not(isPrimitiveType()));
+    return methodReturns(not(isPrimitiveOrVoidType()));
   }
 
   /**

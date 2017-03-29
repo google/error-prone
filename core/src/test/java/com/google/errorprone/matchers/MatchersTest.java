@@ -19,7 +19,10 @@ package com.google.errorprone.matchers;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.inLoop;
+import static com.google.errorprone.matchers.Matchers.isPrimitiveOrVoidType;
+import static com.google.errorprone.matchers.Matchers.isPrimitiveType;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.isVoidType;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
@@ -220,6 +223,77 @@ public class MatchersTest {
   }
 
   @Test
+  public void methodReturnsPrimitiveType() {
+    Matcher<MethodTree> matcher = methodReturns(isPrimitiveType());
+    CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
+        .addSourceLines(
+            "test/MethodReturnsPrimitiveTypeTest.java",
+            "package test;",
+            "public class MethodReturnsPrimitiveTypeTest {",
+            "  // BUG: Diagnostic contains:",
+            "  public boolean matches1() {",
+            "    return false;",
+            "  }",
+            "  public void doesntMatch() {",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  public int matches2() {",
+            "    return 42;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReturnsVoidType() {
+    Matcher<MethodTree> matcher =
+        Matchers.allOf(methodReturns(typeFromString("void")), methodReturns(isVoidType()));
+    CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
+        .addSourceLines(
+            "test/MethodReturnsVoidTypeTest.java",
+            "package test;",
+            "public class MethodReturnsVoidTypeTest {",
+            "  public boolean doesntMatch1() {",
+            "    return true;",
+            "  }",
+            "  public Object doesntMatch2() {",
+            "    return new Integer(42);",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  public void matches() {",
+            "    System.out.println(42);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReturnsPrimitiveOrVoidType() {
+    Matcher<MethodTree> matcher = methodReturns(isPrimitiveOrVoidType());
+    CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
+        .addSourceLines(
+            "test/MethodReturnsPrimitiveOrVoidTypeTest.java",
+            "package test;",
+            "public class MethodReturnsPrimitiveOrVoidTypeTest {",
+            "  public Object doesntMatch() {",
+            "    return null;",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  public boolean doesMatch1() {",
+            "    return true;",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  public void doesMatch2() {",
+            "  }",
+            "  // BUG: Diagnostic contains:",
+            "  public double doesMatch3() {",
+            "    return 42.0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void methodReturnsNonPrimitiveType() {
     Matcher<MethodTree> matcher = Matchers.methodReturnsNonPrimitiveType();
     CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
@@ -229,6 +303,8 @@ public class MatchersTest {
             "public class MethodReturnsSubtypeTest {",
             "  public int doesntMatch() {",
             "    return 0;",
+            "  }",
+            "  public void doesntMatch2() {",
             "  }",
             "  // BUG: Diagnostic contains:",
             "  public String matches() {",
