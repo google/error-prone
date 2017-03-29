@@ -25,9 +25,42 @@ import com.google.inject.Provides;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** Tests for {@code BindingToUnqualifiedCommonType} */
 public class BindingToUnqualifiedCommonTypeNegativeCases {
+
+  // All of the tagged instances would normally be flagged, but aren't because it's in a JUnit4
+  // class
+  @RunWith(JUnit4.class)
+  static class MyTestClass {
+    /** Regular module */
+    class Module1 extends AbstractModule {
+      @Override
+      protected void configure() {
+        bind(Integer.class).toInstance(2);
+        bind(String.class).toInstance("Hello");
+        bind(Double.class).toProvider(() -> 42.0);
+        binder().bind(Long.class).toInstance(42L);
+      }
+
+      @Provides
+      int providesFoo() {
+        return 42;
+      }
+
+      @Provides
+      Integer provideBoxedFoo() {
+        return 42;
+      }
+
+      @Provides
+      String providesGreeting() {
+        return "hi";
+      }
+    }
+  }
 
   /** Regular module */
   class Module1 extends AbstractModule {

@@ -42,6 +42,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -95,7 +96,8 @@ public class BindingToUnqualifiedCommonType extends BugChecker
 
   @Override
   public Description matchMethod(MethodTree method, VisitorState state) {
-    if (PROVIDES_UNQUALIFIED_CONSTANT.matches(method, state)) {
+    if (PROVIDES_UNQUALIFIED_CONSTANT.matches(method, state)
+        && !ASTHelpers.isJUnitTestCode(state)) {
       return describeMatch(method);
     }
     return Description.NO_MATCH;
@@ -104,7 +106,8 @@ public class BindingToUnqualifiedCommonType extends BugChecker
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocation, VisitorState state) {
-    if (BIND_TO_UNQUALIFIED_CONSTANT.matches(methodInvocation, state)) {
+    if (BIND_TO_UNQUALIFIED_CONSTANT.matches(methodInvocation, state)
+        && !ASTHelpers.isJUnitTestCode(state)) {
       return describeMatch(methodInvocation);
     }
     return Description.NO_MATCH;

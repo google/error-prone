@@ -17,6 +17,7 @@
 package com.google.errorprone.util;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 
 import com.google.common.base.CharMatcher;
@@ -811,7 +812,8 @@ public class ASTHelpers {
         return true;
       }
       if (ancestor instanceof ClassTree
-          && JUnitMatchers.isTestCaseDescendant.matches((ClassTree) ancestor, state)) {
+          && (JUnitMatchers.isTestCaseDescendant.matches((ClassTree) ancestor, state)
+              || hasAnnotation(getSymbol(ancestor), JUNIT4_RUN_WITH_ANNOTATION, state))) {
         return true;
       }
     }
