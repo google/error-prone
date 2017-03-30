@@ -374,6 +374,55 @@ public class ScannerSupplierTest {
     assertScanner(overriddenScannerSupplier).hasSeverities(expected);
   }
 
+  @Test
+  public void allChecksAsWarningsWorks() throws Exception {
+    ScannerSupplier ss =
+        ScannerSupplier.fromBugCheckerClasses(
+                BadShiftAmount.class,
+                ChainingConstructorIgnoresParameter.class,
+                StringEquality.class)
+            .filter(Predicates.alwaysFalse());
+    assertScanner(ss).hasEnabledChecks(); // Everything's off
+
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(
+            ImmutableList.of("-Xep:StringEquality:OFF", "-XepAllDisabledChecksAsWarnings"));
+
+    ScannerSupplier withOverrides = ss.applyOverrides(epOptions);
+    assertScanner(withOverrides)
+        .hasEnabledChecks(
+            BadShiftAmount.class, ChainingConstructorIgnoresParameter.class, StringEquality.class);
+
+    ImmutableMap<String, SeverityLevel> expectedSeverities =
+        ImmutableMap.of(
+            "BadShiftAmount",
+            SeverityLevel.WARNING,
+            "ChainingConstructorIgnoresParameter",
+            SeverityLevel.WARNING,
+            "StringEquality",
+            SeverityLevel.WARNING);
+    assertScanner(withOverrides).hasSeverities(expectedSeverities);
+
+    epOptions =
+        ErrorProneOptions.processArgs(
+            ImmutableList.of(
+                "-Xep:StringEquality:OFF",
+                "-XepAllDisabledChecksAsWarnings",
+                "-Xep:StringEquality:OFF"));
+
+    withOverrides = ss.applyOverrides(epOptions);
+    assertScanner(withOverrides)
+        .hasEnabledChecks(BadShiftAmount.class, ChainingConstructorIgnoresParameter.class);
+
+    expectedSeverities =
+        ImmutableMap.of(
+            "BadShiftAmount",
+            SeverityLevel.WARNING,
+            "ChainingConstructorIgnoresParameter",
+            SeverityLevel.WARNING);
+    assertScanner(withOverrides).hasSeverities(expectedSeverities);
+  }
+
   private static class ScannerSupplierSubject
       extends Subject<ScannerSupplierSubject, ScannerSupplier> {
     ScannerSupplierSubject(FailureStrategy failureStrategy, ScannerSupplier scannerSupplier) {

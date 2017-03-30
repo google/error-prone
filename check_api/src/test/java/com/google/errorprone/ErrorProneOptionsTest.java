@@ -110,10 +110,10 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
-  public void recognizesAllChecks() {
+  public void recognizesAllChecksAsWarnings() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepAllDisabledChecksAsWarnings"});
-    assertThat(options.isEnableAllChecks()).isTrue();
+    assertThat(options.isEnableAllChecksAsWarnings()).isTrue();
   }
 
   @Test

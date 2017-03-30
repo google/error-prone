@@ -137,7 +137,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       throws InvalidCommandLineOptionException {
     Map<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
     if (severityOverrides.isEmpty()
-        && !errorProneOptions.isEnableAllChecks()
+        && !errorProneOptions.isEnableAllChecksAsWarnings()
         && !errorProneOptions.isDropErrorsToWarnings()
         && !errorProneOptions.isDisableAllChecks()) {
       return this;
@@ -148,8 +148,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     Map<String, SeverityLevel> severities = new LinkedHashMap<>(severities());
     Set<String> disabled = new HashSet<>(disabled());
 
-    if (errorProneOptions.isEnableAllChecks()) {
-      disabled.forEach(c -> severities.put(c, checks.get(c).defaultSeverity()));
+    if (errorProneOptions.isEnableAllChecksAsWarnings()) {
+      disabled.forEach(c -> severities.put(c, SeverityLevel.WARNING));
       disabled.clear();
     }
 

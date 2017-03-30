@@ -70,8 +70,8 @@ public class ErrorProneOptions {
     return isSupported ? 0 : -1;
   }
 
-  public boolean isEnableAllChecks() {
-    return enableAllChecks;
+  public boolean isEnableAllChecksAsWarnings() {
+    return enableAllChecksAsWarnings;
   }
 
   public boolean isDisableAllChecks() {
@@ -144,7 +144,7 @@ public class ErrorProneOptions {
   private final boolean ignoreUnknownChecks;
   private final boolean disableWarningsInGeneratedCode;
   private final boolean dropErrorsToWarnings;
-  private final boolean enableAllChecks;
+  private final boolean enableAllChecksAsWarnings;
   private final boolean disableAllChecks;
   private final PatchingOptions patchingOptions;
 
@@ -154,7 +154,7 @@ public class ErrorProneOptions {
       boolean ignoreUnknownChecks,
       boolean disableWarningsInGeneratedCode,
       boolean dropErrorsToWarnings,
-      boolean enableAllChecks,
+      boolean enableAllChecksAsWarnings,
       boolean disableAllChecks,
       PatchingOptions patchingOptions) {
     this.severityMap = severityMap;
@@ -162,7 +162,7 @@ public class ErrorProneOptions {
     this.ignoreUnknownChecks = ignoreUnknownChecks;
     this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
     this.dropErrorsToWarnings = dropErrorsToWarnings;
-    this.enableAllChecks = enableAllChecks;
+    this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     this.disableAllChecks = disableAllChecks;
     this.patchingOptions = patchingOptions;
   }
@@ -195,7 +195,7 @@ public class ErrorProneOptions {
     private boolean ignoreUnknownChecks = false;
     private boolean disableWarningsInGeneratedCode = false;
     private boolean dropErrorsToWarnings = false;
-    private boolean enableAllChecks = false;
+    private boolean enableAllChecksAsWarnings = false;
     private boolean disableAllChecks = false;
     private Map<String, Severity> severityMap = new HashMap<>();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
@@ -221,8 +221,14 @@ public class ErrorProneOptions {
       severityMap.put(checkName, severity);
     }
 
-    public void setEnableAllChecks(boolean enableAllChecks) {
-      this.enableAllChecks = enableAllChecks;
+    public void setEnableAllChecksAsWarnings(boolean enableAllChecksAsWarnings) {
+      // Checks manually disabled before this flag are reset to warning-level
+      severityMap
+          .entrySet()
+          .stream()
+          .filter(e -> e.getValue() == Severity.OFF)
+          .forEach(e -> e.setValue(Severity.WARN));
+      this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     }
 
     public void setDisableAllChecks(boolean disableAllChecks) {
@@ -242,7 +248,7 @@ public class ErrorProneOptions {
           ignoreUnknownChecks,
           disableWarningsInGeneratedCode,
           dropErrorsToWarnings,
-          enableAllChecks,
+          enableAllChecksAsWarnings,
           disableAllChecks,
           patchingOptionsBuilder.build());
     }
@@ -286,7 +292,7 @@ public class ErrorProneOptions {
           builder.setDropErrorsToWarnings(true);
           break;
         case ENABLE_ALL_CHECKS:
-          builder.setEnableAllChecks(true);
+          builder.setEnableAllChecksAsWarnings(true);
           break;
         case DISABLE_ALL_CHECKS:
           builder.setDisableAllChecks(true);
