@@ -40,14 +40,9 @@ public class ParameterMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
   protected Optional<MatchState> matchResult(ExpressionTree item, MatchState info,
       VisitorState state) {
     ImmutableList<Type> actual = ImmutableList.copyOf(info.paramTypes());
-    if (info.sym().isVarArgs()) {
-      if (actual.size() < expected.size()) {
-        return Optional.absent();
-      }
-    } else if (actual.size() != expected.size()) {
+    if (actual.size() != expected.size()) {
       return Optional.absent();
     }
-
     for (int i = 0; i < actual.size(); ++i) {
       if (!state.getTypes().isSameType(actual.get(i), expected.get(i).get(state))) {
         return Optional.absent();
