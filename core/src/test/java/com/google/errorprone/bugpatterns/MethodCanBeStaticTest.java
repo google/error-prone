@@ -220,4 +220,24 @@ public class MethodCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void serialization() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.io.ObjectInputStream;",
+            "import java.io.ObjectOutputStream;",
+            "import java.io.ObjectStreamException;",
+            "import java.io.IOException;",
+            "import java.io.Serializable;",
+            "class Test implements Serializable {",
+            "  private void readObject(",
+            "    ObjectInputStream stream) throws IOException, ClassNotFoundException {}",
+            "  private void writeObject(",
+            "    ObjectOutputStream stream) throws IOException {}",
+            "  private void readObjectNoData() throws ObjectStreamException {}",
+            "}")
+        .doTest();
+  }
 }

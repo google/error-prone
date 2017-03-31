@@ -16,10 +16,13 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -67,6 +70,34 @@ public class MethodCanBeStatic extends BugChecker implements MethodTreeMatcher {
     }
     if (CanBeStaticAnalyzer.referencesOuter(tree, sym, state)) {
       return NO_MATCH;
+    }
+    if (isSubtype(sym.owner.enclClass().type, state.getSymtab().serializableType, state)) {
+      switch (sym.getSimpleName().toString()) {
+        case "readObject":
+          if (sym.getParameters().size() == 1
+              && isSameType(
+                  getOnlyElement(sym.getParameters()).type,
+                  state.getTypeFromString("java.io.ObjectInputStream"),
+                  state)) {
+            return NO_MATCH;
+          }
+          break;
+        case "writeObject":
+          if (sym.getParameters().size() == 1
+              && isSameType(
+                  getOnlyElement(sym.getParameters()).type,
+                  state.getTypeFromString("java.io.ObjectOutputStream"),
+                  state)) {
+            return NO_MATCH;
+          }
+          break;
+        case "readObjectNoData":
+          if (sym.getParameters().size() == 0) {
+            return NO_MATCH;
+          }
+          break;
+        default: // fall out
+      }
     }
     return describeMatch(tree.getModifiers(), addModifiers(tree, state, Modifier.STATIC));
   }
