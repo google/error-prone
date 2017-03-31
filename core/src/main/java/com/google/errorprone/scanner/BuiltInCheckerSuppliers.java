@@ -47,6 +47,8 @@ import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
 import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.ConstantOverflow;
+import com.google.errorprone.bugpatterns.ConstructorInvokesOverridable;
+import com.google.errorprone.bugpatterns.ConstructorLeaksThis;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
@@ -432,6 +434,8 @@ public class BuiltInCheckerSuppliers {
           ClassName.class,
           ComparisonContractViolated.class,
           ConstantField.class,
+          ConstructorInvokesOverridable.class,
+          ConstructorLeaksThis.class,
           DepAnn.class,
           DivZero.class,
           EmptyIfStatement.class,
