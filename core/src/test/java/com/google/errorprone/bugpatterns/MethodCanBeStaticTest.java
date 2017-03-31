@@ -206,4 +206,18 @@ public class MethodCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negative_referencesTypeVariable() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test<T> {",
+            "  private int add(int x, int y) {",
+            "    T t = null;",
+            "    return x + y;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
