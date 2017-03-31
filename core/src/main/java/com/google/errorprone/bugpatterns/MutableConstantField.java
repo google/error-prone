@@ -51,6 +51,7 @@ public final class MutableConstantField extends BugChecker implements VariableTr
   private static final ImmutableSet<String> IMMUTABLE_CLASS_NAMES =
       ImmutableSet.of(
           "com.google.common.collect.ImmutableBiMap",
+          "com.google.common.collect.ImmutableCollection",
           "com.google.common.collect.ImmutableList",
           "com.google.common.collect.ImmutableListMultimap",
           "com.google.common.collect.ImmutableMap",
@@ -86,7 +87,8 @@ public final class MutableConstantField extends BugChecker implements VariableTr
     if (lhsType == null) {
       return Description.NO_MATCH;
     }
-    if (ASTHelpers.isSameType(lhsType, rhsType, state)) {
+    String lhsTypeQualifiedName = lhsType.tsym.getQualifiedName().toString();
+    if (IMMUTABLE_CLASS_NAMES.contains(lhsTypeQualifiedName)) {
       return Description.NO_MATCH;
     }
 

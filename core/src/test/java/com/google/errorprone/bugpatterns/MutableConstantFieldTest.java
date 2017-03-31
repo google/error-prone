@@ -34,9 +34,8 @@ public class MutableConstantFieldTest {
             "Test.java",
             "import com.google.common.collect.ImmutableSet;",
             "class Test {",
-            "  // BUG: Diagnostic contains: static final ImmutableSet<String> COLORS =",
-            "  static final Iterable<String> COLORS =",
-            "      ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "  // BUG: Diagnostic contains: static final ImmutableSet<String> FOO =",
+            "  static final Iterable<String> FOO = ImmutableSet.of();",
             "}")
         .doTest();
   }
@@ -49,8 +48,8 @@ public class MutableConstantFieldTest {
             "import com.google.common.collect.ImmutableSet;",
             "import java.util.Set;",
             "class Test {",
-            "  // BUG: Diagnostic contains: static final ImmutableSet<String> COLORS =",
-            "  static final Set<String> COLORS = ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "  // BUG: Diagnostic contains: static final ImmutableSet<String> FOO =",
+            "  static final Set<String> FOO = ImmutableSet.of();",
             "}")
         .doTest();
   }
@@ -63,8 +62,8 @@ public class MutableConstantFieldTest {
             "import com.google.common.collect.ImmutableSet;",
             "import java.util.Set;",
             "class Test {",
-            "  // BUG: Diagnostic contains: static final ImmutableSet COLORS =",
-            "  static final Set COLORS = ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "  // BUG: Diagnostic contains: static final ImmutableSet FOO =",
+            "  static final Set FOO = ImmutableSet.of();",
             "}")
         .doTest();
   }
@@ -77,13 +76,8 @@ public class MutableConstantFieldTest {
             "import com.google.common.collect.ImmutableSet;",
             "import java.util.Set;",
             "class Test {",
-            "  // BUG: Diagnostic contains: static final ImmutableSet<String> COLORS =",
-            "  static final Set<String> COLORS =",
-            "      ImmutableSet.<String>builder()",
-            "         .add(\"Red\")",
-            "         .add(\"Green\")",
-            "         .add(\"Blue\")",
-            "         .build();",
+            "  // BUG: Diagnostic contains: static final ImmutableSet<String> FOO =",
+            "  static final Set<String> FOO = ImmutableSet.<String>builder().build();",
             "}")
         .doTest();
   }
@@ -96,8 +90,8 @@ public class MutableConstantFieldTest {
             "import com.google.common.collect.ImmutableList;",
             "import java.util.List;",
             "class Test {",
-            "  // BUG: Diagnostic contains: static final ImmutableList<String> COLORS =",
-            "  static final List<String> COLORS = ImmutableList.of(\"Red\", \"Green\", \"Blue\");",
+            "  // BUG: Diagnostic contains: static final ImmutableList<String> FOO =",
+            "  static final List<String> FOO = ImmutableList.of();",
             "}")
         .doTest();
   }
@@ -110,9 +104,22 @@ public class MutableConstantFieldTest {
             "import com.google.common.collect.ImmutableMap;",
             "import java.util.Map;",
             "class Test {",
-            "  // BUG: Diagnostic contains: static final ImmutableMap<Integer, String> NUMBERS =",
-            "  static final Map<Integer, String> NUMBERS =",
-            "      ImmutableMap.of(1, \"One\", 2, \"Two\", 3, \"Three\");",
+            "  // BUG: Diagnostic contains: static final ImmutableMap<Integer, String> FOO =",
+            "  static final Map<Integer, String> FOO = ImmutableMap.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void
+      staticFinalImmutableMultimapInitializedInDeclarationWithImmutableListMultimap_doesNotSuggestFix() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableListMultimap;",
+            "import com.google.common.collect.ImmutableMultimap;",
+            "class Test {",
+            "  static final ImmutableMultimap<String, String> FOO = ImmutableListMultimap.of();",
             "}")
         .doTest();
   }
@@ -124,8 +131,7 @@ public class MutableConstantFieldTest {
             "Test.java",
             "import com.google.common.collect.ImmutableSet;",
             "class Test {",
-            "  static final ImmutableSet<String> COLORS =",
-            "      ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "  static final ImmutableSet<String> FOO = ImmutableSet.of();",
             "}")
         .doTest();
   }
@@ -138,9 +144,9 @@ public class MutableConstantFieldTest {
             "import com.google.common.collect.ImmutableSet;",
             "import java.util.Set;",
             "class Test {",
-            "  static final Set<String> COLORS;",
+            "  static final Set<String> FOO;",
             "  static {",
-            "    COLORS = ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "    FOO = ImmutableSet.of();",
             "  }",
             "}")
         .doTest();
@@ -154,7 +160,7 @@ public class MutableConstantFieldTest {
             "import com.google.common.collect.ImmutableSet;",
             "import java.util.Set;",
             "class Test {",
-            "  final Set<String> colors = ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "  final Set<String> NON_STATIC = ImmutableSet.of();",
             "}")
         .doTest();
   }
@@ -167,7 +173,7 @@ public class MutableConstantFieldTest {
             "import com.google.common.collect.ImmutableSet;",
             "import java.util.Set;",
             "class Test {",
-            "  static Set<String> colors = ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "  static Set<String> NON_FINAL = ImmutableSet.of();",
             "}")
         .doTest();
   }
@@ -180,7 +186,7 @@ public class MutableConstantFieldTest {
             "import com.google.common.collect.ImmutableSet;",
             "import java.util.Set;",
             "class Test {",
-            "  static final Set<String> colors = ImmutableSet.of(\"Red\", \"Green\", \"Blue\");",
+            "  static final Set<String> nonCapitalCase = ImmutableSet.of();",
             "}")
         .doTest();
   }
