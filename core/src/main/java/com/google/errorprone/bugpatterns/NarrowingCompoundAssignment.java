@@ -154,9 +154,11 @@ public class NarrowingCompoundAssignment extends BugChecker
   /** Classifies bad casts. */
   private static NarrowingCastKind identifyBadCast(Type lhs, Type rhs, Types types) {
     if (types.isConvertible(rhs, lhs)) {
-      // Exemption if the rhs is convertable to the lhs.
+      // Exemption if the rhs is convertible to the lhs.
       // This allows, e.g.: <byte> &= <byte> since the narrowing conversion can never be
       // detected.
+      // This also allows, for example, char += char, which could overflow, but this is no
+      // different than any other integral addition.
       return null;
     }
     if (DEFICIENT_TYPES.contains(lhs.getKind())) {

@@ -170,6 +170,35 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
+  public void allowsBinopsOfDeficientTypes() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    short smask = 0b1;",
+            "    byte bmask = 0b1;",
+            "",
+            "    short s = 0;",
+            "    byte b = 0;",
+            "",
+            "    s += smask;",
+            "    s -= smask;",
+            "    s *= smask;",
+            "",
+            "    s += bmask;",
+            "    s -= bmask;",
+            "    s *= bmask;",
+            "",
+            "    b -= bmask;",
+            "    b += bmask;",
+            "    b /= bmask;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testPreservePrecedence() throws Exception {
     compilationHelper
         .addSourceLines(
