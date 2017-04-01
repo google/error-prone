@@ -16,19 +16,28 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import javax.annotation.CheckReturnValue;
+import javax.annotation.meta.When;
+
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class CheckReturnValueNegativeCases {
-  
+
   public void test1() {
     test2();
+    test3();
     Object obj = new String();
     obj.toString();
   }
-  
+
   @SuppressWarnings("foo")  // wrong annotation
-  public void test2() { 
+  public void test2() {
   }
-  
+
+  @CheckReturnValue(when = When.NEVER)
+  private int test3() {
+    return 0;
+  }
+
 }

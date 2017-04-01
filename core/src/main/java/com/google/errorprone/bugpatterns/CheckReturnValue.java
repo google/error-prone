@@ -18,10 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.util.ASTHelpers.enclosingClass;
-import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
-import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.*;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.BugPattern;
@@ -38,6 +35,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import javax.annotation.meta.When;
 import javax.lang.model.element.ElementKind;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
@@ -51,14 +49,20 @@ import javax.lang.model.element.ElementKind;
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
 
-  private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
+  private static final Class<javax.annotation.CheckReturnValue> CHECK_RETURN_VALUE =
+          javax.annotation.CheckReturnValue.class;
 
   private static Optional<Boolean> shouldCheckReturnValue(Symbol sym, VisitorState state) {
     if (hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
       return Optional.of(false);
     }
-    if (hasDirectAnnotationWithSimpleName(sym, CHECK_RETURN_VALUE)) {
-      return Optional.of(true);
+    if (hasDirectAnnotationWithSimpleName(sym, CHECK_RETURN_VALUE.getSimpleName())) {
+      Optional<When> when = Optional.fromNullable(getAnnotation(sym, CHECK_RETURN_VALUE)).transform(a -> a.when());
+      if (when.isPresent() && when.get().equals(When.NEVER)) {
+        return Optional.of(false);
+      } else {
+        return Optional.of(true);
+      }
     }
     return Optional.absent();
   }
@@ -128,7 +132,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol method = ASTHelpers.getSymbol(tree);
 
-    boolean checkReturn = hasDirectAnnotationWithSimpleName(method, CHECK_RETURN_VALUE);
+    boolean checkReturn = hasDirectAnnotationWithSimpleName(method, CHECK_RETURN_VALUE.getSimpleName());
     boolean canIgnore = hasAnnotation(method, CanIgnoreReturnValue.class, state);
 
     if (checkReturn && canIgnore) {
@@ -161,7 +165,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
    */
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (hasDirectAnnotationWithSimpleName(ASTHelpers.getSymbol(tree), CHECK_RETURN_VALUE)
+    if (hasDirectAnnotationWithSimpleName(ASTHelpers.getSymbol(tree), CHECK_RETURN_VALUE.getSimpleName())
         && hasAnnotation(tree, CanIgnoreReturnValue.class, state)) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "class")).build();
     }
