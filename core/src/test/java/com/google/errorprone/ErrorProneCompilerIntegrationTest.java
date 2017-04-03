@@ -638,6 +638,60 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
+  public void pluginWithFlag() throws Exception {
+
+    Path base = tmpFolder.newFolder().toPath();
+    Path source = base.resolve("test/Test.java");
+    Files.createDirectories(source.getParent());
+    Files.write(
+        source,
+        Arrays.asList(
+            "package test;", //
+            "public class Test {",
+            "  int f() { return 42; }",
+            "}"),
+        UTF_8);
+
+    Path jar = base.resolve("libproc.jar");
+    try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(jar))) {
+      jos.putNextEntry(new JarEntry("META-INF/services/" + BugChecker.class.getName()));
+      jos.write((CPSChecker.class.getName() + "\n").getBytes(UTF_8));
+      String classFile = CPSChecker.class.getName().replace('.', '/') + ".class";
+      jos.putNextEntry(new JarEntry(classFile));
+      ByteStreams.copy(getClass().getClassLoader().getResourceAsStream(classFile), jos);
+    }
+
+    // Plugin jar is on classpath, disabled.
+    {
+      List<String> args =
+          ImmutableList.of(
+              source.toAbsolutePath().toString(),
+              "-processorpath",
+              jar.toAbsolutePath().toString(),
+              "-XepDisableAllChecks");
+      StringWriter out = new StringWriter();
+      Result result =
+          ErrorProneCompiler.compile(args.toArray(new String[0]), new PrintWriter(out, true));
+      assertThat(result).isEqualTo(Result.OK);
+    }
+    // Plugin is disabled by -XepDisableAllChecks and re-enabled with -Xep:CPSChecker:ERROR
+    {
+      List<String> args =
+          ImmutableList.of(
+              source.toAbsolutePath().toString(),
+              "-processorpath",
+              jar.toAbsolutePath().toString(),
+              "-XepDisableAllChecks",
+              "-Xep:CPSChecker:ERROR");
+      StringWriter out = new StringWriter();
+      Result result =
+          ErrorProneCompiler.compile(args.toArray(new String[0]), new PrintWriter(out, true));
+      assertThat(out.toString()).contains("Using 'return' is considered harmful");
+      assertThat(result).isEqualTo(Result.ERROR);
+    }
+  }
+
+  @Test
   public void paramsFiles() throws IOException {
     Path dir = tmpFolder.newFolder("tmp").toPath();
     Path source = dir.resolve("Test.java");
