@@ -259,7 +259,8 @@ public class TypeParameterShadowingTest {
             "      T5 var = t;",
             "    }",
             "  }",
-            "}");
+            "}")
+        .doTest();
   }
 
   @Test
@@ -269,10 +270,9 @@ public class TypeParameterShadowingTest {
             "in/Test.java",
             "package foo.bar;",
             "class Test<T> {",
-            "  <D> static void something(T t) {",
-            "      class B {",
-            "        class C<T,D> {}",
-            "      }",
+            "  static <D> void something(D t) {",
+            "    class B {",
+            "      class C<T,D> {}",
             "    }",
             "  }",
             "}")
@@ -280,13 +280,14 @@ public class TypeParameterShadowingTest {
             "out/Test.java",
             "package foo.bar;",
             "class Test<T> {",
-            "  <D> static void something(T t) {",
-            "      class B {",
-            "        class C<T2,D2> {}",
-            "      }",
+            "  static <D> void something(D t) {",
+            "    class B {",
+            // T isn't accessible to the inner since the method is static
+            "      class C<T,D2> {}",
             "    }",
             "  }",
-            "}");
+            "}")
+        .doTest();
   }
 
   // don't try to read type parameters off the enclosing local variable declaration
