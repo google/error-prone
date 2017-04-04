@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.io.CharStreams;
 import com.google.errorprone.apply.DescriptionBasedDiff;
+import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.SourceFile;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.Fix;
@@ -121,6 +122,7 @@ public class BugCheckerRefactoringTestHelper {
   private FixChooser fixChooser = FixChoosers.FIRST;
   private List<String> options = ImmutableList.of();
   private boolean allowBreakingChanges = false;
+  private String importOrder = "static-first";
 
   private BugCheckerRefactoringTestHelper(BugChecker refactoringBugChecker, Class<?> clazz) {
     this.refactoringBugChecker = refactoringBugChecker;
@@ -154,6 +156,11 @@ public class BugCheckerRefactoringTestHelper {
   /** If set, fixes that produce output that doesn't compile are allowed. Off by default. */
   public BugCheckerRefactoringTestHelper allowBreakingChanges() {
     allowBreakingChanges = true;
+    return this;
+  }
+
+  public BugCheckerRefactoringTestHelper setImportOrder(String importOrder) {
+    this.importOrder = importOrder;
     return this;
   }
 
@@ -218,7 +225,8 @@ public class BugCheckerRefactoringTestHelper {
 
   private JavaFileObject applyDiff(
       JavaFileObject sourceFileObject, Context context, JCCompilationUnit tree) throws IOException {
-    final DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree);
+    ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(importOrder);
+    final DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree, importOrganizer);
     transformer(refactoringBugChecker)
         .apply(
             new TreePath(tree),

@@ -45,22 +45,29 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   private final Set<String> importsToRemove;
   private final EndPosTable endPositions;
   private final Replacements replacements = new Replacements();
+  private final ImportOrganizer importOrganizer;
 
-  public static DescriptionBasedDiff create(JCCompilationUnit compilationUnit) {
-    return new DescriptionBasedDiff(compilationUnit, false);
+  public static DescriptionBasedDiff create(
+      JCCompilationUnit compilationUnit, ImportOrganizer importOrganizer) {
+    return new DescriptionBasedDiff(compilationUnit, false, importOrganizer);
   }
 
-  public static DescriptionBasedDiff createIgnoringOverlaps(JCCompilationUnit compilationUnit) {
-    return new DescriptionBasedDiff(compilationUnit, true);
+  public static DescriptionBasedDiff createIgnoringOverlaps(
+      JCCompilationUnit compilationUnit, ImportOrganizer importOrganizer) {
+    return new DescriptionBasedDiff(compilationUnit, true, importOrganizer);
   }
 
-  private DescriptionBasedDiff(JCCompilationUnit compilationUnit, boolean ignoreOverlappingFixes) {
+  private DescriptionBasedDiff(
+      JCCompilationUnit compilationUnit,
+      boolean ignoreOverlappingFixes,
+      ImportOrganizer importOrganizer) {
     this.compilationUnit = checkNotNull(compilationUnit);
     this.sourcePath = compilationUnit.getSourceFile().toUri().getPath();
     this.ignoreOverlappingFixes = ignoreOverlappingFixes;
     this.importsToAdd = new LinkedHashSet<>();
     this.importsToRemove = new LinkedHashSet<>();
     this.endPositions = compilationUnit.endPositions;
+    this.importOrganizer = importOrganizer;
   }
 
   @Override
@@ -97,7 +104,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   @Override
   public void applyDifferences(SourceFile sourceFile) throws DiffNotApplicableException {
     if (!importsToAdd.isEmpty() || !importsToRemove.isEmpty()) {
-      ImportStatements importStatements = ImportStatements.create(compilationUnit);
+      ImportStatements importStatements = ImportStatements.create(compilationUnit, importOrganizer);
       importStatements.addAll(importsToAdd);
       importStatements.removeAll(importsToRemove);
       replacements.add(

@@ -24,11 +24,13 @@ import static org.junit.Assert.fail;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -226,5 +228,37 @@ public class BugCheckerRefactoringTestHelperTest {
       return;
     }
     fail("compilation succeeded unexpectedly");
+  }
+
+  @Test
+  public void staticLastImportOrder() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new ImportArrayList(), getClass())
+        .setImportOrder("static-last")
+        .addInputLines("pkg/A.java", "import static java.lang.Math.min;", "class A {", "}")
+        .addOutputLines(
+            "out/pkg/A.java",
+            "import java.util.ArrayList;",
+            "",
+            "import static java.lang.Math.min;",
+            "class A {",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  /** Mock {@link BugChecker} for testing only. */
+  @BugPattern(
+    name = "ImportArrayList",
+    summary = "Mock refactoring that imports an ArrayList",
+    explanation = "For test purposes only.",
+    category = JDK,
+    severity = SUGGESTION
+  )
+  public static class ImportArrayList extends BugChecker implements CompilationUnitTreeMatcher {
+
+    @Override
+    public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+      SuggestedFix fix = SuggestedFix.builder().addImport("java.util.ArrayList").build();
+      return buildDescription(tree).addFix(fix).build();
+    }
   }
 }

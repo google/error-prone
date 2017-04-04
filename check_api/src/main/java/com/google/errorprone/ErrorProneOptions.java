@@ -24,6 +24,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.apply.ImportOrganizer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -47,6 +48,7 @@ public class ErrorProneOptions {
   private static final String CUSTOM_ENABLEMENT_PREFIX = "-Xep:";
   private static final String PATCH_CHECKS_PREFIX = "-XepPatchChecks:";
   private static final String PATCH_OUTPUT_LOCATION = "-XepPatchLocation:";
+  private static final String PATCH_IMPORT_ORDER_PREFIX = "-XepPatchImportOrder:";
   private static final String ERRORS_AS_WARNINGS_FLAG = "-XepAllErrorsAsWarnings";
   private static final String ENABLE_ALL_CHECKS = "-XepAllDisabledChecksAsWarnings";
   private static final String DISABLE_ALL_CHECKS = "-XepDisableAllChecks";
@@ -103,11 +105,14 @@ public class ErrorProneOptions {
 
     abstract Optional<Supplier<CodeTransformer>> customRefactorer();
 
+    abstract ImportOrganizer importOrganizer();
+
     static Builder builder() {
       return new AutoValue_ErrorProneOptions_PatchingOptions.Builder()
           .baseDirectory("")
           .inPlace(false)
-          .namedCheckers(Collections.emptySet());
+          .namedCheckers(Collections.emptySet())
+          .importOrganizer(ImportOrganizer.STATIC_FIRST_ORGANIZER);
     }
 
     @AutoValue.Builder
@@ -120,6 +125,8 @@ public class ErrorProneOptions {
       abstract Builder baseDirectory(String baseDirectory);
 
       abstract Builder customRefactorer(Supplier<CodeTransformer> refactorer);
+
+      abstract Builder importOrganizer(ImportOrganizer importOrganizer);
 
       abstract PatchingOptions autoBuild();
 
@@ -331,6 +338,10 @@ public class ErrorProneOptions {
               Iterable<String> checks = Splitter.on(',').trimResults().split(remaining);
               builder.patchingOptionsBuilder().namedCheckers(ImmutableSet.copyOf(checks));
             }
+          } else if (arg.startsWith(PATCH_IMPORT_ORDER_PREFIX)) {
+            String remaining = arg.substring(PATCH_IMPORT_ORDER_PREFIX.length());
+            ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(remaining);
+            builder.patchingOptionsBuilder().importOrganizer(importOrganizer);
           } else {
             outputArgs.add(arg);
           }

@@ -125,10 +125,16 @@ public class ImportStatementsTest {
     return result;
   }
 
+  private static ImportStatements createImportStatements(
+      JCExpression basePackage, List<JCImport> importTrees) {
+    return new ImportStatements(
+        basePackage, importTrees, FAKE_END_POS_MAP, ImportOrganizer.STATIC_FIRST_ORGANIZER);
+  }
+
   /** Test that the import statements are sorted according to the Google Style Guide. */
   @Test
   public void shouldSortImports() {
-    ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, baseImportList);
 
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
@@ -159,7 +165,7 @@ public class ImportStatementsTest {
    */
   @Test
   public void shouldAddImportInCorrectPosition() {
-    ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, baseImportList);
     boolean added = imports.add("import static org.junit.Assert.assertEquals");
 
     assertTrue(added);
@@ -193,7 +199,7 @@ public class ImportStatementsTest {
    */
   @Test
   public void shouldAddMultipleImportsInCorrectPositions() {
-    ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, baseImportList);
     boolean added = imports.addAll(Arrays.asList("import static org.junit.Assert.assertEquals",
         "import javax.servlet.http.HttpServletRequest",
         "import com.google.common.flags.FlagSpec"));
@@ -230,7 +236,7 @@ public class ImportStatementsTest {
    */
   @Test
   public void shouldNotAddExistingImport() {
-    ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, baseImportList);
     boolean added = imports.add("import com.google.common.collect.ImmutableMap");
 
     assertTrue(!added);
@@ -263,7 +269,7 @@ public class ImportStatementsTest {
    */
   @Test
   public void shouldRemoveImportAndSort() {
-    ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, baseImportList);
     boolean removed = imports.remove("import com.sun.tools.javac.tree.JCTree");
 
     assertTrue(removed);
@@ -295,7 +301,7 @@ public class ImportStatementsTest {
    */
   @Test
   public void shouldRemoveMultipleImportsAndSort() {
-    ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, baseImportList);
     boolean removed = imports.removeAll(Arrays.asList("import com.sun.tools.javac.tree.JCTree",
         "import static com.google.common.base.Preconditions.checkNotNull",
         "import org.joda.time.Interval"));
@@ -324,7 +330,7 @@ public class ImportStatementsTest {
   /** Tests that a list of imports with no static imports is handled correctly. */
   @Test
   public void noRemainingStaticImports() {
-    ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, baseImportList);
     boolean removed =
         imports.removeAll(
             Arrays.asList(
@@ -357,7 +363,7 @@ public class ImportStatementsTest {
    */
   @Test
   public void removingNonExistingImportShouldntChangeImports() {
-    ImportStatements imports = new ImportStatements(basePackage, baseImportList, FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, baseImportList);
     boolean removed = imports.remove("import org.joda.time.format.ISODateTimeFormat;\n");
 
     assertTrue(!removed);
@@ -390,8 +396,7 @@ public class ImportStatementsTest {
    */
   @Test
   public void emptyImportListShouldGivePositionOfPackageStmt() {
-    ImportStatements imports = new ImportStatements(
-        basePackage, new ArrayList<JCImport>(), FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, new ArrayList<JCImport>());
     assertEquals(81, imports.getStartPos());
     assertEquals(81, imports.getEndPos());
   }
@@ -403,8 +408,7 @@ public class ImportStatementsTest {
    */
   @Test
   public void addingToEmptyImportListOutputShouldStartAndEndWithNewlines() {
-    ImportStatements imports = new ImportStatements(
-        basePackage, new ArrayList<JCImport>(), FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, new ArrayList<JCImport>());
     imports.add("import org.joda.time.Interval");
     assertEquals("\n"
         + "import org.joda.time.Interval;\n",
@@ -418,16 +422,14 @@ public class ImportStatementsTest {
    */
   @Test
   public void startAndEndPositionsShouldComeFromImportStatements() {
-    ImportStatements imports = new ImportStatements(
-        basePackage, baseImportList, FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(basePackage, baseImportList);
     assertEquals(82, imports.getStartPos());
     assertEquals(806, imports.getEndPos());
   }
 
   @Test
   public void addingToEmptyImportListInDefaultPackage() {
-    ImportStatements imports =
-        new ImportStatements(null, new ArrayList<JCImport>(), FAKE_END_POS_MAP);
+    ImportStatements imports = createImportStatements(null, new ArrayList<>());
     imports.add("import java.util.List");
     assertEquals(0, imports.getStartPos());
     assertEquals("\nimport java.util.List;\n", imports.toString());

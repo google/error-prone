@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.CharStreams;
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.apply.DescriptionBasedDiff;
+import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.SourceFile;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
@@ -69,7 +70,8 @@ public abstract class CodeTransformerTestHelper {
       task.analyze();
       JCCompilationUnit tree =
           Iterables.getOnlyElement(Iterables.filter(trees, JCCompilationUnit.class));
-      DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree);
+      DescriptionBasedDiff diff =
+          DescriptionBasedDiff.create(tree, ImportOrganizer.STATIC_FIRST_ORGANIZER);
       transformer().apply(new TreePath(tree), task.getContext(), diff);
       diff.applyDifferences(sourceFile);
 

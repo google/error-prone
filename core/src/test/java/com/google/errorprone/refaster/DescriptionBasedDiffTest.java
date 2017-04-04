@@ -20,6 +20,7 @@ import static org.junit.Assert.assertThrows;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.apply.DescriptionBasedDiff;
+import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -54,16 +55,20 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     compilationUnit = Iterables.getOnlyElement(compilationUnits);
   }
 
+  private DescriptionBasedDiff createDescriptionBasedDiff() {
+    return DescriptionBasedDiff.create(compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
+  }
+
   @Test
   public void noDiffs() {
-    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines()).containsExactly((Object[]) lines).inOrder();
   }
 
   @Test
   public void oneDiff() {
-    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
         new Description(
             null, "message", SuggestedFix.replace(117, 120, "bar"), SeverityLevel.SUGGESTION));
@@ -83,7 +88,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
 
   @Test
   public void prefixDiff() {
-    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
         new Description(
             null, "message", SuggestedFix.replace(120, 120, "bar"), SeverityLevel.SUGGESTION));
@@ -104,7 +109,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
 
   @Test
   public void twoDiffs() {
-    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
         new Description(
             null,
@@ -127,7 +132,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
 
   @Test
   public void overlappingDiffs_throws() {
-    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
     assertThrows(
         IllegalArgumentException.class,
         () ->
@@ -141,7 +146,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
                         .build(),
                     SeverityLevel.SUGGESTION)));
 
-    DescriptionBasedDiff diff2 = DescriptionBasedDiff.create(compilationUnit);
+    DescriptionBasedDiff diff2 = createDescriptionBasedDiff();
     diff2.onDescribed(
         new Description(
             null,
@@ -159,7 +164,9 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
                     SuggestedFix.builder().replace(117, 120, "bar").build(),
                     SeverityLevel.SUGGESTION)));
 
-    DescriptionBasedDiff diff3 = DescriptionBasedDiff.createIgnoringOverlaps(compilationUnit);
+    DescriptionBasedDiff diff3 =
+        DescriptionBasedDiff.createIgnoringOverlaps(
+            compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
     diff3.onDescribed(
         new Description(
             null,
@@ -190,7 +197,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
 
   @Test
   public void addImport() {
-    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
         new Description(
             null,
@@ -214,7 +221,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
 
   @Test
   public void removeImport() {
-    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
         new Description(
             null,
@@ -237,7 +244,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
 
   @Test
   public void twoDiffsWithImport() {
-    DescriptionBasedDiff diff = DescriptionBasedDiff.create(compilationUnit);
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
         new Description(
             null,

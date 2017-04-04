@@ -22,6 +22,7 @@ import static org.junit.Assert.expectThrows;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.ErrorProneOptions.Severity;
+import com.google.errorprone.apply.ImportOrganizer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -176,5 +177,21 @@ public class ErrorProneOptionsTest {
     assertThat(options.patchingOptions().doRefactor()).isTrue();
     assertThat(options.patchingOptions().inPlace()).isTrue();
     assertThat(options.patchingOptions().customRefactorer()).isPresent();
+  }
+
+  @Test
+  public void importOrder_staticFirst() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:static-first"});
+    assertThat(options.patchingOptions().importOrganizer())
+        .isSameAs(ImportOrganizer.STATIC_FIRST_ORGANIZER);
+  }
+
+  @Test
+  public void importOrder_staticLast() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:static-last"});
+    assertThat(options.patchingOptions().importOrganizer())
+        .isSameAs(ImportOrganizer.STATIC_LAST_ORGANIZER);
   }
 }
