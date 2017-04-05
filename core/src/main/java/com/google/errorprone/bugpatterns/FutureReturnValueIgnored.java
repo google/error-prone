@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
@@ -28,6 +29,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.FindIdentifiers;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -40,6 +42,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.ForkJoinTask;
 
 /** See BugPattern annotation. */
 @BugPattern(
@@ -56,6 +59,10 @@ import java.util.Stack;
   severity = ERROR
 )
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
+
+  private static final Matcher<ExpressionTree> FORK_JOIN_TASK_FORK =
+      instanceMethod().onDescendantOf(ForkJoinTask.class.getName()).named("fork").withParameters();
+
   private static final Matcher<MethodInvocationTree> MATCHER =
       new Matcher<MethodInvocationTree>() {
         @Override
@@ -77,6 +84,11 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
                     state)) {
               return false;
             }
+          }
+          // ForkJoinTask#fork has side-effects and returns 'this', so it's reasonable to ignore
+          // the return value.
+          if (FORK_JOIN_TASK_FORK.matches(tree, state)) {
+            return false;
           }
           Type returnType = sym.getReturnType();
           return ASTHelpers.isSubtype(
