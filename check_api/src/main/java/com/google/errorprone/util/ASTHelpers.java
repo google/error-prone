@@ -33,6 +33,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -66,6 +67,7 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
@@ -179,6 +181,9 @@ public class ASTHelpers {
     if (tree instanceof TypeParameterTree) {
       Type type = ((JCTypeParameter) tree).type;
       return type == null ? null : type.tsym;
+    }
+    if (tree instanceof MemberReferenceTree) {
+      return ((JCMemberReference) tree).sym;
     }
 
     return null;
@@ -346,6 +351,8 @@ public class ASTHelpers {
       return methodCall.sym.owner.type;
     } else if (expressionTree instanceof JCMethodInvocation) {
       return getReceiverType(((JCMethodInvocation) expressionTree).getMethodSelect());
+    } else if (expressionTree instanceof JCMemberReference) {
+      return ((JCMemberReference) expressionTree).getQualifierExpression().type;
     }
     throw new IllegalArgumentException(
         "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
@@ -380,6 +387,8 @@ public class ASTHelpers {
       return getReceiver(methodSelect);
     } else if (expressionTree instanceof MemberSelectTree) {
       return ((MemberSelectTree) expressionTree).getExpression();
+    } else if (expressionTree instanceof MemberReferenceTree) {
+      return ((MemberReferenceTree) expressionTree).getQualifierExpression();
     } else {
       throw new IllegalStateException(String.format(
           "Expected expression '%s' to be a method invocation or field access, but was %s",
