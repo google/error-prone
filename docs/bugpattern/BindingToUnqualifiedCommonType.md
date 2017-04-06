@@ -14,7 +14,7 @@ String, double, etc.). You should use a Qualifier annotation to allow you to
 get the *right* Integer back:
 
 ```java
-bindConstant(Integer.class).annotatedWith(HttpPort.class).to(80);
+bindConstant().annotatedWith(HttpPort.class).to(80);
 ...
 @Inject MyWebServer(@HttpPort Integer httpPort) {}
 ```
