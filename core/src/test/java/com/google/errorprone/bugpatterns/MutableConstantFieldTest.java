@@ -41,6 +41,20 @@ public class MutableConstantFieldTest {
   }
 
   @Test
+  public void staticFinalMapInitializedInDeclarationWithImmutableBiMapOf_suggestsFix() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableBiMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static final ImmutableMap<String, String> FOO =",
+            "  static final Map<String, String> FOO = ImmutableBiMap.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void staticFinalSetInitializedInDeclarationWithImmutableSetOf_suggestsFix() {
     testHelper
         .addSourceLines(

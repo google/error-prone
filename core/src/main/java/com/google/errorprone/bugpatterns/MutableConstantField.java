@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -48,23 +48,30 @@ import javax.lang.model.element.Modifier;
 )
 public final class MutableConstantField extends BugChecker implements VariableTreeMatcher {
 
-  private static final ImmutableSet<String> IMMUTABLE_CLASS_NAMES =
-      ImmutableSet.of(
-          "com.google.common.collect.ImmutableBiMap",
-          "com.google.common.collect.ImmutableCollection",
-          "com.google.common.collect.ImmutableList",
-          "com.google.common.collect.ImmutableListMultimap",
-          "com.google.common.collect.ImmutableMap",
-          "com.google.common.collect.ImmutableMultimap",
-          "com.google.common.collect.ImmutableMultiset",
-          "com.google.common.collect.ImmutableRangeMap",
-          "com.google.common.collect.ImmutableRangeSet",
-          "com.google.common.collect.ImmutableSet",
-          "com.google.common.collect.ImmutableSetMultimap",
-          "com.google.common.collect.ImmutableSortedMap",
-          "com.google.common.collect.ImmutableSortedMultiset",
-          "com.google.common.collect.ImmutableSortedSet",
-          "com.google.common.collect.ImmutableTable");
+  private static final ImmutableBiMap<String, String> MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP =
+      ImmutableBiMap.<String, String>builder()
+          .put("com.google.common.collect.BiMap", "com.google.common.collect.ImmutableBiMap")
+          .put(
+              "com.google.common.collect.ListMultimap",
+              "com.google.common.collect.ImmutableListMultimap")
+          .put("com.google.common.collect.RangeMap", "com.google.common.collect.ImmutableRangeMap")
+          .put("com.google.common.collect.RangeSet", "com.google.common.collect.ImmutableRangeSet")
+          .put(
+              "com.google.common.collect.SetMultimap",
+              "com.google.common.collect.ImmutableSetMultimap")
+          .put(
+              "com.google.common.collect.SortedMultiset",
+              "com.google.common.collect.ImmutableSortedMultiset")
+          .put("com.google.common.collect.Table", "com.google.common.collect.ImmutableTable")
+          .put("java.util.Collection", "com.google.common.collect.ImmutableCollection")
+          .put("java.util.List", "com.google.common.collect.ImmutableList")
+          .put("java.util.Map", "com.google.common.collect.ImmutableMap")
+          .put("java.util.Multimap", "com.google.common.collect.ImmutableMultimap")
+          .put("java.util.Multiset", "com.google.common.collect.ImmutableMultiset")
+          .put("java.util.NavigableMap", "com.google.common.collect.ImmutableSortedMap")
+          .put("java.util.NavigableSet", "com.google.common.collect.ImmutableSortedSet")
+          .put("java.util.Set", "com.google.common.collect.ImmutableSet")
+          .build();
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -74,32 +81,40 @@ public final class MutableConstantField extends BugChecker implements VariableTr
 
     Tree rhsTree = tree.getInitializer();
     Type rhsType = ASTHelpers.getType(rhsTree);
-    if (rhsType == null) {
-      return Description.NO_MATCH;
-    }
-    String rhsTypeQualifiedName = rhsType.tsym.getQualifiedName().toString();
-    if (!IMMUTABLE_CLASS_NAMES.contains(rhsTypeQualifiedName)) {
+    if (rhsType == null || !isImmutableType(rhsType)) {
       return Description.NO_MATCH;
     }
 
     Tree lhsTree = tree.getType();
     Type lhsType = ASTHelpers.getType(lhsTree);
-    if (lhsType == null) {
-      return Description.NO_MATCH;
-    }
-    String lhsTypeQualifiedName = lhsType.tsym.getQualifiedName().toString();
-    if (IMMUTABLE_CLASS_NAMES.contains(lhsTypeQualifiedName)) {
+    if (lhsType == null || isImmutableType(lhsType)) {
       return Description.NO_MATCH;
     }
 
-    Type immutableType = state.getTypeFromString(rhsTypeQualifiedName);
+    String newLhsTypeQualifiedName;
+    String lhsTypeQualifiedName = getTypeQualifiedName(lhsType);
+    if (MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.containsKey(lhsTypeQualifiedName)) {
+      newLhsTypeQualifiedName = MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.get(lhsTypeQualifiedName);
+    } else {
+      newLhsTypeQualifiedName = getTypeQualifiedName(rhsType);
+    }
+
+    Type newLhsType = state.getTypeFromString(newLhsTypeQualifiedName);
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     fixBuilder.replace(
         getTypeTree(lhsTree),
-        SuggestedFixes.qualifyType(state, fixBuilder, immutableType.asElement()));
+        SuggestedFixes.qualifyType(state, fixBuilder, newLhsType.asElement()));
     SuggestedFix fix = fixBuilder.build();
 
     return describeMatch(lhsTree, fix);
+  }
+
+  private static boolean isImmutableType(Type type) {
+    return MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.values().contains(getTypeQualifiedName(type));
+  }
+
+  private static String getTypeQualifiedName(Type type) {
+    return type.tsym.getQualifiedName().toString();
   }
 
   private static boolean isConstantField(Symbol sym) {
