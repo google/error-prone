@@ -99,7 +99,7 @@ public class NameInCommentHeuristicTest {
             "  abstract void target(Object first);",
             "  void test(Object first) {",
             "     // BUG: Diagnostic contains: true",
-            "     target(/*first=*/ first);",
+            "     target(/*first= */ first);",
             "  }",
             "}")
         .doTest();
