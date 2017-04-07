@@ -67,7 +67,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "  abstract void target(Object first, Object second);",
             "  void test(Object first, Object second) {",
             "     // BUG: Diagnostic contains: target(first, second)",
-            "     // target(/*first=*/second, /*second=*/first)",
+            "     // target(/* first= */second, /* second= */first)",
             "     target(second, first);",
             "  }",
             "}")
@@ -84,7 +84,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "  abstract Object getSecond();",
             "  void test(Object first) {",
             "     // BUG: Diagnostic contains: target(first, getSecond())",
-            "     // target(/*first=*/getSecond(), /*second=*/first)",
+            "     // target(/* first= */getSecond(), /* second= */first)",
             "     target(getSecond(), first);",
             "  }",
             "}")
@@ -100,7 +100,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "  abstract void target(Object first, Object second);",
             "  void test(Object second) {",
             "     // BUG: Diagnostic contains: target(null, second)",
-            "     // target(/*first=*/second, /*second=*/null)",
+            "     // target(/* first= */second, /* second= */null)",
             "     target(second, null);",
             "  }",
             "}")
@@ -130,7 +130,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "  abstract void target(Object first, Object second, Object third);",
             "  void test(Object first, Object second, Object third) {",
             "     // BUG: Diagnostic contains: target(first, second, third)",
-            "     // target(/*first=*/second, /*second=*/first, third)",
+            "     // target(/* first= */second, /* second= */first, third)",
             "     target(second, first, third);",
             "  }",
             "}")
@@ -235,7 +235,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "  abstract void target(Object first, Object second);",
             "  void test(Object first, Object second) {",
             "     // BUG: Diagnostic contains: target(first, second)",
-            "     // target(/*first=*/second, /*second=*/first)",
+            "     // target(/* first= */second, /* second= */first)",
             "     target(second, first);",
             "  }",
             "}")
@@ -288,7 +288,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "abstract class Test {",
             "  abstract void target(Object first, Object second);",
             "  void test(Object first, Object second) {",
-            "     target(/*first=*/second, /*second=*/first);",
+            "     target(/* first= */second, /* second= */first);",
             "  }",
             "}")
         .doTest();

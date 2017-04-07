@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.Streams;
 import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.Comments;
@@ -60,11 +62,71 @@ final class NamedParameterComment {
     NOT_ANNOTATED,
   }
 
+  @AutoValue
+  abstract static class MatchedComment {
+
+    abstract Comment comment();
+
+    abstract MatchType matchType();
+
+    static MatchedComment create(Comment comment, MatchType matchType) {
+      return new AutoValue_NamedParameterComment_MatchedComment(comment, matchType);
+    }
+
+    static MatchedComment notAnnotated() {
+      return new AutoValue_NamedParameterComment_MatchedComment(
+          new Comment() {
+            @Override
+            public String getText() {
+              throw new IllegalArgumentException(
+                  "Attempt to call getText on comment when in NOT_ANNOTATED state");
+            }
+
+            @Override
+            public int getSourcePos(int i) {
+              throw new IllegalArgumentException(
+                  "Attempt to call getText on comment when in NOT_ANNOTATED state");
+            }
+
+            @Override
+            public CommentStyle getStyle() {
+              throw new IllegalArgumentException(
+                  "Attempt to call getText on comment when in NOT_ANNOTATED state");
+            }
+
+            @Override
+            public boolean isDeprecated() {
+              throw new IllegalArgumentException(
+                  "Attempt to call getText on comment when in NOT_ANNOTATED state");
+            }
+          },
+          MatchType.NOT_ANNOTATED);
+    }
+  }
+
+  private static boolean isApproximateMatchingComment(Comment comment, String formal) {
+    switch (comment.getStyle()) {
+      case BLOCK:
+      case LINE:
+        // sometimes people use comments around arguments for higher level structuring - such as
+        // dividing two separate blocks of arguments. In these cases we want to avoid concluding
+        // that its a match. Therefore we also check to make sure that the comment is not really
+        // long and that it doesn't contain acsii-art style markup.
+        String commentText = Comments.getTextFromComment(comment);
+        boolean textMatches = Arrays.asList(commentText.split("[^a-zA-Z0-9_]+")).contains(formal);
+        boolean tooLong = commentText.length() > formal.length() + 5 && commentText.length() > 50;
+        boolean tooMuchMarkup = CharMatcher.anyOf("-*!@<>").countIn(commentText) > 5;
+        return textMatches && !tooLong && !tooMuchMarkup;
+      default:
+        return false;
+    }
+  }
+
   /**
    * Determine the kind of match we have between the comments on this argument and the formal
    * parameter name.
    */
-  static MatchType match(Commented<ExpressionTree> actual, String formal) {
+  static MatchedComment match(Commented<ExpressionTree> actual, String formal) {
     Optional<Comment> lastBlockComment =
         Streams.findLast(
             actual.beforeComments().stream().filter(c -> c.getStyle() == CommentStyle.BLOCK));
@@ -73,17 +135,22 @@ final class NamedParameterComment {
       Matcher m =
           PARAMETER_COMMENT_PATTERN.matcher(Comments.getTextFromComment(lastBlockComment.get()));
       if (m.matches()) {
-        return m.group(1).equals(formal) ? MatchType.EXACT_MATCH : MatchType.BAD_MATCH;
+        return MatchedComment.create(
+            lastBlockComment.get(),
+            m.group(1).equals(formal) ? MatchType.EXACT_MATCH : MatchType.BAD_MATCH);
       }
     }
 
-    if (Stream.concat(actual.beforeComments().stream(), actual.afterComments().stream())
-        .map(Comments::getTextFromComment)
-        .anyMatch(comment -> Arrays.asList(comment.split("[^a-zA-Z0-9_]+")).contains(formal))) {
-      return MatchType.APPROXIMATE_MATCH;
+    Optional<Comment> approximateMatchComment =
+        Stream.concat(actual.beforeComments().stream(), actual.afterComments().stream())
+            .filter(comment -> isApproximateMatchingComment(comment, formal))
+            .findFirst();
+
+    if (approximateMatchComment.isPresent()) {
+      return MatchedComment.create(approximateMatchComment.get(), MatchType.APPROXIMATE_MATCH);
     }
 
-    return MatchType.NOT_ANNOTATED;
+    return MatchedComment.notAnnotated();
   }
 
   /**
@@ -91,7 +158,7 @@ final class NamedParameterComment {
    * name.
    */
   static String toCommentText(String formal) {
-    return String.format("/*%s%s*/", formal, PARAMETER_COMMENT_MARKER);
+    return String.format("/* %s%s */", formal, PARAMETER_COMMENT_MARKER);
   }
 
   private NamedParameterComment() {}

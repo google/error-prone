@@ -52,7 +52,8 @@ class NameInCommentHeuristic implements Heuristic {
         .noneMatch(
             p -> {
               MatchType match =
-                  NamedParameterComment.match(comments.get(p.formal().index()), p.formal().name());
+                  NamedParameterComment.match(comments.get(p.formal().index()), p.formal().name())
+                      .matchType();
               return match == MatchType.EXACT_MATCH || match == MatchType.APPROXIMATE_MATCH;
             });
   }
