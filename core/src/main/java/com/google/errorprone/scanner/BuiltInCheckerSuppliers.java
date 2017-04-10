@@ -297,7 +297,6 @@ public class BuiltInCheckerSuppliers {
           FormatStringAnnotationChecker.class,
           FunctionalInterfaceMethodChanged.class,
           FuturesGetCheckedIllegalExceptionType.class,
-          FutureReturnValueIgnored.class,
           GetClassOnAnnotation.class,
           GetClassOnClass.class,
           GuardedByChecker.class,
@@ -442,6 +441,7 @@ public class BuiltInCheckerSuppliers {
           EmptySetMultibindingContributions.class,
           EmptyTopLevelDeclaration.class,
           ExpectedExceptionChecker.class,
+          FutureReturnValueIgnored.class, // TODO(b/35766780): make this a warning
           HardCodedSdCardPath.class,
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
