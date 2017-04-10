@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -48,12 +49,15 @@ import javax.lang.model.element.Modifier;
 )
 public final class MutableConstantField extends BugChecker implements VariableTreeMatcher {
 
-  private static final ImmutableBiMap<String, String> MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP =
+  @VisibleForTesting
+  static final ImmutableBiMap<String, String> MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP =
       ImmutableBiMap.<String, String>builder()
           .put("com.google.common.collect.BiMap", "com.google.common.collect.ImmutableBiMap")
           .put(
               "com.google.common.collect.ListMultimap",
               "com.google.common.collect.ImmutableListMultimap")
+          .put("com.google.common.collect.Multimap", "com.google.common.collect.ImmutableMultimap")
+          .put("com.google.common.collect.Multiset", "com.google.common.collect.ImmutableMultiset")
           .put("com.google.common.collect.RangeMap", "com.google.common.collect.ImmutableRangeMap")
           .put("com.google.common.collect.RangeSet", "com.google.common.collect.ImmutableRangeSet")
           .put(
@@ -66,8 +70,6 @@ public final class MutableConstantField extends BugChecker implements VariableTr
           .put("java.util.Collection", "com.google.common.collect.ImmutableCollection")
           .put("java.util.List", "com.google.common.collect.ImmutableList")
           .put("java.util.Map", "com.google.common.collect.ImmutableMap")
-          .put("java.util.Multimap", "com.google.common.collect.ImmutableMultimap")
-          .put("java.util.Multiset", "com.google.common.collect.ImmutableMultiset")
           .put("java.util.NavigableMap", "com.google.common.collect.ImmutableSortedMap")
           .put("java.util.NavigableSet", "com.google.common.collect.ImmutableSortedSet")
           .put("java.util.Set", "com.google.common.collect.ImmutableSet")

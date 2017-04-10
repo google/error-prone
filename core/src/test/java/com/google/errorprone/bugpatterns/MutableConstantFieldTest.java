@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.Streams;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -215,6 +216,20 @@ public class MutableConstantFieldTest {
             "class Test {",
             "  static final List<String> MUTABLE = new ArrayList<>();",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void allReferencedClassNamesExist() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            Streams.concat(
+                    MutableConstantField.MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.keySet().stream(),
+                    MutableConstantField.MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.values().stream())
+                .distinct()
+                .map(className -> "import " + className + ";")
+                .toArray(String[]::new))
         .doTest();
   }
 }
