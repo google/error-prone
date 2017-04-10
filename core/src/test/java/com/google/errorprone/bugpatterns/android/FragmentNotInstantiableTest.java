@@ -16,32 +16,68 @@
 
 package com.google.errorprone.bugpatterns.android;
 
+import static com.google.errorprone.BugPattern.Category.ANDROID;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 @RunWith(JUnit4.class)
 public class FragmentNotInstantiableTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(FragmentNotInstantiable.class, getClass());
+  /** Used for testing a custom FragmentNotInstantiable. */
+  @BugPattern(
+    name = "CustomFragmentNotInstantiable",
+    summary =
+        "Subclasses of CustomFragment must be instantiable via Class#newInstance():"
+            + " the class must be public, static and have a public nullary constructor",
+    category = ANDROID,
+    severity = WARNING
+  )
+  public static class CustomFragmentNotInstantiable extends FragmentNotInstantiable {
+    public CustomFragmentNotInstantiable() {
+      super(ImmutableSet.of("com.google.errorprone.bugpatterns.android.testdata.CustomFragment"));
+    }
   }
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.addSourceFile("FragmentNotInstantiablePositiveCases.java").doTest();
+    createCompilationTestHelper(FragmentNotInstantiable.class)
+        .addSourceFile("FragmentNotInstantiablePositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.addSourceFile("FragmentNotInstantiableNegativeCases.java").doTest();
+    createCompilationTestHelper(FragmentNotInstantiable.class)
+        .addSourceFile("FragmentNotInstantiableNegativeCases.java")
+        .doTest();
+  }
+
+  @Test
+  public void testPositiveCases_custom() throws Exception {
+    createCompilationTestHelper(CustomFragmentNotInstantiable.class)
+        .addSourceFile("FragmentNotInstantiablePositiveCases.java")
+        .addSourceFile("CustomFragment.java")
+        .addSourceFile("CustomFragmentNotInstantiablePositiveCases.java")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCase_custom() throws Exception {
+    createCompilationTestHelper(CustomFragmentNotInstantiable.class)
+        .addSourceFile("FragmentNotInstantiableNegativeCases.java")
+        .addSourceFile("CustomFragment.java")
+        .addSourceFile("CustomFragmentNotInstantiableNegativeCases.java")
+        .doTest();
+  }
+
+  private CompilationTestHelper createCompilationTestHelper(
+      Class<? extends FragmentNotInstantiable> bugCheckerClass) {
+    return CompilationTestHelper.newInstance(bugCheckerClass, getClass());
   }
 }

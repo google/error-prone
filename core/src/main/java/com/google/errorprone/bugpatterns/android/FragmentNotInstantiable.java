@@ -28,6 +28,7 @@ import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.NestingKind.MEMBER;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -39,6 +40,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
@@ -59,8 +61,29 @@ public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatc
   // platforms prior to Android 3.0.
   private static final String FRAGMENT_CLASS_V4 = "android.support.v4.app.Fragment";
 
-  private static final Matcher<ClassTree> FRAGMENT_MATCHER =
-      allOf(kindIs(CLASS), anyOf(isSubtypeOf(FRAGMENT_CLASS), isSubtypeOf(FRAGMENT_CLASS_V4)));
+  private final ImmutableSet<String> fragmentClasses;
+  private final Matcher<ClassTree> fragmentMatcher;
+
+  public FragmentNotInstantiable() {
+    this(ImmutableSet.of());
+  }
+
+  protected FragmentNotInstantiable(Iterable<String> additionalFragmentClasses) {
+    fragmentClasses =
+        ImmutableSet.<String>builder()
+            .add(FRAGMENT_CLASS)
+            .add(FRAGMENT_CLASS_V4)
+            .addAll(additionalFragmentClasses)
+            .build();
+    fragmentMatcher =
+        allOf(
+            kindIs(CLASS),
+            anyOf(
+                fragmentClasses
+                    .stream()
+                    .map(fragmentClass -> isSubtypeOf(fragmentClass))
+                    .collect(Collectors.toList())));
+  }
 
   private Description buildErrorMessage(Tree tree, String explanation) {
     Description.Builder description = buildDescription(tree);
@@ -70,12 +93,12 @@ public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatc
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    if (!FRAGMENT_MATCHER.matches(classTree, state)) {
+    if (!fragmentMatcher.matches(classTree, state)) {
       return Description.NO_MATCH;
     }
 
     String className = ASTHelpers.getSymbol(classTree).toString();
-    if (className.equals(FRAGMENT_CLASS) || className.equals(FRAGMENT_CLASS_V4)) {
+    if (fragmentClasses.contains(className)) {
       // Do not check the base class declarations (or their stubs).
       return Description.NO_MATCH;
     }
