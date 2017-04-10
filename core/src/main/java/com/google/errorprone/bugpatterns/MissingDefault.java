@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
@@ -28,6 +29,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneTokens;
+import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Type;
@@ -61,8 +63,16 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
       if (!tree.getCases().isEmpty()) {
         // Inserting the default after the last case is easier than finding the closing brace
         // for the switch statement. Hopefully we don't often see switches with zero cases.
-        description.addFix(
-            SuggestedFix.postfixWith(getLast(tree.getCases()), "\ndefault: // fall out\n"));
+        CaseTree lastCase = getLast(tree.getCases());
+        String replacement;
+        if (lastCase.getStatements().isEmpty()
+            || Reachability.canCompleteNormally(
+                Iterables.getOnlyElement(lastCase.getStatements()))) {
+          replacement = "\nbreak;\ndefault: // fall out\n";
+        } else {
+          replacement = "\ndefault: // fall out\n";
+        }
+        description.addFix(SuggestedFix.postfixWith(getLast(tree.getCases()), replacement));
       }
       return description.build();
     }

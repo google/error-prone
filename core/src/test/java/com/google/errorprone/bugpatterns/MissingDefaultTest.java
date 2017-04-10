@@ -65,6 +65,37 @@ public class MissingDefaultTest {
   }
 
   @Test
+  public void positiveBreak() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void f(int i) {",
+            "    // BUG: Diagnostic contains:",
+            "    switch (i) {",
+            "      case 42:",
+            "        System.err.println(42);",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void f(int i) {",
+            "    // BUG: Diagnostic contains:",
+            "    switch (i) {",
+            "      case 42:",
+            "        System.err.println(42);",
+            "break;",
+            "default: // fall out",
+            "",
+            "    }",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(
