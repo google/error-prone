@@ -22,10 +22,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.RefactoringCollection.RefactoringResult;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.JavacTask;
+import com.sun.source.util.TaskListener;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -40,6 +46,10 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.annotation.processing.Processor;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
@@ -82,7 +92,52 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     RefactoringCollection[] refactoringCollection = {null};
     task.addTaskListener(
         createAnalyzer(errorProneOptions, task.getContext(), refactoringCollection));
-    return new CompilationTask() {
+    return new JavacTask() {
+      @Override
+      public Iterable<? extends CompilationUnitTree> parse() throws IOException {
+        return task.parse();
+      }
+
+      @Override
+      public Iterable<? extends Element> analyze() throws IOException {
+        return task.analyze();
+      }
+
+      @Override
+      public Iterable<? extends JavaFileObject> generate() throws IOException {
+        return task.generate();
+      }
+
+      @Override
+      public void setTaskListener(TaskListener taskListener) {
+        task.setTaskListener(taskListener);
+      }
+
+      @Override
+      public void addTaskListener(TaskListener taskListener) {
+        task.addTaskListener(taskListener);
+      }
+
+      @Override
+      public void removeTaskListener(TaskListener taskListener) {
+        task.removeTaskListener(taskListener);
+      }
+
+      @Override
+      public TypeMirror getTypeMirror(Iterable<? extends Tree> path) {
+        return task.getTypeMirror(path);
+      }
+
+      @Override
+      public Elements getElements() {
+        return task.getElements();
+      }
+
+      @Override
+      public Types getTypes() {
+        return task.getTypes();
+      }
+
       @Override
       public void setProcessors(Iterable<? extends Processor> processors) {
         task.setProcessors(processors);
