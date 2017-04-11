@@ -96,6 +96,7 @@ import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LiteralClassName;
+import com.google.errorprone.bugpatterns.LogicalAssignment;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
@@ -450,6 +451,7 @@ public class BuiltInCheckerSuppliers {
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JavaxInjectOnFinalField.class,
           LockMethodChecker.class,
+          LogicalAssignment.class, // TODO(b/35766780): make this a warning
           LongLiteralLowerCaseSuffix.class,
           MethodCanBeStatic.class,
           MissingDefault.class,
