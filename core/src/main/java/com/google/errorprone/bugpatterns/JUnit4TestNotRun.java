@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -42,7 +43,11 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers.JUnit4TestClassMatcher;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Options;
 import java.util.List;
 import javax.lang.model.element.Modifier;
@@ -126,13 +131,45 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
         return NO_MATCH;
       }
 
-      // Method non-static and contains call(s) to testing method, probably a test.
-      if (not(hasModifier(STATIC)).matches(methodTree, state) && containsTestMethod(methodTree)) {
+      // Method non-static and contains call(s) to testing method, probably a test,
+      // unless it is called elsewhere in the class, in which case it is a helper method.
+      if (not(hasModifier(STATIC)).matches(methodTree, state)
+          && containsTestMethod(methodTree)
+          && !calledElsewhere(methodTree, state)) {
         return describeFixes(methodTree, state);
       }
     }
     return NO_MATCH;
   }
+
+  /** Whether the given method is called elsewhere in the enclosing class. */
+  private static boolean calledElsewhere(MethodTree methodTree, VisitorState state) {
+    MethodSymbol methodSymbol = getSymbol(methodTree);
+    if (methodSymbol == null) {
+      return false;
+    }
+    return state
+        .findEnclosing(ClassTree.class)
+        .accept(
+            new TreeScanner<Boolean, Void>() {
+              @Override
+              public Boolean visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
+                if (methodSymbol.equals(getSymbol(callTree.getMethodSelect()))) {
+                  return true;
+                }
+                return super.visitMethodInvocation(callTree, unused);
+              }
+
+              @Override
+              public Boolean reduce(Boolean r1, Boolean r2) {
+                r1 = (r1 == null) ? false : r1;
+                r2 = (r2 == null) ? false : r2;
+                return r1 || r2;
+              }
+            },
+            null);
+  }
+
 
   /**
    * Returns a finding for the given method tree containing fixes:

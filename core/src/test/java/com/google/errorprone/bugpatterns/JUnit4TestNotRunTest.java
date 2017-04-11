@@ -451,6 +451,52 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
+  public void helperMethodCalledElsewhere() {
+    expandedHeuristicCompilationHelper
+        .addSourceLines(
+            "TestStuff.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "import org.junit.Test;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  public void shouldDoSomething() {",
+            "    verify();",
+            "  }",
+            "  @Test",
+            "  public void testDoesSomething() {",
+            "    shouldDoSomething();",
+            "  }",
+            "  void verify() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void helperMethodCallFoundInNestedInvocation() {
+    expandedHeuristicCompilationHelper
+        .addSourceLines(
+            "TestStuff.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "import org.junit.Test;",
+            "import java.util.function.Consumer;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  public void shouldDoSomething() {",
+            "    verify();",
+            "  }",
+            "  @Test",
+            "  public void testDoesSomething() {",
+            "    doSomething(u -> shouldDoSomething());",
+            "  }",
+            "  void doSomething(Consumer f) {}",
+            "  void verify() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase1.java").doTest();
   }
