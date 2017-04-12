@@ -65,6 +65,25 @@ public class Comments {
         methodInvocationTree, methodInvocationTree.getArguments(), state);
   }
 
+  /**
+   * Extract the text body from a comment.
+   *
+   * <p>This currently includes asterisks that start lines in the body of block comments. Do not
+   * rely on this behaviour.
+   *
+   * <p>TODO(andrewrice) Update this method to handle block comments properly if we find the need
+   */
+  public static String getTextFromComment(Comment comment) {
+    switch (comment.getStyle()) {
+      case BLOCK:
+        return comment.getText().replaceAll("^\\s*/\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
+      case LINE:
+        return comment.getText().replaceAll("^\\s*//\\s*", "");
+      default:
+        return comment.getText();
+    }
+  }
+  
   private static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
       Tree tree, List<? extends ExpressionTree> arguments, VisitorState state) {
 

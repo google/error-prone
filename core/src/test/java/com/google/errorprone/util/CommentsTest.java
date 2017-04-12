@@ -31,6 +31,9 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.tools.javac.parser.Tokens.Comment;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -111,7 +114,7 @@ public class CommentsTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints the comments around arguments */
+  /** A {@link BugChecker} that prints the contents of comments around arguments */
   @BugPattern(
     name = "PrintCommentsForArguments",
     category = Category.ONE_OFF,
@@ -142,13 +145,17 @@ public class CommentsTest {
           .stream()
           .map(
               c ->
-                  c.beforeComments().stream().map(i -> i.getText()).collect(toImmutableList())
-                      + " "
-                      + c.tree()
-                      + " "
-                      + c.afterComments().stream().map(i -> i.getText()).collect(toImmutableList()))
+                  Stream.of(
+                          String.valueOf(getTextFromCommentList(c.beforeComments())),
+                          String.valueOf(c.tree()),
+                          String.valueOf(getTextFromCommentList(c.afterComments())))
+                      .collect(Collectors.joining(" ")))
           .collect(toImmutableList())
           .toString();
+    }
+
+    private static ImmutableList<String> getTextFromCommentList(ImmutableList<Comment> comments) {
+      return comments.stream().map(Comments::getTextFromComment).collect(toImmutableList());
     }
   }
 
@@ -160,7 +167,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract void target(Object param);",
             "  private void test(Object param) {",
-            "    // BUG: Diagnostic contains: [[/* 1 */] param [/* 2 */]]",
+            "    // BUG: Diagnostic contains: [[1] param [2]]",
             "    target(/* 1 */ param /* 2 */);",
             "  }",
             "}")
@@ -175,7 +182,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract void target(Object param);",
             "  private void test(Object param) {",
-            "    // BUG: Diagnostic contains: [[/* 1 */, /* 2 */] param []]",
+            "    // BUG: Diagnostic contains: [[1, 2] param []]",
             "    target(/* 1 */ /* 2 */ param);",
             "  }",
             "}")
@@ -190,7 +197,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract void target(Object param);",
             "  private void test(Object param) {",
-            "    // BUG: Diagnostic contains: [[] param [/* 1 */, /* 2 */]]",
+            "    // BUG: Diagnostic contains: [[] param [1, 2]]",
             "    target(param /* 1 */ /* 2 */);",
             "  }",
             "}")
@@ -205,7 +212,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract void target(Object param1, Object param2);",
             "  private void test(Object param1, Object param2) {",
-            "    // BUG: Diagnostic contains: [[] param1 [/* 1 */], [/* 2 */] param2 []]",
+            "    // BUG: Diagnostic contains: [[] param1 [1], [2] param2 []]",
             "    target(param1 /* 1 */, /* 2 */ param2);",
             "  }",
             "}")
@@ -250,7 +257,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract void target(Object param1, Object param2);",
             "  private void test(Object param1, Object param2) {",
-            "    // BUG: Diagnostic contains: [[] param1 [// 1], [] param2 []]",
+            "    // BUG: Diagnostic contains: [[] param1 [1], [] param2 []]",
             "    target(param1, // 1",
             "           param2);",
             "  }",
@@ -266,7 +273,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract void target(Object param1, Object param2);",
             "  private void test(Object param1, Object param2) {",
-            "    // BUG: Diagnostic contains: [[] param1 [/* 1 */], [] param2 []]",
+            "    // BUG: Diagnostic contains: [[] param1 [1], [] param2 []]",
             "    target(param1, /* 1 */",
             "           param2);",
             "  }",
@@ -282,7 +289,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract void target(Object param1, Object param2);",
             "  private void test(Object param1, Object param2) {",
-            "    // BUG: Diagnostic contains: [[] param1 [], [] param2 [// 2]]",
+            "    // BUG: Diagnostic contains: [[] param1 [], [] param2 [2]]",
             "    target(param1,",
             "           param2); // 2",
             "  }",
@@ -299,7 +306,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract void target(Object param1, Object param2);",
             "  private void test(Object param1, Object param2) {",
-            "    // BUG: Diagnostic contains: [[] param1 [], [] param2 [// 2]]",
+            "    // BUG: Diagnostic contains: [[] param1 [], [] param2 [2]]",
             "    target(param1,",
             "           param2); // 2",
             "    int i = 1;",
@@ -315,7 +322,7 @@ public class CommentsTest {
             "Test.java",
             "abstract class Test {",
             "  abstract Object target(Object param);",
-            "  // BUG: Diagnostic contains: [[] null [// 1]]",
+            "  // BUG: Diagnostic contains: [[] null [1]]",
             "  private Object test = target(null); // 1",
             "}")
         .doTest();
@@ -329,7 +336,7 @@ public class CommentsTest {
             "class Test {",
             "  Test(Object param1, Object param2) {}",
             "  void test(Object param1, Object param2) {",
-            "    // BUG: Diagnostic contains: [[/* 1 */] param1 [], [] param2 [/* 2 */]]",
+            "    // BUG: Diagnostic contains: [[1] param1 [], [] param2 [2]]",
             "    new Test(/* 1 */ param1, param2 /* 2 */);",
             "  }",
             "}")
@@ -344,7 +351,7 @@ public class CommentsTest {
             "class Test {",
             "  Test(Object param1, Object param2) {}",
             "  void test(Object param1, Object param2) {",
-            "    // BUG: Diagnostic contains: [[] param1 [], [// 1] param2 []]",
+            "    // BUG: Diagnostic contains: [[] param1 [], [1] param2 []]",
             "    new Test(param1, ",
             "             // 1",
             "             param2);",
@@ -362,7 +369,7 @@ public class CommentsTest {
             "class Test {",
             "  Test(Object param1) {}",
             "  void test(Object param1) {",
-            "    // BUG: Diagnostic contains: [[] param1 [// 1]]",
+            "    // BUG: Diagnostic contains: [[] param1 [1]]",
             "    new Test(param1",
             "             // 1",
             "            );",
@@ -379,7 +386,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract Object target(Object param);",
             "  void test(Object param) {",
-            "    // BUG: Diagnostic contains: [[] param [// 1]]",
+            "    // BUG: Diagnostic contains: [[] param [1]]",
             "    target(param); // 1",
             "    /* 2 */ int i;",
             "  }",
@@ -396,7 +403,7 @@ public class CommentsTest {
             "abstract class Test {",
             "  abstract void target(Object param1, Object param2);",
             "  void test(Object param1, Object param2) {",
-            "    // BUG: Diagnostic contains: [[] param1 [], [] param2 [// 1]]",
+            "    // BUG: Diagnostic contains: [[] param1 [], [] param2 [1]]",
             "    target(param1, param2);  // 1",
             "    // BUG: Diagnostic contains: [[] param1 [], [] param2 []]",
             "    target(param1, param2);",
