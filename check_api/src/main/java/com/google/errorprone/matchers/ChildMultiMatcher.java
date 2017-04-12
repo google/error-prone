@@ -68,9 +68,9 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
   
   @AutoValue
   abstract static class MatchResult<T extends Tree> {
-    public abstract ImmutableList<T> matchingNodes();
+    public abstract List<T> matchingNodes();
     public abstract boolean matches();
-    
+
     public static <T extends Tree> MatchResult<T> none() {
       return create(ImmutableList.<T>of(), false);
     }
@@ -82,10 +82,10 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     public static <T extends Tree> MatchResult<T> match(ImmutableList<T> matchingNodes) {
       return create(matchingNodes, true);
     }
-    
-    private static <T extends Tree> MatchResult<T> create(
-        ImmutableList<T> matchingNode, boolean matches) {
-      return new AutoValue_ChildMultiMatcher_MatchResult<>(matchingNode, matches);
+
+    private static <T extends Tree> MatchResult<T> create(List<T> matchingNode, boolean matches) {
+      return new AutoValue_ChildMultiMatcher_MatchResult<>(
+          ImmutableList.copyOf(matchingNode), matches);
     }
   }
   

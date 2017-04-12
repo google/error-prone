@@ -22,6 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
+import java.util.List;
 
 /**
  * An matcher that applies a single matcher across multiple tree nodes.
@@ -48,15 +49,15 @@ public interface MultiMatcher<T extends Tree, N extends Tree> extends Matcher<T>
      * The list of nodes which matched the MultiMatcher's expectations (could be empty if the match
      * type was ALL and there were no child nodes). Only sensical if {@link #matches()} is true.
      */
-    public abstract ImmutableList<N> matchingNodes();
+    public abstract List<N> matchingNodes();
 
     public final N onlyMatchingNode() {
       return getOnlyElement(matchingNodes());
     }
 
-    static <N extends Tree> MultiMatchResult<N> create(
-        boolean matches, ImmutableList<N> matchingNodes) {
-      return new AutoValue_MultiMatcher_MultiMatchResult<>(matches, matchingNodes);
+    static <N extends Tree> MultiMatchResult<N> create(boolean matches, List<N> matchingNodes) {
+      return new AutoValue_MultiMatcher_MultiMatchResult<>(
+          matches, ImmutableList.copyOf(matchingNodes));
     }
   }
 }
