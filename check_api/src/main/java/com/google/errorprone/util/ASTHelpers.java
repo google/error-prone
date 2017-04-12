@@ -16,7 +16,6 @@
 
 package com.google.errorprone.util;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 
@@ -90,6 +89,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
@@ -324,7 +324,7 @@ public class ASTHelpers {
    */
   public static Type getResultType(ExpressionTree expressionTree) {
     Type type = ASTHelpers.getType(expressionTree);
-    return firstNonNull(type.getReturnType(), type);
+    return Optional.ofNullable(type.getReturnType()).orElse(type);
   }
 
   /**
