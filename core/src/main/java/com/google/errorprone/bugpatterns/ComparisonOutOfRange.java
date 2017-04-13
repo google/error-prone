@@ -181,15 +181,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
     String customDiagnosticMessage;
     if (byteMatch) {
       String replacement = Byte.toString(((Number) literal.getValue()).byteValue());
-
-      // Correct for poor javac 6 literal parsing.
-      int actualStart = ASTHelpers.getActualStartPosition(literal, state.getSourceCode());
-      if (actualStart != literal.getStartPosition()) {
-        fix =
-            SuggestedFix.replace(literal, replacement, actualStart - literal.getStartPosition(), 0);
-      } else {
-        fix = SuggestedFix.replace(literal, replacement);
-      }
+      fix = SuggestedFix.replace(literal, replacement);
       customDiagnosticMessage = String.format(MESSAGE_TEMPLATE, "byte", (int) Byte.MIN_VALUE,
           (int) Byte.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
     } else {

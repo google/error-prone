@@ -29,7 +29,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
@@ -38,7 +37,6 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /**
  * @author bill.pugh@gmail.com (Bill Pugh)
@@ -113,16 +111,9 @@ public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
         fix = SuggestedFix.prefixWith(tree, "(long) ");
       }
     } else {
-      JCLiteral jcLiteral = (JCLiteral) tree.getRightOperand();
       // This is the equivalent shift distance according to JLS 15.19.
       String actualShiftDistance = Integer.toString(intValue & 0x1f);
-      int actualStart = ASTHelpers.getActualStartPosition(jcLiteral, state.getSourceCode());
-      if (actualStart != jcLiteral.getStartPosition()) {
-        fix = SuggestedFix.replace(tree.getRightOperand(), actualShiftDistance,
-            actualStart - jcLiteral.getStartPosition(), 0);
-      } else {
-        fix = SuggestedFix.replace(tree.getRightOperand(), actualShiftDistance);
-      }
+      fix = SuggestedFix.replace(tree.getRightOperand(), actualShiftDistance);
     }
     return describeMatch(tree, fix);
   }

@@ -420,35 +420,6 @@ public class ASTHelpers {
     return null;
   }
 
-  /**
-   * A collection of Java whitespace characters, as defined by JLS 3.6.
-   */
-  private static final CharMatcher WHITESPACE_CHARS = CharMatcher.anyOf(" \t\f\n\r");
-
-  /**
-   * Hacky fix for poor javac 6 literal parsing.  javac 6 doesn't set the AST node start
-   * position correctly when a numeric literal is preceded by -. So we scan the source
-   * backwards starting at the provided start position, looking for whitespace, until we find
-   * the true start position.  javac 7 gets this right.
-   *
-   * @return The actual start position of the literal. May be the same as the start position
-   * given by the tree node itself.
-   */
-  public static int getActualStartPosition(JCLiteral tree, CharSequence source) {
-    // This only applies to negative numeric literals.
-    Object value = tree.getValue();
-    if ((value instanceof Number) && (((Number) value).doubleValue() < 0)) {
-      int start = tree.getStartPosition() - 1;
-      while (WHITESPACE_CHARS.matches(source.charAt(start))) {
-        start--;
-      }
-      if (source.charAt(start) == '-') {
-        return start;
-      }
-    }
-    return tree.getStartPosition();
-  }
-
   @Nullable
   public static MethodSymbol findSuperMethodInType(
       MethodSymbol methodSymbol, Type superType, Types types) {

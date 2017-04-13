@@ -93,7 +93,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testGetActualStartPositionUnix() {
+  public void testGetStartPositionUnix() {
     String fileContent = UNIX_LINE_JOINER.join(
         "public class A { ",
         "  public void foo() {",
@@ -102,11 +102,11 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         "  }",
         "}");
     writeFile("A.java", fileContent);
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+    assertCompiles(literalExpressionMatches(literalHasStartPosition(59)));
   }
 
   @Test
-  public void testGetActualStartPositionWindows() {
+  public void testGetStartPositionWindows() {
     String fileContent = WINDOWS_LINE_JOINER.join(
         "public class A { ",
         "  public void foo() {",
@@ -115,11 +115,11 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         "  }",
         "}");
     writeFile("A.java", fileContent);
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(62)));
+    assertCompiles(literalExpressionMatches(literalHasStartPosition(62)));
   }
 
   @Test
-  public void testGetActualStartPositionWithWhitespaceUnix() {
+  public void testGetStartPositionWithWhitespaceUnix() {
     String fileContent = UNIX_LINE_JOINER.join(
         "public class A { ",
         "  public void foo() {",
@@ -128,11 +128,11 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         "  }",
         "}");
     writeFile("A.java", fileContent);
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(59)));
+    assertCompiles(literalExpressionMatches(literalHasStartPosition(59)));
   }
 
   @Test
-  public void testGetActualStartPositionWithWhitespaceWindows() {
+  public void testGetStartPositionWithWhitespaceWindows() {
     String fileContent = WINDOWS_LINE_JOINER.join(
         "public class A { ",
         "  public void foo() {",
@@ -141,15 +141,15 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         "  }",
         "}");
     writeFile("A.java", fileContent);
-    assertCompiles(literalExpressionMatches(literalHasActualStartPosition(62)));
+    assertCompiles(literalExpressionMatches(literalHasStartPosition(62)));
   }
 
-  private Matcher<LiteralTree> literalHasActualStartPosition(final int startPosition) {
+  private Matcher<LiteralTree> literalHasStartPosition(final int startPosition) {
     return new Matcher<LiteralTree>() {
       @Override
       public boolean matches(LiteralTree tree, VisitorState state) {
         JCLiteral literal = (JCLiteral) tree;
-        return ASTHelpers.getActualStartPosition(literal, state.getSourceCode()) == startPosition;
+        return literal.getStartPosition() == startPosition;
       }
     };
   }
