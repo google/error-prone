@@ -89,4 +89,22 @@ public class NamingConventionsTest {
 
     assertThat(terms).containsExactly("test", "1");
   }
+  
+  @Test
+  public void convertToLowerUnderscore_givesSingleUnderscore_fromSingleUnderscore() {
+    String identifierName = "_";
+
+    String lowerUnderscore = NamingConventions.convertToLowerUnderscore(identifierName);
+
+    assertThat(lowerUnderscore).isEqualTo("_");
+  }
+
+  @Test
+  public void convertToLowerUnderscore_separatesTerms_fromCamelCase() {
+    String identifierName = "camelCase";
+
+    String lowerUnderscore = NamingConventions.convertToLowerUnderscore(identifierName);
+
+    assertThat(lowerUnderscore).isEqualTo("camel_case");
+  }
 }

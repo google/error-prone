@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /** Utility functions for dealing with Java naming conventions */
 public class NamingConventions {
@@ -49,5 +50,9 @@ public class NamingConventions {
     return Arrays.stream(TERM_SPLITTER.split(identifierName))
         .map(String::toLowerCase)
         .collect(toImmutableList());
+  }
+
+  public static String convertToLowerUnderscore(String identifierName) {
+    return splitToLowercaseTerms(identifierName).stream().collect(Collectors.joining("_"));
   }
 }
