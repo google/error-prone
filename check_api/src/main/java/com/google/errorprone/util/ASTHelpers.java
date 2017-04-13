@@ -674,24 +674,14 @@ public class ASTHelpers {
     return sym == null ? null : sym.name.toString();
   }
 
-  private static <T extends Symbol> T enclosingSymbol(Symbol sym, Class<T> clazz) {
-    while (sym != null) {
-      if (clazz.isInstance(sym)) {
-        return clazz.cast(sym);
-      }
-      sym = sym.owner;
-    }
-    return null;
-  }
-
   /** Return the enclosing {@code ClassSymbol} of the given symbol, or {@code null}. */
   public static ClassSymbol enclosingClass(Symbol sym) {
-    return enclosingSymbol(sym, ClassSymbol.class);
+    return sym.owner.enclClass();
   }
 
   /** Return the enclosing {@code PackageSymbol} of the given symbol, or {@code null}. */
   public static PackageSymbol enclosingPackage(Symbol sym) {
-    return enclosingSymbol(sym, PackageSymbol.class);
+    return sym.packge();
   }
 
   /**
