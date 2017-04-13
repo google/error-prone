@@ -53,14 +53,14 @@ public class ExpectedExceptionChecker extends AbstractExpectedExceptionChecker {
     BaseFix baseFix = buildBaseFix(state, expectations);
     // provide fixes to wrap each of the trailing statements in a lambda
     // skip statements that look like assertions
-    List<Fix> fixes =
+    ImmutableList<Fix> fixes =
         Lists.reverse(suffix)
             .stream()
             .filter(t -> !JUnitMatchers.containsTestMethod(t))
             .map(t -> baseFix.build(ImmutableList.of(t)))
             .collect(toImmutableList());
     if (fixes.isEmpty()) {
-      fixes.add(baseFix.build(ImmutableList.of(getLast(suffix))));
+      fixes = ImmutableList.of(baseFix.build(ImmutableList.of(getLast(suffix))));
     }
     return buildDescription(tree).addAllFixes(fixes).build();
   }

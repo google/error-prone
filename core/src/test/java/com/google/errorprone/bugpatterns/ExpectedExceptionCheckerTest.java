@@ -329,4 +329,40 @@ public class ExpectedExceptionCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nothingButAsserts() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import org.junit.Rule;",
+            "import org.junit.Test;",
+            "import org.junit.rules.ExpectedException;",
+            "class ExceptionTest {",
+            "  @Rule ExpectedException thrown = ExpectedException.none();",
+            "  @Test",
+            "  public void test() throws Exception {",
+            "    thrown.expect(RuntimeException.class);",
+            "    assertThat(false).isFalse();",
+            "    assertThat(true).isTrue();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import static org.junit.Assert.assertThrows;",
+            "import org.junit.Rule;",
+            "import org.junit.Test;",
+            "import org.junit.rules.ExpectedException;",
+            "class ExceptionTest {",
+            "  @Rule ExpectedException thrown = ExpectedException.none();",
+            "  @Test",
+            "  public void test() throws Exception {",
+            "    assertThat(false).isFalse();",
+            "    assertThrows(RuntimeException.class, () -> assertThat(true).isTrue());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
