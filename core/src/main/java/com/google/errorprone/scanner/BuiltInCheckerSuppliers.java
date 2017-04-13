@@ -188,6 +188,7 @@ import com.google.errorprone.bugpatterns.android.IsLoggableTagLength;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
+import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
@@ -425,6 +426,7 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           ArgumentParameterMismatch.class,
           ArgumentParameterSwap.class,
+          ArgumentSelectionDefectChecker.class,
           AutoFactoryAtInject.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
