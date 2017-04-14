@@ -22,7 +22,7 @@ import com.google.errorprone.bugpatterns.proto.TestEnum;
 public class ProtocolBufferOrdinalPositiveCases {
 
   public static void checkCallOnOrdinal() {
-    // BUG: Diagnostic contains: TestEnum.TEST_ENUM_VAL.getNumber()
+    // BUG: Diagnostic contains: ProtocolBufferOrdinal
     TestEnum.TEST_ENUM_VAL.ordinal();
   }
 }

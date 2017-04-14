@@ -23,11 +23,8 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
@@ -38,11 +35,7 @@ import com.sun.source.tree.MethodInvocationTree;
  */
 @BugPattern(
   name = "ProtocolBufferOrdinal",
-  summary = "ordinal() value of Protocol Buffer Enum can change if enumeration order is changed",
-  explanation =
-      "Shuffling of values in a Protocol Buffer enum can change the ordinal value of the enum "
-          + "member. Since changing tag number isn't advisable in protos, use #getNumber() "
-          + "instead which gives the tag number.",
+  summary = "To get the tag number of a protocol buffer enum, use getNumber() instead.",
   category = PROTOBUF,
   severity = WARNING
 )
@@ -56,18 +49,8 @@ public class ProtocolBufferOrdinal extends BugChecker implements MethodInvocatio
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    if (!PROTO_MSG_ORDINAL_MATCHER.matches(methodInvocationTree, state)) {
-      return Description.NO_MATCH;
-    }
-    ExpressionTree rec = ASTHelpers.getReceiver(methodInvocationTree);
-    if (rec != null) {
-      Fix fix =
-          SuggestedFix.replace(
-              state.getEndPosition(rec),
-              state.getEndPosition(methodInvocationTree),
-              ".getNumber()");
-      return describeMatch(methodInvocationTree, fix);
-    }
-    return Description.NO_MATCH;
+    return PROTO_MSG_ORDINAL_MATCHER.matches(methodInvocationTree, state)
+        ? describeMatch(methodInvocationTree)
+        : Description.NO_MATCH;
   }
 }
