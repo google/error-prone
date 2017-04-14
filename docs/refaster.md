@@ -104,7 +104,8 @@ class Utf8Length { // A name for the refactoring
   int toUtf8Length( // the method name is unimportant
       String string /* the string parameter stands in for any expression of type String */) {
     return /* this is here just to make the compiler happy */
-        string.getBytes(StandardCharsets.UTF_8).length; // this is what the code looks like before the refactoring
+        string.getBytes(StandardCharsets.UTF_8).length;
+        // this is what the code looks like before the refactoring
   }
 
   @AfterTemplate // replace code with this pattern
@@ -120,10 +121,15 @@ This refactoring rewrites _expressions_ of the form `someString.getBytes(UTF_8).
 This is called an _expression_ template because it rewrites expressions.  Let's look at a _block_ template:
 
 ```java
-class ListSwap<T> { // T is a type parameter for the entire rule, which will be inferred from the match
+class ListSwap<T> {
+  // T is a type parameter for the entire rule, which will be inferred from the match
+  
   @BeforeTemplate
-  void manualSwap(List<T> list, int i, int j) { // the list, i, and j can be any expressions of appropriate type
-    T tmp = list.get(i); // tmp doesn't actually have to be the variable name used in the code being matched
+  void manualSwap(
+       List<T> list, int i, int j) {
+       // the list, i, and j can be any expressions of appropriate type
+    T tmp = list.get(i); 
+      // tmp doesn't actually have to be the variable name used in the code being matched
     list.set(i, list.get(j));
     list.set(j, tmp);
   }
