@@ -168,7 +168,7 @@ class SortedFirst<T> {
 }
 ```
 
-We have literally thousands of simplification patterns like this that are presented as automatically generated code review comments at Google that we hope to release in open source soon.
+At Google, we have a tool that uses thousands of these simplification patterns to automatically comment on code reviews, suggesting improvements to code.  We hope to release many of these soon.
 
 ## Advanced features
 
