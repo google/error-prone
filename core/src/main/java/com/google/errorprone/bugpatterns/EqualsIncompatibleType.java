@@ -33,6 +33,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
@@ -162,14 +163,24 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     // This equality test almost certainly evaluates to false, which is very unlikely to be the
     // programmer's intent. Hence, this is reported as an error. There is no sensible fix to suggest
     // in this situation.
-    Description.Builder description = buildDescription(invocationTree);
-    description.setMessage(
-        "Calling "
-            + ASTHelpers.getSymbol(invocationTree).getSimpleName()
-            + " on incompatible types "
-            + receiverType
-            + " and "
-            + argumentType);
-    return description.build();
+    return buildDescription(invocationTree)
+        .setMessage(getMessage(invocationTree, receiverType, argumentType))
+        .build();
+  }
+
+  private static String getMessage(
+      MethodInvocationTree invocationTree, Type receiverType, Type argumentType) {
+    String receiverTypeString = Signatures.prettyType(receiverType);
+    String argumentTypeString = Signatures.prettyType(argumentType);
+    if (argumentTypeString.equals(receiverTypeString)) {
+      receiverTypeString = receiverType.toString();
+      argumentTypeString = argumentType.toString();
+    }
+    return "Calling "
+        + ASTHelpers.getSymbol(invocationTree).getSimpleName()
+        + " on incompatible types "
+        + receiverTypeString
+        + " and "
+        + argumentTypeString;
   }
 }

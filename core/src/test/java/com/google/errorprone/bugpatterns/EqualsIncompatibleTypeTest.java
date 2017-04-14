@@ -68,7 +68,23 @@ public class EqualsIncompatibleTypeTest {
             "class Test {",
             "  interface B {}",
             "  <T extends B> void t(T x) {",
-            "    // BUG: Diagnostic contains: T and java.lang.String",
+            "    // BUG: Diagnostic contains: T and String",
+            "    x.equals(\"foo\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void prettyNameForConflicts() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  interface B {}",
+            "  interface String {}",
+            "  void t(String x) {",
+            "    // BUG: Diagnostic contains: types Test.String and java.lang.String",
             "    x.equals(\"foo\");",
             "  }",
             "}")
