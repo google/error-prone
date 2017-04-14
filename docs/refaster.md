@@ -19,7 +19,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 public class StringIsEmpty {
   @BeforeTemplate
   boolean equalsEmptyString(String string) {
-  	return string.equals("");
+    return string.equals("");
   }
 
   @BeforeTemplate
@@ -91,6 +91,78 @@ This will generate a unified diff file named `error-prone.patch` that you can ap
 cd /full/path/to/your/source/root
 patch -p0 -u -i error-prone.patch
 ```
+
+## Anatomy of a Refaster Rule
+
+The idea of Refaster is, more or less, to take the pseudocode you'd write to explain a refactoring you wanted to perform, and make that into real code that performs a real refactoring.
+
+Let's take apart an example rule.
+
+```java
+class Utf8Length { // A name for the refactoring
+  @BeforeTemplate // This is what the code looks like before the refactoring
+  int toUtf8Length( // the method name is unimportant
+      String string /* the string parameter stands in for any expression of type String */) {
+    return /* this is here just to make the compiler happy */
+        string.getBytes(StandardCharsets.UTF_8).length; // this is what the code looks like before the refactoring
+  }
+
+  @AfterTemplate // replace code with this pattern
+  int optimizedMethod(
+      String string /* substitute in the original String expression */) {
+    return Utf8.encodedLength(string);
+  }
+}
+```
+
+This refactoring rewrites _expressions_ of the form `someString.getBytes(UTF_8).length` to `Utf8.encodedLength(string)`, a method from Guava that avoids allocating an entire byte array just to get its length, no matter where that `String` comes from -- it can be the result of a more complicated expression, or just a simple variable.  Additionally, this will match even if the `int` result of the expression is being passed to a method, added to something else, assigned to a variable, whatever.
+
+This is called an _expression_ template because it rewrites expressions.  Let's look at a _block_ template:
+
+```java
+class ListSwap<T> { // T is a type parameter for the entire rule, which will be inferred from the match
+  @BeforeTemplate
+  void manualSwap(List<T> list, int i, int j) { // the list, i, and j can be any expressions of appropriate type
+    T tmp = list.get(i); // tmp doesn't actually have to be the variable name used in the code being matched
+    list.set(i, list.get(j));
+    list.set(j, tmp);
+  }
+  @AfterTemplate
+  void swap(List<T> list, int i, int j) {
+    Collections.swap(list, i, j);
+  }
+}
+```
+
+This rule matches three consecutive lines that "look like" the body of the `@BeforeTemplate`, and replaces them with the single line of the `@AfterTemplate`.
+
+## What is Refaster good for?
+
+Refaster was originally built for the Java Libraries Team at Google, around the slogan of "make simple refactorings simple."  We tended to focus on library migrations, method renamings, and the like; refactorings that could be clearly described by just describing what the code should look like before and after the change.  We use Refaster for simple refactorings like this, and combine it with more sophisticated analyses written with the Error Prone API for refactorings Refaster can't express.
+
+Refaster excels at refactorings like:
+
+ * Migrate users of method A to method B.
+ * Migrate users of method A where the arguments are of some particular type to method B.
+ * Migrate a particular fluent sequence of method invocations to some other pattern.
+ * Migrate a sequence of consecutive statements to an alternative.
+
+We have also found Refaster good for expressing code _simplification_ patterns to improve efficiency or code readability.  For example, here is a simplification rule for Java 8 streams that Refaster expresses neatly:
+
+```java
+class SortedFirst<T> {
+  @BeforeTemplate
+  Optional<T> before(Stream<T> stream, Comparator<? super T> comparator) {
+    return stream.sorted(comparator).findFirst();
+  }
+  @AfterTemplate
+  Optional<T> after(Stream<T> stream, Comparator<? super T> comparator) {
+    return stream.min(comparator);
+  }
+}
+```
+
+We have literally thousands of simplification patterns like this that are presented as automatically generated code review comments at Google that we hope to release in open source soon.
 
 ## Advanced features
 
