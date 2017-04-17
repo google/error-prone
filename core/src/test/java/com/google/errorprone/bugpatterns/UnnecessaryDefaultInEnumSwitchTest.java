@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -43,6 +45,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "      case THREE:",
             "        return true;",
             "      default:",
+            "        // This is a comment",
             "        throw new AssertionError(c);",
             "    }",
             "  }",
@@ -57,11 +60,13 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "      case TWO:",
             "      case THREE:",
             "        return true;",
+            "      ",
             "    }",
-            "    throw new AssertionError(c);",
+            "// This is a comment",
+            "throw new AssertionError(c);",
             "  }",
             "}")
-        .doTest();
+        .doTest(TEXT_MATCH);
   }
 
   @Test

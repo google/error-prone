@@ -92,7 +92,12 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
                   ((JCTree) defaultStatements.get(0)).getStartPosition(),
                   state.getEndPosition(getLast(defaultStatements)))
               .toString();
-      fix = SuggestedFix.builder().delete(defaultCase).postfixWith(tree, defaultSource).build();
+      String initialComments = comments(state, defaultCase, defaultStatements);
+      fix =
+          SuggestedFix.builder()
+              .delete(defaultCase)
+              .postfixWith(tree, initialComments + defaultSource)
+              .build();
     } else {
       return NO_MATCH;
     }
@@ -109,5 +114,30 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
       return true;
     }
     return false;
+  }
+
+  /** Returns the comments between the "default:" case and the first statement within it, if any. */
+  private String comments(
+      VisitorState state, CaseTree defaultCase, List<? extends StatementTree> defaultStatements) {
+    // If there are no statements, then there can be no comments that we strip,
+    // because comments are attached to the statements, not the "default:" case.
+    if (defaultStatements.isEmpty()) {
+      return "";
+    }
+    // To extract the comments, we have to get the source code from
+    // "default:" to the first statement, and then strip off "default:", because
+    // we have no way of identifying the end position of just the "default:" statement.
+    int defaultStart = ((JCTree) defaultCase).getStartPosition();
+    int statementStart = ((JCTree) defaultStatements.get(0)).getStartPosition();
+    String defaultAndComments =
+        state.getSourceCode().subSequence(defaultStart, statementStart).toString();
+    String comments =
+        defaultAndComments
+            .substring(defaultAndComments.indexOf("default:") + "default:".length())
+            .trim();
+    if (!comments.isEmpty()) {
+      comments = "\n" + comments + "\n";
+    }
+    return comments;
   }
 }
