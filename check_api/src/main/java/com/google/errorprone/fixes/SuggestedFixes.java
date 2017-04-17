@@ -37,7 +37,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.io.CharStreams;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.apply.DescriptionBasedDiff;
+import com.google.errorprone.apply.ImportOrganizer;
+import com.google.errorprone.apply.SourceFile;
 import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
@@ -53,17 +57,25 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
+import com.sun.source.util.JavacTask;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.main.Arguments;
 import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.tree.TreeScanner;
+import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Options;
 import com.sun.tools.javac.util.Position;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,6 +94,12 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleTypeVisitor8;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.JavaFileObject.Kind;
+import javax.tools.SimpleJavaFileObject;
 
 /** Factories for constructing {@link Fix}es. */
 public class SuggestedFixes {
@@ -610,5 +628,79 @@ public class SuggestedFixes {
       }
     }
     return Optional.absent();
+  }
+
+  /**
+   * Returns true if the current compilation would succeed with the given fix applied. Note that
+   * calling this method is very expensive as it requires rerunning the entire compile, so it should
+   * be used with restraint.
+   */
+  public static boolean compilesWithFix(Fix fix, VisitorState state) {
+    if (fix.isEmpty()) {
+      return true;
+    }
+    JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
+    JavaFileObject modifiedFile = compilationUnit.getSourceFile();
+    JavacTaskImpl javacTask = (JavacTaskImpl) state.context.get(JavacTask.class);
+    if (javacTask == null) {
+      throw new IllegalArgumentException("No JavacTask in context.");
+    }
+    Arguments arguments = Arguments.instance(javacTask.getContext());
+    List<JavaFileObject> fileObjects = new ArrayList<>(arguments.getFileObjects());
+    for (int i = 0; i < fileObjects.size(); i++) {
+      final JavaFileObject oldFile = fileObjects.get(i);
+      if (modifiedFile.toUri().equals(oldFile.toUri())) {
+        DescriptionBasedDiff diff =
+            DescriptionBasedDiff.create(compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
+        diff.handleFix(fix);
+        SourceFile fixSource;
+        try {
+          fixSource =
+              new SourceFile(
+                  modifiedFile.getName(),
+                  modifiedFile.getCharContent(false /*ignoreEncodingErrors*/));
+        } catch (IOException e) {
+          return false;
+        }
+        diff.applyDifferences(fixSource);
+        fileObjects.set(
+            i,
+            new SimpleJavaFileObject(modifiedFile.toUri(), Kind.SOURCE) {
+              @Override
+              public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+                return fixSource.getAsSequence();
+              }
+            });
+        break;
+      }
+    }
+    DiagnosticCollector<JavaFileObject> diagnosticListener = new DiagnosticCollector<>();
+    Context context = new Context();
+    Options.instance(context).putAll(Options.instance(javacTask.getContext()));
+    context.put(Arguments.class, arguments);
+    JavacTask newTask =
+        JavacTool.create()
+            .getTask(
+                CharStreams.nullWriter(),
+                state.context.get(JavaFileManager.class),
+                diagnosticListener,
+                ImmutableList.of(),
+                arguments.getClassNames(),
+                fileObjects,
+                context);
+    try {
+      newTask.analyze();
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+    return countErrors(diagnosticListener) == 0;
+  }
+
+  private static long countErrors(DiagnosticCollector<JavaFileObject> diagnosticCollector) {
+    return diagnosticCollector
+        .getDiagnostics()
+        .stream()
+        .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
+        .count();
   }
 }

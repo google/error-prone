@@ -17,6 +17,7 @@
 package com.google.errorprone.fixes;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -485,4 +486,38 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
+  /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
+  @BugPattern(name = "CompilesWithFixChecker", category = JDK, summary = "", severity = ERROR)
+  public static class CompilesWithFixChecker extends BugChecker implements VariableTreeMatcher {
+    @Override
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      Fix fix = SuggestedFix.delete(tree);
+      return SuggestedFixes.compilesWithFix(fix, state)
+          ? describeMatch(tree, fix)
+          : Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void compilesWithFixTest() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new CompilesWithFixChecker(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void f() {",
+            "    int x = 0;",
+            "    int y = 1;",
+            "    System.err.println(y);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void f() {",
+            "    int y = 1;",
+            "    System.err.println(y);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
