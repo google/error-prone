@@ -32,6 +32,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Position.LineMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Utilities for attaching comments to relevant AST nodes
@@ -83,7 +84,7 @@ public class Comments {
         return comment.getText();
     }
   }
-  
+
   private static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
       Tree tree, List<? extends ExpressionTree> arguments, VisitorState state) {
 
@@ -93,8 +94,12 @@ public class Comments {
 
     CharSequence sourceCode = state.getSourceCode();
     int startPosition = ((JCTree) tree).getStartPosition();
-    int endPosition = computeEndPosition(tree, sourceCode, state);
-    CharSequence source = sourceCode.subSequence(startPosition, endPosition);
+    Optional<Integer> endPosition = computeEndPosition(tree, sourceCode, state);
+    if (!endPosition.isPresent()) {
+      return ImmutableList.of();
+    }
+
+    CharSequence source = sourceCode.subSequence(startPosition, endPosition.get());
 
     // The token position of the end of the method invocation
     int invocationEnd = state.getEndPosition(tree) - startPosition;
@@ -167,24 +172,34 @@ public class Comments {
    * <p>As a heuristic we first scan for any {@code /} characters on the same line as the end of the
    * method invocation. If we don't find any then we use the end of the method invocation as the end
    * position.
+   *
+   * @return the end position of the tree or Optional.empty if we are unable to calculate it
    */
   @VisibleForTesting
-  static int computeEndPosition(
+  static Optional<Integer> computeEndPosition(
       Tree methodInvocationTree, CharSequence sourceCode, VisitorState state) {
     int invocationEnd = state.getEndPosition(methodInvocationTree);
+    if (invocationEnd == -1) {
+      return Optional.empty();
+    }
 
     // Finding a good end position is expensive so first check whether we have any comment at
     // the end of our line. If we don't then we can just use the end of the methodInvocationTree
     int nextNewLine = CharMatcher.is('\n').indexIn(sourceCode, invocationEnd);
     if (nextNewLine == -1) {
-      return invocationEnd;
+      return Optional.of(invocationEnd);
     }
 
     if (CharMatcher.is('/').matchesNoneOf(sourceCode.subSequence(invocationEnd, nextNewLine))) {
-      return invocationEnd;
+      return Optional.of(invocationEnd);
     }
 
-    return state.getEndPosition(getNextNodeOrParent(methodInvocationTree, state));
+    int nextNodeEnd = state.getEndPosition(getNextNodeOrParent(methodInvocationTree, state));
+    if (nextNodeEnd == -1) {
+      return Optional.of(invocationEnd);
+    }
+
+    return Optional.of(nextNodeEnd);
   }
 
   /**

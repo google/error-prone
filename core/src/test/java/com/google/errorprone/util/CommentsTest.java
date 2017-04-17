@@ -32,6 +32,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.parser.Tokens.Comment;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.Test;
@@ -56,14 +57,17 @@ public class CommentsTest {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
       CharSequence sourceCode = state.getSourceCode();
-      int endPosition = Comments.computeEndPosition(tree, sourceCode, state);
-      int startPosition = endPosition;
+      Optional<Integer> endPosition = Comments.computeEndPosition(tree, sourceCode, state);
+      if (!endPosition.isPresent()) {
+        return Description.NO_MATCH;
+      }
+      int startPosition = endPosition.get();
       do {
         startPosition--;
       } while (sourceCode.charAt(startPosition) != '\n');
 
       return buildDescription(tree)
-          .setMessage(sourceCode.subSequence(startPosition + 1, endPosition).toString())
+          .setMessage(sourceCode.subSequence(startPosition + 1, endPosition.get()).toString())
           .build();
     }
   }
