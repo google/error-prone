@@ -368,6 +368,7 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
           AmbiguousMethodReference.class,
+          ArgumentSelectionDefectChecker.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BoxedPrimitiveConstructor.class,
@@ -426,7 +427,6 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           ArgumentParameterMismatch.class,
           ArgumentParameterSwap.class,
-          ArgumentSelectionDefectChecker.class,
           AutoFactoryAtInject.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
