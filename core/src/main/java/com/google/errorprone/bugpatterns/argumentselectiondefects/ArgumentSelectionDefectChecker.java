@@ -37,7 +37,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Checks the lexical distance between method parameter names and the argument names at call sites.
@@ -66,27 +66,11 @@ public class ArgumentSelectionDefectChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
   private final ImmutableList<Heuristic> heuristics;
-  private final BiFunction<String, String, Double> nameDistanceFunction;
-
-  private static final BiFunction<String, String, Double> DEFAULT_NAME_DISTANCE_FUNCTION =
-      new BiFunction<String, String, Double>() {
-        @Override
-        public Double apply(String source, String target) {
-          String normalizedSource = NamingConventions.convertToLowerUnderscore(source);
-          String normalizedTarget = NamingConventions.convertToLowerUnderscore(target);
-          return NeedlemanWunschEditDistance.getNormalizedEditDistance(
-              /*          source */ normalizedSource,
-              /*          target */ normalizedTarget,
-              /*   caseSensitive */ false,
-              /*      changeCost */ 8,
-              /*     openGapCost */ 8,
-              /* continueGapCost */ 1);
-        }
-      };
+  private final Function<ParameterPair, Double> nameDistanceFunction;
 
   public ArgumentSelectionDefectChecker() {
     this(
-        DEFAULT_NAME_DISTANCE_FUNCTION,
+        buildDefaultDistanceFunction(),
         ImmutableList.of(
             new LowInformationNameHeuristic(),
             new PenaltyThresholdHeuristic(),
@@ -96,8 +80,7 @@ public class ArgumentSelectionDefectChecker extends BugChecker
   }
 
   public ArgumentSelectionDefectChecker(
-      BiFunction<String, String, Double> nameDistanceFunction,
-      ImmutableList<Heuristic> heuristics) {
+      Function<ParameterPair, Double> nameDistanceFunction, ImmutableList<Heuristic> heuristics) {
     this.nameDistanceFunction = nameDistanceFunction;
     this.heuristics = heuristics;
   }
@@ -136,7 +119,9 @@ public class ArgumentSelectionDefectChecker extends BugChecker
     for (ParameterPair pair : changes.changedPairs()) {
       fix.replace(
           actualParameters.get(pair.formal().index()),
-          actualParameters.get(pair.actual().index()).toString());
+          // use getSourceForNode to avoid javac pretty printing the replacement (pretty printing
+          // converts unicode characters to unicode escapes)
+          state.getSourceForNode(actualParameters.get(pair.actual().index())));
     }
     return describeMatch(invokedMethodTree, fix.build());
   }
@@ -195,7 +180,7 @@ public class ArgumentSelectionDefectChecker extends BugChecker
     }
 
     /* Set the lexical distance between pairs */
-    costs.viablePairs().forEach(p -> costs.updatePair(p, computeEditDistance(p)));
+    costs.viablePairs().forEach(p -> costs.updatePair(p, nameDistanceFunction.apply(p)));
 
     Changes changes = costs.computeAssignments();
 
@@ -203,7 +188,7 @@ public class ArgumentSelectionDefectChecker extends BugChecker
       return changes;
     }
 
-    /* Only keep this change if all of the heuristcs match */
+    /* Only keep this change if all of the heuristics match */
     for (Heuristic heuristic : heuristics) {
       if (!heuristic.isAcceptableChange(changes, invokedMethodTree, invokedMethodSymbol, state)) {
         return Changes.empty();
@@ -214,25 +199,35 @@ public class ArgumentSelectionDefectChecker extends BugChecker
   }
 
   /**
-   * Wraps the provided distance function to deal with wildcard and unknown names and the penalty
-   * distance: a wildcard name has distance 0 to everything, an unknown name has infinite distance
-   * to every other alternative except itself. The penalty distance is added to the distance between
-   * all alternatives and the formal parameter but not the existing actual parameter.
+   * Computes the distance between a formal and actual parameter. If either is a null literal then
+   * the distance is zero (null matches everything). If both have a name then we compute the
+   * normalised NeedlemanWunschEditDistance. Otherwise, one of the names is unknown and so we return
+   * 0 distance between it and its original parameter and infinite distance between all others.
    */
-  private double computeEditDistance(ParameterPair pair) {
-    Parameter formal = pair.formal();
-    Parameter actual = pair.actual();
+  private static final Function<ParameterPair, Double> buildDefaultDistanceFunction() {
+    return new Function<ParameterPair, Double>() {
+      @Override
+      public Double apply(ParameterPair pair) {
+        if (pair.formal().isNullLiteral() || pair.actual().isNullLiteral()) {
+          return 0.0;
+        }
 
-    if (formal.hasWildcardName() || actual.hasWildcardName()) {
-      return 0.0;
-    }
+        if (pair.formal().isNamed() && pair.actual().isNamed()) {
+          String normalizedSource =
+              NamingConventions.convertToLowerUnderscore(pair.formal().name());
+          String normalizedTarget =
+              NamingConventions.convertToLowerUnderscore(pair.actual().name());
+          return NeedlemanWunschEditDistance.getNormalizedEditDistance(
+              /*          source */ normalizedSource,
+              /*          target */ normalizedTarget,
+              /*   caseSensitive */ false,
+              /*      changeCost */ 8,
+              /*     openGapCost */ 8,
+              /* continueGapCost */ 1);
+        }
 
-    if (formal.hasUnknownName() || actual.hasUnknownName()) {
-      return formal.index() == actual.index() ? 0.0 : Double.POSITIVE_INFINITY;
-    }
-
-    double score = nameDistanceFunction.apply(formal.name(), actual.name());
-
-    return score;
+        return pair.formal().index() == pair.actual().index() ? 0.0 : Double.POSITIVE_INFINITY;
+      }
+    };
   }
 }

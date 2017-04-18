@@ -39,6 +39,7 @@ import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,19 +54,17 @@ abstract class Parameter {
   private static final ImmutableSet<String> METHODNAME_PREFIXES_TO_REMOVE =
       ImmutableSet.of("get", "set", "is");
 
-  /**
-   * We use this placeholder to indicate a name which should have zero edit distance to everything
-   * else. '*' is an invalid name in Java and so we know this can't collide with anything.
-   */
-  private static final String WILDCARD_NAME = "*WILDCARD*";
+  /** We use this placeholder to indicate a name which is a null literal. */
+  @VisibleForTesting static final String NAME_NULL = "*NULL*";
+
+  /** We use this placeholder to indicate a name which we couldn't get a canonical string for. */
+  @VisibleForTesting static final String NAME_UNKNOWN = "*UNKNOWN*";
 
   /**
-   * We use this placeholder to indicate a name which we couldn't get a canonical string for. These
-   * cases will have zero distance to their original formal parameter and Inf distance to everything
-   * else - i.e. we won't swap them.
+   * We use this placeholder to indicate a name which is a compile-time constant (other than null).
    */
-  private static final String UNKNOWN_NAME = "*UNKNOWN*";
-
+  @VisibleForTesting static final String NAME_CONSTANT = "*CONSTANT*";
+  
   abstract String name();
 
   abstract Type type();
@@ -112,13 +111,21 @@ abstract class Parameter {
       return false;
     }
   }
-
-  boolean hasWildcardName() {
-    return name().equals(WILDCARD_NAME);
+  
+  boolean isNullLiteral() {
+    return name().equals(NAME_NULL);
   }
 
-  boolean hasUnknownName() {
-    return name().equals(UNKNOWN_NAME);
+  boolean isUnknownName() {
+    return name().equals(NAME_UNKNOWN);
+  }
+
+  boolean isConstant() {
+    return name().equals(NAME_CONSTANT);
+  }
+
+  boolean isNamed() {
+    return !isNullLiteral() && !isUnknownName() && !isConstant();
   }
 
   private static String getClassName(ClassSymbol s) {
@@ -154,13 +161,13 @@ abstract class Parameter {
         return ((MemberSelectTree) expressionTree).getIdentifier().toString();
       case NULL_LITERAL:
         // null could match anything pretty well
-        return WILDCARD_NAME;
+        return NAME_NULL;
       case IDENTIFIER:
         IdentifierTree idTree = (IdentifierTree) expressionTree;
         if (idTree.getName().contentEquals("this")) {
           // for the 'this' keyword the argument name is the name of the object's class
           Symbol sym = ASTHelpers.getSymbol(idTree);
-          return sym != null ? getClassName(ASTHelpers.enclosingClass(sym)) : UNKNOWN_NAME;
+          return sym != null ? getClassName(ASTHelpers.enclosingClass(sym)) : NAME_UNKNOWN;
         } else {
           // if we have a variable, just extract its name
           return idTree.getName().toString();
@@ -187,15 +194,17 @@ abstract class Parameter {
             return name;
           }
         } else {
-          return UNKNOWN_NAME;
+          return NAME_UNKNOWN;
         }
       case NEW_CLASS:
         MethodSymbol constructorSym = ASTHelpers.getSymbol((NewClassTree) expressionTree);
         return constructorSym != null && constructorSym.owner != null
             ? getClassName((ClassSymbol) constructorSym.owner)
-            : UNKNOWN_NAME;
+            : NAME_UNKNOWN;
       default:
-        return UNKNOWN_NAME;
+        return (((JCTree.JCExpression) expressionTree).type.constValue() != null)
+            ? NAME_CONSTANT
+            : NAME_UNKNOWN;
     }
   }
 }

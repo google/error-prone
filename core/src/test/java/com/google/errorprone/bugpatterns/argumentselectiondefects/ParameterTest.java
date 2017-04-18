@@ -272,4 +272,50 @@ public class ParameterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void getName_returnsNull_withNullLiteral() {
+    CompilationTestHelper.newInstance(PrintNameOfFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object o);",
+            "  void test() {",
+            "    // BUG: Diagnostic contains: " + Parameter.NAME_NULL,
+            "    target(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void getName_returnsConstant_withConstant() {
+    CompilationTestHelper.newInstance(PrintNameOfFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object o);",
+            "  void test() {",
+            "    // BUG: Diagnostic contains: " + Parameter.NAME_CONSTANT,
+            "    target(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void getName_returnsUnknown_withTerneryIf() {
+    CompilationTestHelper.newInstance(PrintNameOfFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object o);",
+            "  void test(boolean flag) {",
+            "    // BUG: Diagnostic contains: " + Parameter.NAME_UNKNOWN,
+            "    target(flag ? 1 : 0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
 }

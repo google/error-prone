@@ -22,6 +22,7 @@ import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.BugChecker;
+import java.util.function.Function;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -49,7 +50,7 @@ public class ArgumentSelectionDefectCheckerTest {
       extends ArgumentSelectionDefectChecker {
 
     public ArgumentSelectionDefectWithStringEquality() {
-      super((s, t) -> s.equals(t) ? 0.0 : 1.0, ImmutableList.of());
+      super(buildEqualityFunction(), ImmutableList.of());
     }
   }
 
@@ -100,20 +101,6 @@ public class ArgumentSelectionDefectCheckerTest {
   }
 
   @Test
-  public void argumentSelectionDefectChecker_rejectsSwap_withArgumentWithoutName() {
-    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
-        .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object second) {",
-            "     target(second, 1);",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void argumentSelectionDefectChecker_rejectsSwap_withNoAssignableAlternatives() {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
         .addSourceLines(
@@ -144,7 +131,7 @@ public class ArgumentSelectionDefectCheckerTest {
 
     public ArgumentSelectionDefectWithIgnoredFormalsHeuristic() {
       super(
-          (s, t) -> s.equals(t) ? 0.0 : 1.0,
+          buildEqualityFunction(),
           ImmutableList.of(new LowInformationNameHeuristic(ImmutableSet.of("ignore"))));
     }
   }
@@ -162,5 +149,42 @@ public class ArgumentSelectionDefectCheckerTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void argumentSelectionDefectChecker_makesSwap_withNullArgument() {
+    CompilationTestHelper.newInstance(ArgumentSelectionDefectChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second);",
+            "  void test(Object second) {",
+            "     target(second, null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void argumentSelectionDefectChecker_rejectsSwap_withArgumentWithoutName() {
+    CompilationTestHelper.newInstance(ArgumentSelectionDefectChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second);",
+            "  void test(Object second) {",
+            "     target(second, 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  private static final Function<ParameterPair, Double> buildEqualityFunction() {
+    return new Function<ParameterPair, Double>() {
+      @Override
+      public Double apply(ParameterPair parameterPair) {
+        return parameterPair.formal().name().equals(parameterPair.actual().name()) ? 0.0 : 1.0;
+      }
+    };
   }
 }
