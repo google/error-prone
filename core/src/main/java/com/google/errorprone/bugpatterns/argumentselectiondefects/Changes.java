@@ -37,6 +37,14 @@ abstract class Changes {
     return changedPairs().isEmpty();
   }
 
+  double totalAssignmentCost() {
+    return assignmentCost().stream().mapToDouble(d -> d).sum();
+  }
+
+  double totalOriginalCost() {
+    return originalCost().stream().mapToDouble(d -> d).sum();
+  }
+  
   static Changes create(
       ImmutableList<Double> originalCost,
       ImmutableList<Double> assignmentCost,

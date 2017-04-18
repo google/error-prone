@@ -48,12 +48,9 @@ class PenaltyThresholdHeuristic implements Heuristic {
   public boolean isAcceptableChange(
       Changes changes, Tree node, MethodSymbol symbol, VisitorState state) {
 
-    double originalScore = changes.originalCost().stream().mapToDouble(p -> p).sum();
-    double alternativeScore = changes.assignmentCost().stream().mapToDouble(p -> p).sum();
     int numberOfChanges = changes.changedPairs().size();
 
-    boolean shouldKeepOriginals = originalScore - alternativeScore < threshold * numberOfChanges;
-
-    return !shouldKeepOriginals;
+    return changes.totalOriginalCost() - changes.totalAssignmentCost()
+        >= threshold * numberOfChanges;
   }
 }

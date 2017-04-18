@@ -179,6 +179,54 @@ public class ArgumentSelectionDefectCheckerTest {
         .doTest();
   }
 
+  /**
+   * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
+   * equality for edit distance and a penaltyThreshold of 0.9
+   */
+  @BugPattern(
+    name = "ArgumentSelectionDefectWithPenaltyThreshold",
+    category = Category.ONE_OFF,
+    severity = SeverityLevel.ERROR,
+    summary = "Run the ArgumentSelectionDefectChecker checker with the penalty threshold heuristic"
+  )
+  public static class ArgumentSelectionDefectWithPenaltyThreshold
+      extends ArgumentSelectionDefectChecker {
+
+    public ArgumentSelectionDefectWithPenaltyThreshold() {
+      super(buildEqualityFunction(), ImmutableList.of(new PenaltyThresholdHeuristic(0.9)));
+    }
+  }
+
+  @Test
+  public void argumentSelectionDefectCheckerWithPenalty_findsSwap_withSwappedMatchingPair() {
+    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithPenaltyThreshold.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second);",
+            "  void test(Object first, Object second) {",
+            "     // BUG: Diagnostic contains: target(first, second)",
+            "     target(second, first);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void argumentSelectionDefectCheckerWithPenalty_makesNoChange_withAlmostMatchingSet() {
+    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithPenaltyThreshold.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second, Object third, Object fourth);",
+            "  void test(Object first, Object second, Object third, Object different) {",
+            "     target(different, third, second, first);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+
   private static final Function<ParameterPair, Double> buildEqualityFunction() {
     return new Function<ParameterPair, Double>() {
       @Override
