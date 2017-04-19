@@ -59,7 +59,7 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
         .anyMatch(
             change ->
                 Objects.equals(
-                    change.actual().name(), arguments.get(change.formal().index()).name()));
+                    change.actual().text(), arguments.get(change.formal().index()).text()));
   }
 
   /**

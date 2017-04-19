@@ -39,7 +39,6 @@ import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,17 +63,24 @@ abstract class Parameter {
    * We use this placeholder to indicate a name which is a compile-time constant (other than null).
    */
   @VisibleForTesting static final String NAME_CONSTANT = "*CONSTANT*";
-  
+
   abstract String name();
 
   abstract Type type();
 
   abstract int index();
 
+  abstract String text();
+
   static ImmutableList<Parameter> createListFromVarSymbols(List<VarSymbol> varSymbols) {
     return Streams.mapWithIndex(
             varSymbols.stream(),
-            (s, i) -> new AutoValue_Parameter(s.getSimpleName().toString(), s.asType(), (int) i))
+            (s, i) ->
+                new AutoValue_Parameter(
+                    s.getSimpleName().toString(),
+                    s.asType(),
+                    (int) i,
+                    s.getSimpleName().toString()))
         .collect(toImmutableList());
   }
 
@@ -86,7 +92,8 @@ abstract class Parameter {
                 new AutoValue_Parameter(
                     getArgumentName(t),
                     Optional.ofNullable(ASTHelpers.getResultType(t)).orElse(Type.noType),
-                    (int) i))
+                    (int) i,
+                    t.toString()))
         .collect(toImmutableList());
   }
 
@@ -111,7 +118,7 @@ abstract class Parameter {
       return false;
     }
   }
-  
+
   boolean isNullLiteral() {
     return name().equals(NAME_NULL);
   }
@@ -202,9 +209,7 @@ abstract class Parameter {
             ? getClassName((ClassSymbol) constructorSym.owner)
             : NAME_UNKNOWN;
       default:
-        return (((JCTree.JCExpression) expressionTree).type.constValue() != null)
-            ? NAME_CONSTANT
-            : NAME_UNKNOWN;
+        return ASTHelpers.constValue(expressionTree) != null ? NAME_CONSTANT : NAME_UNKNOWN;
     }
   }
 }

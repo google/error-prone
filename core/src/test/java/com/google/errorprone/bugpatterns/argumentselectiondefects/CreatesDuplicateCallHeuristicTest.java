@@ -136,4 +136,21 @@ public class CreatesDuplicateCallHeuristicTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void createsDuplicateCall_returnsFalse_withCallWithDifferentConstant() {
+    CompilationTestHelper.newInstance(CreatesDuplicateCallHeuristicChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object param1);",
+            "  void test() {",
+            "     // BUG: Diagnostic contains: false",
+            "     target(1);",
+            "     // BUG: Diagnostic contains: false",
+            "     target(2);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
