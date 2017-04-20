@@ -24,6 +24,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveAction;
@@ -82,5 +83,9 @@ public class FutureReturnValueIgnoredNegativeCases {
 
   void ignoreForkJoinTaskFork_subclass(RecursiveAction t) {
     t.fork();
+  }
+
+  void ignoreExecutorCompletionServiceSubmit(ExecutorCompletionService s) {
+    s.submit(() -> null);
   }
 }

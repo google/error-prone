@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.ForkJoinTask;
 
 /** See BugPattern annotation. */
@@ -60,8 +62,17 @@ import java.util.concurrent.ForkJoinTask;
 )
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
 
-  private static final Matcher<ExpressionTree> FORK_JOIN_TASK_FORK =
-      instanceMethod().onDescendantOf(ForkJoinTask.class.getName()).named("fork").withParameters();
+  private static final Matcher<ExpressionTree> BLACKLIST =
+      anyOf(
+          // ForkJoinTask#fork has side-effects and returns 'this', so it's reasonable to ignore
+          // the return value.
+          instanceMethod()
+              .onDescendantOf(ForkJoinTask.class.getName())
+              .named("fork")
+              .withParameters(),
+          // CompletionService is intended to be used in a way where the Future returned
+          // from submit is discarded, because the Futures are available later via e.g. take()
+          instanceMethod().onDescendantOf(CompletionService.class.getName()).named("submit"));
 
   private static final Matcher<MethodInvocationTree> MATCHER =
       new Matcher<MethodInvocationTree>() {
@@ -85,9 +96,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
               return false;
             }
           }
-          // ForkJoinTask#fork has side-effects and returns 'this', so it's reasonable to ignore
-          // the return value.
-          if (FORK_JOIN_TASK_FORK.matches(tree, state)) {
+          if (BLACKLIST.matches(tree, state)) {
             return false;
           }
           Type returnType = sym.getReturnType();
