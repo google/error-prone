@@ -63,6 +63,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "  abstract void target(Object first, Object second);",
             "  void test(Object first, Object second) {",
             "     // BUG: Diagnostic contains: target(first, second)",
+            "     // target(/*first=*/second, /*second=*/first)",
             "     target(second, first);",
             "  }",
             "}")
@@ -79,6 +80,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "  abstract Object getSecond();",
             "  void test(Object first) {",
             "     // BUG: Diagnostic contains: target(first, getSecond())",
+            "     // target(/*first=*/getSecond(), /*second=*/first)",
             "     target(getSecond(), first);",
             "  }",
             "}")
@@ -94,6 +96,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "  abstract void target(Object first, Object second);",
             "  void test(Object second) {",
             "     // BUG: Diagnostic contains: target(null, second)",
+            "     // target(/*first=*/second, /*second=*/null)",
             "     target(second, null);",
             "  }",
             "}")
@@ -114,6 +117,22 @@ public class ArgumentSelectionDefectCheckerTest {
         .doTest();
   }
 
+  @Test
+  public void argumentSelectionDefectChecker_commentsOnlyOnSwappedPair_withThreeArguments() {
+    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second, Object third);",
+            "  void test(Object first, Object second, Object third) {",
+            "     // BUG: Diagnostic contains: target(first, second, third)",
+            "     // target(/*first=*/second, /*second=*/first, third)",
+            "     target(second, first, third);",
+            "  }",
+            "}")
+        .doTest();
+  }
+  
   /**
    * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
    * equality for edit distance and ignores formal parameters called 'ignore'.
@@ -206,6 +225,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "  abstract void target(Object first, Object second);",
             "  void test(Object first, Object second) {",
             "     // BUG: Diagnostic contains: target(first, second)",
+            "     // target(/*first=*/second, /*second=*/first)",
             "     target(second, first);",
             "  }",
             "}")
@@ -225,8 +245,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "}")
         .doTest();
   }
-
-
+  
   private static final Function<ParameterPair, Double> buildEqualityFunction() {
     return new Function<ParameterPair, Double>() {
       @Override

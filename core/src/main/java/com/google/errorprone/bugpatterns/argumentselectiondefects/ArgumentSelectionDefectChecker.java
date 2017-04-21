@@ -36,6 +36,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import java.util.function.Function;
 
@@ -115,15 +116,17 @@ public class ArgumentSelectionDefectChecker extends BugChecker
       return Description.NO_MATCH;
     }
 
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    for (ParameterPair pair : changes.changedPairs()) {
-      fix.replace(
-          actualParameters.get(pair.formal().index()),
-          // use getSourceForNode to avoid javac pretty printing the replacement (pretty printing
-          // converts unicode characters to unicode escapes)
-          state.getSourceForNode(actualParameters.get(pair.actual().index())));
-    }
-    return describeMatch(invokedMethodTree, fix.build());
+    // Fix1: permute the arguments as required
+    SuggestedFix permuteArgumentsFix = buildPermuteArgumentsFix(changes, actualParameters, state);
+
+    // Fix2: apply comments with parameter names to potentially-swapped arguments of the method
+    SuggestedFix commentArgumentsFix =
+        buildCommentArgumentsFix(changes, invokedMethodSymbol, actualParameters);
+
+    return buildDescription(invokedMethodTree)
+        .addFix(permuteArgumentsFix)
+        .addFix(commentArgumentsFix)
+        .build();
   }
 
   private Changes findChanges(
@@ -132,37 +135,23 @@ public class ArgumentSelectionDefectChecker extends BugChecker
       List<? extends ExpressionTree> actualParameters,
       VisitorState state) {
 
-    List<VarSymbol> formalParameters = invokedMethodSymbol.getParameters();
-
-    /* javac can get argument names from debugging symbols if they are not available from
-    other sources. When it does this for an inner class sometimes it returns the implicit this
-    pointer for the outer class as the first name (but not the first type). If we see this, then
-    just abort */
-    if (!formalParameters.isEmpty()
-        && formalParameters.get(0).getSimpleName().toString().matches("this\\$[0-9]+")) {
-      return Changes.empty();
-    }
-
-    /* If we have a varargs method then just ignore the final parameter and trailing actual
-    parameters */
-    int size =
-        invokedMethodSymbol.isVarArgs() ? formalParameters.size() - 1 : formalParameters.size();
+    List<VarSymbol> formalParameters = getFormalParametersWithoutVarArgs(invokedMethodSymbol);
 
     /* Methods with one or fewer parameters cannot possibly have a swap */
-    if (size <= 1) {
+    if (formalParameters.size() <= 1) {
       return Changes.empty();
     }
 
     /* Sometimes we don't have enough actual parameters. This seems to happen sometimes with calls
      * to super and javac finds two parameters arg0 and arg1 and no arguments */
-    if (actualParameters.size() < size) {
+    if (actualParameters.size() < formalParameters.size()) {
       return Changes.empty();
     }
 
-    ImmutableList<Parameter> formals =
-        Parameter.createListFromVarSymbols(formalParameters.subList(0, size));
+    ImmutableList<Parameter> formals = Parameter.createListFromVarSymbols(formalParameters);
     ImmutableList<Parameter> actuals =
-        Parameter.createListFromExpressionTrees(actualParameters.subList(0, size));
+        Parameter.createListFromExpressionTrees(
+            actualParameters.subList(0, formalParameters.size()));
 
     Costs costs = new Costs(formals, actuals);
 
@@ -218,16 +207,67 @@ public class ArgumentSelectionDefectChecker extends BugChecker
           String normalizedTarget =
               NamingConventions.convertToLowerUnderscore(pair.actual().name());
           return NeedlemanWunschEditDistance.getNormalizedEditDistance(
-              /*          source */ normalizedSource,
-              /*          target */ normalizedTarget,
-              /*   caseSensitive */ false,
-              /*      changeCost */ 8,
-              /*     openGapCost */ 8,
-              /* continueGapCost */ 1);
+              /*source=*/ normalizedSource,
+              /*target=*/ normalizedTarget,
+              /*caseSensitive=*/ false,
+              /*changeCost=*/ 8,
+              /*openGapCost=*/ 8,
+              /*continueGapCost=*/ 1);
         }
 
         return pair.formal().index() == pair.actual().index() ? 0.0 : Double.POSITIVE_INFINITY;
       }
     };
+  }
+
+  private static List<VarSymbol> getFormalParametersWithoutVarArgs(
+      MethodSymbol invokedMethodSymbol) {
+    List<VarSymbol> formalParameters = invokedMethodSymbol.getParameters();
+
+    /* javac can get argument names from debugging symbols if they are not available from
+    other sources. When it does this for an inner class sometimes it returns the implicit this
+    pointer for the outer class as the first name (but not the first type). If we see this, then
+    just abort */
+    if (!formalParameters.isEmpty()
+        && formalParameters.get(0).getSimpleName().toString().matches("this\\$[0-9]+")) {
+      return ImmutableList.of();
+    }
+
+    /* If we have a varargs method then just ignore the final parameter and trailing actual
+    parameters */
+    int size =
+        invokedMethodSymbol.isVarArgs() ? formalParameters.size() - 1 : formalParameters.size();
+
+    return formalParameters.subList(0, size);
+  }
+
+  private static SuggestedFix buildCommentArgumentsFix(
+      Changes changes,
+      MethodSymbol invokedMethodSymbol,
+      List<? extends ExpressionTree> actualParameters) {
+    SuggestedFix.Builder commentArgumentsFixBuilder = SuggestedFix.builder();
+    List<VarSymbol> formalParameters = getFormalParametersWithoutVarArgs(invokedMethodSymbol);
+    for (ParameterPair change : changes.changedPairs()) {
+      int index = change.formal().index();
+      ExpressionTree actual = actualParameters.get(index);
+      int startPosition = ((JCTree) actual).getStartPosition();
+      String formal = formalParameters.get(index).getSimpleName().toString();
+      commentArgumentsFixBuilder.replace(
+          startPosition, startPosition, NamedParameterComment.toCommentText(formal));
+    }
+    return commentArgumentsFixBuilder.build();
+  }
+
+  private static SuggestedFix buildPermuteArgumentsFix(
+      Changes changes, List<? extends ExpressionTree> actualParameters, VisitorState state) {
+    SuggestedFix.Builder permuteArgumentsFixBuilder = SuggestedFix.builder();
+    for (ParameterPair pair : changes.changedPairs()) {
+      permuteArgumentsFixBuilder.replace(
+          actualParameters.get(pair.formal().index()),
+          // use getSourceForNode to avoid javac pretty printing the replacement (pretty printing
+          // converts unicode characters to unicode escapes)
+          state.getSourceForNode(actualParameters.get(pair.actual().index())));
+    }
+    return permuteArgumentsFixBuilder.build();
   }
 }
