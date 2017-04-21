@@ -141,10 +141,10 @@ public class UnnecessaryDefaultInEnumSwitchTest {
   }
 
   @Test
-  public void completes() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
+  public void completes_noUnassignedVars_priorCaseExits() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+        .addInputLines(
+            "in/Test.java",
             "class Test {",
             "  enum Case { ONE, TWO, THREE }",
             "  boolean m(Case c) {",
@@ -158,6 +158,86 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "        throw new AssertionError(c);",
             "    }",
             "    return false;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE }",
+            "  boolean m(Case c) {",
+            "    switch (c) {",
+            "      case ONE:",
+            "      case TWO:",
+            "        break;",
+            "      case THREE:",
+            "        return true;",
+            "    }",
+            "    return false;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void completes_noUnassignedVars_priorCaseDoesntExit() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE }",
+            "  boolean m(Case c) {",
+            "    switch (c) {",
+            "      case ONE:",
+            "      case TWO:",
+            "        return true;",
+            "      case THREE:",
+            "      default:",
+            "        // This is a comment",
+            "        System.out.println(\"Test\");",
+            "    }",
+            "    return false;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE }",
+            "  boolean m(Case c) {",
+            "    switch (c) {",
+            "      case ONE:",
+            "      case TWO:",
+            "        return true;",
+            "      case THREE:",
+            "        // This is a comment",
+            "        System.out.println(\"Test\");",
+            "    }",
+            "    return false;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void completes_unassignedVars() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE }",
+            "  boolean m(Case c) {",
+            "    int x;",
+            "    switch (c) {",
+            "      case ONE:",
+            "      case TWO:",
+            "        x = 1;",
+            "        break;",
+            "      case THREE:",
+            "        x = 2;",
+            "        break;",
+            "      default:",
+            "        x = 3;",
+            "    }",
+            "    return x == 1;",
             "  }",
             "}")
         .doTest();

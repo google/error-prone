@@ -66,6 +66,23 @@ public class Reachability {
     return statement.accept(new CanCompleteNormallyVisitor(), null);
   }
 
+  /**
+   * Returns true if the given case tree can complete normally, as defined by JLS 14.21.
+   *
+   * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
+   */
+  public static boolean canCompleteNormally(CaseTree caseTree) {
+    List<? extends StatementTree> statements = caseTree.getStatements();
+    if (statements.isEmpty()) {
+      return true;
+    }
+    // We only care whether the last statement completes; javac would have already
+    // reported an error if that statement wasn't reachable, and the answer is
+    // independent of any preceding statements.
+    // TODO(cushon): This isn't really making an exception for System.exit in the prior statements.
+    return canCompleteNormally(getLast(statements));
+  }
+
   private static class CanCompleteNormallyVisitor extends SimpleTreeVisitor<Boolean, Void> {
 
     /** Trees that are the target of a reachable break statement. */
