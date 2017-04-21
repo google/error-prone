@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 
@@ -44,7 +45,7 @@ public class ParameterMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
       return Optional.absent();
     }
     for (int i = 0; i < actual.size(); ++i) {
-      if (!state.getTypes().isSameType(actual.get(i), expected.get(i).get(state))) {
+      if (!ASTHelpers.isSameType(actual.get(i), expected.get(i).get(state), state)) {
         return Optional.absent();
       }
     }
