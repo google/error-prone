@@ -90,6 +90,38 @@ public class NameInCommentHeuristicTest {
   }
 
   @Test
+  public void
+      nameInCommentHeuristic_returnsTrue_wherePreceedingCommentWithEqualsMatchesFormalParameter() {
+    CompilationTestHelper.newInstance(NameInCommentHeuristicChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first);",
+            "  void test(Object first) {",
+            "     // BUG: Diagnostic contains: true",
+            "     target(/*first=*/ first);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void
+      nameInCommentHeuristic_returnsTrue_wherePreceedingCommentHasEqualsSpacesAndExtraText() {
+    CompilationTestHelper.newInstance(NameInCommentHeuristicChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first);",
+            "  void test(Object first) {",
+            "     // BUG: Diagnostic contains: true",
+            "     target(/*note first = */ first);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void nameInCommentHeuristic_returnsFalse_withNoComments() {
     CompilationTestHelper.newInstance(NameInCommentHeuristicChecker.class, getClass())
         .addSourceLines(

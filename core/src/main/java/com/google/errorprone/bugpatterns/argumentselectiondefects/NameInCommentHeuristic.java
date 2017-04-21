@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterComment.MatchType;
 import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.Comments;
 import com.sun.source.tree.ExpressionTree;
@@ -25,7 +26,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.stream.Stream;
 
 /**
  * Heuristic to detect if the name for the formal parameter has been used in the comment for an
@@ -45,26 +45,15 @@ class NameInCommentHeuristic implements Heuristic {
     // Now check to see if there is a comment in the position of any actual parameter we want to
     // change which matches the formal parameter
     ImmutableList<Commented<ExpressionTree>> comments = findCommentsForArguments(node, state);
-    boolean hasComments =
-        comments
-            .stream()
-            .anyMatch(n -> n.afterComments().isEmpty() || n.beforeComments().isEmpty());
-
-    if (!hasComments) {
-      return true;
-    }
 
     return changes
         .changedPairs()
         .stream()
-        .allMatch(
+        .noneMatch(
             p -> {
-              String formal = p.formal().name();
-              Commented<ExpressionTree> actual = comments.get(p.formal().index());
-              return Stream.concat(
-                      actual.beforeComments().stream(), actual.afterComments().stream())
-                  .map(Comments::getTextFromComment)
-                  .noneMatch(formal::equals);
+              MatchType match =
+                  NamedParameterComment.match(comments.get(p.formal().index()), p.formal().name());
+              return match == MatchType.EXACT_MATCH || match == MatchType.APPROXIMATE_MATCH;
             });
   }
 
