@@ -61,8 +61,11 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -173,6 +176,17 @@ public class DefaultCharset extends BugChecker
               .forClass(PrintWriter.class.getName())
               .withParameters(OutputStream.class.getName(), "boolean"));
 
+  private static final Matcher<ExpressionTree> SCANNER_MATCHER =
+      anyOf(
+          constructor()
+              .forClass(Scanner.class.getName())
+              .withParameters(InputStream.class.getName()),
+          constructor().forClass(Scanner.class.getName()).withParameters(File.class.getName()),
+          constructor().forClass(Scanner.class.getName()).withParameters(Path.class.getName()),
+          constructor()
+              .forClass(Scanner.class.getName())
+              .withParameters(ReadableByteChannel.class.getName()));
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (state.isAndroidCompatible()) {
@@ -219,9 +233,9 @@ public class DefaultCharset extends BugChecker
       String suffix) {
     return SuggestedFix.builder()
         .replace(
-            state.getEndPosition(ASTHelpers.getReceiver(parent)),
-            ((JCTree) tree).getStartPosition(),
-            prefix)
+            /*startPos=*/ state.getEndPosition(ASTHelpers.getReceiver(parent)),
+            /*endPos=*/ ((JCTree) tree).getStartPosition(),
+            /*replaceWith=*/ prefix)
         .replace(
             state.getEndPosition(ASTHelpers.getReceiver(tree)), state.getEndPosition(tree), suffix);
   }
@@ -248,7 +262,24 @@ public class DefaultCharset extends BugChecker
     if (PRINT_WRITER_OUTPUTSTREAM.matches(tree, state)) {
       return handlePrintWriterOutputStream(tree, state);
     }
+    if (SCANNER_MATCHER.matches(tree, state)) {
+      return handleScanner(tree, state);
+    }
     return NO_MATCH;
+  }
+
+  private Description handleScanner(NewClassTree tree, VisitorState state) {
+    Description.Builder description = buildDescription(tree);
+    for (CharsetFix charsetFix : CharsetFix.values()) {
+      SuggestedFix.Builder fix =
+          SuggestedFix.builder()
+              .postfixWith(
+                  getOnlyElement(tree.getArguments()),
+                  String.format(", %s.name()", charsetFix.replacement()));
+      charsetFix.addImport(fix, state);
+      description.addFix(fix.build());
+    }
+    return description.build();
   }
 
   boolean shouldUseGuava(VisitorState state) {

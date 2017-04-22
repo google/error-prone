@@ -444,4 +444,41 @@ public class DefaultCharsetTest {
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
+
+  @Test
+  public void scannerDefaultCharset() throws IOException {
+    refactoringTest()
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.Scanner;",
+            "import java.io.File;",
+            "import java.io.InputStream;",
+            "import java.nio.channels.ReadableByteChannel;",
+            "import java.nio.file.Path;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    new Scanner((InputStream) null);",
+            "    new Scanner((File) null);",
+            "    new Scanner((Path) null);",
+            "    new Scanner((ReadableByteChannel) null);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import static java.nio.charset.StandardCharsets.UTF_8;",
+            "import java.io.File;",
+            "import java.io.InputStream;",
+            "import java.nio.channels.ReadableByteChannel;",
+            "import java.nio.file.Path;",
+            "import java.util.Scanner;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    new Scanner((InputStream) null, UTF_8.name());",
+            "    new Scanner((File) null, UTF_8.name());",
+            "    new Scanner((Path) null, UTF_8.name());",
+            "    new Scanner((ReadableByteChannel) null, UTF_8.name());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
