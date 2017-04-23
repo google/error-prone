@@ -245,6 +245,42 @@ public class ArgumentSelectionDefectCheckerTest {
             "}")
         .doTest();
   }
+
+
+  /**
+   * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
+   * equality for edit distance and name in comments heuristic
+   */
+  @BugPattern(
+    name = "ArgumentSelectionDefectWithNameInCommentsHeuristic",
+    category = Category.ONE_OFF,
+    severity = SeverityLevel.ERROR,
+    summary =
+        "Run the ArgumentSelectionDefectChecker checker using string equality for edit distance"
+  )
+  public static class ArgumentSelectionDefectWithNameInCommentsHeuristic
+      extends ArgumentSelectionDefectChecker {
+
+    public ArgumentSelectionDefectWithNameInCommentsHeuristic() {
+      super(buildEqualityFunction(), ImmutableList.of(new NameInCommentHeuristic()));
+    }
+  }
+
+  @Test
+  public void argumentSelectionDefectCheckerWithPenalty_noSwap_withNamedPair() {
+    CompilationTestHelper.newInstance(
+            ArgumentSelectionDefectWithNameInCommentsHeuristic.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second);",
+            "  void test(Object first, Object second) {",
+            "     target(/*first=*/second, /*second=*/first);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   
   private static final Function<ParameterPair, Double> buildEqualityFunction() {
     return new Function<ParameterPair, Double>() {
