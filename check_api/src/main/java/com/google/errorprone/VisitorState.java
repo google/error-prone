@@ -192,10 +192,10 @@ public class VisitorState {
     }
     Name typeName = getName(typeStr);
     try {
-      ClassSymbol typeSymbol = getSymtab().classes.get(typeName);
+      ClassSymbol typeSymbol = getSymtab().getClass(getSymtab().java_base, typeName);
       if (typeSymbol == null) {
         JavaCompiler compiler = JavaCompiler.instance(context);
-        Symbol sym = compiler.resolveIdent(typeStr);
+        Symbol sym = compiler.resolveIdent(getSymtab().java_base, typeStr);
         if (!(sym instanceof ClassSymbol)) {
           return null;
         }
@@ -221,7 +221,7 @@ public class VisitorState {
   public Symbol getSymbolFromString(String symStr) {
     try {
       Name symName = getName(symStr);
-      Symbol result = getSymtab().classes.get(symName);
+      Symbol result = getSymtab().getClass(getSymtab().java_base, symName);
       if (result != null) {
         // Force a completion failure if the type is not available.
         result.complete();
