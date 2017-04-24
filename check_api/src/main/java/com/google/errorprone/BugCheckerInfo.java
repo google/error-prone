@@ -124,6 +124,45 @@ public class BugCheckerInfo implements Serializable {
     }
   }
 
+  private BugCheckerInfo(
+      Class<? extends BugChecker> checker,
+      String canonicalName,
+      ImmutableSet<String> allNames,
+      String message,
+      SeverityLevel defaultSeverity,
+      String linkUrl,
+      Suppressibility suppressibility,
+      Set<Class<? extends Annotation>> customSuppressionAnnotations) {
+    this.checker = checker;
+    this.canonicalName = canonicalName;
+    this.allNames = allNames;
+    this.message = message;
+    this.defaultSeverity = defaultSeverity;
+    this.linkUrl = linkUrl;
+    this.suppressibility = suppressibility;
+    this.customSuppressionAnnotations = customSuppressionAnnotations;
+  }
+
+  /**
+   * @return a BugCheckerInfo with the same information as this class, except that its default
+   *     severity is the passed in paramter. If this checker's current defaultSeverity is the same
+   *     as the argument, return this.
+   */
+  public BugCheckerInfo withCustomDefaultSeverity(SeverityLevel defaultSeverity) {
+    if (defaultSeverity == this.defaultSeverity) {
+      return this;
+    }
+    return new BugCheckerInfo(
+        checker,
+        canonicalName,
+        allNames,
+        message,
+        defaultSeverity,
+        linkUrl,
+        suppressibility,
+        customSuppressionAnnotations);
+  }
+
   private static final String URL_FORMAT = "http://errorprone.info/bugpattern/%s";
 
   private static String createLinkUrl(BugPattern pattern) {
