@@ -229,6 +229,7 @@ import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
 import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
+import java.util.Arrays;
 
 /**
  * Static helper class that provides {@link ScannerSupplier}s and {@link BugChecker}s for the
@@ -237,6 +238,11 @@ import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 public class BuiltInCheckerSuppliers {
   @SafeVarargs
   public static ImmutableSet<BugCheckerInfo> getSuppliers(Class<? extends BugChecker>... checkers) {
+    return getSuppliers(Arrays.asList(checkers));
+  }
+
+  public static ImmutableSet<BugCheckerInfo> getSuppliers(
+      Iterable<Class<? extends BugChecker>> checkers) {
     ImmutableSet.Builder<BugCheckerInfo> result = ImmutableSet.builder();
     for (Class<? extends BugChecker> checker : checkers) {
       result.add(BugCheckerInfo.create(checker));
