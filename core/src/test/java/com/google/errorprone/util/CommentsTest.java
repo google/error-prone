@@ -54,6 +54,7 @@ public class CommentsTest {
     summary = "Calls computeEndPosition and prints results"
   )
   public static class ComputeEndPosition extends BugChecker implements MethodInvocationTreeMatcher {
+
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
       CharSequence sourceCode = state.getSourceCode();
@@ -123,13 +124,16 @@ public class CommentsTest {
     name = "PrintCommentsForArguments",
     category = Category.ONE_OFF,
     severity = SeverityLevel.ERROR,
-    summary = "Prints comments occurring around arguments"
+    summary =
+        "Prints comments occurring around arguments. Matches calls to methods named "
+            + "'target' and all constructors"
   )
   public static class PrintCommentsForArguments extends BugChecker
       implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
+
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-      if (ASTHelpers.getSymbol(tree).getSimpleName().contentEquals("<init>")) {
+      if (!ASTHelpers.getSymbol(tree).getSimpleName().contentEquals("target")) {
         return Description.NO_MATCH;
       }
       return buildDescription(tree)
@@ -411,6 +415,111 @@ public class CommentsTest {
             "    target(param1, param2);  // 1",
             "    // BUG: Diagnostic contains: [[] param1 [], [] param2 []]",
             "    target(param1, param2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void findCommentsForArguments_attachesCommentToFirstCall_whenMethodIsChained() {
+    CompilationTestHelper.newInstance(PrintCommentsForArguments.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract Test chain(Object param1);",
+            "  abstract void target(Object param2);",
+            "  void test(Object param1, Object param2) {",
+            "    // BUG: Diagnostic contains: [[] param2 []]",
+            "    chain(/* 1 */ param1).target(param2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  /** A {@link BugChecker} that prints the source code at comment positions */
+  @BugPattern(
+    name = "PrintTextAtCommentPosition",
+    category = Category.ONE_OFF,
+    severity = SeverityLevel.ERROR,
+    summary =
+        "Prints the source code text which is under the comment position. Matches calls to "
+            + "methods called target and constructors only"
+  )
+  public static class PrintTextAtCommentPosition extends BugChecker
+      implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (!ASTHelpers.getSymbol(tree).getSimpleName().contentEquals("target")) {
+        return Description.NO_MATCH;
+      }
+      return buildDescription(tree)
+          .setMessage(commentsToString(Comments.findCommentsForArguments(tree, state), state))
+          .build();
+    }
+
+    @Override
+    public Description matchNewClass(NewClassTree tree, VisitorState state) {
+      return buildDescription(tree)
+          .setMessage(commentsToString(Comments.findCommentsForArguments(tree, state), state))
+          .build();
+    }
+
+    private static String commentsToString(
+        ImmutableList<Commented<ExpressionTree>> comments, VisitorState state) {
+      return comments
+          .stream()
+          .map(
+              c ->
+                  Stream.of(
+                          String.valueOf(getSourceAtComment(c.beforeComments(), state)),
+                          String.valueOf(c.tree()),
+                          String.valueOf(getSourceAtComment(c.afterComments(), state)))
+                      .collect(Collectors.joining(" ")))
+          .collect(toImmutableList())
+          .toString();
+    }
+
+    private static ImmutableList<String> getSourceAtComment(
+        ImmutableList<Comment> comments, VisitorState state) {
+      return comments
+          .stream()
+          .map(
+              c ->
+                  state
+                      .getSourceCode()
+                      .subSequence(c.getSourcePos(0), c.getSourcePos(0) + c.getText().length())
+                      .toString())
+          .collect(toImmutableList());
+    }
+  }
+
+  @Test
+  public void printTextAtCommentPosition_isCorrect_whenMethodIsChained() {
+    CompilationTestHelper.newInstance(PrintTextAtCommentPosition.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract Test chain(Object param1);",
+            "  abstract void target(Object param2);",
+            "  void test(Object param1, Object param2) {",
+            "    // BUG: Diagnostic contains: [[/* 1 */] param2 []]",
+            "    chain(param1).target(/* 1 */ param2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void printTextAtCommentPosition_isCorrect_onConstructor() {
+    CompilationTestHelper.newInstance(PrintTextAtCommentPosition.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  Test(Object param1, Object param2) {}",
+            "  void test(Object param1, Object param2) {",
+            "    // BUG: Diagnostic contains: [[/* 1 */] param1 [], [] param2 [/* 2 */]]",
+            "    new Test(/* 1 */ param1, param2 /* 2 */);",
             "  }",
             "}")
         .doTest();

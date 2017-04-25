@@ -46,11 +46,17 @@ public class Comments {
    * param1 /* c1 *&#47;, /* c2 *&#47; param2)} will attach the comment c1 to {@code param1} and the
    * comment c2 to {@code param2}.
    *
-   * <p>Warning: this is expensive to compute as it involves re-tokenizing the source for this node
+   * <p>Warning: this is expensive to compute as it involves re-tokenizing the source for this node.
+   *
+   * <p>Currently this method will only tokenize the source code of the method call itself. However,
+   * the source positions in the returned {@code Comment} objects are adjusted so that they are
+   * relative to the whole file.
    */
   public static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
       NewClassTree newClassTree, VisitorState state) {
-    return findCommentsForArguments(newClassTree, newClassTree.getArguments(), state);
+    int startPosition = ((JCTree) newClassTree).getStartPosition();
+    return findCommentsForArguments(
+        newClassTree, newClassTree.getArguments(), startPosition, state);
   }
 
   /**
@@ -59,11 +65,16 @@ public class Comments {
    * to {@code param2}.
    *
    * <p>Warning: this is expensive to compute as it involves re-tokenizing the source for this node
+   *
+   * <p>Currently this method will only tokenize the source code of the method call itself. However,
+   * the source positions in the returned {@code Comment} objects are adjusted so that they are
+   * relative to the whole file.
    */
   public static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
+    int startPosition = state.getEndPosition(methodInvocationTree.getMethodSelect());
     return findCommentsForArguments(
-        methodInvocationTree, methodInvocationTree.getArguments(), state);
+        methodInvocationTree, methodInvocationTree.getArguments(), startPosition, state);
   }
 
   /**
@@ -86,14 +97,13 @@ public class Comments {
   }
 
   private static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
-      Tree tree, List<? extends ExpressionTree> arguments, VisitorState state) {
+      Tree tree, List<? extends ExpressionTree> arguments, int startPosition, VisitorState state) {
 
     if (arguments.isEmpty()) {
       return ImmutableList.of();
     }
 
     CharSequence sourceCode = state.getSourceCode();
-    int startPosition = ((JCTree) tree).getStartPosition();
     Optional<Integer> endPosition = computeEndPosition(tree, sourceCode, state);
     if (!endPosition.isPresent()) {
       return ImmutableList.of();
@@ -361,15 +371,15 @@ public class Comments {
     }
 
     void addCommentToPreviousArgument(Comment c) {
-      previousCommentedResultBuilder.addComment(c, previousArgumentEndPosition);
+      previousCommentedResultBuilder.addComment(c, previousArgumentEndPosition, offset);
     }
 
     void addCommentToCurrentArgument(Comment c) {
-      currentCommentedResultBuilder.addComment(c, currentArgumentStartPosition);
+      currentCommentedResultBuilder.addComment(c, currentArgumentStartPosition, offset);
     }
 
     void addAllCommentsToCurrentArgument(Iterable<Comment> comments) {
-      currentCommentedResultBuilder.addAllComment(comments, currentArgumentStartPosition);
+      currentCommentedResultBuilder.addAllComment(comments, currentArgumentStartPosition, offset);
     }
 
     public boolean hasMoreArguments() {

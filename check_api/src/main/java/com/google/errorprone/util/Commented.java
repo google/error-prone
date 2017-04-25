@@ -40,26 +40,60 @@ public abstract class Commented<T extends Tree> {
 
     abstract Builder<T> setTree(T tree);
 
-    abstract ImmutableList.Builder<Comment> beforeCommentsBuilder();
+    protected abstract ImmutableList.Builder<Comment> beforeCommentsBuilder();
 
-    abstract ImmutableList.Builder<Comment> afterCommentsBuilder();
+    protected abstract ImmutableList.Builder<Comment> afterCommentsBuilder();
 
-    Builder<T> addComment(Comment comment, int nodePosition) {
+    Builder<T> addComment(Comment comment, int nodePosition, int tokenizingOffset) {
+      OffsetComment offsetComment = new OffsetComment(comment, tokenizingOffset);
+
       if (comment.getSourcePos(0) < nodePosition) {
-        beforeCommentsBuilder().add(comment);
+        beforeCommentsBuilder().add(offsetComment);
       } else {
-        afterCommentsBuilder().add(comment);
+        afterCommentsBuilder().add(offsetComment);
       }
       return this;
     }
 
-    Builder<T> addAllComment(Iterable<? extends Comment> comments, int nodePosition) {
+    Builder<T> addAllComment(
+        Iterable<? extends Comment> comments, int nodePosition, int tokenizingOffset) {
       for (Comment comment : comments) {
-        addComment(comment, nodePosition);
+        addComment(comment, nodePosition, tokenizingOffset);
       }
       return this;
     }
 
     abstract Commented<T> build();
+  }
+
+  private static final class OffsetComment implements Comment {
+
+    private final Comment wrapped;
+    private final int offset;
+
+    private OffsetComment(Comment wrapped, int offset) {
+      this.wrapped = wrapped;
+      this.offset = offset;
+    }
+
+    @Override
+    public String getText() {
+      return wrapped.getText();
+    }
+
+    @Override
+    public int getSourcePos(int i) {
+      return wrapped.getSourcePos(i) + offset;
+    }
+
+    @Override
+    public CommentStyle getStyle() {
+      return wrapped.getStyle();
+    }
+
+    @Override
+    public boolean isDeprecated() {
+      return false;
+    }
   }
 }
