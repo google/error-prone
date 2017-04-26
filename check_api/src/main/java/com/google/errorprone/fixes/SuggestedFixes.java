@@ -43,13 +43,17 @@ import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.SourceFile;
 import com.google.errorprone.fixes.SuggestedFix.Builder;
+import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
+import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.NewArrayTree;
@@ -62,6 +66,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.main.Arguments;
@@ -70,7 +75,6 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Options;
@@ -221,57 +225,57 @@ public class SuggestedFixes {
     return fix.build();
   }
 
-  /** Returns a human-friendly name of the given type for use in fixes. */
-  public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, TypeMirror type) {
-    TreeMaker make =
-        TreeMaker.instance(state.context)
-            .forToplevel((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit());
-    return qualifyType(make, fix, type);
-  }
-
-  /** Returns a human-friendly name of the given {@link Symbol.TypeSymbol} for use in fixes. */
-  public static String qualifyType(
-      VisitorState state, SuggestedFix.Builder fix, Symbol.TypeSymbol sym) {
-    if (sym.getKind() == ElementKind.TYPE_PARAMETER) {
-      return sym.getSimpleName().toString();
-    }
-    TreeMaker make =
-        TreeMaker.instance(state.context)
-            .forToplevel((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit());
-    return qualifyType(make, fix, sym);
-  }
-
   /**
    * Returns a human-friendly name of the given {@link Symbol.TypeSymbol} for use in fixes.
    *
    * <ul>
-   * <li>If the type is already imported, its simple name is used.
-   * <li>If an enclosing type is imported, that enclosing type is used as a qualified.
-   * <li>Otherwise the outermost enclosing type is imported and used as a qualifier.
+   *   <li>If the type is already imported, its simple name is used.
+   *   <li>If an enclosing type is imported, that enclosing type is used as a qualified.
+   *   <li>Otherwise the outermost enclosing type is imported and used as a qualifier.
    * </ul>
    */
-  public static String qualifyType(
-      TreeMaker make, SuggestedFix.Builder fix, Symbol.TypeSymbol sym) {
-    // let javac figure out whether the type is already imported
-    JCTree.JCExpression qual = make.QualIdent(sym);
-    if (!selectsPackage(qual)) {
-      return qual.toString();
+  public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, Symbol sym) {
+    if (sym.getKind() == ElementKind.TYPE_PARAMETER) {
+      return sym.getSimpleName().toString();
     }
     Deque<String> names = new ArrayDeque<>();
-    Symbol curr = sym;
-    while (true) {
+    for (Symbol curr = sym; curr != null; curr = curr.owner) {
+      if (curr.getSimpleName().contentEquals("FIELD")) {
+        System.err.println(curr);
+      }
       names.addFirst(curr.getSimpleName().toString());
-      if (curr.owner == null || curr.owner.getKind() == ElementKind.PACKAGE) {
+      Symbol found =
+          FindIdentifiers.findIdent(curr.getSimpleName().toString(), state, KindSelector.VAL_TYP);
+      if (found == curr) {
         break;
       }
-      curr = curr.owner;
+      if (curr.owner != null && curr.owner.getKind() == ElementKind.PACKAGE) {
+        if (importClash(state, curr)) {
+          names.addFirst(curr.owner.getQualifiedName().toString());
+          break;
+        } else {
+          fix.addImport(curr.getQualifiedName().toString());
+          break;
+        }
+      }
     }
-    fix.addImport(curr.toString());
     return Joiner.on('.').join(names);
   }
 
-  public static String qualifyType(
-      final TreeMaker make, SuggestedFix.Builder fix, TypeMirror type) {
+  private static boolean importClash(VisitorState state, Symbol sym) {
+    for (ImportTree importTree : state.getPath().getCompilationUnit().getImports()) {
+      if (((MemberSelectTree) importTree.getQualifiedIdentifier())
+              .getIdentifier()
+              .contentEquals(sym.getSimpleName())
+          && !sym.equals(ASTHelpers.getSymbol(importTree.getQualifiedIdentifier()))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Returns a human-friendly name of the given type for use in fixes. */
+  public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, TypeMirror type) {
     return type.accept(
         new SimpleTypeVisitor8<String, SuggestedFix.Builder>() {
           @Override
@@ -286,7 +290,7 @@ public class SuggestedFixes {
 
           @Override
           public String visitDeclared(DeclaredType t, Builder builder) {
-            String baseType = qualifyType(make, builder, ((Type) t).tsym);
+            String baseType = qualifyType(state, builder, ((Type) t).tsym);
             if (t.getTypeArguments().isEmpty()) {
               return baseType;
             }
@@ -307,21 +311,6 @@ public class SuggestedFixes {
         fix);
   }
 
-  /** Returns true iff the given expression is qualified by a package. */
-  private static boolean selectsPackage(JCTree.JCExpression qual) {
-    JCTree.JCExpression curr = qual;
-    while (true) {
-      Symbol sym = getSymbol(curr);
-      if (sym != null && sym.getKind() == ElementKind.PACKAGE) {
-        return true;
-      }
-      if (!(curr instanceof JCTree.JCFieldAccess)) {
-        break;
-      }
-      curr = ((JCTree.JCFieldAccess) curr).getExpression();
-    }
-    return false;
-  }
 
   /** Replaces the leaf doctree in the given path with {@code replacement}. */
   public static void replaceDocTree(
@@ -335,8 +324,8 @@ public class SuggestedFixes {
   }
 
   /**
-   * Fully qualifies a javadoc reference, e.g. for replacing {@code {@link List}} with
-   * {@code {@link java.util.List}}
+   * Fully qualifies a javadoc reference, e.g. for replacing {@code {@link List}} with {@code {@link
+   * java.util.List}}
    *
    * @param fix the fix builder to add to
    * @param docPath the path to a {@link DCTree.DCReference} element
@@ -369,8 +358,8 @@ public class SuggestedFixes {
 
   /**
    * Returns a {@link Fix} that adds members defined by {@code firstMember} (and optionally {@code
-   * otherMembers}) to the end of the class referenced by {@code classTree}.  This method should
-   * only be called once per {@link ClassTree} as the suggestions will otherwise collide.
+   * otherMembers}) to the end of the class referenced by {@code classTree}. This method should only
+   * be called once per {@link ClassTree} as the suggestions will otherwise collide.
    */
   public static Fix addMembers(
       ClassTree classTree, VisitorState state, String firstMember, String... otherMembers) {

@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,4 +50,35 @@ public class StaticQualifiedUsingExpressionTest {
     compilationHelper.addSourceFile("StaticQualifiedUsingExpressionNegativeCases.java").doTest();
   }
 
+  @Test
+  public void clash() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass())
+        .addInputLines(
+            "a/Lib.java", //
+            "package a;",
+            "public class Lib {",
+            "  public static final int CONST = 0;",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "b/Lib.java", //
+            "package b;",
+            "public class Lib {",
+            "  public static final int CONST = 0;",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Test.java",
+            "import a.Lib;",
+            "class Test {",
+            "  int x = Lib.CONST + new b.Lib().CONST;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import a.Lib;",
+            "class Test {",
+            "  int x = Lib.CONST + b.Lib.CONST;",
+            "}")
+        .doTest();
+  }
 }

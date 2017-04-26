@@ -65,13 +65,13 @@ public class StaticQualifiedUsingExpressionPositiveCase1 {
     int i;
 
     // BUG: Diagnostic contains: variable staticVar1
-    // i = StaticQualifiedUsingExpressionPositiveCase1.staticVar1
+    // i = staticVar1
     i = this.staticVar1;
     // BUG: Diagnostic contains: variable staticVar1
-    // i = StaticQualifiedUsingExpressionPositiveCase1.staticVar1
+    // i = staticVar1
     i = testObj.staticVar1;
     // BUG: Diagnostic contains: variable staticVar1
-    // i = StaticQualifiedUsingExpressionPositiveCase1.staticVar1
+    // i = staticVar1
     i = testObj.next.next.next.staticVar1;
   }
 
@@ -116,7 +116,7 @@ public class StaticQualifiedUsingExpressionPositiveCase1 {
     // Object o = staticTestMethod3(this.toString())
     Object o = this.staticTestMethod3(this.toString());
     // BUG: Diagnostic contains: variable myClass
-    // x = StaticInnerClass.myClass.FIELD;
+    // x = MyClass.StaticInnerClass.myClass.FIELD;
     int x = new MyClass.StaticInnerClass().myClass.FIELD;
     // BUG: Diagnostic contains: variable STATIC_FIELD
     // x = MyClass.STATIC_FIELD;

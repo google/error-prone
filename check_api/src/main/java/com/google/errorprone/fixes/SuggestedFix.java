@@ -23,11 +23,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -391,17 +389,5 @@ public class SuggestedFix implements Fix {
   @Deprecated
   public static Fix removeModifier(Tree tree, Modifier modifier, VisitorState state) {
     return SuggestedFixes.removeModifiers(tree, state, modifier);
-  }
-
-  /** @deprecated prefer {@link SuggestedFixes#qualifyType} */
-  @Deprecated
-  public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, TypeSymbol sym) {
-    return SuggestedFixes.qualifyType(state, fix, sym);
-  }
-
-  /** @deprecated prefer {@link SuggestedFixes#qualifyType} */
-  @Deprecated
-  public static String qualifyType(TreeMaker make, SuggestedFix.Builder fix, TypeSymbol sym) {
-    return SuggestedFixes.qualifyType(make, fix, sym);
   }
 }
