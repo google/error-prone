@@ -130,6 +130,7 @@ final class WellKnownMutability {
         .add(java.math.BigDecimal.class)
         .add(java.math.BigInteger.class)
         .add(java.net.InetAddress.class)
+        .add(java.net.URI.class)
         .add(java.util.Locale.class)
         .add(java.util.regex.Pattern.class)
         .add("android.net.Uri")
