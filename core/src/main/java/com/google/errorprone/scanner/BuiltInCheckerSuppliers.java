@@ -389,6 +389,7 @@ public class BuiltInCheckerSuppliers {
           FragmentInjection.class,
           FragmentNotInstantiable.class,
           FunctionalInterfaceClash.class,
+          FutureReturnValueIgnored.class,
           GetClassOnEnum.class,
           ImmutableAnnotationChecker.class,
           ImmutableEnumChecker.class,
@@ -399,6 +400,7 @@ public class BuiltInCheckerSuppliers {
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnitAmbiguousTestClass.class,
           LiteralClassName.class,
+          LogicalAssignment.class,
           MissingFail.class,
           MissingOverride.class,
           MutableConstantField.class,
@@ -446,7 +448,6 @@ public class BuiltInCheckerSuppliers {
           EmptySetMultibindingContributions.class,
           EmptyTopLevelDeclaration.class,
           ExpectedExceptionChecker.class,
-          FutureReturnValueIgnored.class, // TODO(b/35766780): make this a warning
           HardCodedSdCardPath.class,
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
@@ -455,7 +456,6 @@ public class BuiltInCheckerSuppliers {
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JavaxInjectOnFinalField.class,
           LockMethodChecker.class,
-          LogicalAssignment.class, // TODO(b/35766780): make this a warning
           LongLiteralLowerCaseSuffix.class,
           MethodCanBeStatic.class,
           MissingDefault.class,

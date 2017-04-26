@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -58,7 +58,7 @@ import java.util.concurrent.ForkJoinTask;
           + "If you don’t check the return value of these methods, you will never find out if they "
           + "threw an exception.",
   category = JDK,
-  severity = ERROR
+  severity = WARNING
 )
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
 
