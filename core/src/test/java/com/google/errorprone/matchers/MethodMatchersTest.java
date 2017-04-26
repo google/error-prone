@@ -19,12 +19,14 @@ package com.google.errorprone.matchers;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.sun.source.tree.ExpressionTree;
@@ -121,6 +123,39 @@ public class MethodMatchersTest {
             "  public void f() {",
             "    // BUG: Diagnostic contains:",
             "    new Foo(\"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  /** This is javadoc. */
+  @BugPattern(
+    name = "CrashyParameterMatcherTestChecker",
+    category = JDK,
+    summary = "",
+    severity = ERROR
+  )
+  public static class CrashyerMatcherTestChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+
+    public static final Matcher<ExpressionTree> MATCHER =
+        instanceMethod().anyClass().withAnyName().withParameters("NOSUCH");
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      return MATCHER.matches(tree, state) ? describeMatch(tree) : NO_MATCH;
+    }
+  }
+
+  @Test
+  public void varargsParameterMatcher() {
+    CompilationTestHelper.newInstance(CrashyerMatcherTestChecker.class, getClass())
+        .addSourceLines("Lib.java", "abstract class Lib { ", "  void f(int x) {}", "}")
+        .addSourceLines(
+            "test/Test.java", //
+            "class Test {",
+            "  void f(Lib l) {",
+            "    l.f(42);",
             "  }",
             "}")
         .doTest();
