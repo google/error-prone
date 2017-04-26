@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
@@ -44,7 +44,7 @@ import com.sun.tools.javac.tree.JCTree;
   summary =
       "Assignment where a boolean expression was expected;"
           + " use == if this assignment wasn't expected or add parentheses for clarity.",
-  severity = ERROR
+  severity = WARNING
 )
 public class LogicalAssignment extends BugChecker
     implements IfTreeMatcher, WhileLoopTreeMatcher, DoWhileLoopTreeMatcher, ForLoopTreeMatcher {
@@ -86,8 +86,8 @@ public class LogicalAssignment extends BugChecker
             SuggestedFix.builder().prefixWith(condition, "(").postfixWith(condition, ")").build())
         .addFix(
             SuggestedFix.replace(
-                state.getEndPosition(assign.getVariable()),
-                ((JCTree) assign.getExpression()).getStartPosition(),
+                /*startPos=*/ state.getEndPosition(assign.getVariable()),
+                /*endPos=*/ ((JCTree) assign.getExpression()).getStartPosition(),
                 " == "))
         .build();
   }
