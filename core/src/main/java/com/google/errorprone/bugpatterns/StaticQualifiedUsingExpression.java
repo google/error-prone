@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
@@ -46,19 +47,19 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
   summary = "A static variable or method should be qualified with a class name, not expression",
   category = JDK,
   severity = WARNING,
-  altNames = {"static", "static-access", "StaticAccessedFromInstance"}
+  altNames = {"static", "static-access", "StaticAccessedFromInstance"},
+  generateExamplesFromTestCases = false
 )
 public class StaticQualifiedUsingExpression extends BugChecker implements MemberSelectTreeMatcher {
 
-  private static final String MESSAGE_TEMPLATE = "Static %s %s should not be accessed from an "
-      + "object instance; instead use %s";
+  private static final String MESSAGE_TEMPLATE =
+      "Static %s %s should not be accessed from an " + "object instance; instead use %s";
 
-  private static final Matcher<ExpressionTree> staticAccessedFromInstanceMatcher = allOf(
-      anyOf(
-          staticMethod(),
-          staticFieldAccess()),
-      kindIs(Kind.MEMBER_SELECT),
-      selectedIsInstance());
+  private static final Matcher<ExpressionTree> staticAccessedFromInstanceMatcher =
+      allOf(
+          anyOf(staticMethod(), staticFieldAccess()),
+          kindIs(Kind.MEMBER_SELECT),
+          selectedIsInstance());
 
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
@@ -74,34 +75,17 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
     boolean isMethod = staticMemberSym instanceof MethodSymbol;
 
     // Is the static member defined in this class?
-    Symbol ownerSym = staticMemberSym.owner;
-    Symbol whereAccessedSym = ASTHelpers.getSymbol(
-        ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), ClassTree.class));
-    if (!(ownerSym instanceof ClassSymbol && whereAccessedSym instanceof ClassSymbol)) {
-      return Description.NO_MATCH;
-    }
-    boolean staticMemberDefinedHere = whereAccessedSym.equals(ownerSym);
-
+    ClassSymbol ownerSym = staticMemberSym.owner.enclClass();
+    ClassSymbol whereAccessedSym =
+        ASTHelpers.getSymbol(
+            ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), ClassTree.class));
     SuggestedFix.Builder fix = SuggestedFix.builder();
+    boolean staticMemberDefinedHere = whereAccessedSym.equals(ownerSym);
     String replacement;
     if (staticMemberDefinedHere && isMethod) {
-      // If the static member is defined in the enclosing class and the member is a method, then
-      // just use the bare method name. Don't do this for fields, because they may share a simple
-      // name with a local in the same scope.
-      // TODO(eaftan): If we had access to name resolution info, we could do this in all applicable
-      // cases.  Investigate Scope.Entry for this.
-      replacement = tree.getIdentifier().toString();
+      replacement = staticMemberSym.getSimpleName().toString();
     } else {
-      // Replace the operand of the field access expression with the simple name of the class.
-      replacement = ownerSym.getSimpleName() + "." + tree.getIdentifier();
-
-      // Don't import implicitly imported packages (java.lang.* and current package).
-      // TODO(cushon): move this logic into addImport?
-      Symbol packageSym = ownerSym.packge();
-      if (!packageSym.toString().equals("java.lang")
-          && !packageSym.equals(whereAccessedSym.packge())) {
-        fix.addImport(ownerSym.toString());
-      }
+      replacement = qualifyType(state, fix, staticMemberSym);
     }
     fix.replace(tree, replacement);
 
@@ -109,11 +93,8 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
     String memberName = staticMemberSym.getSimpleName().toString();
     String methodOrVariable = isMethod ? "method" : "variable";
 
-    String customDiagnosticMessage = String.format(MESSAGE_TEMPLATE,
-        methodOrVariable, memberName, replacement);
-    return buildDescription(tree)
-        .setMessage(customDiagnosticMessage)
-        .addFix(fix.build())
-        .build();
+    String customDiagnosticMessage =
+        String.format(MESSAGE_TEMPLATE, methodOrVariable, memberName, replacement);
+    return buildDescription(tree).setMessage(customDiagnosticMessage).addFix(fix.build()).build();
   }
 }
