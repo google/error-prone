@@ -21,7 +21,12 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.MethodInvocationTree;
 import java.util.function.Function;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -289,5 +294,43 @@ public class ArgumentSelectionDefectCheckerTest {
         return parameterPair.formal().name().equals(parameterPair.actual().name()) ? 0.0 : 1.0;
       }
     };
+  }
+
+  /** A {@link BugChecker} which returns true if parameter names are available */
+  @BugPattern(
+    name = "ParameterNamesAvailableChecker",
+    category = Category.ONE_OFF,
+    severity = SeverityLevel.ERROR,
+    summary = "Returns true if parameter names are available on a method call"
+  )
+  public static class ParameterNamesAvailableChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      return buildDescription(tree)
+          .setMessage(
+              String.valueOf(
+                  ASTHelpers.getSymbol(tree)
+                      .getParameters()
+                      .stream()
+                      .noneMatch(p -> p.getSimpleName().toString().matches("arg[0-9]"))))
+          .build();
+    }
+  }
+
+  @Test
+  public void parameterNamesAvailable_returnsTree_onMethodNotInCompilationUnit() {
+    CompilationTestHelper.newInstance(ParameterNamesAvailableChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            String.format("import %s;", CompilationTestHelper.class.getName()),
+            String.format("import %s;", BugChecker.class.getName()),
+            "class Test {",
+            "  void test() {",
+            "     // BUG: Diagnostic contains: true",
+            "     CompilationTestHelper.newInstance((Class<BugChecker>)null, getClass());",
+            "  }",
+            "}")
+        .doTest();
   }
 }
