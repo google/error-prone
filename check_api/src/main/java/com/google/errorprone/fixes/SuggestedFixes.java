@@ -240,9 +240,6 @@ public class SuggestedFixes {
     }
     Deque<String> names = new ArrayDeque<>();
     for (Symbol curr = sym; curr != null; curr = curr.owner) {
-      if (curr.getSimpleName().contentEquals("FIELD")) {
-        System.err.println(curr);
-      }
       names.addFirst(curr.getSimpleName().toString());
       Symbol found =
           FindIdentifiers.findIdent(curr.getSimpleName().toString(), state, KindSelector.VAL_TYP);
