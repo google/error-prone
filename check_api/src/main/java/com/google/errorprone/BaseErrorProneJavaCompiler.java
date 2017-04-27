@@ -29,6 +29,8 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
+import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Log.WriterKind;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -82,9 +84,10 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     setupMessageBundle(task.getContext());
     RefactoringCollection[] refactoringCollection = {null};
     task.addTaskListener(
-        createAnalyzer(errorProneOptions, task.getContext(), refactoringCollection));
+        createAnalyzer(
+            scannerSupplier, errorProneOptions, task.getContext(), refactoringCollection));
     if (refactoringCollection[0] != null) {
-      task.addTaskListener(new RefactoringTask(new PrintWriter(out), refactoringCollection[0]));
+      task.addTaskListener(new RefactoringTask(task.getContext(), refactoringCollection[0]));
     }
     return task;
   }
@@ -184,8 +187,11 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     JavacMessages.instance(context).add(l -> bundle);
   }
 
-  private ErrorProneAnalyzer createAnalyzer(
-      ErrorProneOptions epOptions, Context context, RefactoringCollection[] refactoringCollection) {
+  static ErrorProneAnalyzer createAnalyzer(
+      ScannerSupplier scannerSupplier,
+      ErrorProneOptions epOptions,
+      Context context,
+      RefactoringCollection[] refactoringCollection) {
     if (!epOptions.patchingOptions().doRefactor()) {
       return ErrorProneAnalyzer.createByScanningForPlugins(scannerSupplier, epOptions, context);
     }
@@ -212,13 +218,13 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
         codeTransformer, epOptions, context, refactoringCollection[0]);
   }
 
-  private static class RefactoringTask implements TaskListener {
+  static class RefactoringTask implements TaskListener {
 
-    private final PrintWriter out;
+    private final Context context;
     private final RefactoringCollection refactoringCollection;
 
-    public RefactoringTask(PrintWriter out, RefactoringCollection refactoringCollection) {
-      this.out = out;
+    public RefactoringTask(Context context, RefactoringCollection refactoringCollection) {
+      this.context = context;
       this.refactoringCollection = refactoringCollection;
     }
 
@@ -234,11 +240,13 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
       try {
         refactoringResult = refactoringCollection.applyChanges();
       } catch (Exception e) {
+        PrintWriter out = Log.instance(context).getWriter(WriterKind.ERROR);
         out.append(e.getMessage());
         out.flush();
         return;
       }
       if (refactoringResult.type() == RefactoringCollection.RefactoringResultType.CHANGED) {
+        PrintWriter out = Log.instance(context).getWriter(WriterKind.NOTICE);
         out.println(refactoringResult.message());
         out.flush();
       }

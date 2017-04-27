@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.google.auto.service.AutoService;
+import com.google.errorprone.BaseErrorProneJavaCompiler.RefactoringTask;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.Plugin;
@@ -35,8 +36,15 @@ public class ErrorProneJavacPlugin implements Plugin {
   public void init(JavacTask javacTask, String... args) {
     Context context = ((BasicJavacTask) javacTask).getContext();
     BaseErrorProneJavaCompiler.setupMessageBundle(context);
+    RefactoringCollection[] refactoringCollection = {null};
     javacTask.addTaskListener(
-        ErrorProneAnalyzer.createByScanningForPlugins(
-            BuiltInCheckerSuppliers.defaultChecks(), ErrorProneOptions.processArgs(args), context));
+        BaseErrorProneJavaCompiler.createAnalyzer(
+            BuiltInCheckerSuppliers.defaultChecks(),
+            ErrorProneOptions.processArgs(args),
+            context,
+            refactoringCollection));
+    if (refactoringCollection[0] != null) {
+      javacTask.addTaskListener(new RefactoringTask(context, refactoringCollection[0]));
+    }
   }
 }
