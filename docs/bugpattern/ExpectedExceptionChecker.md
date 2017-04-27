@@ -32,7 +32,7 @@ public void testRemoveFails() {
       () -> {
         list.remove(0);
       });
-  assertThat(thrown).hasMessage().contains("hello");
+  assertThat(thrown).hasMessageThat().contains("hello");
   assertThat(list).hasSize(1);
 }
 ```
