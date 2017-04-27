@@ -187,6 +187,7 @@ import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
+import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
@@ -432,6 +433,7 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
           AutoFactoryAtInject.class,
+          AssertEqualsArgumentOrderChecker.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,
