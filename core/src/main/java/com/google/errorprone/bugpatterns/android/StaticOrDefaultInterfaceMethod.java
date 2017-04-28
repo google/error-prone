@@ -39,9 +39,11 @@ import com.sun.source.tree.Tree;
 /** @author epmjohnston@google.com (Emily P.M. Johnston) */
 @BugPattern(
   name = "StaticOrDefaultInterfaceMethod",
-  summary = "Static and default methods in interfaces are not allowed in android builds.",
+  summary =
+      "Static and default interface methods are not natively supported on older Android devices. ",
   category = ANDROID,
-  severity = ERROR
+  severity = ERROR,
+  documentSuppression = false // for slightly customized suppression documentation
 )
 public class StaticOrDefaultInterfaceMethod extends BugChecker implements MethodTreeMatcher {
 
