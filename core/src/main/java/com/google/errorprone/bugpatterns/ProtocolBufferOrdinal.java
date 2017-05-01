@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.PROTOBUF;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
@@ -37,7 +37,7 @@ import com.sun.source.tree.MethodInvocationTree;
   name = "ProtocolBufferOrdinal",
   summary = "To get the tag number of a protocol buffer enum, use getNumber() instead.",
   category = PROTOBUF,
-  severity = WARNING
+  severity = ERROR
 )
 public class ProtocolBufferOrdinal extends BugChecker implements MethodInvocationTreeMatcher {
 
