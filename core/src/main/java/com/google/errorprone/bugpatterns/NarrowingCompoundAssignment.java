@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.Signatures.prettyType;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.BugPattern;
@@ -33,50 +34,17 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
-import javax.lang.model.type.TypeKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "NarrowingCompoundAssignment",
-  summary = "Compound assignments to bytes, shorts, chars, and floats hide dangerous casts",
+  summary = "Compound assignments may hide dangerous casts",
   category = JDK,
   severity = WARNING
 )
 public class NarrowingCompoundAssignment extends BugChecker
     implements CompoundAssignmentTreeMatcher {
-
-  private enum NarrowingCastKind {
-    DEFICIENT("Compound assignments to bytes, shorts, chars, and floats hide dangerous casts"),
-    FLOAT_TO_INTEGRAL(
-        "Compound assignments from floating point to integral types hide dangerous casts");
-
-    private final String message;
-
-    private NarrowingCastKind(String message) {
-      this.message = message;
-    }
-
-    String message() {
-      return message;
-    }
-  }
-
-  /** The set of types susceptible to the implicit narrowing bug, and their string names. */
-  private static final Set<TypeKind> DEFICIENT_TYPES =
-      Collections.unmodifiableSet(
-          EnumSet.of(TypeKind.BYTE, TypeKind.SHORT, TypeKind.CHAR, TypeKind.FLOAT));
-
-  private static final Set<TypeKind> INTEGRAL_TYPES =
-      Collections.unmodifiableSet(
-          EnumSet.of(TypeKind.BYTE, TypeKind.SHORT, TypeKind.CHAR, TypeKind.INT, TypeKind.LONG));
-
-  private static final Set<TypeKind> FLOAT_TYPES =
-      Collections.unmodifiableSet(EnumSet.of(TypeKind.FLOAT, TypeKind.DOUBLE));
 
   static String assignmentToString(Tree.Kind kind) {
     switch (kind) {
@@ -138,21 +106,21 @@ public class NarrowingCompoundAssignment extends BugChecker
 
   @Override
   public Description matchCompoundAssignment(CompoundAssignmentTree tree, VisitorState state) {
-    NarrowingCastKind castKind =
+    String message =
         identifyBadCast(
             getType(tree.getVariable()), getType(tree.getExpression()), state.getTypes());
-    if (castKind == null) {
+    if (message == null) {
       return Description.NO_MATCH;
     }
     Optional<Fix> fix = rewriteCompoundAssignment(tree, state);
     if (!fix.isPresent()) {
       return Description.NO_MATCH;
     }
-    return buildDescription(tree).addFix(fix.get()).setMessage(castKind.message()).build();
+    return buildDescription(tree).addFix(fix.get()).setMessage(message).build();
   }
 
   /** Classifies bad casts. */
-  private static NarrowingCastKind identifyBadCast(Type lhs, Type rhs, Types types) {
+  private static String identifyBadCast(Type lhs, Type rhs, Types types) {
     if (types.isConvertible(rhs, lhs)) {
       // Exemption if the rhs is convertible to the lhs.
       // This allows, e.g.: <byte> &= <byte> since the narrowing conversion can never be
@@ -161,20 +129,15 @@ public class NarrowingCompoundAssignment extends BugChecker
       // different than any other integral addition.
       return null;
     }
-    if (DEFICIENT_TYPES.contains(lhs.getKind())) {
-      return NarrowingCastKind.DEFICIENT;
-    }
-    if (FLOAT_TYPES.contains(rhs.getKind()) && INTEGRAL_TYPES.contains(lhs.getKind())) {
-      return NarrowingCastKind.FLOAT_TO_INTEGRAL;
-    }
-    return null;
+    return String.format(
+        "Compound assignments from %s to %s hide lossy casts", prettyType(rhs), prettyType(lhs));
   }
 
   /** Desugars a compound assignment, making the cast explicit. */
   private static Optional<Fix> rewriteCompoundAssignment(
       CompoundAssignmentTree tree, VisitorState state) {
-    CharSequence var = state.getSourceForNode((JCTree) tree.getVariable());
-    CharSequence expr = state.getSourceForNode((JCTree) tree.getExpression());
+    CharSequence var = state.getSourceForNode(tree.getVariable());
+    CharSequence expr = state.getSourceForNode(tree.getExpression());
     if (var == null || expr == null) {
       return Optional.absent();
     }
@@ -191,7 +154,7 @@ public class NarrowingCompoundAssignment extends BugChecker
     // Add parens to the rhs if necessary to preserve the current precedence
     // e.g. 's -= 1 - 2' -> 's = s - (1 - 2)'
     if (tree.getExpression() instanceof JCBinary) {
-      Kind rhsKind = ((JCBinary) tree.getExpression()).getKind();
+      Kind rhsKind = tree.getExpression().getKind();
       if (!OperatorPrecedence.from(rhsKind)
           .isHigher(OperatorPrecedence.from(regularAssignmentKind))) {
         expr = String.format("(%s)", expr);

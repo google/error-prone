@@ -292,8 +292,7 @@ public class NarrowingCompoundAssignmentTest {
             "  void m() {",
             "    long a = 1;",
             "    double b = 2;",
-            "    // BUG: Diagnostic contains:"
-                + " Compound assignments from floating point to integral type",
+            "    // BUG: Diagnostic contains: Compound assignments from double to long",
             "    a *= b;",
             "  }",
             "}")
@@ -309,8 +308,7 @@ public class NarrowingCompoundAssignmentTest {
             "  void m() {",
             "    int a = 1;",
             "    double b = 2;",
-            "    // BUG: Diagnostic contains:"
-                + " Compound assignments from floating point to integral type",
+            "    // BUG: Diagnostic contains: Compound assignments from double to int",
             "    a *= b;",
             "  }",
             "}")
@@ -326,8 +324,7 @@ public class NarrowingCompoundAssignmentTest {
             "  void m() {",
             "    long a = 1;",
             "    float b = 2;",
-            "    // BUG: Diagnostic contains:"
-                + " Compound assignments from floating point to integral type",
+            "    // BUG: Diagnostic contains: Compound assignments from float to long",
             "    a *= b;",
             "  }",
             "}")
@@ -343,9 +340,107 @@ public class NarrowingCompoundAssignmentTest {
             "  void m() {",
             "    int a = 1;",
             "    float b = 2;",
-            "    // BUG: Diagnostic contains:"
-                + " Compound assignments from floating point to integral type",
+            "    // BUG: Diagnostic contains:" + " Compound assignments from float to int",
             "    a *= b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void exhaustiveTypes() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(short s, byte b, char c, int i, long l, float f, double d) {",
+            "    s += s;",
+            "    s += b;",
+            "    // BUG: Diagnostic contains:",
+            "    s += c;",
+            "    // BUG: Diagnostic contains:",
+            "    s += i;",
+            "    // BUG: Diagnostic contains:",
+            "    s += l;",
+            "    // BUG: Diagnostic contains:",
+            "    s += f;",
+            "    // BUG: Diagnostic contains:",
+            "    s += d;",
+            "    // BUG: Diagnostic contains:",
+            "    b += s;",
+            "    b += b;",
+            "    // BUG: Diagnostic contains:",
+            "    b += c;",
+            "    // BUG: Diagnostic contains:",
+            "    b += i;",
+            "    // BUG: Diagnostic contains:",
+            "    b += l;",
+            "    // BUG: Diagnostic contains:",
+            "    b += f;",
+            "    // BUG: Diagnostic contains:",
+            "    b += d;",
+            "    // BUG: Diagnostic contains:",
+            "    c += s;",
+            "    // BUG: Diagnostic contains:",
+            "    c += b;",
+            "    c += c;",
+            "    // BUG: Diagnostic contains:",
+            "    c += i;",
+            "    // BUG: Diagnostic contains:",
+            "    c += l;",
+            "    // BUG: Diagnostic contains:",
+            "    c += f;",
+            "    // BUG: Diagnostic contains:",
+            "    c += d;",
+            "    i += s;",
+            "    i += b;",
+            "    i += c;",
+            "    i += i;",
+            "    // BUG: Diagnostic contains:",
+            "    i += l;",
+            "    // BUG: Diagnostic contains:",
+            "    i += f;",
+            "    // BUG: Diagnostic contains:",
+            "    i += d;",
+            "    l += s;",
+            "    l += b;",
+            "    l += c;",
+            "    l += i;",
+            "    l += l;",
+            "    // BUG: Diagnostic contains:",
+            "    l += f;",
+            "    // BUG: Diagnostic contains:",
+            "    l += d;",
+            "    f += s;",
+            "    f += b;",
+            "    f += c;",
+            "    f += i;",
+            "    f += l;",
+            "    f += f;",
+            "    // BUG: Diagnostic contains:",
+            "    f += d;",
+            "    d += s;",
+            "    d += b;",
+            "    d += c;",
+            "    d += i;",
+            "    d += l;",
+            "    d += f;",
+            "    d += d;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testBoxing() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    int a = 1;",
+            "    // BUG: Diagnostic contains: from Long to int",
+            "    a += (Long) 0L;",
             "  }",
             "}")
         .doTest();
