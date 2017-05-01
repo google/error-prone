@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -60,10 +60,10 @@ import javax.lang.model.element.ElementKind;
   name = "AssertEqualsArgumentOrderChecker",
   summary = "Arguments are swapped in assertEquals-like call",
   explanation =
-      "assertEquals (and similar) are defined to take the expected value first and the actual "
-          + "value second. Getting these the wrong way round will cause a confusing error "
+      "JUnit's assertEquals (and similar) are defined to take the expected value first and the "
+          + "actual value second. Getting these the wrong way round will cause a confusing error "
           + "message if the assertion fails.",
-  category = JDK,
+  category = JUNIT,
   severity = WARNING
 )
 public class AssertEqualsArgumentOrderChecker extends ArgumentSelectionDefectChecker {
