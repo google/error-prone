@@ -126,6 +126,7 @@ public class Description {
     this.severity = severity;
   }
 
+  /** Internal-only. Has no effect if applied to a Description within a BugChecker. */
   @CheckReturnValue
   public Description applySeverityOverride(SeverityLevel severity) {
     return new Description(node, checkName, rawMessage, linkUrl, fixes, severity);
