@@ -74,13 +74,15 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
         state.reportMatch(
             buildDescription(next)
                 .setMessage(
-                    "Switch case may fall through; add a `// fall through` comment if it was"
-                        + " deliberate")
+                    "Execution may fall through from the previous case; add a `// fall through`"
+                        + " comment before this line if it was deliberate")
                 .build());
       } else if (!completes && FALL_THROUGH_PATTERN.matcher(comments).find()) {
         state.reportMatch(
             buildDescription(next)
-                .setMessage("Switch case has 'fall through' comment, but does not fall through")
+                .setMessage(
+                    "Switch case has 'fall through' comment, but execution cannot fall through"
+                        + " from the previous case")
                 .build());
       }
     }
