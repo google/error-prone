@@ -60,12 +60,8 @@ public class Description {
    */
   private final String rawMessage;
 
-  /**
-   * The link to include in the error message. May be null if there is no link.
-   */
-  @Nullable
-  private final String link;
-
+  /** The raw link URL for the check. May be null if there is no link. */
+  @Nullable private final String linkUrl;
   /**
    * A list of fixes to suggest in an error message or use in automated refactoring.  Fixes are
    * in order of decreasing preference, from most preferred to least preferred.
@@ -85,12 +81,10 @@ public class Description {
     return String.format("[%s] %s", checkName, getMessageWithoutCheckName());
   }
 
-  /**
-   * Returns link to be included in the error message or null if there is no link.
-   */
+  /** Returns a link associated with this finding or null if there is no link. */
   @Nullable
   public String getLink() {
-    return link;
+    return linkUrl;
   }
 
   /** Returns the raw message, not including a link or check name. */
@@ -102,41 +96,48 @@ public class Description {
    * Returns the message, not including the check name but including the link.
    */
   public String getMessageWithoutCheckName() {
-    return link != null
-        ? String.format("%s\n%s", rawMessage, link)
+    return linkUrl != null
+        ? String.format("%s\n%s", rawMessage, linkTextForDiagnostic(linkUrl))
         : String.format("%s", rawMessage);
   }
 
   /** TODO(cushon): Remove this constructor and ensure that there's always a check name. */
-  public Description(Tree node, String message, Fix suggestedFix,
-                     BugPattern.SeverityLevel severity) {
+  @Deprecated
+  public Description(
+      Tree node, String message, Fix suggestedFix, BugPattern.SeverityLevel severity) {
     this(node, UNDEFINED_CHECK_NAME, message, message, ImmutableList.of(suggestedFix), severity);
     if (suggestedFix == null) {
       throw new IllegalArgumentException("suggestedFix must not be null.");
     }
   }
 
-  private Description(Tree node, String checkName, String rawMessage, String link,
-      ImmutableList<Fix> fixes, BugPattern.SeverityLevel severity) {
+  private Description(
+      Tree node,
+      String checkName,
+      String rawMessage,
+      String linkUrl,
+      ImmutableList<Fix> fixes,
+      SeverityLevel severity) {
     this.node = node;
     this.checkName = checkName;
     this.rawMessage = rawMessage;
-    this.link = link;
+    this.linkUrl = linkUrl;
     this.fixes = fixes;
     this.severity = severity;
   }
 
   @CheckReturnValue
   public Description applySeverityOverride(SeverityLevel severity) {
-    return new Description(node, checkName, rawMessage, link, fixes, severity);
+    return new Description(node, checkName, rawMessage, linkUrl, fixes, severity);
   }
 
   @CheckReturnValue
   public Description filterFixes(Predicate<? super Fix> predicate) {
-    return new Description(node,
+    return new Description(
+        node,
         checkName,
         rawMessage,
-        link,
+        linkUrl,
         ImmutableList.copyOf(Iterables.filter(fixes, predicate)),
         severity);
   }
@@ -225,8 +226,7 @@ public class Description {
     }
 
     public Description build() {
-      return new Description(node, name, rawMessage, linkTextForDiagnostic(linkUrl),
-          fixListBuilder.build(), severity);
+      return new Description(node, name, rawMessage, linkUrl, fixListBuilder.build(), severity);
     }
   }
 
