@@ -160,6 +160,9 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    */
   private Description handleLocal(DCLInfo info, VisitorState state) {
     JCExpressionStatement expr = getChild(info.synchTree().getBlock(), JCExpressionStatement.class);
+    if (expr == null) {
+      return Description.NO_MATCH;
+    }
     if (expr.getStartPosition() > ((JCTree) info.innerIf()).getStartPosition()) {
       return Description.NO_MATCH;
     }

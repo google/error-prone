@@ -157,4 +157,26 @@ public class DoubleCheckedLockingTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void b37896333() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "tTest.java",
+            "class Test {",
+            "  public String x;",
+            "  String m() {",
+            "    String result = x;",
+            "    if (result == null) {",
+            "      synchronized (this) {",
+            "        if (result == null) {",
+            "          x = result = \"\";",
+            "        }",
+            "      }",
+            "    }",
+            "    return result;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
