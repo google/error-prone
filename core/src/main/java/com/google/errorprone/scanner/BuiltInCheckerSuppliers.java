@@ -131,6 +131,7 @@ import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
+import com.google.errorprone.bugpatterns.PredicateIncompatibleType;
 import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
 import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
@@ -345,6 +346,7 @@ public class BuiltInCheckerSuppliers {
           PackageInfo.class,
           PreconditionsCheckNotNull.class,
           PreconditionsCheckNotNullPrimitive.class,
+          PredicateIncompatibleType.class,
           ProtocolBufferOrdinal.class,
           ProtoFieldNullComparison.class,
           ProvidesMethodOutsideOfModule.class,
