@@ -104,8 +104,32 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
       argumentType = ASTHelpers.getType(invocationTree.getArguments().get(0));
     }
 
-    if (receiverType == null || argumentType == null) {
+    if (!incompatibleTypes(receiverType, argumentType, state)) {
       return Description.NO_MATCH;
+    }
+
+    // Ignore callsites wrapped inside assertFalse:
+    // assertFalse(objOfReceiverType.equals(objOfArgumentType))
+    if (ASSERT_FALSE_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)) {
+      return Description.NO_MATCH;
+    }
+
+    // When we reach this point, we know that the two following facts hold:
+    // (1) The types of the receiver and the argument to the eventual invocation of
+    //     java.lang.Object.equals() are incompatible.
+    // (2) No common superclass (other than java.lang.Object) or interface of the receiver and the
+    //     argument defines an override of java.lang.Object.equals().
+    // This equality test almost certainly evaluates to false, which is very unlikely to be the
+    // programmer's intent. Hence, this is reported as an error. There is no sensible fix to suggest
+    // in this situation.
+    return buildDescription(invocationTree)
+        .setMessage(getMessage(invocationTree, receiverType, argumentType))
+        .build();
+  }
+
+  static boolean incompatibleTypes(Type receiverType, Type argumentType, final VisitorState state) {
+    if (receiverType == null || argumentType == null) {
+      return false;
     }
 
     // If one type can be cast into the other, we don't flag the equality test.
@@ -113,7 +137,7 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     // 1.6: java.lang.Object can't be cast to primitives
     // 1.7: java.lang.Object can be cast to primitives (implicitly through the boxed primitive type)
     if (ASTHelpers.isCastable(argumentType, receiverType, state)) {
-      return Description.NO_MATCH;
+      return false;
     }
 
     // Otherwise, we explore the superclasses of the receiver type as well as the interfaces it
@@ -145,27 +169,10 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
         // The type of the argument shares a superclass
         // (other then java.lang.Object or java.lang.Enum) or interface
         // with the receiver that implements an override of java.lang.Object.equals().
-        return Description.NO_MATCH;
+        return false;
       }
     }
-
-    // Ignore callsites wrapped inside assertFalse:
-    // assertFalse(objOfReceiverType.equals(objOfArgumentType))
-    if (ASSERT_FALSE_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)) {
-      return Description.NO_MATCH;
-    }
-
-    // When we reach this point, we know that the two following facts hold:
-    // (1) The types of the receiver and the argument to the eventual invocation of
-    //     java.lang.Object.equals() are incompatible.
-    // (2) No common superclass (other than java.lang.Object) or interface of the receiver and the
-    //     argument defines an override of java.lang.Object.equals().
-    // This equality test almost certainly evaluates to false, which is very unlikely to be the
-    // programmer's intent. Hence, this is reported as an error. There is no sensible fix to suggest
-    // in this situation.
-    return buildDescription(invocationTree)
-        .setMessage(getMessage(invocationTree, receiverType, argumentType))
-        .build();
+    return true;
   }
 
   private static String getMessage(
