@@ -35,17 +35,17 @@ import java.lang.annotation.Target;
  * <p>A conservative definition of object immutability is:
  *
  * <ul>
- * <li>All fields are final;
- * <li>All reference fields are of immutable type, or null;
- * <li>It is <em>properly constructed</em> (the {@code this} reference does not escape the
- * constructor).
+ *   <li>All fields are final;
+ *   <li>All reference fields are of immutable type, or null;
+ *   <li>It is <em>properly constructed</em> (the {@code this} reference does not escape the
+ *       constructor).
  * </ul>
  *
- * <p>The requirement that all reference fields be immutable ensures <em>deep</em>
- * immutability, meaning all contained state is also immutable. A weaker property, common with
- * container classes, is <em>shallow</em> immutability, which allows some of the object's fields to
- * point to mutable objects. One example of shallow immutability is guava's ImmutableList, which
- * may contain mutable elements.
+ * <p>The requirement that all reference fields be immutable ensures <em>deep</em> immutability,
+ * meaning all contained state is also immutable. A weaker property, common with container classes,
+ * is <em>shallow</em> immutability, which allows some of the object's fields to point to mutable
+ * objects. One example of shallow immutability is guava's ImmutableList, which may contain mutable
+ * elements.
  *
  * <p>It is possible to implement immutable classes with some internal mutable state, as long as
  * callers can never observe changes to that state. For example, some state may be lazily
@@ -55,9 +55,9 @@ import java.lang.annotation.Target;
  * implementation of {@link String#hashCode()} for an example), but doing this correctly requires
  * subtle reasoning about safe data races and deep knowledge of the Java Memory Model.
  *
- * Use of this annotation is validated by
- * <a href="http://errorprone.info/bugpatterns/ImmutableChecker">Error Prone's immutability analysis</a>,
- * which ensures that all {@code @Immutable}-annotated classes are deeply immutable according to the
+ * <p>Use of this annotation is validated by <a
+ * href="http://errorprone.info/bugpattern/Immutable">Error Prone's immutability analysis</a>, which
+ * ensures that all {@code @Immutable}-annotated classes are deeply immutable according to the
  * conservative definition above. Non-final classes may be annotated with {@code @Immutable}, and
  * any code compiled by Error Prone will be checked to ensure that no mutable subtypes of
  * {@code @Immutable}-annotated classes exist.
@@ -65,8 +65,8 @@ import java.lang.annotation.Target;
  * <p>For more information about immutability, see:
  *
  * <ul>
- * <li>Java Concurrency in Practice §3.4
- * <li>Effective Java §15
+ *   <li>Java Concurrency in Practice §3.4
+ *   <li>Effective Java §15
  * </ul>
  */
 @Target(TYPE)
