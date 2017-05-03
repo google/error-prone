@@ -121,6 +121,9 @@ public class NarrowingCompoundAssignment extends BugChecker
 
   /** Classifies bad casts. */
   private static String identifyBadCast(Type lhs, Type rhs, Types types) {
+    if (!lhs.isPrimitive()) {
+      return null;
+    }
     if (types.isConvertible(rhs, lhs)) {
       // Exemption if the rhs is convertible to the lhs.
       // This allows, e.g.: <byte> &= <byte> since the narrowing conversion can never be

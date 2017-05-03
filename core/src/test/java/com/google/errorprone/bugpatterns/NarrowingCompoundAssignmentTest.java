@@ -445,4 +445,18 @@ public class NarrowingCompoundAssignmentTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testStringConcat() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    String a = \"\";",
+            "    a += (char) 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
