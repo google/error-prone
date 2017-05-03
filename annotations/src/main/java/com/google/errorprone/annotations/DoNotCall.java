@@ -23,7 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * The method to which this annotation is applied cannot not be called.
+ * The method to which this annotation is applied cannot be called.
  *
  * <p>The annotation is applied to methods that are required to satisfy the contract of an
  * interface, but that are not supported. One example is the implementation of {@link
