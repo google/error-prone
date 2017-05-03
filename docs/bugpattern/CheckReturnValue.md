@@ -10,13 +10,9 @@ specific methods or classes from this behavior. `@CanIgnoreReturnValue` is
 available from the Error Prone annotations package,
 `com.google.errorprone.annotations`.
 
-// MOE:begin_strip
-[^package-info]: See go/errorprone/faq#package-info for how to do this.
-/* MOE:end_strip_and_replace
-[^package-info]: To annotate a package, create a `package-info.java` file in the
-    package directory, add a package statement, and annotate the package
-    statement.
-*/
+[^package-info]: To annotate a package, create a
+    `package-info.java` file in the package directory, add a package statement,
+    and annotate the package statement.
 
 If you really want to ignore the return value of a method annotated with
 `@CheckReturnValue`, a cleaner alternative to `@SuppressWarnings` is to assign
