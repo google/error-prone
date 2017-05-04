@@ -351,8 +351,8 @@ public class VisitorState {
           + "getType()");
     }
     if (typeStr.contains("<") || typeStr.contains(">")) {
-      throw new IllegalArgumentException("Cannot covnert generic types, please build them using "
-          + "getType()");
+      throw new IllegalArgumentException(
+          "Cannot convert generic types, please build them using getType()");
     }
   }
 
