@@ -29,8 +29,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MemberReferenceTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import java.util.stream.Stream;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -55,18 +55,19 @@ public class PredicateIncompatibleType extends BugChecker implements MemberRefer
         .setMessage(
             String.format(
                 "Using %s::equals as Predicate<%s>; the predicate will always return false",
-                prettyType(predicateType), prettyType(receiverType)))
+                prettyType(receiverType), prettyType(predicateType)))
         .build();
   }
 
   private static Type predicateType(Type type, VisitorState state) {
-    return Stream.of(
-            java.util.function.Predicate.class.getName(),
-            com.google.common.base.Predicate.class.getName())
-        .map(p -> state.getTypes().asSuper(type, state.getSymbolFromString(p)))
-        .filter(t -> t != null)
-        .map(pt -> getOnlyElement(pt.getTypeArguments(), null))
-        .findFirst()
-        .orElse(null);
+    Symbol predicate = state.getSymbolFromString(java.util.function.Predicate.class.getName());
+    if (predicate == null) {
+      return null;
+    }
+    Type asPredicate = state.getTypes().asSuper(type, predicate);
+    if (asPredicate == null) {
+      return null;
+    }
+    return getOnlyElement(asPredicate.getTypeArguments(), null);
   }
 }
