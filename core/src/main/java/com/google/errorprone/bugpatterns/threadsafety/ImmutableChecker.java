@@ -66,7 +66,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
       return handleAnonymousClass(tree, state, analysis);
     }
 
-    ImmutableAnnotationInfo annotation = getImmutableAnnotation(tree);
+    ImmutableAnnotationInfo annotation = getImmutableAnnotation(tree, state);
     if (annotation == null) {
       // If the type isn't annotated we don't check for immutability, but we do
       // report an error if it extends/implements any @Immutable-annotated types.
@@ -101,7 +101,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     Violation info =
         analysis.checkForImmutability(
             Optional.of(tree),
-            immutableTypeParametersInScope(ASTHelpers.getSymbol(tree)),
+            immutableTypeParametersInScope(ASTHelpers.getSymbol(tree), state),
             ASTHelpers.getType(tree));
 
     if (!info.isPresent()) {
@@ -136,15 +136,16 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // public static <@Immutable T> ImmutableBox<T> create(T t) {
     //   return new ImmutableBox<>(t);
     // }
-    ImmutableSet<String> typarams = immutableTypeParametersInScope(sym);
+    ImmutableSet<String> typarams = immutableTypeParametersInScope(sym, state);
     Violation info =
         analysis.areFieldsImmutable(Optional.of(tree), typarams, ASTHelpers.getType(tree));
     if (!info.isPresent()) {
       return Description.NO_MATCH;
     }
     String reason = Joiner.on(", ").join(info.path());
-    String message = String.format(
-        "Class extends @Immutable type %s, but is not immutable: %s", superType, reason);
+    String message =
+        String.format(
+            "Class extends @Immutable type %s, but is not immutable: %s", superType, reason);
     return buildDescription(tree).setMessage(message).build();
   }
 
@@ -200,11 +201,11 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
   }
 
   /**
-   * Gets the set of in-scope immutable type parameters from the containerOf specs
-   * on {@code @Immutable} annotations.
+   * Gets the set of in-scope immutable type parameters from the containerOf specs on
+   * {@code @Immutable} annotations.
    *
-   * <p>Usually only the immediately enclosing declaration is searched, but it's
-   * possible to have cases like:
+   * <p>Usually only the immediately enclosing declaration is searched, but it's possible to have
+   * cases like:
    *
    * <pre>
    * @Immutable(containerOf="T") class C<T> {
@@ -212,7 +213,8 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
    * }
    * </pre>
    */
-  private static ImmutableSet<String> immutableTypeParametersInScope(Symbol sym) {
+  private static ImmutableSet<String> immutableTypeParametersInScope(
+      Symbol sym, VisitorState state) {
     if (sym == null) {
       return ImmutableSet.of();
     }
@@ -227,7 +229,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
         default:
           break;
       }
-      ImmutableAnnotationInfo annotation = getImmutableAnnotation(s);
+      ImmutableAnnotationInfo annotation = getImmutableAnnotation(s, state);
       if (annotation == null) {
         continue;
       }

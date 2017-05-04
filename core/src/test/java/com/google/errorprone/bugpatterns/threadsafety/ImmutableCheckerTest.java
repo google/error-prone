@@ -16,12 +16,22 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -887,8 +897,8 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
+            "// BUG: Diagnostic contains:",
             "class Test extends Super {",
-            "  // BUG: Diagnostic contains: non-final",
             "  public int x = 0;",
             "}")
         .doTest();
@@ -1232,7 +1242,7 @@ public class ImmutableCheckerTest {
   public void mutableExtendsAnnotation() {
     compilationHelper
         .addSourceLines(
-            "Anno.java",
+            "Anno.java", //
             "@interface Anno {}")
         .addSourceLines(
             "Test.java",
@@ -1290,6 +1300,39 @@ public class ImmutableCheckerTest {
             "@Immutable class Test {",
             "  final Class clazz = Test.class;",
             "}")
+        .doTest();
+  }
+
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
+
+  /** Test class annotated with @Immutable. */
+  @Immutable(containerOf = {"T"})
+  public static class ClassPathTest<T> {}
+
+  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
+    String entryPath = clazz.getName().replace('.', '/') + ".class";
+    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+      jos.putNextEntry(new JarEntry(entryPath));
+      ByteStreams.copy(is, jos);
+    }
+  }
+
+  @Test
+  public void incompleteClassPath() throws Exception {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      addClassToJar(jos, ImmutableCheckerTest.ClassPathTest.class);
+      addClassToJar(jos, ImmutableCheckerTest.class);
+    }
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + ClassPathTest.class.getCanonicalName() + ";",
+            "// BUG: Diagnostic contains: is not annotated",
+            "class Test extends ClassPathTest {",
+            "}")
+        .setArgs(Arrays.asList("-cp", libJar.toString()))
         .doTest();
   }
 }
