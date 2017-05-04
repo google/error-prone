@@ -31,6 +31,8 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
@@ -45,9 +47,11 @@ import com.sun.tools.javac.util.Filter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import org.pcollections.ConsPStack;
 
 /** Analyzes types for deep immutability. */
@@ -136,7 +140,8 @@ public class ImmutableAnalysis {
     }
 
     for (Type interfaceType : state.getTypes().interfaces(type)) {
-      ImmutableAnnotationInfo interfaceAnnotation = getImmutableAnnotation(interfaceType.tsym);
+      ImmutableAnnotationInfo interfaceAnnotation =
+          getImmutableAnnotation(interfaceType.tsym, state);
       if (interfaceAnnotation == null) {
         continue;
       }
@@ -170,7 +175,7 @@ public class ImmutableAnalysis {
     }
     Type enclosing = type.getEnclosingType();
     while (!Type.noType.equals(enclosing)) {
-      if (getImmutableAnnotation(enclosing.tsym) == null
+      if (getImmutableAnnotation(enclosing.tsym, state) == null
           && isImmutableType(ImmutableSet.of(), enclosing).isPresent()) {
         return enclosing;
       }
@@ -190,7 +195,7 @@ public class ImmutableAnalysis {
       return Violation.absent();
     }
 
-    ImmutableAnnotationInfo superannotation = getImmutableAnnotation(superType.tsym);
+    ImmutableAnnotationInfo superannotation = getImmutableAnnotation(superType.tsym, state);
     if (superannotation != null) {
       // If the superclass does happen to be immutable, we don't need to recursively
       // inspect it. We just have to check that it's instantiated correctly:
@@ -403,7 +408,7 @@ public class ImmutableAnalysis {
         // TODO(b/25630189): add enforcement
         return Violation.absent();
       }
-      ImmutableAnnotationInfo annotation = getImmutableAnnotation(type.tsym);
+      ImmutableAnnotationInfo annotation = getImmutableAnnotation(type.tsym, state);
       if (annotation != null) {
         return immutableInstantiation(immutableTyParams, annotation, type);
       }
@@ -427,26 +432,46 @@ public class ImmutableAnalysis {
    * Gets the {@link Symbol}'s {@code @Immutable} annotation info, either from an annotation on the
    * symbol or from the list of well-known immutable types.
    */
-  static ImmutableAnnotationInfo getImmutableAnnotation(Symbol sym) {
+  static ImmutableAnnotationInfo getImmutableAnnotation(Symbol sym, VisitorState state) {
     String nameStr = sym.flatName().toString();
     ImmutableAnnotationInfo known = WellKnownMutability.KNOWN_IMMUTABLE.get(nameStr);
     if (known != null) {
       return known;
     }
-    Immutable immutable = ASTHelpers.getAnnotation(sym, Immutable.class);
-    if (immutable == null) {
+    Compound attr = sym.attribute(state.getSymbolFromString(Immutable.class.getName()));
+    if (attr == null) {
       return null;
     }
-    return ImmutableAnnotationInfo.create(
-        sym.getQualifiedName().toString(), ImmutableList.copyOf(immutable.containerOf()));
+    ImmutableList.Builder<String> containerOf = ImmutableList.builder();
+    Attribute m = attr.member(state.getName("containerOf"));
+    if (m != null) {
+      m.accept(
+          new SimpleAnnotationValueVisitor8<Void, Void>() {
+            @Override
+            public Void visitString(String s, Void unused) {
+              containerOf.add(s);
+              return null;
+            }
+
+            @Override
+            public Void visitArray(List<? extends AnnotationValue> list, Void unused) {
+              for (AnnotationValue value : list) {
+                value.accept(this, null);
+              }
+              return null;
+            }
+          },
+          null);
+    }
+    return ImmutableAnnotationInfo.create(sym.getQualifiedName().toString(), containerOf.build());
   }
   /**
    * Gets the {@link Tree}'s {@code @Immutable} annotation info, either from an annotation on the
    * symbol or from the list of well-known immutable types.
    */
-  static ImmutableAnnotationInfo getImmutableAnnotation(Tree tree) {
+  static ImmutableAnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
-    return sym == null ? null : getImmutableAnnotation(sym);
+    return sym == null ? null : getImmutableAnnotation(sym, state);
   }
 
   /** Gets a human-friendly name for the given {@link Symbol} to use in diagnostics. */
