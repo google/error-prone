@@ -15,6 +15,8 @@
  */
 package com.google.errorprone.util;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
@@ -106,10 +108,14 @@ public class Comments {
     CharSequence sourceCode = state.getSourceCode();
     Optional<Integer> endPosition = computeEndPosition(tree, sourceCode, state);
     if (!endPosition.isPresent()) {
-      return ImmutableList.of();
+      return noComments(arguments);
     }
 
     CharSequence source = sourceCode.subSequence(startPosition, endPosition.get());
+
+    if (CharMatcher.is('/').matchesNoneOf(source)) {
+      return noComments(arguments);
+    }
 
     // The token position of the end of the method invocation
     int invocationEnd = state.getEndPosition(tree) - startPosition;
@@ -158,6 +164,13 @@ public class Comments {
     }
 
     return argumentTracker.build();
+  }
+
+  private static ImmutableList noComments(List<? extends ExpressionTree> arguments) {
+    return arguments
+        .stream()
+        .map(a -> Commented.builder().setTree(a).build())
+        .collect(toImmutableList());
   }
 
   /**
