@@ -17,6 +17,8 @@
 package com.google.errorprone;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.HashMultimap;
@@ -24,35 +26,37 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.errorprone.ErrorProneOptions.PatchingOptions;
 import com.google.errorprone.apply.DescriptionBasedDiff;
-import com.google.errorprone.apply.DiffApplier;
 import com.google.errorprone.apply.FileDestination;
 import com.google.errorprone.apply.FileSource;
 import com.google.errorprone.apply.FsFileDestination;
 import com.google.errorprone.apply.FsFileSource;
 import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.PatchFileDestination;
+import com.google.errorprone.apply.SourceFile;
 import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Log;
+import java.io.IOError;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** A container of fixes that have been collected during a single compilation phase. */
 class RefactoringCollection implements DescriptionListener.Factory {
+
+  private static final Logger logger = Logger.getLogger(RefactoringCollection.class.getName());
+
   private final Multimap<URI, DelegatingDescriptionListener> foundSources = HashMultimap.create();
-  private final AtomicBoolean foundMatches = new AtomicBoolean(false);
   private final Path rootPath;
   private final FileDestination fileDestination;
-  private final Callable<RefactoringResult> postProcess;
+  private final Function<URI, RefactoringResult> postProcess;
   private final DescriptionListener.Factory descriptionsFactory;
   private final ImportOrganizer importOrganizer;
 
@@ -75,15 +79,17 @@ class RefactoringCollection implements DescriptionListener.Factory {
   static RefactoringCollection refactor(PatchingOptions patchingOptions) {
     Path rootPath = buildRootPath();
     FileDestination fileDestination;
-    Callable<RefactoringResult> postProcess;
+    Function<URI, RefactoringResult> postProcess;
 
     if (patchingOptions.inPlace()) {
       fileDestination = new FsFileDestination(rootPath);
       postProcess =
-          () ->
+          uri ->
               RefactoringResult.create(
-                  "Refactoring changes were successfully applied, please check the refactored code "
-                      + "and recompile.",
+                  String.format(
+                      "Refactoring changes were successfully applied to %s,"
+                          + " please check the refactored code and recompile.",
+                      uri),
                   RefactoringResultType.CHANGED);
     } else {
       Path baseDir = rootPath.resolve(patchingOptions.baseDirectory());
@@ -91,17 +97,22 @@ class RefactoringCollection implements DescriptionListener.Factory {
 
       PatchFileDestination patchFileDestination = new PatchFileDestination(baseDir, rootPath);
       postProcess =
-          () -> {
-            try {
-              writePatchFile(patchFileDestination, patchFilePath);
-              return RefactoringResult.create(
-                  "Changes were written to "
-                      + patchFilePath
-                      + ". Please inspect the file and apply with: "
-                      + "patch -p0 -u -i error-prone.patch",
-                  RefactoringResultType.CHANGED);
-            } catch (IOException e) {
-              throw new RuntimeException("Failed to emit patch file!", e);
+          new Function<URI, RefactoringResult>() {
+            private final AtomicBoolean first = new AtomicBoolean(true);
+
+            @Override
+            public RefactoringResult apply(URI uri) {
+              try {
+                writePatchFile(first, uri, patchFileDestination, patchFilePath);
+                return RefactoringResult.create(
+                    "Changes were written to "
+                        + patchFilePath
+                        + ". Please inspect the file and apply with: "
+                        + "patch -p0 -u -i error-prone.patch",
+                    RefactoringResultType.CHANGED);
+              } catch (IOException e) {
+                throw new RuntimeException("Failed to emit patch file!", e);
+              }
             }
           };
       fileDestination = patchFileDestination;
@@ -114,7 +125,7 @@ class RefactoringCollection implements DescriptionListener.Factory {
   private RefactoringCollection(
       Path rootPath,
       FileDestination fileDestination,
-      Callable<RefactoringResult> postProcess,
+      Function<URI, RefactoringResult> postProcess,
       ImportOrganizer importOrganizer) {
     this.rootPath = rootPath;
     this.fileDestination = fileDestination;
@@ -143,39 +154,47 @@ class RefactoringCollection implements DescriptionListener.Factory {
     return delegate;
   }
 
-  RefactoringResult applyChanges() throws Exception {
-    if (!foundMatches.get()) {
+  RefactoringResult applyChanges(URI uri) throws Exception {
+    Collection<DelegatingDescriptionListener> listeners = foundSources.removeAll(uri);
+    if (listeners.isEmpty()) {
       return RefactoringResult.create("", RefactoringResultType.NO_CHANGES);
     }
 
-    doApplyProcess(fileDestination, new FsFileSource(rootPath));
-    return postProcess.call();
+    doApplyProcess(fileDestination, new FsFileSource(rootPath), listeners);
+    return postProcess.apply(uri);
   }
 
-  private static void writePatchFile(PatchFileDestination fileDestination, Path patchFilePatch)
+  private static void writePatchFile(
+      AtomicBoolean first, URI uri, PatchFileDestination fileDestination, Path patchFilePatch)
       throws IOException {
-    String patchFile = fileDestination.patchFile();
-    if (!patchFile.isEmpty()) {
-      Files.write(patchFilePatch, patchFile.getBytes(UTF_8));
+    String patchFile = fileDestination.patchFile(uri);
+    if (patchFile != null) {
+      if (first.compareAndSet(true, false)) {
+        try {
+          Files.deleteIfExists(patchFilePatch);
+        } catch (IOException e) {
+          throw new IOError(e);
+        }
+      }
+      Files.write(patchFilePatch, patchFile.getBytes(UTF_8), APPEND, CREATE);
     }
   }
 
-  private void doApplyProcess(FileDestination fileDestination, FileSource fileSource) {
-    DiffApplier diffApplier = new DiffApplier(4, fileSource, fileDestination);
-    diffApplier.startAsync().awaitRunning();
-
-    List<Future<?>> futures = new ArrayList<>();
-    for (DelegatingDescriptionListener listener : foundSources.values()) {
-      futures.add(diffApplier.put(listener.base));
-    }
-    diffApplier.stopAsync().awaitTerminated();
-
-    try {
-      for (Future<?> future : futures) {
-        future.get();
+  private void doApplyProcess(
+      FileDestination fileDestination,
+      FileSource fileSource,
+      Collection<DelegatingDescriptionListener> listeners) {
+    for (DelegatingDescriptionListener listener : listeners) {
+      try {
+        SourceFile file = fileSource.readFile(listener.base.getRelevantFileName());
+        listener.base.applyDifferences(file);
+        fileDestination.writeFile(file);
+      } catch (IOException e) {
+        logger.log(
+            Level.WARNING,
+            "Failed to apply diff to file " + listener.base.getRelevantFileName(),
+            e);
       }
-    } catch (InterruptedException | ExecutionException e) {
-      throw new RuntimeException(e);
     }
   }
 
@@ -190,7 +209,6 @@ class RefactoringCollection implements DescriptionListener.Factory {
 
     @Override
     public void onDescribed(Description description) {
-      foundMatches.set(true);
       listener.onDescribed(description);
       base.onDescribed(description);
     }

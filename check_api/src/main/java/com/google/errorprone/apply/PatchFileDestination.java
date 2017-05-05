@@ -23,12 +23,12 @@ import com.google.common.base.Splitter;
 import difflib.DiffUtils;
 import difflib.Patch;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 /**
  * A {@link FileDestination} that writes a unix-patch file to {@code rootPath} containing the
@@ -43,7 +43,7 @@ public final class PatchFileDestination implements FileDestination {
   private final Path baseDir;
   private final Path rootPath;
   // Path -> Unified Diff, sorted by path
-  private final Map<String, String> diffByFile = new TreeMap<>();
+  private final Map<URI, String> diffByFile = new TreeMap<>();
 
   public PatchFileDestination(Path baseDir, Path rootPath) {
     this.baseDir = baseDir;
@@ -63,8 +63,8 @@ public final class PatchFileDestination implements FileDestination {
       List<String> unifiedDiff =
           DiffUtils.generateUnifiedDiff(relativePath, relativePath, originalLines, diff, 2);
 
-      String diffString = Joiner.on("\n").join(unifiedDiff);
-      diffByFile.put(sourceFilePath.toString(), diffString);
+      String diffString = Joiner.on("\n").join(unifiedDiff) + "\n";
+      diffByFile.put(sourceFilePath.toUri(), diffString);
     }
   }
 
@@ -72,8 +72,8 @@ public final class PatchFileDestination implements FileDestination {
     return baseDir.relativize(sourceFilePath).toString();
   }
 
-  public String patchFile() {
-    return diffByFile.values().stream().collect(Collectors.joining("\n"));
+  public String patchFile(URI uri) {
+    return diffByFile.remove(uri);
   }
 
   @Override
