@@ -26,7 +26,7 @@ import com.sun.source.tree.Tree;
  *
  * @author mwacker@google.com (Mike Wacker)
  */
-class AnnotationMatcherUtils {
+public class AnnotationMatcherUtils {
 
   /**
    * Gets the value for an argument, or null if the argument does not exist.
