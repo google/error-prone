@@ -96,6 +96,8 @@ final class WellKnownMutability {
         .add("com.google.protobuf.Extension")
         .add("com.google.protobuf.ExtensionRegistry$ExtensionInfo")
         .add("com.google.re2j.Pattern")
+        .add("com.google.inject.TypeLiteral")
+        .add("com.google.inject.Key")
         .add(com.google.common.base.CharMatcher.class)
         .add(com.google.common.base.Converter.class)
         .add(com.google.common.base.Joiner.class)
