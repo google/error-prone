@@ -239,4 +239,20 @@ public class AssertEqualsArgumentOrderCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void assertEqualsCheck_makesNoChange_withReturnedEnum() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  static void assertEquals(Object expected, Object actual) {};",
+            "  enum MyEnum {}",
+            "  abstract MyEnum enumValue();",
+            "  void test(Object other) {",
+            "    assertEquals(other, enumValue());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

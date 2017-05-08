@@ -39,7 +39,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -163,7 +162,7 @@ public class AssertEqualsArgumentOrderChecker extends ArgumentSelectionDefectChe
         String actualName = actual.name();
 
         if (formalName.equals("expected")) {
-          if (actual.isConstant() || isEnumType(actual.type())) {
+          if (actual.constant() || isEnumIdentifier(actual)) {
             return 0.0;
           }
           if (actualName.startsWith("expected")) {
@@ -173,7 +172,7 @@ public class AssertEqualsArgumentOrderChecker extends ArgumentSelectionDefectChe
         }
 
         if (formalName.equals("actual")) {
-          if (actual.isConstant() || isEnumType(actual.type())) {
+          if (actual.constant() || isEnumIdentifier(actual)) {
             return 1.0;
           }
           if (actualName.startsWith("actual")) {
@@ -187,8 +186,16 @@ public class AssertEqualsArgumentOrderChecker extends ArgumentSelectionDefectChe
     };
   }
 
-  private static boolean isEnumType(Type t) {
-    TypeSymbol typeSymbol = t.tsym;
+  /** Returns true if this parameter is an enum identifier */
+  private static boolean isEnumIdentifier(Parameter parameter) {
+    switch (parameter.kind()) {
+      case IDENTIFIER:
+      case MEMBER_SELECT:
+        break;
+      default:
+        return false;
+    }
+    TypeSymbol typeSymbol = parameter.type().tsym;
     if (typeSymbol != null) {
       return typeSymbol.getKind() == ElementKind.ENUM;
     }
