@@ -117,4 +117,25 @@ class Costs {
   void invalidatePair(ParameterPair p) {
     updatePair(p, Double.POSITIVE_INFINITY);
   }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder("Costs:\n");
+    builder.append("formals=").append(formals).append("\n");
+    builder.append("actuals=").append(actuals).append("\n");
+    builder.append("costMatrix=\n");
+    builder.append(String.format("%20s", ""));
+    for (int j = 0; j < costMatrix[0].length; j++) {
+      builder.append(String.format("%20s", actuals.get(j).name()));
+    }
+    builder.append("\n");
+    for (int i = 0; i < costMatrix.length; i++) {
+      builder.append(String.format("%20s", formals.get(i).name()));
+      for (int j = 0; j < costMatrix[i].length; j++) {
+        builder.append(String.format("%20.1f", costMatrix[i][j]));
+      }
+      builder.append("\n");
+    }
+    return builder.toString();
+  }
 }

@@ -209,7 +209,7 @@ public class ArgumentSelectionDefectChecker extends BugChecker
           return 0.0;
         }
 
-        if (pair.formal().isNamed() && pair.actual().isNamed()) {
+        if (!pair.formal().isUnknownName() && !pair.actual().isUnknownName()) {
           String normalizedSource =
               NamingConventions.convertToLowerUnderscore(pair.formal().name());
           String normalizedTarget =

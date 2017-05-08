@@ -273,6 +273,7 @@ public class ParameterTest {
         .doTest();
   }
 
+
   @Test
   public void getName_returnsNull_withNullLiteral() {
     CompilationTestHelper.newInstance(PrintNameOfFirstArgument.class, getClass())
@@ -289,21 +290,6 @@ public class ParameterTest {
   }
 
   @Test
-  public void getName_returnsConstant_withConstant() {
-    CompilationTestHelper.newInstance(PrintNameOfFirstArgument.class, getClass())
-        .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object o);",
-            "  void test() {",
-            "    // BUG: Diagnostic contains: " + Parameter.NAME_CONSTANT,
-            "    target(1);",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void getName_returnsUnknown_withTerneryIf() {
     CompilationTestHelper.newInstance(PrintNameOfFirstArgument.class, getClass())
         .addSourceLines(
@@ -311,11 +297,80 @@ public class ParameterTest {
             "abstract class Test {",
             "  abstract void target(Object o);",
             "  void test(boolean flag) {",
-            "    // BUG: Diagnostic contains: " + Parameter.NAME_UNKNOWN,
+            "    // BUG: Diagnostic contains: " + Parameter.NAME_NOT_PRESENT,
             "    target(flag ? 1 : 0);",
             "  }",
             "}")
         .doTest();
   }
+
+  /** A {@link BugChecker} that prints whether the first argument is constant */
+  @BugPattern(
+    name = "PrintIsConstantFirstArgument",
+    category = Category.ONE_OFF,
+    severity = SeverityLevel.ERROR,
+    summary = "Print whether the first argument is constant"
+  )
+  public static class PrintIsConstantFirstArgument extends BugChecker
+      implements MethodInvocationTreeMatcher {
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      List<? extends ExpressionTree> arguments = tree.getArguments();
+      if (arguments.isEmpty()) {
+        return Description.NO_MATCH;
+      }
+      List<Parameter> parameters = Parameter.createListFromExpressionTrees(arguments);
+      Parameter first = Iterables.getFirst(parameters, null);
+      return buildDescription(tree).setMessage(String.valueOf(first.constant())).build();
+    }
+  }
+
+  @Test
+  public void getName_returnsConstant_withConstant() {
+    CompilationTestHelper.newInstance(PrintIsConstantFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object o);",
+            "  void test() {",
+            "    // BUG: Diagnostic contains: true",
+            "    target(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void getName_returnsConstant_withConstantFromOtherClass() {
+    CompilationTestHelper.newInstance(PrintIsConstantFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object o);",
+            "  void test() {",
+            "    // BUG: Diagnostic contains: true",
+            "    target(Double.MAX_VALUE);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+
+  @Test
+  public void getName_returnsNotConstant_withVariable() {
+    CompilationTestHelper.newInstance(PrintIsConstantFirstArgument.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object o);",
+            "  void test(Object o) {",
+            "    // BUG: Diagnostic contains: false",
+            "    target(o);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
 
 }

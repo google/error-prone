@@ -32,6 +32,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -52,17 +53,12 @@ abstract class Parameter {
 
   private static final ImmutableSet<String> METHODNAME_PREFIXES_TO_REMOVE =
       ImmutableSet.of("get", "set", "is");
-
+  
   /** We use this placeholder to indicate a name which is a null literal. */
   @VisibleForTesting static final String NAME_NULL = "*NULL*";
-
+  
   /** We use this placeholder to indicate a name which we couldn't get a canonical string for. */
-  @VisibleForTesting static final String NAME_UNKNOWN = "*UNKNOWN*";
-
-  /**
-   * We use this placeholder to indicate a name which is a compile-time constant (other than null).
-   */
-  @VisibleForTesting static final String NAME_CONSTANT = "*CONSTANT*";
+  @VisibleForTesting static final String NAME_NOT_PRESENT = "*NOT_PRESENT*";
 
   abstract String name();
 
@@ -72,6 +68,10 @@ abstract class Parameter {
 
   abstract String text();
 
+  abstract Kind kind();
+
+  abstract boolean constant();
+  
   static ImmutableList<Parameter> createListFromVarSymbols(List<VarSymbol> varSymbols) {
     return Streams.mapWithIndex(
             varSymbols.stream(),
@@ -80,7 +80,9 @@ abstract class Parameter {
                     s.getSimpleName().toString(),
                     s.asType(),
                     (int) i,
-                    s.getSimpleName().toString()))
+                    s.getSimpleName().toString(),
+                    Kind.IDENTIFIER,
+                    false))
         .collect(toImmutableList());
   }
 
@@ -93,7 +95,9 @@ abstract class Parameter {
                     getArgumentName(t),
                     Optional.ofNullable(ASTHelpers.getResultType(t)).orElse(Type.noType),
                     (int) i,
-                    t.toString()))
+                    t.toString(),
+                    t.getKind(),
+                    ASTHelpers.constValue(t) != null))
         .collect(toImmutableList());
   }
 
@@ -124,15 +128,7 @@ abstract class Parameter {
   }
 
   boolean isUnknownName() {
-    return name().equals(NAME_UNKNOWN);
-  }
-
-  boolean isConstant() {
-    return name().equals(NAME_CONSTANT);
-  }
-
-  boolean isNamed() {
-    return !isNullLiteral() && !isUnknownName() && !isConstant();
+    return name().equals(NAME_NOT_PRESENT);
   }
 
   private static String getClassName(ClassSymbol s) {
@@ -174,7 +170,7 @@ abstract class Parameter {
         if (idTree.getName().contentEquals("this")) {
           // for the 'this' keyword the argument name is the name of the object's class
           Symbol sym = ASTHelpers.getSymbol(idTree);
-          return sym != null ? getClassName(ASTHelpers.enclosingClass(sym)) : NAME_UNKNOWN;
+          return sym != null ? getClassName(ASTHelpers.enclosingClass(sym)) : NAME_NOT_PRESENT;
         } else {
           // if we have a variable, just extract its name
           return idTree.getName().toString();
@@ -201,15 +197,15 @@ abstract class Parameter {
             return name;
           }
         } else {
-          return NAME_UNKNOWN;
+          return NAME_NOT_PRESENT;
         }
       case NEW_CLASS:
         MethodSymbol constructorSym = ASTHelpers.getSymbol((NewClassTree) expressionTree);
         return constructorSym != null && constructorSym.owner != null
             ? getClassName((ClassSymbol) constructorSym.owner)
-            : NAME_UNKNOWN;
+            : NAME_NOT_PRESENT;
       default:
-        return ASTHelpers.constValue(expressionTree) != null ? NAME_CONSTANT : NAME_UNKNOWN;
+        return NAME_NOT_PRESENT;
     }
   }
 }
