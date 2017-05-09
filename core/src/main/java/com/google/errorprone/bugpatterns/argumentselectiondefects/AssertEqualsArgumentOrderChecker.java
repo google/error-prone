@@ -31,12 +31,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.NewClassTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
@@ -65,7 +67,10 @@ import javax.lang.model.element.ElementKind;
   category = JUNIT,
   severity = WARNING
 )
-public class AssertEqualsArgumentOrderChecker extends ArgumentSelectionDefectChecker {
+public class AssertEqualsArgumentOrderChecker extends BugChecker
+    implements MethodInvocationTreeMatcher {
+
+  private final ArgumentChangeFinder argumentchangeFinder;
 
   private final ImmutableList<String> assertClassNames;
 
@@ -76,10 +81,12 @@ public class AssertEqualsArgumentOrderChecker extends ArgumentSelectionDefectChe
 
   @VisibleForTesting
   AssertEqualsArgumentOrderChecker(ImmutableList<String> assertClassNames) {
-    super(
-        /*nameDistanceFunction=*/ buildDistanceFunction(),
-        /*heuristics=*/ ImmutableList.of(
-            changeMustBeBetterThanOriginal(), new CreatesDuplicateCallHeuristic()));
+    this.argumentchangeFinder =
+        ArgumentChangeFinder.builder()
+            .setDistanceFunction(buildDistanceFunction())
+            .addHeuristic(changeMustBeBetterThanOriginal())
+            .addHeuristic(new CreatesDuplicateCallHeuristic())
+            .build();
     this.assertClassNames = assertClassNames;
   }
 
@@ -88,12 +95,23 @@ public class AssertEqualsArgumentOrderChecker extends ArgumentSelectionDefectChe
     if (!assertMethodMatcher().matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    return super.matchMethodInvocation(tree, state);
-  }
 
-  @Override
-  public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    return Description.NO_MATCH;
+    MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+    if (symbol == null) {
+      return Description.NO_MATCH;
+    }
+
+    InvocationInfo invocationInfo = InvocationInfo.createFromMethodInvocation(tree, symbol, state);
+
+    Changes changes = argumentchangeFinder.findChanges(invocationInfo);
+
+    if (changes.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+
+    return buildDescription(invocationInfo.tree())
+        .addFix(changes.buildPermuteArgumentsFix(invocationInfo))
+        .build();
   }
 
   private Matcher<MethodInvocationTree> assertMethodMatcher() {
