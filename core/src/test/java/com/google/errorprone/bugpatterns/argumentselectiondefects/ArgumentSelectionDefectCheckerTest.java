@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
@@ -55,7 +54,7 @@ public class ArgumentSelectionDefectCheckerTest {
       extends ArgumentSelectionDefectChecker {
 
     public ArgumentSelectionDefectWithStringEquality() {
-      super(buildEqualityFunction(), ImmutableList.of());
+      super(ArgumentChangeFinder.builder().setDistanceFunction(buildEqualityFunction()).build());
     }
   }
 
@@ -137,7 +136,7 @@ public class ArgumentSelectionDefectCheckerTest {
             "}")
         .doTest();
   }
-  
+
   /**
    * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
    * equality for edit distance and ignores formal parameters called 'ignore'.
@@ -155,8 +154,10 @@ public class ArgumentSelectionDefectCheckerTest {
 
     public ArgumentSelectionDefectWithIgnoredFormalsHeuristic() {
       super(
-          buildEqualityFunction(),
-          ImmutableList.of(new LowInformationNameHeuristic(ImmutableSet.of("ignore"))));
+          ArgumentChangeFinder.builder()
+              .setDistanceFunction(buildEqualityFunction())
+              .addHeuristic(new LowInformationNameHeuristic(ImmutableSet.of("ignore")))
+              .build());
     }
   }
 
@@ -217,7 +218,11 @@ public class ArgumentSelectionDefectCheckerTest {
       extends ArgumentSelectionDefectChecker {
 
     public ArgumentSelectionDefectWithPenaltyThreshold() {
-      super(buildEqualityFunction(), ImmutableList.of(new PenaltyThresholdHeuristic(0.9)));
+      super(
+          ArgumentChangeFinder.builder()
+              .setDistanceFunction(buildEqualityFunction())
+              .addHeuristic(new PenaltyThresholdHeuristic(0.9))
+              .build());
     }
   }
 
@@ -251,7 +256,6 @@ public class ArgumentSelectionDefectCheckerTest {
         .doTest();
   }
 
-
   /**
    * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
    * equality for edit distance and name in comments heuristic
@@ -267,7 +271,11 @@ public class ArgumentSelectionDefectCheckerTest {
       extends ArgumentSelectionDefectChecker {
 
     public ArgumentSelectionDefectWithNameInCommentsHeuristic() {
-      super(buildEqualityFunction(), ImmutableList.of(new NameInCommentHeuristic()));
+      super(
+          ArgumentChangeFinder.builder()
+              .setDistanceFunction(buildEqualityFunction())
+              .addHeuristic(new NameInCommentHeuristic())
+              .build());
     }
   }
 
@@ -286,7 +294,6 @@ public class ArgumentSelectionDefectCheckerTest {
         .doTest();
   }
 
-  
   private static final Function<ParameterPair, Double> buildEqualityFunction() {
     return new Function<ParameterPair, Double>() {
       @Override

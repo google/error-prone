@@ -18,6 +18,9 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.tree.JCTree;
 
 /**
  * Value class for holding suggested changes to method call arguments.
@@ -44,7 +47,7 @@ abstract class Changes {
   double totalOriginalCost() {
     return originalCost().stream().mapToDouble(d -> d).sum();
   }
-  
+
   static Changes create(
       ImmutableList<Double> originalCost,
       ImmutableList<Double> assignmentCost,
@@ -54,5 +57,30 @@ abstract class Changes {
 
   static Changes empty() {
     return new AutoValue_Changes(ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
+  }
+
+  SuggestedFix buildCommentArgumentsFix(InvocationInfo info) {
+    SuggestedFix.Builder commentArgumentsFixBuilder = SuggestedFix.builder();
+    for (ParameterPair change : changedPairs()) {
+      int index = change.formal().index();
+      ExpressionTree actual = info.actualParameters().get(index);
+      int startPosition = ((JCTree) actual).getStartPosition();
+      String formal = info.formalParameters().get(index).getSimpleName().toString();
+      commentArgumentsFixBuilder.replace(
+          startPosition, startPosition, NamedParameterComment.toCommentText(formal));
+    }
+    return commentArgumentsFixBuilder.build();
+  }
+
+  SuggestedFix buildPermuteArgumentsFix(InvocationInfo info) {
+    SuggestedFix.Builder permuteArgumentsFixBuilder = SuggestedFix.builder();
+    for (ParameterPair pair : changedPairs()) {
+      permuteArgumentsFixBuilder.replace(
+          info.actualParameters().get(pair.formal().index()),
+          // use getSourceForNode to avoid javac pretty printing the replacement (pretty printing
+          // converts unicode characters to unicode escapes)
+          info.state().getSourceForNode(info.actualParameters().get(pair.actual().index())));
+    }
+    return permuteArgumentsFixBuilder.build();
   }
 }

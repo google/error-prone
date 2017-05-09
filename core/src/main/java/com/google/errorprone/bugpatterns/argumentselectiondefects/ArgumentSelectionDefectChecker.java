@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -30,14 +30,9 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.names.NamingConventions;
 import com.google.errorprone.names.NeedlemanWunschEditDistance;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree;
-import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -74,24 +69,23 @@ import java.util.function.Function;
 public class ArgumentSelectionDefectChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
-  private final ImmutableList<Heuristic> heuristics;
-  private final Function<ParameterPair, Double> nameDistanceFunction;
+  private final ArgumentChangeFinder argumentchangeFinder;
 
   public ArgumentSelectionDefectChecker() {
     this(
-        buildDefaultDistanceFunction(),
-        ImmutableList.of(
-            new LowInformationNameHeuristic(),
-            new PenaltyThresholdHeuristic(),
-            new EnclosedByReverseHeuristic(),
-            new CreatesDuplicateCallHeuristic(),
-            new NameInCommentHeuristic()));
+        ArgumentChangeFinder.builder()
+            .setDistanceFunction(buildDefaultDistanceFunction())
+            .addHeuristic(new LowInformationNameHeuristic())
+            .addHeuristic(new PenaltyThresholdHeuristic())
+            .addHeuristic(new EnclosedByReverseHeuristic())
+            .addHeuristic(new CreatesDuplicateCallHeuristic())
+            .addHeuristic(new NameInCommentHeuristic())
+            .build());
   }
 
-  public ArgumentSelectionDefectChecker(
-      Function<ParameterPair, Double> nameDistanceFunction, ImmutableList<Heuristic> heuristics) {
-    this.nameDistanceFunction = nameDistanceFunction;
-    this.heuristics = heuristics;
+  @VisibleForTesting
+  ArgumentSelectionDefectChecker(ArgumentChangeFinder argumentChangeFinder) {
+    this.argumentchangeFinder = argumentChangeFinder;
   }
 
   @Override
@@ -100,7 +94,8 @@ public class ArgumentSelectionDefectChecker extends BugChecker
     if (symbol == null) {
       return Description.NO_MATCH;
     }
-    return visitNewClassOrMethodInvocation(tree, symbol, tree.getArguments(), state);
+    return visitNewClassOrMethodInvocation(
+        InvocationInfo.createFromMethodInvocation(tree, symbol, state));
   }
 
   @Override
@@ -109,90 +104,27 @@ public class ArgumentSelectionDefectChecker extends BugChecker
     if (symbol == null) {
       return Description.NO_MATCH;
     }
-    return visitNewClassOrMethodInvocation(tree, symbol, tree.getArguments(), state);
+    return visitNewClassOrMethodInvocation(InvocationInfo.createFromNewClass(tree, symbol, state));
   }
 
-  private Description visitNewClassOrMethodInvocation(
-      Tree invokedMethodTree,
-      MethodSymbol invokedMethodSymbol,
-      List<? extends ExpressionTree> actualParameters,
-      VisitorState state) {
+  private Description visitNewClassOrMethodInvocation(InvocationInfo invocationInfo) {
 
-    Changes changes = findChanges(invokedMethodTree, invokedMethodSymbol, actualParameters, state);
+    Changes changes = argumentchangeFinder.findChanges(invocationInfo);
 
     if (changes.isEmpty()) {
       return Description.NO_MATCH;
     }
 
     // Fix1: permute the arguments as required
-    SuggestedFix permuteArgumentsFix = buildPermuteArgumentsFix(changes, actualParameters, state);
+    SuggestedFix permuteArgumentsFix = changes.buildPermuteArgumentsFix(invocationInfo);
 
     // Fix2: apply comments with parameter names to potentially-swapped arguments of the method
-    SuggestedFix commentArgumentsFix =
-        buildCommentArgumentsFix(changes, invokedMethodSymbol, actualParameters);
+    SuggestedFix commentArgumentsFix = changes.buildCommentArgumentsFix(invocationInfo);
 
-    return buildDescription(invokedMethodTree)
+    return buildDescription(invocationInfo.tree())
         .addFix(permuteArgumentsFix)
         .addFix(commentArgumentsFix)
         .build();
-  }
-
-  private Changes findChanges(
-      Tree invokedMethodTree,
-      MethodSymbol invokedMethodSymbol,
-      List<? extends ExpressionTree> actualParameters,
-      VisitorState state) {
-
-    List<VarSymbol> formalParameters = getFormalParametersWithoutVarArgs(invokedMethodSymbol);
-
-    /* Methods with one or fewer parameters cannot possibly have a swap */
-    if (formalParameters.size() <= 1) {
-      return Changes.empty();
-    }
-
-    /* Sometimes we don't have enough actual parameters. This seems to happen sometimes with calls
-     * to super and javac finds two parameters arg0 and arg1 and no arguments */
-    if (actualParameters.size() < formalParameters.size()) {
-      return Changes.empty();
-    }
-
-    ImmutableList<Parameter> formals = Parameter.createListFromVarSymbols(formalParameters);
-    ImmutableList<Parameter> actuals =
-        Parameter.createListFromExpressionTrees(
-            actualParameters.subList(0, formalParameters.size()));
-
-    Costs costs = new Costs(formals, actuals);
-
-    /* Set the distance between a pair to Inf if not assignable */
-    costs
-        .viablePairs()
-        .filter(ParameterPair::isAlternativePairing)
-        .filter(p -> !p.actual().isAssignableTo(p.formal(), state))
-        .forEach(p -> costs.invalidatePair(p));
-
-    /* If there are no formal parameters which are assignable to any alternative actual parameters
-    then we can stop without trying to look for permutations */
-    if (costs.viablePairs().noneMatch(ParameterPair::isAlternativePairing)) {
-      return Changes.empty();
-    }
-
-    /* Set the lexical distance between pairs */
-    costs.viablePairs().forEach(p -> costs.updatePair(p, nameDistanceFunction.apply(p)));
-
-    Changes changes = costs.computeAssignments();
-
-    if (changes.isEmpty()) {
-      return changes;
-    }
-
-    /* Only keep this change if all of the heuristics match */
-    for (Heuristic heuristic : heuristics) {
-      if (!heuristic.isAcceptableChange(changes, invokedMethodTree, invokedMethodSymbol, state)) {
-        return Changes.empty();
-      }
-    }
-
-    return changes;
   }
 
   /**
@@ -226,56 +158,5 @@ public class ArgumentSelectionDefectChecker extends BugChecker
         return pair.formal().index() == pair.actual().index() ? 0.0 : Double.POSITIVE_INFINITY;
       }
     };
-  }
-
-  private static List<VarSymbol> getFormalParametersWithoutVarArgs(
-      MethodSymbol invokedMethodSymbol) {
-    List<VarSymbol> formalParameters = invokedMethodSymbol.getParameters();
-
-    /* javac can get argument names from debugging symbols if they are not available from
-    other sources. When it does this for an inner class sometimes it returns the implicit this
-    pointer for the outer class as the first name (but not the first type). If we see this, then
-    just abort */
-    if (!formalParameters.isEmpty()
-        && formalParameters.get(0).getSimpleName().toString().matches("this\\$[0-9]+")) {
-      return ImmutableList.of();
-    }
-
-    /* If we have a varargs method then just ignore the final parameter and trailing actual
-    parameters */
-    int size =
-        invokedMethodSymbol.isVarArgs() ? formalParameters.size() - 1 : formalParameters.size();
-
-    return formalParameters.subList(0, size);
-  }
-
-  private static SuggestedFix buildCommentArgumentsFix(
-      Changes changes,
-      MethodSymbol invokedMethodSymbol,
-      List<? extends ExpressionTree> actualParameters) {
-    SuggestedFix.Builder commentArgumentsFixBuilder = SuggestedFix.builder();
-    List<VarSymbol> formalParameters = getFormalParametersWithoutVarArgs(invokedMethodSymbol);
-    for (ParameterPair change : changes.changedPairs()) {
-      int index = change.formal().index();
-      ExpressionTree actual = actualParameters.get(index);
-      int startPosition = ((JCTree) actual).getStartPosition();
-      String formal = formalParameters.get(index).getSimpleName().toString();
-      commentArgumentsFixBuilder.replace(
-          startPosition, startPosition, NamedParameterComment.toCommentText(formal));
-    }
-    return commentArgumentsFixBuilder.build();
-  }
-
-  private static SuggestedFix buildPermuteArgumentsFix(
-      Changes changes, List<? extends ExpressionTree> actualParameters, VisitorState state) {
-    SuggestedFix.Builder permuteArgumentsFixBuilder = SuggestedFix.builder();
-    for (ParameterPair pair : changes.changedPairs()) {
-      permuteArgumentsFixBuilder.replace(
-          actualParameters.get(pair.formal().index()),
-          // use getSourceForNode to avoid javac pretty printing the replacement (pretty printing
-          // converts unicode characters to unicode escapes)
-          state.getSourceForNode(actualParameters.get(pair.actual().index())));
-    }
-    return permuteArgumentsFixBuilder.build();
   }
 }
