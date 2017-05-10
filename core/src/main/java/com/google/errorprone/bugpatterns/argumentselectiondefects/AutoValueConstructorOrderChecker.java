@@ -26,10 +26,6 @@ import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.NewClassTree;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
 import java.util.function.Function;
 
 /**
@@ -63,36 +59,12 @@ public class AutoValueConstructorOrderChecker extends BugChecker implements NewC
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
+    if (!Matchers.AUTOVALUE_CONSTRUCTOR.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
-    ClassSymbol owner = (ClassSymbol) sym.owner;
-    if (owner == null) {
-      return Description.NO_MATCH;
-    }
-
-    Type superType = owner.getSuperclass();
-    if (superType == null) {
-      return Description.NO_MATCH;
-    }
-
-    Symbol superSymbol = superType.tsym;
-    if (superSymbol == null) {
-      return Description.NO_MATCH;
-    }
-
-    if (!ASTHelpers.hasDirectAnnotationWithSimpleName(superSymbol, "AutoValue")) {
-      return Description.NO_MATCH;
-    }
-
-    MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return Description.NO_MATCH;
-    }
-
-    InvocationInfo invocationInfo = InvocationInfo.createFromNewClass(tree, symbol, state);
+    InvocationInfo invocationInfo =
+        InvocationInfo.createFromNewClass(tree, ASTHelpers.getSymbol(tree), state);
 
     Changes changes = argumentChangeFinder.findChanges(invocationInfo);
 

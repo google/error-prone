@@ -16,12 +16,7 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import com.google.common.collect.ImmutableList;
-import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.BugChecker;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,36 +28,18 @@ public class AssertEqualsArgumentOrderCheckerTest {
 
   private CompilationTestHelper compilationHelper;
 
-  /**
-   * A {@link BugChecker} which runs the AssertEqualsArgumentOrderChecker which looks for
-   * assertEquals methods declared in a class Test
-   */
-  @BugPattern(
-    name = "AssertEqualsArgumentOrderCheckerInTest",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Run AssertEqualsArgumentOrderChecker looking for methods declared in class Test"
-  )
-  public static class AssertEqualsArgumentOrderCheckerInTest
-      extends AssertEqualsArgumentOrderChecker {
-
-    public AssertEqualsArgumentOrderCheckerInTest() {
-      super(ImmutableList.of("Test"));
-    }
-  }
-
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(AssertEqualsArgumentOrderCheckerInTest.class, getClass());
+        CompilationTestHelper.newInstance(AssertEqualsArgumentOrderChecker.class, getClass());
   }
 
   @Test
   public void assertEqualsCheck_makesNoSuggestion_withOrderExpectedActual() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test(Object expected, Object actual) {",
             "    assertEquals(expected, actual);",
@@ -76,8 +53,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
       throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(String message, Object expected, Object actual) {};",
             "  void test(Object expected, Object actual) {",
             "    assertEquals(\"\", expected, actual);",
@@ -90,8 +67,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_swapsArguments_withOrderActualExpected() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test(Object expected, Object actual) {",
             "    // BUG: Diagnostic contains: assertEquals(expected, actual)",
@@ -106,8 +83,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
       throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(String message, Object expected, Object actual) {};",
             "  void test(Object expected, Object actual) {",
             "    // BUG: Diagnostic contains: assertEquals(\"\", expected, actual)",
@@ -121,8 +98,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_swapsArguments_withOnlyExpectedAsPrefix() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  abstract Object get();",
             "  void test(Object expectedValue) {",
@@ -137,8 +114,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_swapsArguments_withLiteralForActual() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test(Object other) {",
             "    // BUG: Diagnostic contains: assertEquals(1, other)",
@@ -152,8 +129,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_doesntSwap_withLiteralForExpected() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(String mesasge, Object expected, Object actual) {};",
             "  void test(Object other) {",
             "    assertEquals(\"\",1, other);",
@@ -166,8 +143,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_makeNoChange_withLiteralForBoth() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test() {",
             "    assertEquals(2, 1);",
@@ -180,8 +157,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_makeNoChange_ifSwapCreatesDuplicateCall() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test(Object expected, Object actual) {",
             "    assertEquals(expected, actual);",
@@ -195,8 +172,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_makesNoChange_withNothingMatching() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test(Object other1, Object other2) {",
             "    assertEquals(other1, other2);",
@@ -209,8 +186,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_makesNoChange_whenArgumentExtendsThrowable() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test(Exception exception) {",
             "    try {",
@@ -227,8 +204,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_makesNoChange_whenArgumentIsEnumMember() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  enum MyEnum {",
             "    VALUE",
@@ -244,8 +221,8 @@ public class AssertEqualsArgumentOrderCheckerTest {
   public void assertEqualsCheck_makesNoChange_withReturnedEnum() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Test.java",
-            "abstract class Test {",
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  enum MyEnum {}",
             "  abstract MyEnum enumValue();",

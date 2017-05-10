@@ -18,32 +18,17 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.enclosingMethod;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
-import static com.google.errorprone.matchers.Matchers.hasArguments;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
-import java.util.List;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -70,29 +55,16 @@ import javax.lang.model.element.ElementKind;
 public class AssertEqualsArgumentOrderChecker extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private final ArgumentChangeFinder argumentchangeFinder;
-
-  private final ImmutableList<String> assertClassNames;
-
-  public AssertEqualsArgumentOrderChecker() {
-    this(
-        ImmutableList.of("org.junit.Assert", "junit.framework.TestCase", "junit.framework.Assert"));
-  }
-
-  @VisibleForTesting
-  AssertEqualsArgumentOrderChecker(ImmutableList<String> assertClassNames) {
-    this.argumentchangeFinder =
-        ArgumentChangeFinder.builder()
-            .setDistanceFunction(buildDistanceFunction())
-            .addHeuristic(changeMustBeBetterThanOriginal())
-            .addHeuristic(new CreatesDuplicateCallHeuristic())
-            .build();
-    this.assertClassNames = assertClassNames;
-  }
+  private final ArgumentChangeFinder argumentchangeFinder =
+      ArgumentChangeFinder.builder()
+          .setDistanceFunction(buildDistanceFunction())
+          .addHeuristic(changeMustBeBetterThanOriginal())
+          .addHeuristic(new CreatesDuplicateCallHeuristic())
+          .build();
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!assertMethodMatcher().matches(tree, state)) {
+    if (!Matchers.ASSERT_METHOD.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
@@ -112,54 +84,6 @@ public class AssertEqualsArgumentOrderChecker extends BugChecker
     return buildDescription(invocationInfo.tree())
         .addFix(changes.buildPermuteArgumentsFix(invocationInfo))
         .build();
-  }
-
-  private Matcher<MethodInvocationTree> assertMethodMatcher() {
-    return allOf(
-        staticMethod().onClassAny(assertClassNames).withNameMatching(Pattern.compile("assert.*")),
-        anyOf(twoParameterAssertMatcher(), threeParameterAssertMatcher()),
-        not(argumentExtendsThrowableMatcher()),
-        not(methodAnnotatedWithBeforeTemplateMatcher()));
-  }
-
-  // if any of the arguments are instances of throwable then abort - people like to use
-  // 'expected' as the name of the exception they are expecting
-  private static Matcher<MethodInvocationTree> argumentExtendsThrowableMatcher() {
-    return hasArguments(MatchType.AT_LEAST_ONE, isSubtypeOf(Throwable.class));
-  }
-
-  // if the method is a refaster-before template then it might be explicitly matching bad behaviour
-  private static Matcher<MethodInvocationTree> methodAnnotatedWithBeforeTemplateMatcher() {
-    return enclosingMethod(
-        hasAnnotation("com.google.errorprone.refaster.annotation.BeforeTemplate"));
-  }
-
-  private static Matcher<MethodInvocationTree> twoParameterAssertMatcher() {
-    return new Matcher<MethodInvocationTree>() {
-      @Override
-      public boolean matches(MethodInvocationTree tree, VisitorState state) {
-        List<VarSymbol> parameters = ASTHelpers.getSymbol(tree).getParameters();
-        if (parameters.size() != 2) {
-          return false;
-        }
-        return ASTHelpers.isSameType(parameters.get(0).asType(), parameters.get(1).asType(), state);
-      }
-    };
-  }
-
-  private static Matcher<MethodInvocationTree> threeParameterAssertMatcher() {
-    return new Matcher<MethodInvocationTree>() {
-      @Override
-      public boolean matches(MethodInvocationTree tree, VisitorState state) {
-        List<VarSymbol> parameters = ASTHelpers.getSymbol(tree).getParameters();
-        if (parameters.size() != 3) {
-          return false;
-        }
-        return ASTHelpers.isSameType(
-                parameters.get(0).asType(), state.getTypeFromString("java.lang.String"), state)
-            && ASTHelpers.isSameType(parameters.get(1).asType(), parameters.get(2).asType(), state);
-      }
-    };
   }
 
   /**
