@@ -15,84 +15,39 @@
  */
 package com.google.errorprone.apply;
 
-import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Ordering;
-import java.util.ArrayList;
+import static com.google.common.collect.ImmutableSortedSet.toImmutableSortedSet;
+
+import com.google.common.collect.ImmutableSortedSet;
 import java.util.Comparator;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * Sorts imports according to a supplied {@link Comparator} and separates static and non-static with
- * a blank line.
+ * Sorts imports according to a supplied {@link StaticOrder} and separates static and non-static
+ * with a blank line.
  */
-public class BasicImportOrganizer implements ImportOrganizer {
+class BasicImportOrganizer implements ImportOrganizer {
 
-  private final Comparator<String> comparator;
+  private final StaticOrder order;
 
-  BasicImportOrganizer(Comparator<String> comparator) {
-    this.comparator = comparator;
-  }
-
-  private static boolean isStatic(String importString) {
-    return importString.startsWith("import static ");
-  }
-
-  /**
-   * A {@link Comparator} that sorts import statements so that all static imports come before all
-   * non-static imports and otherwise sorted alphabetically.
-   */
-  static Comparator<String> staticFirst() {
-    return new Ordering<String>() {
-      @Override
-      public int compare(String s1, String s2) {
-        return ComparisonChain.start()
-            .compareTrueFirst(isStatic(s1), isStatic(s2))
-            .compare(s1, s2)
-            .result();
-      }
-    };
-  }
-
-  /**
-   * A {@link Comparator} that sorts import statements so that all static imports come after all
-   * non-static imports and otherwise sorted alphabetically.
-   */
-  static Comparator<String> staticLast() {
-    return new Ordering<String>() {
-      @Override
-      public int compare(String s1, String s2) {
-        return ComparisonChain.start()
-            .compareFalseFirst(isStatic(s1), isStatic(s2))
-            .compare(s1, s2)
-            .result();
-      }
-    };
+  BasicImportOrganizer(StaticOrder order) {
+    this.order = order;
   }
 
   @Override
-  public Iterable<String> organizeImports(Iterable<String> importStrings) {
-    SortedSet<String> sorted = new TreeSet<>(comparator);
-    Iterables.addAll(sorted, importStrings);
+  public OrganizedImports organizeImports(List<Import> imports) {
 
-    List<String> organized = new ArrayList<>();
+    // Group into static and non-static. Each group is a set sorted by type.
+    Map<Boolean, ImmutableSortedSet<Import>> partionedByStatic =
+        imports
+            .stream()
+            .collect(
+                Collectors.partitioningBy(
+                    Import::isStatic, toImmutableSortedSet(Comparator.comparing(Import::getType))));
 
-    // output sorted imports, with a line break between static and non-static imports
-    boolean first = true;
-    boolean prevIsStatic = true;
-    for (String importString : sorted) {
-      boolean isStatic = isStatic(importString);
-      if (!first && prevIsStatic != isStatic) {
-        // Add a blank line.
-        organized.add("");
-      }
-      organized.add(importString);
-      prevIsStatic = isStatic;
-      first = false;
-    }
-
-    return organized;
+    return new OrganizedImports()
+        // Add groups, in the appropriate order.
+        .addGroups(partionedByStatic, order.groupOrder());
   }
 }

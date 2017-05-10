@@ -194,4 +194,20 @@ public class ErrorProneOptionsTest {
     assertThat(options.patchingOptions().importOrganizer())
         .isSameAs(ImportOrganizer.STATIC_LAST_ORGANIZER);
   }
+
+  @Test
+  public void importOrder_androidStaticFirst() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:android-static-first"});
+    assertThat(options.patchingOptions().importOrganizer())
+        .isSameAs(ImportOrganizer.ANDROID_STATIC_FIRST_ORGANIZER);
+  }
+
+  @Test
+  public void importOrder_androidStaticLast() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:android-static-last"});
+    assertThat(options.patchingOptions().importOrganizer())
+        .isSameAs(ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER);
+  }
 }
