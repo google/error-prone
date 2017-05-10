@@ -17,14 +17,17 @@
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Singleton;
+import dagger.Component;
+import dagger.Subcomponent;
+import javax.inject.Scope;
 
 /**
  * Negative test cases in which scoping annotations are used correctly.
- * 
+ *
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 public class ScopeAnnotationOnInterfaceOrAbstractClassNegativeCases {
-  
+
   /**
    * A concrete class that has no scoping annotation.
    */
@@ -36,17 +39,32 @@ public class ScopeAnnotationOnInterfaceOrAbstractClassNegativeCases {
    */
   public abstract class TestClass2 {
   }
-  
+
   /**
    *An interface that has no scoping annotation.
    */
   public interface TestClass3 {
   }
-  
+
   /**
    * A concrete class that has scoping annotation.
    */
   @Singleton
   public class TestClass4 {
+  }
+
+  @Scope
+  @interface CustomScope {}
+
+  /** A concrete class that has a custom annotation. */
+  @CustomScope
+  public class ClassWithCustomScope {}
+
+  @Component
+  @Singleton
+  interface DaggerInterfaceComponent {
+    @Subcomponent
+    @CustomScope
+    abstract class DaggerAbstractClassSubcomponent {}
   }
 }
