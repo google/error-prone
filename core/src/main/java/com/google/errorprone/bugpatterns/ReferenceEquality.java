@@ -26,7 +26,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Scope.WriteableScope;
+import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -106,7 +106,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
       if (ASTHelpers.isSameType(sup, state.getSymtab().objectType, state)) {
         return false;
       }
-      WriteableScope scope = sup.tsym.members();
+      Scope scope = sup.tsym.members();
       if (scope == null) {
         continue;
       }
