@@ -94,6 +94,12 @@ public class ArgumentSelectionDefectChecker extends BugChecker
     if (symbol == null) {
       return Description.NO_MATCH;
     }
+
+    // Don't return a match if the AssertEqualsArgumentOrderChecker would match it too
+    if (Matchers.ASSERT_METHOD.matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
+    
     return visitNewClassOrMethodInvocation(
         InvocationInfo.createFromMethodInvocation(tree, symbol, state));
   }
@@ -104,6 +110,12 @@ public class ArgumentSelectionDefectChecker extends BugChecker
     if (symbol == null) {
       return Description.NO_MATCH;
     }
+    
+    // Don't return a match if the AutoValueConstructorOrderChecker would match it too
+    if (Matchers.AUTOVALUE_CONSTRUCTOR.matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
+    
     return visitNewClassOrMethodInvocation(InvocationInfo.createFromNewClass(tree, symbol, state));
   }
 
