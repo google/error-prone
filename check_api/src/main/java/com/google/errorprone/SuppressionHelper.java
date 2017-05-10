@@ -30,7 +30,6 @@ import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.Generated;
 
 /**
  * Encapsulates the logic of handling suppressions, both via {@code @SuppressWarnings} and via
@@ -105,7 +104,7 @@ public class SuppressionHelper {
       VisitorState state) {
 
     boolean newInGeneratedCode =
-        inGeneratedCode || ASTHelpers.hasAnnotation(sym, Generated.class, state);
+        inGeneratedCode || ASTHelpers.hasAnnotation(sym, "javax.annotation.Generated", state);
 
     /**
      * Handle custom suppression annotations.
