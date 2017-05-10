@@ -32,6 +32,10 @@ public class ImportOrderParser {
         return ImportOrganizer.STATIC_FIRST_ORGANIZER;
       case "static-last":
         return ImportOrganizer.STATIC_LAST_ORGANIZER;
+      case "android-static-first":
+        return ImportOrganizer.ANDROID_STATIC_FIRST_ORGANIZER;
+      case "android-static-last":
+        return ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER;
       default:
         throw new IllegalStateException("Unknown import order: '" + importOrder + "'");
     }

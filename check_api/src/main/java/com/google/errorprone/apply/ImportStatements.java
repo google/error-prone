@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Represents a list of import statements. Supports adding and removing import statements and pretty
@@ -106,16 +107,12 @@ public class ImportStatements {
             }));
   }
 
-  /**
-   * Return the start position of the import statements.
-   */
+  /** Return the start position of the import statements. */
   public int getStartPos() {
     return startPos;
   }
 
-  /**
-   * Return the end position of the import statements.
-   */
+  /** Return the end position of the import statements. */
   public int getEndPos() {
     return endPos;
   }
@@ -178,13 +175,24 @@ public class ImportStatements {
       result.append('\n');
     }
 
-    // output organized imports
-    for (String importString : importOrganizer.organizeImports(importStrings)) {
-      if (!importString.isEmpty()) {
-        result.append(importString).append(';');
-      }
-      result.append('\n');
+    List<ImportOrganizer.Import> imports =
+        importStrings.stream().map(ImportOrganizer.Import::importOf).collect(Collectors.toList());
+
+    // Organize the imports.
+    ImportOrganizer.OrganizedImports organizedImports = importOrganizer.organizeImports(imports);
+
+    // Make sure that every import was organized.
+    int expectedImportCount = imports.size();
+    int importCount = organizedImports.getImportCount();
+    if (importCount != expectedImportCount) {
+      throw new IllegalStateException(
+          String.format(
+              "Expected %d import(s) in the organized imports but it contained %d",
+              expectedImportCount, importCount));
     }
+
+    // output organized imports
+    result.append(organizedImports.asImportBlock());
 
     String replacementString = result.toString();
     if (!hasExistingImports) {

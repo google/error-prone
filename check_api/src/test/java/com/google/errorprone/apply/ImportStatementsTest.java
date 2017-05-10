@@ -18,6 +18,7 @@ package com.google.errorprone.apply;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.expectThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -433,5 +434,25 @@ public class ImportStatementsTest {
     imports.add("import java.util.List");
     assertEquals(0, imports.getStartPos());
     assertEquals("\nimport java.util.List;\n", imports.toString());
+  }
+
+  @Test
+  public void addsAllImports() {
+    ImportStatements imports =
+        new ImportStatements(
+            null,
+            new ArrayList<>(),
+            FAKE_END_POS_MAP,
+            new ImportOrganizer() {
+              @Override
+              public OrganizedImports organizeImports(List<Import> imports) {
+                return new OrganizedImports();
+              }
+            });
+
+    imports.add("import java.util.List");
+    IllegalStateException exception = expectThrows(IllegalStateException.class, imports::toString);
+    assertEquals(
+        "Expected 1 import(s) in the organized imports but it contained 0", exception.getMessage());
   }
 }
