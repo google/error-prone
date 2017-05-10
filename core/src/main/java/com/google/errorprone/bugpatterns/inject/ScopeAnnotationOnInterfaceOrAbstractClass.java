@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.IS_DAGGER_COMPONENT;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static javax.lang.model.element.Modifier.ABSTRACT;
@@ -70,6 +71,7 @@ public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     Tree modified = getCurrentlyAnnotatedNode(state);
     if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state)
         && modified instanceof ClassTree
+        && !IS_DAGGER_COMPONENT.matches((ClassTree) modified, state)
         && INTERFACE_AND_ABSTRACT_TYPE_MATCHER.matches((ClassTree) modified, state)) {
       return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
     }
