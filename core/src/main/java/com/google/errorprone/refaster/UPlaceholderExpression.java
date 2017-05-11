@@ -142,23 +142,26 @@ public abstract class UPlaceholderExpression extends UExpression {
       return Choice.none();
     }
     final JCExpression expr = (JCExpression) node;
-    
-    PlaceholderVerificationVisitor verification = new PlaceholderVerificationVisitor(
-        Collections2.transform(placeholder().requiredParameters(), Functions.forMap(arguments())),
-        arguments().values());
+
+    PlaceholderVerificationVisitor verification =
+        new PlaceholderVerificationVisitor(
+            Collections2.transform(
+                placeholder().requiredParameters(), Functions.forMap(arguments())),
+            arguments().values());
     if (!verification.scan(node, unifier) || !verification.allRequiredMatched()) {
       return Choice.none();
     }
-    
+
     /*
      * We copy the tree with a TreeCopier, replacing matches for the parameters with
      * PlaceholderParamIdents, and updating unifierHolder as we unify things, including forbidding
      * references to local variables, etc.
      */
-    Choice<? extends PlaceholderUnificationVisitor.State<? extends JCExpression>> states = 
-        PlaceholderUnificationVisitor.create(
-            TreeMaker.instance(unifier.getContext()), arguments())
-                .unifyExpression(expr, PlaceholderUnificationVisitor.State.create(
+    Choice<? extends PlaceholderUnificationVisitor.State<? extends JCExpression>> states =
+        PlaceholderUnificationVisitor.create(TreeMaker.instance(unifier.getContext()), arguments())
+            .unifyExpression(
+                expr,
+                PlaceholderUnificationVisitor.State.create(
                     List.<UVariableDecl>nil(), unifier, null));
     return states.thenOption(
         new Function<

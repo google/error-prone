@@ -79,9 +79,7 @@ public final class BugPatternInstance {
       @SuppressWarnings("unchecked")
       List<? extends AnnotationValue> resultList = (List<? extends AnnotationValue>) result;
       instance.customSuppressionAnnotations =
-          FluentIterable.from(resultList)
-              .transform(TO_STRING)
-              .toArray(String.class);
+          FluentIterable.from(resultList).transform(TO_STRING).toArray(String.class);
     }
     instance.generateExamplesFromTestCases =
         !keyValues.containsKey("generateExamplesFromTestCases")

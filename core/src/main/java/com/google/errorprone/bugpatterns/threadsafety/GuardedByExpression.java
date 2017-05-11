@@ -37,19 +37,18 @@ import javax.lang.model.element.ElementKind;
 public abstract class GuardedByExpression {
 
   public abstract Kind kind();
+
   public abstract Symbol sym();
+
   public abstract Type type();
-  
+
   static final String ENCLOSING_INSTANCE_NAME = "outer$";
-  
-  /**
-   * A 'class' literal: ClassName.class
-   */
+
+  /** A 'class' literal: ClassName.class */
   @AutoValue
   public abstract static class ClassLiteral extends GuardedByExpression {
     public static ClassLiteral create(Symbol owner) {
-      return new AutoValue_GuardedByExpression_ClassLiteral(
-          Kind.CLASS_LITERAL, owner, owner.type);
+      return new AutoValue_GuardedByExpression_ClassLiteral(Kind.CLASS_LITERAL, owner, owner.type);
     }
   }
 
@@ -59,14 +58,11 @@ public abstract class GuardedByExpression {
   @AutoValue
   public abstract static class TypeLiteral extends GuardedByExpression {
     public static TypeLiteral create(Symbol owner) {
-      return new AutoValue_GuardedByExpression_TypeLiteral(
-          Kind.TYPE_LITERAL, owner, owner.type);
+      return new AutoValue_GuardedByExpression_TypeLiteral(Kind.TYPE_LITERAL, owner, owner.type);
     }
   }
 
-  /**
-   * A local variable (or parameter), resolved as part of a lock access expression.
-   */
+  /** A local variable (or parameter), resolved as part of a lock access expression. */
   @AutoValue
   public abstract static class LocalVariable extends GuardedByExpression {
     public static LocalVariable create(Symbol owner) {
@@ -104,9 +100,7 @@ public abstract class GuardedByExpression {
     }
   }
 
-  /**
-   * A simple 'this literal.
-   */
+  /** A simple 'this literal. */
   // Don't use AutoValue here, since sym and type need to be 'null'. (And since
   // it's a singleton we don't need to implement equals() or hashCode()).
   public static class ThisLiteral extends GuardedByExpression {
@@ -131,12 +125,10 @@ public abstract class GuardedByExpression {
     private ThisLiteral() {}
   }
 
-  /**
-   * The member access expression for a field or method.
-   */
+  /** The member access expression for a field or method. */
   @AutoValue
   public abstract static class Select extends GuardedByExpression {
-    
+
     public abstract GuardedByExpression base();
 
     public static Select create(GuardedByExpression base, Symbol sym, Type type) {
@@ -151,13 +143,13 @@ public abstract class GuardedByExpression {
     }
 
     /**
-     * Synthesizes the {@link GuardedByExpression} for an enclosing class access. The
-     * access is represented as a chain of field accesses from an instance of the current class to
-     * its enclosing ancestor. At each level, the enclosing class is accessed via a magic 'outer$'
+     * Synthesizes the {@link GuardedByExpression} for an enclosing class access. The access is
+     * represented as a chain of field accesses from an instance of the current class to its
+     * enclosing ancestor. At each level, the enclosing class is accessed via a magic 'outer$'
      * field.
-     * 
+     *
      * <p>Example:
-     * 
+     *
      * <pre>
      * <code>
      * class Outer {
@@ -171,9 +163,9 @@ public abstract class GuardedByExpression {
      * }
      * </code>
      * </pre>
-     * 
-     * @param  access    the inner class where the access occurs.
-     * @param  enclosing the lexically enclosing class.
+     *
+     * @param access the inner class where the access occurs.
+     * @param enclosing the lexically enclosing class.
      */
     GuardedByExpression qualifiedThis(Names names, ClassSymbol access, Symbol enclosing) {
       GuardedByExpression base = thisliteral();
@@ -185,7 +177,7 @@ public abstract class GuardedByExpression {
         }
         base = select(base, new EnclosingInstanceSymbol(names, curr));
       } while (!curr.equals(enclosing));
-      checkGuardedBy(curr != null , "Expected an enclosing class.");
+      checkGuardedBy(curr != null, "Expected an enclosing class.");
       return base;
     }
 
@@ -232,8 +224,7 @@ public abstract class GuardedByExpression {
       if (member instanceof MethodSymbol) {
         return select(base, (MethodSymbol) member);
       }
-      throw new IllegalStateException(
-          "Bad select expression: expected symbol " + member.getKind());
+      throw new IllegalStateException("Bad select expression: expected symbol " + member.getKind());
     }
 
     Select select(GuardedByExpression base, Symbol.VarSymbol member) {
@@ -276,9 +267,7 @@ public abstract class GuardedByExpression {
     return DebugPrinter.print(this);
   }
 
-  /**
-   * Pretty printer for lock expressions.
-   */
+  /** Pretty printer for lock expressions. */
   private static class PrettyPrinter {
 
     public static String print(GuardedByExpression exp) {
@@ -333,9 +322,7 @@ public abstract class GuardedByExpression {
     }
   }
 
-  /**
-   * s-exp pretty printer for lock expressions.
-   */
+  /** s-exp pretty printer for lock expressions. */
   private static class DebugPrinter {
     public static String print(GuardedByExpression exp) {
       StringBuilder sb = new StringBuilder();
@@ -368,7 +355,7 @@ public abstract class GuardedByExpression {
       if (exp.sym().name.contentEquals(ENCLOSING_INSTANCE_NAME)) {
         sb.append(String.format(" %s%s)", ENCLOSING_INSTANCE_NAME, exp.sym().owner));
       } else {
-        sb.append(String.format(" %s)", exp.sym())); 
+        sb.append(String.format(" %s)", exp.sym()));
       }
     }
   }

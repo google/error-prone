@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  */
 @AutoValue
 public abstract class ULiteral extends UExpression implements LiteralTree {
-  
+
   public static ULiteral nullLit() {
     return create(Kind.NULL_LITERAL, null);
   }
@@ -47,39 +47,39 @@ public abstract class ULiteral extends UExpression implements LiteralTree {
   public static ULiteral longLit(long value) {
     return create(Kind.LONG_LITERAL, value);
   }
-  
+
   public static ULiteral floatLit(float value) {
     return create(Kind.FLOAT_LITERAL, value);
   }
-  
+
   public static ULiteral doubleLit(double value) {
     return create(Kind.DOUBLE_LITERAL, value);
   }
-  
+
   public static ULiteral booleanLit(boolean value) {
     return create(Kind.BOOLEAN_LITERAL, value);
   }
-  
+
   public static ULiteral charLit(char value) {
     return create(Kind.CHAR_LITERAL, value);
   }
-  
+
   public static ULiteral stringLit(String value) {
     return create(Kind.STRING_LITERAL, value);
   }
 
   private static final ImmutableBiMap<Kind, TypeTag> LIT_KIND_TAG =
       new ImmutableBiMap.Builder<Kind, TypeTag>()
-        .put(Kind.INT_LITERAL, TypeTag.INT)
-        .put(Kind.LONG_LITERAL, TypeTag.LONG)
-        .put(Kind.FLOAT_LITERAL, TypeTag.FLOAT)
-        .put(Kind.DOUBLE_LITERAL, TypeTag.DOUBLE)
-        .put(Kind.CHAR_LITERAL, TypeTag.CHAR)
-        .put(Kind.BOOLEAN_LITERAL, TypeTag.BOOLEAN)
-        .put(Kind.NULL_LITERAL, TypeTag.BOT)
-        .put(Kind.STRING_LITERAL, TypeTag.CLASS)
-        .build();
-  
+          .put(Kind.INT_LITERAL, TypeTag.INT)
+          .put(Kind.LONG_LITERAL, TypeTag.LONG)
+          .put(Kind.FLOAT_LITERAL, TypeTag.FLOAT)
+          .put(Kind.DOUBLE_LITERAL, TypeTag.DOUBLE)
+          .put(Kind.CHAR_LITERAL, TypeTag.CHAR)
+          .put(Kind.BOOLEAN_LITERAL, TypeTag.BOOLEAN)
+          .put(Kind.NULL_LITERAL, TypeTag.BOT)
+          .put(Kind.STRING_LITERAL, TypeTag.CLASS)
+          .build();
+
   public static ULiteral create(Kind kind, Object value) {
     checkArgument(LIT_KIND_TAG.containsKey(kind), "%s is not a literal kind", kind);
     return new AutoValue_ULiteral(kind, value);

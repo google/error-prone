@@ -43,7 +43,7 @@ public class UForAllTest {
         .addEqualityGroup(UForAll.create(ImmutableList.of(tType), tType)) // <T> T
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     UType nullType = UPrimitiveType.create(TypeKind.NULL);

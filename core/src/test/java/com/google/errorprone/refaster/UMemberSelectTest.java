@@ -47,10 +47,10 @@ public class UMemberSelectTest extends AbstractUTreeTest {
     UMethodType indexOfIntTy = UMethodType.create(UPrimitiveType.INT, UPrimitiveType.INT);
     // int String.indexOf(String)
     UMethodType indexOfStringTy = UMethodType.create(UPrimitiveType.INT, stringTy);
-    
+
     UExpression fooLit = ULiteral.stringLit("foo");
     UExpression barLit = ULiteral.stringLit("bar");
-    
+
     new EqualsTester()
         .addEqualityGroup(UMemberSelect.create(fooLit, "indexOf", indexOfIntTy))
         .addEqualityGroup(UMemberSelect.create(fooLit, "indexOf", indexOfStringTy))
@@ -61,7 +61,9 @@ public class UMemberSelectTest extends AbstractUTreeTest {
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(
-        UMemberSelect.create(ULiteral.stringLit("foo"), "indexOf",
+        UMemberSelect.create(
+            ULiteral.stringLit("foo"),
+            "indexOf",
             UMethodType.create(UPrimitiveType.INT, UPrimitiveType.INT)));
   }
 }

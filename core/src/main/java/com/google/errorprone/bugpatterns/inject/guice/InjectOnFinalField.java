@@ -54,5 +54,4 @@ public class InjectOnFinalField extends BugChecker implements VariableTreeMatche
     }
     return Description.NO_MATCH;
   }
-
 }

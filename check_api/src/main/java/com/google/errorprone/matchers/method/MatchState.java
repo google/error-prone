@@ -34,7 +34,7 @@ abstract class MatchState {
   abstract ImmutableList<Type> paramTypes();
 
   static MatchState create(Type ownerType, MethodSymbol methodSymbol) {
-    return new AutoValue_MatchState(ownerType, methodSymbol,
-        ImmutableList.copyOf(methodSymbol.type.getParameterTypes()));
+    return new AutoValue_MatchState(
+        ownerType, methodSymbol, ImmutableList.copyOf(methodSymbol.type.getParameterTypes()));
   }
 }

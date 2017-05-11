@@ -21,23 +21,22 @@ import javax.annotation.Nullable;
 
 /**
  * Supplier of file differences.
- * 
- * <p>This can be a data source (e.g. an already computed diff file) or it can produce diffs on
- * the fly by reading files from a {@link FileSource} and processing each one by one.
- * 
+ *
+ * <p>This can be a data source (e.g. an already computed diff file) or it can produce diffs on the
+ * fly by reading files from a {@link FileSource} and processing each one by one.
+ *
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 public interface DiffSupplier {
 
   /**
    * Gets the list of differences
-   * 
+   *
    * @param fileSource the source of source files
-   * @param fileNames an optional list of filenames to restrict to. If null, there is no
-   *   restriction on file names. This will make more sense for some diff suppliers than others.)
+   * @param fileNames an optional list of filenames to restrict to. If null, there is no restriction
+   *     on file names. This will make more sense for some diff suppliers than others.)
    * @return the diffs
-   * @throws IOException if there is an I/O problem while generating the diffs 
+   * @throws IOException if there is an I/O problem while generating the diffs
    */
   Iterable<Diff> getDiffs(FileSource fileSource, @Nullable String[] fileNames) throws IOException;
-  
 }

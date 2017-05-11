@@ -48,7 +48,7 @@ import javax.lang.model.element.Name;
 
 /**
  * Analyzes a series of statements to determine whether they don't, sometimes, or never return.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
@@ -127,20 +127,20 @@ class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
 
     abstract Result then(Result other);
   }
-  
+
   static class BreakContext {
     final Set<Name> internalLabels;
     int loopDepth;
-    
+
     private BreakContext() {
       this.internalLabels = new HashSet<>();
       this.loopDepth = 0;
     }
-    
+
     void enter(Name label) {
       internalLabels.add(label);
     }
-    
+
     void exit(Name label) {
       internalLabels.remove(label);
     }
@@ -151,7 +151,7 @@ class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
   public Result visitStatement(StatementTree node) {
     return node.accept(this, new BreakContext());
   }
-  
+
   public Result visitStatements(Iterable<? extends StatementTree> nodes) {
     return visitStatements(nodes, new BreakContext());
   }
@@ -224,7 +224,7 @@ class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
         if (caseTree.getExpression() == null) {
           seenDefault = true;
         }
-        
+
         if (result == null) {
           result = caseTree.accept(this, cxt);
         } else {
@@ -270,9 +270,8 @@ class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
   @Override
   public Result visitIf(IfTree node, BreakContext cxt) {
     Result thenResult = node.getThenStatement().accept(this, cxt);
-    Result elseResult = (node.getElseStatement() == null)
-        ? NEVER_EXITS
-            : node.getElseStatement().accept(this, cxt);
+    Result elseResult =
+        (node.getElseStatement() == null) ? NEVER_EXITS : node.getElseStatement().accept(this, cxt);
     return thenResult.or(elseResult);
   }
 

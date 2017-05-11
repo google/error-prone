@@ -23,11 +23,10 @@ import java.lang.annotation.Target;
 
 /**
  * An annotation for repeated Refaster template variables.
- * <p>
- * A template variable with annotation @Repeated matches zero or more occurences of expression.
+ *
+ * <p>A template variable with annotation @Repeated matches zero or more occurences of expression.
  * This is often used for varargs.
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
 public @interface Repeated {}
-

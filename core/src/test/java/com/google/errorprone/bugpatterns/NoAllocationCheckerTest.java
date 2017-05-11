@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author agoode@google.com (Adam Goode)
- */
+/** @author agoode@google.com (Adam Goode) */
 @RunWith(JUnit4.class)
 public class NoAllocationCheckerTest {
 

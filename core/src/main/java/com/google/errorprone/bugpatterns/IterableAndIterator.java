@@ -50,19 +50,13 @@ public class IterableAndIterator extends BugChecker implements ClassTreeMatcher 
   private static final String ITERABLE = Iterable.class.getCanonicalName();
   private static final String ITERATOR = Iterator.class.getCanonicalName();
 
-  /**
-   * Matches if a class/interface is subtype of Iterable
-   */
+  /** Matches if a class/interface is subtype of Iterable */
   private static final Matcher<Tree> ITERABLE_MATCHER = isSubtypeOf(ITERABLE);
 
-  /**
-   * Matches if a class/interface is subtype of Iterator
-   */
+  /** Matches if a class/interface is subtype of Iterator */
   private static final Matcher<Tree> ITERATOR_MATCHER = isSubtypeOf(ITERATOR);
 
-  /**
-   * Matches if a class/interface is subtype of Iterable _and_ Iterator
-   */
+  /** Matches if a class/interface is subtype of Iterable _and_ Iterator */
   private static final Matcher<Tree> ITERABLE_AND_ITERATOR_MATCHER =
       allOf(ITERABLE_MATCHER, ITERATOR_MATCHER);
 

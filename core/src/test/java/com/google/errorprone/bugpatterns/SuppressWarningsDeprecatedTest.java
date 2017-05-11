@@ -24,7 +24,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Unit tests for {@link SuppressWarningsDeprecated}.
- *  
+ *
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 @RunWith(JUnit4.class)

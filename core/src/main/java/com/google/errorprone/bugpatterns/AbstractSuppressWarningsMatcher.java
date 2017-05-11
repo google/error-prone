@@ -28,20 +28,17 @@ import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Abstract matcher which can process changes to a SuppressWarnings annotation.
- */
-abstract class AbstractSuppressWarningsMatcher extends BugChecker
-    implements AnnotationTreeMatcher {
+/** Abstract matcher which can process changes to a SuppressWarnings annotation. */
+abstract class AbstractSuppressWarningsMatcher extends BugChecker implements AnnotationTreeMatcher {
 
   /**
    * Processes the list of SuppressWarnings values in-place when creating a {@link SuggestedFix}.
-   * Items may be added, removed or re-ordered as necessary. The initial input are the values
-   * in the order specified in the code being processed.
+   * Items may be added, removed or re-ordered as necessary. The initial input are the values in the
+   * order specified in the code being processed.
    *
    * @param values list of suppressed warnings in the order in which they appear in the code
    */
-  abstract protected void processSuppressWarningsValues(List<String> values);
+  protected abstract void processSuppressWarningsValues(List<String> values);
 
   protected final Fix getSuggestedFix(AnnotationTree annotationTree) {
     List<String> values = new ArrayList<>();
@@ -71,8 +68,7 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker
     if (values.isEmpty()) {
       return SuggestedFix.delete(annotationTree);
     } else if (values.size() == 1) {
-      return SuggestedFix
-          .replace(annotationTree, "@SuppressWarnings(\"" + values.get(0) + "\")");
+      return SuggestedFix.replace(annotationTree, "@SuppressWarnings(\"" + values.get(0) + "\")");
     } else {
       StringBuilder sb = new StringBuilder("@SuppressWarnings({\"" + values.get(0) + "\"");
       for (int i = 1; i < values.size(); i++) {
@@ -83,5 +79,4 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker
       return SuggestedFix.replace(annotationTree, sb.toString());
     }
   }
-
 }

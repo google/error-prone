@@ -19,10 +19,7 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 
-/**
-
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 public class ParentNode implements Matcher<Tree> {
   private final Matcher<Tree> treeMatcher;
 

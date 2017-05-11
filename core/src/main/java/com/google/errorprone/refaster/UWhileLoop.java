@@ -25,7 +25,7 @@ import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
 
 /**
  * A {@link UTree} representation of a {@link WhileLoopTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -42,14 +42,15 @@ abstract class UWhileLoop extends USimpleStatement implements WhileLoopTree {
 
   @Override
   public JCWhileLoop inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().WhileLoop(
-        getCondition().inline(inliner),
-        getStatement().inline(inliner));
+    return inliner
+        .maker()
+        .WhileLoop(getCondition().inline(inliner), getStatement().inline(inliner));
   }
 
   @Override
   public Choice<Unifier> visitWhileLoop(WhileLoopTree loop, Unifier unifier) {
-    return getCondition().unify(loop.getCondition(), unifier)
+    return getCondition()
+        .unify(loop.getCondition(), unifier)
         .thenChoose(unifications(getStatement(), loop.getStatement()));
   }
 

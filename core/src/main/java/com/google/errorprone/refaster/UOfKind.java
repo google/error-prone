@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 
 /**
  * {@code UExpression} imposing a restriction on the kind of the matched expression.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -35,25 +35,26 @@ abstract class UOfKind extends UExpression {
   public static UOfKind create(UExpression expression, Set<Kind> allowed) {
     return new AutoValue_UOfKind(expression, allowed);
   }
-  
+
   abstract UExpression expression();
+
   abstract Set<Kind> allowed();
-  
+
   @Override
   public JCExpression inline(Inliner inliner) throws CouldNotResolveImportException {
     return expression().inline(inliner);
   }
-  
+
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
     return expression().accept(visitor, data);
   }
-  
+
   @Override
   public Kind getKind() {
     return expression().getKind();
   }
-  
+
   @Override
   @Nullable
   protected Choice<Unifier> defaultAction(Tree tree, @Nullable Unifier unifier) {

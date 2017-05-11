@@ -81,8 +81,8 @@ public class ThrowIfUncheckedKnownChecked extends BugChecker
           Types types = state.getTypes();
           Symtab symtab = state.getSymtab();
           return
-              // Has to be some Exception: A variable of type Throwable might be an Error.
-              types.isSubtype(type, symtab.exceptionType)
+          // Has to be some Exception: A variable of type Throwable might be an Error.
+          types.isSubtype(type, symtab.exceptionType)
               // Has to be some subtype: A variable of type Exception might be a RuntimeException.
               && !types.isSameType(type, symtab.exceptionType)
               // Can't be of type RuntimeException.

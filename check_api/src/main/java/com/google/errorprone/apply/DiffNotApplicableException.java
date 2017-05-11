@@ -16,16 +16,16 @@
 
 package com.google.errorprone.apply;
 
-/**
- * Exception thrown if a {@link Diff} could not be applied by a {@link DiffApplier}
- */
+/** Exception thrown if a {@link Diff} could not be applied by a {@link DiffApplier} */
 public class DiffNotApplicableException extends RuntimeException {
   public DiffNotApplicableException(String msg) {
     super(msg);
   }
+
   public DiffNotApplicableException(String msg, Throwable cause) {
     super(msg, cause);
   }
+
   public DiffNotApplicableException(Throwable cause) {
     super(cause);
   }

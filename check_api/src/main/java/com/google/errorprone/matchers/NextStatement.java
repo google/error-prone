@@ -23,6 +23,7 @@ import java.util.List;
 
 /**
  * A matcher for the next statement following a given statement.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class NextStatement<T extends StatementTree> implements Matcher<T> {

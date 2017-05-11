@@ -52,16 +52,16 @@ import javax.lang.model.element.Modifier;
 
 /**
  * Scanner implementation to extract a single Refaster rule from a {@code ClassTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Void> {
   private static final Logger logger =
       Logger.getLogger(RefasterRuleBuilderScanner.class.toString());
-  
-  static final Context.Key<Map<MethodSymbol, PlaceholderMethod>> PLACEHOLDER_METHODS_KEY
-      = new Context.Key<>();
-  
+
+  static final Context.Key<Map<MethodSymbol, PlaceholderMethod>> PLACEHOLDER_METHODS_KEY =
+      new Context.Key<>();
+
   private final Context context;
   private final Map<MethodSymbol, PlaceholderMethod> placeholderMethods;
   private final List<Template<?>> beforeTemplates;
@@ -75,28 +75,30 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
     } else {
       this.placeholderMethods = context.get(PLACEHOLDER_METHODS_KEY);
     }
-    
+
     this.beforeTemplates = new ArrayList<>();
     this.afterTemplates = new ArrayList<>();
   }
-  
-  public static Collection<? extends CodeTransformer> extractRules(ClassTree tree,
-      Context context) {
+
+  public static Collection<? extends CodeTransformer> extractRules(
+      ClassTree tree, Context context) {
     ClassSymbol sym = ASTHelpers.getSymbol(tree);
     RefasterRuleBuilderScanner scanner = new RefasterRuleBuilderScanner(context);
     // visit abstract methods first
-    List<MethodTree> methods = new Ordering<MethodTree>() {
-      @Override public int compare(MethodTree l, MethodTree r) {
-        return Boolean.compare(
-            l.getModifiers().getFlags().contains(Modifier.ABSTRACT),
-            r.getModifiers().getFlags().contains(Modifier.ABSTRACT));
-      }
-    }.reverse().immutableSortedCopy(Iterables.filter(tree.getMembers(), MethodTree.class));
+    List<MethodTree> methods =
+        new Ordering<MethodTree>() {
+          @Override
+          public int compare(MethodTree l, MethodTree r) {
+            return Boolean.compare(
+                l.getModifiers().getFlags().contains(Modifier.ABSTRACT),
+                r.getModifiers().getFlags().contains(Modifier.ABSTRACT));
+          }
+        }.reverse().immutableSortedCopy(Iterables.filter(tree.getMembers(), MethodTree.class));
     scanner.visit(methods, null);
-    
+
     UTemplater templater = new UTemplater(context);
     List<UType> types = templater.templateTypes(sym.type.getTypeArguments());
-    
+
     return scanner.createMatchers(
         Iterables.filter(types, UTypeVar.class),
         sym.getQualifiedName().toString(),
@@ -109,19 +111,25 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
       VisitorState state = new VisitorState(context);
       logger.log(FINE, "Discovered method with name {0}", tree.getName());
       if (ASTHelpers.hasAnnotation(tree, Placeholder.class, state)) {
-        checkArgument(tree.getModifiers().getFlags().contains(Modifier.ABSTRACT),
+        checkArgument(
+            tree.getModifiers().getFlags().contains(Modifier.ABSTRACT),
             "@Placeholder methods are expected to be abstract");
         UTemplater templater = new UTemplater(context);
-        ImmutableMap.Builder<UVariableDecl,
-            ImmutableClassToInstanceMap<Annotation>> params = ImmutableMap.builder();
+        ImmutableMap.Builder<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> params =
+            ImmutableMap.builder();
         for (VariableTree param : tree.getParameters()) {
-          params.put(templater.visitVariable(param, null), 
+          params.put(
+              templater.visitVariable(param, null),
               UTemplater.annotationMap(ASTHelpers.getSymbol(param)));
         }
         MethodSymbol sym = ASTHelpers.getSymbol(tree);
-        placeholderMethods.put(sym, PlaceholderMethod.create(tree.getName(),
-            templater.template(sym.getReturnType()), params.build(),
-            UTemplater.annotationMap(sym)));
+        placeholderMethods.put(
+            sym,
+            PlaceholderMethod.create(
+                tree.getName(),
+                templater.template(sym.getReturnType()),
+                params.build(),
+                UTemplater.annotationMap(sym)));
       } else if (ASTHelpers.hasAnnotation(tree, BeforeTemplate.class, state)) {
         checkState(afterTemplates.isEmpty(), "BeforeTemplate must come before AfterTemplate");
         Template<?> template = UTemplater.createTemplate(context, tree);
@@ -143,7 +151,8 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
 
   private Collection<? extends CodeTransformer> createMatchers(
       Iterable<UTypeVar> typeVars,
-      String qualifiedTemplateClass, ImmutableClassToInstanceMap<Annotation> annotationMap) {
+      String qualifiedTemplateClass,
+      ImmutableClassToInstanceMap<Annotation> annotationMap) {
     if (beforeTemplates.isEmpty() && afterTemplates.isEmpty()) {
       // there's no template here
       return ImmutableList.of();
@@ -165,12 +174,14 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
         }
         for (int i = 0; i < afterTemplates.size(); i++) {
           BlockTemplate afterBlock = (BlockTemplate) afterTemplates.get(i);
-          afterTemplates.set(i, afterBlock.withStatements(
-              Iterables.concat(blanks, afterBlock.templateStatements())));
+          afterTemplates.set(
+              i,
+              afterBlock.withStatements(Iterables.concat(blanks, afterBlock.templateStatements())));
         }
       }
-      RefasterRule<?, ?> rule = RefasterRule.create(qualifiedTemplateClass, typeVars,
-          beforeTemplates, afterTemplates, annotationMap);
+      RefasterRule<?, ?> rule =
+          RefasterRule.create(
+              qualifiedTemplateClass, typeVars, beforeTemplates, afterTemplates, annotationMap);
 
       List<ExpressionTemplate> negatedAfterTemplates = new ArrayList<>();
       for (Template<?> afterTemplate : afterTemplates) {
@@ -183,13 +194,16 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
         for (Template<?> beforeTemplate : beforeTemplates) {
           negatedBeforeTemplates.add(((ExpressionTemplate) beforeTemplate).negation());
         }
-        RefasterRule<?, ?> negation = RefasterRule.create(
-            qualifiedTemplateClass, typeVars, negatedBeforeTemplates, 
-            negatedAfterTemplates, annotationMap);
+        RefasterRule<?, ?> negation =
+            RefasterRule.create(
+                qualifiedTemplateClass,
+                typeVars,
+                negatedBeforeTemplates,
+                negatedAfterTemplates,
+                annotationMap);
         return ImmutableList.of(rule, negation);
       }
       return ImmutableList.of(rule);
     }
   }
-
 }

@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link UIf}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -33,44 +33,58 @@ public class UIfTest extends AbstractUTreeTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UIf.create(
-            UFreeIdent.create("cond"), 
-            UBlock.create(UExpressionStatement.create(
-                UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))), 
-            UBlock.create(UExpressionStatement.create(
-                UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("z"))))))
-        .addEqualityGroup(UIf.create(
-            UFreeIdent.create("cond"), 
-            UBlock.create(UExpressionStatement.create(
-                UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))),
-            null))
-        .addEqualityGroup(UIf.create(
-            ULiteral.booleanLit(true), 
-            UBlock.create(UExpressionStatement.create(
-                UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))),
-            UBlock.create(UExpressionStatement.create(
-                UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("z"))))))
+        .addEqualityGroup(
+            UIf.create(
+                UFreeIdent.create("cond"),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("z"))))))
+        .addEqualityGroup(
+            UIf.create(
+                UFreeIdent.create("cond"),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))),
+                null))
+        .addEqualityGroup(
+            UIf.create(
+                ULiteral.booleanLit(true),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("z"))))))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UIf.create(
-        UFreeIdent.create("cond"), 
-        UBlock.create(UExpressionStatement.create(
-            UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))), 
-        UBlock.create(UExpressionStatement.create(
-            UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("z"))))));
+    SerializableTester.reserializeAndAssert(
+        UIf.create(
+            UFreeIdent.create("cond"),
+            UBlock.create(
+                UExpressionStatement.create(
+                    UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))),
+            UBlock.create(
+                UExpressionStatement.create(
+                    UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("z"))))));
   }
-  
+
   @Test
   public void inlineWithElse() {
-    UIf ifTree = UIf.create(
-        UFreeIdent.create("cond"), 
-        UBlock.create(UExpressionStatement.create(
-            UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))), 
-        UBlock.create(UExpressionStatement.create(
-            UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("z")))));
+    UIf ifTree =
+        UIf.create(
+            UFreeIdent.create("cond"),
+            UBlock.create(
+                UExpressionStatement.create(
+                    UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))),
+            UBlock.create(
+                UExpressionStatement.create(
+                    UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("z")))));
     bind(new UFreeIdent.Key("cond"), parseExpression("true"));
     bind(new UFreeIdent.Key("x"), parseExpression("x"));
     bind(new UFreeIdent.Key("y"), parseExpression("\"foo\""));
@@ -85,14 +99,16 @@ public class UIfTest extends AbstractUTreeTest {
                 "}"),
         ifTree);
   }
-  
+
   @Test
   public void inlineWithoutElse() {
-    UIf ifTree = UIf.create(
-        UFreeIdent.create("cond"), 
-        UBlock.create(UExpressionStatement.create(
-            UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))), 
-        null);
+    UIf ifTree =
+        UIf.create(
+            UFreeIdent.create("cond"),
+            UBlock.create(
+                UExpressionStatement.create(
+                    UAssign.create(UFreeIdent.create("x"), UFreeIdent.create("y")))),
+            null);
     bind(new UFreeIdent.Key("cond"), parseExpression("true"));
     bind(new UFreeIdent.Key("x"), parseExpression("x"));
     bind(new UFreeIdent.Key("y"), parseExpression("\"foo\""));

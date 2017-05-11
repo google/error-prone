@@ -45,7 +45,7 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
   severity = SUGGESTION,
   linkType = CUSTOM,
   link = "https://google.github.io/styleguide/javaguide.html#s4.8.3.2-array-declarations"
-  )
+)
 public class MixedArrayDimensions extends BugChecker
     implements MethodTreeMatcher, VariableTreeMatcher {
 

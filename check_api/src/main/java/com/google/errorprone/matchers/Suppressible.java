@@ -20,9 +20,7 @@ import com.google.errorprone.BugPattern;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 public interface Suppressible {
   /**
    * Returns all of the name strings that this checker should respect as part of a
@@ -30,9 +28,7 @@ public interface Suppressible {
    */
   Set<String> allNames();
 
-  /**
-   * The canonical name of the check.
-   */
+  /** The canonical name of the check. */
   String canonicalName();
 
   /**
@@ -41,8 +37,6 @@ public interface Suppressible {
    */
   BugPattern.Suppressibility suppressibility();
 
-  /**
-   * Returns the custom suppression annotations for this checker, if custom suppression is used.
-   */
+  /** Returns the custom suppression annotations for this checker, if custom suppression is used. */
   Set<Class<? extends Annotation>> customSuppressionAnnotations();
 }

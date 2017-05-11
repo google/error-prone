@@ -73,30 +73,30 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
       return MoreObjects.toStringHelper(this).add("identifier", identifier).toString();
     }
   }
-  
+
   private final Map<Key<?>, Object> contents;
-  
+
   public static Bindings create() {
     return new Bindings();
   }
-  
+
   public static <V> Bindings create(Key<V> key, V value) {
     Bindings result = create();
     result.putBinding(key, value);
     return result;
   }
-  
+
   public static <V1, V2> Bindings create(Key<V1> key1, V1 value1, Key<V2> key2, V2 value2) {
     Bindings result = create();
     result.putBinding(key1, value1);
     result.putBinding(key2, value2);
     return result;
   }
-  
+
   public static Bindings create(Bindings bindings) {
     return new Bindings(bindings);
   }
-  
+
   private Bindings() {
     this(new HashMap<Key<?>, Object>());
   }
@@ -113,13 +113,13 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
   protected Map<Key<?>, Object> delegate() {
     return contents;
   }
-  
+
   @SuppressWarnings("unchecked")
   public <V> V getBinding(Key<V> key) {
     checkNotNull(key);
     return (V) super.get(key);
   }
-  
+
   @SuppressWarnings("unchecked")
   public <V> V putBinding(Key<V> key, V value) {
     checkNotNull(value);
@@ -137,7 +137,7 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
   public void putAll(Map<? extends Key<?>, ? extends Object> map) {
     standardPutAll(map);
   }
-  
+
   public Bindings unmodifiable() {
     return new Bindings(Collections.unmodifiableMap(contents));
   }

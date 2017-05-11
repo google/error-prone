@@ -46,7 +46,9 @@ public class NonRuntimeAnnotation extends BugChecker implements MethodInvocation
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!instanceMethod().onDescendantOf("java.lang.Class").named("getAnnotation")
+    if (!instanceMethod()
+        .onDescendantOf("java.lang.Class")
+        .named("getAnnotation")
         .matches(tree, state)) {
       return Description.NO_MATCH;
     }

@@ -28,8 +28,8 @@ import com.sun.source.tree.ExpressionTree;
 class AnyMethodMatcherImpl extends MethodMatcher implements AnyMethodMatcher {
 
   @Override
-  protected Optional<MatchState> matchResult(ExpressionTree method,
-      MatchState baseResult, VisitorState state) {
+  protected Optional<MatchState> matchResult(
+      ExpressionTree method, MatchState baseResult, VisitorState state) {
     return Optional.of(baseResult);
   }
 

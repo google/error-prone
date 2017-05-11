@@ -58,7 +58,6 @@ public class StrictFormatStringValidation {
           state);
     }
 
-
     // The format string is not a compile time constant. Check if it is an @FormatString method
     // parameter or is in an @FormatMethod method.
     Symbol formatStringSymbol = ASTHelpers.getSymbol(formatStringTree);
@@ -245,9 +244,9 @@ public class StrictFormatStringValidation {
    * either:
    *
    * <ol>
-   * <li>Annotated with {@link FormatString}
-   * <li>The first {@link String} parameter in the method with no other parameters annotated {@link
-   *     FormatString}.
+   *   <li>Annotated with {@link FormatString}
+   *   <li>The first {@link String} parameter in the method with no other parameters annotated
+   *       {@link FormatString}.
    * </ol>
    */
   private static boolean isFormatStringParameter(Symbol formatString, VisitorState state) {

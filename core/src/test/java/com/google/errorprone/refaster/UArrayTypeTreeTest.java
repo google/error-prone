@@ -37,12 +37,12 @@ public class UArrayTypeTreeTest extends AbstractUTreeTest {
         .addEqualityGroup(UArrayTypeTree.create(UArrayTypeTree.create(UPrimitiveTypeTree.INT)))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(UArrayTypeTree.create(UPrimitiveTypeTree.INT));
   }
-  
+
   @Test
   public void inline() {
     assertInlines("int[]", UArrayTypeTree.create(UPrimitiveTypeTree.INT));

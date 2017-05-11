@@ -33,9 +33,9 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import java.io.Serializable;
 
 /**
- * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known
- * {@link BugChecker}s and a set of enabled {@link BugChecker}s. The set of enabled suppliers must
- * be a subset of all known suppliers.
+ * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known {@link
+ * BugChecker}s and a set of enabled {@link BugChecker}s. The set of enabled suppliers must be a
+ * subset of all known suppliers.
  */
 class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   private final ImmutableBiMap<String, BugCheckerInfo> checks;

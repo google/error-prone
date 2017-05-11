@@ -73,8 +73,10 @@ public class ElementsCountedInLoop extends BugChecker
     JCExpression whileExpression = ((JCParens) whileLoop.getCondition()).getExpression();
     if (whileExpression instanceof MethodInvocationTree) {
       MethodInvocationTree methodInvocation = (MethodInvocationTree) whileExpression;
-      if (instanceMethod().onDescendantOf("java.util.Iterator").withSignature("hasNext()").matches(
-          methodInvocation, state)) {
+      if (instanceMethod()
+          .onDescendantOf("java.util.Iterator")
+          .withSignature("hasNext()")
+          .matches(methodInvocation, state)) {
         IdentifierTree identifier = getIncrementedIdentifer(extractSingleStatement(whileLoop.body));
         if (identifier != null) {
           return describeMatch(tree);
@@ -100,10 +102,11 @@ public class ElementsCountedInLoop extends BugChecker
         fix = SuggestedFix.replace(tree, replacement);
       } else {
         String replacement = identifier + " += Iterables.size(" + expression + ");";
-        fix = SuggestedFix.builder()
-            .replace(tree, replacement)
-            .addImport("com.google.common.collect.Iterables")
-            .build();
+        fix =
+            SuggestedFix.builder()
+                .replace(tree, replacement)
+                .addImport("com.google.common.collect.Iterables")
+                .build();
       }
       return describeMatch(tree, fix);
     }
@@ -112,7 +115,7 @@ public class ElementsCountedInLoop extends BugChecker
 
   /**
    * @return the only statement in a block containing one statement or the body itself when it is
-   *         not a block.
+   *     not a block.
    */
   private JCStatement extractSingleStatement(JCStatement body) {
     if (body.getKind() != Kind.BLOCK) {
@@ -127,7 +130,7 @@ public class ElementsCountedInLoop extends BugChecker
 
   /**
    * @return identifier which is being incremented by constant one. Returns null if no such
-   *         identifier is found.
+   *     identifier is found.
    */
   private IdentifierTree getIncrementedIdentifer(JCStatement statement) {
     if (statement == null) {
@@ -173,7 +176,9 @@ public class ElementsCountedInLoop extends BugChecker
   private boolean isConstantOne(JCExpression exp) {
     Tree.Kind kind = exp.getKind();
 
-    if (kind == Kind.INT_LITERAL || kind == Kind.LONG_LITERAL || kind == Kind.FLOAT_LITERAL
+    if (kind == Kind.INT_LITERAL
+        || kind == Kind.LONG_LITERAL
+        || kind == Kind.FLOAT_LITERAL
         || kind == Kind.DOUBLE_LITERAL) {
       if (exp instanceof LiteralTree) {
         Object literalValue = ((LiteralTree) exp).getValue();

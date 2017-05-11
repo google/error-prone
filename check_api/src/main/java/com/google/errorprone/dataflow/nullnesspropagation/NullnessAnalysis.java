@@ -21,9 +21,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
 
-/**
- * An interface to the nullness analysis.
- */
+/** An interface to the nullness analysis. */
 public final class NullnessAnalysis implements Serializable {
 
   private static final Context.Key<NullnessAnalysis> NULLNESS_ANALYSIS_KEY = new Context.Key<>();
@@ -31,7 +29,7 @@ public final class NullnessAnalysis implements Serializable {
   private final NullnessPropagationTransfer nullnessPropagation;
 
   /**
-   * Retrieve an instance of {@link NullnessAnalysis} from the {@code context}.  If there is no
+   * Retrieve an instance of {@link NullnessAnalysis} from the {@code context}. If there is no
    * {@link NullnessAnalysis} currently in the {@code context}, create one, insert it, and return
    * it.
    */
@@ -51,9 +49,9 @@ public final class NullnessAnalysis implements Serializable {
   /**
    * Returns the {@link Nullness} of the leaf of {@code exprPath}.
    *
-   * <p>If the leaf required the compiler to generate autoboxing or autounboxing calls,
-   * {@code getNullness} returns the {@code Nullness} <i>after</i> the boxing/unboxing. This implies
-   * that, in those cases, it will always return {@code NONNULL}.
+   * <p>If the leaf required the compiler to generate autoboxing or autounboxing calls, {@code
+   * getNullness} returns the {@code Nullness} <i>after</i> the boxing/unboxing. This implies that,
+   * in those cases, it will always return {@code NONNULL}.
    */
   public Nullness getNullness(TreePath exprPath, Context context) {
     try {

@@ -54,32 +54,37 @@ import com.sun.tools.javac.tree.JCTree;
 )
 public class MisusedWeekYear extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
-  
+
   private static final String JAVA_SIMPLE_DATE_FORMAT = "java.text.SimpleDateFormat";
   private static final String ICU_SIMPLE_DATE_FORMAT = "com.ibm.icu.text.SimpleDateFormat";
 
   private static final Matcher<NewClassTree> simpleDateFormatConstructorMatcher =
       Matchers.<NewClassTree>anyOf(
-          constructor().forClass(JAVA_SIMPLE_DATE_FORMAT)
-              .withParameters("java.lang.String"),
-          constructor().forClass(JAVA_SIMPLE_DATE_FORMAT)
+          constructor().forClass(JAVA_SIMPLE_DATE_FORMAT).withParameters("java.lang.String"),
+          constructor()
+              .forClass(JAVA_SIMPLE_DATE_FORMAT)
               .withParameters("java.lang.String", "java.text.DateFormatSymbols"),
-          constructor().forClass(JAVA_SIMPLE_DATE_FORMAT)
+          constructor()
+              .forClass(JAVA_SIMPLE_DATE_FORMAT)
               .withParameters("java.lang.String", "java.util.Locale"),
-          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
-              .withParameters("java.lang.String"),
-          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+          constructor().forClass(ICU_SIMPLE_DATE_FORMAT).withParameters("java.lang.String"),
+          constructor()
+              .forClass(ICU_SIMPLE_DATE_FORMAT)
               .withParameters("java.lang.String", "com.ibm.icu.text.DateFormatSymbols"),
-          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+          constructor()
+              .forClass(ICU_SIMPLE_DATE_FORMAT)
               .withParameters(
-                  "java.lang.String", 
-                  "com.ibm.icu.text.DateFormatSymbols", 
+                  "java.lang.String",
+                  "com.ibm.icu.text.DateFormatSymbols",
                   "com.ibm.icu.util.ULocale"),
-          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+          constructor()
+              .forClass(ICU_SIMPLE_DATE_FORMAT)
               .withParameters("java.lang.String", "java.util.Locale"),
-          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+          constructor()
+              .forClass(ICU_SIMPLE_DATE_FORMAT)
               .withParameters("java.lang.String", "java.lang.String", "com.ibm.icu.util.ULocale"),
-          constructor().forClass(ICU_SIMPLE_DATE_FORMAT)
+          constructor()
+              .forClass(ICU_SIMPLE_DATE_FORMAT)
               .withParameters("java.lang.String", "com.ibm.icu.util.ULocale"));
 
   private static final Matcher<ExpressionTree> applyPatternMatcher =
@@ -90,10 +95,10 @@ public class MisusedWeekYear extends BugChecker
           instanceMethod().onExactClass(ICU_SIMPLE_DATE_FORMAT).named("applyLocalizedPattern"));
 
   /**
-   * Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in
-   * which the pattern passed in contains YYYY but not ww, signifying that it was not intended to
-   * be a week date.  If the pattern is a string literal, suggest replacing the YYYY with yyyy.
-   * If the pattern is a constant, don't give a suggested fix since the fix is nonlocal.
+   * Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in which
+   * the pattern passed in contains YYYY but not ww, signifying that it was not intended to be a
+   * week date. If the pattern is a string literal, suggest replacing the YYYY with yyyy. If the
+   * pattern is a constant, don't give a suggested fix since the fix is nonlocal.
    */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -105,10 +110,10 @@ public class MisusedWeekYear extends BugChecker
   }
 
   /**
-   * Match uses of the SimpleDateFormat constructor in which the pattern passed in contains
-   * YYYY but not ww, signifying that it was not intended to be a week date.  If the pattern
-   * is a string literal, suggest replacing the YYYY with yyyy.  If the pattern is a constant, don't
-   * give a suggested fix since the fix is nonlocal.
+   * Match uses of the SimpleDateFormat constructor in which the pattern passed in contains YYYY but
+   * not ww, signifying that it was not intended to be a week date. If the pattern is a string
+   * literal, suggest replacing the YYYY with yyyy. If the pattern is a constant, don't give a
+   * suggested fix since the fix is nonlocal.
    */
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
@@ -120,10 +125,10 @@ public class MisusedWeekYear extends BugChecker
   }
 
   /**
-   * Given the {@link ExpressionTree} representing the pattern argument to the various
-   * methods in SimpleDateFormat that accept a pattern, construct the description for this matcher 
-   * to return.  May be {@link Description#NO_MATCH} if the pattern does not have a constant value,
-   * does not use the week year format specifier, or is in proper week date format.
+   * Given the {@link ExpressionTree} representing the pattern argument to the various methods in
+   * SimpleDateFormat that accept a pattern, construct the description for this matcher to return.
+   * May be {@link Description#NO_MATCH} if the pattern does not have a constant value, does not use
+   * the week year format specifier, or is in proper week date format.
    */
   private Description constructDescription(Tree tree, ExpressionTree patternArg) {
     String pattern = (String) ASTHelpers.constValue((JCTree) patternArg);

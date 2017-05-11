@@ -44,7 +44,8 @@ abstract class UDoWhileLoop extends USimpleStatement implements DoWhileLoopTree 
   @Override
   @Nullable
   public Choice<Unifier> visitDoWhileLoop(DoWhileLoopTree loop, @Nullable Unifier unifier) {
-    return getStatement().unify(loop.getStatement(), unifier)
+    return getStatement()
+        .unify(loop.getStatement(), unifier)
         .thenChoose(unifications(getCondition(), loop.getCondition()));
   }
 

@@ -73,7 +73,6 @@ public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements Cla
                     + "Please remove all but one of them.")
             .build();
       }
-
     }
     return Description.NO_MATCH;
   }

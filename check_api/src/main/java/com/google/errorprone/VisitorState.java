@@ -50,10 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 public class VisitorState {
 
   private final DescriptionListener descriptionListener;
@@ -65,9 +62,11 @@ public class VisitorState {
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
-  private static final DescriptionListener NULL_LISTENER = new DescriptionListener() {
-    @Override public void onDescribed(Description description) {}
-  };
+  private static final DescriptionListener NULL_LISTENER =
+      new DescriptionListener() {
+        @Override
+        public void onDescribed(Description description) {}
+      };
 
   public VisitorState(Context context) {
     this(context, NULL_LISTENER);
@@ -232,9 +231,7 @@ public class VisitorState {
     }
   }
 
-  /**
-   * Build an instance of a Type.
-   */
+  /** Build an instance of a Type. */
   public Type getType(Type baseType, boolean isArray, List<Type> typeParams) {
     boolean isGeneric = typeParams != null && !typeParams.isEmpty();
     if (!isArray && !isGeneric) {
@@ -342,13 +339,11 @@ public class VisitorState {
     return ((JCTree) node).getEndPosition(compilationUnit.endPositions);
   }
 
-  /**
-   * Validates a type string, ensuring it is not generic and not an array type.
-   */
+  /** Validates a type string, ensuring it is not generic and not an array type. */
   private static void validateTypeStr(String typeStr) {
     if (typeStr.contains("[") || typeStr.contains("]")) {
-      throw new IllegalArgumentException("Cannot convert array types, please build them using "
-          + "getType()");
+      throw new IllegalArgumentException(
+          "Cannot convert array types, please build them using " + "getType()");
     }
     if (typeStr.contains("<") || typeStr.contains(">")) {
       throw new IllegalArgumentException(
@@ -386,9 +381,14 @@ public class VisitorState {
   }
 
   private static boolean isPrimitiveType(String typeStr) {
-    return typeStr.equals("byte") || typeStr.equals("short") || typeStr.equals("int") ||
-        typeStr.equals("long") || typeStr.equals("float") || typeStr.equals("double") ||
-        typeStr.equals("boolean") || typeStr.equals("char");
+    return typeStr.equals("byte")
+        || typeStr.equals("short")
+        || typeStr.equals("int")
+        || typeStr.equals("long")
+        || typeStr.equals("float")
+        || typeStr.equals("double")
+        || typeStr.equals("boolean")
+        || typeStr.equals("char");
   }
 
   private static boolean isVoidType(String typeStr) {

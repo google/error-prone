@@ -22,12 +22,14 @@ import com.sun.tools.javac.util.Log;
 
 /**
  * Strategies for reporting results.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public interface DescriptionListener {
 
   /**
    * Reports a suggested modification to the code.
+   *
    * @param description
    */
   void onDescribed(Description description);

@@ -21,11 +21,11 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 
 /**
- * A matcher that recursively inspects a tree, applying the given matcher to all levels of each
- * tree and returning {@code true} if any match is found.
+ * A matcher that recursively inspects a tree, applying the given matcher to all levels of each tree
+ * and returning {@code true} if any match is found.
  *
- * <p>This matcher may be slow. Please avoid using it if there is any other way to implement
- * your check.
+ * <p>This matcher may be slow. Please avoid using it if there is any other way to implement your
+ * check.
  */
 public class Contains implements Matcher<Tree> {
 

@@ -138,7 +138,5 @@ public class BugPatternIndexWriterTest {
                 + "__[BugPatternB](bugpattern/BugPatternB)__<br>\n"
                 + "{summary2}\n"
                 + "\n");
-
   }
-
 }

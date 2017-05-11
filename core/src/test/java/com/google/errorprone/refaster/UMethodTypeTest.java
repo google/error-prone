@@ -40,7 +40,7 @@ public class UMethodTypeTest {
         .addEqualityGroup(UMethodType.create(stringTy))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(

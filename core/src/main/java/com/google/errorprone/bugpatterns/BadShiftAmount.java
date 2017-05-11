@@ -51,45 +51,44 @@ import com.sun.tools.javac.tree.JCTree;
 public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
 
   /**
-   * Matches if the left operand is an int, byte, short, or char, and the right operand is a
-   * literal that is not in the range 0-31 inclusive.
+   * Matches if the left operand is an int, byte, short, or char, and the right operand is a literal
+   * that is not in the range 0-31 inclusive.
    *
    * <p>In a shift expression, byte, short, and char undergo unary numeric promotion and are
-   * promoted to int.  See JLS 5.6.1.
+   * promoted to int. See JLS 5.6.1.
    */
-  private static final Matcher<BinaryTree> BAD_SHIFT_AMOUNT_INT = new Matcher<BinaryTree>() {
-    @Override
-    public boolean matches(BinaryTree tree, VisitorState state) {
-      Type leftType = ((JCTree) tree.getLeftOperand()).type;
-      Types types = state.getTypes();
-      Symtab symtab = state.getSymtab();
-      if (!(types.isSameType(leftType, symtab.intType)) &&
-          !(types.isSameType(leftType, symtab.byteType)) &&
-          !(types.isSameType(leftType, symtab.shortType)) &&
-          !(types.isSameType(leftType, symtab.charType))) {
-        return false;
-      }
+  private static final Matcher<BinaryTree> BAD_SHIFT_AMOUNT_INT =
+      new Matcher<BinaryTree>() {
+        @Override
+        public boolean matches(BinaryTree tree, VisitorState state) {
+          Type leftType = ((JCTree) tree.getLeftOperand()).type;
+          Types types = state.getTypes();
+          Symtab symtab = state.getSymtab();
+          if (!(types.isSameType(leftType, symtab.intType))
+              && !(types.isSameType(leftType, symtab.byteType))
+              && !(types.isSameType(leftType, symtab.shortType))
+              && !(types.isSameType(leftType, symtab.charType))) {
+            return false;
+          }
 
-      ExpressionTree rightOperand = tree.getRightOperand();
-      if (rightOperand instanceof LiteralTree) {
-        Object rightValue = ((LiteralTree) rightOperand).getValue();
-        if (rightValue instanceof Number) {
-          int intValue = ((Number) rightValue).intValue();
-          return intValue < 0 || intValue > 31;
+          ExpressionTree rightOperand = tree.getRightOperand();
+          if (rightOperand instanceof LiteralTree) {
+            Object rightValue = ((LiteralTree) rightOperand).getValue();
+            if (rightValue instanceof Number) {
+              int intValue = ((Number) rightValue).intValue();
+              return intValue < 0 || intValue > 31;
+            }
+          }
+
+          return false;
         }
-      }
+      };
 
-      return false;
-    }
-  };
-
-  public static final Matcher<BinaryTree> BINARY_TREE_MATCHER = allOf(
-      anyOf(
-          kindIs(Kind.LEFT_SHIFT),
-          kindIs(Kind.RIGHT_SHIFT),
-          kindIs(Kind.UNSIGNED_RIGHT_SHIFT)),
-      BAD_SHIFT_AMOUNT_INT
-  );
+  public static final Matcher<BinaryTree> BINARY_TREE_MATCHER =
+      allOf(
+          anyOf(
+              kindIs(Kind.LEFT_SHIFT), kindIs(Kind.RIGHT_SHIFT), kindIs(Kind.UNSIGNED_RIGHT_SHIFT)),
+          BAD_SHIFT_AMOUNT_INT);
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {

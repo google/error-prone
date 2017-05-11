@@ -26,14 +26,14 @@ import javax.lang.model.element.Name;
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
-public abstract class StringName 
+public abstract class StringName
     implements Name, Unifiable<Name>, Inlineable<com.sun.tools.javac.util.Name> {
   public static StringName of(CharSequence contents) {
     return new AutoValue_StringName(contents.toString());
   }
-  
+
   abstract String contents();
-  
+
   @Override
   public String toString() {
     return contents();

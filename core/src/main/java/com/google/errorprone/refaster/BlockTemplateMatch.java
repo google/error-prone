@@ -26,9 +26,9 @@ import com.sun.tools.javac.tree.JCTree.JCStatement;
 import java.io.IOException;
 
 /**
- * A representation of a match against a {@code BlockTemplate}.  The "location" is
- * the first statement of the match.
- * 
+ * A representation of a match against a {@code BlockTemplate}. The "location" is the first
+ * statement of the match.
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 class BlockTemplateMatch extends TemplateMatch {
@@ -38,19 +38,21 @@ class BlockTemplateMatch extends TemplateMatch {
     super(checkNotNull(block).getStatements().get(start), unifier);
     this.statements = ImmutableList.copyOf(block.getStatements().subList(start, end));
   }
-  
+
   public ImmutableList<JCStatement> getStatements() {
     return statements;
   }
-  
+
   @Override
   public String getRange(JCCompilationUnit unit) {
     try {
       CharSequence sequence = unit.getSourceFile().getCharContent(true);
       JCTree firstStatement = statements.get(0);
       JCTree lastStatement = statements.get(statements.size() - 1);
-      return sequence.subSequence(firstStatement.getStartPosition(),
-          lastStatement.getEndPosition(unit.endPositions)).toString();
+      return sequence
+          .subSequence(
+              firstStatement.getStartPosition(), lastStatement.getEndPosition(unit.endPositions))
+          .toString();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

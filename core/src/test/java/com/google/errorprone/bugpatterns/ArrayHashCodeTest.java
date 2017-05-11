@@ -25,9 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class ArrayHashCodeTest {
 
@@ -43,9 +41,7 @@ public class ArrayHashCodeTest {
     compilationHelper.addSourceFile("ArrayHashCodePositiveCases.java").doTest();
   }
 
-  /**
-   * Tests java.util.Objects hashCode methods, which are only in JDK 7 and above.
-   */
+  /** Tests java.util.Objects hashCode methods, which are only in JDK 7 and above. */
   @Test
   public void testJava7PositiveCase() throws Exception {
     String[] javaVersion = JAVA_VERSION.value().split("\\.");
@@ -58,9 +54,7 @@ public class ArrayHashCodeTest {
     compilationHelper.addSourceFile("ArrayHashCodeNegativeCases.java").doTest();
   }
 
-  /**
-   * Tests java.util.Objects hashCode methods, which are only in JDK 7 and above.
-   */
+  /** Tests java.util.Objects hashCode methods, which are only in JDK 7 and above. */
   @Test
   public void testJava7NegativeCase() throws Exception {
     compilationHelper.addSourceFile("ArrayHashCodeNegativeCases2.java").doTest();

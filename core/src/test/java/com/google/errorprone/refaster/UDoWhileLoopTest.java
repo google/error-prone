@@ -33,47 +33,74 @@ public class UDoWhileLoopTest extends AbstractUTreeTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UDoWhileLoop.create(
-            UBlock.create(
-                UExpressionStatement.create(
-                    UAssign.create(ULocalVarIdent.create("old"), UMethodInvocation.create(
-                        UMemberSelect.create(UFreeIdent.create("str"), "indexOf", 
-                            UMethodType.create(
-                                UPrimitiveType.INT, UPrimitiveType.INT, UPrimitiveType.INT)),
-                        ULiteral.charLit(' '), 
-                        UBinary.create(
-                            Kind.PLUS, ULocalVarIdent.create("old"), ULiteral.intLit(1)))))),
-            UParens.create(UBinary.create(
-                Kind.NOT_EQUAL_TO, ULocalVarIdent.create("old"), ULiteral.intLit(-1)))))
         .addEqualityGroup(
             UDoWhileLoop.create(
                 UBlock.create(
                     UExpressionStatement.create(
-                        UAssign.create(ULocalVarIdent.create("old"), UMethodInvocation.create(
-                            UMemberSelect.create(UFreeIdent.create("str"), "indexOf",
-                                UMethodType.create(
-                                    UPrimitiveType.INT, UPrimitiveType.INT, UPrimitiveType.INT)),
-                            ULiteral.charLit(' '), 
-                            UBinary.create(
-                                Kind.PLUS, ULocalVarIdent.create("old"), ULiteral.intLit(1)))))), 
-                UParens.create(UBinary.create(
-                    Kind.GREATER_THAN_EQUAL, ULocalVarIdent.create("old"), ULiteral.intLit(0)))))
+                        UAssign.create(
+                            ULocalVarIdent.create("old"),
+                            UMethodInvocation.create(
+                                UMemberSelect.create(
+                                    UFreeIdent.create("str"),
+                                    "indexOf",
+                                    UMethodType.create(
+                                        UPrimitiveType.INT,
+                                        UPrimitiveType.INT,
+                                        UPrimitiveType.INT)),
+                                ULiteral.charLit(' '),
+                                UBinary.create(
+                                    Kind.PLUS,
+                                    ULocalVarIdent.create("old"),
+                                    ULiteral.intLit(1)))))),
+                UParens.create(
+                    UBinary.create(
+                        Kind.NOT_EQUAL_TO, ULocalVarIdent.create("old"), ULiteral.intLit(-1)))))
+        .addEqualityGroup(
+            UDoWhileLoop.create(
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UAssign.create(
+                            ULocalVarIdent.create("old"),
+                            UMethodInvocation.create(
+                                UMemberSelect.create(
+                                    UFreeIdent.create("str"),
+                                    "indexOf",
+                                    UMethodType.create(
+                                        UPrimitiveType.INT,
+                                        UPrimitiveType.INT,
+                                        UPrimitiveType.INT)),
+                                ULiteral.charLit(' '),
+                                UBinary.create(
+                                    Kind.PLUS,
+                                    ULocalVarIdent.create("old"),
+                                    ULiteral.intLit(1)))))),
+                UParens.create(
+                    UBinary.create(
+                        Kind.GREATER_THAN_EQUAL,
+                        ULocalVarIdent.create("old"),
+                        ULiteral.intLit(0)))))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UDoWhileLoop.create(
-        UBlock.create(
-            UExpressionStatement.create(
-                UAssign.create(ULocalVarIdent.create("old"), UMethodInvocation.create(
-                    UMemberSelect.create(UFreeIdent.create("str"), "indexOf", 
-                        UMethodType.create(
-                            UPrimitiveType.INT, UPrimitiveType.INT, UPrimitiveType.INT)),
-                    ULiteral.charLit(' '), 
-                    UBinary.create(
-                        Kind.PLUS, ULocalVarIdent.create("old"), ULiteral.intLit(1)))))),
-        UParens.create(UBinary.create(
-            Kind.NOT_EQUAL_TO, ULocalVarIdent.create("old"), ULiteral.intLit(-1)))));
+    SerializableTester.reserializeAndAssert(
+        UDoWhileLoop.create(
+            UBlock.create(
+                UExpressionStatement.create(
+                    UAssign.create(
+                        ULocalVarIdent.create("old"),
+                        UMethodInvocation.create(
+                            UMemberSelect.create(
+                                UFreeIdent.create("str"),
+                                "indexOf",
+                                UMethodType.create(
+                                    UPrimitiveType.INT, UPrimitiveType.INT, UPrimitiveType.INT)),
+                            ULiteral.charLit(' '),
+                            UBinary.create(
+                                Kind.PLUS, ULocalVarIdent.create("old"), ULiteral.intLit(1)))))),
+            UParens.create(
+                UBinary.create(
+                    Kind.NOT_EQUAL_TO, ULocalVarIdent.create("old"), ULiteral.intLit(-1)))));
   }
 }

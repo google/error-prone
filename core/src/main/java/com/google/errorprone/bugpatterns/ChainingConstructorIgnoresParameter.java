@@ -149,12 +149,12 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
         ExpressionTree actualParam = invocation.getArguments().get(i);
 
         if (
-            /*
-             * The caller has no param of this type. (Or if it did, we couldn't determine the type.
-             * Does that ever happen?) If the param doesn't exist, the caller can't be failing to
-             * pass it.
-             */
-            availableParamType == null
+        /*
+         * The caller has no param of this type. (Or if it did, we couldn't determine the type.
+         * Does that ever happen?) If the param doesn't exist, the caller can't be failing to
+         * pass it.
+         */
+        availableParamType == null
 
             /*
              * We couldn't determine the type of the formal parameter. (Does this ever happen?)
@@ -201,12 +201,13 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
 
   private static boolean referencesIdentifierWithName(
       final String name, ExpressionTree tree, VisitorState state) {
-    Matcher<IdentifierTree> identifierMatcher = new Matcher<IdentifierTree>() {
-      @Override
-      public boolean matches(IdentifierTree tree, VisitorState state) {
-        return isIdentifierWithName(tree, name);
-      }
-    };
+    Matcher<IdentifierTree> identifierMatcher =
+        new Matcher<IdentifierTree>() {
+          @Override
+          public boolean matches(IdentifierTree tree, VisitorState state) {
+            return isIdentifierWithName(tree, name);
+          }
+        };
     return hasIdentifier(identifierMatcher).matches(tree, state);
   }
 

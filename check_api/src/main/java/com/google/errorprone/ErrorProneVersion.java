@@ -30,8 +30,8 @@ public final class ErrorProneVersion {
   /**
    * Loads the Error Prone version.
    *
-   * <p>This depends on the Maven build, and will always return {@code Optional.absent()} with
-   * other build systems.
+   * <p>This depends on the Maven build, and will always return {@code Optional.absent()} with other
+   * build systems.
    */
   public static Optional<String> loadVersionFromPom() {
     try (InputStream stream = ErrorProneVersion.class.getResourceAsStream(PROPERTIES_RESOURCE)) {

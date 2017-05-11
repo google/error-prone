@@ -46,16 +46,16 @@ import com.sun.source.tree.AssertTree;
   severity = WARNING
 )
 public class AssertFalse extends BugChecker implements AssertTreeMatcher {
-  
-  private static final Matcher<AssertTree> ASSERT_FALSE_MATCHER = 
-      assertionWithCondition(booleanLiteral(false)); 
+
+  private static final Matcher<AssertTree> ASSERT_FALSE_MATCHER =
+      assertionWithCondition(booleanLiteral(false));
 
   @Override
   public Description matchAssert(AssertTree tree, VisitorState state) {
     if (!ASSERT_FALSE_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    
+
     return describeMatch(tree, SuggestedFix.replace(tree, "throw new AssertionError()"));
   }
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -50,8 +49,10 @@ abstract class UAssignOp extends UExpression implements CompoundAssignmentTree {
           .build();
 
   public static UAssignOp create(UExpression variable, Kind operator, UExpression expression) {
-    checkArgument(TAG.containsKey(operator),
-        "Tree kind %s does not represent a compound assignment operator", operator);
+    checkArgument(
+        TAG.containsKey(operator),
+        "Tree kind %s does not represent a compound assignment operator",
+        operator);
     return new AutoValue_UAssignOp(variable, operator, expression);
   }
 
@@ -66,8 +67,10 @@ abstract class UAssignOp extends UExpression implements CompoundAssignmentTree {
 
   @Override
   public JCAssignOp inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Assignop(
-        TAG.get(getKind()), getVariable().inline(inliner), getExpression().inline(inliner));
+    return inliner
+        .maker()
+        .Assignop(
+            TAG.get(getKind()), getVariable().inline(inliner), getExpression().inline(inliner));
   }
 
   @Override
@@ -76,10 +79,9 @@ abstract class UAssignOp extends UExpression implements CompoundAssignmentTree {
   }
 
   // TODO(lowasser): consider matching x = x ? y as well as x ?= y
-  
+
   @Override
-  public Choice<Unifier> visitCompoundAssignment(
-      CompoundAssignmentTree assignOp, Unifier unifier) {
+  public Choice<Unifier> visitCompoundAssignment(CompoundAssignmentTree assignOp, Unifier unifier) {
     return Choice.condition(getKind() == assignOp.getKind(), unifier)
         .thenChoose(unifications(getVariable(), assignOp.getVariable()))
         .thenChoose(unifications(getExpression(), assignOp.getExpression()));

@@ -37,7 +37,7 @@ public class ULabeledStatementTest {
         .addEqualityGroup(ULabeledStatement.create("bar", UBlock.create()))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(ULabeledStatement.create("foo", USkip.INSTANCE));

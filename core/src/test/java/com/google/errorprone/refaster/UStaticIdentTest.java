@@ -32,32 +32,48 @@ public class UStaticIdentTest extends AbstractUTreeTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UStaticIdent.create("java.lang.Integer", "valueOf", 
-            UMethodType.create(UClassType.create("java.lang.Integer"), 
-                UClassType.create("java.lang.String"))))
-        .addEqualityGroup(UStaticIdent.create("java.lang.Integer", "valueOf", 
-            UMethodType.create(UClassType.create("java.lang.Integer"), 
-                UClassType.create("java.lang.String"), UPrimitiveType.INT)))
-        .addEqualityGroup(UStaticIdent.create("java.lang.Integer", "getInteger", 
-            UMethodType.create(UClassType.create("java.lang.Integer"),
-                UClassType.create("java.lang.String"))))
+        .addEqualityGroup(
+            UStaticIdent.create(
+                "java.lang.Integer",
+                "valueOf",
+                UMethodType.create(
+                    UClassType.create("java.lang.Integer"), UClassType.create("java.lang.String"))))
+        .addEqualityGroup(
+            UStaticIdent.create(
+                "java.lang.Integer",
+                "valueOf",
+                UMethodType.create(
+                    UClassType.create("java.lang.Integer"),
+                    UClassType.create("java.lang.String"),
+                    UPrimitiveType.INT)))
+        .addEqualityGroup(
+            UStaticIdent.create(
+                "java.lang.Integer",
+                "getInteger",
+                UMethodType.create(
+                    UClassType.create("java.lang.Integer"), UClassType.create("java.lang.String"))))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UStaticIdent.create(
-        "java.lang.Integer", "valueOf", 
-        UMethodType.create(UClassType.create("java.lang.Integer"), 
-            UClassType.create("java.lang.String"))));
+    SerializableTester.reserializeAndAssert(
+        UStaticIdent.create(
+            "java.lang.Integer",
+            "valueOf",
+            UMethodType.create(
+                UClassType.create("java.lang.Integer"), UClassType.create("java.lang.String"))));
   }
-  
+
   @Test
   public void inline() {
     ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
-    assertInlines("Integer.valueOf", UStaticIdent.create(
-        "java.lang.Integer", "valueOf", 
-        UMethodType.create(UClassType.create("java.lang.Integer"), 
-            UClassType.create("java.lang.String"))));
+    assertInlines(
+        "Integer.valueOf",
+        UStaticIdent.create(
+            "java.lang.Integer",
+            "valueOf",
+            UMethodType.create(
+                UClassType.create("java.lang.Integer"), UClassType.create("java.lang.String"))));
   }
 }

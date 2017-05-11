@@ -64,15 +64,16 @@ public class BigDecimalLiteralDouble extends BugChecker
   // Matches literals and unary +/- and a literal, since most people conceptually think of -1.0 as a
   // literal. Doesn't handle nested unary operators as new BigDecimal(String) doesn't accept
   // multiple unary prefixes.
-  private static final Matcher<ExpressionTree> literalArgument = new Matcher<ExpressionTree>() {
-    @Override
-    public boolean matches(ExpressionTree tree, VisitorState state) {
-      if (tree.getKind() == Kind.UNARY_PLUS || tree.getKind() == Kind.UNARY_MINUS) {
-        tree = ((UnaryTree) tree).getExpression();
-      }
-      return tree.getKind() == Kind.DOUBLE_LITERAL;
-    }
-  };
+  private static final Matcher<ExpressionTree> literalArgument =
+      new Matcher<ExpressionTree>() {
+        @Override
+        public boolean matches(ExpressionTree tree, VisitorState state) {
+          if (tree.getKind() == Kind.UNARY_PLUS || tree.getKind() == Kind.UNARY_MINUS) {
+            tree = ((UnaryTree) tree).getExpression();
+          }
+          return tree.getKind() == Kind.DOUBLE_LITERAL;
+        }
+      };
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -138,9 +139,9 @@ public class BigDecimalLiteralDouble extends BugChecker
 
       description.addFix(
           SuggestedFix.builder()
-          .addImport("java.math.BigDecimal")
-          .replace(tree, suggestedString)
-          .build());
+              .addImport("java.math.BigDecimal")
+              .replace(tree, suggestedString)
+              .build());
     }
     description.addFix(
         SuggestedFix.builder()

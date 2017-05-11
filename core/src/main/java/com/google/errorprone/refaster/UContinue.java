@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 
 /**
  * {@code UTree} representation of {@code ContinueTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -46,7 +46,7 @@ abstract class UContinue extends USimpleStatement implements ContinueTree {
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
     return visitor.visitContinue(this, data);
   }
-  
+
   private ULabeledStatement.Key key() {
     return new ULabeledStatement.Key(getLabel());
   }
@@ -59,11 +59,11 @@ abstract class UContinue extends USimpleStatement implements ContinueTree {
   @Override
   public Choice<Unifier> visitContinue(ContinueTree node, Unifier unifier) {
     if (getLabel() == null) {
-      return Choice.condition(node.getLabel() == null, unifier); 
+      return Choice.condition(node.getLabel() == null, unifier);
     } else {
       CharSequence boundName = unifier.getBinding(key());
-      return Choice.condition(boundName != null && node.getLabel().contentEquals(boundName),
-          unifier);
+      return Choice.condition(
+          boundName != null && node.getLabel().contentEquals(boundName), unifier);
     }
   }
 }

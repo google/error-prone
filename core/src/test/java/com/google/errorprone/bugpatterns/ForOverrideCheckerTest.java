@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@code ForOverrideChecker}.
- */
+/** Tests for {@code ForOverrideChecker}. */
 @RunWith(JUnit4.class)
 public class ForOverrideCheckerTest {
 
@@ -282,11 +280,9 @@ public class ForOverrideCheckerTest {
             "test/OuterClass.java",
             "package test;",
             "import com.google.errorprone.annotations.ForOverride;",
-
             "public class OuterClass {",
             "  @ForOverride",
             "  protected void forOverride() { }",
-
             "  private class InnerClass {",
             "    void invoke() {",
             "      forOverride();",
@@ -306,7 +302,6 @@ public class ForOverrideCheckerTest {
             "public class OuterClass {",
             "  @ForOverride",
             "  protected void forOverride() { }",
-
             "  public Runnable getRunner() {",
             "    return new Runnable() {",
             "      public void run() {",

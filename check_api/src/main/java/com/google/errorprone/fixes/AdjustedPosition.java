@@ -20,9 +20,7 @@ import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-/**
- * Describes a tree position with adjustments to the start and end indices.
- */
+/** Describes a tree position with adjustments to the start and end indices. */
 public class AdjustedPosition implements DiagnosticPosition {
   protected final JCTree position;
   protected final int startPositionAdjustment;

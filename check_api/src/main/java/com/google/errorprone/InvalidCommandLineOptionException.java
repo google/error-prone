@@ -21,5 +21,4 @@ public class InvalidCommandLineOptionException extends RuntimeException {
   public InvalidCommandLineOptionException(String message) {
     super(message);
   }
-
 }

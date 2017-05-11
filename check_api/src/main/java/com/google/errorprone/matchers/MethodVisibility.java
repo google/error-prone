@@ -38,21 +38,22 @@ public class MethodVisibility implements Matcher<MethodTree> {
   public boolean matches(MethodTree t, VisitorState state) {
     Set<Modifier> modifiers = t.getModifiers().getFlags();
     if (visibility == Visibility.DEFAULT) {
-      return !(modifiers.contains(Visibility.PUBLIC.toModifier()) ||
-          modifiers.contains(Visibility.PROTECTED.toModifier()) ||
-          modifiers.contains(Visibility.PRIVATE.toModifier()));
+      return !(modifiers.contains(Visibility.PUBLIC.toModifier())
+          || modifiers.contains(Visibility.PROTECTED.toModifier())
+          || modifiers.contains(Visibility.PRIVATE.toModifier()));
     } else {
       return modifiers.contains(visibility.toModifier());
     }
   }
 
   public static enum Visibility {
-    PUBLIC    (Modifier.PUBLIC),
-    PROTECTED (Modifier.PROTECTED),
-    DEFAULT   (null),
-    PRIVATE   (Modifier.PRIVATE);
+    PUBLIC(Modifier.PUBLIC),
+    PROTECTED(Modifier.PROTECTED),
+    DEFAULT(null),
+    PRIVATE(Modifier.PRIVATE);
 
     private Modifier correspondingModifier;
+
     Visibility(Modifier correspondingModifier) {
       this.correspondingModifier = correspondingModifier;
     }

@@ -53,9 +53,7 @@ import javax.lang.model.element.ElementKind;
 public class MislabeledAndroidString extends BugChecker implements MemberSelectTreeMatcher {
 
   private static final String R_STRING_CLASSNAME = "android.R.string";
-  /**
-   * Maps problematic resources defined in {@value #R_STRING_CLASSNAME} to their replacements.
-   */
+  /** Maps problematic resources defined in {@value #R_STRING_CLASSNAME} to their replacements. */
   @VisibleForTesting
   static final ImmutableMap<String, String> MISLEADING =
       ImmutableMap.of(
@@ -65,9 +63,9 @@ public class MislabeledAndroidString extends BugChecker implements MemberSelectT
   @VisibleForTesting
   static final ImmutableMap<String, String> ASSUMED_MEANINGS =
       ImmutableMap.of(
-          "yes", "Yes",        // assumed but not actual meaning
-          "no", "No",          // assumed but not actual meaning
-          "ok", "OK",          // assumed and actual meaning
+          "yes", "Yes", // assumed but not actual meaning
+          "no", "No", // assumed but not actual meaning
+          "ok", "OK", // assumed and actual meaning
           "cancel", "Cancel"); // assumed and actual meaning
 
   @Override
@@ -88,9 +86,15 @@ public class MislabeledAndroidString extends BugChecker implements MemberSelectT
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage(String.format("%s.%s is not \"%s\" but \"%s\"; prefer %s.%s for clarity",
-            R_STRING_CLASSNAME, misleading, ASSUMED_MEANINGS.get(misleading),
-            ASSUMED_MEANINGS.get(preferred), R_STRING_CLASSNAME, preferred))
+        .setMessage(
+            String.format(
+                "%s.%s is not \"%s\" but \"%s\"; prefer %s.%s for clarity",
+                R_STRING_CLASSNAME,
+                misleading,
+                ASSUMED_MEANINGS.get(misleading),
+                ASSUMED_MEANINGS.get(preferred),
+                R_STRING_CLASSNAME,
+                preferred))
         // Keep the way tree refers to android.R.string as it is but replace the identifier
         .addFix(SuggestedFix.replace(tree, tree.getExpression() + "." + preferred))
         .build();

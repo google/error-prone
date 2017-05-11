@@ -23,9 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author gak@google.com (Gregory Kick)
- */
+/** @author gak@google.com (Gregory Kick) */
 @RunWith(JUnit4.class)
 public class RemoveUnusedImportsTest {
   private BugCheckerRefactoringTestHelper testHelper;
@@ -241,7 +239,6 @@ public class RemoveUnusedImportsTest {
         .expectUnchanged()
         .doTest();
   }
-
 
   @Test
   public void atSee() throws IOException {

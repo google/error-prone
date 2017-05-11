@@ -21,9 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author jsjeon@google.com (Jinseong Jeon)
- */
+/** @author jsjeon@google.com (Jinseong Jeon) */
 @RunWith(JUnit4.class)
 public class IterableAndIteratorTest {
   private CompilationTestHelper compilationHelper;

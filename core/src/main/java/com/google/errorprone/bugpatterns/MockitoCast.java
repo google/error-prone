@@ -102,8 +102,8 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
   }
 
   /**
-   * Records declarations of and assignments to mock variables where the initializer references
-   * an answer strategy that does not support generics.
+   * Records declarations of and assignments to mock variables where the initializer references an
+   * answer strategy that does not support generics.
    */
   static class MockInitializationScanner extends TreeScanner<Void, Void> {
 
@@ -241,9 +241,9 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
   /**
    * Scans for the mock variable in a when(...), and checks if it has a bad answer strategy.
    *
-   * <p>@Mock annotations are handled here instead of in {@link MockInitializationScanner}
-   * because they're visible across compilation boundaries, so scanning the declarations in the
-   * current compilation would result in false negatives.
+   * <p>@Mock annotations are handled here instead of in {@link MockInitializationScanner} because
+   * they're visible across compilation boundaries, so scanning the declarations in the current
+   * compilation would result in false negatives.
    */
   static class MockAnswerStrategyScanner extends TreeScanner<Boolean, Void> {
 
@@ -286,8 +286,8 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
     }
 
     /**
-     * Returns if the variable has a {@code @Mock} annotation that specifies an answer that does
-     * not handle generics.
+     * Returns if the variable has a {@code @Mock} annotation that specifies an answer that does not
+     * handle generics.
      */
     static boolean answerHandlesGenerics(VarSymbol varSym, VisitorState state) {
       Compound attribute = varSym.attribute(state.getSymbolFromString(MOCK_ANNOTATION));

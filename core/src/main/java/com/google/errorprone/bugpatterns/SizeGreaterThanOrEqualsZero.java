@@ -71,9 +71,16 @@ import java.util.List;
 )
 public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTreeMatcher {
 
-  private enum MethodName { LENGTH, SIZE }
+  private enum MethodName {
+    LENGTH,
+    SIZE
+  }
 
-  private enum ExpressionType { LESS_THAN_EQUAL, GREATER_THAN_EQUAL, MISMATCH}
+  private enum ExpressionType {
+    LESS_THAN_EQUAL,
+    GREATER_THAN_EQUAL,
+    MISMATCH
+  }
 
   // Class name, whether it uses SIZE or LENGTH, whether or not the class has an appropriate
   // isEmpty() method
@@ -99,11 +106,9 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
 
   private static final Matcher<ExpressionTree> INSTANCE_METHOD_MATCHER =
       buildInstanceMethodMatcher();
-  private static final Matcher<ExpressionTree> STATIC_METHOD_MATCHER =
-      buildStaticMethodMatcher();
+  private static final Matcher<ExpressionTree> STATIC_METHOD_MATCHER = buildStaticMethodMatcher();
   private static final Matcher<MemberSelectTree> ARRAY_LENGTH_MATCHER = arrayLengthMatcher();
-  private static final Matcher<ExpressionTree> HAS_EMPTY_METHOD =
-      classHasIsEmptyFunction();
+  private static final Matcher<ExpressionTree> HAS_EMPTY_METHOD = classHasIsEmptyFunction();
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
@@ -113,8 +118,10 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
       return Description.NO_MATCH;
     }
 
-    ExpressionTree operand = expressionType == ExpressionType.GREATER_THAN_EQUAL
-        ? tree.getLeftOperand() : tree.getRightOperand();
+    ExpressionTree operand =
+        expressionType == ExpressionType.GREATER_THAN_EQUAL
+            ? tree.getLeftOperand()
+            : tree.getRightOperand();
     if (operand instanceof MethodInvocationTree) {
       MethodInvocationTree callToSize = (MethodInvocationTree) operand;
       if (INSTANCE_METHOD_MATCHER.matches(callToSize, state)) {
@@ -153,7 +160,8 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
 
   private static Iterable<Matcher<ExpressionTree>> staticMethodMatcher(
       Iterable<String> sizeMethodClassNames, final String methodName) {
-    return Iterables.transform(sizeMethodClassNames,
+    return Iterables.transform(
+        sizeMethodClassNames,
         new Function<String, Matcher<ExpressionTree>>() {
           @Override
           public Matcher<ExpressionTree> apply(String className) {
@@ -163,21 +171,23 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   }
 
   private static Matcher<ExpressionTree> isSubtypeOfAny(Iterable<String> classes) {
-    return anyOfIterable(transform(classes,
-        new Function<String, Matcher<ExpressionTree>>() {
-          @Override
-          public Matcher<ExpressionTree> apply(String clazzName) {
-            return Matchers.isSubtypeOf(clazzName);
-          }
-        }));
+    return anyOfIterable(
+        transform(
+            classes,
+            new Function<String, Matcher<ExpressionTree>>() {
+              @Override
+              public Matcher<ExpressionTree> apply(String clazzName) {
+                return Matchers.isSubtypeOf(clazzName);
+              }
+            }));
   }
 
   // From the defined classes above, return a matcher that will match an expression if its type
   // contains a well-behaved isEmpty() method.
   private static Matcher<ExpressionTree> classHasIsEmptyFunction() {
     ImmutableList.Builder<String> classNames = ImmutableList.builder();
-    for (Cell<String, MethodName, Boolean> methodInformation
-        : Iterables.concat(CLASSES.cellSet(), STATIC_CLASSES.cellSet())) {
+    for (Cell<String, MethodName, Boolean> methodInformation :
+        Iterables.concat(CLASSES.cellSet(), STATIC_CLASSES.cellSet())) {
       if (!methodInformation.getValue()) {
         continue;
       }
@@ -197,36 +207,50 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   }
 
   private Description provideReplacementForMethodInvocation(
-      BinaryTree tree, MethodInvocationTree leftOperand, VisitorState state,
+      BinaryTree tree,
+      MethodInvocationTree leftOperand,
+      VisitorState state,
       ExpressionType expressionType) {
     ExpressionTree collection = ASTHelpers.getReceiver(leftOperand);
 
     if (HAS_EMPTY_METHOD.matches(collection, state)) {
-      return describeMatch(tree, SuggestedFix.replace(tree,
-          "!" + state.getSourceForNode((JCTree) collection) + ".isEmpty()"));
+      return describeMatch(
+          tree,
+          SuggestedFix.replace(
+              tree, "!" + state.getSourceForNode((JCTree) collection) + ".isEmpty()"));
     } else {
       return removeEqualsFromComparison(tree, state, expressionType);
     }
   }
 
   private Description provideReplacementForStaticMethodInvocation(
-      BinaryTree tree, MethodInvocationTree callToSize, final VisitorState state,
+      BinaryTree tree,
+      MethodInvocationTree callToSize,
+      final VisitorState state,
       ExpressionType expressionType) {
     ExpressionTree classToken = ASTHelpers.getReceiver(callToSize);
 
     if (HAS_EMPTY_METHOD.matches(classToken, state)) {
-      List<CharSequence> argumentSourceValues = Lists.transform(callToSize.getArguments(),
-          new Function<ExpressionTree, CharSequence>() {
-            @Override
-            public CharSequence apply(ExpressionTree expressionTree) {
-              return state.getSourceForNode((JCTree) expressionTree);
-            }
-          });
+      List<CharSequence> argumentSourceValues =
+          Lists.transform(
+              callToSize.getArguments(),
+              new Function<ExpressionTree, CharSequence>() {
+                @Override
+                public CharSequence apply(ExpressionTree expressionTree) {
+                  return state.getSourceForNode((JCTree) expressionTree);
+                }
+              });
       String argumentString = Joiner.on(',').join(argumentSourceValues);
 
-      return describeMatch(tree, SuggestedFix.replace(tree,
-          "!" + state.getSourceForNode((JCTree) classToken) + ".isEmpty("
-              + argumentString + ")"));
+      return describeMatch(
+          tree,
+          SuggestedFix.replace(
+              tree,
+              "!"
+                  + state.getSourceForNode((JCTree) classToken)
+                  + ".isEmpty("
+                  + argumentString
+                  + ")"));
     } else {
       return removeEqualsFromComparison(tree, state, expressionType);
     }
@@ -234,9 +258,10 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
 
   private Description removeEqualsFromComparison(
       BinaryTree tree, VisitorState state, ExpressionType expressionType) {
-    String replacement = expressionType == ExpressionType.GREATER_THAN_EQUAL
-        ? state.getSourceForNode((JCTree) tree.getLeftOperand()) + " > 0"
-        : "0 < " + state.getSourceForNode((JCTree) tree.getRightOperand());
+    String replacement =
+        expressionType == ExpressionType.GREATER_THAN_EQUAL
+            ? state.getSourceForNode((JCTree) tree.getLeftOperand()) + " > 0"
+            : "0 < " + state.getSourceForNode((JCTree) tree.getRightOperand());
     return describeMatch(tree, SuggestedFix.replace(tree, replacement));
   }
 

@@ -32,20 +32,20 @@ public class UVariableDeclTest {
   @Test
   public void equality() {
     new EqualsTester()
+        .addEqualityGroup(UVariableDecl.create("foo", UClassIdent.create("java.lang.String"), null))
         .addEqualityGroup(
-            UVariableDecl.create("foo", UClassIdent.create("java.lang.String"), null))
-        .addEqualityGroup(UVariableDecl.create("foo", 
-            UClassIdent.create("java.lang.String"), ULiteral.stringLit("bar")))
+            UVariableDecl.create(
+                "foo", UClassIdent.create("java.lang.String"), ULiteral.stringLit("bar")))
         .addEqualityGroup(
             UVariableDecl.create("foo", UClassIdent.create("java.lang.Integer"), null))
-        .addEqualityGroup(
-            UVariableDecl.create("baz", UClassIdent.create("java.lang.String"), null))
+        .addEqualityGroup(UVariableDecl.create("baz", UClassIdent.create("java.lang.String"), null))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UVariableDecl.create(
-        "foo", UClassIdent.create("java.lang.String"), ULiteral.stringLit("bar")));
+    SerializableTester.reserializeAndAssert(
+        UVariableDecl.create(
+            "foo", UClassIdent.create("java.lang.String"), ULiteral.stringLit("bar")));
   }
 }

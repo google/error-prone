@@ -57,8 +57,7 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
             .setMessage(
                 String.format(
                     "Unsynchronized method %s overrides synchronized method in %s",
-                    methodSymbol.getSimpleName(),
-                    s.enclClass().getSimpleName()))
+                    methodSymbol.getSimpleName(), s.enclClass().getSimpleName()))
             .build();
       }
     }

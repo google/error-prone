@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link BadAnnotationImplementation}.
- */
+/** Tests for {@link BadAnnotationImplementation}. */
 @RunWith(JUnit4.class)
 public class BadAnnotationImplementationTest {
 
@@ -73,9 +71,7 @@ public class BadAnnotationImplementationTest {
   @Test
   public void anonymousClassImplementsUserDefinedAnnotation() {
     compilationHelper
-        .addSourceLines(
-            "MyAnnotation.java",
-            "public @interface MyAnnotation {}")
+        .addSourceLines("MyAnnotation.java", "public @interface MyAnnotation {}")
         .addSourceLines(
             "AnonymousClass.java",
             "import java.lang.annotation.Annotation;",
@@ -239,6 +235,5 @@ public class BadAnnotationImplementationTest {
             "import java.lang.annotation.Annotation;",
             "public class MyAnnotation extends BaseAnnotation {}")
         .doTest();
-
   }
 }

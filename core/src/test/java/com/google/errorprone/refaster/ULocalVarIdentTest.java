@@ -24,7 +24,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link ULocalVarIdent}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -36,7 +36,7 @@ public class ULocalVarIdentTest {
         .addEqualityGroup(ULocalVarIdent.create("bar"))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(ULocalVarIdent.create("foo"));

@@ -30,9 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cpovirk@google.com (Chris Povirk)
- */
+/** @author cpovirk@google.com (Chris Povirk) */
 @RunWith(JUnit4.class)
 public class MethodReturnsTest extends CompilerBasedAbstractTest {
   final List<ScannerTest> tests = new ArrayList<ScannerTest>();
@@ -46,28 +44,19 @@ public class MethodReturnsTest extends CompilerBasedAbstractTest {
 
   @Test
   public void returnsString() {
-    writeFile("A.java",
-        "public class A {",
-        "  static String foo() { return null; }",
-        "}");
+    writeFile("A.java", "public class A {", "  static String foo() { return null; }", "}");
     assertCompiles(fooReturnsType(true, "java.lang.String"));
   }
 
   @Test
   public void notReturnsString() {
-    writeFile("A.java",
-        "public class A {",
-        "  static int foo() { return 0; }",
-        "}");
+    writeFile("A.java", "public class A {", "  static int foo() { return 0; }", "}");
     assertCompiles(fooReturnsType(false, "java.lang.String"));
   }
 
   @Test
   public void returnsInt() {
-    writeFile("A.java",
-        "public class A {",
-        "  static int foo() { return 0; }",
-        "}");
+    writeFile("A.java", "public class A {", "  static int foo() { return 0; }", "}");
     assertCompiles(fooReturnsType(true, "int"));
   }
 

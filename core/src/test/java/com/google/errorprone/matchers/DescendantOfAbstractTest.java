@@ -33,7 +33,8 @@ public class DescendantOfAbstractTest extends CompilerBasedAbstractTest {
 
   @Before
   public void setUp() throws Exception {
-    writeFile("com/google/A.java",
+    writeFile(
+        "com/google/A.java",
         "package com.google;",
         "public class A { ",
         "  public int count() {",
@@ -42,8 +43,7 @@ public class DescendantOfAbstractTest extends CompilerBasedAbstractTest {
         "  public static int staticCount() {",
         "    return 2;",
         "  }",
-        "}"
-    );
+        "}");
   }
 
   @After
@@ -57,26 +57,26 @@ public class DescendantOfAbstractTest extends CompilerBasedAbstractTest {
     public abstract void assertDone();
   }
 
-  protected Scanner memberSelectMatches(final boolean shouldMatch,
-                                        final DescendantOf toMatch) {
-    ScannerTest test = new ScannerTest() {
-      private boolean matched = false;
+  protected Scanner memberSelectMatches(final boolean shouldMatch, final DescendantOf toMatch) {
+    ScannerTest test =
+        new ScannerTest() {
+          private boolean matched = false;
 
-      @Override
-      public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
-        visitorState = visitorState.withPath(getCurrentPath());
-        ExpressionTree methodSelect = node.getMethodSelect();
-        if (toMatch.matches(methodSelect, visitorState)) {
-          matched = true;
-        }
-        return super.visitMethodInvocation(node, visitorState);
-      }
+          @Override
+          public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {
+            visitorState = visitorState.withPath(getCurrentPath());
+            ExpressionTree methodSelect = node.getMethodSelect();
+            if (toMatch.matches(methodSelect, visitorState)) {
+              matched = true;
+            }
+            return super.visitMethodInvocation(node, visitorState);
+          }
 
-      @Override
-      public void assertDone() {
-        assertEquals(matched, shouldMatch);
-      }
-    };
+          @Override
+          public void assertDone() {
+            assertEquals(matched, shouldMatch);
+          }
+        };
     tests.add(test);
     return test;
   }

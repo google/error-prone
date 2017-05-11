@@ -27,7 +27,7 @@ import com.sun.tools.javac.tree.JCTree.JCTypeUnion;
 
 /**
  * {@code UTree} representation of {@code UnionTypeTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -36,7 +36,7 @@ abstract class UUnionType extends UExpression implements UnionTypeTree {
   static UUnionType create(UExpression... typeAlternatives) {
     return create(ImmutableList.copyOf(typeAlternatives));
   }
-  
+
   static UUnionType create(Iterable<? extends UExpression> typeAlternatives) {
     return new AutoValue_UUnionType(ImmutableList.copyOf(typeAlternatives));
   }
@@ -63,5 +63,4 @@ abstract class UUnionType extends UExpression implements UnionTypeTree {
   public Choice<Unifier> visitUnionType(UnionTypeTree node, Unifier unifier) {
     return unifyList(unifier, getTypeAlternatives(), node.getTypeAlternatives());
   }
-
 }

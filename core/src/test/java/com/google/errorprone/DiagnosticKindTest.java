@@ -34,23 +34,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Tests that {@link BugPattern.SeverityLevel}s map to appropriate
- * {@link javax.tools.Diagnostic.Kind}s and are displayed in some reasonable way on the command
- * line.
+ * Tests that {@link BugPattern.SeverityLevel}s map to appropriate {@link
+ * javax.tools.Diagnostic.Kind}s and are displayed in some reasonable way on the command line.
  */
 @RunWith(JUnit4.class)
 public class DiagnosticKindTest {
 
   /**
-   * The mock code we are going to analyze in our tests.  Only needs a return for the matcher
-   * to match on.
+   * The mock code we are going to analyze in our tests. Only needs a return for the matcher to
+   * match on.
    */
   private static final String[] TEST_CODE = {
-    "class Test {",
-    "  void doIt() {",
-    "    return;",
-    " }",
-    "}"
+    "class Test {", "  void doIt() {", "    return;", " }", "}"
   };
 
   private DiagnosticTestHelper diagnosticHelper;
@@ -59,8 +54,8 @@ public class DiagnosticKindTest {
   @Before
   public void setUp() {
     diagnosticHelper = new DiagnosticTestHelper();
-    compilerBuilder = new ErrorProneTestCompiler.Builder()
-        .listenToDiagnostics(diagnosticHelper.collector);
+    compilerBuilder =
+        new ErrorProneTestCompiler.Builder().listenToDiagnostics(diagnosticHelper.collector);
   }
 
   @BugPattern(
@@ -81,8 +76,9 @@ public class DiagnosticKindTest {
   public void testError() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ErrorChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
-    Result result = compiler.compile(Arrays.asList(
-        compiler.fileManager().forSourceLines("Test.java", TEST_CODE)));
+    Result result =
+        compiler.compile(
+            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", TEST_CODE)));
 
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
     assertThat(diagnosticHelper.getDiagnostics().get(0).getKind()).isEqualTo(Diagnostic.Kind.ERROR);
@@ -108,8 +104,9 @@ public class DiagnosticKindTest {
   public void testWarning() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(WarningChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
-    Result result = compiler.compile(Arrays.asList(
-        compiler.fileManager().forSourceLines("Test.java", TEST_CODE)));
+    Result result =
+        compiler.compile(
+            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", TEST_CODE)));
 
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
     assertThat(diagnosticHelper.getDiagnostics().get(0).getKind())
@@ -136,8 +133,9 @@ public class DiagnosticKindTest {
   public void testSuggestion() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(SuggestionChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
-    Result result = compiler.compile(Arrays.asList(
-        compiler.fileManager().forSourceLines("Test.java", TEST_CODE)));
+    Result result =
+        compiler.compile(
+            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", TEST_CODE)));
 
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
     assertThat(diagnosticHelper.getDiagnostics().get(0).getKind()).isEqualTo(Diagnostic.Kind.NOTE);

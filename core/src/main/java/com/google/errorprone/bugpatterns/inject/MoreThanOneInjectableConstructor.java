@@ -69,5 +69,4 @@ public class MoreThanOneInjectableConstructor extends BugChecker implements Anno
     }
     return Description.NO_MATCH;
   }
-
 }

@@ -35,8 +35,7 @@ import org.mockito.exceptions.base.MockitoException;
  */
 @RunWith(JUnit4.class)
 public class CannotMockFinalClassTest {
-  @Rule
-  public final ExpectedException exception = ExpectedException.none();
+  @Rule public final ExpectedException exception = ExpectedException.none();
 
   private CompilationTestHelper compilationHelper;
 
@@ -45,12 +44,10 @@ public class CannotMockFinalClassTest {
     compilationHelper = CompilationTestHelper.newInstance(CannotMockFinalClass.class, getClass());
   }
 
-  static final class FinalClass {
-  }
+  static final class FinalClass {}
 
   static class MocksFinalClassWithAnnotation {
-    @Mock
-    FinalClass impossible;
+    @Mock FinalClass impossible;
   }
 
   @Test
@@ -79,5 +76,4 @@ public class CannotMockFinalClassTest {
   public void testNegativeCase2() throws Exception {
     compilationHelper.addSourceFile("CannotMockFinalClassNegativeCases2.java").doTest();
   }
-
 }

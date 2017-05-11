@@ -20,9 +20,7 @@ import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-/**
- * Describes a position that only has a start and end index.
- */
+/** Describes a position that only has a start and end index. */
 public class IndexedPosition implements DiagnosticPosition {
 
   final int startPos;

@@ -35,7 +35,7 @@ public class UWildcardTypeTest {
   public void equality() {
     UType objectType = UClassType.create("java.lang.Object", ImmutableList.<UType>of());
     UType setType = UClassType.create("java.util.Set", ImmutableList.<UType>of(objectType));
-    
+
     new EqualsTester()
         .addEqualityGroup(UWildcardType.create(BoundKind.UNBOUND, objectType)) // ?
         .addEqualityGroup(UWildcardType.create(BoundKind.EXTENDS, objectType)) // ? extends Object
@@ -43,7 +43,7 @@ public class UWildcardTypeTest {
         .addEqualityGroup(UWildcardType.create(BoundKind.SUPER, setType)) // ? super Set<Object>
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     UType numberType = UClassType.create("java.lang.Number", ImmutableList.<UType>of());

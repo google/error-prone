@@ -45,5 +45,4 @@ public class ElementsCountedInLoopTest {
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("ElementsCountedInLoopNegativeCases.java").doTest();
   }
-
 }

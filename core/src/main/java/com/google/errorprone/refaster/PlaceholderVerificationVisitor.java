@@ -41,12 +41,12 @@ final class PlaceholderVerificationVisitor extends TreeScanner<Boolean, Unifier>
 
   /**
    * @param required UExpressions that must potentially match at least one expression in the tested
-   *        code.
+   *     code.
    * @param allowed UExpressions that are explicitly allowed, and excepted from the ban on
-   *        references to known variables
+   *     references to known variables
    */
-  PlaceholderVerificationVisitor(Collection<? extends UExpression> required,
-      Collection<? extends UExpression> allowed) {
+  PlaceholderVerificationVisitor(
+      Collection<? extends UExpression> required, Collection<? extends UExpression> allowed) {
     this.unmatched = new LinkedList<>(required);
     this.allowed = ImmutableList.copyOf(allowed);
     assert this.allowed.containsAll(unmatched);
@@ -102,5 +102,4 @@ final class PlaceholderVerificationVisitor extends TreeScanner<Boolean, Unifier>
   public Boolean reduce(Boolean r1, Boolean r2) {
     return firstNonNull(r1, true) && firstNonNull(r2, true);
   }
-
 }

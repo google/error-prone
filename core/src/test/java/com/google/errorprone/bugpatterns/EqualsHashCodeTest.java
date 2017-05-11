@@ -45,9 +45,7 @@ public class EqualsHashCodeTest {
   @Test
   public void superClassWithoutHashCode() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "Super.java",
-            "abstract class Super {}")
+        .addSourceLines("Super.java", "abstract class Super {}")
         .addSourceLines(
             "Test.java",
             "class Test extends Super {",
@@ -78,11 +76,7 @@ public class EqualsHashCodeTest {
   @Test
   public void interfaceEquals() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "I.java",
-            "interface I {",
-            "  boolean equals(Object o);",
-            "}")
+        .addSourceLines("I.java", "interface I {", "  boolean equals(Object o);", "}")
         .doTest();
   }
 

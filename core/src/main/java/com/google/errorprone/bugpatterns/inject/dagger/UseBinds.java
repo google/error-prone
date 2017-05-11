@@ -204,7 +204,7 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
     for (Flag flag : methodFlags) {
       modifierStringsBuilder.add(flag.toString());
     }
-  
+
     fix.replace(modifiers, Joiner.on(' ').join(modifierStringsBuilder.build()));
     fix.replace(method.getBody(), ";");
     return fix;

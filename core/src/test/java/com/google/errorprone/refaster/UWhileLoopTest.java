@@ -24,7 +24,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link UWhileLoop}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -32,31 +32,55 @@ public class UWhileLoopTest extends AbstractUTreeTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UWhileLoop.create(
-            UParens.create(UMethodInvocation.create(
-                UMemberSelect.create(UFreeIdent.create("itr"), "hasNext", 
-                    UMethodType.create(UPrimitiveType.BOOLEAN)))),
-            UBlock.create(UExpressionStatement.create(UMethodInvocation.create(
-                UMemberSelect.create(UFreeIdent.create("itr"), "next", 
-                    UMethodType.create(UTypeVar.create("E"))))))))
-        .addEqualityGroup(UWhileLoop.create(
-            UParens.create(UMethodInvocation.create(
-                UMemberSelect.create(UFreeIdent.create("elements"), "hasNext",
-                    UMethodType.create(UPrimitiveType.BOOLEAN)))), 
-            UBlock.create(UExpressionStatement.create(UMethodInvocation.create(
-                UMemberSelect.create(UFreeIdent.create("elements"), "next", 
-                    UMethodType.create(UTypeVar.create("E"))))))))
+        .addEqualityGroup(
+            UWhileLoop.create(
+                UParens.create(
+                    UMethodInvocation.create(
+                        UMemberSelect.create(
+                            UFreeIdent.create("itr"),
+                            "hasNext",
+                            UMethodType.create(UPrimitiveType.BOOLEAN)))),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UMethodInvocation.create(
+                            UMemberSelect.create(
+                                UFreeIdent.create("itr"),
+                                "next",
+                                UMethodType.create(UTypeVar.create("E"))))))))
+        .addEqualityGroup(
+            UWhileLoop.create(
+                UParens.create(
+                    UMethodInvocation.create(
+                        UMemberSelect.create(
+                            UFreeIdent.create("elements"),
+                            "hasNext",
+                            UMethodType.create(UPrimitiveType.BOOLEAN)))),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UMethodInvocation.create(
+                            UMemberSelect.create(
+                                UFreeIdent.create("elements"),
+                                "next",
+                                UMethodType.create(UTypeVar.create("E"))))))))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UWhileLoop.create(
-        UParens.create(UMethodInvocation.create(
-            UMemberSelect.create(UFreeIdent.create("itr"), "hasNext", 
-                UMethodType.create(UPrimitiveType.BOOLEAN)))),
-        UBlock.create(UExpressionStatement.create(UMethodInvocation.create(
-            UMemberSelect.create(UFreeIdent.create("itr"), "next", 
-                UMethodType.create(UTypeVar.create("E"))))))));
+    SerializableTester.reserializeAndAssert(
+        UWhileLoop.create(
+            UParens.create(
+                UMethodInvocation.create(
+                    UMemberSelect.create(
+                        UFreeIdent.create("itr"),
+                        "hasNext",
+                        UMethodType.create(UPrimitiveType.BOOLEAN)))),
+            UBlock.create(
+                UExpressionStatement.create(
+                    UMethodInvocation.create(
+                        UMemberSelect.create(
+                            UFreeIdent.create("itr"),
+                            "next",
+                            UMethodType.create(UTypeVar.create("E"))))))));
   }
 }

@@ -56,9 +56,7 @@ public class ErrorProneOptions {
   private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
       "-XepDisableWarningsInGeneratedCode";
 
-  /**
-   * see {@link javax.tools.OptionChecker#isSupportedOption(String)}
-   */
+  /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
   public static int isSupportedOption(String option) {
     boolean isSupported =
         option.startsWith(CUSTOM_ENABLEMENT_PREFIX)
@@ -81,11 +79,10 @@ public class ErrorProneOptions {
   }
 
   /**
-   * Severity levels for an error-prone check that define how the check results should be
-   * presented.
+   * Severity levels for an error-prone check that define how the check results should be presented.
    */
   public enum Severity {
-    DEFAULT,    // whatever is specified in the @BugPattern annotation
+    DEFAULT, // whatever is specified in the @BugPattern annotation
     OFF,
     WARN,
     ERROR

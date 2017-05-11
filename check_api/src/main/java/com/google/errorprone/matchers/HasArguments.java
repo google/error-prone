@@ -22,7 +22,7 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /**
  * Matches if the given matcher matches all of/any of the parameters to this method.
-  *
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class HasArguments extends ChildMultiMatcher<MethodInvocationTree, ExpressionTree> {

@@ -25,9 +25,7 @@ import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
-/**
- * Wraps {@link com.google.errorprone.ErrorProneCompiler}.
- */
+/** Wraps {@link com.google.errorprone.ErrorProneCompiler}. */
 public class ErrorProneTestCompiler {
 
   /** Wraps {@link com.google.errorprone.ErrorProneCompiler.Builder} */
@@ -75,7 +73,7 @@ public class ErrorProneTestCompiler {
   }
 
   public Result compile(List<JavaFileObject> sources, List<? extends Processor> processors) {
-    return compile(new String[]{}, sources, processors);
+    return compile(new String[] {}, sources, processors);
   }
 
   public Result compile(

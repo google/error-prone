@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link UForLoop}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -34,28 +34,37 @@ public class UForLoopTest extends AbstractUTreeTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UForLoop.create(ImmutableList.of(
-            UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))), 
-            UBinary.create(Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")),
-            ImmutableList.of(UExpressionStatement.create(
-                UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i")))), 
-            UBlock.create()))
-        .addEqualityGroup(UForLoop.create(ImmutableList.of(
-            UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
-            UBinary.create(Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")),
-            ImmutableList.<UExpressionStatement>of(), 
-            UBlock.create(UExpressionStatement.create(
-                UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i"))))))
+        .addEqualityGroup(
+            UForLoop.create(
+                ImmutableList.of(
+                    UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
+                UBinary.create(Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")),
+                ImmutableList.of(
+                    UExpressionStatement.create(
+                        UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i")))),
+                UBlock.create()))
+        .addEqualityGroup(
+            UForLoop.create(
+                ImmutableList.of(
+                    UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
+                UBinary.create(Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")),
+                ImmutableList.<UExpressionStatement>of(),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i"))))))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UForLoop.create(ImmutableList.of(
-        UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))), 
-        UBinary.create(Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")), 
-        ImmutableList.of(UExpressionStatement.create(
-            UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i")))), 
-        UBlock.create()));
+    SerializableTester.reserializeAndAssert(
+        UForLoop.create(
+            ImmutableList.of(
+                UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
+            UBinary.create(Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")),
+            ImmutableList.of(
+                UExpressionStatement.create(
+                    UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i")))),
+            UBlock.create()));
   }
 }

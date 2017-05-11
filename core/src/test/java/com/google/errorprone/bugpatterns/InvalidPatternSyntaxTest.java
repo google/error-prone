@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author mdempsky@google.com (Matthew Dempsky)
- */
+/** @author mdempsky@google.com (Matthew Dempsky) */
 @RunWith(JUnit4.class)
 public class InvalidPatternSyntaxTest {
 
@@ -44,5 +42,4 @@ public class InvalidPatternSyntaxTest {
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("InvalidPatternSyntaxNegativeCases.java").doTest();
   }
-
 }

@@ -30,19 +30,21 @@ import com.sun.tools.javac.util.Context;
 import javax.annotation.Nullable;
 
 /**
- * {@code UMatches} allows conditionally matching a {@code UExpression} predicated by an
- * error-prone {@code Matcher}.
+ * {@code UMatches} allows conditionally matching a {@code UExpression} predicated by an error-prone
+ * {@code Matcher}.
  */
 @AutoValue
 abstract class UMatches extends UExpression {
-  public static UMatches create(Class<? extends Matcher<? super ExpressionTree>> matcherClass,
-      boolean positive, UExpression expression) {
+  public static UMatches create(
+      Class<? extends Matcher<? super ExpressionTree>> matcherClass,
+      boolean positive,
+      UExpression expression) {
     // Verify that we can instantiate the Matcher
     makeMatcher(matcherClass);
 
     return new AutoValue_UMatches(positive, matcherClass, expression);
   }
-  
+
   abstract boolean positive();
 
   abstract Class<? extends Matcher<? super ExpressionTree>> matcherClass();
@@ -53,12 +55,15 @@ abstract class UMatches extends UExpression {
   @Nullable
   protected Choice<Unifier> defaultAction(Tree target, @Nullable Unifier unifier) {
     final Tree exprTarget = UParens.skipParens(target);
-    return expression().unify(exprTarget, unifier).condition(new Predicate<Unifier>() {
-      @Override
-      public boolean apply(Unifier success) {
-        return matches(exprTarget, success) == positive();
-      }
-    });
+    return expression()
+        .unify(exprTarget, unifier)
+        .condition(
+            new Predicate<Unifier>() {
+              @Override
+              public boolean apply(Unifier success) {
+                return matches(exprTarget, success) == positive();
+              }
+            });
   }
 
   @Override
@@ -89,7 +94,7 @@ abstract class UMatches extends UExpression {
   static <T> T makeMatcher(Class<T> klass) {
     try {
       return klass.newInstance();
-    } catch (IllegalAccessException|InstantiationException e) {
+    } catch (IllegalAccessException | InstantiationException e) {
       throw new RuntimeException(e);
     }
   }

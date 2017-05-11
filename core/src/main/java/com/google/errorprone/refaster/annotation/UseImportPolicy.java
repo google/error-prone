@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation to indicate which import policy to use.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @Target(ElementType.METHOD)

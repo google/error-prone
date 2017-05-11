@@ -29,8 +29,8 @@ import com.sun.tools.javac.code.Type;
 /** Matches static methods, allows refinement on class type. */
 class StaticMethodMatcherImpl extends MethodMatcher implements StaticMethodMatcher {
   @Override
-  protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
-      VisitorState state) {
+  protected Optional<MatchState> matchResult(
+      ExpressionTree item, MatchState method, VisitorState state) {
     if (!method.sym().isStatic()) {
       return Optional.absent();
     }
@@ -51,7 +51,7 @@ class StaticMethodMatcherImpl extends MethodMatcher implements StaticMethodMatch
   public MethodClassMatcherImpl onClassAny(Iterable<String> classNames) {
     return new MethodClassMatcherImpl(this, TypePredicates.isExactTypeAny(classNames));
   }
-  
+
   @Override
   public MethodClassMatcherImpl onClassAny(String... classNames) {
     return onClassAny(ImmutableList.copyOf(classNames));

@@ -98,24 +98,24 @@ import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
  * exception). For example, if {@code foo.toString()} is successfully evaluated, we know two things:
  *
  * <ol>
- * <li>The expression itself is non-null (because {@code toString()} is in our whitelist of methods
- *     known to return non-null values)
- * <li>{@code foo} is non-null (because it has been dereferenced without producing a {@code
- *     NullPointerException})
+ *   <li>The expression itself is non-null (because {@code toString()} is in our whitelist of
+ *       methods known to return non-null values)
+ *   <li>{@code foo} is non-null (because it has been dereferenced without producing a {@code
+ *       NullPointerException})
  * </ol>
  *
  * <p>These particular two pieces of data also demonstrate the two connected but distinct systems
  * that we use to track nullness:
  *
  * <ol>
- * <li>We compute the nullability of each expression by applying rules that may reference only the
- *     nullability of <i>subexpressions</i>. We make the result available only to superexpressions
- *     (and to the {@linkplain Analysis#getValue final output of the analysis}).
- * <li>We {@linkplain LocalVariableUpdates update} and {@linkplain LocalVariableValues read} the
- *     nullability of <i>variables</i> in a mapping that persists from node to node. This is the
- *     only exception to the rule that we propagate data from subexpression to superexpression only.
- *     The mapping is read only when visiting a {@link LocalVariableNode}. That is enough to give
- *     the {@code LocalVariableNode} a value that is then available to superexpressions.
+ *   <li>We compute the nullability of each expression by applying rules that may reference only the
+ *       nullability of <i>subexpressions</i>. We make the result available only to superexpressions
+ *       (and to the {@linkplain Analysis#getValue final output of the analysis}).
+ *   <li>We {@linkplain LocalVariableUpdates update} and {@linkplain LocalVariableValues read} the
+ *       nullability of <i>variables</i> in a mapping that persists from node to node. This is the
+ *       only exception to the rule that we propagate data from subexpression to superexpression
+ *       only. The mapping is read only when visiting a {@link LocalVariableNode}. That is enough to
+ *       give the {@code LocalVariableNode} a value that is then available to superexpressions.
  * </ol>
  *
  * <p>A further complication is that sometimes we know the nullability of an expression only
@@ -240,7 +240,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * Constructor for use by subclasses.
    *
    * @param defaultAssumption used if a field or method can't be resolved as well as as the default
-   *        for local variables, field and array reads in the absence of better information
+   *     for local variables, field and array reads in the absence of better information
    * @param methodReturnsNonNull determines whether a method's return value is known to be non-null
    */
   protected NullnessPropagationTransfer(

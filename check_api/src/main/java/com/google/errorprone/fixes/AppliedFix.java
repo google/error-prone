@@ -24,8 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represents the corrected source which we think was intended, by applying a Fix. This
- * is used to generate the "Did you mean?" snippet in the error message.
+ * Represents the corrected source which we think was intended, by applying a Fix. This is used to
+ * generate the "Did you mean?" snippet in the error message.
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -56,8 +56,8 @@ public class AppliedFix {
     }
 
     /**
-     * Applies the suggestedFix to the source. Returns null if applying the fix results in no
-     * change to the source, or a change only to imports.
+     * Applies the suggestedFix to the source. Returns null if applying the fix results in no change
+     * to the source, or a change only to imports.
      */
     public AppliedFix apply(Fix suggestedFix) {
       StringBuilder replaced = new StringBuilder(source);
@@ -85,11 +85,11 @@ public class AppliedFix {
       }
 
       LineNumberReader lineNumberReader =
-              new LineNumberReader(new StringReader(replaced.toString()));
+          new LineNumberReader(new StringReader(replaced.toString()));
       String snippet = null;
       boolean isRemoveLine = false;
       try {
-        while(!modifiedLines.contains(lineNumberReader.getLineNumber())) {
+        while (!modifiedLines.contains(lineNumberReader.getLineNumber())) {
           lineNumberReader.readLine();
         }
         // TODO: this is over-simplified; need a failing test case

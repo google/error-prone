@@ -21,12 +21,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation on any static or field that will be initialized lazily,
- * where races yield no semantic difference in the code.  The canonical
- * example of this is String.hashCode():
+ * Use this annotation on any static or field that will be initialized lazily, where races yield no
+ * semantic difference in the code. The canonical example of this is String.hashCode():
  *
- * <pre>
- * {@code
+ * <pre>{@code
  * public int hashCode() {
  *   int h = hash;
  *   if (h == 0 && value.length > 0) {
@@ -43,5 +41,4 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface LazyInit {
-}
+public @interface LazyInit {}

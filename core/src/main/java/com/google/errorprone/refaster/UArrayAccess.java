@@ -42,7 +42,8 @@ abstract class UArrayAccess extends UExpression implements ArrayAccessTree {
 
   @Override
   public Choice<Unifier> visitArrayAccess(ArrayAccessTree arrayAccess, Unifier unifier) {
-    return getExpression().unify(arrayAccess.getExpression(), unifier)
+    return getExpression()
+        .unify(arrayAccess.getExpression(), unifier)
         .thenChoose(unifications(getIndex(), arrayAccess.getIndex()));
   }
 

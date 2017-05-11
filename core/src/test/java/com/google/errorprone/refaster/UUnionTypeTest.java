@@ -30,25 +30,29 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class UUnionTypeTest {
   @Test
-  public void equality() {    
+  public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UUnionType.create(
-            UClassIdent.create("java.lang.IllegalArgumentException"),
-            UClassIdent.create("java.lang.IllegalStateException")))
-        .addEqualityGroup(UUnionType.create(
-            UClassIdent.create("java.lang.IllegalStateException"),
-            UClassIdent.create("java.lang.IllegalArgumentException")))
-        .addEqualityGroup(UUnionType.create(
-            UClassIdent.create("java.lang.IllegalStateException"),
-            UClassIdent.create("java.lang.IllegalArgumentException"),
-            UClassIdent.create("java.lang.IndexOutOfBoundsException")))
+        .addEqualityGroup(
+            UUnionType.create(
+                UClassIdent.create("java.lang.IllegalArgumentException"),
+                UClassIdent.create("java.lang.IllegalStateException")))
+        .addEqualityGroup(
+            UUnionType.create(
+                UClassIdent.create("java.lang.IllegalStateException"),
+                UClassIdent.create("java.lang.IllegalArgumentException")))
+        .addEqualityGroup(
+            UUnionType.create(
+                UClassIdent.create("java.lang.IllegalStateException"),
+                UClassIdent.create("java.lang.IllegalArgumentException"),
+                UClassIdent.create("java.lang.IndexOutOfBoundsException")))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UUnionType.create(
-        UClassIdent.create("java.lang.IllegalArgumentException"),
-        UClassIdent.create("java.lang.IllegalStateException")));
+    SerializableTester.reserializeAndAssert(
+        UUnionType.create(
+            UClassIdent.create("java.lang.IllegalArgumentException"),
+            UClassIdent.create("java.lang.IllegalStateException")));
   }
 }

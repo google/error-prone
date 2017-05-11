@@ -30,8 +30,7 @@ public class TypeParameterQualifierTest {
 
   @Before
   public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(TypeParameterQualifier.class, getClass());
+    compilationHelper = CompilationTestHelper.newInstance(TypeParameterQualifier.class, getClass());
   }
 
   @Test

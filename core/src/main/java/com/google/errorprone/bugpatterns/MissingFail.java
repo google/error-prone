@@ -105,33 +105,44 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   // assertTrue(thrown);
   // ```
 
-  private static final Matcher<ExpressionTree> ASSERT_EQUALS = Matchers.anyOf(
-      staticMethod().onClass("org.junit.Assert").named("assertEquals"),
-      staticMethod().onClass("junit.framework.Assert").named("assertEquals"),
-      staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
+  private static final Matcher<ExpressionTree> ASSERT_EQUALS =
+      Matchers.anyOf(
+          staticMethod().onClass("org.junit.Assert").named("assertEquals"),
+          staticMethod().onClass("junit.framework.Assert").named("assertEquals"),
+          staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
   private static final Matcher<Tree> ASSERT_UNEQUAL =
       toType(MethodInvocationTree.class, new UnequalIntegerLiteralMatcher(ASSERT_EQUALS));
 
-  private static final Matcher<ExpressionTree> ASSERT_TRUE = Matchers.anyOf(
-      staticMethod().onClass("org.junit.Assert").named("assertTrue"),
-      staticMethod().onClass("junit.framework.Assert").named("assertTrue"),
-      staticMethod().onClass("junit.framework.TestCase").named("assertTrue"));
-  private static final Matcher<ExpressionTree> ASSERT_FALSE = Matchers.anyOf(
-      staticMethod().onClass("org.junit.Assert").named("assertFalse"),
-      staticMethod().onClass("junit.framework.Assert").named("assertFalse"),
-      staticMethod().onClass("junit.framework.TestCase").named("assertFalse"));
+  private static final Matcher<ExpressionTree> ASSERT_TRUE =
+      Matchers.anyOf(
+          staticMethod().onClass("org.junit.Assert").named("assertTrue"),
+          staticMethod().onClass("junit.framework.Assert").named("assertTrue"),
+          staticMethod().onClass("junit.framework.TestCase").named("assertTrue"));
+  private static final Matcher<ExpressionTree> ASSERT_FALSE =
+      Matchers.anyOf(
+          staticMethod().onClass("org.junit.Assert").named("assertFalse"),
+          staticMethod().onClass("junit.framework.Assert").named("assertFalse"),
+          staticMethod().onClass("junit.framework.TestCase").named("assertFalse"));
   private static final Matcher<ExpressionTree> ASSERT_TRUE_FALSE =
-      methodInvocation(ASSERT_TRUE, MatchType.AT_LEAST_ONE,
+      methodInvocation(
+          ASSERT_TRUE,
+          MatchType.AT_LEAST_ONE,
           Matchers.anyOf(booleanLiteral(false), booleanConstant(false)));
   private static final Matcher<ExpressionTree> ASSERT_FALSE_TRUE =
-      methodInvocation(ASSERT_FALSE, MatchType.AT_LEAST_ONE, Matchers.anyOf(
-          booleanLiteral(true), booleanConstant(true)));
+      methodInvocation(
+          ASSERT_FALSE,
+          MatchType.AT_LEAST_ONE,
+          Matchers.anyOf(booleanLiteral(true), booleanConstant(true)));
   private static final Matcher<ExpressionTree> ASSERT_TRUE_TRUE =
-      methodInvocation(ASSERT_TRUE, MatchType.AT_LEAST_ONE, Matchers.anyOf(
-          booleanLiteral(true), booleanConstant(true)));
+      methodInvocation(
+          ASSERT_TRUE,
+          MatchType.AT_LEAST_ONE,
+          Matchers.anyOf(booleanLiteral(true), booleanConstant(true)));
   private static final Matcher<ExpressionTree> ASSERT_FALSE_FALSE =
-      methodInvocation(ASSERT_FALSE, MatchType.AT_LEAST_ONE, Matchers.anyOf(
-          booleanLiteral(false), booleanConstant(false)));
+      methodInvocation(
+          ASSERT_FALSE,
+          MatchType.AT_LEAST_ONE,
+          Matchers.anyOf(booleanLiteral(false), booleanConstant(false)));
 
   private static final Matcher<StatementTree> JAVA_ASSERT_FALSE =
       assertStatement(ignoreParens(Matchers.anyOf(booleanLiteral(false), booleanConstant(false))));
@@ -146,9 +157,9 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<ExpressionTree> ASSERT_CALL =
       methodInvocation(new AssertMethodMatcher());
-  private static final Matcher<ExpressionTree> REAL_ASSERT_CALL = Matchers.allOf(
-      ASSERT_CALL,
-      Matchers.not(Matchers.anyOf(ASSERT_FALSE_FALSE, ASSERT_TRUE_TRUE)));
+  private static final Matcher<ExpressionTree> REAL_ASSERT_CALL =
+      Matchers.allOf(
+          ASSERT_CALL, Matchers.not(Matchers.anyOf(ASSERT_FALSE_FALSE, ASSERT_TRUE_TRUE)));
   private static final Matcher<ExpressionTree> VERIFY_CALL =
       methodInvocation(staticMethod().onClass("org.mockito.Mockito").named("verify"));
   private static final MultiMatcher<TryTree, Tree> ASSERT_LAST_CALL_IN_TRY =
@@ -177,11 +188,12 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   private static final NextStatement<StatementTree> RETURN_AFTER =
       nextStatement(returnStatement(Matchers.anything()));
 
-  private static final Matcher<VariableTree> INAPPLICABLE_EXCEPTION = Matchers.anyOf(
-      isSameType("java.lang.InterruptedException"),
-      isSameType("java.lang.AssertionError"),
-      isSameType("java.lang.Throwable"),
-      isSameType("junit.framework.AssertionFailedError"));
+  private static final Matcher<VariableTree> INAPPLICABLE_EXCEPTION =
+      Matchers.anyOf(
+          isSameType("java.lang.InterruptedException"),
+          isSameType("java.lang.AssertionError"),
+          isSameType("java.lang.Throwable"),
+          isSameType("junit.framework.AssertionFailedError"));
 
   private static final InLoopMatcher IN_LOOP = new InLoopMatcher();
 
@@ -196,18 +208,19 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   private static final Matcher<Tree> FIELD_ASSIGNMENT_IN_BLOCK =
       contains(toType(AssignmentTree.class, FIELD_ASSIGNMENT));
 
-  private static final Matcher<ExpressionTree> BOOLEAN_ASSERT_VAR = methodInvocation(
-      Matchers.anyOf(ASSERT_FALSE, ASSERT_TRUE),
-      MatchType.AT_LEAST_ONE,
-      Matchers.anyOf(isInstanceField(), isVariable()));
+  private static final Matcher<ExpressionTree> BOOLEAN_ASSERT_VAR =
+      methodInvocation(
+          Matchers.anyOf(ASSERT_FALSE, ASSERT_TRUE),
+          MatchType.AT_LEAST_ONE,
+          Matchers.anyOf(isInstanceField(), isVariable()));
   private static final Matcher<Tree> BOOLEAN_ASSERT_VAR_IN_BLOCK =
       contains(toType(ExpressionTree.class, BOOLEAN_ASSERT_VAR));
 
   // Subtly different from JUnitMatchers: We want to match test base classes too.
   private static final Matcher<ClassTree> JUNIT3_TEST_CLASS =
       isSubtypeOf("junit.framework.TestCase");
-  private static final Matcher<ClassTree> TEST_CLASS = Matchers.anyOf(JUNIT3_TEST_CLASS,
-      new JUnitMatchers.JUnit4TestClassMatcher());
+  private static final Matcher<ClassTree> TEST_CLASS =
+      Matchers.anyOf(JUNIT3_TEST_CLASS, new JUnitMatchers.JUnit4TestClassMatcher());
 
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {
@@ -216,8 +229,8 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       StatementTree lastTryStatement = tryStatements.get(tryStatements.size() - 1);
 
       String failCall = String.format("\nfail(\"Expected %s\");", exceptionToString(tree));
-      SuggestedFix.Builder fixBuilder = SuggestedFix.builder()
-          .postfixWith(lastTryStatement, failCall);
+      SuggestedFix.Builder fixBuilder =
+          SuggestedFix.builder().postfixWith(lastTryStatement, failCall);
 
       // Make sure that when the fail import is added it doesn't conflict with existing ones.
       fixBuilder.removeStaticImport("junit.framework.Assert.fail");
@@ -259,10 +272,15 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       return false;
     }
 
-    if (hasThrowOrFail(tree, state) || isInInapplicableMethod(tree, state)
-        || returnsInTryCatchOrAfter(tree, state) || isInapplicableExceptionType(tree, state)
-        || isInLoop(state, tree) || hasWhileTrue(tree, state) || hasContinue(tree, state)
-        || hasFinally(tree) || logsInCatch(state, tree)) {
+    if (hasThrowOrFail(tree, state)
+        || isInInapplicableMethod(tree, state)
+        || returnsInTryCatchOrAfter(tree, state)
+        || isInapplicableExceptionType(tree, state)
+        || isInLoop(state, tree)
+        || hasWhileTrue(tree, state)
+        || hasContinue(tree, state)
+        || hasFinally(tree)
+        || logsInCatch(state, tree)) {
       return false;
     }
 
@@ -402,9 +420,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     }
   }
 
-  /**
-   * Matches any try-tree that is enclosed in a loop.
-   */
+  /** Matches any try-tree that is enclosed in a loop. */
   private static class InLoopMatcher implements Matcher<TryTree> {
 
     @Override
@@ -420,8 +436,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
 
     @Override
     public boolean matches(WhileLoopTree tree, VisitorState state) {
-      return ignoreParens(booleanLiteral(true))
-          .matches(tree.getCondition(), state);
+      return ignoreParens(booleanLiteral(true)).matches(tree.getCondition(), state);
     }
   }
 

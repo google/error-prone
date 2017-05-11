@@ -54,6 +54,7 @@ import javax.lang.model.element.Modifier;
 
 /**
  * Matchers for code patterns which appear to be JUnit-based tests.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  * @author eaftan@google.com (Eddie Aftandillian)
  */
@@ -67,127 +68,107 @@ public class JUnitMatchers {
   private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
   private static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
 
+  public static final Matcher<MethodTree> hasJUnitAnnotation =
+      anyOf(
+          /* @Test, @Before, and @After are inherited by methods that override a base method with the
+           * annotation.  @BeforeClass and @AfterClass can only be applied to static methods, so they
+           * cannot be inherited. */
+          hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
+          hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
+          hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
+          hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
+          hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
 
-  public static final Matcher<MethodTree> hasJUnitAnnotation = anyOf(
-      /* @Test, @Before, and @After are inherited by methods that override a base method with the
-       * annotation.  @BeforeClass and @AfterClass can only be applied to static methods, so they
-       * cannot be inherited. */
-      hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
-      hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
-      hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
-      hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
-      hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
+  public static final Matcher<MethodTree> hasJUnit4BeforeAnnotations =
+      anyOf(
+          hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
+          hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION));
 
-  public static final Matcher<MethodTree> hasJUnit4BeforeAnnotations = anyOf(
-      hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
-      hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION));
+  public static final Matcher<MethodTree> hasJUnit4AfterAnnotations =
+      anyOf(
+          hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
+          hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
 
-  public static final Matcher<MethodTree> hasJUnit4AfterAnnotations = anyOf(
-      hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
-      hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
-
-  /**
-   * Matches a class that inherits from TestCase.
-   */
-  public static final Matcher<ClassTree> isTestCaseDescendant =
-      isSubtypeOf(JUNIT3_TEST_CASE_CLASS);
+  /** Matches a class that inherits from TestCase. */
+  public static final Matcher<ClassTree> isTestCaseDescendant = isSubtypeOf(JUNIT3_TEST_CASE_CLASS);
 
   /**
    * Match a class which appears to be missing a @RunWith annotation.
    *
-   * Matches if:
-   * 1) The class does not have a JUnit 4 @RunWith annotation.
-   * 2) The class is concrete.
-   * 3) The class is a top-level class.
+   * <p>Matches if: 1) The class does not have a JUnit 4 @RunWith annotation. 2) The class is
+   * concrete. 3) The class is a top-level class.
    */
-  public static final Matcher<ClassTree> isConcreteClassWithoutRunWith = allOf(
-      not(hasAnnotation(JUNIT4_RUN_WITH_ANNOTATION)),
-      not(Matchers.<ClassTree>hasModifier(Modifier.ABSTRACT)),
-      nestingKind(TOP_LEVEL));
+  public static final Matcher<ClassTree> isConcreteClassWithoutRunWith =
+      allOf(
+          not(hasAnnotation(JUNIT4_RUN_WITH_ANNOTATION)),
+          not(Matchers.<ClassTree>hasModifier(Modifier.ABSTRACT)),
+          nestingKind(TOP_LEVEL));
 
-  /**
-   * Match a class which has one or more methods with a JUnit 4 @Test annotation.
-   */
+  /** Match a class which has one or more methods with a JUnit 4 @Test annotation. */
   public static final Matcher<ClassTree> hasJUnit4TestCases =
       hasMethod(hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION));
 
   /**
    * Match a class which appears to be a JUnit 3 test class.
    *
-   * Matches if:
-   * 1) The class does inherit from TestCase.
-   * 2) The class does not have a JUnit 4 @RunWith annotation.
-   * 3) The class is concrete.
-   * 4) This class is a top-level class.
+   * <p>Matches if: 1) The class does inherit from TestCase. 2) The class does not have a JUnit
+   * 4 @RunWith annotation. 3) The class is concrete. 4) This class is a top-level class.
    */
-  public static final Matcher<ClassTree> isJUnit3TestClass = allOf(
-      isTestCaseDescendant,
-      isConcreteClassWithoutRunWith);
+  public static final Matcher<ClassTree> isJUnit3TestClass =
+      allOf(isTestCaseDescendant, isConcreteClassWithoutRunWith);
 
   /**
    * Match a method which appears to be a JUnit 3 test case.
    *
-   * Matches if:
-   * 1) The method's name begins with "test".
-   * 2) The method has no parameters.
-   * 3) The method is public.
-   * 4) The method returns void
+   * <p>Matches if: 1) The method's name begins with "test". 2) The method has no parameters. 3) The
+   * method is public. 4) The method returns void
    */
-  public static final Matcher<MethodTree> isJunit3TestCase = allOf(
-      methodNameStartsWith("test"),
-      methodHasParameters(),
-      Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
-      methodReturns(VOID_TYPE)
-  );
+  public static final Matcher<MethodTree> isJunit3TestCase =
+      allOf(
+          methodNameStartsWith("test"),
+          methodHasParameters(),
+          Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
+          methodReturns(VOID_TYPE));
 
   /**
    * Match a method which appears to be a JUnit 3 setUp method
    *
-   * Matches if:
-   * 1) The method is named "setUp"
-   * 2) The method has no parameters
-   * 3) The method is a public or protected instance method that is not abstract
-   * 4) The method returns void
+   * <p>Matches if: 1) The method is named "setUp" 2) The method has no parameters 3) The method is
+   * a public or protected instance method that is not abstract 4) The method returns void
    */
-  public static final Matcher<MethodTree> looksLikeJUnit3SetUp = allOf(
-      methodIsNamed("setUp"),
-      methodHasParameters(),
-      anyOf(
-          methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
-          methodHasVisibility(MethodVisibility.Visibility.PROTECTED)
-      ),
-      not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
-      not(Matchers.<MethodTree>hasModifier(Modifier.STATIC)),
-      methodReturns(VOID_TYPE)
-  );
+  public static final Matcher<MethodTree> looksLikeJUnit3SetUp =
+      allOf(
+          methodIsNamed("setUp"),
+          methodHasParameters(),
+          anyOf(
+              methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
+              methodHasVisibility(MethodVisibility.Visibility.PROTECTED)),
+          not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
+          not(Matchers.<MethodTree>hasModifier(Modifier.STATIC)),
+          methodReturns(VOID_TYPE));
 
   /**
    * Match a method which appears to be a JUnit 3 tearDown method
    *
-   * Matches if:
-   * 1) The method is named "tearDown"
-   * 2) The method has no parameters
-   * 3) The method is a public or protected instance method that is not abstract
-   * 4) The method returns void
+   * <p>Matches if: 1) The method is named "tearDown" 2) The method has no parameters 3) The method
+   * is a public or protected instance method that is not abstract 4) The method returns void
    */
-  public static final Matcher<MethodTree> looksLikeJUnit3TearDown = allOf(
-      methodIsNamed("tearDown"),
-      methodHasParameters(),
-      anyOf(
-          methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
-          methodHasVisibility(MethodVisibility.Visibility.PROTECTED)
-      ),
-      not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
-      not(Matchers.<MethodTree>hasModifier(Modifier.STATIC)),
-      methodReturns(VOID_TYPE)
-  );
+  public static final Matcher<MethodTree> looksLikeJUnit3TearDown =
+      allOf(
+          methodIsNamed("tearDown"),
+          methodHasParameters(),
+          anyOf(
+              methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
+              methodHasVisibility(MethodVisibility.Visibility.PROTECTED)),
+          not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
+          not(Matchers.<MethodTree>hasModifier(Modifier.STATIC)),
+          methodReturns(VOID_TYPE));
 
-  /**
-   * Matches a method annotated with @Test but not @Ignore.
-   */
-  public static final Matcher<MethodTree> wouldRunInJUnit4 = allOf(
-      hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
-      not(hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION)));
+  /** Matches a method annotated with @Test but not @Ignore. */
+  public static final Matcher<MethodTree> wouldRunInJUnit4 =
+      allOf(
+          hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
+          not(hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION)));
 
   public static class JUnit4TestClassMatcher implements Matcher<ClassTree> {
 
@@ -195,48 +176,49 @@ public class JUnitMatchers {
      * A list of test runners that this matcher should look for in the @RunWith annotation.
      * Subclasses of the test runners are also matched.
      */
-    private static final Collection<String> TEST_RUNNERS = Arrays.asList(
-        "org.mockito.runners.MockitoJUnitRunner",
-        "org.junit.runners.BlockJUnit4ClassRunner");
+    private static final Collection<String> TEST_RUNNERS =
+        Arrays.asList(
+            "org.mockito.runners.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
 
     /**
      * Matches an argument of type Class<T>, where T is a subtype of one of the test runners listed
      * in the TEST_RUNNERS field.
      *
-     * TODO(eaftan): Support checking for an annotation that tells us whether this test runner
+     * <p>TODO(eaftan): Support checking for an annotation that tells us whether this test runner
      * expects tests to be annotated with @Test.
      */
     private static final Matcher<ExpressionTree> isJUnit4TestRunner =
         new Matcher<ExpressionTree>() {
-      @Override
-      public boolean matches(ExpressionTree t, VisitorState state) {
-        Type type = ((JCTree) t).type;
-        // Expect a class type.
-        if (!(type instanceof ClassType)) {
-          return false;
-        }
-        // Expect one type argument, the type of the JUnit class runner to use.
-        com.sun.tools.javac.util.List<Type> typeArgs = ((ClassType) type).getTypeArguments();
-        if (typeArgs.size() != 1) {
-          return false;
-        }
-        Type runnerType = typeArgs.get(0);
-        for (String testRunner : TEST_RUNNERS) {
-          Symbol parent = state.getSymbolFromString(testRunner);
-          if (parent == null) {
-            continue;
+          @Override
+          public boolean matches(ExpressionTree t, VisitorState state) {
+            Type type = ((JCTree) t).type;
+            // Expect a class type.
+            if (!(type instanceof ClassType)) {
+              return false;
+            }
+            // Expect one type argument, the type of the JUnit class runner to use.
+            com.sun.tools.javac.util.List<Type> typeArgs = ((ClassType) type).getTypeArguments();
+            if (typeArgs.size() != 1) {
+              return false;
+            }
+            Type runnerType = typeArgs.get(0);
+            for (String testRunner : TEST_RUNNERS) {
+              Symbol parent = state.getSymbolFromString(testRunner);
+              if (parent == null) {
+                continue;
+              }
+              if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
+                return true;
+              }
+            }
+            return false;
           }
-          if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
-            return true;
-          }
-        }
-        return false;
-      }
-    };
+        };
 
-    private static final Matcher<ClassTree> isJUnit4TestClass = allOf(
-        not(isTestCaseDescendant),
-        annotations(AT_LEAST_ONE, hasArgumentWithValue("value", isJUnit4TestRunner)));
+    private static final Matcher<ClassTree> isJUnit4TestClass =
+        allOf(
+            not(isTestCaseDescendant),
+            annotations(AT_LEAST_ONE, hasArgumentWithValue("value", isJUnit4TestRunner)));
 
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {

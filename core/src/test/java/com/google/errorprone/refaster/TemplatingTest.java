@@ -32,12 +32,12 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link UTemplater#createTemplate} against real compiled code.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
 public class TemplatingTest extends CompilerBasedTest {
-  
+
   @Test
   public void arrayAccess() {
     compile(
@@ -67,9 +67,10 @@ public class TemplatingTest extends CompilerBasedTest {
             ImmutableMap.of(
                 "x", UPrimitiveType.INT,
                 "y", UPrimitiveType.INT),
-            UBinary.create(Kind.DIVIDE, 
-                UParens.create(UBinary.create(
-                    Kind.PLUS, UFreeIdent.create("x"), UFreeIdent.create("y"))),
+            UBinary.create(
+                Kind.DIVIDE,
+                UParens.create(
+                    UBinary.create(Kind.PLUS, UFreeIdent.create("x"), UFreeIdent.create("y"))),
                 ULiteral.intLit(2)),
             UPrimitiveType.INT),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
@@ -87,9 +88,7 @@ public class TemplatingTest extends CompilerBasedTest {
         ExpressionTemplate.create(
             ImmutableMap.of("foo", UPrimitiveType.BOOLEAN),
             UConditional.create(
-                UFreeIdent.create("foo"), 
-                ULiteral.nullLit(), 
-                ULiteral.stringLit("bar")),
+                UFreeIdent.create("foo"), ULiteral.nullLit(), ULiteral.stringLit("bar")),
             UClassType.create("java.lang.String")),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
@@ -107,19 +106,21 @@ public class TemplatingTest extends CompilerBasedTest {
         "}");
     assertEquals(
         BlockTemplate.create(
-            ImmutableMap.of(
-                "itr", UClassType.create("java.util.Iterator", UWildcardType.create())),
+            ImmutableMap.of("itr", UClassType.create("java.util.Iterator", UWildcardType.create())),
             UWhileLoop.create(
-                UParens.create(UMethodInvocation.create(
-                    UMemberSelect.create(
-                        UFreeIdent.create("itr"), 
-                        "hasNext", 
-                        UMethodType.create(UPrimitiveType.BOOLEAN)))), 
-                UBlock.create(UExpressionStatement.create(UMethodInvocation.create(
-                    UMemberSelect.create(
-                        UFreeIdent.create("itr"), 
-                        "next", 
-                        UMethodType.create(UTypeVar.create("E")))))))),
+                UParens.create(
+                    UMethodInvocation.create(
+                        UMemberSelect.create(
+                            UFreeIdent.create("itr"),
+                            "hasNext",
+                            UMethodType.create(UPrimitiveType.BOOLEAN)))),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UMethodInvocation.create(
+                            UMemberSelect.create(
+                                UFreeIdent.create("itr"),
+                                "next",
+                                UMethodType.create(UTypeVar.create("E")))))))),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
 
@@ -133,8 +134,8 @@ public class TemplatingTest extends CompilerBasedTest {
         "}");
     assertEquals(
         ExpressionTemplate.create(
-            UStaticIdent.create("java.math.RoundingMode", "FLOOR", 
-                UClassType.create("java.math.RoundingMode")),
+            UStaticIdent.create(
+                "java.math.RoundingMode", "FLOOR", UClassType.create("java.math.RoundingMode")),
             UClassType.create("java.math.RoundingMode")),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
@@ -150,8 +151,8 @@ public class TemplatingTest extends CompilerBasedTest {
         "}");
     assertEquals(
         ExpressionTemplate.create(
-            UStaticIdent.create("java.math.RoundingMode", "FLOOR", 
-                UClassType.create("java.math.RoundingMode")),
+            UStaticIdent.create(
+                "java.math.RoundingMode", "FLOOR", UClassType.create("java.math.RoundingMode")),
             UClassType.create("java.math.RoundingMode")),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
@@ -168,8 +169,8 @@ public class TemplatingTest extends CompilerBasedTest {
         "}");
     assertEquals(
         ExpressionTemplate.create(
-            UStaticIdent.create("java.math.RoundingMode", "FLOOR", 
-                UClassType.create("java.math.RoundingMode")),
+            UStaticIdent.create(
+                "java.math.RoundingMode", "FLOOR", UClassType.create("java.math.RoundingMode")),
             UClassType.create("java.math.RoundingMode")),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
@@ -188,9 +189,10 @@ public class TemplatingTest extends CompilerBasedTest {
             ImmutableMap.of("x", UPrimitiveType.INT),
             UMethodInvocation.create(
                 UStaticIdent.create(
-                    "java.math.BigInteger", "valueOf", 
-                    UMethodType.create(UClassType.create("java.math.BigInteger"), 
-                        UPrimitiveType.LONG)), 
+                    "java.math.BigInteger",
+                    "valueOf",
+                    UMethodType.create(
+                        UClassType.create("java.math.BigInteger"), UPrimitiveType.LONG)),
                 UFreeIdent.create("x")),
             UClassType.create("java.math.BigInteger")),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
@@ -208,8 +210,10 @@ public class TemplatingTest extends CompilerBasedTest {
         ExpressionTemplate.create(
             ImmutableMap.of("str", UClassType.create("java.lang.String")),
             UMethodInvocation.create(
-                UMemberSelect.create(UFreeIdent.create("str"), "charAt", 
-                    UMethodType.create(UPrimitiveType.CHAR, UPrimitiveType.INT)), 
+                UMemberSelect.create(
+                    UFreeIdent.create("str"),
+                    "charAt",
+                    UMethodType.create(UPrimitiveType.CHAR, UPrimitiveType.INT)),
                 ULiteral.intLit(5)),
             UPrimitiveType.CHAR),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
@@ -228,8 +232,10 @@ public class TemplatingTest extends CompilerBasedTest {
         ExpressionTemplate.create(
             ImmutableMap.of("str", UClassType.create("java.lang.String")),
             UMethodInvocation.create(
-                UMemberSelect.create(UFreeIdent.create("str"), "charAt", 
-                    UMethodType.create(UPrimitiveType.CHAR, UPrimitiveType.INT)), 
+                UMemberSelect.create(
+                    UFreeIdent.create("str"),
+                    "charAt",
+                    UMethodType.create(UPrimitiveType.CHAR, UPrimitiveType.INT)),
                 UAnyOf.create(ULiteral.intLit(1), ULiteral.intLit(3), ULiteral.intLit(5))),
             UPrimitiveType.CHAR),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
@@ -247,15 +253,16 @@ public class TemplatingTest extends CompilerBasedTest {
     assertEquals(
         ExpressionTemplate.create(
             ImmutableMap.of(
-                "array", UArrayType.create(UPrimitiveType.INT),
-                "key", UPrimitiveType.INT),
+                "array", UArrayType.create(UPrimitiveType.INT), "key", UPrimitiveType.INT),
             UUnary.create(
-                Kind.BITWISE_COMPLEMENT, 
+                Kind.BITWISE_COMPLEMENT,
                 UMethodInvocation.create(
-                    UStaticIdent.create("java.util.Arrays", "binarySearch",
+                    UStaticIdent.create(
+                        "java.util.Arrays",
+                        "binarySearch",
                         UMethodType.create(
-                            UPrimitiveType.INT, 
-                            UArrayType.create(UPrimitiveType.INT), 
+                            UPrimitiveType.INT,
+                            UArrayType.create(UPrimitiveType.INT),
                             UPrimitiveType.INT)),
                     UFreeIdent.create("array"),
                     UFreeIdent.create("key"))),
@@ -276,11 +283,11 @@ public class TemplatingTest extends CompilerBasedTest {
         ExpressionTemplate.create(
             ImmutableClassToInstanceMap.<Annotation>builder().build(),
             ImmutableList.of(UTypeVar.create("E")),
-            ImmutableMap.of("list", UClassType.create("java.util.List", UTypeVar.create("E"))), 
+            ImmutableMap.of("list", UClassType.create("java.util.List", UTypeVar.create("E"))),
             UMethodInvocation.create(
                 UMemberSelect.create(
-                    UFreeIdent.create("list"), 
-                    "get", 
+                    UFreeIdent.create("list"),
+                    "get",
                     UMethodType.create(UTypeVar.create("E"), UPrimitiveType.INT)),
                 ULiteral.intLit(0)),
             UTypeVar.create("E")),
@@ -306,15 +313,14 @@ public class TemplatingTest extends CompilerBasedTest {
             ImmutableMap.of("list", UClassType.create("java.util.List", eVar)),
             UMethodInvocation.create(
                 UStaticIdent.create(
-                    "java.util.Collections", 
-                    "unmodifiableList", 
+                    "java.util.Collections",
+                    "unmodifiableList",
                     UForAll.create(
-                        ImmutableList.of(tVar), 
+                        ImmutableList.of(tVar),
                         UMethodType.create(
                             UClassType.create("java.util.List", tVar),
                             UClassType.create(
-                                "java.util.List", 
-                                UWildcardType.create(BoundKind.EXTENDS, tVar))))),
+                                "java.util.List", UWildcardType.create(BoundKind.EXTENDS, tVar))))),
                 UFreeIdent.create("list")),
             UClassType.create("java.util.List", eVar)),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
@@ -339,25 +345,26 @@ public class TemplatingTest extends CompilerBasedTest {
                 UBlock.create(
                     UExpressionStatement.create(
                         UAssign.create(
-                            ULocalVarIdent.create("old"), 
+                            ULocalVarIdent.create("old"),
                             UMethodInvocation.create(
                                 UMemberSelect.create(
-                                    UFreeIdent.create("str"), 
-                                    "indexOf", 
+                                    UFreeIdent.create("str"),
+                                    "indexOf",
                                     UMethodType.create(
                                         UPrimitiveType.INT,
                                         UPrimitiveType.INT,
                                         UPrimitiveType.INT)),
-                                ULiteral.charLit(' '), 
+                                ULiteral.charLit(' '),
                                 UBinary.create(
                                     Kind.PLUS,
-                                    ULocalVarIdent.create("old"), 
+                                    ULocalVarIdent.create("old"),
                                     ULiteral.intLit(1)))))),
-                UParens.create(UBinary.create(
-                    Kind.NOT_EQUAL_TO, ULocalVarIdent.create("old"), ULiteral.intLit(-1))))),
+                UParens.create(
+                    UBinary.create(
+                        Kind.NOT_EQUAL_TO, ULocalVarIdent.create("old"), ULiteral.intLit(-1))))),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void voidReturn() {
     compile(
@@ -372,17 +379,17 @@ public class TemplatingTest extends CompilerBasedTest {
             ImmutableMap.of(
                 "md", UClassType.create("java.security.MessageDigest"),
                 "bytes", UArrayType.create(UPrimitiveType.BYTE)),
-            UExpressionStatement.create(UMethodInvocation.create(
-                UMemberSelect.create(
-                    UFreeIdent.create("md"), 
-                    "update", 
-                    UMethodType.create(
-                        UPrimitiveType.VOID, 
-                        UArrayType.create(UPrimitiveType.BYTE))), 
-                UFreeIdent.create("bytes")))),
+            UExpressionStatement.create(
+                UMethodInvocation.create(
+                    UMemberSelect.create(
+                        UFreeIdent.create("md"),
+                        "update",
+                        UMethodType.create(
+                            UPrimitiveType.VOID, UArrayType.create(UPrimitiveType.BYTE))),
+                    UFreeIdent.create("bytes")))),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void arrayCast() {
     compile(
@@ -400,7 +407,7 @@ public class TemplatingTest extends CompilerBasedTest {
             UArrayType.create(UClassType.create("java.lang.String"))),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void primitiveCast() {
     compile(
@@ -416,7 +423,7 @@ public class TemplatingTest extends CompilerBasedTest {
             UPrimitiveType.CHAR),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void objectCast() {
     compile(
@@ -432,7 +439,7 @@ public class TemplatingTest extends CompilerBasedTest {
             UClassType.create("java.lang.String")),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void constructor() {
     compile(
@@ -448,7 +455,7 @@ public class TemplatingTest extends CompilerBasedTest {
             UClassType.create("java.lang.String")),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void forLoop() {
     compile(
@@ -466,16 +473,14 @@ public class TemplatingTest extends CompilerBasedTest {
             UForLoop.create(
                 ImmutableList.of(
                     UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
-                UBinary.create(
-                    Kind.LESS_THAN, 
-                    ULocalVarIdent.create("i"), 
-                    UFreeIdent.create("to")), 
-                ImmutableList.of(UExpressionStatement.create(
-                    UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i")))),
+                UBinary.create(Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")),
+                ImmutableList.of(
+                    UExpressionStatement.create(
+                        UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i")))),
                 UBlock.create())),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void forLoopNoStep() {
     compile(
@@ -492,16 +497,13 @@ public class TemplatingTest extends CompilerBasedTest {
                 "to", UPrimitiveType.INT),
             UForLoop.create(
                 ImmutableList.of(
-                    UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))), 
-                UBinary.create(
-                    Kind.LESS_THAN, 
-                    ULocalVarIdent.create("i"), 
-                    UFreeIdent.create("to")), 
+                    UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
+                UBinary.create(Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")),
                 ImmutableList.<UExpressionStatement>of(),
                 UBlock.create())),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void forLoopNoCondition() {
     compile(
@@ -518,14 +520,15 @@ public class TemplatingTest extends CompilerBasedTest {
                 "to", UPrimitiveType.INT),
             UForLoop.create(
                 ImmutableList.of(
-                    UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))), 
-                null, 
-                ImmutableList.of(UExpressionStatement.create(
-                    UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i")))), 
+                    UVariableDecl.create("i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
+                null,
+                ImmutableList.of(
+                    UExpressionStatement.create(
+                        UUnary.create(Kind.POSTFIX_INCREMENT, ULocalVarIdent.create("i")))),
                 UBlock.create())),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void forLoopNoStart() {
     compile(
@@ -541,14 +544,15 @@ public class TemplatingTest extends CompilerBasedTest {
                 "from", UPrimitiveType.INT,
                 "to", UPrimitiveType.INT),
             UForLoop.create(
-                ImmutableList.<UStatement>of(), 
+                ImmutableList.<UStatement>of(),
                 UBinary.create(Kind.LESS_THAN, UFreeIdent.create("from"), UFreeIdent.create("to")),
-                ImmutableList.of(UExpressionStatement.create(
-                    UUnary.create(Kind.POSTFIX_INCREMENT, UFreeIdent.create("from")))), 
+                ImmutableList.of(
+                    UExpressionStatement.create(
+                        UUnary.create(Kind.POSTFIX_INCREMENT, UFreeIdent.create("from")))),
                 UBlock.create())),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void parameterizedCast() {
     compile(
@@ -561,17 +565,17 @@ public class TemplatingTest extends CompilerBasedTest {
         "}");
     assertEquals(
         ExpressionTemplate.create(
-            ImmutableMap.of("elements", 
+            ImmutableMap.of(
+                "elements",
                 UClassType.create("java.util.Collection", UClassType.create("java.lang.String"))),
             UTypeCast.create(
                 UTypeApply.create(
-                    UClassIdent.create("java.util.List"), 
-                    UClassIdent.create("java.lang.String")), 
+                    UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.String")),
                 UFreeIdent.create("elements")),
             UClassType.create("java.util.List", UClassType.create("java.lang.String"))),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void instanceOf() {
     compile(
@@ -588,7 +592,7 @@ public class TemplatingTest extends CompilerBasedTest {
             UPrimitiveType.BOOLEAN),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void assignment() {
     compile(
@@ -604,7 +608,7 @@ public class TemplatingTest extends CompilerBasedTest {
             UClassType.create("java.lang.String")),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void recursiveTypes() {
     compile(
@@ -624,7 +628,7 @@ public class TemplatingTest extends CompilerBasedTest {
             eVar),
         template);
   }
-  
+
   @Test
   public void localVariable() {
     compile(
@@ -644,29 +648,34 @@ public class TemplatingTest extends CompilerBasedTest {
             ImmutableList.of(UTypeVar.create("E")),
             ImmutableMap.of(
                 "collection", UClassType.create("java.util.Collection", UTypeVar.create("E")),
-                "comparator", UClassType.create("java.util.Comparator", 
-                    UWildcardType.create(BoundKind.SUPER, UTypeVar.create("E")))),
+                "comparator",
+                    UClassType.create(
+                        "java.util.Comparator",
+                        UWildcardType.create(BoundKind.SUPER, UTypeVar.create("E")))),
             UVariableDecl.create(
-                "list", 
-                UTypeApply.create("java.util.List", UTypeVarIdent.create("E")), 
+                "list",
+                UTypeApply.create("java.util.List", UTypeVarIdent.create("E")),
                 UNewClass.create(
-                    UTypeApply.create("java.util.ArrayList", UTypeVarIdent.create("E")), 
-                UFreeIdent.create("collection"))),
-            UExpressionStatement.create(UMethodInvocation.create(
-                UStaticIdent.create(
-                    "java.util.Collections", 
-                    "sort", 
-                    UForAll.create(
-                        ImmutableList.of(UTypeVar.create("T")), 
-                        UMethodType.create(UPrimitiveType.VOID, 
-                            UClassType.create("java.util.List", UTypeVar.create("T")), 
-                            UClassType.create("java.util.Comparator", 
-                                UWildcardType.create(BoundKind.SUPER, UTypeVar.create("T")))))), 
-                ULocalVarIdent.create("list"), 
-                UFreeIdent.create("comparator")))),
+                    UTypeApply.create("java.util.ArrayList", UTypeVarIdent.create("E")),
+                    UFreeIdent.create("collection"))),
+            UExpressionStatement.create(
+                UMethodInvocation.create(
+                    UStaticIdent.create(
+                        "java.util.Collections",
+                        "sort",
+                        UForAll.create(
+                            ImmutableList.of(UTypeVar.create("T")),
+                            UMethodType.create(
+                                UPrimitiveType.VOID,
+                                UClassType.create("java.util.List", UTypeVar.create("T")),
+                                UClassType.create(
+                                    "java.util.Comparator",
+                                    UWildcardType.create(BoundKind.SUPER, UTypeVar.create("T")))))),
+                    ULocalVarIdent.create("list"),
+                    UFreeIdent.create("comparator")))),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void throwException() {
     compile(
@@ -677,11 +686,11 @@ public class TemplatingTest extends CompilerBasedTest {
         "}");
     assertEquals(
         BlockTemplate.create(
-            UThrow.create(UNewClass.create(
-                UClassIdent.create("java.lang.IllegalArgumentException")))),
-        UTemplater.createTemplate(context, getMethodDeclaration("example")));            
+            UThrow.create(
+                UNewClass.create(UClassIdent.create("java.lang.IllegalArgumentException")))),
+        UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void forEach() {
     compile(
@@ -698,16 +707,17 @@ public class TemplatingTest extends CompilerBasedTest {
             ImmutableMap.of("array", UArrayType.create(UPrimitiveType.INT)),
             UVariableDecl.create("sum", UPrimitiveTypeTree.INT, ULiteral.intLit(0)),
             UEnhancedForLoop.create(
-                UVariableDecl.create("value", UPrimitiveTypeTree.INT), 
-                UFreeIdent.create("array"), 
-                UBlock.create(UExpressionStatement.create(
-                    UAssignOp.create(
-                        ULocalVarIdent.create("sum"), 
-                        Kind.PLUS_ASSIGNMENT, 
-                        ULocalVarIdent.create("value")))))),
+                UVariableDecl.create("value", UPrimitiveTypeTree.INT),
+                UFreeIdent.create("array"),
+                UBlock.create(
+                    UExpressionStatement.create(
+                        UAssignOp.create(
+                            ULocalVarIdent.create("sum"),
+                            Kind.PLUS_ASSIGNMENT,
+                            ULocalVarIdent.create("value")))))),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void synchronizd() {
     compile(
@@ -727,17 +737,19 @@ public class TemplatingTest extends CompilerBasedTest {
             UVariableDecl.create("sum", UPrimitiveTypeTree.INT, ULiteral.intLit(0)),
             USynchronized.create(
                 UParens.create(UFreeIdent.create("array")),
-                UBlock.create(UEnhancedForLoop.create(
-                    UVariableDecl.create("value", UPrimitiveTypeTree.INT), 
-                    UFreeIdent.create("array"), 
-                    UBlock.create(UExpressionStatement.create(
-                        UAssignOp.create(
-                            ULocalVarIdent.create("sum"), 
-                            Kind.PLUS_ASSIGNMENT, 
-                            ULocalVarIdent.create("value")))))))),
+                UBlock.create(
+                    UEnhancedForLoop.create(
+                        UVariableDecl.create("value", UPrimitiveTypeTree.INT),
+                        UFreeIdent.create("array"),
+                        UBlock.create(
+                            UExpressionStatement.create(
+                                UAssignOp.create(
+                                    ULocalVarIdent.create("sum"),
+                                    Kind.PLUS_ASSIGNMENT,
+                                    ULocalVarIdent.create("value")))))))),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
-  
+
   @Test
   public void anonymousClass() {
     compile(
@@ -756,43 +768,51 @@ public class TemplatingTest extends CompilerBasedTest {
     UTypeVar tVar = UTypeVar.create("T");
     assertEquals(
         BlockTemplate.create(
-            ImmutableMap.of("list", 
-                UClassType.create("java.util.List", UClassType.create("java.lang.String"))),
-            UExpressionStatement.create(UMethodInvocation.create(
-                UStaticIdent.create("java.util.Collections", "sort",
-                    UForAll.create(
-                        ImmutableList.of(tVar),
-                        UMethodType.create(
-                            UPrimitiveType.VOID,
-                            UClassType.create("java.util.List", tVar),
-                            UClassType.create("java.util.Comparator",
-                                UWildcardType.create(BoundKind.SUPER, tVar))))),
-                UFreeIdent.create("list"),
-                UNewClass.create(
-                    null,
-                    ImmutableList.<UExpression>of(),
-                    UTypeApply.create(
-                        "java.util.Comparator",
-                        UClassIdent.create("java.lang.String")),
-                    ImmutableList.<UExpression>of(),
-                    UClassDecl.create(UMethodDecl.create(
-                        UModifiers.create(
-                            Flags.PUBLIC,
-                            UAnnotation.create(UClassIdent.create("java.lang.Override"))),
-                        "compare",
-                        UPrimitiveTypeTree.INT,
-                        ImmutableList.of(
-                            UVariableDecl.create("a", UClassIdent.create("java.lang.String")),
-                            UVariableDecl.create("b", UClassIdent.create("java.lang.String"))),
+            ImmutableMap.of(
+                "list", UClassType.create("java.util.List", UClassType.create("java.lang.String"))),
+            UExpressionStatement.create(
+                UMethodInvocation.create(
+                    UStaticIdent.create(
+                        "java.util.Collections",
+                        "sort",
+                        UForAll.create(
+                            ImmutableList.of(tVar),
+                            UMethodType.create(
+                                UPrimitiveType.VOID,
+                                UClassType.create("java.util.List", tVar),
+                                UClassType.create(
+                                    "java.util.Comparator",
+                                    UWildcardType.create(BoundKind.SUPER, tVar))))),
+                    UFreeIdent.create("list"),
+                    UNewClass.create(
+                        null,
                         ImmutableList.<UExpression>of(),
-                        UBlock.create(UReturn.create(UMethodInvocation.create(
-                            UMemberSelect.create(
-                                ULocalVarIdent.create("a"),
-                                "compareTo",
-                                UMethodType.create(
-                                    UPrimitiveType.INT,
-                                    UClassType.create("java.lang.String"))),
-                            ULocalVarIdent.create("b")))))))))),
+                        UTypeApply.create(
+                            "java.util.Comparator", UClassIdent.create("java.lang.String")),
+                        ImmutableList.<UExpression>of(),
+                        UClassDecl.create(
+                            UMethodDecl.create(
+                                UModifiers.create(
+                                    Flags.PUBLIC,
+                                    UAnnotation.create(UClassIdent.create("java.lang.Override"))),
+                                "compare",
+                                UPrimitiveTypeTree.INT,
+                                ImmutableList.of(
+                                    UVariableDecl.create(
+                                        "a", UClassIdent.create("java.lang.String")),
+                                    UVariableDecl.create(
+                                        "b", UClassIdent.create("java.lang.String"))),
+                                ImmutableList.<UExpression>of(),
+                                UBlock.create(
+                                    UReturn.create(
+                                        UMethodInvocation.create(
+                                            UMemberSelect.create(
+                                                ULocalVarIdent.create("a"),
+                                                "compareTo",
+                                                UMethodType.create(
+                                                    UPrimitiveType.INT,
+                                                    UClassType.create("java.lang.String"))),
+                                            ULocalVarIdent.create("b")))))))))),
         UTemplater.createTemplate(context, getMethodDeclaration("example")));
   }
 }

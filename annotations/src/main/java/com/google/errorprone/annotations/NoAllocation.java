@@ -27,8 +27,8 @@ import java.lang.annotation.Target;
  * allocation to occur that might result in garbage collection.
  *
  * <p>Be careful using this annotation. It should be used sparingly, typically only for methods
- * called within inner loops or user interface event handlers. Misuse will likely lead to
- * decreased performance and significantly more complex code.
+ * called within inner loops or user interface event handlers. Misuse will likely lead to decreased
+ * performance and significantly more complex code.
  */
 @Documented
 @Target(METHOD)

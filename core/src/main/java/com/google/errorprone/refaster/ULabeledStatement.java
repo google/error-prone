@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 
 /**
  * {@code UTree} representation of a {@code LabeledStatementTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -33,16 +33,16 @@ abstract class ULabeledStatement extends USimpleStatement implements LabeledStat
   static ULabeledStatement create(CharSequence label, UStatement statement) {
     return new AutoValue_ULabeledStatement(StringName.of(label), (USimpleStatement) statement);
   }
-  
+
   static class Key extends Bindings.Key<CharSequence> {
     Key(CharSequence identifier) {
       super(identifier.toString());
     }
   }
-  
+
   /**
-   * Returns either the {@code Name} bound to the specified label, or a {@code Name}
-   * representing the original label if none is already bound.
+   * Returns either the {@code Name} bound to the specified label, or a {@code Name} representing
+   * the original label if none is already bound.
    */
   @Nullable
   static Name inlineLabel(@Nullable CharSequence label, Inliner inliner) {
@@ -66,16 +66,16 @@ abstract class ULabeledStatement extends USimpleStatement implements LabeledStat
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
     return visitor.visitLabeledStatement(this, data);
   }
-  
+
   private Key key() {
     return new Key(getLabel());
   }
 
   @Override
   public JCLabeledStatement inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Labelled(
-        inlineLabel(getLabel(), inliner),
-        getStatement().inline(inliner));
+    return inliner
+        .maker()
+        .Labelled(inlineLabel(getLabel(), inliner), getStatement().inline(inliner));
   }
 
   @Override

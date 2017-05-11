@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author Bill Pugh (bill.pugh@gmail.com)
- */
+/** @author Bill Pugh (bill.pugh@gmail.com) */
 @RunWith(JUnit4.class)
 public class ComparisonOutOfRangeTest {
 

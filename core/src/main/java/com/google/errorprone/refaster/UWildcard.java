@@ -45,7 +45,7 @@ abstract class UWildcard extends UExpression implements WildcardTree {
     validKinds.put(Kind.SUPER_WILDCARD, BoundKind.SUPER);
     BOUND_KINDS = Maps.unmodifiableBiMap(validKinds);
   }
-  
+
   static UWildcard create(Kind kind, @Nullable UTree<?> bound) {
     checkArgument(BOUND_KINDS.containsKey(kind));
     // verify bound is null iff kind is UNBOUNDED_WILDCARD
@@ -62,9 +62,11 @@ abstract class UWildcard extends UExpression implements WildcardTree {
 
   @Override
   public JCWildcard inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Wildcard(
-        inliner.maker().TypeBoundKind(BOUND_KINDS.get(getKind())),
-        (getBound() == null) ? null : getBound().inline(inliner));
+    return inliner
+        .maker()
+        .Wildcard(
+            inliner.maker().TypeBoundKind(BOUND_KINDS.get(getKind())),
+            (getBound() == null) ? null : getBound().inline(inliner));
   }
 
   @Override

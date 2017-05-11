@@ -78,7 +78,8 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
   @Override
   @Before
   public void setUp() throws IOException {
-    writeFileToLocalDisk("A.java",
+    writeFileToLocalDisk(
+        "A.java",
         "package com.google;",
         "public class A { ",
         "  public int count() {",
@@ -87,8 +88,7 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
         "  public static int staticCount() {",
         "    return 2;",
         "  }",
-        "}"
-    );
+        "}");
   }
 
   @Override
@@ -101,33 +101,19 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
 
   @Test
   public void shouldMatchTransitively() throws Exception {
-    writeFileToLocalDisk("I1.java",
-        "package i;",
-        "public interface I1 {",
-        "  void count();",
-        "}"
-    );
-    writeFileToLocalDisk("I2.java",
-        "package i;",
-        "public interface I2 extends I1 {",
-        "}"
-    );
-    writeFileToLocalDisk("B.java",
+    writeFileToLocalDisk("I1.java", "package i;", "public interface I1 {", "  void count();", "}");
+    writeFileToLocalDisk("I2.java", "package i;", "public interface I2 extends I1 {", "}");
+    writeFileToLocalDisk(
+        "B.java",
         "package b;",
         "public class B implements i.I2 {",
         "  public void count() {",
         "  }",
-        "}"
-    );
+        "}");
     assertCompilesWithLocalDisk(new Scanner());
     clearSourceFiles();
-    writeFileToLocalDisk("C.java",
-        "public class C {",
-        "  public void test(b.B b) {",
-        "    b.count();",
-        "  }",
-        "}"
-    );
+    writeFileToLocalDisk(
+        "C.java", "public class C {", "  public void test(b.B b) {", "    b.count();", "  }", "}");
     assertCompilesWithLocalDisk(memberSelectMatches(true, new DescendantOf("i.I1", "count()")));
   }
 }

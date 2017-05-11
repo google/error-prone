@@ -19,15 +19,15 @@ package com.google.errorprone.refaster;
 import java.io.Serializable;
 
 /**
- * A serializable representation of a template that can be matched against a target of type
- * {@code T}.
+ * A serializable representation of a template that can be matched against a target of type {@code
+ * T}.
  *
  * @author Louis Wasserman
  */
 public interface Unifiable<T> extends Serializable {
   /**
-   * Returns all valid unification paths (if any) from this {@code Unifier} that unify
-   * this with {@code target}.
+   * Returns all valid unification paths (if any) from this {@code Unifier} that unify this with
+   * {@code target}.
    */
   Choice<Unifier> unify(T target, Unifier unifier);
 }

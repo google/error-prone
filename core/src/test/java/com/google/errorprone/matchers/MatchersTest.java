@@ -40,9 +40,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link Matchers}.
- */
+/** Unit tests for {@link Matchers}. */
 @RunWith(JUnit4.class)
 public class MatchersTest {
 
@@ -56,7 +54,8 @@ public class MatchersTest {
   @Test
   public void inLoopShouldMatchInWhileLoop() {
     compilationHelper
-        .addSourceLines("Test.java",
+        .addSourceLines(
+            "Test.java",
             "public class Test {",
             "  public void doIt() {",
             "    while (true) {",
@@ -71,7 +70,8 @@ public class MatchersTest {
   @Test
   public void inLoopShouldMatchInDoLoop() {
     compilationHelper
-        .addSourceLines("Test.java",
+        .addSourceLines(
+            "Test.java",
             "public class Test {",
             "  public void doIt() {",
             "    do {",
@@ -86,7 +86,8 @@ public class MatchersTest {
   @Test
   public void inLoopShouldMatchInForLoop() {
     compilationHelper
-        .addSourceLines("Test.java",
+        .addSourceLines(
+            "Test.java",
             "public class Test {",
             "  public void doIt() {",
             "    for (; true; ) {",
@@ -101,7 +102,8 @@ public class MatchersTest {
   @Test
   public void inLoopShouldMatchInEnhancedForLoop() {
     compilationHelper
-        .addSourceLines("Test.java",
+        .addSourceLines(
+            "Test.java",
             "import java.util.List;",
             "public class Test {",
             "  public void doIt(List<String> strings) {",
@@ -117,7 +119,8 @@ public class MatchersTest {
   @Test
   public void inLoopShouldNotMatchInInitializerWithoutLoop() {
     compilationHelper
-        .addSourceLines("Test.java",
+        .addSourceLines(
+            "Test.java",
             "import java.util.List;",
             "public class Test {",
             "  {",
@@ -130,7 +133,8 @@ public class MatchersTest {
   @Test
   public void inLoopShouldMatchInInitializerInLoop() {
     compilationHelper
-        .addSourceLines("Test.java",
+        .addSourceLines(
+            "Test.java",
             "import java.util.List;",
             "public class Test {",
             "  {",
@@ -147,7 +151,8 @@ public class MatchersTest {
   @Test
   public void inLoopShouldNotMatchInAnonymousInnerClassDefinedInLoop() {
     compilationHelper
-        .addSourceLines("Test.java",
+        .addSourceLines(
+            "Test.java",
             "import java.util.*;",
             "public class Test {",
             "  public void sort(List<List<String>> stringLists) {",
@@ -334,11 +339,9 @@ public class MatchersTest {
     name = "MethodTreeChecker",
     summary = "Checker that flags the given method declaration if the given matcher matches",
     category = ONE_OFF,
-    
     severity = ERROR
   )
-  static class MethodTreeChecker extends BugChecker
-      implements MethodTreeMatcher {
+  static class MethodTreeChecker extends BugChecker implements MethodTreeMatcher {
     private final Matcher<MethodTree> matcher;
 
     public MethodTreeChecker(Matcher<MethodTree> matcher) {

@@ -24,12 +24,17 @@ import java.lang.annotation.Target;
 import javax.lang.model.element.Modifier;
 
 /**
- * Annotation declaring that the target annotation requires all the specified
- * modifiers. For example, an annotation declared as: <pre>
+ * Annotation declaring that the target annotation requires all the specified modifiers. For
+ * example, an annotation declared as:
+ *
+ * <pre>
  * {@literal @}RequiredModifiers(Modifier.PUBLIC)
  * {@literal @}interface MyAnnotation {}
  * </pre>
- * <p>will be considered illegal when used on non-public elements such as: <pre>
+ *
+ * <p>will be considered illegal when used on non-public elements such as:
+ *
+ * <pre>
  * {@literal @}MyAnnotation void foo() {}
  * </pre>
  *
@@ -40,11 +45,11 @@ import javax.lang.model.element.Modifier;
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface RequiredModifiers {
   /**
-   * The required modifiers. The annotated element is illegal if any one or more
-   * of these modifiers are absent.
+   * The required modifiers. The annotated element is illegal if any one or more of these modifiers
+   * are absent.
    *
-   * <p>Empty array has the same effect as not applying this annotation at all;
-   * duplicates are allowed but have no effect.
+   * <p>Empty array has the same effect as not applying this annotation at all; duplicates are
+   * allowed but have no effect.
    */
   Modifier[] value();
 }

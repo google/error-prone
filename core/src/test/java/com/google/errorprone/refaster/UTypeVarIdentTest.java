@@ -32,7 +32,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link UTypeVarIdent}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -44,19 +44,21 @@ public class UTypeVarIdentTest extends AbstractUTreeTest {
         .addEqualityGroup(UTypeVarIdent.create("T"))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(UTypeVarIdent.create("E"));
   }
-  
+
   @Test
   public void inline() {
     ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
     Symtab symtab = Symtab.instance(context);
     Type listType = symtab.listType;
-    bind(new UTypeVar.Key("E"), TypeWithExpression.create(new ClassType(
-        listType, List.<Type>of(symtab.stringType), listType.tsym)));
+    bind(
+        new UTypeVar.Key("E"),
+        TypeWithExpression.create(
+            new ClassType(listType, List.<Type>of(symtab.stringType), listType.tsym)));
     assertInlines("List<String>", UTypeVarIdent.create("E"));
     assertEquals(ImmutableSet.of("java.util.List"), inliner.getImportsToAdd());
   }

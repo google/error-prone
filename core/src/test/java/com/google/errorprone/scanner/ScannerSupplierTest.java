@@ -52,9 +52,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link ScannerSupplier}.
- */
+/** Tests for {@link ScannerSupplier}. */
 @RunWith(JUnit4.class)
 public class ScannerSupplierTest {
 
@@ -141,8 +139,8 @@ public class ScannerSupplierTest {
                 ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class)
             .filter(Predicates.alwaysFalse()); // disables all checks
 
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
-        ImmutableList.of("-Xep:ArrayEquals", "-Xep:BadShiftAmount"));
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(ImmutableList.of("-Xep:ArrayEquals", "-Xep:BadShiftAmount"));
 
     assertScanner(ss.applyOverrides(epOptions))
         .hasEnabledChecks(ArrayEquals.class, BadShiftAmount.class);
@@ -311,10 +309,11 @@ public class ScannerSupplierTest {
             ChainingConstructorIgnoresParameter.class,
             DepAnn.class,
             LongLiteralLowerCaseSuffix.class);
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
-        ImmutableList.of(
-            "-Xep:LongLiteralLowerCaseSuffix:OFF",
-            "-Xep:ChainingConstructorIgnoresParameter:OFF"));
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(
+            ImmutableList.of(
+                "-Xep:LongLiteralLowerCaseSuffix:OFF",
+                "-Xep:ChainingConstructorIgnoresParameter:OFF"));
 
     assertScanner(ss.applyOverrides(epOptions)).hasEnabledChecks(DepAnn.class);
   }
@@ -324,8 +323,8 @@ public class ScannerSupplierTest {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ErrorProneJavaCompilerTest.UnsuppressibleArrayEquals.class);
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
-        ImmutableList.of("-Xep:ArrayEquals:OFF"));
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(ImmutableList.of("-Xep:ArrayEquals:OFF"));
 
     InvalidCommandLineOptionException exception =
         expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
@@ -337,8 +336,8 @@ public class ScannerSupplierTest {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ErrorProneJavaCompilerTest.UnsuppressibleArrayEquals.class);
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
-        ImmutableList.of("-Xep:ArrayEquals:WARN"));
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(ImmutableList.of("-Xep:ArrayEquals:WARN"));
 
     InvalidCommandLineOptionException exception =
         expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
@@ -349,8 +348,9 @@ public class ScannerSupplierTest {
   public void applyOverridesSucceedsWhenDisablingUnknownCheckAndIgnoreUnknownCheckNamesIsSet()
       throws Exception {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class);
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
-        ImmutableList.of("-XepIgnoreUnknownCheckNames", "-Xep:foo:OFF"));
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(
+            ImmutableList.of("-XepIgnoreUnknownCheckNames", "-Xep:foo:OFF"));
 
     assertScanner(ss.applyOverrides(epOptions)).hasEnabledChecks(ArrayEquals.class);
   }
@@ -360,16 +360,17 @@ public class ScannerSupplierTest {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             BadShiftAmount.class, ChainingConstructorIgnoresParameter.class, StringEquality.class);
-    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(
-        ImmutableList.of(
-            "-Xep:ChainingConstructorIgnoresParameter:WARN",
-            "-Xep:StringEquality:ERROR"));
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(
+            ImmutableList.of(
+                "-Xep:ChainingConstructorIgnoresParameter:WARN", "-Xep:StringEquality:ERROR"));
     ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(epOptions);
-    
-    Map<String, SeverityLevel> expected = ImmutableMap.of(
-        "BadShiftAmount", SeverityLevel.ERROR,
-        "ChainingConstructorIgnoresParameter", SeverityLevel.WARNING,
-        "StringEquality", SeverityLevel.ERROR);
+
+    Map<String, SeverityLevel> expected =
+        ImmutableMap.of(
+            "BadShiftAmount", SeverityLevel.ERROR,
+            "ChainingConstructorIgnoresParameter", SeverityLevel.WARNING,
+            "StringEquality", SeverityLevel.ERROR);
 
     assertScanner(overriddenScannerSupplier).hasSeverities(expected);
   }

@@ -44,8 +44,8 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
 
 /**
- * An abstract matcher for implicit and explicit calls to {@code Object.toString()}, for use
- * on types that do not have a human-readable {@code toString()} implementation.
+ * An abstract matcher for implicit and explicit calls to {@code Object.toString()}, for use on
+ * types that do not have a human-readable {@code toString()} implementation.
  *
  * <p>See examples in {@link StreamToString} and {@link ArrayToString}.
  */
@@ -56,16 +56,16 @@ public abstract class AbstractToString extends BugChecker
   protected abstract TypePredicate typePredicate();
 
   /**
-   * Constructs a fix for an implicit toString call, e.g. from string concatenation or from
-   * passing an argument to {@code println} or {@code StringBuilder.append}.
+   * Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
+   * an argument to {@code println} or {@code StringBuilder.append}.
    *
    * @param tree the tree node for the expression being converted to a String
    */
   protected abstract Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state);
 
   /**
-   * Constructs a fix for an explicit toString call, e.g. from {@code Object.toString()} or
-   * {@code String.valueOf()}.
+   * Constructs a fix for an explicit toString call, e.g. from {@code Object.toString()} or {@code
+   * String.valueOf()}.
    *
    * @param parent the expression's parent (e.g. {@code String.valueOf(expression)})
    */
@@ -111,8 +111,8 @@ public abstract class AbstractToString extends BugChecker
   }
 
   /**
-   * Tests if the given expression is converted to a String by its parent (i.e. its parent
-   * is a string concat expression, {@code String.format}, or {@code println(Object)}).
+   * Tests if the given expression is converted to a String by its parent (i.e. its parent is a
+   * string concat expression, {@code String.format}, or {@code println(Object)}).
    */
   private Description checkToString(ExpressionTree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);

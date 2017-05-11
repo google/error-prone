@@ -37,5 +37,4 @@ public interface Fix {
   Collection<String> getImportsToRemove();
 
   boolean isEmpty();
-
 }

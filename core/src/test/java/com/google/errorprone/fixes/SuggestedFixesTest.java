@@ -228,7 +228,6 @@ public class SuggestedFixesTest {
 
   @BugPattern(
     category = Category.ONE_OFF,
-
     name = "CastReturn",
     severity = SeverityLevel.ERROR,
     summary = "Adds casts to returned expressions"
@@ -252,7 +251,6 @@ public class SuggestedFixesTest {
 
   @BugPattern(
     category = Category.ONE_OFF,
-
     name = "CastReturn",
     severity = SeverityLevel.ERROR,
     summary = "Adds casts to returned expressions"

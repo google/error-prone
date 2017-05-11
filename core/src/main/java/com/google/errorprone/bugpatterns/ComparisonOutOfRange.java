@@ -63,12 +63,13 @@ import java.util.List;
 )
 public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatcher {
 
-  private static final String MESSAGE_TEMPLATE = "%ss may have a value in the range %d to %d; "
-      + "therefore, this comparison to %s will always evaluate to %s";
+  private static final String MESSAGE_TEMPLATE =
+      "%ss may have a value in the range %d to %d; "
+          + "therefore, this comparison to %s will always evaluate to %s";
 
   /**
-   * Matches comparisons that are out of range for the given type.  Parameterized based on the
-   * type of comparison (byte or char).
+   * Matches comparisons that are out of range for the given type. Parameterized based on the type
+   * of comparison (byte or char).
    */
   private static class BadComparisonMatcher implements Matcher<BinaryTree> {
     private final Supplier<Type> comparisonType;
@@ -77,8 +78,8 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
 
     public BadComparisonMatcher(Class<?> type) {
       if (type != Byte.TYPE && type != Character.TYPE) {
-        throw new IllegalArgumentException("type must be either byte or char, but was "
-            + type.getName());
+        throw new IllegalArgumentException(
+            "type must be either byte or char, but was " + type.getName());
       }
       if (type == Byte.TYPE) {
         comparisonType = Suppliers.BYTE_TYPE;
@@ -99,10 +100,13 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
       }
 
       // Match trees that have one literal operand and another of the specified type.
-      List<ExpressionTree> binaryTreeMatches = ASTHelpers.matchBinaryTree(tree,
-          Arrays.asList(Matchers.<ExpressionTree>isInstance(JCLiteral.class),
-              Matchers.<ExpressionTree>isSameType(comparisonType)),
-          state);
+      List<ExpressionTree> binaryTreeMatches =
+          ASTHelpers.matchBinaryTree(
+              tree,
+              Arrays.asList(
+                  Matchers.<ExpressionTree>isInstance(JCLiteral.class),
+                  Matchers.<ExpressionTree>isSameType(comparisonType)),
+              state);
       if (binaryTreeMatches == null) {
         return false;
       }
@@ -133,8 +137,8 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
           } else if (literalValue instanceof Character) {
             intValue = ((Character) literalValue).charValue();
           } else if (literalValue instanceof Boolean) {
-            throw new IllegalStateException("Cannot compare " + comparisonType
-                + " to boolean literal");
+            throw new IllegalStateException(
+                "Cannot compare " + comparisonType + " to boolean literal");
           } else {
             throw new IllegalStateException("Unexpected literal type: " + literal);
           }
@@ -148,33 +152,35 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
-    if(anyOf(BYTE_MATCHER, CHAR_MATCHER).matches(tree, state)) {
+    if (anyOf(BYTE_MATCHER, CHAR_MATCHER).matches(tree, state)) {
       return describe(tree, state);
     }
     return Description.NO_MATCH;
   }
 
   /**
-   * Suggested fixes are as follows.  For the byte case, convert the literal to its byte
-   * representation. For example, "255" becomes "-1.  For the character case, replace the
-   * comparison with "true"/"false" since it's not clear what was intended and that is
-   * semantically equivalent.
+   * Suggested fixes are as follows. For the byte case, convert the literal to its byte
+   * representation. For example, "255" becomes "-1. For the character case, replace the comparison
+   * with "true"/"false" since it's not clear what was intended and that is semantically equivalent.
    *
-   * TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as
-   * (d = reader.read()) == -1.  Maybe add special case handling for assignments.
+   * <p>TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as (d =
+   * reader.read()) == -1. Maybe add special case handling for assignments.
    */
   public Description describe(BinaryTree tree, VisitorState state) {
-    List<ExpressionTree> binaryTreeMatches = ASTHelpers.matchBinaryTree(tree,
-        Arrays.asList(Matchers.<ExpressionTree>isInstance(JCLiteral.class),
-            Matchers.<ExpressionTree>anything()),
-        state);
+    List<ExpressionTree> binaryTreeMatches =
+        ASTHelpers.matchBinaryTree(
+            tree,
+            Arrays.asList(
+                Matchers.<ExpressionTree>isInstance(JCLiteral.class),
+                Matchers.<ExpressionTree>anything()),
+            state);
     if (binaryTreeMatches == null) {
       throw new IllegalStateException("Expected one of the operands to be a literal");
     }
     JCLiteral literal = (JCLiteral) binaryTreeMatches.get(0);
     JCTree nonLiteralOperand = (JCTree) binaryTreeMatches.get(1);
-    boolean byteMatch = state.getTypes().isSameType(nonLiteralOperand.type,
-        state.getSymtab().byteType);
+    boolean byteMatch =
+        state.getTypes().isSameType(nonLiteralOperand.type, state.getSymtab().byteType);
 
     boolean willEvaluateTo = (tree.getKind() != Kind.EQUAL_TO);
     Fix fix;
@@ -182,16 +188,25 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
     if (byteMatch) {
       String replacement = Byte.toString(((Number) literal.getValue()).byteValue());
       fix = SuggestedFix.replace(literal, replacement);
-      customDiagnosticMessage = String.format(MESSAGE_TEMPLATE, "byte", (int) Byte.MIN_VALUE,
-          (int) Byte.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
+      customDiagnosticMessage =
+          String.format(
+              MESSAGE_TEMPLATE,
+              "byte",
+              (int) Byte.MIN_VALUE,
+              (int) Byte.MAX_VALUE,
+              literal.toString(),
+              Boolean.toString(willEvaluateTo));
     } else {
       fix = SuggestedFix.replace(tree, Boolean.toString(willEvaluateTo));
-      customDiagnosticMessage = String.format(MESSAGE_TEMPLATE, "char", (int) Character.MIN_VALUE,
-          (int) Character.MAX_VALUE, literal.toString(), Boolean.toString(willEvaluateTo));
+      customDiagnosticMessage =
+          String.format(
+              MESSAGE_TEMPLATE,
+              "char",
+              (int) Character.MIN_VALUE,
+              (int) Character.MAX_VALUE,
+              literal.toString(),
+              Boolean.toString(willEvaluateTo));
     }
-    return buildDescription(tree)
-        .addFix(fix)
-        .setMessage(customDiagnosticMessage)
-        .build();
+    return buildDescription(tree).addFix(fix).setMessage(customDiagnosticMessage).build();
   }
 }

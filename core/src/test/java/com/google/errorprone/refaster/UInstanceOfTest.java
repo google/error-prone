@@ -24,7 +24,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link UInstanceOf}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -32,19 +32,16 @@ public class UInstanceOfTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UInstanceOf.create(
-            UFreeIdent.create("o"),
-            UClassIdent.create("java.lang.String")))
-        .addEqualityGroup(UInstanceOf.create(
-            UFreeIdent.create("o"),
-            UClassIdent.create("java.lang.Integer")))
+        .addEqualityGroup(
+            UInstanceOf.create(UFreeIdent.create("o"), UClassIdent.create("java.lang.String")))
+        .addEqualityGroup(
+            UInstanceOf.create(UFreeIdent.create("o"), UClassIdent.create("java.lang.Integer")))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UInstanceOf.create(
-        UFreeIdent.create("o"),
-        UClassIdent.create("java.lang.String")));
+    SerializableTester.reserializeAndAssert(
+        UInstanceOf.create(UFreeIdent.create("o"), UClassIdent.create("java.lang.String")));
   }
 }

@@ -33,16 +33,14 @@ abstract class UWildcardType extends UType {
   public static UWildcardType create(BoundKind boundKind, UType bound) {
     return new AutoValue_UWildcardType(boundKind, bound);
   }
-  
-  /**
-   * This corresponds to a plain ? wildcard.
-   */
+
+  /** This corresponds to a plain ? wildcard. */
   public static UWildcardType create() {
     return create(BoundKind.UNBOUND, UClassType.create("java.lang.Object"));
   }
-  
+
   abstract BoundKind boundKind();
-  
+
   abstract UType bound();
 
   @Override
@@ -53,9 +51,6 @@ abstract class UWildcardType extends UType {
 
   @Override
   public Type inline(Inliner inliner) throws CouldNotResolveImportException {
-    return new WildcardType(
-        bound().inline(inliner),
-        boundKind(),
-        inliner.symtab().boundClass);
+    return new WildcardType(bound().inline(inliner), boundKind(), inliner.symtab().boundClass);
   }
 }

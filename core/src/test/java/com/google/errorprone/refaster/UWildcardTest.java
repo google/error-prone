@@ -34,17 +34,17 @@ public class UWildcardTest {
   public void equality() {
     UExpression objectIdent = UClassIdent.create("java.lang.Object");
     UExpression setIdent = UTypeApply.create("java.util.Set", objectIdent);
-    
+
     new EqualsTester()
         .addEqualityGroup(UWildcard.create(Kind.UNBOUNDED_WILDCARD, null))
         .addEqualityGroup(UWildcard.create(Kind.EXTENDS_WILDCARD, objectIdent))
         .addEqualityGroup(UWildcard.create(Kind.EXTENDS_WILDCARD, setIdent))
-            // ? extends Set<Object>
+        // ? extends Set<Object>
         .addEqualityGroup(UWildcard.create(Kind.SUPER_WILDCARD, setIdent))
-            // ? super Set<Object>
+        // ? super Set<Object>
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(

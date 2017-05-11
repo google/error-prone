@@ -25,7 +25,7 @@ import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
 
 /**
  * A {@link UTree} representation of a {@link EnhancedForLoopTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -56,15 +56,18 @@ abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForL
 
   @Override
   public JCEnhancedForLoop inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().ForeachLoop(
-        getVariable().inline(inliner),
-        getExpression().inline(inliner),
-        getStatement().inline(inliner));
+    return inliner
+        .maker()
+        .ForeachLoop(
+            getVariable().inline(inliner),
+            getExpression().inline(inliner),
+            getStatement().inline(inliner));
   }
 
   @Override
   public Choice<Unifier> visitEnhancedForLoop(EnhancedForLoopTree loop, Unifier unifier) {
-    return getVariable().unify(loop.getVariable(), unifier)
+    return getVariable()
+        .unify(loop.getVariable(), unifier)
         .thenChoose(unifications(getExpression(), loop.getExpression()))
         .thenChoose(unifications(getStatement(), loop.getStatement()));
   }

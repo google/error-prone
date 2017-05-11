@@ -62,10 +62,10 @@ public class DoNotCallChecker extends BugChecker
       if (symbol.owner.enclClass().getModifiers().contains(Modifier.FINAL)) {
         return NO_MATCH;
       }
-        return buildDescription(tree)
-            .setMessage("Methods annotated with @DoNotCall should be final.")
-            .addFix(SuggestedFixes.addModifiers(tree, state, Modifier.FINAL))
-            .build();
+      return buildDescription(tree)
+          .setMessage("Methods annotated with @DoNotCall should be final.")
+          .addFix(SuggestedFixes.addModifiers(tree, state, Modifier.FINAL))
+          .build();
     }
     return findSuperMethods(symbol, state.getTypes())
         .stream()

@@ -40,7 +40,7 @@ public abstract class AbstractUTreeTest {
   protected Context context;
   protected Unifier unifier;
   protected Inliner inliner;
-  
+
   @Before
   public void createContext() {
     context = new Context();
@@ -48,7 +48,7 @@ public abstract class AbstractUTreeTest {
     unifier = new Unifier(context);
     inliner = unifier.createInliner();
   }
-  
+
   public void assertUnifiesAndInlines(String expression, UTree<?> template) {
     assertUnifies(expression, template);
     assertInlines(expression, template);
@@ -56,16 +56,17 @@ public abstract class AbstractUTreeTest {
 
   public void assertUnifies(String expression, UTree<?> template) {
     assertWithMessage(
-        String.format("Expected template %s to unify with expression %s", template, expression))
+            String.format("Expected template %s to unify with expression %s", template, expression))
         .that(template.unify(parseExpression(expression), unifier).first())
         .isPresent();
   }
-  
+
   public void assertInlines(String expression, UTree<?> template) {
     try {
       assertEquals(
           String.format("Expected template %s to inline to expression %s", template, expression),
-          expression, template.inline(inliner).toString());
+          expression,
+          template.inline(inliner).toString());
     } catch (CouldNotResolveImportException e) {
       throw new RuntimeException(e);
     }
@@ -82,29 +83,30 @@ public abstract class AbstractUTreeTest {
       throw new RuntimeException(e);
     }
   }
-  
+
   protected JCExpression parseExpression(String contents) {
     Parser parser = ParserFactory.instance(context).newParser(contents, false, false, true);
     return parser.parseExpression();
   }
-  
+
   protected <V> void bind(Bindings.Key<V> key, V value) {
     Bindings bindings = Bindings.create(inliner.bindings);
     bindings.putBinding(key, value);
     inliner = new Inliner(context, bindings);
   }
-  
-  protected JCExpression ident(final String name) {
-    return argThat(new TypeSafeMatcher<JCExpression>() {
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("Identifier matching \"" + name + "\"");
-      }
 
-      @Override
-      public boolean matchesSafely(JCExpression item) {
-        return item instanceof JCIdent && ((JCIdent) item).getName().contentEquals(name);
-      }
-    });
+  protected JCExpression ident(final String name) {
+    return argThat(
+        new TypeSafeMatcher<JCExpression>() {
+          @Override
+          public void describeTo(Description description) {
+            description.appendText("Identifier matching \"" + name + "\"");
+          }
+
+          @Override
+          public boolean matchesSafely(JCExpression item) {
+            return item instanceof JCIdent && ((JCIdent) item).getName().contentEquals(name);
+          }
+        });
   }
 }

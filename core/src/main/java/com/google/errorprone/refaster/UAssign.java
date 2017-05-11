@@ -57,7 +57,8 @@ abstract class UAssign extends UExpression implements AssignmentTree {
 
   @Override
   public Choice<Unifier> visitAssignment(AssignmentTree assign, Unifier unifier) {
-    return getVariable().unify(assign.getVariable(), unifier)
+    return getVariable()
+        .unify(assign.getVariable(), unifier)
         .thenChoose(unifications(getExpression(), assign.getExpression()));
   }
 }

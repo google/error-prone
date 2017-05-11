@@ -20,9 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link FuturesGetCheckedIllegalExceptionType}.
- */
+/** Tests for {@link FuturesGetCheckedIllegalExceptionType}. */
 @RunWith(JUnit4.class)
 public class FuturesGetCheckedIllegalExceptionTypeTest {
   private CompilationTestHelper compilationHelper;
@@ -35,13 +33,15 @@ public class FuturesGetCheckedIllegalExceptionTypeTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("FuturesGetCheckedIllegalExceptionTypePositiveCases.java")
+    compilationHelper
+        .addSourceFile("FuturesGetCheckedIllegalExceptionTypePositiveCases.java")
         .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.addSourceFile("FuturesGetCheckedIllegalExceptionTypeNegativeCases.java")
+    compilationHelper
+        .addSourceFile("FuturesGetCheckedIllegalExceptionTypeNegativeCases.java")
         .doTest();
   }
 }

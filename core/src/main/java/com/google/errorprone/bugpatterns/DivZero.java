@@ -80,7 +80,8 @@ public class DivZero extends BugChecker
     StatementTree enclosingStmt =
         ASTHelpers.findEnclosingNode(state.getPath(), StatementTree.class);
     return (enclosingStmt != null)
-        ? describeMatch(tree,
+        ? describeMatch(
+            tree,
             SuggestedFix.replace(enclosingStmt, "throw new ArithmeticException(\"/ by zero\");"))
         : describeMatch(tree);
   }

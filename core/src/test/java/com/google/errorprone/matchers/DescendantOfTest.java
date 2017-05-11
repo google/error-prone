@@ -20,81 +20,79 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class DescendantOfTest extends DescendantOfAbstractTest {
 
   @Test
   public void shouldMatchExactMethod() {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B {",
-      "  public int count() {",
-      "    A a = new A();",
-      "    return a.count();",
-      "  }",
-      "}"
-    );
+    writeFile(
+        "B.java",
+        "import com.google.A;",
+        "public class B {",
+        "  public int count() {",
+        "    A a = new A();",
+        "    return a.count();",
+        "  }",
+        "}");
     assertCompiles(memberSelectMatches(true, new DescendantOf("com.google.A", "count()")));
   }
 
   @Test
   public void shouldMatchOverriddenMethod() {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B extends A {",
-      "  public int count() {",
-      "    B b = new B();",
-      "    return b.count();",
-      "  }",
-      "}"
-    );
+    writeFile(
+        "B.java",
+        "import com.google.A;",
+        "public class B extends A {",
+        "  public int count() {",
+        "    B b = new B();",
+        "    return b.count();",
+        "  }",
+        "}");
     assertCompiles(memberSelectMatches(true, new DescendantOf("com.google.A", "count()")));
   }
 
   @Test
   public void shouldMatchBareOverriddenMethod() {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B extends A {",
-      "  public int count() {",
-      "    return 2;",
-      "  }",
-      "  public int testCount() {",
-      "    return count();",
-      "  }",
-      "}"
-    );
+    writeFile(
+        "B.java",
+        "import com.google.A;",
+        "public class B extends A {",
+        "  public int count() {",
+        "    return 2;",
+        "  }",
+        "  public int testCount() {",
+        "    return count();",
+        "  }",
+        "}");
     assertCompiles(memberSelectMatches(true, new DescendantOf("com.google.A", "count()")));
   }
 
   @Test
   public void shouldNotMatchDifferentMethod() {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B {",
-      "  public int count() {",
-      "    A a = new A();",
-      "    return a.count();",
-      "  }",
-      "}"
-    );
-    assertCompiles(memberSelectMatches(false,
-        new DescendantOf("com.google.A", "count(java.lang.Object)")));
+    writeFile(
+        "B.java",
+        "import com.google.A;",
+        "public class B {",
+        "  public int count() {",
+        "    A a = new A();",
+        "    return a.count();",
+        "  }",
+        "}");
+    assertCompiles(
+        memberSelectMatches(false, new DescendantOf("com.google.A", "count(java.lang.Object)")));
   }
 
   @Test
   public void shouldNotMatchStaticMethod() {
-    writeFile("B.java",
-      "import com.google.A;",
-      "public class B {",
-      "  public int count() {",
-      "    return A.staticCount();",
-      "  }",
-      "}"
-    );
+    writeFile(
+        "B.java",
+        "import com.google.A;",
+        "public class B {",
+        "  public int count() {",
+        "    return A.staticCount();",
+        "  }",
+        "}");
     assertCompiles(memberSelectMatches(false, new DescendantOf("com.google.A", "count()")));
   }
 }

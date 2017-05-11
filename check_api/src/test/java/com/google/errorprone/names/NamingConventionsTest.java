@@ -89,7 +89,7 @@ public class NamingConventionsTest {
 
     assertThat(terms).containsExactly("test", "1");
   }
-  
+
   @Test
   public void convertToLowerUnderscore_givesSingleUnderscore_fromSingleUnderscore() {
     String identifierName = "_";

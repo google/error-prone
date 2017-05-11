@@ -24,13 +24,13 @@ import java.io.IOException;
 
 /**
  * Abstract type representing a match against a {@code Template}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public abstract class TemplateMatch {
   private final JCTree location;
   private final Unifier unifier;
-  
+
   public TemplateMatch(JCTree location, Unifier unifier) {
     this.location = checkNotNull(location);
     this.unifier = checkNotNull(unifier);
@@ -47,12 +47,13 @@ public abstract class TemplateMatch {
   public Inliner createInliner() {
     return unifier.createInliner();
   }
-  
+
   public String getRange(JCCompilationUnit unit) {
     try {
       CharSequence sequence = unit.getSourceFile().getCharContent(true);
-      return sequence.subSequence(location.getStartPosition(),
-          location.getEndPosition(unit.endPositions)).toString();
+      return sequence
+          .subSequence(location.getStartPosition(), location.getEndPosition(unit.endPositions))
+          .toString();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

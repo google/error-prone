@@ -45,27 +45,30 @@ abstract class UBlock extends USimpleStatement implements BlockTree {
 
   @Override
   public abstract List<UStatement> getStatements();
-  
-  static Choice<Unifier> unifyStatementList(Iterable<? extends UStatement> statements,
-      Iterable<? extends StatementTree> targets, Unifier unifier) {
-    Choice<UnifierWithUnconsumedStatements> choice = Choice.of(
-        UnifierWithUnconsumedStatements.create(unifier, ImmutableList.copyOf(targets)));
+
+  static Choice<Unifier> unifyStatementList(
+      Iterable<? extends UStatement> statements,
+      Iterable<? extends StatementTree> targets,
+      Unifier unifier) {
+    Choice<UnifierWithUnconsumedStatements> choice =
+        Choice.of(UnifierWithUnconsumedStatements.create(unifier, ImmutableList.copyOf(targets)));
     for (UStatement statement : statements) {
       choice = choice.thenChoose(statement);
     }
-    return choice.thenOption(new Function<UnifierWithUnconsumedStatements, Optional<Unifier>>() {
-      @Override
-      public Optional<Unifier> apply(UnifierWithUnconsumedStatements state) {
-        return state.unconsumedStatements().isEmpty()
-            ? Optional.of(state.unifier())
-            : Optional.<Unifier>absent();
-      }
-    });
+    return choice.thenOption(
+        new Function<UnifierWithUnconsumedStatements, Optional<Unifier>>() {
+          @Override
+          public Optional<Unifier> apply(UnifierWithUnconsumedStatements state) {
+            return state.unconsumedStatements().isEmpty()
+                ? Optional.of(state.unifier())
+                : Optional.<Unifier>absent();
+          }
+        });
   }
-  
+
   static com.sun.tools.javac.util.List<JCStatement> inlineStatementList(
-      Iterable<? extends UStatement> statements, Inliner inliner) 
-          throws CouldNotResolveImportException {
+      Iterable<? extends UStatement> statements, Inliner inliner)
+      throws CouldNotResolveImportException {
     ListBuffer<JCStatement> buffer = new ListBuffer<>();
     for (UStatement statement : statements) {
       buffer.appendList(statement.inlineStatements(inliner));

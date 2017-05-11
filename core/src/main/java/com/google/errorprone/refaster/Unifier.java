@@ -86,7 +86,7 @@ public final class Unifier {
     checkArgument(bindings.containsKey(key), "Binding for %s does not exist", key);
     return bindings.putBinding(key, value);
   }
-  
+
   public void clearBinding(Key<?> key) {
     bindings.remove(key);
   }
@@ -98,14 +98,14 @@ public final class Unifier {
   public Context getContext() {
     return context;
   }
-  
+
   @Override
   public String toString() {
     return "Unifier{" + bindings + "}";
   }
 
-  public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> 
-      unifications(@Nullable final U unifiable, @Nullable final T target) {
+  public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
+      @Nullable final U unifiable, @Nullable final T target) {
     return new Function<Unifier, Choice<Unifier>>() {
       @Override
       public Choice<Unifier> apply(Unifier unifier) {
@@ -113,7 +113,7 @@ public final class Unifier {
       }
     };
   }
-  
+
   public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyNullable(
       Unifier unifier, @Nullable final U unifiable, @Nullable final T target) {
     if (target == null && unifiable == null) {
@@ -131,7 +131,8 @@ public final class Unifier {
   }
 
   public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
-      @Nullable final List<U> toUnify, @Nullable final List<? extends T> targets,
+      @Nullable final List<U> toUnify,
+      @Nullable final List<? extends T> targets,
       final boolean allowVarargs) {
     return new Function<Unifier, Choice<Unifier>>() {
       @Override
@@ -145,8 +146,8 @@ public final class Unifier {
    * Returns all successful unification paths from the specified {@code Unifier} unifying the
    * specified lists, disallowing varargs.
    */
-  public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(Unifier unifier,
-      @Nullable List<U> toUnify, @Nullable final List<? extends T> targets) {
+  public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(
+      Unifier unifier, @Nullable List<U> toUnify, @Nullable final List<? extends T> targets) {
     return unifyList(unifier, toUnify, targets, false);
   }
 
@@ -154,11 +155,15 @@ public final class Unifier {
    * Returns all successful unification paths from the specified {@code Unifier} unifying the
    * specified lists, allowing varargs if and only if {@code allowVarargs} is true.
    */
-  public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(Unifier unifier,
-      @Nullable List<U> toUnify, @Nullable final List<? extends T> targets, boolean allowVarargs) {
+  public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(
+      Unifier unifier,
+      @Nullable List<U> toUnify,
+      @Nullable final List<? extends T> targets,
+      boolean allowVarargs) {
     if (toUnify == null && targets == null) {
       return Choice.of(unifier);
-    } else if (toUnify == null || targets == null
+    } else if (toUnify == null
+        || targets == null
         || (allowVarargs
             ? toUnify.size() - 1 > targets.size()
             : toUnify.size() != targets.size())) {
@@ -171,27 +176,29 @@ public final class Unifier {
       if (allowVarargs && toUnifyNext instanceof URepeated) {
         final URepeated repeated = (URepeated) toUnifyNext;
         final int startIndex = index;
-        return choice.condition(index + 1 == toUnify.size()).thenOption(
-            new Function<Unifier, Optional<Unifier>>() {
-              @Override
-              public Optional<Unifier> apply(Unifier unifier) {
-                List<JCExpression> expressions = new ArrayList<>();
-                for (int j = startIndex; j < targets.size(); j++) {
-                  Optional<Unifier> forked =
-                      repeated.unify((JCTree) targets.get(j), unifier.fork()).first();
-                  if (!forked.isPresent()) {
-                    return Optional.absent();
+        return choice
+            .condition(index + 1 == toUnify.size())
+            .thenOption(
+                new Function<Unifier, Optional<Unifier>>() {
+                  @Override
+                  public Optional<Unifier> apply(Unifier unifier) {
+                    List<JCExpression> expressions = new ArrayList<>();
+                    for (int j = startIndex; j < targets.size(); j++) {
+                      Optional<Unifier> forked =
+                          repeated.unify((JCTree) targets.get(j), unifier.fork()).first();
+                      if (!forked.isPresent()) {
+                        return Optional.absent();
+                      }
+                      JCExpression boundExpr = repeated.getUnderlyingBinding(forked.get());
+                      if (boundExpr == null) {
+                        return Optional.absent();
+                      }
+                      expressions.add(boundExpr);
+                    }
+                    unifier.putBinding(repeated.key(), expressions);
+                    return Optional.of(unifier);
                   }
-                  JCExpression boundExpr = repeated.getUnderlyingBinding(forked.get());
-                  if (boundExpr == null) {
-                    return Optional.absent();
-                  }
-                  expressions.add(boundExpr);
-                }
-                unifier.putBinding(repeated.key(), expressions);
-                return Optional.of(unifier);
-              }
-            });
+                });
       }
       if (index >= targets.size()) {
         return Choice.none();

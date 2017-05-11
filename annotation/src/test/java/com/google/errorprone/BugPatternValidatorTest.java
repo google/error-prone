@@ -24,13 +24,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class BugPatternValidatorTest {
 
   private @interface CustomSuppressionAnnotation {}
+
   private @interface CustomSuppressionAnnotation2 {}
 
   @Test
@@ -121,7 +120,6 @@ public class BugPatternValidatorTest {
       summary = "Uses SuppressWarnings but includes custom suppression annotation",
       explanation = "Uses SuppressWarnings but includes custom suppression annotation",
       category = Category.ONE_OFF,
-      
       severity = SeverityLevel.ERROR,
       suppressibility = Suppressibility.SUPPRESS_WARNINGS,
       customSuppressionAnnotations = CustomSuppressionAnnotation.class
@@ -155,7 +153,6 @@ public class BugPatternValidatorTest {
       summary = "Unsuppressible but includes custom suppression annotation",
       explanation = "Unsuppressible but includes custom suppression annotation",
       category = Category.ONE_OFF,
-      
       severity = SeverityLevel.ERROR,
       suppressibility = Suppressibility.UNSUPPRESSIBLE,
       customSuppressionAnnotations = CustomSuppressionAnnotation.class
@@ -173,7 +170,6 @@ public class BugPatternValidatorTest {
       summary = "Uses a custom suppression annotation",
       explanation = "Uses a custom suppression annotation",
       category = Category.ONE_OFF,
-      
       severity = SeverityLevel.ERROR,
       suppressibility = Suppressibility.CUSTOM_ANNOTATION,
       customSuppressionAnnotations = CustomSuppressionAnnotation.class
@@ -191,7 +187,6 @@ public class BugPatternValidatorTest {
       summary = "Uses multiple custom suppression annotations",
       explanation = "Uses multiple custom suppression annotations",
       category = Category.ONE_OFF,
-      
       severity = SeverityLevel.ERROR,
       suppressibility = Suppressibility.CUSTOM_ANNOTATION,
       customSuppressionAnnotations = {
@@ -212,7 +207,6 @@ public class BugPatternValidatorTest {
       summary = "Specifies a custom suppression annotation of @SuppressWarnings",
       explanation = "Specifies a custom suppression annotation of @SuppressWarnings",
       category = Category.ONE_OFF,
-      
       severity = SeverityLevel.ERROR,
       suppressibility = Suppressibility.CUSTOM_ANNOTATION,
       customSuppressionAnnotations = SuppressWarnings.class
@@ -230,7 +224,6 @@ public class BugPatternValidatorTest {
       summary = "Specifies multiple custom suppression annotations including @SuppressWarnings",
       explanation = "Specifies multiple custom suppression annotations including @SuppressWarnings",
       category = Category.ONE_OFF,
-      
       severity = SeverityLevel.ERROR,
       suppressibility = Suppressibility.CUSTOM_ANNOTATION,
       customSuppressionAnnotations = {CustomSuppressionAnnotation.class, SuppressWarnings.class}
@@ -256,7 +249,4 @@ public class BugPatternValidatorTest {
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
     BugPatternValidator.validate(annotation);
   }
-
-
-
 }

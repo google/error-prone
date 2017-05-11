@@ -35,6 +35,7 @@ import javax.tools.JavaFileObject;
 
 /**
  * Making our errors appear to the user and break their build.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class JavacErrorDescriptionListener implements DescriptionListener {
@@ -116,7 +117,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
       }
       first = false;
     }
-    if (!first) {     // appended at least one suggested fix to the message
+    if (!first) { // appended at least one suggested fix to the message
       messageBuilder.append("?");
     }
     return messageBuilder.toString();

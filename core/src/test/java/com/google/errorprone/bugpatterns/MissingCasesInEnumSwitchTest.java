@@ -49,8 +49,7 @@ public class MissingCasesInEnumSwitchTest {
             "        break;",
             "    }",
             "  }",
-            "}"
-        )
+            "}")
         .doTest();
   }
 
@@ -71,8 +70,7 @@ public class MissingCasesInEnumSwitchTest {
             "        break;",
             "    }",
             "  }",
-            "}"
-        )
+            "}")
         .doTest();
   }
 

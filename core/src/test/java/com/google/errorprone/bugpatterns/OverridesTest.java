@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @RunWith(JUnit4.class)
 public class OverridesTest {
   private CompilationTestHelper compilationHelper;
@@ -48,7 +46,7 @@ public class OverridesTest {
   public void testPositiveCase3() throws Exception {
     compilationHelper.addSourceFile("OverridesPositiveCase3.java").doTest();
   }
-  
+
   @Test
   public void testPositiveCase4() throws Exception {
     compilationHelper.addSourceFile("OverridesPositiveCase4.java").doTest();

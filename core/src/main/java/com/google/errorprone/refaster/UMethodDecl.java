@@ -33,17 +33,27 @@ import javax.annotation.Nullable;
 
 /**
  * {@code UTree} representation of a {@code MethodTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
 abstract class UMethodDecl extends UTree<JCMethodDecl> implements MethodTree {
-  public static UMethodDecl create(UModifiers modifiers, CharSequence name, UExpression returnType,
-      Iterable<UVariableDecl> parameters, Iterable<UExpression> thrown, UBlock body) {
-    return new AutoValue_UMethodDecl(modifiers, StringName.of(name), returnType, 
-        ImmutableList.copyOf(parameters), ImmutableList.copyOf(thrown), body);
+  public static UMethodDecl create(
+      UModifiers modifiers,
+      CharSequence name,
+      UExpression returnType,
+      Iterable<UVariableDecl> parameters,
+      Iterable<UExpression> thrown,
+      UBlock body) {
+    return new AutoValue_UMethodDecl(
+        modifiers,
+        StringName.of(name),
+        returnType,
+        ImmutableList.copyOf(parameters),
+        ImmutableList.copyOf(thrown),
+        body);
   }
-  
+
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
     return visitor.visitMethod(this, data);
@@ -57,7 +67,8 @@ abstract class UMethodDecl extends UTree<JCMethodDecl> implements MethodTree {
   @Override
   @Nullable
   public Choice<Unifier> visitMethod(MethodTree decl, @Nullable Unifier unifier) {
-    return getName().unify(decl.getName(), unifier)
+    return getName()
+        .unify(decl.getName(), unifier)
         .thenChoose(unifications(getReturnType(), decl.getReturnType()))
         .thenChoose(unifications(getParameters(), decl.getParameters()))
         .thenChoose(unifications(getThrows(), decl.getThrows()))
@@ -66,15 +77,17 @@ abstract class UMethodDecl extends UTree<JCMethodDecl> implements MethodTree {
 
   @Override
   public JCMethodDecl inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().MethodDef(
-        getModifiers().inline(inliner),
-        getName().inline(inliner),
-        getReturnType().inline(inliner),
-        List.<JCTypeParameter>nil(),
-        List.convert(JCVariableDecl.class, inliner.inlineList(getParameters())),
-        inliner.<JCExpression>inlineList(getThrows()),
-        getBody().inline(inliner),
-        null);
+    return inliner
+        .maker()
+        .MethodDef(
+            getModifiers().inline(inliner),
+            getName().inline(inliner),
+            getReturnType().inline(inliner),
+            List.<JCTypeParameter>nil(),
+            List.convert(JCVariableDecl.class, inliner.inlineList(getParameters())),
+            inliner.<JCExpression>inlineList(getThrows()),
+            getBody().inline(inliner),
+            null);
   }
 
   @Override

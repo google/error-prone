@@ -52,53 +52,48 @@ public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   /**
-   * Assuming the argument in the varargs position is a single one of type int[], here is the
-   * truth table:
-   *     Param type    Should return     Why
-   *     int...        false             Exact type match
-   *     int[]...      false             Exact type match for the array element type
-   *     T...          true              Will cause boxing
-   *     Object...     true              Will cause boxing
+   * Assuming the argument in the varargs position is a single one of type int[], here is the truth
+   * table: Param type Should return Why int... false Exact type match int[]... false Exact type
+   * match for the array element type T... true Will cause boxing Object... true Will cause boxing
    */
   private static final Matcher<MethodInvocationTree> isVarargs =
       new Matcher<MethodInvocationTree>() {
-    @Override
-    public boolean matches(MethodInvocationTree t, VisitorState state) {
-      Symbol symbol = ASTHelpers.getSymbol(t);
-      if (!(symbol instanceof MethodSymbol)) {
-        return false;
-      }
-      MethodSymbol methodSymbol = (MethodSymbol) symbol;
+        @Override
+        public boolean matches(MethodInvocationTree t, VisitorState state) {
+          Symbol symbol = ASTHelpers.getSymbol(t);
+          if (!(symbol instanceof MethodSymbol)) {
+            return false;
+          }
+          MethodSymbol methodSymbol = (MethodSymbol) symbol;
 
-      // Bail out quickly if the method is not varargs
-      if (!methodSymbol.isVarArgs()) {
-        return false;
-      }
+          // Bail out quickly if the method is not varargs
+          if (!methodSymbol.isVarArgs()) {
+            return false;
+          }
 
-      // Last param must be varags
-      List<VarSymbol> params = methodSymbol.getParameters();
-      int varargsPosition = params.length() - 1;
-      ArrayType varargsParamType = (ArrayType) params.last().type;
+          // Last param must be varags
+          List<VarSymbol> params = methodSymbol.getParameters();
+          int varargsPosition = params.length() - 1;
+          ArrayType varargsParamType = (ArrayType) params.last().type;
 
-      // Is the argument at the varargsPosition the only varargs argument and a primitive array?
-      JCMethodInvocation methodInvocation = (JCMethodInvocation) t;
-      List<JCExpression> arguments = methodInvocation.getArguments();
-      Types types = state.getTypes();
-      if (arguments.size() != params.length()) {
-        return false;
-      }
-      Type varargsArgumentType = arguments.get(varargsPosition).type;
-      if (!types.isArray(varargsArgumentType)
-          || !types.elemtype(varargsArgumentType).isPrimitive()) {
-        return false;
-      }
+          // Is the argument at the varargsPosition the only varargs argument and a primitive array?
+          JCMethodInvocation methodInvocation = (JCMethodInvocation) t;
+          List<JCExpression> arguments = methodInvocation.getArguments();
+          Types types = state.getTypes();
+          if (arguments.size() != params.length()) {
+            return false;
+          }
+          Type varargsArgumentType = arguments.get(varargsPosition).type;
+          if (!types.isArray(varargsArgumentType)
+              || !types.elemtype(varargsArgumentType).isPrimitive()) {
+            return false;
+          }
 
-      // Do the param and argument types actually match? i.e. can boxing even happen?
-      return !(types.isSameType(varargsParamType, varargsArgumentType)
-          || types.isSameType(varargsParamType.getComponentType(), varargsArgumentType));
-
-    }
-  };
+          // Do the param and argument types actually match? i.e. can boxing even happen?
+          return !(types.isSameType(varargsParamType, varargsArgumentType)
+              || types.isSameType(varargsParamType.getComponentType(), varargsArgumentType));
+        }
+      };
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {

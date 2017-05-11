@@ -43,14 +43,13 @@ import com.sun.tools.javac.util.Name;
 /**
  * Matches the behaviour of javac's finally Xlint warning.
  *
- * 1) Any return statement in a finally block is an error
- * 2) An uncaught throw statement in a finally block is an error. We can't always know whether a
- *    specific exception will be caught, so we report errors for throw statements that are not
- *    contained in a try with at least one catch block.
- * 3) A continue statement in a finally block is an error if it breaks out of a (possibly labeled)
- *    loop that is outside the enclosing finally.
- * 4) A break statement in a finally block is an error if it breaks out of a (possibly labeled)
- *    loop or a switch statement that is outside the enclosing finally.
+ * <p>1) Any return statement in a finally block is an error 2) An uncaught throw statement in a
+ * finally block is an error. We can't always know whether a specific exception will be caught, so
+ * we report errors for throw statements that are not contained in a try with at least one catch
+ * block. 3) A continue statement in a finally block is an error if it breaks out of a (possibly
+ * labeled) loop that is outside the enclosing finally. 4) A break statement in a finally block is
+ * an error if it breaks out of a (possibly labeled) loop or a switch statement that is outside the
+ * enclosing finally.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -101,12 +100,14 @@ public class Finally extends BugChecker
   }
 
   private static enum MatchResult {
-    KEEP_LOOKING, NO_MATCH, FOUND_ERROR;
+    KEEP_LOOKING,
+    NO_MATCH,
+    FOUND_ERROR;
   }
 
   /**
-   * Base class for all finally matchers.  Walks up the tree of enclosing statements and
-   * reports an error if it finds an enclosing finally block.
+   * Base class for all finally matchers. Walks up the tree of enclosing statements and reports an
+   * error if it finds an enclosing finally block.
    *
    * @param <T> The type of the tree node to match against
    */
@@ -114,6 +115,7 @@ public class Finally extends BugChecker
 
     /**
      * Matches a StatementTree type by walking that statement's ancestor chain.
+     *
      * @returns true if an error is found.
      */
     @Override
@@ -138,9 +140,7 @@ public class Finally extends BugChecker
       return false;
     }
 
-    /**
-     * Match a tree in the ancestor chain given the ancestor's immediate descendant.
-     */
+    /** Match a tree in the ancestor chain given the ancestor's immediate descendant. */
     protected MatchResult matchAncestor(Tree leaf, Tree prevTree) {
       if (leaf instanceof TryTree) {
         TryTree tryTree = (TryTree) leaf;
@@ -153,9 +153,7 @@ public class Finally extends BugChecker
     }
   }
 
-  /**
-   * Ancestor matcher for statements that break or continue out of a finally block.
-   */
+  /** Ancestor matcher for statements that break or continue out of a finally block. */
   private static class FinallyJumpMatcher extends FinallyCompletionMatcher<StatementTree> {
     private final Name label;
     private final JumpType jumpType;
@@ -176,12 +174,11 @@ public class Finally extends BugChecker
     }
 
     /**
-     * The target of a jump statement (break or continue) is
-     * (1) the enclosing loop if the jump is unlabeled
-     * (2) the enclosing LabeledStatementTree with matching label if the jump is labeled
+     * The target of a jump statement (break or continue) is (1) the enclosing loop if the jump is
+     * unlabeled (2) the enclosing LabeledStatementTree with matching label if the jump is labeled
      * (3) the enclosing switch statement if the jump is a break
      *
-     * If the target of a break or continue statement is encountered before reaching a finally
+     * <p>If the target of a break or continue statement is encountered before reaching a finally
      * block, return NO_MATCH.
      */
     @Override
@@ -204,7 +201,7 @@ public class Finally extends BugChecker
       if (label != null
           && leaf instanceof LabeledStatementTree
           && label.equals(((LabeledStatementTree) leaf).getLabel())) {
-          return MatchResult.NO_MATCH;
+        return MatchResult.NO_MATCH;
       }
 
       // (3)

@@ -30,16 +30,21 @@ public class UIntersectionTypeTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UIntersectionType.create(UClassIdent.create("java.lang.CharSequence"),
-            UClassIdent.create("java.io.Serializable")))
-        .addEqualityGroup(UIntersectionType.create(UClassIdent.create("java.lang.Number"),
-            UClassIdent.create("java.io.Serializable")))
+        .addEqualityGroup(
+            UIntersectionType.create(
+                UClassIdent.create("java.lang.CharSequence"),
+                UClassIdent.create("java.io.Serializable")))
+        .addEqualityGroup(
+            UIntersectionType.create(
+                UClassIdent.create("java.lang.Number"), UClassIdent.create("java.io.Serializable")))
         .testEquals();
   }
 
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UIntersectionType.create(
-        UClassIdent.create("java.lang.CharSequence"), UClassIdent.create("java.io.Serializable")));
+    SerializableTester.reserializeAndAssert(
+        UIntersectionType.create(
+            UClassIdent.create("java.lang.CharSequence"),
+            UClassIdent.create("java.io.Serializable")));
   }
 }

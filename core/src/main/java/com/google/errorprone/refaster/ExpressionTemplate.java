@@ -62,18 +62,18 @@ import java.util.logging.Logger;
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
-public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatch> 
+public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatch>
     implements Unifiable<JCExpression> {
   private static final Logger logger = Logger.getLogger(ExpressionTemplate.class.toString());
-  
-  public static ExpressionTemplate create(
-      UExpression expression, UType returnType) {
+
+  public static ExpressionTemplate create(UExpression expression, UType returnType) {
     return create(ImmutableMap.<String, UType>of(), expression, returnType);
   }
-  
+
   public static ExpressionTemplate create(
       Map<String, ? extends UType> expressionArgumentTypes,
-      UExpression expression, UType returnType) {
+      UExpression expression,
+      UType returnType) {
     return create(
         ImmutableClassToInstanceMap.<Annotation>builder().build(),
         ImmutableList.<UTypeVar>of(),
@@ -81,12 +81,13 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
         expression,
         returnType);
   }
-  
+
   public static ExpressionTemplate create(
       ImmutableClassToInstanceMap<Annotation> annotations,
       Iterable<UTypeVar> typeVariables,
       Map<String, ? extends UType> expressionArgumentTypes,
-      UExpression expression, UType returnType) {
+      UExpression expression,
+      UType returnType) {
     return new AutoValue_ExpressionTemplate(
         annotations,
         ImmutableList.copyOf(typeVariables),
@@ -96,22 +97,27 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
   }
 
   abstract UExpression expression();
+
   abstract UType returnType();
-  
+
   public boolean generateNegation() {
     return annotations().containsKey(AlsoNegation.class);
   }
-  
+
   public ExpressionTemplate negation() {
-    checkState(returnType().equals(UPrimitiveType.BOOLEAN),
-        "Return type must be boolean to generate negation, but was %s", returnType());
-    return create(annotations(), templateTypeVariables(), expressionArgumentTypes(), 
-        expression().negate(), returnType());
+    checkState(
+        returnType().equals(UPrimitiveType.BOOLEAN),
+        "Return type must be boolean to generate negation, but was %s",
+        returnType());
+    return create(
+        annotations(),
+        templateTypeVariables(),
+        expressionArgumentTypes(),
+        expression().negate(),
+        returnType());
   }
 
-  /**
-   * Returns the matches of this template against the specified target AST.
-   */
+  /** Returns the matches of this template against the specified target AST. */
   @Override
   public Iterable<ExpressionTemplateMatch> match(JCTree target, Context context) {
     if (target instanceof JCExpression) {
@@ -126,52 +132,55 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
 
   @Override
   public Choice<Unifier> unify(final JCExpression target, Unifier unifier) {
-    return expression().unify(target, unifier)
-        .thenOption(new Function<Unifier, Optional<Unifier>>() {
+    return expression()
+        .unify(target, unifier)
+        .thenOption(
+            new Function<Unifier, Optional<Unifier>>() {
 
-          @Override
-          public Optional<Unifier> apply(Unifier unifier) {
-            Inliner inliner = unifier.createInliner();
-            try {
-              List<Type> expectedTypes = expectedTypes(inliner);
-              List<Type> actualTypes = actualTypes(inliner);
-              /*
-               * TODO(cushon): the following is not true in javac8, which can apply target-typing to
-               * nested method invocations.
-               *
-               * The Java compiler's type inference doesn't directly take into account the expected
-               * return type, so we test the return type by treating the expected return type as an
-               * extra method argument, and the actual type of the return expression as its actual
-               * value.
-               */
-              if (target.type.getTag() != TypeTag.VOID) {
-                expectedTypes = expectedTypes.prepend(returnType().inline(inliner));
-                Type ty = target.type;
-                // Java 8 types conditional expressions by taking the *widest* possible type
-                // they could be allowed, instead of the narrowest, where Refaster really wants
-                // the narrowest type possible.  We reconstruct that by taking the lub of the
-                // types from each branch.
-                if (target.getKind() == Kind.CONDITIONAL_EXPRESSION) {
-                  JCConditional cond = (JCConditional) target;
-                  Type trueTy = cond.truepart.type;
-                  Type falseTy = cond.falsepart.type;
-                  if (trueTy.getTag() == TypeTag.BOT) {
-                    ty = falseTy;
-                  } else if (falseTy.getTag() == TypeTag.BOT) {
-                    ty = trueTy;
-                  } else {
-                    ty = Types.instance(unifier.getContext()).lub(trueTy, falseTy); 
+              @Override
+              public Optional<Unifier> apply(Unifier unifier) {
+                Inliner inliner = unifier.createInliner();
+                try {
+                  List<Type> expectedTypes = expectedTypes(inliner);
+                  List<Type> actualTypes = actualTypes(inliner);
+                  /*
+                   * TODO(cushon): the following is not true in javac8, which can apply target-typing to
+                   * nested method invocations.
+                   *
+                   * The Java compiler's type inference doesn't directly take into account the expected
+                   * return type, so we test the return type by treating the expected return type as an
+                   * extra method argument, and the actual type of the return expression as its actual
+                   * value.
+                   */
+                  if (target.type.getTag() != TypeTag.VOID) {
+                    expectedTypes = expectedTypes.prepend(returnType().inline(inliner));
+                    Type ty = target.type;
+                    // Java 8 types conditional expressions by taking the *widest* possible type
+                    // they could be allowed, instead of the narrowest, where Refaster really wants
+                    // the narrowest type possible.  We reconstruct that by taking the lub of the
+                    // types from each branch.
+                    if (target.getKind() == Kind.CONDITIONAL_EXPRESSION) {
+                      JCConditional cond = (JCConditional) target;
+                      Type trueTy = cond.truepart.type;
+                      Type falseTy = cond.falsepart.type;
+                      if (trueTy.getTag() == TypeTag.BOT) {
+                        ty = falseTy;
+                      } else if (falseTy.getTag() == TypeTag.BOT) {
+                        ty = trueTy;
+                      } else {
+                        ty = Types.instance(unifier.getContext()).lub(trueTy, falseTy);
+                      }
+                    }
+                    actualTypes = actualTypes.prepend(ty);
                   }
+                  return typecheck(
+                      unifier, inliner, new Warner(target), expectedTypes, actualTypes);
+                } catch (CouldNotResolveImportException e) {
+                  logger.log(FINE, "Failure to resolve import", e);
+                  return Optional.absent();
                 }
-                actualTypes = actualTypes.prepend(ty);
               }
-              return typecheck(unifier, inliner, new Warner(target), expectedTypes, actualTypes);
-            } catch (CouldNotResolveImportException e) {
-              logger.log(FINE, "Failure to resolve import", e);
-              return Optional.absent();
-            }
-          }
-        });
+            });
   }
 
   /**
@@ -202,8 +211,8 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
   }
 
   /**
-   * Returns the precedence level appropriate for unambiguously printing
-   * leaf as a subexpression of its parent.
+   * Returns the precedence level appropriate for unambiguously printing leaf as a subexpression of
+   * its parent.
    */
   private static int getPrecedence(JCTree leaf, Context context) {
     JCCompilationUnit comp = context.get(JCCompilationUnit.class);

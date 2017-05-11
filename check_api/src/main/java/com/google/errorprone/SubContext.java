@@ -21,9 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.sun.tools.javac.util.Context;
 
 /**
- * A view on top of a {@code Context} allowing additional modifications to be
- * added without affecting the underlying {@code Context}.
- * 
+ * A view on top of a {@code Context} allowing additional modifications to be added without
+ * affecting the underlying {@code Context}.
+ *
  * @author Louis Wasserman
  */
 public final class SubContext extends Context {
@@ -36,17 +36,12 @@ public final class SubContext extends Context {
   @Override
   public <T> T get(Key<T> key) {
     T result = super.get(key);
-    return (result == null)
-        ? base.get(key)
-        : result;
+    return (result == null) ? base.get(key) : result;
   }
-  
+
   @Override
   public <T> T get(Class<T> clazz) {
     T result = super.get(clazz);
-    return (result == null)
-        ? base.get(clazz)
-        : result;
+    return (result == null) ? base.get(clazz) : result;
   }
 }
-

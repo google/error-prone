@@ -22,8 +22,8 @@ import com.google.common.collect.ImmutableSet;
 /**
  * A copy of the information in {@link com.google.errorprone.annotations.Immutable}.
  *
- * <p>Useful for providing information for immutable classes we can't easily
- * annotate, e.g. those in the JDK.
+ * <p>Useful for providing information for immutable classes we can't easily annotate, e.g. those in
+ * the JDK.
  */
 @AutoValue
 public abstract class ImmutableAnnotationInfo {

@@ -29,9 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @RunWith(JUnit4.class)
 public class DescriptionTest {
 
@@ -67,10 +65,10 @@ public class DescriptionTest {
   public void testDescriptionFromBugPattern() {
     Description description = new MyChecker().getDescription();
     assertEquals("DeadException", description.checkName);
-    assertEquals("Exception created but not thrown\n" + URL,
-        description.getMessageWithoutCheckName());
-    assertEquals("[DeadException] Exception created but not thrown\n" + URL,
-        description.getMessage());
+    assertEquals(
+        "Exception created but not thrown\n" + URL, description.getMessageWithoutCheckName());
+    assertEquals(
+        "[DeadException] Exception created but not thrown\n" + URL, description.getMessage());
   }
 
   @Test
@@ -80,12 +78,8 @@ public class DescriptionTest {
             .setMessage("custom message")
             .build();
     assertEquals("DeadException", description.checkName);
-    assertEquals(
-        "custom message\n" + URL,
-        description.getMessageWithoutCheckName());
-    assertEquals(
-        "[DeadException] custom message\n" + URL,
-        description.getMessage());
+    assertEquals("custom message\n" + URL, description.getMessageWithoutCheckName());
+    assertEquals("[DeadException] custom message\n" + URL, description.getMessage());
   }
 
   @BugPattern(

@@ -51,7 +51,8 @@ abstract class UAnnotation extends UExpression implements AnnotationTree {
   @Override
   @Nullable
   public Choice<Unifier> visitAnnotation(AnnotationTree annotation, Unifier unifier) {
-    return getAnnotationType().unify(annotation.getAnnotationType(), unifier)
+    return getAnnotationType()
+        .unify(annotation.getAnnotationType(), unifier)
         .thenChoose(unifications(getArguments(), annotation.getArguments()));
   }
 
@@ -67,8 +68,9 @@ abstract class UAnnotation extends UExpression implements AnnotationTree {
 
   @Override
   public JCAnnotation inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Annotation(
-        getAnnotationType().inline(inliner),
-        inliner.<JCExpression>inlineList(getArguments()));
+    return inliner
+        .maker()
+        .Annotation(
+            getAnnotationType().inline(inliner), inliner.<JCExpression>inlineList(getArguments()));
   }
 }

@@ -55,19 +55,18 @@ import com.sun.source.tree.Tree;
 public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMatcher {
 
   /**
-   * Match empty statement if:
-   * - Parent statement is an if
-   * - The then part of the parent if is an empty statement, and
-   * - The else part of the parent if does not exist
+   * Match empty statement if: - Parent statement is an if - The then part of the parent if is an
+   * empty statement, and - The else part of the parent if does not exist
    */
   @Override
   public Description matchEmptyStatement(EmptyStatementTree tree, VisitorState state) {
     boolean matches = false;
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (parent.getKind() == IF) {
-      IfTree parentAsIf = (IfTree)parent;
-      matches = (parentAsIf.getThenStatement() instanceof EmptyStatementTree) &&
-          (parentAsIf.getElseStatement() == null);
+      IfTree parentAsIf = (IfTree) parent;
+      matches =
+          (parentAsIf.getThenStatement() instanceof EmptyStatementTree)
+              && (parentAsIf.getElseStatement() == null);
     }
     if (!matches) {
       return Description.NO_MATCH;
@@ -80,18 +79,18 @@ public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMa
      * empty then part of the if.  If the next statement is not a block, then also
      * suggest deleting the empty then part of the if.
      */
-    boolean nextStmtIsNull = parentNode(nextStatement(Matchers.<StatementTree>isSame(null)))
-        .matches(tree, state);
+    boolean nextStmtIsNull =
+        parentNode(nextStatement(Matchers.<StatementTree>isSame(null))).matches(tree, state);
 
-    assert(state.getPath().getParentPath().getLeaf().getKind() == IF);
-    IfTree ifParent = (IfTree)state.getPath().getParentPath().getLeaf();
+    assert (state.getPath().getParentPath().getLeaf().getKind() == IF);
+    IfTree ifParent = (IfTree) state.getPath().getParentPath().getLeaf();
     if (nextStmtIsNull) {
       // No following statements. Delete whole if.
       return describeMatch(parent, SuggestedFix.delete(parent));
     } else {
       // There are more statements. Delete the empty then part of the if.
-      return describeMatch(ifParent.getThenStatement(),
-          SuggestedFix.delete(ifParent.getThenStatement()));
+      return describeMatch(
+          ifParent.getThenStatement(), SuggestedFix.delete(ifParent.getThenStatement()));
     }
   }
 }

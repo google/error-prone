@@ -20,12 +20,12 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.AnnotationTree;
 
 /**
- * Matches an annotation that does not have a particular argument,
- * possibly because the default value is being used.
+ * Matches an annotation that does not have a particular argument, possibly because the default
+ * value is being used.
  *
  * @author mwacker@google.com (Mike Wacker)
  */
-public class AnnotationDoesNotHaveArgument implements Matcher<AnnotationTree>  {
+public class AnnotationDoesNotHaveArgument implements Matcher<AnnotationTree> {
 
   private final String name;
 

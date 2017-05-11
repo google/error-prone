@@ -34,9 +34,9 @@ abstract class UPrimitiveTypeTree extends UExpression implements PrimitiveTypeTr
   public static UPrimitiveTypeTree create(TypeTag tag) {
     return new AutoValue_UPrimitiveTypeTree(tag);
   }
-  
+
   abstract TypeTag typeTag();
-  
+
   public static final UPrimitiveTypeTree BYTE = create(TypeTag.BYTE);
   public static final UPrimitiveTypeTree SHORT = create(TypeTag.SHORT);
   public static final UPrimitiveTypeTree INT = create(TypeTag.INT);
@@ -52,7 +52,7 @@ abstract class UPrimitiveTypeTree extends UExpression implements PrimitiveTypeTr
   public Choice<Unifier> visitPrimitiveType(PrimitiveTypeTree tree, Unifier unifier) {
     return Choice.condition(getPrimitiveTypeKind().equals(tree.getPrimitiveTypeKind()), unifier);
   }
-  
+
   @Override
   public Kind getKind() {
     return Kind.PRIMITIVE_TYPE;

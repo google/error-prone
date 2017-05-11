@@ -22,7 +22,7 @@ import com.sun.source.tree.VariableTree;
 
 /**
  * Matches if the given matcher matches all of/any of the parameters to this method.
-  *
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class MethodHasParameters extends ChildMultiMatcher<MethodTree, VariableTree> {
@@ -32,8 +32,8 @@ public class MethodHasParameters extends ChildMultiMatcher<MethodTree, VariableT
   }
 
   @Override
-  protected Iterable<? extends VariableTree> getChildNodes(MethodTree methodTree, 
-      VisitorState state) {
+  protected Iterable<? extends VariableTree> getChildNodes(
+      MethodTree methodTree, VisitorState state) {
     return methodTree.getParameters();
   }
 }

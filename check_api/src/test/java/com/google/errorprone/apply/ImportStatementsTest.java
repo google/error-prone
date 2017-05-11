@@ -43,50 +43,46 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class ImportStatementsTest {
-  private static final EndPosTable FAKE_END_POS_MAP = new EndPosTable() {
-    @Override
-    public int getEndPos(JCTree tree) {
-      return Position.NOPOS;
-    }
+  private static final EndPosTable FAKE_END_POS_MAP =
+      new EndPosTable() {
+        @Override
+        public int getEndPos(JCTree tree) {
+          return Position.NOPOS;
+        }
 
-    @Override
-    public void storeEnd(JCTree tree, int endpos) {
-    }
+        @Override
+        public void storeEnd(JCTree tree, int endpos) {}
 
-    @Override
-    public int replaceTree(JCTree oldtree, JCTree newtree) {
-      return Position.NOPOS;
-    }
-  };
+        @Override
+        public int replaceTree(JCTree oldtree, JCTree newtree) {
+          return Position.NOPOS;
+        }
+      };
 
-  /**
-   * A stubbed package JCExpression to use for testing.
-   */
+  /** A stubbed package JCExpression to use for testing. */
   private final JCExpression basePackage = stubPackage(79);
 
-  /**
-   * An unsorted list of JCImport stubs to use for testing.
-   */
-  private final List<JCImport> baseImportList = ImmutableList.of(
-      stubImport("com.google.common.base.Preconditions.checkNotNull", true, 82, 145),
-      stubImport("com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED", true, 147, 213),
-      stubImport("com.google.common.collect.ImmutableMap", false, 215, 260),
-      stubImport("com.google.common.collect.ImmutableList", false, 262, 308),
-      stubImport("org.joda.time.Interval", false, 310, 339),
-      stubImport("org.joda.time.DateTime", false, 341, 370),
-      stubImport("org.joda.time.DateTimeZone", false, 372, 405),
-      stubImport("com.sun.tools.javac.tree.JCTree", false, 407, 445),
-      stubImport("com.sun.source.tree.ImportTree", false, 447, 484),
-      stubImport("com.sun.tools.javac.tree.JCTree.JCExpression", false, 486, 537),
-      stubImport("com.sun.source.tree.CompilationUnitTree", false, 539, 585),
-      stubImport("java.io.File", false, 587, 606),
-      stubImport("java.util.Iterator", false, 608, 633),
-      stubImport("java.io.IOException", false, 635, 661),
-      stubImport("javax.tools.StandardJavaFileManager", false, 663, 705),
-      stubImport("javax.tools.JavaFileObject", false, 707, 740),
-      stubImport("javax.tools.JavaCompiler", false, 742, 773),
-      stubImport("javax.tools.ToolProvider", false, 775, 806));
-
+  /** An unsorted list of JCImport stubs to use for testing. */
+  private final List<JCImport> baseImportList =
+      ImmutableList.of(
+          stubImport("com.google.common.base.Preconditions.checkNotNull", true, 82, 145),
+          stubImport("com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED", true, 147, 213),
+          stubImport("com.google.common.collect.ImmutableMap", false, 215, 260),
+          stubImport("com.google.common.collect.ImmutableList", false, 262, 308),
+          stubImport("org.joda.time.Interval", false, 310, 339),
+          stubImport("org.joda.time.DateTime", false, 341, 370),
+          stubImport("org.joda.time.DateTimeZone", false, 372, 405),
+          stubImport("com.sun.tools.javac.tree.JCTree", false, 407, 445),
+          stubImport("com.sun.source.tree.ImportTree", false, 447, 484),
+          stubImport("com.sun.tools.javac.tree.JCTree.JCExpression", false, 486, 537),
+          stubImport("com.sun.source.tree.CompilationUnitTree", false, 539, 585),
+          stubImport("java.io.File", false, 587, 606),
+          stubImport("java.util.Iterator", false, 608, 633),
+          stubImport("java.io.IOException", false, 635, 661),
+          stubImport("javax.tools.StandardJavaFileManager", false, 663, 705),
+          stubImport("javax.tools.JavaFileObject", false, 707, 740),
+          stubImport("javax.tools.JavaCompiler", false, 742, 773),
+          stubImport("javax.tools.ToolProvider", false, 775, 806));
 
   /**
    * A helper method to create a stubbed package JCExpression.
@@ -158,12 +154,9 @@ public class ImportStatementsTest {
             + "import org.joda.time.DateTimeZone;\n"
             + "import org.joda.time.Interval;",
         imports.toString());
-
   }
 
-  /**
-   * Test that adding a new import inserts it in the correct position.
-   */
+  /** Test that adding a new import inserts it in the correct position. */
   @Test
   public void shouldAddImportInCorrectPosition() {
     ImportStatements imports = createImportStatements(basePackage, baseImportList);
@@ -194,16 +187,16 @@ public class ImportStatementsTest {
         imports.toString());
   }
 
-  /**
-   * Test that adding multiple new imports using addAll() inserts them
-   * in the correct positions.
-   */
+  /** Test that adding multiple new imports using addAll() inserts them in the correct positions. */
   @Test
   public void shouldAddMultipleImportsInCorrectPositions() {
     ImportStatements imports = createImportStatements(basePackage, baseImportList);
-    boolean added = imports.addAll(Arrays.asList("import static org.junit.Assert.assertEquals",
-        "import javax.servlet.http.HttpServletRequest",
-        "import com.google.common.flags.FlagSpec"));
+    boolean added =
+        imports.addAll(
+            Arrays.asList(
+                "import static org.junit.Assert.assertEquals",
+                "import javax.servlet.http.HttpServletRequest",
+                "import com.google.common.flags.FlagSpec"));
 
     assertTrue(added);
     assertEquals(
@@ -232,9 +225,7 @@ public class ImportStatementsTest {
         imports.toString());
   }
 
-  /**
-   * Test that adding an already-existing import doesn't change anything.
-   */
+  /** Test that adding an already-existing import doesn't change anything. */
   @Test
   public void shouldNotAddExistingImport() {
     ImportStatements imports = createImportStatements(basePackage, baseImportList);
@@ -264,10 +255,7 @@ public class ImportStatementsTest {
         imports.toString());
   }
 
-  /**
-   * Test that removing an import works and the resulting output is
-   * correctly sorted.
-   */
+  /** Test that removing an import works and the resulting output is correctly sorted. */
   @Test
   public void shouldRemoveImportAndSort() {
     ImportStatements imports = createImportStatements(basePackage, baseImportList);
@@ -297,15 +285,18 @@ public class ImportStatementsTest {
   }
 
   /**
-   * Test that removing multiple imports using removeAll() works
-   * and the resulting output is correctly sorted.
+   * Test that removing multiple imports using removeAll() works and the resulting output is
+   * correctly sorted.
    */
   @Test
   public void shouldRemoveMultipleImportsAndSort() {
     ImportStatements imports = createImportStatements(basePackage, baseImportList);
-    boolean removed = imports.removeAll(Arrays.asList("import com.sun.tools.javac.tree.JCTree",
-        "import static com.google.common.base.Preconditions.checkNotNull",
-        "import org.joda.time.Interval"));
+    boolean removed =
+        imports.removeAll(
+            Arrays.asList(
+                "import com.sun.tools.javac.tree.JCTree",
+                "import static com.google.common.base.Preconditions.checkNotNull",
+                "import org.joda.time.Interval"));
 
     assertTrue(removed);
     assertEquals(
@@ -359,9 +350,7 @@ public class ImportStatementsTest {
         imports.toString());
   }
 
-  /**
-   * Test that removing a non-existent import doesn't change anything.
-   */
+  /** Test that removing a non-existent import doesn't change anything. */
   @Test
   public void removingNonExistingImportShouldntChangeImports() {
     ImportStatements imports = createImportStatements(basePackage, baseImportList);
@@ -391,10 +380,7 @@ public class ImportStatementsTest {
         imports.toString());
   }
 
-  /**
-   * Test empty initial import list. Positions should match package end
-   * positions.
-   */
+  /** Test empty initial import list. Positions should match package end positions. */
   @Test
   public void emptyImportListShouldGivePositionOfPackageStmt() {
     ImportStatements imports = createImportStatements(basePackage, new ArrayList<JCImport>());
@@ -403,23 +389,20 @@ public class ImportStatementsTest {
   }
 
   /**
-   * Test empty initial import list. The output string should start and
-   * end with newlines because it is intended to be inserted after the
-   * package statement.
+   * Test empty initial import list. The output string should start and end with newlines because it
+   * is intended to be inserted after the package statement.
    */
   @Test
   public void addingToEmptyImportListOutputShouldStartAndEndWithNewlines() {
     ImportStatements imports = createImportStatements(basePackage, new ArrayList<JCImport>());
     imports.add("import org.joda.time.Interval");
-    assertEquals("\n"
-        + "import org.joda.time.Interval;\n",
-        imports.toString());
+    assertEquals("\n" + "import org.joda.time.Interval;\n", imports.toString());
   }
 
   /**
-   * Test start and end position calculations. The start position should be
-   * the start offset of the first import statement, and the end position
-   * should be the end position of the last import statement.
+   * Test start and end position calculations. The start position should be the start offset of the
+   * first import statement, and the end position should be the end position of the last import
+   * statement.
    */
   @Test
   public void startAndEndPositionsShouldComeFromImportStatements() {

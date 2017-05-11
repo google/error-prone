@@ -117,8 +117,8 @@ final class Util {
    * dagger.producers.ProducersModule producer modules} that could contain abstract binding methods.
    *
    * <ul>
-   * <li>an interface or a class with no superclass
-   * <li>no instance {@link dagger.Provides} or {@link dagger.producers.Produces} methods
+   *   <li>an interface or a class with no superclass
+   *   <li>no instance {@link dagger.Provides} or {@link dagger.producers.Produces} methods
    * </ul>
    */
   static final Matcher<ClassTree> CAN_HAVE_ABSTRACT_BINDING_METHODS =
@@ -155,10 +155,10 @@ final class Util {
    * Returns a fix that changes a concrete class to an abstract class.
    *
    * <ul>
-   * <li>Removes {@code final} if it was there.
-   * <li>Adds {@code abstract} if it wasn't there.
-   * <li>Adds a private empty constructor if the class was {@code final} and had only a default
-   *     constructor.
+   *   <li>Removes {@code final} if it was there.
+   *   <li>Adds {@code abstract} if it wasn't there.
+   *   <li>Adds a private empty constructor if the class was {@code final} and had only a default
+   *       constructor.
    * </ul>
    */
   static SuggestedFix.Builder makeConcreteClassAbstract(ClassTree classTree, VisitorState state) {

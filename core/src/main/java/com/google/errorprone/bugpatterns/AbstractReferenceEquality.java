@@ -46,8 +46,8 @@ import java.util.Optional;
  * Abstract implementation of a BugPattern that detects the use of reference equality to compare
  * classes with value semantics.
  *
- * <p>See e.g. {@link NumericEquality}, {@link OptionalEquality},
- * {@link ProtoStringFieldReferenceEquality}, and {@link StringEquality}.
+ * <p>See e.g. {@link NumericEquality}, {@link OptionalEquality}, {@link
+ * ProtoStringFieldReferenceEquality}, and {@link StringEquality}.
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */

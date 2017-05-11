@@ -26,8 +26,8 @@ import com.google.common.collect.Range;
 public abstract class Replacement {
 
   /**
-   * Creates a {@link Replacement}. Start and end positions are represented as code unit indices
-   * in a Unicode 16-bit string.
+   * Creates a {@link Replacement}. Start and end positions are represented as code unit indices in
+   * a Unicode 16-bit string.
    *
    * @param startPosition the beginning of the replacement
    * @param endPosition the end of the replacement, exclusive
@@ -59,4 +59,3 @@ public abstract class Replacement {
   /** The source text to appear in the output. */
   public abstract String replaceWith();
 }
-

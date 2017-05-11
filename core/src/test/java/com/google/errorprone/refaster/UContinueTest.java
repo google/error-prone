@@ -37,7 +37,7 @@ public class UContinueTest {
         .addEqualityGroup(UContinue.create("bar"))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(UContinue.create("bar"));

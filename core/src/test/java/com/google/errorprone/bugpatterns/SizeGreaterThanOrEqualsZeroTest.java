@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero}
- */
+/** Unit tests for {@link com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero} */
 @RunWith(JUnit4.class)
 public class SizeGreaterThanOrEqualsZeroTest {
   CompilationTestHelper compilationHelper;

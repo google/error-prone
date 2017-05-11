@@ -40,7 +40,7 @@ public class UTypeCastTest {
 
   @Test
   public void serialization() {
-    SerializableTester
-      .reserializeAndAssert(UTypeCast.create(UPrimitiveTypeTree.BYTE, ULiteral.intLit(100)));
+    SerializableTester.reserializeAndAssert(
+        UTypeCast.create(UPrimitiveTypeTree.BYTE, ULiteral.intLit(100)));
   }
 }

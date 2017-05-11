@@ -36,8 +36,8 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
 /**
- * Annotation processor which visits all classes that have a {@code BugPattern} annotation,
- * and writes a tab-delimited text file dumping the data found.
+ * Annotation processor which visits all classes that have a {@code BugPattern} annotation, and
+ * writes a tab-delimited text file dumping the data found.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author alexeagle@google.com (Alex Eagle)
@@ -55,24 +55,22 @@ public class DocGenProcessor extends AbstractProcessor {
 
   private PrintWriter pw;
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
     try {
-      FileObject manifest = processingEnv.getFiler()
-          .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
+      FileObject manifest =
+          processingEnv
+              .getFiler()
+              .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
       pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream(), UTF_8));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     for (Element element : roundEnv.getElementsAnnotatedWith(BugPattern.class)) {
@@ -87,9 +85,7 @@ public class DocGenProcessor extends AbstractProcessor {
     return true;
   }
 
-  /**
-   * Perform cleanup after last round of annotation processing.
-   */
+  /** Perform cleanup after last round of annotation processing. */
   private void cleanup() {
     pw.close();
   }

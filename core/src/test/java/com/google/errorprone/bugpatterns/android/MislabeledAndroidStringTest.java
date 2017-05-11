@@ -24,16 +24,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author kmb@google.com (Kevin Bierhoff)
- */
+/** @author kmb@google.com (Kevin Bierhoff) */
 @RunWith(JUnit4.class)
 public class MislabeledAndroidStringTest {
 
   @Test
   public void testMatchFullyQualified() throws Exception {
     createCompilationTestHelper()
-        .addSourceLines("com/google/errorprone/bugpatterns/android/MatchFullyQualifiedTest.java",
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/android/MatchFullyQualifiedTest.java",
             "package com.google.errorprone.bugpatterns.android;",
             "public class MatchFullyQualifiedTest {",
             "  public int getStringId() {",
@@ -48,7 +47,8 @@ public class MislabeledAndroidStringTest {
   @Test
   public void testMatchWithImport() throws Exception {
     createCompilationTestHelper()
-        .addSourceLines("com/google/errorprone/bugpatterns/android/MatchWithImportTest.java",
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/android/MatchWithImportTest.java",
             "package com.google.errorprone.bugpatterns.android;",
             "import android.R;",
             "public class MatchWithImportTest {",
@@ -65,7 +65,8 @@ public class MislabeledAndroidStringTest {
   @Test
   public void testUseInField() throws Exception {
     createCompilationTestHelper()
-        .addSourceLines("com/google/errorprone/bugpatterns/android/MatchUseInFieldTest.java",
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/android/MatchUseInFieldTest.java",
             "package com.google.errorprone.bugpatterns.android;",
             "public class MatchUseInFieldTest {",
             "  // BUG: Diagnostic contains: android.R.string.ok",
@@ -78,7 +79,8 @@ public class MislabeledAndroidStringTest {
   @Test
   public void testNegativeCase() throws Exception {
     createCompilationTestHelper()
-        .addSourceLines("com/google/errorprone/bugpatterns/android/FineStringTest.java",
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/android/FineStringTest.java",
             "package com.google.errorprone.bugpatterns.android;",
             "import android.R;",
             "public class FineStringTest {",

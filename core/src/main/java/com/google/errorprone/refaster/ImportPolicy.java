@@ -64,11 +64,11 @@ public enum ImportPolicy {
        * Otherwise, import toplevelClazz, and return the name from the top level class
        * to the class name.
        */
-      checkArgument(topLevelClazz.length() > 0 && fullyQualifiedClazz.length() > 0,
+      checkArgument(
+          topLevelClazz.length() > 0 && fullyQualifiedClazz.length() > 0,
           String.format(
               "either topLevelClass (%s) or fullyQualifiedClazz (%s) is null or empty",
-              topLevelClazz,
-              fullyQualifiedClazz));
+              topLevelClazz, fullyQualifiedClazz));
       List<String> topLevelPath = Splitter.on('.').splitToList(topLevelClazz);
       String topClazz = Iterables.getLast(topLevelPath);
       List<String> qualifiedPath = Splitter.on('.').splitToList(fullyQualifiedClazz);
@@ -80,14 +80,14 @@ public enum ImportPolicy {
         }
         importTopLevelClazz |= importName.contentEquals(topLevelClazz);
         if (!importTopLevelClazz) {
-          conflictTopLevelClazz |= topClazz.equals(
-              Iterables.getLast(Splitter.on('.').split(importName)));
+          conflictTopLevelClazz |=
+              topClazz.equals(Iterables.getLast(Splitter.on('.').split(importName)));
         }
       }
       if (importTopLevelClazz) {
-          return makeSelectExpression(inliner, qualifiedPath, topLevelPath.size() - 1);
+        return makeSelectExpression(inliner, qualifiedPath, topLevelPath.size() - 1);
       } else if (conflictTopLevelClazz) {
-          return makeSelectExpression(inliner, qualifiedPath, 0);
+        return makeSelectExpression(inliner, qualifiedPath, 0);
       }
       // No conflicts
       String packge = Joiner.on('.').join(topLevelPath.subList(0, topLevelPath.size() - 1));
@@ -100,10 +100,15 @@ public enum ImportPolicy {
     }
 
     @Override
-    public JCExpression staticReference(Inliner inliner, CharSequence topLevelClazz,
-        CharSequence fullyQualifiedClazz, CharSequence member) {
-      return inliner.maker().Select(
-          classReference(inliner, topLevelClazz, fullyQualifiedClazz), inliner.asName(member));
+    public JCExpression staticReference(
+        Inliner inliner,
+        CharSequence topLevelClazz,
+        CharSequence fullyQualifiedClazz,
+        CharSequence member) {
+      return inliner
+          .maker()
+          .Select(
+              classReference(inliner, topLevelClazz, fullyQualifiedClazz), inliner.asName(member));
     }
 
     /* Returns a combined list of strings from importsInSource and importsToAdd. */
@@ -130,13 +135,11 @@ public enum ImportPolicy {
       return select;
     }
   },
-  /**
-   * Import nested classes directly, and qualify static references from the class level.
-   */
+  /** Import nested classes directly, and qualify static references from the class level. */
   IMPORT_CLASS_DIRECTLY {
     @Override
-    public JCExpression classReference(Inliner inliner, CharSequence topLevelClazz,
-        CharSequence fullyQualifiedClazz) {
+    public JCExpression classReference(
+        Inliner inliner, CharSequence topLevelClazz, CharSequence fullyQualifiedClazz) {
       if (Refaster.class.getName().contentEquals(fullyQualifiedClazz)) {
         // Special handling to ensure that the pretty-printer always recognizes Refaster references
         return inliner.maker().Ident(inliner.asName("Refaster"));
@@ -145,7 +148,8 @@ public enum ImportPolicy {
       int lastDot = packge.lastIndexOf('.');
       packge = (lastDot >= 0) ? packge.substring(0, lastDot) : "";
       PackageSymbol currentPackage = inliner.getContext().get(PackageSymbol.class);
-      if (currentPackage == null || !currentPackage.getQualifiedName().contentEquals(packge)
+      if (currentPackage == null
+          || !currentPackage.getQualifiedName().contentEquals(packge)
           || !topLevelClazz.equals(fullyQualifiedClazz)) {
         // don't import classes from the same package as the class we're refactoring
         inliner.addImport(fullyQualifiedClazz.toString());
@@ -156,23 +160,27 @@ public enum ImportPolicy {
     }
 
     @Override
-    public JCExpression staticReference(Inliner inliner, CharSequence topLevelClazz,
-        CharSequence fullyQualifiedClazz, CharSequence member) {
+    public JCExpression staticReference(
+        Inliner inliner,
+        CharSequence topLevelClazz,
+        CharSequence fullyQualifiedClazz,
+        CharSequence member) {
       if (Refaster.class.getName().contentEquals(topLevelClazz)) {
         // Special handling to ensure that the pretty-printer always recognizes Refaster references
         return inliner
             .maker()
             .Select(inliner.maker().Ident(inliner.asName("Refaster")), inliner.asName(member));
       }
-      return inliner.maker().Select(
-          classReference(inliner, topLevelClazz, fullyQualifiedClazz), 
-          inliner.asName(member));
+      return inliner
+          .maker()
+          .Select(
+              classReference(inliner, topLevelClazz, fullyQualifiedClazz), inliner.asName(member));
     }
   },
 
   /**
-   * When inlining static methods, always static import the method.  Non-static references to
-   * classes are imported from the top level as in {@code IMPORT_TOP_LEVEL}.
+   * When inlining static methods, always static import the method. Non-static references to classes
+   * are imported from the top level as in {@code IMPORT_TOP_LEVEL}.
    */
   STATIC_IMPORT_ALWAYS {
     @Override
@@ -182,8 +190,11 @@ public enum ImportPolicy {
     }
 
     @Override
-    public JCExpression staticReference(Inliner inliner, CharSequence topLevelClazz,
-        CharSequence fullyQualifiedClazz, CharSequence member) {
+    public JCExpression staticReference(
+        Inliner inliner,
+        CharSequence topLevelClazz,
+        CharSequence fullyQualifiedClazz,
+        CharSequence member) {
       if (Refaster.class.getName().contentEquals(topLevelClazz)) {
         // Special handling to ensure that the pretty-printer always recognizes Refaster references
         return inliner
@@ -192,9 +203,9 @@ public enum ImportPolicy {
       }
       inliner.addStaticImport(fullyQualifiedClazz + "." + member);
       return inliner.maker().Ident(inliner.asName(member));
-    }    
+    }
   };
-  
+
   public static void bind(Context context, ImportPolicy policy) {
     context.put(ImportPolicy.class, checkNotNull(policy));
   }
@@ -208,6 +219,9 @@ public enum ImportPolicy {
   public abstract JCExpression classReference(
       Inliner inliner, CharSequence topLevelClazz, CharSequence fullyQualifiedClazz);
 
-  public abstract JCExpression staticReference(Inliner inliner, CharSequence topLevelClazz,
-      CharSequence fullyQualifiedClazz, CharSequence member);
+  public abstract JCExpression staticReference(
+      Inliner inliner,
+      CharSequence topLevelClazz,
+      CharSequence fullyQualifiedClazz,
+      CharSequence member);
 }

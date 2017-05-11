@@ -32,25 +32,26 @@ public class UNewClassTest extends AbstractUTreeTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UNewClass.create(
-            UClassIdent.create("java.lang.String"), ULiteral.stringLit("123")))
-        .addEqualityGroup(UNewClass.create(
-            UClassIdent.create("java.math.BigInteger"), ULiteral.stringLit("123")))
-        .addEqualityGroup(UNewClass.create(
-            UClassIdent.create("java.lang.String"), ULiteral.stringLit("foobar")))
+        .addEqualityGroup(
+            UNewClass.create(UClassIdent.create("java.lang.String"), ULiteral.stringLit("123")))
+        .addEqualityGroup(
+            UNewClass.create(UClassIdent.create("java.math.BigInteger"), ULiteral.stringLit("123")))
+        .addEqualityGroup(
+            UNewClass.create(UClassIdent.create("java.lang.String"), ULiteral.stringLit("foobar")))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(
         UNewClass.create(UClassIdent.create("java.lang.String"), ULiteral.stringLit("123")));
   }
-  
+
   @Test
   public void inline() {
     ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
-    assertInlines("new String(\"123\")", 
+    assertInlines(
+        "new String(\"123\")",
         UNewClass.create(UClassIdent.create("java.lang.String"), ULiteral.stringLit("123")));
   }
 }

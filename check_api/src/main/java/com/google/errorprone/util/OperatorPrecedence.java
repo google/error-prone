@@ -20,8 +20,8 @@ import com.sun.source.tree.Tree;
 
 /**
  * The precedence for an operator kind in the {@link com.sun.source.tree} API.
- * 
- * As documented at: http://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
+ *
+ * <p>As documented at: http://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
  */
 public enum OperatorPrecedence {
   POSTFIX(13),
@@ -38,17 +38,17 @@ public enum OperatorPrecedence {
   CONDITIONAL_OR(2),
   TERNARY(1),
   ASSIGNMENT(0);
-  
+
   private final int precedence;
-  
+
   private OperatorPrecedence(int precedence) {
     this.precedence = precedence;
   }
-  
+
   public boolean isHigher(OperatorPrecedence other) {
     return precedence > other.precedence;
   }
-  
+
   public static OperatorPrecedence from(Tree.Kind kind) {
     switch (kind) {
       case POSTFIX_DECREMENT:

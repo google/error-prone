@@ -16,7 +16,6 @@
 
 package com.google.errorprone.refaster;
 
-
 import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
@@ -36,10 +35,10 @@ import javax.annotation.Nullable;
 /**
  * A {@link UTree} representation of a local variable declaration.
  *
- * <p>A {@code UVariableDecl} can be unified with any variable declaration which has a matching 
- * type and initializer. Annotations and modifiers are preserved for the corresponding replacement,
- * as well as the variable name. {@link ULocalVarIdent} instances are used to represent references 
- * to local variables.
+ * <p>A {@code UVariableDecl} can be unified with any variable declaration which has a matching type
+ * and initializer. Annotations and modifiers are preserved for the corresponding replacement, as
+ * well as the variable name. {@link ULocalVarIdent} instances are used to represent references to
+ * local variables.
  *
  * <p>As a result, we can modify variable declarations and initializations in target code while
  * preserving variable names and other contextual information.
@@ -57,17 +56,17 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
   public static UVariableDecl create(CharSequence identifier, UExpression type) {
     return create(identifier, type, null);
   }
-  
+
   @Override
   public abstract StringName getName();
-  
+
   @Override
   public abstract UExpression getType();
-  
+
   @Override
   @Nullable
   public abstract UExpression getInitializer();
-  
+
   ULocalVarIdent.Key key() {
     return new ULocalVarIdent.Key(getName());
   }
@@ -77,14 +76,15 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
     return Choice.condition(unifier.getBinding(key()) == null, unifier)
         .thenChoose(unifications(getType(), decl.getType()))
         .thenChoose(unifications(getInitializer(), decl.getInitializer()))
-        .transform(new Function<Unifier, Unifier>() {
-          @Override
-          public Unifier apply(Unifier unifier) {
-            unifier.putBinding(key(),
-                LocalVarBinding.create(ASTHelpers.getSymbol(decl), decl.getModifiers()));
-            return unifier;
-          }
-        });
+        .transform(
+            new Function<Unifier, Unifier>() {
+              @Override
+              public Unifier apply(Unifier unifier) {
+                unifier.putBinding(
+                    key(), LocalVarBinding.create(ASTHelpers.getSymbol(decl), decl.getModifiers()));
+                return unifier;
+              }
+            });
   }
 
   @Override

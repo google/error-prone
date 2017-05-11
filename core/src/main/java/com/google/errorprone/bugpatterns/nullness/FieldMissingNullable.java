@@ -77,7 +77,6 @@ public class FieldMissingNullable extends BugChecker
       return Description.NO_MATCH; // field already annotated
     }
 
-
     // Don't need dataflow to tell us that null is nullable
     if (expression.getKind() == Tree.Kind.NULL_LITERAL) {
       return makeFix(tree, tree, "Initializing field with null literal");

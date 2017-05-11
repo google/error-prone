@@ -34,8 +34,7 @@ public class UArrayAccessTest extends AbstractUTreeTest {
   @Test
   public void unify() {
     UExpression arrayIdent = mock(UExpression.class);
-    when(arrayIdent.unify(ident("array"), isA(Unifier.class)))
-        .thenReturn(Choice.of(unifier));
+    when(arrayIdent.unify(ident("array"), isA(Unifier.class))).thenReturn(Choice.of(unifier));
     assertUnifies("array[5]", UArrayAccess.create(arrayIdent, ULiteral.intLit(5)));
   }
 

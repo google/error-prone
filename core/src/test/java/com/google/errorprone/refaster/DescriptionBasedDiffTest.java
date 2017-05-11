@@ -106,7 +106,6 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
         .inOrder();
   }
 
-
   @Test
   public void twoDiffs() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();

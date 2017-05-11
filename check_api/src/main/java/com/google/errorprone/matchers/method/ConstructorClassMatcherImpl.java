@@ -35,16 +35,15 @@ class ConstructorClassMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
   private final TypePredicate predicate;
 
   @Override
-  protected Optional<MatchState> matchResult(ExpressionTree item, MatchState baseResult,
-      VisitorState state) {
+  protected Optional<MatchState> matchResult(
+      ExpressionTree item, MatchState baseResult, VisitorState state) {
     if (predicate.apply(baseResult.ownerType(), state)) {
       return Optional.of(baseResult);
     }
     return Optional.absent();
   }
 
-  public ConstructorClassMatcherImpl(ConstructorMatcherImpl baseMatcher,
-      TypePredicate predicate) {
+  public ConstructorClassMatcherImpl(ConstructorMatcherImpl baseMatcher, TypePredicate predicate) {
     super(baseMatcher);
     this.predicate = predicate;
   }

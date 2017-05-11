@@ -23,8 +23,8 @@ import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
 import javax.annotation.Nullable;
 
 /**
- * {@link UTree} version of {@link ArrayTypeTree}. This is the AST representation of
- * {@link UArrayType}.
+ * {@link UTree} version of {@link ArrayTypeTree}. This is the AST representation of {@link
+ * UArrayType}.
  *
  * @author lowasser@google.com (Louis Wasserman)
  */

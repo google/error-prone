@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  *
  * @author Louis Wasserman
  */
-public abstract class UType extends Types.SimpleVisitor<Choice<Unifier>, Unifier> 
+public abstract class UType extends Types.SimpleVisitor<Choice<Unifier>, Unifier>
     implements Unifiable<Type>, Inlineable<Type> {
 
   @Override

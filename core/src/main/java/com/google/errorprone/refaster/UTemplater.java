@@ -129,8 +129,8 @@ import javax.lang.model.type.MirroredTypeException;
  */
 public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   /**
-   * Context key to indicate that templates should be treated as BlockTemplates, regardless
-   * of their structure.
+   * Context key to indicate that templates should be treated as BlockTemplates, regardless of their
+   * structure.
    */
   public static final Context.Key<Boolean> REQUIRE_BLOCK_KEY = new Context.Key<>();
 
@@ -145,13 +145,16 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     ImmutableMap<String, VarSymbol> freeExpressionVars = freeExpressionVariables(decl);
     Context subContext = new SubContext(context);
     final UTemplater templater = new UTemplater(freeExpressionVars, subContext);
-    ImmutableMap<String, UType> expressionVarTypes = ImmutableMap.copyOf(
-        Maps.transformValues(freeExpressionVars, new Function<VarSymbol, UType>() {
-          @Override
-          public UType apply(VarSymbol sym) {
-            return templater.template(sym.type);
-          }
-        }));
+    ImmutableMap<String, UType> expressionVarTypes =
+        ImmutableMap.copyOf(
+            Maps.transformValues(
+                freeExpressionVars,
+                new Function<VarSymbol, UType>() {
+                  @Override
+                  public UType apply(VarSymbol sym) {
+                    return templater.template(sym.type);
+                  }
+                }));
 
     UType genericType = templater.template(declSym.type);
     List<UTypeVar> typeParameters;
@@ -175,15 +178,18 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
       ExpressionTree expression =
           ((ReturnTree) Iterables.getOnlyElement(bodyStatements)).getExpression();
       return ExpressionTemplate.create(
-          annotations, typeParameters, expressionVarTypes,
-          templater.template(expression), methodType.getReturnType());
+          annotations,
+          typeParameters,
+          expressionVarTypes,
+          templater.template(expression),
+          methodType.getReturnType());
     } else {
       List<UStatement> templateStatements = new ArrayList<>();
       for (StatementTree statement : bodyStatements) {
         templateStatements.add(templater.template(statement));
       }
-      return BlockTemplate.create(annotations, 
-          typeParameters, expressionVarTypes, templateStatements);
+      return BlockTemplate.create(
+          annotations, typeParameters, expressionVarTypes, templateStatements);
     }
   }
 
@@ -223,7 +229,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     }
     return builder.build();
   }
-  
+
   private static <T> ImmutableList<T> cast(Iterable<?> elements, Class<T> clazz) {
     ImmutableList.Builder<T> builder = ImmutableList.builder();
     for (Object element : elements) {
@@ -245,7 +251,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
   @Override
   public UModifiers visitModifiers(ModifiersTree modifiers, Void v) {
-    return UModifiers.create(((JCModifiers) modifiers).flags,
+    return UModifiers.create(
+        ((JCModifiers) modifiers).flags,
         cast(templateExpressions(modifiers.getAnnotations()), UAnnotation.class));
   }
 
@@ -267,8 +274,10 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   }
 
   public UExpression templateType(Tree tree) {
-    checkArgument(tree instanceof ExpressionTree,
-        "Trees representing types are expected to implement ExpressionTree, but %s does not", tree);
+    checkArgument(
+        tree instanceof ExpressionTree,
+        "Trees representing types are expected to implement ExpressionTree, but %s does not",
+        tree);
     return template((ExpressionTree) tree);
   }
 
@@ -286,8 +295,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
   @Override
   public UInstanceOf visitInstanceOf(InstanceOfTree tree, Void v) {
-    return UInstanceOf.create(template(tree.getExpression()), 
-        templateType(tree.getType()));
+    return UInstanceOf.create(template(tree.getExpression()), templateType(tree.getType()));
   }
 
   @Override
@@ -317,8 +325,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
   @Override
   public UAnnotation visitAnnotation(AnnotationTree tree, Void v) {
-    return UAnnotation.create(templateType(tree.getAnnotationType()),
-        templateExpressions(tree.getArguments()));
+    return UAnnotation.create(
+        templateType(tree.getAnnotationType()), templateExpressions(tree.getArguments()));
   }
 
   @Override
@@ -335,17 +343,20 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
       return UClassIdent.create((ClassSymbol) sym);
     } else if (sym.isStatic()) {
       ExpressionTree selected = tree.getExpression();
-      checkState(ASTHelpers.getSymbol(selected) instanceof ClassSymbol,
+      checkState(
+          ASTHelpers.getSymbol(selected) instanceof ClassSymbol,
           "Refaster cannot match static methods used on instances");
       return staticMember(sym);
     }
-    return UMemberSelect.create(template(tree.getExpression()),
-        tree.getIdentifier(), template(sym.type));
+    return UMemberSelect.create(
+        template(tree.getExpression()), tree.getIdentifier(), template(sym.type));
   }
 
   private UStaticIdent staticMember(Symbol symbol) {
-    return UStaticIdent.create((ClassSymbol) symbol.getEnclosingElement(),
-        symbol.getSimpleName(), template(symbol.asType()));
+    return UStaticIdent.create(
+        (ClassSymbol) symbol.getEnclosingElement(),
+        symbol.getSimpleName(),
+        template(symbol.asType()));
   }
 
   private static final UStaticIdent ANY_OF;
@@ -357,28 +368,44 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
   static {
     UTypeVar tVar = UTypeVar.create("T");
-    ANY_OF = UStaticIdent.create(
-        Refaster.class.getCanonicalName(), "anyOf",
-        UForAll.create(ImmutableList.of(tVar), UMethodType.create(tVar, UArrayType.create(tVar))));
-    IS_INSTANCE = UStaticIdent.create(
-        Refaster.class.getCanonicalName(), "isInstance",
-        UForAll.create(ImmutableList.of(tVar), 
-            UMethodType.create(UPrimitiveType.BOOLEAN,
-                UClassType.create(Object.class.getCanonicalName()))));
-    CLAZZ = UStaticIdent.create(
-        Refaster.class.getCanonicalName(), "clazz",
-        UForAll.create(ImmutableList.of(tVar),
-            UMethodType.create(UClassType.create(Class.class.getCanonicalName(), tVar))));
-    NEW_ARRAY = UStaticIdent.create(
-        Refaster.class.getCanonicalName(), "newArray",
-        UForAll.create(ImmutableList.of(tVar),
-            UMethodType.create(UArrayType.create(tVar), UPrimitiveType.INT)));
-    UTypeVar eVar = UTypeVar.create("E",
-        UClassType.create(Enum.class.getCanonicalName(), UTypeVar.create("E")));
-    ENUM_VALUE_OF = UStaticIdent.create(
-        Refaster.class.getCanonicalName(), "enumValueOf",
-        UForAll.create(ImmutableList.of(eVar),
-            UMethodType.create(eVar, UClassType.create(String.class.getCanonicalName()))));
+    ANY_OF =
+        UStaticIdent.create(
+            Refaster.class.getCanonicalName(),
+            "anyOf",
+            UForAll.create(
+                ImmutableList.of(tVar), UMethodType.create(tVar, UArrayType.create(tVar))));
+    IS_INSTANCE =
+        UStaticIdent.create(
+            Refaster.class.getCanonicalName(),
+            "isInstance",
+            UForAll.create(
+                ImmutableList.of(tVar),
+                UMethodType.create(
+                    UPrimitiveType.BOOLEAN, UClassType.create(Object.class.getCanonicalName()))));
+    CLAZZ =
+        UStaticIdent.create(
+            Refaster.class.getCanonicalName(),
+            "clazz",
+            UForAll.create(
+                ImmutableList.of(tVar),
+                UMethodType.create(UClassType.create(Class.class.getCanonicalName(), tVar))));
+    NEW_ARRAY =
+        UStaticIdent.create(
+            Refaster.class.getCanonicalName(),
+            "newArray",
+            UForAll.create(
+                ImmutableList.of(tVar),
+                UMethodType.create(UArrayType.create(tVar), UPrimitiveType.INT)));
+    UTypeVar eVar =
+        UTypeVar.create(
+            "E", UClassType.create(Enum.class.getCanonicalName(), UTypeVar.create("E")));
+    ENUM_VALUE_OF =
+        UStaticIdent.create(
+            Refaster.class.getCanonicalName(),
+            "enumValueOf",
+            UForAll.create(
+                ImmutableList.of(eVar),
+                UMethodType.create(eVar, UClassType.create(String.class.getCanonicalName()))));
     AS_VARARGS =
         UStaticIdent.create(
             Refaster.class.getCanonicalName(),
@@ -389,12 +416,13 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
   private static Tree getSingleExplicitTypeArgument(MethodInvocationTree tree) {
     if (tree.getTypeArguments().isEmpty()) {
-      throw new IllegalArgumentException("Methods in the Refaster class must be invoked with "
-          + "an explicit type parameter; for example, 'Refaster.<T>isInstance(o)'.");
+      throw new IllegalArgumentException(
+          "Methods in the Refaster class must be invoked with "
+              + "an explicit type parameter; for example, 'Refaster.<T>isInstance(o)'.");
     }
     return Iterables.getOnlyElement(tree.getTypeArguments());
   }
-  
+
   static <T, U extends Unifiable<? super T>> boolean anyMatch(
       U toUnify, T target, Unifier unifier) {
     return toUnify.unify(target, unifier).first().isPresent();
@@ -405,11 +433,14 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     if (anyMatch(ANY_OF, tree.getMethodSelect(), new Unifier(context))) {
       return UAnyOf.create(templateExpressions(tree.getArguments()));
     } else if (anyMatch(IS_INSTANCE, tree.getMethodSelect(), new Unifier(context))) {
-      return UInstanceOf.create(template(Iterables.getOnlyElement(tree.getArguments())),
+      return UInstanceOf.create(
+          template(Iterables.getOnlyElement(tree.getArguments())),
           templateType(getSingleExplicitTypeArgument(tree)));
     } else if (anyMatch(CLAZZ, tree.getMethodSelect(), new Unifier(context))) {
       Tree typeArg = getSingleExplicitTypeArgument(tree);
-      return UMemberSelect.create(templateType(typeArg), "class",
+      return UMemberSelect.create(
+          templateType(typeArg),
+          "class",
           UClassType.create("java.lang.Class", template(((JCTree) typeArg).type)));
     } else if (anyMatch(NEW_ARRAY, tree.getMethodSelect(), new Unifier(context))) {
       Tree typeArg = getSingleExplicitTypeArgument(tree);
@@ -418,36 +449,40 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     } else if (anyMatch(ENUM_VALUE_OF, tree.getMethodSelect(), new Unifier(context))) {
       Tree typeArg = getSingleExplicitTypeArgument(tree);
       ExpressionTree strArg = Iterables.getOnlyElement(tree.getArguments());
-      return UMethodInvocation.create(UMemberSelect.create(templateType(typeArg),
-          "valueOf", UMethodType.create(template(((JCTree) typeArg).type),
-              UClassType.create("java.lang.String"))), template(strArg));
+      return UMethodInvocation.create(
+          UMemberSelect.create(
+              templateType(typeArg),
+              "valueOf",
+              UMethodType.create(
+                  template(((JCTree) typeArg).type), UClassType.create("java.lang.String"))),
+          template(strArg));
     } else if (anyMatch(AS_VARARGS, tree.getMethodSelect(), new Unifier(context))) {
       ExpressionTree arg = Iterables.getOnlyElement(tree.getArguments());
       checkArgument(ASTHelpers.hasAnnotation(arg, Repeated.class, new VisitorState(context)));
       return template(arg);
     }
-    Map<MethodSymbol, PlaceholderMethod> placeholderMethods = 
+    Map<MethodSymbol, PlaceholderMethod> placeholderMethods =
         context.get(RefasterRuleBuilderScanner.PLACEHOLDER_METHODS_KEY);
     if (placeholderMethods != null && placeholderMethods.containsKey(ASTHelpers.getSymbol(tree))) {
       return UPlaceholderExpression.create(
           placeholderMethods.get(ASTHelpers.getSymbol(tree)),
           templateExpressions(tree.getArguments()));
     } else {
-      return UMethodInvocation.create(template(tree.getMethodSelect()),
-          templateExpressions(tree.getArguments()));
+      return UMethodInvocation.create(
+          template(tree.getMethodSelect()), templateExpressions(tree.getArguments()));
     }
   }
 
   @Override
   public UBinary visitBinary(BinaryTree tree, Void v) {
-    return UBinary.create(tree.getKind(), template(tree.getLeftOperand()),
-        template(tree.getRightOperand()));
+    return UBinary.create(
+        tree.getKind(), template(tree.getLeftOperand()), template(tree.getRightOperand()));
   }
 
   @Override
   public UAssignOp visitCompoundAssignment(CompoundAssignmentTree tree, Void v) {
-    return UAssignOp.create(template(tree.getVariable()), tree.getKind(),
-        template(tree.getExpression()));
+    return UAssignOp.create(
+        template(tree.getVariable()), tree.getKind(), template(tree.getExpression()));
   }
 
   @Override
@@ -457,13 +492,16 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
   @Override
   public UExpression visitConditionalExpression(ConditionalExpressionTree tree, Void v) {
-    return UConditional.create(template(tree.getCondition()),
-        template(tree.getTrueExpression()), template(tree.getFalseExpression()));
+    return UConditional.create(
+        template(tree.getCondition()),
+        template(tree.getTrueExpression()),
+        template(tree.getFalseExpression()));
   }
 
   @Override
   public UNewArray visitNewArray(NewArrayTree tree, Void v) {
-    return UNewArray.create((UExpression) template(tree.getType()),
+    return UNewArray.create(
+        (UExpression) template(tree.getType()),
         templateExpressions(tree.getDimensions()),
         templateExpressions(tree.getInitializers()));
   }
@@ -473,7 +511,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     return UNewClass.create(
         tree.getEnclosingExpression() == null ? null : template(tree.getEnclosingExpression()),
         templateTypeExpressions(tree.getTypeArguments()),
-        template(tree.getIdentifier()), 
+        template(tree.getIdentifier()),
         templateExpressions(tree.getArguments()),
         (tree.getClassBody() == null) ? null : visitClass(tree.getClassBody(), null));
   }
@@ -497,8 +535,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   @Override
   public UTypeApply visitParameterizedType(ParameterizedTypeTree tree, Void v) {
     return UTypeApply.create(
-        templateType(tree.getType()),
-        templateTypeExpressions(tree.getTypeArguments()));
+        templateType(tree.getType()), templateTypeExpressions(tree.getTypeArguments()));
   }
 
   @Override
@@ -508,8 +545,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
   @Override
   public UWildcard visitWildcard(WildcardTree tree, Void v) {
-    return UWildcard.create(tree.getKind(),
-        (tree.getBound() == null) ? null : templateType(tree.getBound()));
+    return UWildcard.create(
+        tree.getKind(), (tree.getBound() == null) ? null : templateType(tree.getBound()));
   }
 
   @Override
@@ -590,9 +627,9 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   }
 
   /**
-   * Returns the {@link Class} instance for the {@link Matcher} associated with the provided
-   * {@link Matches} annotation.  This roundabout solution is recommended and explained by
-   * {@link Element#getAnnotation(Class)}.
+   * Returns the {@link Class} instance for the {@link Matcher} associated with the provided {@link
+   * Matches} annotation. This roundabout solution is recommended and explained by {@link
+   * Element#getAnnotation(Class)}.
    */
   static Class<? extends Matcher<? super ExpressionTree>> getValue(Matches matches) {
     String name;
@@ -605,15 +642,15 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     }
     try {
       return asSubclass(Class.forName(name), new TypeToken<Matcher<? super ExpressionTree>>() {});
-    } catch (ClassNotFoundException|ClassCastException e) {
+    } catch (ClassNotFoundException | ClassCastException e) {
       throw new RuntimeException(e);
     }
   }
 
   /**
-   * Returns the {@link Class} instance for the {@link Matcher} associated with the provided
-   * {@link NotMatches} annotation.  This roundabout solution is recommended and explained by
-   * {@link Element#getAnnotation(Class)}.
+   * Returns the {@link Class} instance for the {@link Matcher} associated with the provided {@link
+   * NotMatches} annotation. This roundabout solution is recommended and explained by {@link
+   * Element#getAnnotation(Class)}.
    */
   static Class<? extends Matcher<? super ExpressionTree>> getValue(NotMatches matches) {
     String name;
@@ -626,7 +663,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     }
     try {
       return asSubclass(Class.forName(name), new TypeToken<Matcher<? super ExpressionTree>>() {});
-    } catch (ClassNotFoundException|ClassCastException e) {
+    } catch (ClassNotFoundException | ClassCastException e) {
       throw new RuntimeException(e);
     }
   }
@@ -659,7 +696,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     }
     return builder.build();
   }
-  
+
   @Override
   public UTry visitTry(TryTree tree, Void v) {
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -670,7 +707,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     for (CatchTree catchTree : tree.getCatches()) {
       catchesBuilder.add(visitCatch(catchTree, null));
     }
-    UBlock finallyBlock = 
+    UBlock finallyBlock =
         (tree.getFinallyBlock() == null) ? null : visitBlock(tree.getFinallyBlock(), null);
     return UTry.create(resources, block, catchesBuilder.build(), finallyBlock);
   }
@@ -678,16 +715,16 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   @Override
   public UCatch visitCatch(CatchTree tree, Void v) {
     return UCatch.create(
-        visitVariable(tree.getParameter(), null),
-        visitBlock(tree.getBlock(), null));
+        visitVariable(tree.getParameter(), null), visitBlock(tree.getBlock(), null));
   }
 
-  @Nullable 
+  @Nullable
   private PlaceholderMethod placeholder(@Nullable ExpressionTree expr) {
-    Map<MethodSymbol, PlaceholderMethod> placeholderMethods = 
+    Map<MethodSymbol, PlaceholderMethod> placeholderMethods =
         context.get(RefasterRuleBuilderScanner.PLACEHOLDER_METHODS_KEY);
-    return (placeholderMethods != null && expr != null) 
-        ? placeholderMethods.get(ASTHelpers.getSymbol(expr)) : null;
+    return (placeholderMethods != null && expr != null)
+        ? placeholderMethods.get(ASTHelpers.getSymbol(expr))
+        : null;
   }
 
   @Override
@@ -695,8 +732,10 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     PlaceholderMethod placeholderMethod = placeholder(tree.getExpression());
     if (placeholderMethod != null && placeholderMethod.returnType().equals(UPrimitiveType.VOID)) {
       MethodInvocationTree invocation = (MethodInvocationTree) tree.getExpression();
-      return UPlaceholderStatement.create(placeholderMethod,
-          templateExpressions(invocation.getArguments()), ControlFlowVisitor.Result.NEVER_EXITS);
+      return UPlaceholderStatement.create(
+          placeholderMethod,
+          templateExpressions(invocation.getArguments()),
+          ControlFlowVisitor.Result.NEVER_EXITS);
     }
     return UExpressionStatement.create(template(tree.getExpression()));
   }
@@ -706,12 +745,12 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     PlaceholderMethod placeholderMethod = placeholder(tree.getExpression());
     if (placeholderMethod != null) {
       MethodInvocationTree invocation = (MethodInvocationTree) tree.getExpression();
-      return UPlaceholderStatement.create(placeholderMethod, 
-          templateExpressions(invocation.getArguments()), 
+      return UPlaceholderStatement.create(
+          placeholderMethod,
+          templateExpressions(invocation.getArguments()),
           ControlFlowVisitor.Result.ALWAYS_RETURNS);
     }
-    return UReturn.create(
-        (tree.getExpression() == null) ? null : template(tree.getExpression()));
+    return UReturn.create((tree.getExpression() == null) ? null : template(tree.getExpression()));
   }
 
   @Override
@@ -775,21 +814,19 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   public UEnhancedForLoop visitEnhancedForLoop(EnhancedForLoopTree tree, Void v) {
     return UEnhancedForLoop.create(
         visitVariable(tree.getVariable(), null),
-        template(tree.getExpression()), 
+        template(tree.getExpression()),
         template(tree.getStatement()));
   }
 
   @Override
   public USynchronized visitSynchronized(SynchronizedTree tree, Void v) {
-    return USynchronized.create(
-        template(tree.getExpression()),
-        visitBlock(tree.getBlock(), null));
+    return USynchronized.create(template(tree.getExpression()), visitBlock(tree.getBlock(), null));
   }
 
   @Override
   public UIf visitIf(IfTree tree, Void v) {
     return UIf.create(
-        template(tree.getCondition()), 
+        template(tree.getCondition()),
         template(tree.getThenStatement()),
         (tree.getElseStatement() == null) ? null : template(tree.getElseStatement()));
   }
@@ -819,68 +856,70 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     return builder.build();
   }
 
-  private final Type.Visitor<UType, Void> typeTemplater = new Types.SimpleVisitor<UType, Void>() {
-    private final Map<TypeSymbol, UTypeVar> typeVariables = new HashMap<>();
+  private final Type.Visitor<UType, Void> typeTemplater =
+      new Types.SimpleVisitor<UType, Void>() {
+        private final Map<TypeSymbol, UTypeVar> typeVariables = new HashMap<>();
 
-    @Override
-    public UType visitType(Type type, Void v) {
-      if (UPrimitiveType.isDeFactoPrimitive(type.getKind())) {
-        return UPrimitiveType.create(type.getKind());
-      } else {
-        throw new IllegalArgumentException(
-            "Refaster does not currently support syntax " + type.getKind());
-      }
-    }
+        @Override
+        public UType visitType(Type type, Void v) {
+          if (UPrimitiveType.isDeFactoPrimitive(type.getKind())) {
+            return UPrimitiveType.create(type.getKind());
+          } else {
+            throw new IllegalArgumentException(
+                "Refaster does not currently support syntax " + type.getKind());
+          }
+        }
 
-    @Override
-    public UArrayType visitArrayType(ArrayType type, Void v) {
-      return UArrayType.create(type.getComponentType().accept(this, null));
-    }
+        @Override
+        public UArrayType visitArrayType(ArrayType type, Void v) {
+          return UArrayType.create(type.getComponentType().accept(this, null));
+        }
 
-    @Override
-    public UMethodType visitMethodType(MethodType type, Void v) {
-      return UMethodType.create(
-          type.getReturnType().accept(this, null), templateTypes(type.getParameterTypes()));
-    }
+        @Override
+        public UMethodType visitMethodType(MethodType type, Void v) {
+          return UMethodType.create(
+              type.getReturnType().accept(this, null), templateTypes(type.getParameterTypes()));
+        }
 
-    @Override
-    public UType visitClassType(ClassType type, Void v) {
-      if (type instanceof IntersectionClassType) {
-        return UIntersectionClassType.create(
-            templateTypes(((IntersectionClassType) type).getComponents()));
-      }
-      return UClassType.create(
-          type.tsym.getQualifiedName().toString(), templateTypes(type.getTypeArguments()));
-    }
+        @Override
+        public UType visitClassType(ClassType type, Void v) {
+          if (type instanceof IntersectionClassType) {
+            return UIntersectionClassType.create(
+                templateTypes(((IntersectionClassType) type).getComponents()));
+          }
+          return UClassType.create(
+              type.tsym.getQualifiedName().toString(), templateTypes(type.getTypeArguments()));
+        }
 
-    @Override
-    public UWildcardType visitWildcardType(WildcardType type, Void v) {
-      return UWildcardType.create(type.kind, type.type.accept(this, null));
-    }
+        @Override
+        public UWildcardType visitWildcardType(WildcardType type, Void v) {
+          return UWildcardType.create(type.kind, type.type.accept(this, null));
+        }
 
-    @Override
-    public UTypeVar visitTypeVar(TypeVar type, Void v) {
-      /*
-       * In order to handle recursively bounded type variables without a stack overflow, we first
-       * cache a type var with no bounds, then we template the bounds.
-       */
-      TypeSymbol tsym = type.asElement();
-      if (typeVariables.containsKey(tsym)) {
-        return typeVariables.get(tsym);
-      }
-      UTypeVar var = UTypeVar.create(tsym.getSimpleName().toString());
-      typeVariables.put(tsym, var); // so the type variable can be used recursively in the bounds
-      var.setLowerBound(type.getLowerBound().accept(this, null));
-      var.setUpperBound(type.getUpperBound().accept(this, null));
-      return var;
-    }
+        @Override
+        public UTypeVar visitTypeVar(TypeVar type, Void v) {
+          /*
+           * In order to handle recursively bounded type variables without a stack overflow, we first
+           * cache a type var with no bounds, then we template the bounds.
+           */
+          TypeSymbol tsym = type.asElement();
+          if (typeVariables.containsKey(tsym)) {
+            return typeVariables.get(tsym);
+          }
+          UTypeVar var = UTypeVar.create(tsym.getSimpleName().toString());
+          typeVariables.put(
+              tsym, var); // so the type variable can be used recursively in the bounds
+          var.setLowerBound(type.getLowerBound().accept(this, null));
+          var.setUpperBound(type.getUpperBound().accept(this, null));
+          return var;
+        }
 
-    @Override
-    public UForAll visitForAll(ForAll type, Void v) {
-      List<UTypeVar> vars = cast(templateTypes(type.getTypeVariables()), UTypeVar.class);
-      return UForAll.create(vars, type.qtype.accept(this, null));
-    }
-  };
+        @Override
+        public UForAll visitForAll(ForAll type, Void v) {
+          List<UTypeVar> vars = cast(templateTypes(type.getTypeVariables()), UTypeVar.class);
+          return UForAll.create(vars, type.qtype.accept(this, null));
+        }
+      };
 
   @SuppressWarnings("unchecked")
   public static ImmutableClassToInstanceMap<Annotation> annotationMap(Symbol symbol) {
@@ -889,9 +928,10 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
       Name qualifiedAnnotationType =
           ((TypeElement) compound.getAnnotationType().asElement()).getQualifiedName();
       try {
-        Class<? extends Annotation> annotationClazz = 
+        Class<? extends Annotation> annotationClazz =
             Class.forName(qualifiedAnnotationType.toString()).asSubclass(Annotation.class);
-        builder.put((Class) annotationClazz,
+        builder.put(
+            (Class) annotationClazz,
             AnnotationProxyMaker.generateAnnotation(compound, annotationClazz));
       } catch (ClassNotFoundException e) {
         throw new IllegalArgumentException("Unrecognized annotation type", e);

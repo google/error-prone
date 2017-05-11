@@ -28,8 +28,8 @@ import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 
 /**
- * Matches an instance method like {@link Collection#removeAll}, for which we need to extract
- * the type argument to the method argument.
+ * Matches an instance method like {@link Collection#removeAll}, for which we need to extract the
+ * type argument to the method argument.
  */
 class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
 
@@ -42,15 +42,14 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
 
   /**
    * @param receiverTypeName The fully-qualified name of the type of the method receiver whose
-   *        descendants to match on
+   *     descendants to match on
    * @param signature The signature of the method to match on
    * @param receiverTypeArgIndex The index of the type argument that should match the method
-   *        argument
+   *     argument
    * @param methodArgIndex The index of the method argument whose type argument we should extract
-   * @param methodArgTypeName The fully-qualified name of the type of the method argument whose
-   *        type argument we should extract
-   * @param methodArgTypeArgIndex The index of the type argument to extract from the method
-   *        argument
+   * @param methodArgTypeName The fully-qualified name of the type of the method argument whose type
+   *     argument we should extract
+   * @param methodArgTypeArgIndex The index of the type argument to extract from the method argument
    */
   public TypeArgOfMethodArgMatcher(
       String receiverTypeName,

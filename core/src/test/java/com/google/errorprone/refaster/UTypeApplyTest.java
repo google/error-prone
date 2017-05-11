@@ -32,25 +32,31 @@ public class UTypeApplyTest extends AbstractUTreeTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UTypeApply.create(
-            UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.String")))
-        .addEqualityGroup(UTypeApply.create(
-            UClassIdent.create("java.util.Set"), UClassIdent.create("java.lang.String")))
-        .addEqualityGroup(UTypeApply.create(
-            UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.Integer")))
+        .addEqualityGroup(
+            UTypeApply.create(
+                UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.String")))
+        .addEqualityGroup(
+            UTypeApply.create(
+                UClassIdent.create("java.util.Set"), UClassIdent.create("java.lang.String")))
+        .addEqualityGroup(
+            UTypeApply.create(
+                UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.Integer")))
         .testEquals();
   }
 
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UTypeApply.create(
-        UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.String")));
+    SerializableTester.reserializeAndAssert(
+        UTypeApply.create(
+            UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.String")));
   }
 
   @Test
   public void inline() {
     ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
-    assertInlines("List<String>", UTypeApply.create(
-        UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.String")));
+    assertInlines(
+        "List<String>",
+        UTypeApply.create(
+            UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.String")));
   }
 }

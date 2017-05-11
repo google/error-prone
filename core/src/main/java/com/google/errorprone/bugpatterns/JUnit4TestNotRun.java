@@ -103,12 +103,11 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
    *       {@code @BeforeClass}, or {@code @AfterClass},
    *   <li>The enclosing class has an {@code @RunWith} annotation and does not extend TestCase. This
    *       marks that the test is intended to run with JUnit 4, and
-   *   <li> Either:
+   *   <li>Either:
    *       <ol type="a">
    *         <li>The method body contains a method call with a name that contains "assert",
    *             "verify", "check", "fail", or "expect".
    *       </ol>
-   *
    * </ol>
    */
   @Override
@@ -169,7 +168,6 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
             },
             null);
   }
-
 
   /**
    * Returns a finding for the given method tree containing fixes:

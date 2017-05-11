@@ -58,9 +58,9 @@ public final class Inliner {
   private final Set<String> importsToAdd;
   private final Set<String> staticImportsToAdd;
   public final Bindings bindings;
-  
+
   private final Map<String, TypeVar> typeVarCache;
-  
+
   public Inliner(Context context, Bindings bindings) {
     this.context = new SubContext(context);
     this.bindings = new Bindings(bindings).unmodifiable();
@@ -74,12 +74,12 @@ public final class Inliner {
       importsToAdd.add(qualifiedImport);
     }
   }
-  
+
   public void addStaticImport(String qualifiedImport) {
     staticImportsToAdd.add(qualifiedImport);
   }
-  
-  public ClassSymbol resolveClass(CharSequence qualifiedClass) 
+
+  public ClassSymbol resolveClass(CharSequence qualifiedClass)
       throws CouldNotResolveImportException {
     try {
       Symbol symbol =
@@ -94,7 +94,7 @@ public final class Inliner {
       throw new CouldNotResolveImportException(qualifiedClass);
     }
   }
-  
+
   public Context getContext() {
     return context;
   }
@@ -118,7 +118,7 @@ public final class Inliner {
   public TreeMaker maker() {
     return TreeMaker.instance(context);
   }
-  
+
   public Infer infer() {
     return Infer.instance(context);
   }
@@ -166,10 +166,8 @@ public final class Inliner {
           return inliner.maker().TypeArray(visit(type.getComponentType(), inliner));
         }
       };
-  
-  /**
-   * Inlines the syntax tree representing the specified type.
-   */
+
+  /** Inlines the syntax tree representing the specified type. */
   public JCExpression inlineAsTree(Type type) {
     return INLINE_AS_TREE.visit(type, this);
   }
@@ -181,21 +179,20 @@ public final class Inliner {
     }
     return value;
   }
-  
+
   public <V> Optional<V> getOptionalBinding(Key<V> key) {
     return Optional.fromNullable(bindings.getBinding(key));
   }
 
-  public <R> com.sun.tools.javac.util.List<R>
-      inlineList(Iterable<? extends Inlineable<? extends R>> elements)
-      throws CouldNotResolveImportException {
+  public <R> com.sun.tools.javac.util.List<R> inlineList(
+      Iterable<? extends Inlineable<? extends R>> elements) throws CouldNotResolveImportException {
     ListBuffer<R> result = new ListBuffer<>();
     for (Inlineable<? extends R> e : elements) {
       if (e instanceof URepeated) {
         // URepeated is bound to a list of expressions.
         URepeated repeated = (URepeated) e;
         for (JCExpression expr : getBinding(repeated.key())) {
-          @SuppressWarnings("unchecked") 
+          @SuppressWarnings("unchecked")
           // URepeated is an Inlineable<JCExpression>, so if e is also an Inlineable<? extends R>,
           // then R must be ? super JCExpression.
           R r = (R) expr;
@@ -207,15 +204,15 @@ public final class Inliner {
     }
     return result.toList();
   }
-  
+
   public Set<String> getImportsToAdd() {
     return ImmutableSet.copyOf(importsToAdd);
   }
-  
+
   public Set<String> getStaticImportsToAdd() {
     return ImmutableSet.copyOf(staticImportsToAdd);
   }
-  
+
   public TypeVar inlineAsVar(UTypeVar var) throws CouldNotResolveImportException {
     /*
      * In order to handle recursively bounded type variables without a stack overflow,
@@ -235,7 +232,7 @@ public final class Inliner {
     typeVar.lower = var.getLowerBound().inline(this);
     return typeVar;
   }
-  
+
   Type inlineTypeVar(UTypeVar var) throws CouldNotResolveImportException {
     Optional<TypeWithExpression> typeVarBinding = getOptionalBinding(var.key());
     if (typeVarBinding.isPresent()) {

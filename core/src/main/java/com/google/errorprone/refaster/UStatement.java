@@ -27,11 +27,11 @@ import java.util.List;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-public interface UStatement extends Serializable, StatementTree,
-    Function<UnifierWithUnconsumedStatements, Choice<UnifierWithUnconsumedStatements>> {
-  /**
-   * Tuple of a Unifier and a list of statements that are still waiting to be matched.
-   */
+public interface UStatement
+    extends Serializable,
+        StatementTree,
+        Function<UnifierWithUnconsumedStatements, Choice<UnifierWithUnconsumedStatements>> {
+  /** Tuple of a Unifier and a list of statements that are still waiting to be matched. */
   @AutoValue
   public abstract static class UnifierWithUnconsumedStatements {
     public static UnifierWithUnconsumedStatements create(

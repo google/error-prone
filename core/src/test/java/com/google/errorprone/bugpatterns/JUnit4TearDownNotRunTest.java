@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author glorioso@google.com (Nick Glorioso)
- */
+/** @author glorioso@google.com (Nick Glorioso) */
 @RunWith(JUnit4.class)
 public class JUnit4TearDownNotRunTest {
 
@@ -42,8 +40,7 @@ public class JUnit4TearDownNotRunTest {
 
   @Test
   public void testPositiveCase_customAnnotation() throws Exception {
-    compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCaseCustomAfter.java")
-        .doTest();
+    compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCaseCustomAfter.java").doTest();
   }
 
   @Test

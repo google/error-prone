@@ -26,8 +26,7 @@ import javax.tools.JavaFileObject;
 /**
  * An Error Prone compiler that matches the interface of {@link com.sun.tools.javac.main.Main}.
  *
- * <p>Unlike {@link BaseErrorProneCompiler}, it enables all built-in Error Prone checks by
- * default.
+ * <p>Unlike {@link BaseErrorProneCompiler}, it enables all built-in Error Prone checks by default.
  *
  * <p>Used by plexus-java-compiler-errorprone.
  *
@@ -36,8 +35,8 @@ import javax.tools.JavaFileObject;
 public class ErrorProneCompiler {
 
   /**
-   * Entry point for compiling Java code with error-prone enabled.
-   * All default checks are run, and the compile fails if they find a bug.
+   * Entry point for compiling Java code with error-prone enabled. All default checks are run, and
+   * the compile fails if they find a bug.
    *
    * @param args the same args which could be passed to javac on the command line
    */

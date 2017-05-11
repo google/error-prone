@@ -37,19 +37,19 @@ public class UTypeVarTest {
     UType objectType = UClassType.create("java.lang.Object", ImmutableList.<UType>of());
     UType charSequenceType = UClassType.create("java.lang.CharSequence", ImmutableList.<UType>of());
     UType stringType = UClassType.create("java.lang.String", ImmutableList.<UType>of());
-    
+
     new EqualsTester()
-        .addEqualityGroup(UTypeVar.create("T", nullType, charSequenceType)) 
-            // T extends CharSequence
-        .addEqualityGroup(UTypeVar.create("T", stringType, charSequenceType)) 
-            // T extends CharSequence super String
+        .addEqualityGroup(UTypeVar.create("T", nullType, charSequenceType))
+        // T extends CharSequence
+        .addEqualityGroup(UTypeVar.create("T", stringType, charSequenceType))
+        // T extends CharSequence super String
         .addEqualityGroup(UTypeVar.create("T", nullType, objectType))
-            // T extends Object
+        // T extends Object
         .addEqualityGroup(UTypeVar.create("E", nullType, charSequenceType))
-            // E extends CharSequence
+        // E extends CharSequence
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     UType nullType = UPrimitiveType.create(TypeKind.NULL);

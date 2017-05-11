@@ -22,12 +22,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Desired "before" version of a refactoring. Corresponds to a matching method annotated with
- * {@link AfterTemplate}.
+ * Desired "before" version of a refactoring. Corresponds to a matching method annotated with {@link
+ * AfterTemplate}.
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface BeforeTemplate {
-}
+public @interface BeforeTemplate {}

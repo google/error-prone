@@ -25,7 +25,7 @@ import javax.lang.model.element.TypeElement;
 
 /**
  * A minimal annotation processor that claims all annotations and does nothing else.
- * 
+ *
  * @author Eddie Aftandilian (eaftan@google.com)
  */
 @SupportedAnnotationTypes("*")
@@ -34,6 +34,7 @@ public class NullAnnotationProcessor extends AbstractProcessor {
   public SourceVersion getSupportedSourceVersion() {
     return SourceVersion.latest();
   }
+
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     return true;

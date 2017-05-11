@@ -18,12 +18,8 @@ package com.google.errorprone.apply;
 
 import java.io.IOException;
 
-/**
- * @author sjnickerson@google.com (Simon Nickerson)
- *
- */
+/** @author sjnickerson@google.com (Simon Nickerson) */
 public interface FileSource {
 
   SourceFile readFile(String path) throws IOException;
-  
 }

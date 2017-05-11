@@ -31,8 +31,8 @@ import com.sun.tools.javac.code.Type;
 class InstanceMethodMatcherImpl extends MethodMatcher implements InstanceMethodMatcher {
 
   @Override
-  protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
-      VisitorState state) {
+  protected Optional<MatchState> matchResult(
+      ExpressionTree item, MatchState method, VisitorState state) {
     if (method.sym().isStatic()) {
       return Optional.absent();
     }
@@ -68,7 +68,7 @@ class InstanceMethodMatcherImpl extends MethodMatcher implements InstanceMethodM
   public MethodClassMatcherImpl onDescendantOfAny(Iterable<String> classTypes) {
     return new MethodClassMatcherImpl(this, TypePredicates.isDescendantOfAny(classTypes));
   }
-  
+
   @Override
   public MethodClassMatcher onDescendantOfAny(String... classTypes) {
     return onDescendantOfAny(ImmutableList.copyOf(classTypes));

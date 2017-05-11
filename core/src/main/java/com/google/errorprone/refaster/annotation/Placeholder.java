@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
 /**
  * Annotation to indicate a placeholder method.
  *
- * <p>A placeholder method is an abstract method in a Refaster template class which can represent
- * an arbitrary expression (if the return type is nonvoid), or zero or more statements
- * (if the return type is void), in terms of its arguments.  For example,
+ * <p>A placeholder method is an abstract method in a Refaster template class which can represent an
+ * arbitrary expression (if the return type is nonvoid), or zero or more statements (if the return
+ * type is void), in terms of its arguments. For example,
  *
  * <pre><code>
  * abstract class ComputeIfAbsent&lt;K, V&gt; {
@@ -43,9 +43,9 @@ import java.lang.annotation.Target;
  * }
  * </code></pre>
  *
- * <p>Here, {@code computeValue} represents an arbitrary expression in terms of {@code key},
- * and the {@code @AfterTemplate} rewrites that same expression in terms of the parameter of a
- * lambda expression.
+ * <p>Here, {@code computeValue} represents an arbitrary expression in terms of {@code key}, and the
+ * {@code @AfterTemplate} rewrites that same expression in terms of the parameter of a lambda
+ * expression.
  *
  * <p>For a multi-line example, consider
  *
@@ -71,8 +71,8 @@ import java.lang.annotation.Target;
  * }
  * </code></pre>
  *
- * <p>Here, {@code process} is any block, though it must refer to {@code resource} in some way;
- * it is not permitted to reassign the contents of {@code resource}.
+ * <p>Here, {@code process} is any block, though it must refer to {@code resource} in some way; it
+ * is not permitted to reassign the contents of {@code resource}.
  *
  * <p>Placeholder methods are not permitted to refer to any local variables or parameters of the
  * {@code @BeforeTemplate} that are not passed to them as arguments, and must currently contain

@@ -32,13 +32,15 @@ public class UConditionalTest extends AbstractUTreeTest {
 
   @Test
   public void match() {
-    assertUnifies("true ? -1 : 1",
+    assertUnifies(
+        "true ? -1 : 1",
         UConditional.create(ULiteral.booleanLit(true), ULiteral.intLit(-1), ULiteral.intLit(1)));
   }
 
   @Test
   public void inline() {
-    assertInlines("true ? -1 : 1", 
+    assertInlines(
+        "true ? -1 : 1",
         UConditional.create(ULiteral.booleanLit(true), ULiteral.intLit(-1), ULiteral.intLit(1)));
   }
 
@@ -55,7 +57,7 @@ public class UConditionalTest extends AbstractUTreeTest {
         .addEqualityGroup(UConditional.create(falseLit, negOneLit, oneLit))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(

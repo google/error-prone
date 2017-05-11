@@ -308,7 +308,6 @@ public class SuggestedFixes {
         fix);
   }
 
-
   /** Replaces the leaf doctree in the given path with {@code replacement}. */
   public static void replaceDocTree(
       SuggestedFix.Builder fix, DocTreePath docPath, String replacement) {

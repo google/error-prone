@@ -27,7 +27,7 @@ import com.sun.tools.javac.code.Type.IntersectionClassType;
 
 /**
  * {@code UType} representation of an {@code IntersectionClassType}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -35,12 +35,13 @@ public abstract class UIntersectionClassType extends UType {
   static UIntersectionClassType create(Iterable<? extends UType> bounds) {
     return new AutoValue_UIntersectionClassType(ImmutableList.copyOf(bounds));
   }
-  
+
   abstract ImmutableList<UType> bounds();
 
   @Override
   public IntersectionClassType inline(Inliner inliner) throws CouldNotResolveImportException {
-    return new IntersectionClassType(inliner.inlineList(bounds()),
+    return new IntersectionClassType(
+        inliner.inlineList(bounds()),
         new ClassSymbol(COMPOUND, inliner.asName("intersection"), inliner.symtab().noSymbol),
         false);
   }

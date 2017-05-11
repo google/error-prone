@@ -74,10 +74,10 @@ public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatc
    * Create fixes for invalid assertions.
    *
    * <ul>
-   * <li>Rewrite `verify(mock.bar())` to `verify(mock).bar()`
-   * <li>Rewrite `verify(mock.bar(), times(N))` to `verify(mock, times(N)).bar()`
-   * <li>Rewrite `verify(mock, never())` to `verifyZeroInteractions(mock)`
-   * <li>Finally, offer to delete the mock statement.
+   *   <li>Rewrite `verify(mock.bar())` to `verify(mock).bar()`
+   *   <li>Rewrite `verify(mock.bar(), times(N))` to `verify(mock, times(N)).bar()`
+   *   <li>Rewrite `verify(mock, never())` to `verifyZeroInteractions(mock)`
+   *   <li>Finally, offer to delete the mock statement.
    * </ul>
    */
   private void buildFix(

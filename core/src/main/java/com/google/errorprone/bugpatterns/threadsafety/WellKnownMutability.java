@@ -230,8 +230,7 @@ final class WellKnownMutability {
   }
 
   /**
-   * Compile-time equivalent of
-   * {@code com.google.io.protocol.ProtocolSupport#isProto2MessageClass}.
+   * Compile-time equivalent of {@code com.google.io.protocol.ProtocolSupport#isProto2MessageClass}.
    */
   static boolean isProto2MessageClass(VisitorState state, Type type) {
     checkNotNull(type);
@@ -240,8 +239,8 @@ final class WellKnownMutability {
   }
 
   /**
-   * Compile-time equivalent of
-   * {@code com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass}.
+   * Compile-time equivalent of {@code
+   * com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass}.
    */
   static boolean isProto2MutableMessageClass(VisitorState state, Type type) {
     checkNotNull(type);

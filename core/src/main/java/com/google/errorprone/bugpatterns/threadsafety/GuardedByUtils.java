@@ -27,9 +27,7 @@ import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 public class GuardedByUtils {
   static String getGuardValue(Tree tree) {
     {
@@ -66,17 +64,17 @@ public class GuardedByUtils {
     }
     return exp;
   }
-  
 
   @AutoValue
   abstract static class GuardedByValidationResult {
     abstract String message();
+
     abstract Boolean isValid();
-    
+
     static GuardedByValidationResult invalid(String message) {
       return new AutoValue_GuardedByUtils_GuardedByValidationResult(message, false);
     }
-    
+
     static GuardedByValidationResult ok() {
       return new AutoValue_GuardedByUtils_GuardedByValidationResult("", true);
     }
@@ -100,11 +98,11 @@ public class GuardedByUtils {
       return GuardedByValidationResult.ok();
     }
 
-    boolean staticGuard = boundGuard.get().kind() == GuardedByExpression.Kind.CLASS_LITERAL
-        || (boundGuard.get().sym() != null && boundGuard.get().sym().isStatic());
+    boolean staticGuard =
+        boundGuard.get().kind() == GuardedByExpression.Kind.CLASS_LITERAL
+            || (boundGuard.get().sym() != null && boundGuard.get().sym().isStatic());
     if (treeSym.isStatic() && !staticGuard) {
-      return GuardedByValidationResult.invalid(
-          "static member guarded by instance");
+      return GuardedByValidationResult.invalid("static member guarded by instance");
     }
 
     return GuardedByValidationResult.ok();

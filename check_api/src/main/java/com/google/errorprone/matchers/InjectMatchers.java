@@ -59,7 +59,6 @@ public final class InjectMatchers {
     return (Matcher<T>) HAS_PROVIDES_ANNOTATION;
   }
 
-
   public static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
   public static final String ASSISTED_INJECT_ANNOTATION =
       "com.google.inject.assistedinject.AssistedInject";

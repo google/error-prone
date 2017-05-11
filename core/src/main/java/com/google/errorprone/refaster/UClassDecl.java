@@ -36,7 +36,7 @@ import javax.lang.model.element.Name;
 
 /**
  * {@code UTree} representation of a {@code ClassTree} for anonymous inner class matching.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -44,22 +44,23 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
   public static UClassDecl create(UMethodDecl... members) {
     return create(ImmutableList.copyOf(members));
   }
-  
+
   public static UClassDecl create(Iterable<UMethodDecl> members) {
     return new AutoValue_UClassDecl(ImmutableList.copyOf(members));
   }
-  
+
   @AutoValue
   abstract static class UnifierWithRemainingMembers {
     static UnifierWithRemainingMembers create(
         Unifier unifier, Iterable<UMethodDecl> remainingMembers) {
-      return new AutoValue_UClassDecl_UnifierWithRemainingMembers(unifier,
-          ImmutableList.copyOf(remainingMembers));
+      return new AutoValue_UClassDecl_UnifierWithRemainingMembers(
+          unifier, ImmutableList.copyOf(remainingMembers));
     }
-    
+
     abstract Unifier unifier();
+
     abstract ImmutableList<UMethodDecl> remainingMembers();
-    
+
     static final Function<Unifier, UnifierWithRemainingMembers> withRemaining(
         final Iterable<UMethodDecl> remainingMembers) {
       return new Function<Unifier, UnifierWithRemainingMembers>() {
@@ -70,44 +71,47 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
       };
     }
   }
-  
-  private static Function<UnifierWithRemainingMembers, Choice<UnifierWithRemainingMembers>>
-      match(final Tree tree) {
+
+  private static Function<UnifierWithRemainingMembers, Choice<UnifierWithRemainingMembers>> match(
+      final Tree tree) {
     return new Function<UnifierWithRemainingMembers, Choice<UnifierWithRemainingMembers>>() {
       @Override
       public Choice<UnifierWithRemainingMembers> apply(final UnifierWithRemainingMembers state) {
         final ImmutableList<UMethodDecl> currentMembers = state.remainingMembers();
-        Choice<Integer> methodChoice = Choice.from(ContiguousSet.create(
-            Range.closedOpen(0, currentMembers.size()), DiscreteDomain.integers()));
+        Choice<Integer> methodChoice =
+            Choice.from(
+                ContiguousSet.create(
+                    Range.closedOpen(0, currentMembers.size()), DiscreteDomain.integers()));
         return methodChoice.thenChoose(
             new Function<Integer, Choice<UnifierWithRemainingMembers>>() {
               @Override
               public Choice<UnifierWithRemainingMembers> apply(Integer i) {
-                ImmutableList<UMethodDecl> remainingMembers = 
+                ImmutableList<UMethodDecl> remainingMembers =
                     new ImmutableList.Builder<UMethodDecl>()
                         .addAll(currentMembers.subList(0, i))
                         .addAll(currentMembers.subList(i + 1, currentMembers.size()))
                         .build();
                 UMethodDecl chosenMethod = currentMembers.get(i);
                 Unifier unifier = state.unifier().fork();
-                /* 
+                /*
                  * If multiple methods use the same parameter name, preserve the last parameter
                  * name from the target code.  For example, given a @BeforeTemplate with
-                 * 
+                 *
                  *    int get(int index) {...}
                  *    int set(int index, int value) {...}
-                 *    
+                 *
                  * and target code with the lines
-                 * 
+                 *
                  *    int get(int i) {...}
                  *    int set(int j) {...}
-                 *    
+                 *
                  * then use "j" in place of index in the @AfterTemplates.
                  */
                 for (UVariableDecl param : chosenMethod.getParameters()) {
                   unifier.clearBinding(param.key());
                 }
-                return chosenMethod.unify(tree, unifier)
+                return chosenMethod
+                    .unify(tree, unifier)
                     .transform(UnifierWithRemainingMembers.withRemaining(remainingMembers));
               }
             });
@@ -117,8 +121,8 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
 
   @Override
   public Choice<Unifier> visitClass(ClassTree node, Unifier unifier) {
-    Choice<UnifierWithRemainingMembers> path = Choice.of(
-        UnifierWithRemainingMembers.create(unifier, getMembers()));
+    Choice<UnifierWithRemainingMembers> path =
+        Choice.of(UnifierWithRemainingMembers.create(unifier, getMembers()));
     for (Tree targetMember : node.getMembers()) {
       if (!(targetMember instanceof MethodTree)
           || ((MethodTree) targetMember).getReturnType() != null) {
@@ -126,24 +130,28 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
         path = path.thenChoose(match(targetMember));
       }
     }
-    return path.thenOption(new Function<UnifierWithRemainingMembers, Optional<Unifier>>() {
-      @Override
-      public Optional<Unifier> apply(UnifierWithRemainingMembers state) {
-        if (state.remainingMembers().isEmpty()) {
-          return Optional.of(state.unifier());
-        } else {
-          return Optional.absent();
-        }
-      }});
+    return path.thenOption(
+        new Function<UnifierWithRemainingMembers, Optional<Unifier>>() {
+          @Override
+          public Optional<Unifier> apply(UnifierWithRemainingMembers state) {
+            if (state.remainingMembers().isEmpty()) {
+              return Optional.of(state.unifier());
+            } else {
+              return Optional.absent();
+            }
+          }
+        });
   }
 
   @Override
   public JCClassDecl inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().AnonymousClassDef(
-        inliner.maker().Modifiers(0L),
-        List.convert(JCTree.class, inliner.inlineList(getMembers())));
+    return inliner
+        .maker()
+        .AnonymousClassDef(
+            inliner.maker().Modifiers(0L),
+            List.convert(JCTree.class, inliner.inlineList(getMembers())));
   }
-  
+
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
     return visitor.visitClass(this, data);
@@ -181,5 +189,4 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
   public ImmutableList<TypeParameterTree> getTypeParameters() {
     return ImmutableList.of();
   }
-
 }

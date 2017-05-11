@@ -27,20 +27,24 @@ import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 
 /**
  * Transfer function for {@link TrustingNullnessAnalysis}. It "trusts" annotations, meaning:
+ *
  * <ul>
- * <li>The parameters of the analyzed method are assumed non-null unless annotated {@code Nullable}.
- * <li>Field reads and method calls are assumed to return non-null unless annotated.
+ *   <li>The parameters of the analyzed method are assumed non-null unless annotated {@code
+ *       Nullable}.
+ *   <li>Field reads and method calls are assumed to return non-null unless annotated.
  * </ul>
  *
  * <p>This transfer function also uses {@link Nullness#NONNULL} as its default, which means:
+ *
  * <ul>
- * <li>all array reads are assumed non-null.  In the absence of Java 8 type annotations that matches
- *     what we'll do for the result of {@link List#get} etc. Will need to revisit with Java 8.
- * <li>we'll assume non-null for local variables we don't have any information about. Since we seed
- *     {@link #initialStore} based on annotations on method parameters, the only known source of
- *     unknown locals would be "local variables" from outer scopes accessed in anonymous and local
- *     inner classes.
- * <li>in the case of missing method or field symbols, non-null is assumed as well.
+ *   <li>all array reads are assumed non-null. In the absence of Java 8 type annotations that
+ *       matches what we'll do for the result of {@link List#get} etc. Will need to revisit with
+ *       Java 8.
+ *   <li>we'll assume non-null for local variables we don't have any information about. Since we
+ *       seed {@link #initialStore} based on annotations on method parameters, the only known source
+ *       of unknown locals would be "local variables" from outer scopes accessed in anonymous and
+ *       local inner classes.
+ *   <li>in the case of missing method or field symbols, non-null is assumed as well.
  * </ul>
  */
 // TODO(kmb): Respect type annotations on arrays
@@ -80,9 +84,7 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     return nullnessFromAnnotations(accessed.symbol);
   }
 
-  /**
-   * Returns nullability based on the presence of a {@code Nullable} annotation.
-   */
+  /** Returns nullability based on the presence of a {@code Nullable} annotation. */
   static Nullness nullnessFromAnnotations(Element element) {
     for (AnnotationMirror anno : element.getAnnotationMirrors()) {
       // Check for Nullable like ReturnValueIsNonNull
@@ -97,8 +99,8 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     INSTANCE;
 
     /**
-     * Returns {@code true} where {@link #nullnessFromAnnotations} would return
-     * {@link Nullness#NONNULL}.
+     * Returns {@code true} where {@link #nullnessFromAnnotations} would return {@link
+     * Nullness#NONNULL}.
      */
     @Override
     public boolean apply(MethodInfo input) {

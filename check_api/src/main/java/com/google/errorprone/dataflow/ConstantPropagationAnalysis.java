@@ -21,18 +21,16 @@ import com.sun.tools.javac.util.Context;
 import org.checkerframework.dataflow.constantpropagation.Constant;
 import org.checkerframework.dataflow.constantpropagation.ConstantPropagationTransfer;
 
-/**
- * An interface to the constant propagation analysis.
- */
+/** An interface to the constant propagation analysis. */
 public final class ConstantPropagationAnalysis {
 
   private static final ConstantPropagationTransfer CONSTANT_PROPAGATION =
       new ConstantPropagationTransfer();
 
   /**
-   * Returns the value of the leaf of {@code exprPath}, if it is determined to be a constant
-   * (always evaluates to the same numeric value), and null otherwise.
-   * Note that returning null does not necessarily mean the expression is *not* a constant.
+   * Returns the value of the leaf of {@code exprPath}, if it is determined to be a constant (always
+   * evaluates to the same numeric value), and null otherwise. Note that returning null does not
+   * necessarily mean the expression is *not* a constant.
    */
   public static Number numberValue(TreePath exprPath, Context context) {
     Constant val = DataFlow.expressionDataflow(exprPath, context, CONSTANT_PROPAGATION);

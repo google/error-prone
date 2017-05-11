@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 
 /**
  * {@code UTree} representation of a {@code TypeParameterTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -37,13 +37,13 @@ abstract class UTypeParameter extends UTree<JCTypeParameter> implements TypePara
   static UTypeParameter create(CharSequence name, UExpression... bounds) {
     return create(name, ImmutableList.copyOf(bounds), ImmutableList.<UAnnotation>of());
   }
-  
-  static UTypeParameter create(CharSequence name, Iterable<? extends UExpression> bounds,
+
+  static UTypeParameter create(
+      CharSequence name,
+      Iterable<? extends UExpression> bounds,
       Iterable<? extends UAnnotation> annotations) {
     return new AutoValue_UTypeParameter(
-        StringName.of(name),
-        ImmutableList.copyOf(bounds),
-        ImmutableList.copyOf(annotations));
+        StringName.of(name), ImmutableList.copyOf(bounds), ImmutableList.copyOf(annotations));
   }
 
   @Override
@@ -67,16 +67,17 @@ abstract class UTypeParameter extends UTree<JCTypeParameter> implements TypePara
 
   @Override
   public JCTypeParameter inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().TypeParameter(getName().inline(inliner),
-        inliner.inlineList(getBounds()));
+    return inliner
+        .maker()
+        .TypeParameter(getName().inline(inliner), inliner.inlineList(getBounds()));
   }
 
   @Override
   @Nullable
   public Choice<Unifier> visitTypeParameter(TypeParameterTree node, @Nullable Unifier unifier) {
-    return getName().unify(node.getName(), unifier)
+    return getName()
+        .unify(node.getName(), unifier)
         .thenChoose(unifications(getBounds(), node.getBounds()))
         .thenChoose(unifications(getAnnotations(), node.getAnnotations()));
   }
-
 }

@@ -54,23 +54,23 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
   severity = ERROR
 )
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
-  /**
-   * Matches when the equals instance method is used to compare two arrays.
-   */
-  private static final Matcher<MethodInvocationTree> instanceEqualsMatcher = Matchers.allOf(
-      instanceMethod().onClass(isArray()).named("equals"),
-      argument(0, Matchers.<ExpressionTree>isArrayType()));
+  /** Matches when the equals instance method is used to compare two arrays. */
+  private static final Matcher<MethodInvocationTree> instanceEqualsMatcher =
+      Matchers.allOf(
+          instanceMethod().onClass(isArray()).named("equals"),
+          argument(0, Matchers.<ExpressionTree>isArrayType()));
 
   /**
    * Matches when the Guava com.google.common.base.Objects#equal or the JDK7
    * java.util.Objects#equals method is used to compare two arrays.
    */
-  private static final Matcher<MethodInvocationTree> staticEqualsMatcher = allOf(
-      anyOf(
-        staticMethod().onClass("com.google.common.base.Objects").named("equal"),
-        staticMethod().onClass("java.util.Objects").named("equals")),
-      argument(0, Matchers.<ExpressionTree>isArrayType()),
-      argument(1, Matchers.<ExpressionTree>isArrayType()));
+  private static final Matcher<MethodInvocationTree> staticEqualsMatcher =
+      allOf(
+          anyOf(
+              staticMethod().onClass("com.google.common.base.Objects").named("equal"),
+              staticMethod().onClass("java.util.Objects").named("equals")),
+          argument(0, Matchers.<ExpressionTree>isArrayType()),
+          argument(1, Matchers.<ExpressionTree>isArrayType()));
 
   /**
    * Suggests replacing with Arrays.equals(a, b). Also adds the necessary import statement for
@@ -90,10 +90,11 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
       return NO_MATCH;
     }
 
-    Fix fix = SuggestedFix.builder()
-        .replace(t, "Arrays.equals(" + arg1 + ", " + arg2 + ")")
-        .addImport("java.util.Arrays")
-        .build();
+    Fix fix =
+        SuggestedFix.builder()
+            .replace(t, "Arrays.equals(" + arg1 + ", " + arg2 + ")")
+            .addImport("java.util.Arrays")
+            .build();
     return describeMatch(t, fix);
   }
 }

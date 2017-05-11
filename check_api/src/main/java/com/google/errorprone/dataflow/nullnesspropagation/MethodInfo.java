@@ -18,13 +18,15 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import java.util.List;
 
-/**
- * Represents a Java method.  Used for custom predicates to match non-null-returning methods.
- */
+/** Represents a Java method. Used for custom predicates to match non-null-returning methods. */
 public interface MethodInfo {
   String clazz();
+
   String method();
+
   List<String> annotations();
+
   boolean isStatic();
+
   boolean isPrimitive();
 }

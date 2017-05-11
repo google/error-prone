@@ -23,13 +23,12 @@ import java.lang.annotation.Target;
 
 /**
  * Indicates that Refaster should, additionally, refactor the negation of this rule and its
- * corresponding before templates. For example, given a {@code BeforeTemplate} with the code
- * {@code str.length() == 0} and an {@code @AfterTemplate @AlsoNegation} with the code
- * {@code str.isEmpty()}, Refaster would also rewrite {@code str.length() != 0} as
- * {@code !str.isEmpty()}.
+ * corresponding before templates. For example, given a {@code BeforeTemplate} with the code {@code
+ * str.length() == 0} and an {@code @AfterTemplate @AlsoNegation} with the code {@code
+ * str.isEmpty()}, Refaster would also rewrite {@code str.length() != 0} as {@code !str.isEmpty()}.
  *
- * <p>If this annotation is applied, all {@code BeforeTemplate} and {@code AfterTemplate}
- * templates must be expression templates with boolean return type.
+ * <p>If this annotation is applied, all {@code BeforeTemplate} and {@code AfterTemplate} templates
+ * must be expression templates with boolean return type.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)

@@ -54,7 +54,7 @@ public class ErrorProneTokens {
     } while (scanner.token().kind != TokenKind.EOF);
     return tokens.build();
   }
-  
+
   /** Returns the tokens for the given source text, including comments. */
   public static ImmutableList<ErrorProneToken> getTokens(String source, Context context) {
     return new ErrorProneTokens(source, context).getTokens();
@@ -95,9 +95,8 @@ public class ErrorProneTokens {
     /**
      * Returns the source position of the character at index {@code index} in the comment text.
      *
-     * <p>The handling of javadoc comments in javac has more logic to skip over leading
-     * whitespace and '*' characters when indexing into doc comments, but we don't need any
-     * of that.
+     * <p>The handling of javadoc comments in javac has more logic to skip over leading whitespace
+     * and '*' characters when indexing into doc comments, but we don't need any of that.
      */
     @Override
     public int getSourcePos(int index) {

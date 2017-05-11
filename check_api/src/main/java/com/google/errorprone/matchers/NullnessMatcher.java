@@ -21,9 +21,7 @@ import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.util.TreePath;
 
-/**
- * Matches an expression based on the result of the nullness dataflow analysis.
- */
+/** Matches an expression based on the result of the nullness dataflow analysis. */
 public class NullnessMatcher implements Matcher<ExpressionTree> {
   private final Nullness expectedNullnessValue;
 

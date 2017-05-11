@@ -33,22 +33,28 @@ public class UBlockTest {
   public void equality() {
     new EqualsTester()
         .addEqualityGroup(UBlock.create())
-        .addEqualityGroup(UBlock.create(
-            UExpressionStatement.create(
-                UMethodInvocation.create(
-                    UStaticIdent.create("java.lang.System", "exit", 
-                        UMethodType.create(UPrimitiveType.VOID, UPrimitiveType.INT)), 
-                    ULiteral.intLit(0)))))
+        .addEqualityGroup(
+            UBlock.create(
+                UExpressionStatement.create(
+                    UMethodInvocation.create(
+                        UStaticIdent.create(
+                            "java.lang.System",
+                            "exit",
+                            UMethodType.create(UPrimitiveType.VOID, UPrimitiveType.INT)),
+                        ULiteral.intLit(0)))))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UBlock.create(
-        UExpressionStatement.create(
-            UMethodInvocation.create(
-                UStaticIdent.create("java.lang.System", "exit", 
-                    UMethodType.create(UPrimitiveType.VOID, UPrimitiveType.INT)), 
-                ULiteral.intLit(0)))));
+    SerializableTester.reserializeAndAssert(
+        UBlock.create(
+            UExpressionStatement.create(
+                UMethodInvocation.create(
+                    UStaticIdent.create(
+                        "java.lang.System",
+                        "exit",
+                        UMethodType.create(UPrimitiveType.VOID, UPrimitiveType.INT)),
+                    ULiteral.intLit(0)))));
   }
 }

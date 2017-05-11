@@ -39,7 +39,7 @@ public abstract class LocalVarBinding {
   public Name getName() {
     return getSymbol().getSimpleName();
   }
-  
+
   @Override
   public String toString() {
     return getSymbol().getSimpleName().toString();

@@ -47,18 +47,20 @@ public abstract class UAnyOf extends UExpression {
       negations.add(expression.negate());
     }
     return create(negations.build());
-  }  
-  
+  }
+
   @Override
   protected Choice<Unifier> defaultAction(final Tree tree, final Unifier unifier) {
-    return Choice.from(expressions()).thenChoose(new Function<UExpression, Choice<Unifier>>() {
-      @Override
-      public Choice<Unifier> apply(UExpression expression) {
-        return expression.unify(UParens.skipParens(tree), unifier.fork());
-      }
-    });
+    return Choice.from(expressions())
+        .thenChoose(
+            new Function<UExpression, Choice<Unifier>>() {
+              @Override
+              public Choice<Unifier> apply(UExpression expression) {
+                return expression.unify(UParens.skipParens(tree), unifier.fork());
+              }
+            });
   }
-  
+
   @Override
   public JCExpression inline(Inliner inliner) throws CouldNotResolveImportException {
     throw new UnsupportedOperationException("anyOf should not appear in an @AfterTemplate");

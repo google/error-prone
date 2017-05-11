@@ -42,9 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class CommandLineFlagTest {
 
@@ -121,22 +119,21 @@ public class CommandLineFlagTest {
             .redirectOutputTo(new PrintWriter(output, true));
   }
 
-
   /* Tests for new-style ("-Xep:") flags */
 
   @Test
   public void malformedFlag() throws Exception {
     ErrorProneTestCompiler compiler = builder.build();
 
-    List<String> badArgs = Arrays.asList(
-        "-Xep:Foo:WARN:jfkdlsdf", // too many parts
-        "-Xep:", // no check name
-        "-Xep:Foo:FJDKFJSD"); // nonexistent severity level
+    List<String> badArgs =
+        Arrays.asList(
+            "-Xep:Foo:WARN:jfkdlsdf", // too many parts
+            "-Xep:", // no check name
+            "-Xep:Foo:FJDKFJSD"); // nonexistent severity level
 
     Result exitCode;
     for (String badArg : badArgs) {
-      exitCode = compiler.compile(new String[]{badArg},
-          Collections.<JavaFileObject>emptyList());
+      exitCode = compiler.compile(new String[] {badArg}, Collections.<JavaFileObject>emptyList());
       assertThat(exitCode).isEqualTo(Result.CMDERR);
       assertThat(output.toString()).contains("invalid flag");
     }
@@ -156,7 +153,7 @@ public class CommandLineFlagTest {
     assertThat(exitCode).isEqualTo(Result.OK);
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
 
-    exitCode = compiler.compile(new String[]{"-Xep:EmptyIf"}, sources);
+    exitCode = compiler.compile(new String[] {"-Xep:EmptyIf"}, sources);
     assertThat(exitCode).isEqualTo(Result.ERROR);
   }
 
@@ -173,7 +170,7 @@ public class CommandLineFlagTest {
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
 
     diagnosticHelper.clearDiagnostics();
-    exitCode = compiler.compile(new String[]{"-Xep:EmptyIf:WARN"}, sources);
+    exitCode = compiler.compile(new String[] {"-Xep:EmptyIf:WARN"}, sources);
     assertThat(exitCode).isEqualTo(Result.OK);
     assertThat(diagnosticHelper.getDiagnostics()).isNotEmpty();
     assertThat(diagnosticHelper.getDiagnostics().toString()).contains("[EmptyIf]");
@@ -190,7 +187,7 @@ public class CommandLineFlagTest {
     assertThat(exitCode).isEqualTo(Result.OK);
     assertThat(diagnosticHelper.getDiagnostics()).isNotEmpty();
 
-    exitCode = compiler.compile(new String[]{"-Xep:WarningChecker:ERROR"}, sources);
+    exitCode = compiler.compile(new String[] {"-Xep:WarningChecker:ERROR"}, sources);
     assertThat(exitCode).isEqualTo(Result.ERROR);
   }
 
@@ -205,7 +202,7 @@ public class CommandLineFlagTest {
     assertThat(exitCode).isEqualTo(Result.ERROR);
 
     diagnosticHelper.clearDiagnostics();
-    exitCode = compiler.compile(new String[]{"-Xep:ErrorChecker:WARN"}, sources);
+    exitCode = compiler.compile(new String[] {"-Xep:ErrorChecker:WARN"}, sources);
     assertThat(exitCode).isEqualTo(Result.OK);
     assertThat(diagnosticHelper.getDiagnostics()).isNotEmpty();
   }
@@ -221,7 +218,7 @@ public class CommandLineFlagTest {
     assertThat(exitCode).isEqualTo(Result.ERROR);
 
     diagnosticHelper.clearDiagnostics();
-    exitCode = compiler.compile(new String[]{"-Xep:DisableableChecker:OFF"}, sources);
+    exitCode = compiler.compile(new String[] {"-Xep:DisableableChecker:OFF"}, sources);
     assertThat(exitCode).isEqualTo(Result.OK);
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
   }
@@ -233,21 +230,22 @@ public class CommandLineFlagTest {
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
-    Result exitCode = compiler.compile(new String[]{"-Xep:NondisableableChecker:OFF"}, sources);
+    Result exitCode = compiler.compile(new String[] {"-Xep:NondisableableChecker:OFF"}, sources);
     assertThat(output.toString()).contains("NondisableableChecker may not be disabled");
     assertThat(exitCode).isEqualTo(Result.CMDERR);
   }
 
   @Test
   public void cantOverrideNonexistentCheck() throws Exception {
-    ErrorProneTestCompiler compiler =  builder.build();
+    ErrorProneTestCompiler compiler = builder.build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
-    List<String> badOptions = Arrays.asList(
-        "-Xep:BogusChecker:ERROR",
-        "-Xep:BogusChecker:WARN",
-        "-Xep:BogusChecker:OFF",
-        "-Xep:BogusChecker");
+    List<String> badOptions =
+        Arrays.asList(
+            "-Xep:BogusChecker:ERROR",
+            "-Xep:BogusChecker:WARN",
+            "-Xep:BogusChecker:OFF",
+            "-Xep:BogusChecker");
 
     for (String badOption : badOptions) {
       Result exitCode = compiler.compile(new String[] {badOption}, sources);
@@ -270,19 +268,19 @@ public class CommandLineFlagTest {
 
   @Test
   public void ignoreUnknownChecksFlagAllowsOverridingUnknownCheck() throws Exception {
-    ErrorProneTestCompiler compiler =  builder.build();
+    ErrorProneTestCompiler compiler = builder.build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
-    List<String> badOptions = Arrays.asList(
-        "-Xep:BogusChecker:ERROR",
-        "-Xep:BogusChecker:WARN",
-        "-Xep:BogusChecker:OFF",
-        "-Xep:BogusChecker");
+    List<String> badOptions =
+        Arrays.asList(
+            "-Xep:BogusChecker:ERROR",
+            "-Xep:BogusChecker:WARN",
+            "-Xep:BogusChecker:OFF",
+            "-Xep:BogusChecker");
 
     for (String badOption : badOptions) {
-      Result exitCode = compiler.compile(
-          new String[]{"-XepIgnoreUnknownCheckNames", badOption},
-          sources);
+      Result exitCode =
+          compiler.compile(new String[] {"-XepIgnoreUnknownCheckNames", badOption}, sources);
       assertThat(exitCode).isEqualTo(Result.OK);
     }
   }

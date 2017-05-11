@@ -160,9 +160,7 @@ public class ErrorProneAnalyzer implements TaskListener {
     }
   }
 
-  /**
-   * Returns true if all declarations inside the given compilation unit have been visited.
-   */
+  /** Returns true if all declarations inside the given compilation unit have been visited. */
   private boolean finishedCompilation(CompilationUnitTree tree) {
     OUTER:
     for (Tree decl : tree.getTypeDecls()) {

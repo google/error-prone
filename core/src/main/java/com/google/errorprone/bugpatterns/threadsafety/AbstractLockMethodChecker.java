@@ -42,14 +42,12 @@ public abstract class AbstractLockMethodChecker extends BugChecker
     implements BugChecker.MethodTreeMatcher {
 
   /**
-   * Returns the lock expressions in the {@code @LockMethod}/{@code @UnlockMethod}
-   * annotation, if any.
+   * Returns the lock expressions in the {@code @LockMethod}/{@code @UnlockMethod} annotation, if
+   * any.
    */
   protected abstract ImmutableList<String> getLockExpressions(MethodTree tree);
 
-  /**
-   * Searches the method body for locks that are acquired/released.
-   */
+  /** Searches the method body for locks that are acquired/released. */
   protected abstract Set<GuardedByExpression> getActual(MethodTree tree, VisitorState state);
 
   /**
@@ -58,9 +56,7 @@ public abstract class AbstractLockMethodChecker extends BugChecker
    */
   protected abstract Set<GuardedByExpression> getUnwanted(MethodTree tree, VisitorState state);
 
-  /**
-   * Builds the error message, given the list of locks that were not handled.
-   */
+  /** Builds the error message, given the list of locks that were not handled. */
   protected abstract String buildMessage(String unhandled);
 
   @Override
@@ -74,9 +70,7 @@ public abstract class AbstractLockMethodChecker extends BugChecker
     Optional<ImmutableSet<GuardedByExpression>> expected =
         parseLockExpressions(lockExpressions, tree, state);
     if (!expected.isPresent()) {
-      return buildDescription(tree)
-          .setMessage("Could not resolve lock expression.")
-          .build();
+      return buildDescription(tree).setMessage("Could not resolve lock expression.").build();
     }
 
     Set<GuardedByExpression> unwanted = getUnwanted(tree, state);
@@ -97,9 +91,10 @@ public abstract class AbstractLockMethodChecker extends BugChecker
   }
 
   private static String formatLockString(Set<GuardedByExpression> locks) {
-    ImmutableList<String> sortedUnhandled = FluentIterable.from(locks)
-        .transform(Functions.toStringFunction())
-        .toSortedList(Ordering.natural());
+    ImmutableList<String> sortedUnhandled =
+        FluentIterable.from(locks)
+            .transform(Functions.toStringFunction())
+            .toSortedList(Ordering.natural());
     return Joiner.on(", ").join(sortedUnhandled);
   }
 
@@ -107,8 +102,8 @@ public abstract class AbstractLockMethodChecker extends BugChecker
       List<String> lockExpressions, Tree tree, VisitorState state) {
     ImmutableSet.Builder<GuardedByExpression> builder = ImmutableSet.builder();
     for (String lockExpression : lockExpressions) {
-      Optional<GuardedByExpression> guard = GuardedByBinder.bindString(
-          lockExpression, GuardedBySymbolResolver.from(tree, state));
+      Optional<GuardedByExpression> guard =
+          GuardedByBinder.bindString(lockExpression, GuardedBySymbolResolver.from(tree, state));
       if (!guard.isPresent()) {
         return Optional.absent();
       }

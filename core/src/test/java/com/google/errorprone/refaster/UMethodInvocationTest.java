@@ -29,7 +29,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link UMethodInvocation}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -37,32 +37,31 @@ public class UMethodInvocationTest extends AbstractUTreeTest {
   @Test
   public void match() {
     UExpression fooIdent = mock(UExpression.class);
-    when(fooIdent.unify(ident("foo"), isA(Unifier.class))).thenReturn(
-        Choice.of(unifier));
+    when(fooIdent.unify(ident("foo"), isA(Unifier.class))).thenReturn(Choice.of(unifier));
     ULiteral oneLit = ULiteral.intLit(1);
     ULiteral barLit = ULiteral.stringLit("bar");
-    UMethodInvocation invocation = UMethodInvocation.create(
-        fooIdent, ImmutableList.<UExpression>of(oneLit, barLit));
+    UMethodInvocation invocation =
+        UMethodInvocation.create(fooIdent, ImmutableList.<UExpression>of(oneLit, barLit));
     assertUnifies("foo(1, \"bar\")", invocation);
   }
-  
+
   @Test
-  public void inline() throws CouldNotResolveImportException {    
+  public void inline() throws CouldNotResolveImportException {
     UExpression fooIdent = mock(UExpression.class);
-    when(fooIdent.inline(isA(Inliner.class))).thenReturn(
-        inliner.maker().Ident(inliner.asName("foo")));
+    when(fooIdent.inline(isA(Inliner.class)))
+        .thenReturn(inliner.maker().Ident(inliner.asName("foo")));
     ULiteral oneLit = ULiteral.intLit(1);
     ULiteral barLit = ULiteral.stringLit("bar");
     UMethodInvocation invocation = UMethodInvocation.create(fooIdent, oneLit, barLit);
     assertInlines("foo(1, \"bar\")", invocation);
   }
-  
+
   @Test
   public void equality() {
     UMethodType indexOfIntTy = UMethodType.create(UPrimitiveType.INT, UPrimitiveType.INT);
     UExpression fooLit = ULiteral.stringLit("foo");
     UType isEmptyTy = UMethodType.create(UPrimitiveType.BOOLEAN, ImmutableList.<UType>of());
-    
+
     new EqualsTester()
         .addEqualityGroup(
             UMethodInvocation.create(
@@ -74,13 +73,15 @@ public class UMethodInvocationTest extends AbstractUTreeTest {
             UMethodInvocation.create(UMemberSelect.create(fooLit, "isEmpty", isEmptyTy)))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UMethodInvocation.create(
-        UMemberSelect.create(ULiteral.stringLit("foo"), 
-            "indexOf", 
-            UMethodType.create(UPrimitiveType.INT, UPrimitiveType.INT)), 
-        ULiteral.charLit('a')));
+    SerializableTester.reserializeAndAssert(
+        UMethodInvocation.create(
+            UMemberSelect.create(
+                ULiteral.stringLit("foo"),
+                "indexOf",
+                UMethodType.create(UPrimitiveType.INT, UPrimitiveType.INT)),
+            ULiteral.charLit('a')));
   }
 }

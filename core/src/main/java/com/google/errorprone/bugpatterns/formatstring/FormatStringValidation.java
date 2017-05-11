@@ -57,18 +57,14 @@ import javax.lang.model.type.TypeKind;
 /** Utilities for validating format strings. */
 public class FormatStringValidation {
 
-  /**
-   * Description of an incorrect format method call.
-   */
+  /** Description of an incorrect format method call. */
   @AutoValue
   public abstract static class ValidationResult {
     /** The exception thrown by {@code String.format} or {@code Formatter.check}. */
     @Nullable
     public abstract Exception exception();
 
-    /**
-     * A human-readable diagnostic message.
-     */
+    /** A human-readable diagnostic message. */
     public abstract String message();
 
     public static ValidationResult create(@Nullable Exception exception, String message) {
@@ -118,8 +114,8 @@ public class FormatStringValidation {
 
   /**
    * Return an instance of the given type if it receives special handling by {@code String.format}.
-   * For example, an intance of {@link Integer} will be returned for an input of type {@code int}
-   * or {@link Integer}.
+   * For example, an intance of {@link Integer} will be returned for an input of type {@code int} or
+   * {@link Integer}.
    */
   private static Object getInstance(Tree tree, VisitorState state) {
     Object value = ASTHelpers.constValue(tree);

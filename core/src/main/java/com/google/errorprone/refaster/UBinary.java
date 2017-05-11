@@ -55,7 +55,7 @@ abstract class UBinary extends UExpression implements BinaryTree {
           .put(Kind.EQUAL_TO, JCTree.Tag.EQ)
           .put(Kind.NOT_EQUAL_TO, JCTree.Tag.NE)
           .build();
-  
+
   static final ImmutableBiMap<Kind, Kind> NEGATION =
       new ImmutableBiMap.Builder<Kind, Kind>()
           .put(Kind.LESS_THAN, Kind.GREATER_THAN_EQUAL)
@@ -65,7 +65,7 @@ abstract class UBinary extends UExpression implements BinaryTree {
           .put(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO)
           .put(Kind.NOT_EQUAL_TO, Kind.EQUAL_TO)
           .build();
-  
+
   static final ImmutableBiMap<Kind, Kind> DEMORGAN =
       new ImmutableBiMap.Builder<Kind, Kind>()
           .put(Kind.CONDITIONAL_AND, Kind.CONDITIONAL_OR)
@@ -75,8 +75,8 @@ abstract class UBinary extends UExpression implements BinaryTree {
           .build();
 
   public static UBinary create(Kind binaryOp, UExpression lhs, UExpression rhs) {
-    checkArgument(OP_CODES.containsKey(binaryOp), 
-        "%s is not a supported binary operation", binaryOp);
+    checkArgument(
+        OP_CODES.containsKey(binaryOp), "%s is not a supported binary operation", binaryOp);
     return new AutoValue_UBinary(binaryOp, lhs, rhs);
   }
 
@@ -103,21 +103,21 @@ abstract class UBinary extends UExpression implements BinaryTree {
 
   @Override
   public JCBinary inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Binary(
-        OP_CODES.get(getKind()), 
-        getLeftOperand().inline(inliner),
-        getRightOperand().inline(inliner));
+    return inliner
+        .maker()
+        .Binary(
+            OP_CODES.get(getKind()),
+            getLeftOperand().inline(inliner),
+            getRightOperand().inline(inliner));
   }
-  
+
   @Override
   public UExpression negate() {
     if (NEGATION.containsKey(getKind())) {
       return UBinary.create(NEGATION.get(getKind()), getLeftOperand(), getRightOperand());
     } else if (DEMORGAN.containsKey(getKind())) {
       return UBinary.create(
-          DEMORGAN.get(getKind()),
-          getLeftOperand().negate(),
-          getRightOperand().negate());
+          DEMORGAN.get(getKind()), getLeftOperand().negate(), getRightOperand().negate());
     } else {
       return super.negate();
     }

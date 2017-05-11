@@ -35,8 +35,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
- *
- * TODO(eaftan): Add test for correct matching of nodes.
+ *     <p>TODO(eaftan): Add test for correct matching of nodes.
  */
 @RunWith(JUnit4.class)
 public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
@@ -57,82 +56,74 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatchSingleConstructor() {
-    writeFile("A.java",
-        "package com.google;",
-        "public class A {",
-        "  private A() {}",
-        "}");
-    assertCompiles(classMatches(true, new ConstructorOfClass(AT_LEAST_ONE,
-        methodHasVisibility(Visibility.PRIVATE))));
-    assertCompiles(classMatches(true, new ConstructorOfClass(ALL,
-        methodHasVisibility(Visibility.PRIVATE))));
+    writeFile("A.java", "package com.google;", "public class A {", "  private A() {}", "}");
+    assertCompiles(
+        classMatches(
+            true, new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
+    assertCompiles(
+        classMatches(true, new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
   }
 
   @Test
   public void shouldNotMatchNoConstructors() {
-    writeFile("A.java",
-        "package com.google;",
-        "public class A {",
-        "}");
-    assertCompiles(classMatches(false, new ConstructorOfClass(AT_LEAST_ONE,
-        methodHasVisibility(Visibility.PRIVATE))));
-    assertCompiles(classMatches(false, new ConstructorOfClass(ALL,
-        methodHasVisibility(Visibility.PRIVATE))));
+    writeFile("A.java", "package com.google;", "public class A {", "}");
+    assertCompiles(
+        classMatches(
+            false, new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
+    assertCompiles(
+        classMatches(false, new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
   }
 
   @Test
   public void shouldNotMatchNonmatchingConstructor() {
-    writeFile("A.java",
-        "package com.google;",
-        "public class A {",
-        "  public A() {}",
-        "}");
-    assertCompiles(classMatches(false, new ConstructorOfClass(AT_LEAST_ONE,
-        methodHasVisibility(Visibility.PRIVATE))));
-    assertCompiles(classMatches(false, new ConstructorOfClass(ALL,
-        methodHasVisibility(Visibility.PRIVATE))));
+    writeFile("A.java", "package com.google;", "public class A {", "  public A() {}", "}");
+    assertCompiles(
+        classMatches(
+            false, new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
+    assertCompiles(
+        classMatches(false, new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
   }
 
   @Test
   public void testMultipleConstructors() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "package com.google;",
         "public class A {",
         "  private A() {}",
         "  public A(int i) {}",
         "}");
-    assertCompiles(classMatches(true, new ConstructorOfClass(AT_LEAST_ONE,
-        methodHasVisibility(Visibility.PRIVATE))));
-    assertCompiles(classMatches(false, new ConstructorOfClass(ALL,
-        methodHasVisibility(Visibility.PRIVATE))));
+    assertCompiles(
+        classMatches(
+            true, new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
+    assertCompiles(
+        classMatches(false, new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
   }
-
 
   private abstract class ScannerTest extends Scanner {
     public abstract void assertDone();
   }
 
-  private Scanner classMatches(final boolean shouldMatch,
-      final ConstructorOfClass toMatch) {
-    ScannerTest test = new ScannerTest() {
-      private boolean matched = false;
+  private Scanner classMatches(final boolean shouldMatch, final ConstructorOfClass toMatch) {
+    ScannerTest test =
+        new ScannerTest() {
+          private boolean matched = false;
 
-      @Override
-      public Void visitClass(ClassTree node, VisitorState visitorState) {
-        visitorState = visitorState.withPath(getCurrentPath());
-        if (toMatch.matches(node, visitorState)) {
-          matched = true;
-        }
-        return super.visitClass(node, visitorState);
-      }
+          @Override
+          public Void visitClass(ClassTree node, VisitorState visitorState) {
+            visitorState = visitorState.withPath(getCurrentPath());
+            if (toMatch.matches(node, visitorState)) {
+              matched = true;
+            }
+            return super.visitClass(node, visitorState);
+          }
 
-      @Override
-      public void assertDone() {
-        assertEquals(matched, shouldMatch);
-      }
-    };
+          @Override
+          public void assertDone() {
+            assertEquals(matched, shouldMatch);
+          }
+        };
     tests.add(test);
     return test;
   }
-
 }

@@ -45,7 +45,7 @@ public class UPrimitiveTypeTest {
         .addEqualityGroup(UPrimitiveType.create(TypeKind.SHORT), UPrimitiveType.SHORT)
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(UPrimitiveType.INT);

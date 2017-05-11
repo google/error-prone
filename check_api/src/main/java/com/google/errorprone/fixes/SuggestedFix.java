@@ -34,9 +34,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 public class SuggestedFix implements Fix {
 
   private final ImmutableList<FixOperation> fixes;
@@ -44,9 +42,7 @@ public class SuggestedFix implements Fix {
   private final ImmutableList<String> importsToRemove;
 
   private SuggestedFix(
-      List<FixOperation> fixes,
-      List<String> importsToAdd,
-      List<String> importsToRemove) {
+      List<FixOperation> fixes, List<String> importsToAdd, List<String> importsToRemove) {
     this.fixes = ImmutableList.copyOf(fixes);
     this.importsToAdd = ImmutableList.copyOf(importsToAdd);
     this.importsToRemove = ImmutableList.copyOf(importsToRemove);
@@ -179,8 +175,8 @@ public class SuggestedFix implements Fix {
     }
 
     /**
-     * Replace the characters from startPos, inclusive, until endPos, exclusive, with the
-     * given string.
+     * Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
+     * string.
      *
      * @param startPos The position from which to start replacing, inclusive
      * @param endPos The position at which to end replacing, exclusive
@@ -192,9 +188,10 @@ public class SuggestedFix implements Fix {
     }
 
     /**
-     * Replace a tree node with a string, but adjust the start and end positions as well.
-     * For example, if the tree node begins at index 10 and ends at index 30, this call will
-     * replace the characters at index 15 through 25 with "replacement":
+     * Replace a tree node with a string, but adjust the start and end positions as well. For
+     * example, if the tree node begins at index 10 and ends at index 30, this call will replace the
+     * characters at index 15 through 25 with "replacement":
+     *
      * <pre>
      * {@code fix.replace(node, "replacement", 5, -5)}
      * </pre>
@@ -207,9 +204,10 @@ public class SuggestedFix implements Fix {
     public Builder replace(
         Tree node, String replaceWith, int startPosAdjustment, int endPosAdjustment) {
       checkNotSyntheticConstructor(node);
-      return with(new ReplacementFix(
-          new AdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
-          replaceWith));
+      return with(
+          new ReplacementFix(
+              new AdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
+              replaceWith));
     }
 
     public Builder prefixWith(Tree node, String prefix) {
@@ -238,8 +236,8 @@ public class SuggestedFix implements Fix {
     }
 
     /**
-     * Add an import statement as part of this SuggestedFix.
-     * Import string should be of the form "foo.bar.baz".
+     * Add an import statement as part of this SuggestedFix. Import string should be of the form
+     * "foo.bar.baz".
      */
     public Builder addImport(String importString) {
       importsToAdd.add("import " + importString);
@@ -247,8 +245,8 @@ public class SuggestedFix implements Fix {
     }
 
     /**
-     * Add a static import statement as part of this SuggestedFix.
-     * Import string should be of the form "foo.bar.baz".
+     * Add a static import statement as part of this SuggestedFix. Import string should be of the
+     * form "foo.bar.baz".
      */
     public Builder addStaticImport(String importString) {
       importsToAdd.add("import static " + importString);
@@ -256,8 +254,8 @@ public class SuggestedFix implements Fix {
     }
 
     /**
-     * Remove an import statement as part of this SuggestedFix.
-     * Import string should be of the form "foo.bar.baz".
+     * Remove an import statement as part of this SuggestedFix. Import string should be of the form
+     * "foo.bar.baz".
      */
     public Builder removeImport(String importString) {
       importsToRemove.add("import " + importString);
@@ -265,8 +263,8 @@ public class SuggestedFix implements Fix {
     }
 
     /**
-     * Remove a static import statement as part of this SuggestedFix.
-     * Import string should be of the form "foo.bar.baz".
+     * Remove a static import statement as part of this SuggestedFix. Import string should be of the
+     * form "foo.bar.baz".
      */
     public Builder removeStaticImport(String importString) {
       importsToRemove.add("import static " + importString);
@@ -300,9 +298,9 @@ public class SuggestedFix implements Fix {
     }
 
     /**
-     * Implicit default constructors are one of the few synthetic constructs
-     * added to the AST early enough to be visible from Error Prone, so we
-     * do a sanity-check here to prevent attempts to edit them.
+     * Implicit default constructors are one of the few synthetic constructs added to the AST early
+     * enough to be visible from Error Prone, so we do a sanity-check here to prevent attempts to
+     * edit them.
      */
     private static void checkNotSyntheticConstructor(Tree tree) {
       if (tree instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) tree)) {
@@ -373,9 +371,7 @@ public class SuggestedFix implements Fix {
     @Override
     public Replacement getReplacement(EndPosTable endPositions) {
       return Replacement.create(
-          original.getStartPosition(),
-          original.getEndPosition(endPositions),
-          replacement);
+          original.getStartPosition(), original.getEndPosition(endPositions), replacement);
     }
   }
 

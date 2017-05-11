@@ -31,15 +31,15 @@ public class ParameterMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
 
   private final ImmutableList<Supplier<Type>> expected;
 
-  ParameterMatcherImpl(AbstractSimpleMatcher<MatchState> baseMatcher,
-      ImmutableList<Supplier<Type>> parameterTypes) {
+  ParameterMatcherImpl(
+      AbstractSimpleMatcher<MatchState> baseMatcher, ImmutableList<Supplier<Type>> parameterTypes) {
     super(baseMatcher);
     this.expected = parameterTypes;
   }
 
   @Override
-  protected Optional<MatchState> matchResult(ExpressionTree item, MatchState info,
-      VisitorState state) {
+  protected Optional<MatchState> matchResult(
+      ExpressionTree item, MatchState info, VisitorState state) {
     ImmutableList<Type> actual = ImmutableList.copyOf(info.paramTypes());
     if (actual.size() != expected.size()) {
       return Optional.absent();

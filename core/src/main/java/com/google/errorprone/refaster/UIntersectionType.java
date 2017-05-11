@@ -27,15 +27,16 @@ import com.sun.tools.javac.tree.JCTree.JCTypeIntersection;
 
 /**
  * {@code UTree} representation of an {@code IntersectionTypeTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
 abstract class UIntersectionType extends UExpression implements IntersectionTypeTree {
-  @VisibleForTesting static UIntersectionType create(UExpression... bounds) {
+  @VisibleForTesting
+  static UIntersectionType create(UExpression... bounds) {
     return create(ImmutableList.copyOf(bounds));
   }
-  
+
   static UIntersectionType create(Iterable<? extends UExpression> bounds) {
     return new AutoValue_UIntersectionType(ImmutableList.copyOf(bounds));
   }

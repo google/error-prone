@@ -98,9 +98,7 @@ public class HashtableContains extends BugChecker implements MethodInvocationTre
         throw new AssertionError(
             String.format(
                 "unexpected argument to contains(): key: %s, value: %s, argument: %s",
-                key,
-                value,
-                arg));
+                key, value, arg));
       }
     } else {
       result.addFix(replaceMethodName(tree, state, "containsValue"));

@@ -114,8 +114,8 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
           java.lang.String.class.getName());
 
   /**
-   * Recognize a small set of known-immutable types that are safe for DCL even without
-   * a volatile field.
+   * Recognize a small set of known-immutable types that are safe for DCL even without a volatile
+   * field.
    */
   private static boolean isImmutable(Type type, VisitorState state) {
     switch (type.getKind()) {
@@ -138,14 +138,13 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Report a diagnostic for an instance of DCL on a local variable. A match is only reported
-   * if a non-volatile field is written to the variable after acquiring the lock and before
-   * the second null-check on the local.
+   * Report a diagnostic for an instance of DCL on a local variable. A match is only reported if a
+   * non-volatile field is written to the variable after acquiring the lock and before the second
+   * null-check on the local.
    *
    * <p>e.g.
    *
-   * <pre>
-   * {@code
+   * <pre>{@code
    * if ($X == null) {
    *   synchronized (...) {
    *     $X = myNonVolatileField;
@@ -155,8 +154,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    *     ...
    *   }
    * }
-   * }
-   * </pre>
+   * }</pre>
    */
   private Description handleLocal(DCLInfo info, VisitorState state) {
     JCExpressionStatement expr = getChild(info.synchTree().getBlock(), JCExpressionStatement.class);
@@ -193,7 +191,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     /** The synchronized statement */
     abstract SynchronizedTree synchTree();
 
-    /** The inner if statement **/
+    /** The inner if statement * */
     abstract IfTree innerIf();
 
     /** The variable (local or field) that is double-checked */
@@ -208,8 +206,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   /**
    * Matches an instance of DCL. The canonical pattern is:
    *
-   * <pre>
-   * {@code
+   * <pre>{@code
    * if ($X == null) {
    *   synchronized (...) {
    *     if ($X == null) {
@@ -218,8 +215,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    *     ...
    *   }
    * }
-   * }
-   * </pre>
+   * }</pre>
    *
    * Gaps before the synchronized or inner 'if' statement are ignored, and the operands in the
    * null-checks are accepted in either order.
@@ -255,8 +251,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Matches comparisons to null (e.g. {@code foo == null}) and returns the expression being
-   * tested.
+   * Matches comparisons to null (e.g. {@code foo == null}) and returns the expression being tested.
    */
   private static ExpressionTree getNullCheckedExpression(ExpressionTree condition) {
     condition = TreeInfo.skipParens((JCExpression) condition);
@@ -276,8 +271,8 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Visits (possibly nested) block statements and returns the first child statement with the
-   * given class.
+   * Visits (possibly nested) block statements and returns the first child statement with the given
+   * class.
    */
   private static <T> T getChild(StatementTree tree, final Class<T> clazz) {
     return tree.accept(

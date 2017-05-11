@@ -37,18 +37,19 @@ abstract class UParens extends UExpression implements ParenthesizedTree {
   @Override
   public abstract UExpression getExpression();
 
-  private static final TreeVisitor<Tree, Void> SKIP_PARENS = new SimpleTreeVisitor<Tree, Void>() {
-    @Override
-    protected Tree defaultAction(Tree node, Void v) {
-      return node;
-    }
+  private static final TreeVisitor<Tree, Void> SKIP_PARENS =
+      new SimpleTreeVisitor<Tree, Void>() {
+        @Override
+        protected Tree defaultAction(Tree node, Void v) {
+          return node;
+        }
 
-    @Override
-    public Tree visitParenthesized(ParenthesizedTree node, Void v) {
-      return node.getExpression().accept(this, null);
-    }
-  };
-  
+        @Override
+        public Tree visitParenthesized(ParenthesizedTree node, Void v) {
+          return node.getExpression().accept(this, null);
+        }
+      };
+
   static Tree skipParens(Tree tree) {
     return tree.accept(SKIP_PARENS, null);
   }

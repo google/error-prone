@@ -71,12 +71,7 @@ public class MultipleTopLevelClassesTest {
 
   @Test
   public void emptyDeclaration() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "a/A.java",
-            "package a;",
-            "class Test {};")
-        .doTest();
+    compilationHelper.addSourceLines("a/A.java", "package a;", "class Test {};").doTest();
   }
 
   @Test

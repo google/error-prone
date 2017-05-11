@@ -36,11 +36,7 @@ public class MissingOverrideTest {
   @Test
   public void simple() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "Super.java",
-            "public class Super {",
-            "  void f() {}",
-            "}")
+        .addSourceLines("Super.java", "public class Super {", "  void f() {}", "}")
         .addSourceLines(
             "Test.java",
             "public class Test extends Super {",
@@ -53,11 +49,7 @@ public class MissingOverrideTest {
   @Test
   public void abstractMethod() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "Super.java",
-            "public abstract class Super {",
-            "  abstract void f();",
-            "}")
+        .addSourceLines("Super.java", "public abstract class Super {", "  abstract void f();", "}")
         .addSourceLines(
             "Test.java",
             "public class Test extends Super {",
@@ -70,11 +62,7 @@ public class MissingOverrideTest {
   @Test
   public void interfaceMethod() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "Super.java",
-            "interface Super {",
-            "  void f();",
-            "}")
+        .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
         .addSourceLines(
             "Test.java",
             "public class Test implements Super {",
@@ -87,32 +75,18 @@ public class MissingOverrideTest {
   @Test
   public void bothStatic() throws Exception {
     compilationHelper
+        .addSourceLines("Super.java", "public class Super {", "  static void f() {}", "}")
         .addSourceLines(
-            "Super.java",
-            "public class Super {",
-            "  static void f() {}",
-            "}")
-        .addSourceLines(
-            "Test.java",
-            "public class Test extends Super {",
-            "  static public void f() {}",
-            "}")
+            "Test.java", "public class Test extends Super {", "  static public void f() {}", "}")
         .doTest();
   }
 
   @Test
   public void deprecatedMethod() throws Exception {
     compilationHelper
+        .addSourceLines("Super.java", "public class Super {", "  @Deprecated void f() {}", "}")
         .addSourceLines(
-            "Super.java",
-            "public class Super {",
-            "  @Deprecated void f() {}",
-            "}")
-        .addSourceLines(
-            "Test.java",
-            "public class Test extends Super {",
-            "  public void f() {}",
-            "}")
+            "Test.java", "public class Test extends Super {", "  public void f() {}", "}")
         .doTest();
   }
 }

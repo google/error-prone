@@ -23,9 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author rburny@google.com (Radoslaw Burny)
- */
+/** @author rburny@google.com (Radoslaw Burny) */
 @RunWith(JUnit4.class)
 public class JUnit3TestNotRunTest {
 

@@ -36,17 +36,22 @@ import javax.annotation.Nullable;
 @AutoValue
 abstract class UNewClass extends UExpression implements NewClassTree {
 
-  public static UNewClass create(UExpression enclosingExpression,
-      List<? extends UExpression> typeArguments, UExpression identifier,
-      List<UExpression> arguments, @Nullable UClassDecl classBody) {
+  public static UNewClass create(
+      UExpression enclosingExpression,
+      List<? extends UExpression> typeArguments,
+      UExpression identifier,
+      List<UExpression> arguments,
+      @Nullable UClassDecl classBody) {
     return new AutoValue_UNewClass(
-        enclosingExpression, ImmutableList.copyOf(typeArguments), identifier, 
-        ImmutableList.copyOf(arguments), classBody);
+        enclosingExpression,
+        ImmutableList.copyOf(typeArguments),
+        identifier,
+        ImmutableList.copyOf(arguments),
+        classBody);
   }
 
   public static UNewClass create(
-      List<? extends UExpression> typeArguments, UExpression identifier, 
-      UExpression... arguments) {
+      List<? extends UExpression> typeArguments, UExpression identifier, UExpression... arguments) {
     return create(null, typeArguments, identifier, ImmutableList.copyOf(arguments), null);
   }
 
@@ -59,9 +64,9 @@ abstract class UNewClass extends UExpression implements NewClassTree {
   public abstract UExpression getEnclosingExpression();
 
   /**
-   * Note: these are not the type arguments to the class, but to the constructor, for
-   * those extremely rare constructors that look like e.g. {@code <E> Foo(E e)}, where
-   * the type parameter is for the constructor alone and not the class. 
+   * Note: these are not the type arguments to the class, but to the constructor, for those
+   * extremely rare constructors that look like e.g. {@code <E> Foo(E e)}, where the type parameter
+   * is for the constructor alone and not the class.
    */
   @Override
   public abstract List<UExpression> getTypeArguments();
@@ -71,7 +76,7 @@ abstract class UNewClass extends UExpression implements NewClassTree {
 
   @Override
   public abstract List<UExpression> getArguments();
-  
+
   @Override
   @Nullable
   public abstract UClassDecl getClassBody();
@@ -98,11 +103,13 @@ abstract class UNewClass extends UExpression implements NewClassTree {
 
   @Override
   public JCNewClass inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().NewClass(
-        (getEnclosingExpression() == null) ? null : getEnclosingExpression().inline(inliner),
-        inliner.<JCExpression>inlineList(getTypeArguments()),
-        getIdentifier().inline(inliner),
-        inliner.<JCExpression>inlineList(getArguments()),
-        (getClassBody() == null) ? null : getClassBody().inline(inliner));
+    return inliner
+        .maker()
+        .NewClass(
+            (getEnclosingExpression() == null) ? null : getEnclosingExpression().inline(inliner),
+            inliner.<JCExpression>inlineList(getTypeArguments()),
+            getIdentifier().inline(inliner),
+            inliner.<JCExpression>inlineList(getArguments()),
+            (getClassBody() == null) ? null : getClassBody().inline(inliner));
   }
 }

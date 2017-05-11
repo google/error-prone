@@ -41,7 +41,7 @@ import javax.tools.StandardJavaFileManager;
 
 /**
  * Abstract skeleton for tests that run the compiler on the fly.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class CompilerBasedTest {
@@ -49,19 +49,22 @@ public class CompilerBasedTest {
   protected SourceFile sourceFile;
   protected Iterable<JCCompilationUnit> compilationUnits;
   private Map<String, JCMethodDecl> methods;
-  
+
   protected void compile(TreeScanner scanner, JavaFileObject fileObject) {
     JavaCompiler compiler = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector =
         new DiagnosticCollector<JavaFileObject>();
-    StandardJavaFileManager fileManager = 
+    StandardJavaFileManager fileManager =
         compiler.getStandardFileManager(diagnosticsCollector, Locale.ENGLISH, UTF_8);
-    JavacTaskImpl task = (JavacTaskImpl) compiler.getTask(CharStreams.nullWriter(), 
-        fileManager,
-        diagnosticsCollector,
-        ImmutableList.<String>of(),
-        null,
-        ImmutableList.of(fileObject));
+    JavacTaskImpl task =
+        (JavacTaskImpl)
+            compiler.getTask(
+                CharStreams.nullWriter(),
+                fileManager,
+                diagnosticsCollector,
+                ImmutableList.<String>of(),
+                null,
+                ImmutableList.of(fileObject));
     try {
       this.sourceFile = SourceFile.create(fileObject);
       Iterable<? extends CompilationUnitTree> trees = task.parse();
@@ -74,29 +77,31 @@ public class CompilerBasedTest {
     }
     this.context = task.getContext();
   }
-  
+
   protected void compile(TreeScanner scanner, String... lines) {
     compile(scanner, JavaFileObjects.forSourceLines("CompilerBasedTestInput", lines));
   }
 
   protected void compile(JavaFileObject fileObject) {
     final ImmutableMap.Builder<String, JCMethodDecl> methodsBuilder = ImmutableMap.builder();
-    final ImmutableList.Builder<JCCompilationUnit> compilationUnitsBuilder = 
+    final ImmutableList.Builder<JCCompilationUnit> compilationUnitsBuilder =
         ImmutableList.builder();
-    compile(new TreeScanner() {
-      @Override
-      public void visitMethodDef(JCMethodDecl tree) {
-        if (!TreeInfo.isConstructor(tree)) {
-          methodsBuilder.put(tree.getName().toString(), tree);
-        }
-      }
+    compile(
+        new TreeScanner() {
+          @Override
+          public void visitMethodDef(JCMethodDecl tree) {
+            if (!TreeInfo.isConstructor(tree)) {
+              methodsBuilder.put(tree.getName().toString(), tree);
+            }
+          }
 
-      @Override
-      public void visitTopLevel(JCCompilationUnit tree) {
-        compilationUnitsBuilder.add(tree);
-        super.visitTopLevel(tree);
-      }
-    }, fileObject);
+          @Override
+          public void visitTopLevel(JCCompilationUnit tree) {
+            compilationUnitsBuilder.add(tree);
+            super.visitTopLevel(tree);
+          }
+        },
+        fileObject);
     this.methods = methodsBuilder.build();
     this.compilationUnits = compilationUnitsBuilder.build();
   }
@@ -104,7 +109,7 @@ public class CompilerBasedTest {
   protected void compile(String... lines) {
     compile(JavaFileObjects.forSourceLines("CompilerBasedTestInput", lines));
   }
-  
+
   protected JCMethodDecl getMethodDeclaration(String name) {
     return methods.get(name);
   }

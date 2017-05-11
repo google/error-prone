@@ -27,9 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link URepeated}.
- */
+/** Tests for {@link URepeated}. */
 @RunWith(JUnit4.class)
 public class URepeatedTest extends AbstractUTreeTest {
 
@@ -48,10 +46,9 @@ public class URepeatedTest extends AbstractUTreeTest {
         .addEqualityGroup(URepeated.create("bar", UFreeIdent.create("bar")))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(
-        URepeated.create("foo", UFreeIdent.create("foo")));
+    SerializableTester.reserializeAndAssert(URepeated.create("foo", UFreeIdent.create("foo")));
   }
 }

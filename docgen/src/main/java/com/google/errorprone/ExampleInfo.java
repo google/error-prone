@@ -30,14 +30,10 @@ public abstract class ExampleInfo {
     NEGATIVE
   }
 
-  /**
-   * Whether this is a positive or negative example.
-   */
+  /** Whether this is a positive or negative example. */
   public abstract ExampleKind type();
 
-  /**
-   * The fully-qualified name of the checker that this example belongs to.
-   */
+  /** The fully-qualified name of the checker that this example belongs to. */
   public abstract String checkerClass();
 
   /**
@@ -46,9 +42,7 @@ public abstract class ExampleInfo {
    */
   public abstract String name();
 
-  /**
-   * The example code.
-   */
+  /** The example code. */
   public abstract String code();
 
   public static ExampleInfo create(

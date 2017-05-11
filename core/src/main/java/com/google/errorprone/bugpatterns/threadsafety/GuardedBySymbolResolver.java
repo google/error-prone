@@ -59,13 +59,13 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
         tree);
   }
 
-  public static GuardedBySymbolResolver from(ClassSymbol owner,
-      CompilationUnitTree compilationUnit, Context context, Tree leaf) {
+  public static GuardedBySymbolResolver from(
+      ClassSymbol owner, CompilationUnitTree compilationUnit, Context context, Tree leaf) {
     return new GuardedBySymbolResolver(owner, compilationUnit, context, leaf);
   }
 
-  private GuardedBySymbolResolver(ClassSymbol enclosingClass,
-      CompilationUnitTree compilationUnit, Context context, Tree leaf) {
+  private GuardedBySymbolResolver(
+      ClassSymbol enclosingClass, CompilationUnitTree compilationUnit, Context context, Tree leaf) {
     this.compilationUnit = (JCCompilationUnit) compilationUnit;
     this.enclosingClass = enclosingClass;
     this.context = context;
@@ -113,17 +113,18 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   }
 
   @Override
-  public Symbol.MethodSymbol resolveMethod(MethodInvocationTree node,
-      javax.lang.model.element.Name name) {
+  public Symbol.MethodSymbol resolveMethod(
+      MethodInvocationTree node, javax.lang.model.element.Name name) {
     return getMethod(enclosingClass, name.toString());
   }
 
   @Override
-  public Symbol.MethodSymbol resolveMethod(MethodInvocationTree node, GuardedByExpression base,
+  public Symbol.MethodSymbol resolveMethod(
+      MethodInvocationTree node,
+      GuardedByExpression base,
       javax.lang.model.element.Name identifier) {
-    Symbol baseSym = base.kind() == GuardedByExpression.Kind.THIS
-        ? enclosingClass
-        : base.type().asElement();
+    Symbol baseSym =
+        base.kind() == GuardedByExpression.Kind.THIS ? enclosingClass : base.type().asElement();
     return getMethod(baseSym, identifier.toString());
   }
 
@@ -133,9 +134,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
   @Override
   public Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node) {
-    Symbol baseSym = base.kind() == GuardedByExpression.Kind.THIS
-        ? enclosingClass
-        : base.type().asElement();
+    Symbol baseSym =
+        base.kind() == GuardedByExpression.Kind.THIS ? enclosingClass : base.type().asElement();
     return getField(baseSym, node.getIdentifier().toString());
   }
 
@@ -143,8 +143,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return getMember(Symbol.VarSymbol.class, ElementKind.FIELD, classSymbol, name);
   }
 
-  private <T extends Symbol> T getMember(Class<T> type, ElementKind kind, Symbol classSymbol,
-      String name) {
+  private <T extends Symbol> T getMember(
+      Class<T> type, ElementKind kind, Symbol classSymbol, String name) {
     if (classSymbol.type == null) {
       return null;
     }
@@ -156,7 +156,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
         }
       }
     }
-    if (classSymbol.owner != null && classSymbol != classSymbol.owner
+    if (classSymbol.owner != null
+        && classSymbol != classSymbol.owner
         && classSymbol.owner instanceof Symbol.ClassSymbol) {
       T sym = getMember(type, kind, classSymbol.owner, name);
       if (sym != null) {
@@ -183,7 +184,10 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
-  private static enum SearchSuperTypes { YES, NO }
+  private static enum SearchSuperTypes {
+    YES,
+    NO
+  }
 
   /**
    * Resolves a simple name as a type. Considers super classes, lexically enclosing classes, and
@@ -203,8 +207,10 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     if (type == null) {
       type = attribIdent(name);
     }
-    checkGuardedBy(!(type instanceof Symbol.PackageSymbol),
-        "All we could find for '%s' was a package symbol.", name);
+    checkGuardedBy(
+        !(type instanceof Symbol.PackageSymbol),
+        "All we could find for '%s' was a package symbol.",
+        name);
     return type;
   }
 

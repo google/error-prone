@@ -90,10 +90,7 @@ public class ModifyingCollectionWithItself extends BugChecker
             receiverSameAsArgument(1)));
   }
 
-
-  /**
-   * Matches calls to addAll, containsAll, removeAll, and retainAll on itself
-   */
+  /** Matches calls to addAll, containsAll, removeAll, and retainAll on itself */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
     if (IS_COLLECTION_MODIFIED_WITH_ITSELF.matches(t, state)) {

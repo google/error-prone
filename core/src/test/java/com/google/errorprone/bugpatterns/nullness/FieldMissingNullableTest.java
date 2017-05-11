@@ -187,7 +187,6 @@ public class FieldMissingNullableTest {
         .doTest();
   }
 
-
   @Test
   public void testMaybeNullAssignmentInLambda() throws Exception {
     createCompilationTestHelper()
@@ -205,6 +204,7 @@ public class FieldMissingNullableTest {
             "}")
         .doTest();
   }
+
   @Test
   public void testNegativeCases_alreadyAnnotated() throws Exception {
     createCompilationTestHelper()

@@ -105,19 +105,13 @@ public abstract class BugChecker implements Suppressible, Serializable {
     info = BugCheckerInfo.create(getClass());
   }
 
-  /**
-   * Helper to create a Description for the common case where there is a fix.
-   */
+  /** Helper to create a Description for the common case where there is a fix. */
   @CheckReturnValue
   protected Description describeMatch(Tree node, Fix fix) {
-    return buildDescription(node)
-        .addFix(fix)
-        .build();
+    return buildDescription(node).addFix(fix).build();
   }
 
-  /**
-   * Helper to create a Description for the common case where there is no fix.
-   */
+  /** Helper to create a Description for the common case where there is no fix. */
   @CheckReturnValue
   protected Description describeMatch(Tree node) {
     return buildDescription(node).build();
@@ -260,8 +254,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
     Description matchCompoundAssignment(CompoundAssignmentTree tree, VisitorState state);
   }
 
-  public static interface ConditionalExpressionTreeMatcher
-      extends Suppressible {
+  public static interface ConditionalExpressionTreeMatcher extends Suppressible {
     Description matchConditionalExpression(ConditionalExpressionTree tree, VisitorState state);
   }
 
