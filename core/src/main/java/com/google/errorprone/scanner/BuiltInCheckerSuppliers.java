@@ -92,6 +92,7 @@ import com.google.errorprone.bugpatterns.JUnit4TearDownNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
 import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
+import com.google.errorprone.bugpatterns.JavaLangClash;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LiteralClassName;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
@@ -402,6 +403,7 @@ public class BuiltInCheckerSuppliers {
           InjectOnConstructorOfAbstractClass.class,
           InputStreamSlowMultibyteRead.class,
           IterableAndIterator.class,
+          JavaLangClash.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnitAmbiguousTestClass.class,
           LiteralClassName.class,
