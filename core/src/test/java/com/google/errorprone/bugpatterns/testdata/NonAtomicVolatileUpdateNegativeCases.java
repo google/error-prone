@@ -16,26 +16,24 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * Positive test cases for {@code NonAtomicVolatileUpdate} checker.
- */
+/** Positive test cases for {@code NonAtomicVolatileUpdate} checker. */
 public class NonAtomicVolatileUpdateNegativeCases {
-  
+
   private volatile int myVolatileInt = 0;
   private int myInt = 0;
   private volatile String myVolatileString = "";
   private String myString = "";
-  
+
   public void incrementNonVolatile() {
     myInt++;
     ++myInt;
     myInt += 1;
     myInt = myInt + 1;
     myInt = 1 + myInt;
-    
+
     myInt = myVolatileInt + 1;
     myVolatileInt = myInt + 1;
-    
+
     myString += "update";
     myString = myString + "update";
   }
@@ -46,18 +44,18 @@ public class NonAtomicVolatileUpdateNegativeCases {
     myInt -= 1;
     myInt = myInt - 1;
   }
-  
+
   public synchronized void synchronizedIncrement() {
     myVolatileInt++;
     ++myVolatileInt;
     myVolatileInt += 1;
     myVolatileInt = myVolatileInt + 1;
     myVolatileInt = 1 + myVolatileInt;
-    
+
     myVolatileString += "update";
     myVolatileString = myVolatileString + "update";
   }
-  
+
   public void synchronizedBlock() {
     synchronized (this) {
       myVolatileInt++;
@@ -65,10 +63,9 @@ public class NonAtomicVolatileUpdateNegativeCases {
       myVolatileInt += 1;
       myVolatileInt = myVolatileInt + 1;
       myVolatileInt = 1 + myVolatileInt;
-      
+
       myVolatileString += "update";
       myVolatileString = myVolatileString + "update";
     }
   }
 }
-

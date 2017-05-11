@@ -20,9 +20,7 @@ import com.google.inject.Singleton;
 import com.google.inject.servlet.SessionScoped;
 import javax.inject.Scope;
 
-/**
- * @author sgoldfeder@google.com(Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com(Steven Goldfeder) */
 public class MoreThanOneScopeAnnotationOnClassPositiveCases {
 
   /** Class has two scope annotations */

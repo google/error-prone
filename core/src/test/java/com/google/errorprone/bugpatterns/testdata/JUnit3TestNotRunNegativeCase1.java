@@ -20,20 +20,23 @@ import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.junit.Test;
 
-/**
- * @author rburny@google.com (Radoslaw Burny)
- */
+/** @author rburny@google.com (Radoslaw Burny) */
 public class JUnit3TestNotRunNegativeCase1 extends TestCase {
 
   // correctly spelled
   public void test() {}
+
   public void testCorrectlySpelled() {}
 
   // real words
   public void bestNameEver() {}
+
   public void destroy() {}
+
   public void restore() {}
+
   public void establish() {}
+
   public void estimate() {}
 
   // different signature
@@ -46,13 +49,20 @@ public class JUnit3TestNotRunNegativeCase1 extends TestCase {
   // surrounding class is not a JUnit3 TestCase
   private static class TestCase {
     private void tesHelper() {}
+
     private void destroy() {}
   }
 
   // correct test, despite redundant annotation
-  @Test public void testILikeAnnotations() {}
+  @Test
+  public void testILikeAnnotations() {}
 
   // both @Test & @Ignore
-  @Test @Ignore public void ignoredTest2() {}
-  @Ignore @Test public void ignoredTest() {}
+  @Test
+  @Ignore
+  public void ignoredTest2() {}
+
+  @Ignore
+  @Test
+  public void ignoredTest() {}
 }

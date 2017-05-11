@@ -20,15 +20,15 @@ import java.util.Objects;
 
 /**
  * Tests that only run with Java 7 and above.
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class ArrayEqualsPositiveCases2 {
-    
+
   public void intArray() {
     int[] a = {1, 2, 3};
     int[] b = {1, 2, 3};
-    
+
     // BUG: Diagnostic contains: Arrays.equals(a, b)
     if (Objects.equals(a, b)) {
       System.out.println("arrays are equal!");
@@ -36,11 +36,11 @@ public class ArrayEqualsPositiveCases2 {
       System.out.println("arrays are not equal!");
     }
   }
-  
+
   public void objectArray() {
     Object[] a = new Object[3];
     Object[] b = new Object[3];
-    
+
     // BUG: Diagnostic contains: Arrays.equals(a, b)
     if (Objects.equals(a, b)) {
       System.out.println("arrays are equal!");

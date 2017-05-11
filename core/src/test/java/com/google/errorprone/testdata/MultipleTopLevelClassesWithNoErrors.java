@@ -24,9 +24,8 @@ public class MultipleTopLevelClassesWithNoErrors {
     this.foo = foo;
     this.bar = bar;
   }
-  
-  private static class InnerFoo {
-  }
+
+  private static class InnerFoo {}
 }
 
 final class Foo1 {

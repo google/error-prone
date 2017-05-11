@@ -18,32 +18,28 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Arrays;
 
-import com.google.common.base.Objects;
-
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class PrimitiveArrayPassedToVarargsMethodPositiveCases {
-  
+
   public void objectVarargsMethod(Object... objs) {}
- 
+
   public <T> void genericVarargsMethod(T... genericArrays) {}
-  
+
   public void objectVarargsMethodWithMultipleParams(Object obj1, Object... objs) {}
-  
+
   public void doIt() {
     int[] intArray = {1, 2, 3};
-    
-    // BUG: Diagnostic contains: 
+
+    // BUG: Diagnostic contains:
     objectVarargsMethod(intArray);
-    
-    // BUG: Diagnostic contains: 
+
+    // BUG: Diagnostic contains:
     genericVarargsMethod(intArray);
-    
-    // BUG: Diagnostic contains: 
+
+    // BUG: Diagnostic contains:
     objectVarargsMethodWithMultipleParams(new Object(), intArray);
-    
-    // BUG: Diagnostic contains: 
+
+    // BUG: Diagnostic contains:
     Arrays.asList(intArray);
   }
 }

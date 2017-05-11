@@ -18,30 +18,21 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Inject;
 
-/**
- * @author sgoldfeder@google.com(Steven Goldfeder)
- */
-
+/** @author sgoldfeder@google.com(Steven Goldfeder) */
 public class MoreThanOneInjectableConstructorNegativeCases {
 
-  /**
-   * Class has a single non-injectable constructor.
-   */
+  /** Class has a single non-injectable constructor. */
   public class TestClass1 {
     public TestClass1() {}
   }
 
-  /**
-   * Class has a single injectable constructor.
-   */
+  /** Class has a single injectable constructor. */
   public class TestClass2 {
     @Inject
     public TestClass2() {}
   }
 
-  /**
-   * Class has two constructors, one of which is injectable.
-   */
+  /** Class has two constructors, one of which is injectable. */
   public class TestClass3 {
     @Inject
     public TestClass3() {}
@@ -49,23 +40,18 @@ public class MoreThanOneInjectableConstructorNegativeCases {
     public TestClass3(int n) {}
   }
 
-  /**
-   * Class has two constructors, one of which is injectable. Class also has an injectable field.
-   */
+  /** Class has two constructors, one of which is injectable. Class also has an injectable field. */
   public class TestClass4 {
 
-    @Inject
-    String x;
+    @Inject String x;
 
     @Inject
     public TestClass4() {}
 
     public TestClass4(int n) {}
   }
-  
-  /**
-   * Class has 2 constructors, both are injectable. Error is suppressed.
-   */
+
+  /** Class has 2 constructors, both are injectable. Error is suppressed. */
   @SuppressWarnings("MoreThanOneInjectableConstructor")
   public class TestClass5 {
     @Inject
@@ -74,7 +60,6 @@ public class MoreThanOneInjectableConstructorNegativeCases {
     @Inject
     public TestClass5(int n) {}
   }
-
 
   /** Suppressed class */
   @SuppressWarnings("inject-constructors")

@@ -326,7 +326,8 @@ public final class Proto3Test {
                 com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message.Builder.class);
       }
 
-      // Construct using com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message.newBuilder()
+      // Construct using
+      // com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }

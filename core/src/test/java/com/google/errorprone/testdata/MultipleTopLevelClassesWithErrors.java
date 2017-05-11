@@ -23,6 +23,7 @@ final class Poo1 {
     int i = 10;
     i = i;
   }
+
   class Poo2 {
     public void poo() {
       int i = 10;

@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.assistedinject.AssistedInject;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class AssistedInjectAndInjectOnConstructorsPositiveCases {
   /**
    * Class has a constructor annotated with @javax.inject.Inject and another constructor annotated
@@ -34,7 +32,7 @@ public class AssistedInjectAndInjectOnConstructorsPositiveCases {
     @AssistedInject
     public TestClass1(int n) {}
   }
-  
+
   /**
    * Class has a constructor annotated with @com.google.inject.Inject and another constructor
    * annotated with @AssistedInject.
@@ -47,7 +45,7 @@ public class AssistedInjectAndInjectOnConstructorsPositiveCases {
     @AssistedInject
     public TestClass2(int n) {}
   }
-  
+
   /**
    * Class has a constructor annotated with @com.google.inject.Inject, another constructor annotated
    * with @AssistedInject, and a third constructor with no annotation.

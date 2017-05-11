@@ -21,7 +21,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Sample Refaster template that can replace instance methods with an implicit this.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class InferredThisTemplate {

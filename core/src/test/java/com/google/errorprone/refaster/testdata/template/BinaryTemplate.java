@@ -21,7 +21,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Example template using binary expressions.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class BinaryTemplate {

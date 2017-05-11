@@ -22,12 +22,12 @@ import com.google.common.base.Preconditions;
 
 public class PreconditionsInvalidPlaceholderPositiveCase1 {
   int foo;
-  
+
   public void checkPositive(int x) {
     // BUG: Diagnostic contains: %s > 0
     checkArgument(x > 0, "%d > 0", x);
   }
-  
+
   public void checkFoo() {
     // BUG: Diagnostic contains: foo must be equal to 0 but was %s
     Preconditions.checkState(foo == 0, "foo must be equal to 0 but was {0}", foo);

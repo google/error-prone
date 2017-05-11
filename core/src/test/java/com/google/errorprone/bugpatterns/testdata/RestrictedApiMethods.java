@@ -77,8 +77,6 @@ interface IFaceWithRestriction {
   void dontCallMe();
 }
 
-
-
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @interface Whitelist {}
 

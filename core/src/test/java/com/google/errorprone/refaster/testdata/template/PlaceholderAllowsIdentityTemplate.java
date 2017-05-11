@@ -21,13 +21,12 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.Placeholder;
-
 import java.util.Collection;
 import java.util.Iterator;
 
 /**
  * Test case demonstrating use of Refaster placeholder methods.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public abstract class PlaceholderAllowsIdentityTemplate {
@@ -43,12 +42,14 @@ public abstract class PlaceholderAllowsIdentityTemplate {
 
   @AfterTemplate
   <E> void iterablesRemoveIf(Collection<E> collection) {
-    Iterables.removeIf(collection, new Predicate<E>() {
-      @Override
-      public boolean apply(E input) {
-        return someBooleanCondition(input);
-      }
-    });
+    Iterables.removeIf(
+        collection,
+        new Predicate<E>() {
+          @Override
+          public boolean apply(E input) {
+            return someBooleanCondition(input);
+          }
+        });
   }
 
   @Placeholder(allowsIdentity = true)

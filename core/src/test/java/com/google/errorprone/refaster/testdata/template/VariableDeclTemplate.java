@@ -21,7 +21,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Sample Refaster rule matching a variable declaration.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class VariableDeclTemplate {

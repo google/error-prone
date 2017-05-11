@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.NoAllocation;
 
-/**
- * @author agoode@google.com (Adam Goode)
- */
+/** @author agoode@google.com (Adam Goode) */
 public class NoAllocationCheckerPositiveCases {
   // Trigger on new array.
   @NoAllocation
@@ -42,7 +40,7 @@ public class NoAllocationCheckerPositiveCases {
   public int[] returnArrayInitializer(int a, int b) {
     // BUG: Diagnostic contains: @NoAllocation
     // Allocating a new array
-    return new int[]{a, b};
+    return new int[] {a, b};
   }
 
   // Trigger on new.
@@ -55,7 +53,7 @@ public class NoAllocationCheckerPositiveCases {
 
   // Trigger calling a method that does allocation.
   public String allocateString() {
-   return new String();
+    return new String();
   }
 
   @NoAllocation

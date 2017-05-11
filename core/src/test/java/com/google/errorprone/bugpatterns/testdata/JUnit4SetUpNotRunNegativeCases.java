@@ -17,15 +17,12 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.internal.runners.JUnit38ClassRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Not a JUnit 4 test (no @RunWith annotation on the class).
- */
+/** Not a JUnit 4 test (no @RunWith annotation on the class). */
 public class JUnit4SetUpNotRunNegativeCases {
   public void setUp() {}
 }
@@ -41,19 +38,13 @@ class J4SetUpCorrectlyDone {
   public void setUp() {}
 }
 
-
-/**
- * May be a JUnit 3 test -- has @RunWith annotation on the class but also extends TestCase.
- */
+/** May be a JUnit 3 test -- has @RunWith annotation on the class but also extends TestCase. */
 @RunWith(JUnit4.class)
 class J4SetUpJUnit3Class extends TestCase {
   public void setUp() {}
 }
 
-
-/**
- * setUp() method is private and wouldn't be run by JUnit3
- */
+/** setUp() method is private and wouldn't be run by JUnit3 */
 @RunWith(JUnit4.class)
 class J4PrivateSetUp {
   private void setUp() {}
@@ -70,22 +61,22 @@ class J4PackageLocalSetUp {
 
 @RunWith(JUnit4.class)
 class J4SetUpNonVoidReturnType {
-  int setUp() { return 42; }
+  int setUp() {
+    return 42;
+  }
 }
 
-/**
- * setUp() has parameters
- */
+/** setUp() has parameters */
 @RunWith(JUnit4.class)
 class J4SetUpWithParameters {
   public void setUp(int ignored) {}
+
   public void setUp(boolean ignored) {}
+
   public void setUp(String ignored) {}
 }
 
-/**
- * setUp() method is static and wouldn't be run by JUnit3
- */
+/** setUp() method is static and wouldn't be run by JUnit3 */
 @RunWith(JUnit4.class)
 class J4StaticSetUp {
   public static void setUp() {}
@@ -96,9 +87,7 @@ abstract class SetUpAnnotatedBaseClass {
   public void setUp() {}
 }
 
-/**
- * setUp() method overrides parent method with @Before. It will be run by JUnit4BlockRunner
- */
+/** setUp() method overrides parent method with @Before. It will be run by JUnit4BlockRunner */
 @RunWith(JUnit4.class)
 class J4SetUpExtendsAnnotatedMethod extends SetUpAnnotatedBaseClass {
   public void setUp() {}

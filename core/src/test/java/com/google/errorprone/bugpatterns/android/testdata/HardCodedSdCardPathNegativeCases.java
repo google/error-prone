@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.android.testdata;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 public class HardCodedSdCardPathNegativeCases {
   static final String PATH1 = "/home/sdcard";
 

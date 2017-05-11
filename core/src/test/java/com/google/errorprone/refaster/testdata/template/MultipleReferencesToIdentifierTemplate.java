@@ -19,7 +19,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Refaster template referring to a single identifier multiple times.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class MultipleReferencesToIdentifierTemplate {
@@ -27,7 +27,7 @@ public class MultipleReferencesToIdentifierTemplate {
   public boolean orSelf(boolean a) {
     return a || a;
   }
-  
+
   @AfterTemplate
   public boolean identity(boolean a) {
     return a;

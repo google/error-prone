@@ -22,27 +22,31 @@ import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.MayOptionallyUse;
 import com.google.errorprone.refaster.annotation.Placeholder;
-
 import java.io.UnsupportedEncodingException;
 
 /**
  * Template demonstrating the use of the @MayOptionallyUse annotation.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public abstract class MayOptionallyUseTemplate {
-  @Placeholder abstract void useString(String str);
-  @Placeholder abstract void handleException(@MayOptionallyUse Exception e);
-  
-  @BeforeTemplate public void tryCatch(byte[] bytes) {
+  @Placeholder
+  abstract void useString(String str);
+
+  @Placeholder
+  abstract void handleException(@MayOptionallyUse Exception e);
+
+  @BeforeTemplate
+  public void tryCatch(byte[] bytes) {
     try {
       useString(new String(bytes, "UTF-8"));
     } catch (UnsupportedEncodingException e) {
       handleException(e);
     }
   }
-  
-  @AfterTemplate public void safe(byte[] bytes) {
+
+  @AfterTemplate
+  public void safe(byte[] bytes) {
     useString(new String(bytes, UTF_8));
   }
 }

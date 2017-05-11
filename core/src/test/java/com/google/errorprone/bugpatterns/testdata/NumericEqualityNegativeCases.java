@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author scottjohnson@google.com (Scott Johnsson)
- */
+/** @author scottjohnson@google.com (Scott Johnsson) */
 public class NumericEqualityNegativeCases {
 
   public static final Integer NULLINT = null;

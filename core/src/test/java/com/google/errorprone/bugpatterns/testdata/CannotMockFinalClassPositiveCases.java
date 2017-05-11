@@ -19,16 +19,14 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-/**
- * Test for CannotMockFinalClass.
- */
+/** Test for CannotMockFinalClass. */
 @RunWith(JUnit4.class)
 public class CannotMockFinalClassPositiveCases {
   static final class FinalClass {}
-  
+
   // BUG: Diagnostic contains: Mockito cannot mock
   @Mock FinalClass impossible;
-  
+
   public void method() {
     // BUG: Diagnostic contains: Mockito cannot mock
     FinalClass local = Mockito.mock(FinalClass.class);

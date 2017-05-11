@@ -18,13 +18,9 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.assistedinject.AssistedInject;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class AssistedInjectAndInjectOnSameConstructorPositiveCases {
-  /**
-   * Class has a constructor annotated with @javax.inject.Inject and @AssistedInject.
-   */
+  /** Class has a constructor annotated with @javax.inject.Inject and @AssistedInject. */
   public class TestClass1 {
     // BUG: Diagnostic contains: remove
     @javax.inject.Inject
@@ -32,10 +28,8 @@ public class AssistedInjectAndInjectOnSameConstructorPositiveCases {
     @AssistedInject
     public TestClass1() {}
   }
-  
-  /**
-   * Class has a constructor annotated with @com.google.inject.Inject and @AssistedInject.
-   */
+
+  /** Class has a constructor annotated with @com.google.inject.Inject and @AssistedInject. */
   public class TestClass2 {
     // BUG: Diagnostic contains: remove
     @com.google.inject.Inject

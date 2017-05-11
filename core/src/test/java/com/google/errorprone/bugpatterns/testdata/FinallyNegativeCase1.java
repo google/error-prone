@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class FinallyNegativeCase1 {
 
   public static void test1() {
@@ -53,12 +51,10 @@ public class FinallyNegativeCase1 {
     } finally {
     }
   }
-  
-  /**
-   * break inner loop. 
-   */
+
+  /** break inner loop. */
   public void test5() {
-  label:
+    label:
     while (true) {
       try {
       } finally {
@@ -68,32 +64,28 @@ public class FinallyNegativeCase1 {
       }
     }
   }
-  
-  /**
-   * continue statement jumps out of inner for. 
-   */
+
+  /** continue statement jumps out of inner for. */
   public void test6() {
-  label:
-    for (;;) {
+    label:
+    for (; ; ) {
       try {
       } finally {
-        for (;;) {
+        for (; ; ) {
           continue;
         }
       }
     }
   }
-  
-  /**
-   * break statement jumps out of switch. 
-   */
+
+  /** break statement jumps out of switch. */
   public void test7() {
     int i = 10;
     while (true) {
       try {
       } finally {
         switch (i) {
-          case 10: 
+          case 10:
             break;
         }
       }

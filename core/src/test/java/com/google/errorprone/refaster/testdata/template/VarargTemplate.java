@@ -20,22 +20,19 @@ import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.Repeated;
 
-/** 
+/**
  * Example Refaster rule matching varargs.
  *
  * @author juanch@google.com (Juan Chen)
  */
 public class VarargTemplate {
   @BeforeTemplate
-   public String before(
-       String template, @Repeated Object vararg) {
-     return String.format(template, new Object[]{vararg});
-   }
+  public String before(String template, @Repeated Object vararg) {
+    return String.format(template, new Object[] {vararg});
+  }
 
-   @AfterTemplate
-   public String after(
-       String template, @Repeated Object vararg) {
-     return String.format(template, vararg);
-   }
+  @AfterTemplate
+  public String after(String template, @Repeated Object vararg) {
+    return String.format(template, vararg);
+  }
 }
-

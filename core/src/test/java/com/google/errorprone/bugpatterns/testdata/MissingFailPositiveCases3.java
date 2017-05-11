@@ -28,7 +28,8 @@ public class MissingFailPositiveCases3 {
       try {
         // BUG: Diagnostic contains: fail()
         dummyMethod();
-      } catch (Exception expected) {}
+      } catch (Exception expected) {
+      }
     }
 
     public void catchAssert() {
@@ -44,6 +45,4 @@ public class MissingFailPositiveCases3 {
   private static void dummyMethod() {}
 
   private static void assertDummy() {}
-
 }
-

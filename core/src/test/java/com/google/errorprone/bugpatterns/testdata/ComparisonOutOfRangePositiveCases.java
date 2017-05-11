@@ -19,9 +19,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.io.IOException;
 import java.io.Reader;
 
-/**
- * @author Bill Pugh (bill.pugh@gmail.com)
- */
+/** @author Bill Pugh (bill.pugh@gmail.com) */
 public class ComparisonOutOfRangePositiveCases {
 
   public void testByteEquality() {
@@ -38,7 +36,7 @@ public class ComparisonOutOfRangePositiveCases {
     // BUG: Diagnostic contains: b != -1
     result = b != 255;
     // BUG: Diagnostic contains: b == 1
-    result = b == - 255;
+    result = b == -255;
 
     // BUG: Diagnostic contains: barr[0] == -1
     result = barr[0] == 255;
@@ -47,7 +45,7 @@ public class ComparisonOutOfRangePositiveCases {
     // BUG: Diagnostic contains: barr[0] == 1
     result = barr[0] == -255;
   }
-  
+
   public void testCharEquality() throws IOException {
     boolean result;
     char c = 'A';
@@ -63,4 +61,3 @@ public class ComparisonOutOfRangePositiveCases {
     result = (d = (char) reader.read()) == -1;
   }
 }
-

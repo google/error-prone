@@ -29,8 +29,15 @@ import org.junit.runners.JUnit4;
 public class JUnit3TestNotRunNegativeCase2 {
 
   //JUnit4 tests should be ignored, no matter what their names are.
-  @Test public void nameDoesNotStartWithTest() {}
-  @Test public void tesName() {}
-  @Test public void tstName() {}
-  @Test public void TestName() {}
+  @Test
+  public void nameDoesNotStartWithTest() {}
+
+  @Test
+  public void tesName() {}
+
+  @Test
+  public void tstName() {}
+
+  @Test
+  public void TestName() {}
 }

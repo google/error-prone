@@ -18,13 +18,12 @@ package com.google.errorprone.refaster.testdata.template;
 
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
-
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
 /**
  * Sample Refaster template matching a method invocation.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class MethodInvocationTemplate {

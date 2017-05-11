@@ -22,5 +22,5 @@ public class PreconditionsCheckNotNullNegativeCase2 {
   public void go() {
     Object testObj = null;
     Preconditions.checkNotNull(testObj, "this is ok");
-  }  
+  }
 }

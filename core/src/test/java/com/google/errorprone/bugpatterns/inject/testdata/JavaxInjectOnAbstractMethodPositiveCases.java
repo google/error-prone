@@ -16,39 +16,37 @@
 
 package com.google.errorprone.bugpatterns.inject.testdata;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class JavaxInjectOnAbstractMethodPositiveCases {
 
-  /**
-   * Abstract class has an injectable(javax.inject.Inject) abstract method.
-   */
+  /** Abstract class has an injectable(javax.inject.Inject) abstract method. */
   public abstract class TestClass1 {
-    // BUG: Diagnostic contains: remove  
+    // BUG: Diagnostic contains: remove
     @javax.inject.Inject
     abstract void abstractMethod();
   }
 
   /**
-   * Abstract class has an injectable(javax.inject.Inject) abstract method and 
-   * an unrelated concrete method.
+   * Abstract class has an injectable(javax.inject.Inject) abstract method and an unrelated concrete
+   * method.
    */
   public abstract class TestClass2 {
-    // BUG: Diagnostic contains: remove  
+    // BUG: Diagnostic contains: remove
     @javax.inject.Inject
     abstract void abstractMethod();
-    public void foo(){}
+
+    public void foo() {}
   }
-  
+
   /**
    * Abstract class has an injectable(javax.inject.Inject) abstract method and an unrelated abstract
    * method.
    */
   public abstract class TestClass3 {
-    // BUG: Diagnostic contains: remove  
+    // BUG: Diagnostic contains: remove
     @javax.inject.Inject
     abstract void abstractMethod1();
+
     abstract void abstractMethod2();
   }
 

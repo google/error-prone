@@ -16,11 +16,9 @@
 
 package com.google.errorprone.bugpatterns.inject.testdata;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class OverlappingQualifierAndScopeAnnotationNegativeCases {
-  
+
   @javax.inject.Scope
   @interface MyJavaxScope {}
 
@@ -32,26 +30,25 @@ public class OverlappingQualifierAndScopeAnnotationNegativeCases {
 
   @com.google.inject.BindingAnnotation
   @interface MyGuiceBindingAnnotation {}
-  
+
   // supression tests
   @SuppressWarnings("OverlappingQualifierAndScopeAnnotation")
   @javax.inject.Scope
   @javax.inject.Qualifier
   @interface JavaxScopeAndJavaxQualifier {}
-    
+
   @SuppressWarnings("OverlappingQualifierAndScopeAnnotation")
   @com.google.inject.ScopeAnnotation
   @javax.inject.Qualifier
   @interface GuiceScopeAndJavaxQualifier {}
-  
+
   @SuppressWarnings("OverlappingQualifierAndScopeAnnotation")
   @com.google.inject.ScopeAnnotation
   @com.google.inject.BindingAnnotation
   @interface GuiceScopeAndGuiceBindingAnnotation {}
-    
+
   @SuppressWarnings("OverlappingQualifierAndScopeAnnotation")
   @javax.inject.Scope
   @com.google.inject.BindingAnnotation
   @interface JavaxScopeAndGuiceBindingAnnotation {}
-  
 }

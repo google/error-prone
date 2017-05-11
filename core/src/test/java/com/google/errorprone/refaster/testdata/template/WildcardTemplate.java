@@ -17,7 +17,6 @@ package com.google.errorprone.refaster.testdata.template;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
-
 import java.util.Collections;
 import java.util.List;
 

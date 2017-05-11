@@ -19,9 +19,7 @@ import static com.google.common.base.Throwables.propagateIfPossible;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-/**
- * @author cpovirk@google.com (Chris Povirk)
- */
+/** @author cpovirk@google.com (Chris Povirk) */
 public class ThrowIfUncheckedKnownCheckedTestPositiveCases {
   void simple(IOException e) {
 

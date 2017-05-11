@@ -21,77 +21,59 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.inject.servlet.RequestScoped;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class AssistedInjectScopingPositiveCases {
 
   // BUG: Diagnostic contains: remove this line
   @Singleton
   public class TestClass {
     @Inject
-    public TestClass(String unassisted, @Assisted String assisted) {
-    }
+    public TestClass(String unassisted, @Assisted String assisted) {}
   }
-  
+
   // BUG: Diagnostic contains: remove this line
   @RequestScoped
   public class TestClass2 {
     @Inject
-    public TestClass2(String unassisted, @Assisted String assisted) {
-    }
+    public TestClass2(String unassisted, @Assisted String assisted) {}
   }
-  
+
   // BUG: Diagnostic contains: remove this line
   @Singleton
   public class TestClass3 {
     @AssistedInject
-    public TestClass3(String param) {
-    }
+    public TestClass3(String param) {}
   }
-    
-  /**
-   * Multiple constructors, but only one with @Inject, and that one matches.
-   */
+
+  /** Multiple constructors, but only one with @Inject, and that one matches. */
   // BUG: Diagnostic contains: remove this line
   @Singleton
   public class TestClass4 {
     @Inject
-    public TestClass4(String unassisted, @Assisted String assisted) {
-    }
-    
-    public TestClass4(String unassisted, int i) {
-    }
-    
-    public TestClass4(int i, String unassisted) {
-    }
+    public TestClass4(String unassisted, @Assisted String assisted) {}
+
+    public TestClass4(String unassisted, int i) {}
+
+    public TestClass4(int i, String unassisted) {}
   }
-    
-  /**
-   * Multiple constructors, none with @Inject, one matches.
-   */
+
+  /** Multiple constructors, none with @Inject, one matches. */
   // BUG: Diagnostic contains: remove this line
   @Singleton
   public class TestClass5 {
-    public TestClass5(String unassisted1, String unassisted2) {
-    }
-    
-    public TestClass5(String unassisted, int i) {
-    }
-    
+    public TestClass5(String unassisted1, String unassisted2) {}
+
+    public TestClass5(String unassisted, int i) {}
+
     @AssistedInject
-    public TestClass5(int i, String unassisted) {
-    }
+    public TestClass5(int i, String unassisted) {}
   }
-  
-  /**
-   * JSR330 annotations.
-   */
+
+  /** JSR330 annotations. */
   // BUG: Diagnostic contains: remove this line
   @javax.inject.Singleton
   public class TestClass6 {
     @javax.inject.Inject
-    public TestClass6(String unassisted, @Assisted String assisted) {
-    }
+    public TestClass6(String unassisted, @Assisted String assisted) {}
   }
 }

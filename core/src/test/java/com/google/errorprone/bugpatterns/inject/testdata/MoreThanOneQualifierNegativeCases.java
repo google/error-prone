@@ -19,16 +19,12 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.inject.BindingAnnotation;
-import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
+import javax.inject.Qualifier;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class MoreThanOneQualifierNegativeCases {
-  /**
-   * A class in with no annotations on any of its members.
-   */
+  /** A class in with no annotations on any of its members. */
   public class TestClass1 {
     private int n;
 
@@ -43,8 +39,7 @@ public class MoreThanOneQualifierNegativeCases {
    */
   @Foo
   public class TestClass2 {
-    @Foo
-    private int n;
+    @Foo private int n;
 
     @Foo
     public TestClass2() {}
@@ -59,8 +54,7 @@ public class MoreThanOneQualifierNegativeCases {
    */
   @Bar
   public class TestClass3 {
-    @Bar
-    private int n;
+    @Bar private int n;
 
     @Bar
     public TestClass3() {}
@@ -72,7 +66,7 @@ public class MoreThanOneQualifierNegativeCases {
   @Qualifier
   @Retention(RUNTIME)
   public @interface Foo {}
-  
+
   @BindingAnnotation
   @Retention(RUNTIME)
   public @interface Bar {}

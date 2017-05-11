@@ -24,11 +24,10 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
 import javax.crypto.NoSuchPaddingException;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 public class InsecureCipherModePositiveCases {
   static Cipher defaultAesCipher;
+
   static {
     try {
       // BUG: Diagnostic contains: the mode and padding must be explicitly specified
@@ -41,6 +40,7 @@ public class InsecureCipherModePositiveCases {
   }
 
   static Cipher defaultRsaCipher;
+
   static {
     try {
       // BUG: Diagnostic contains: the mode and padding must be explicitly specified
@@ -54,6 +54,7 @@ public class InsecureCipherModePositiveCases {
 
   static final String AES_STRING = "AES";
   static Cipher defaultAesCipherWithConstantString;
+
   static {
     try {
       // BUG: Diagnostic contains: the mode and padding must be explicitly specified
@@ -66,6 +67,7 @@ public class InsecureCipherModePositiveCases {
   }
 
   static Cipher explicitAesCipher;
+
   static {
     try {
       // BUG: Diagnostic contains: ECB mode must not be used
@@ -78,6 +80,7 @@ public class InsecureCipherModePositiveCases {
   }
 
   static Cipher explicitDesCipher;
+
   static {
     try {
       // BUG: Diagnostic contains: ECB mode must not be used
@@ -90,6 +93,7 @@ public class InsecureCipherModePositiveCases {
   }
 
   static Cipher explicitDesCipherWithProvider;
+
   static {
     try {
       // BUG: Diagnostic contains: ECB mode must not be used
@@ -104,6 +108,7 @@ public class InsecureCipherModePositiveCases {
   }
 
   static String transformation;
+
   static {
     try {
       transformation = "DES/CBC/NoPadding";
@@ -144,6 +149,7 @@ public class InsecureCipherModePositiveCases {
   }
 
   static Cipher complexCipher1;
+
   static {
     try {
       String algorithm = "AES";
@@ -157,6 +163,7 @@ public class InsecureCipherModePositiveCases {
   }
 
   static Cipher complexCipher2;
+
   static {
     try {
       String transformation = "AES";

@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.android.testdata;
 
-/**
- * @author jasonlong@google.com (Jason Long)
- */
+/** @author jasonlong@google.com (Jason Long) */
 public class CustomFragmentNotInstantiablePositiveCases {
   // BUG: Diagnostic contains: public
   static class PrivateFragment extends CustomFragment {

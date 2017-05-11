@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/** @author scottjohnson@google.com (Scott Johnson) */
 public class WrongParameterPackageNegativeCases {
 
   public void testParameter(Integer x) {}
@@ -27,9 +25,7 @@ public class WrongParameterPackageNegativeCases {
 
   public void testParameter2(Integer x, Integer y) {}
 
-  /**
-   * Test overrides
-   */
+  /** Test overrides */
   public static class Subclass extends WrongParameterPackageNegativeCases {
 
     @Override
@@ -49,9 +45,6 @@ public class WrongParameterPackageNegativeCases {
     public void testParameter(java.lang.Integer x) {}
   }
 
-  /**
-   * Ambiguous Integer class
-   */
-  public static class Integer {
-  }
+  /** Ambiguous Integer class */
+  public static class Integer {}
 }

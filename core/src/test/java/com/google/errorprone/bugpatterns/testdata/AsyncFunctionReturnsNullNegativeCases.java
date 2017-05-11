@@ -22,9 +22,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
-/**
- * Negative cases for {@link AsyncFunctionReturnsNull}.
- */
+/** Negative cases for {@link AsyncFunctionReturnsNull}. */
 public class AsyncFunctionReturnsNullNegativeCases {
   static {
     new AsyncFunction<String, Object>() {

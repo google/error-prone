@@ -16,22 +16,19 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.common.base.Objects;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class PrimitiveArrayPassedToVarargsMethodNegativeCases {
-  
-  public void intVarargsMethod(int... ints) {} 
-  
+
+  public void intVarargsMethod(int... ints) {}
+
   public void intArrayVarargsMethod(int[]... intArrays) {}
-  
+
   public void objectVarargsMethodWithMultipleParams(Object obj1, Object... objs) {}
-  
+
   public void doIt() {
     int[] intArray = {1, 2, 3};
-    
+
     intVarargsMethod(intArray);
     intArrayVarargsMethod(intArray);
     objectVarargsMethodWithMultipleParams(new Object());

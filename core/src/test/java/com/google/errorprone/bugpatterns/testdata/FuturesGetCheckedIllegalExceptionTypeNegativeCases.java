@@ -20,9 +20,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-/**
- * Negative cases for {@link FuturesGetCheckedIllegalExceptionType}.
- */
+/** Negative cases for {@link FuturesGetCheckedIllegalExceptionType}. */
 public class FuturesGetCheckedIllegalExceptionTypeNegativeCases {
   <T extends Exception> void runtime(Future<?> future, Class<? extends Exception> c1, Class<T> c2)
       throws Exception {
@@ -35,8 +33,9 @@ public class FuturesGetCheckedIllegalExceptionTypeNegativeCases {
     getChecked(future, null);
   }
 
-  <T extends ProtectedConstructorException> void constructor(Future<?> future,
-      Class<? extends ProtectedConstructorException> c1, Class<T> c2) throws Exception {
+  <T extends ProtectedConstructorException> void constructor(
+      Future<?> future, Class<? extends ProtectedConstructorException> c1, Class<T> c2)
+      throws Exception {
     getChecked(future, StaticNestedWithExplicitConstructorException.class);
     getChecked(future, StaticNestedWithImplicitConstructorException.class);
     /*

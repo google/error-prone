@@ -21,138 +21,151 @@ package com.google.errorprone.bugpatterns.proto;
 
 public final class ProtoTest {
   private ProtoTest() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-  }
-  public interface TestFieldProtoMessageOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
+
+  public static void registerAllExtensions(com.google.protobuf.ExtensionRegistry registry) {}
+
+  public interface TestFieldProtoMessageOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
     // optional .com.google.errorprone.bugpatterns.TestFieldProtoMessage field = 1;
     boolean hasField();
+
     com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getField();
-    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder getFieldOrBuilder();
+
+    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder
+        getFieldOrBuilder();
   }
-  public static final class TestFieldProtoMessage extends
-      com.google.protobuf.GeneratedMessage
+
+  public static final class TestFieldProtoMessage extends com.google.protobuf.GeneratedMessage
       implements TestFieldProtoMessageOrBuilder {
     // Use TestFieldProtoMessage.newBuilder() to construct.
     private TestFieldProtoMessage(Builder builder) {
       super(builder);
     }
+
     private TestFieldProtoMessage(boolean noInit) {}
-    
+
     private static final TestFieldProtoMessage defaultInstance;
+
     public static TestFieldProtoMessage getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public TestFieldProtoMessage getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.google.errorprone.bugpatterns.proto.ProtoTest.internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor;
+
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+      return com.google.errorprone.bugpatterns.proto.ProtoTest
+          .internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.errorprone.bugpatterns.proto.ProtoTest.internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_fieldAccessorTable;
+      return com.google.errorprone.bugpatterns.proto.ProtoTest
+          .internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_fieldAccessorTable;
     }
-    
+
     private int bitField0_;
     // optional .com.google.errorprone.bugpatterns.TestFieldProtoMessage field = 1;
     public static final int FIELD_FIELD_NUMBER = 1;
     private com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage field_;
+
     public boolean hasField() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
+
     public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getField() {
       return field_;
     }
-    public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder getFieldOrBuilder() {
+
+    public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder
+        getFieldOrBuilder() {
       return field_;
     }
-    
+
     private void initFields() {
-      field_ = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance();
+      field_ =
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+              .getDefaultInstance();
     }
+
     private byte memoizedIsInitialized = -1;
+
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       memoizedIsInitialized = 1;
       return true;
     }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeMessage(1, field_);
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
+
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, field_);
+        size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, field_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
+
     @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
+    protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
     }
-    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+
+    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(
+        byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
     }
-    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
+
+    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(
+        java.io.InputStream input) throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
     }
-    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
+
+    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+        parseDelimitedFrom(java.io.InputStream input) throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
         return builder.buildParsed();
@@ -160,10 +173,11 @@ public final class ProtoTest {
         return null;
       }
     }
-    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+
+    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+        parseDelimitedFrom(
+            java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
         return builder.buildParsed();
@@ -171,107 +185,128 @@ public final class ProtoTest {
         return null;
       }
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input) throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
     }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage prototype) {
+
+    public static Builder newBuilder() {
+      return Builder.create();
+    }
+
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
+    public static Builder newBuilder(
+        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
-    
+
+    public Builder toBuilder() {
+      return newBuilder(this);
+    }
+
     @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.google.errorprone.bugpatterns.proto.ProtoTest.internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor;
+
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+        implements com.google.errorprone.bugpatterns.proto.ProtoTest
+            .TestFieldProtoMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        return com.google.errorprone.bugpatterns.proto.ProtoTest
+            .internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.google.errorprone.bugpatterns.proto.ProtoTest.internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_fieldAccessorTable;
+        return com.google.errorprone.bugpatterns.proto.ProtoTest
+            .internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_fieldAccessorTable;
       }
-      
-      // Construct using com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.newBuilder()
+
+      // Construct using
+      // com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
+
       private Builder(BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getFieldFieldBuilder();
         }
       }
+
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         if (fieldBuilder_ == null) {
-          field_ = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance();
+          field_ =
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                  .getDefaultInstance();
         } else {
           fieldBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDescriptor();
+
+      public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+        return com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+            .getDescriptor();
       }
-      
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getDefaultInstanceForType() {
-        return com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance();
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+          getDefaultInstanceForType() {
+        return com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+            .getDefaultInstance();
       }
-      
+
       public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage build() {
-        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage result = buildPartial();
+        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage result =
+            buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
-      
+
       private com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
-        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage result = buildPartial();
+        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage result =
+            buildPartial();
         if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
+          throw newUninitializedMessageException(result).asInvalidProtocolBufferException();
         }
         return result;
       }
-      
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage buildPartial() {
-        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage result = new com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage(this);
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+          buildPartial() {
+        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage result =
+            new com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -286,36 +321,40 @@ public final class ProtoTest {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage) {
-          return mergeFrom((com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage)other);
+        if (other
+            instanceof com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage) {
+          return mergeFrom(
+              (com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage) other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
-      
-      public Builder mergeFrom(com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage other) {
-        if (other == com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance()) return this;
+
+      public Builder mergeFrom(
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage other) {
+        if (other
+            == com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                .getDefaultInstance()) return this;
         if (other.hasField()) {
           mergeField(other.getField());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
+            com.google.protobuf.UnknownFieldSet.newBuilder(this.getUnknownFields());
         while (true) {
           int tag = input.readTag();
           switch (tag) {
@@ -323,37 +362,50 @@ public final class ProtoTest {
               this.setUnknownFields(unknownFields.build());
               onChanged();
               return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
+            default:
+              {
+                if (!parseUnknownField(
+                    input, unknownFields,
+                    extensionRegistry, tag)) {
+                  this.setUnknownFields(unknownFields.build());
+                  onChanged();
+                  return this;
+                }
+                break;
               }
-              break;
-            }
-            case 10: {
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder subBuilder = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.newBuilder();
-              if (hasField()) {
-                subBuilder.mergeFrom(getField());
+            case 10:
+              {
+                com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+                    subBuilder =
+                        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                            .newBuilder();
+                if (hasField()) {
+                  subBuilder.mergeFrom(getField());
+                }
+                input.readMessage(subBuilder, extensionRegistry);
+                setField(subBuilder.buildPartial());
+                break;
               }
-              input.readMessage(subBuilder, extensionRegistry);
-              setField(subBuilder.buildPartial());
-              break;
-            }
           }
         }
       }
-      
+
       private int bitField0_;
-      
+
       // optional .com.google.errorprone.bugpatterns.TestFieldProtoMessage field = 1;
-      private com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage field_ = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance();
+      private com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage field_ =
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+              .getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder> fieldBuilder_;
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>
+          fieldBuilder_;
+
       public boolean hasField() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
+
       public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getField() {
         if (fieldBuilder_ == null) {
           return field_;
@@ -361,7 +413,9 @@ public final class ProtoTest {
           return fieldBuilder_.getMessage();
         }
       }
-      public Builder setField(com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
+
+      public Builder setField(
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
         if (fieldBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -374,8 +428,10 @@ public final class ProtoTest {
         bitField0_ |= 0x00000001;
         return this;
       }
+
       public Builder setField(
-          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder builderForValue) {
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+              builderForValue) {
         if (fieldBuilder_ == null) {
           field_ = builderForValue.build();
           onChanged();
@@ -385,12 +441,19 @@ public final class ProtoTest {
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder mergeField(com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
+
+      public Builder mergeField(
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
         if (fieldBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              field_ != com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance()) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)
+              && field_
+                  != com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                      .getDefaultInstance()) {
             field_ =
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.newBuilder(field_).mergeFrom(value).buildPartial();
+                com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.newBuilder(
+                        field_)
+                    .mergeFrom(value)
+                    .buildPartial();
           } else {
             field_ = value;
           }
@@ -401,9 +464,12 @@ public final class ProtoTest {
         bitField0_ |= 0x00000001;
         return this;
       }
+
       public Builder clearField() {
         if (fieldBuilder_ == null) {
-          field_ = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance();
+          field_ =
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                  .getDefaultInstance();
           onChanged();
         } else {
           fieldBuilder_.clear();
@@ -411,139 +477,176 @@ public final class ProtoTest {
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder getFieldBuilder() {
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+          getFieldBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getFieldFieldBuilder().getBuilder();
       }
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder getFieldOrBuilder() {
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder
+          getFieldOrBuilder() {
         if (fieldBuilder_ != null) {
           return fieldBuilder_.getMessageOrBuilder();
         } else {
           return field_;
         }
       }
+
       private com.google.protobuf.SingleFieldBuilder<
-          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder> 
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>
           getFieldFieldBuilder() {
         if (fieldBuilder_ == null) {
-          fieldBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>(
-                  field_,
-                  getParentForChildren(),
-                  isClean());
+          fieldBuilder_ =
+              new com.google.protobuf.SingleFieldBuilder<
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage,
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder,
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>(
+                  field_, getParentForChildren(), isClean());
           field_ = null;
         }
         return fieldBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:com.google.errorprone.bugpatterns.TestFieldProtoMessage)
     }
-    
+
     static {
       defaultInstance = new TestFieldProtoMessage(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:com.google.errorprone.bugpatterns.TestFieldProtoMessage)
   }
-  
-  public interface TestProtoMessageOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
+
+  public interface TestProtoMessageOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
     // optional .com.google.errorprone.bugpatterns.TestFieldProtoMessage message = 1;
     boolean hasMessage();
+
     com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getMessage();
-    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder getMessageOrBuilder();
-    
+
+    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder
+        getMessageOrBuilder();
+
     // repeated .com.google.errorprone.bugpatterns.TestFieldProtoMessage multi_field = 2;
-    java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage> 
+    java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage>
         getMultiFieldList();
-    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getMultiField(int index);
-    int getMultiFieldCount();
-    java.util.List<? extends com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder> 
-        getMultiFieldOrBuilderList();
-    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder getMultiFieldOrBuilder(
+
+    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getMultiField(
         int index);
+
+    int getMultiFieldCount();
+
+    java.util.List<
+            ? extends
+                com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>
+        getMultiFieldOrBuilderList();
+
+    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder
+        getMultiFieldOrBuilder(int index);
   }
-  public static final class TestProtoMessage extends
-      com.google.protobuf.GeneratedMessage
+
+  public static final class TestProtoMessage extends com.google.protobuf.GeneratedMessage
       implements TestProtoMessageOrBuilder {
     // Use TestProtoMessage.newBuilder() to construct.
     private TestProtoMessage(Builder builder) {
       super(builder);
     }
+
     private TestProtoMessage(boolean noInit) {}
-    
+
     private static final TestProtoMessage defaultInstance;
+
     public static TestProtoMessage getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public TestProtoMessage getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.google.errorprone.bugpatterns.proto.ProtoTest.internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor;
+
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+      return com.google.errorprone.bugpatterns.proto.ProtoTest
+          .internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.errorprone.bugpatterns.proto.ProtoTest.internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_fieldAccessorTable;
+      return com.google.errorprone.bugpatterns.proto.ProtoTest
+          .internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_fieldAccessorTable;
     }
-    
+
     private int bitField0_;
     // optional .com.google.errorprone.bugpatterns.TestFieldProtoMessage message = 1;
     public static final int MESSAGE_FIELD_NUMBER = 1;
     private com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage message_;
+
     public boolean hasMessage() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
+
     public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getMessage() {
       return message_;
     }
-    public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder getMessageOrBuilder() {
+
+    public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder
+        getMessageOrBuilder() {
       return message_;
     }
-    
+
     // repeated .com.google.errorprone.bugpatterns.TestFieldProtoMessage multi_field = 2;
     public static final int MULTI_FIELD_FIELD_NUMBER = 2;
-    private java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage> multiField_;
-    public java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage> getMultiFieldList() {
+    private java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage>
+        multiField_;
+
+    public java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage>
+        getMultiFieldList() {
       return multiField_;
     }
-    public java.util.List<? extends com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder> 
+
+    public java.util.List<
+            ? extends
+                com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>
         getMultiFieldOrBuilderList() {
       return multiField_;
     }
+
     public int getMultiFieldCount() {
       return multiField_.size();
     }
-    public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getMultiField(int index) {
-      return multiField_.get(index);
-    }
-    public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder getMultiFieldOrBuilder(
+
+    public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getMultiField(
         int index) {
       return multiField_.get(index);
     }
-    
+
+    public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder
+        getMultiFieldOrBuilder(int index) {
+      return multiField_.get(index);
+    }
+
     private void initFields() {
-      message_ = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance();
+      message_ =
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+              .getDefaultInstance();
       multiField_ = java.util.Collections.emptyList();
     }
+
     private byte memoizedIsInitialized = -1;
+
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       memoizedIsInitialized = 1;
       return true;
     }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeMessage(1, message_);
@@ -553,69 +656,69 @@ public final class ProtoTest {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
+
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, message_);
+        size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, message_);
       }
       for (int i = 0; i < multiField_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, multiField_.get(i));
+        size += com.google.protobuf.CodedOutputStream.computeMessageSize(2, multiField_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
+
     @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
+    protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
     }
-    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+
+    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(
+        byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
     }
-    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
+
+    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(
+        java.io.InputStream input) throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
     }
-    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
+
+    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage
+        parseDelimitedFrom(java.io.InputStream input) throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
         return builder.buildParsed();
@@ -623,10 +726,11 @@ public final class ProtoTest {
         return null;
       }
     }
-    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+
+    public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage
+        parseDelimitedFrom(
+            java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
         return builder.buildParsed();
@@ -634,68 +738,83 @@ public final class ProtoTest {
         return null;
       }
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input) throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
+
     public static com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
     }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage prototype) {
+
+    public static Builder newBuilder() {
+      return Builder.create();
+    }
+
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
+    public static Builder newBuilder(
+        com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
-    
+
+    public Builder toBuilder() {
+      return newBuilder(this);
+    }
+
     @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.google.errorprone.bugpatterns.proto.ProtoTest.internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor;
+
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+        implements com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        return com.google.errorprone.bugpatterns.proto.ProtoTest
+            .internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.google.errorprone.bugpatterns.proto.ProtoTest.internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_fieldAccessorTable;
+        return com.google.errorprone.bugpatterns.proto.ProtoTest
+            .internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_fieldAccessorTable;
       }
-      
-      // Construct using com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage.newBuilder()
+
+      // Construct using
+      // com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
+
       private Builder(BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getMessageFieldBuilder();
           getMultiFieldFieldBuilder();
         }
       }
+
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         if (messageBuilder_ == null) {
-          message_ = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance();
+          message_ =
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                  .getDefaultInstance();
         } else {
           messageBuilder_.clear();
         }
@@ -708,20 +827,21 @@ public final class ProtoTest {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+
+      public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
         return com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage.getDescriptor();
       }
-      
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage getDefaultInstanceForType() {
-        return com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage.getDefaultInstance();
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage
+          getDefaultInstanceForType() {
+        return com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage
+            .getDefaultInstance();
       }
-      
+
       public com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage build() {
         com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage result = buildPartial();
         if (!result.isInitialized()) {
@@ -729,19 +849,19 @@ public final class ProtoTest {
         }
         return result;
       }
-      
+
       private com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage result = buildPartial();
         if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
+          throw newUninitializedMessageException(result).asInvalidProtocolBufferException();
         }
         return result;
       }
-      
+
       public com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage buildPartial() {
-        com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage result = new com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage(this);
+        com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage result =
+            new com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -765,18 +885,22 @@ public final class ProtoTest {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage) {
-          return mergeFrom((com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage)other);
+          return mergeFrom(
+              (com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage) other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
-      
-      public Builder mergeFrom(com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage other) {
-        if (other == com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage.getDefaultInstance()) return this;
+
+      public Builder mergeFrom(
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage other) {
+        if (other
+            == com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage
+                .getDefaultInstance()) return this;
         if (other.hasMessage()) {
           mergeMessage(other.getMessage());
         }
@@ -798,9 +922,10 @@ public final class ProtoTest {
               multiFieldBuilder_ = null;
               multiField_ = other.multiField_;
               bitField0_ = (bitField0_ & ~0x00000002);
-              multiFieldBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getMultiFieldFieldBuilder() : null;
+              multiFieldBuilder_ =
+                  com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
+                      ? getMultiFieldFieldBuilder()
+                      : null;
             } else {
               multiFieldBuilder_.addAllMessages(other.multiField_);
             }
@@ -809,18 +934,17 @@ public final class ProtoTest {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
+            com.google.protobuf.UnknownFieldSet.newBuilder(this.getUnknownFields());
         while (true) {
           int tag = input.readTag();
           switch (tag) {
@@ -828,43 +952,60 @@ public final class ProtoTest {
               this.setUnknownFields(unknownFields.build());
               onChanged();
               return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
+            default:
+              {
+                if (!parseUnknownField(
+                    input, unknownFields,
+                    extensionRegistry, tag)) {
+                  this.setUnknownFields(unknownFields.build());
+                  onChanged();
+                  return this;
+                }
+                break;
               }
-              break;
-            }
-            case 10: {
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder subBuilder = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.newBuilder();
-              if (hasMessage()) {
-                subBuilder.mergeFrom(getMessage());
+            case 10:
+              {
+                com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+                    subBuilder =
+                        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                            .newBuilder();
+                if (hasMessage()) {
+                  subBuilder.mergeFrom(getMessage());
+                }
+                input.readMessage(subBuilder, extensionRegistry);
+                setMessage(subBuilder.buildPartial());
+                break;
               }
-              input.readMessage(subBuilder, extensionRegistry);
-              setMessage(subBuilder.buildPartial());
-              break;
-            }
-            case 18: {
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder subBuilder = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addMultiField(subBuilder.buildPartial());
-              break;
-            }
+            case 18:
+              {
+                com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+                    subBuilder =
+                        com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                            .newBuilder();
+                input.readMessage(subBuilder, extensionRegistry);
+                addMultiField(subBuilder.buildPartial());
+                break;
+              }
           }
         }
       }
-      
+
       private int bitField0_;
-      
+
       // optional .com.google.errorprone.bugpatterns.TestFieldProtoMessage message = 1;
-      private com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage message_ = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance();
+      private com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage message_ =
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+              .getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder> messageBuilder_;
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>
+          messageBuilder_;
+
       public boolean hasMessage() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
+
       public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getMessage() {
         if (messageBuilder_ == null) {
           return message_;
@@ -872,7 +1013,9 @@ public final class ProtoTest {
           return messageBuilder_.getMessage();
         }
       }
-      public Builder setMessage(com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
+
+      public Builder setMessage(
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
         if (messageBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -885,8 +1028,10 @@ public final class ProtoTest {
         bitField0_ |= 0x00000001;
         return this;
       }
+
       public Builder setMessage(
-          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder builderForValue) {
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+              builderForValue) {
         if (messageBuilder_ == null) {
           message_ = builderForValue.build();
           onChanged();
@@ -896,12 +1041,19 @@ public final class ProtoTest {
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder mergeMessage(com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
+
+      public Builder mergeMessage(
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
         if (messageBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              message_ != com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance()) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)
+              && message_
+                  != com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                      .getDefaultInstance()) {
             message_ =
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.newBuilder(message_).mergeFrom(value).buildPartial();
+                com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.newBuilder(
+                        message_)
+                    .mergeFrom(value)
+                    .buildPartial();
           } else {
             message_ = value;
           }
@@ -912,9 +1064,12 @@ public final class ProtoTest {
         bitField0_ |= 0x00000001;
         return this;
       }
+
       public Builder clearMessage() {
         if (messageBuilder_ == null) {
-          message_ = com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance();
+          message_ =
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                  .getDefaultInstance();
           onChanged();
         } else {
           messageBuilder_.clear();
@@ -922,52 +1077,70 @@ public final class ProtoTest {
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder getMessageBuilder() {
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+          getMessageBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getMessageFieldBuilder().getBuilder();
       }
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder getMessageOrBuilder() {
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder
+          getMessageOrBuilder() {
         if (messageBuilder_ != null) {
           return messageBuilder_.getMessageOrBuilder();
         } else {
           return message_;
         }
       }
+
       private com.google.protobuf.SingleFieldBuilder<
-          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder> 
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>
           getMessageFieldBuilder() {
         if (messageBuilder_ == null) {
-          messageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>(
-                  message_,
-                  getParentForChildren(),
-                  isClean());
+          messageBuilder_ =
+              new com.google.protobuf.SingleFieldBuilder<
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage,
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder,
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>(
+                  message_, getParentForChildren(), isClean());
           message_ = null;
         }
         return messageBuilder_;
       }
-      
+
       // repeated .com.google.errorprone.bugpatterns.TestFieldProtoMessage multi_field = 2;
-      private java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage> multiField_ =
-        java.util.Collections.emptyList();
+      private java.util.List<
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage>
+          multiField_ = java.util.Collections.emptyList();
+
       private void ensureMultiFieldIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          multiField_ = new java.util.ArrayList<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage>(multiField_);
+          multiField_ =
+              new java.util.ArrayList<
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage>(
+                  multiField_);
           bitField0_ |= 0x00000002;
-         }
+        }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
-          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder> multiFieldBuilder_;
-      
-      public java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage> getMultiFieldList() {
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>
+          multiFieldBuilder_;
+
+      public java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage>
+          getMultiFieldList() {
         if (multiFieldBuilder_ == null) {
           return java.util.Collections.unmodifiableList(multiField_);
         } else {
           return multiFieldBuilder_.getMessageList();
         }
       }
+
       public int getMultiFieldCount() {
         if (multiFieldBuilder_ == null) {
           return multiField_.size();
@@ -975,15 +1148,19 @@ public final class ProtoTest {
           return multiFieldBuilder_.getCount();
         }
       }
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getMultiField(int index) {
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage getMultiField(
+          int index) {
         if (multiFieldBuilder_ == null) {
           return multiField_.get(index);
         } else {
           return multiFieldBuilder_.getMessage(index);
         }
       }
+
       public Builder setMultiField(
-          int index, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
+          int index,
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
         if (multiFieldBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -996,8 +1173,11 @@ public final class ProtoTest {
         }
         return this;
       }
+
       public Builder setMultiField(
-          int index, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder builderForValue) {
+          int index,
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+              builderForValue) {
         if (multiFieldBuilder_ == null) {
           ensureMultiFieldIsMutable();
           multiField_.set(index, builderForValue.build());
@@ -1007,7 +1187,9 @@ public final class ProtoTest {
         }
         return this;
       }
-      public Builder addMultiField(com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
+
+      public Builder addMultiField(
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
         if (multiFieldBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1020,8 +1202,10 @@ public final class ProtoTest {
         }
         return this;
       }
+
       public Builder addMultiField(
-          int index, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
+          int index,
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage value) {
         if (multiFieldBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1034,8 +1218,10 @@ public final class ProtoTest {
         }
         return this;
       }
+
       public Builder addMultiField(
-          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder builderForValue) {
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+              builderForValue) {
         if (multiFieldBuilder_ == null) {
           ensureMultiFieldIsMutable();
           multiField_.add(builderForValue.build());
@@ -1045,8 +1231,11 @@ public final class ProtoTest {
         }
         return this;
       }
+
       public Builder addMultiField(
-          int index, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder builderForValue) {
+          int index,
+          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+              builderForValue) {
         if (multiFieldBuilder_ == null) {
           ensureMultiFieldIsMutable();
           multiField_.add(index, builderForValue.build());
@@ -1056,8 +1245,11 @@ public final class ProtoTest {
         }
         return this;
       }
+
       public Builder addAllMultiField(
-          java.lang.Iterable<? extends com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage> values) {
+          java.lang.Iterable<
+                  ? extends com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage>
+              values) {
         if (multiFieldBuilder_ == null) {
           ensureMultiFieldIsMutable();
           super.addAll(values, multiField_);
@@ -1067,6 +1259,7 @@ public final class ProtoTest {
         }
         return this;
       }
+
       public Builder clearMultiField() {
         if (multiFieldBuilder_ == null) {
           multiField_ = java.util.Collections.emptyList();
@@ -1077,6 +1270,7 @@ public final class ProtoTest {
         }
         return this;
       }
+
       public Builder removeMultiField(int index) {
         if (multiFieldBuilder_ == null) {
           ensureMultiFieldIsMutable();
@@ -1087,44 +1281,66 @@ public final class ProtoTest {
         }
         return this;
       }
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder getMultiFieldBuilder(
-          int index) {
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+          getMultiFieldBuilder(int index) {
         return getMultiFieldFieldBuilder().getBuilder(index);
       }
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder getMultiFieldOrBuilder(
-          int index) {
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder
+          getMultiFieldOrBuilder(int index) {
         if (multiFieldBuilder_ == null) {
-          return multiField_.get(index);  } else {
+          return multiField_.get(index);
+        } else {
           return multiFieldBuilder_.getMessageOrBuilder(index);
         }
       }
-      public java.util.List<? extends com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder> 
-           getMultiFieldOrBuilderList() {
+
+      public java.util.List<
+              ? extends
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>
+          getMultiFieldOrBuilderList() {
         if (multiFieldBuilder_ != null) {
           return multiFieldBuilder_.getMessageOrBuilderList();
         } else {
           return java.util.Collections.unmodifiableList(multiField_);
         }
       }
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder addMultiFieldBuilder() {
-        return getMultiFieldFieldBuilder().addBuilder(
-            com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance());
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+          addMultiFieldBuilder() {
+        return getMultiFieldFieldBuilder()
+            .addBuilder(
+                com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                    .getDefaultInstance());
       }
-      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder addMultiFieldBuilder(
-          int index) {
-        return getMultiFieldFieldBuilder().addBuilder(
-            index, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.getDefaultInstance());
+
+      public com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+          addMultiFieldBuilder(int index) {
+        return getMultiFieldFieldBuilder()
+            .addBuilder(
+                index,
+                com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage
+                    .getDefaultInstance());
       }
-      public java.util.List<com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder> 
-           getMultiFieldBuilderList() {
+
+      public java.util.List<
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder>
+          getMultiFieldBuilderList() {
         return getMultiFieldFieldBuilder().getBuilderList();
       }
+
       private com.google.protobuf.RepeatedFieldBuilder<
-          com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder> 
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder,
+              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>
           getMultiFieldFieldBuilder() {
         if (multiFieldBuilder_ == null) {
-          multiFieldBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder, com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>(
+          multiFieldBuilder_ =
+              new com.google.protobuf.RepeatedFieldBuilder<
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage,
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder,
+                  com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessageOrBuilder>(
                   multiField_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
@@ -1133,78 +1349,80 @@ public final class ProtoTest {
         }
         return multiFieldBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:com.google.errorprone.bugpatterns.TestProtoMessage)
     }
-    
+
     static {
       defaultInstance = new TestProtoMessage(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:com.google.errorprone.bugpatterns.TestProtoMessage)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor;
+  private static com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor;
+  private static com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_fieldAccessorTable;
-  
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+
+  public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
     return descriptor;
   }
-  private static com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
+
+  private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+
   static {
     java.lang.String[] descriptorData = {
-      "\n?src/test/resources/com/google/errorpro" +
-      "ne/proto/proto_test.proto\022!com.google.er" +
-      "rorprone.bugpatterns\"`\n\025TestFieldProtoMe" +
-      "ssage\022G\n\005field\030\001 \001(\01328.com.google.errorp" +
-      "rone.bugpatterns.TestFieldProtoMessage\"\254" +
-      "\001\n\020TestProtoMessage\022I\n\007message\030\001 \001(\01328.c" +
-      "om.google.errorprone.bugpatterns.TestFie" +
-      "ldProtoMessage\022M\n\013multi_field\030\002 \003(\01328.co" +
-      "m.google.errorprone.bugpatterns.TestFiel" +
-      "dProtoMessageB)\n\'com.google.errorprone.b",
+      "\n?src/test/resources/com/google/errorpro"
+          + "ne/proto/proto_test.proto\022!com.google.er"
+          + "rorprone.bugpatterns\"`\n\025TestFieldProtoMe"
+          + "ssage\022G\n\005field\030\001 \001(\01328.com.google.errorp"
+          + "rone.bugpatterns.TestFieldProtoMessage\"\254"
+          + "\001\n\020TestProtoMessage\022I\n\007message\030\001 \001(\01328.c"
+          + "om.google.errorprone.bugpatterns.TestFie"
+          + "ldProtoMessage\022M\n\013multi_field\030\002 \003(\01328.co"
+          + "m.google.errorprone.bugpatterns.TestFiel"
+          + "dProtoMessageB)\n\'com.google.errorprone.b",
       "ugpatterns.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-      new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-        public com.google.protobuf.ExtensionRegistry assignDescriptors(
-            com.google.protobuf.Descriptors.FileDescriptor root) {
-          descriptor = root;
-          internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-          internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor,
-              new java.lang.String[] { "Field", },
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.class,
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder.class);
-          internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor =
-            getDescriptor().getMessageTypes().get(1);
-          internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor,
-              new java.lang.String[] { "Message", "MultiField", },
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage.class,
-              com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage.Builder.class);
-          return null;
-        }
-      };
-    com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
+          public com.google.protobuf.ExtensionRegistry assignDescriptors(
+              com.google.protobuf.Descriptors.FileDescriptor root) {
+            descriptor = root;
+            internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+            internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_fieldAccessorTable =
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                    internal_static_com_google_errorprone_bugpatterns_TestFieldProtoMessage_descriptor,
+                    new java.lang.String[] {
+                      "Field",
+                    },
+                    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.class,
+                    com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
+                        .class);
+            internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor =
+                getDescriptor().getMessageTypes().get(1);
+            internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_fieldAccessorTable =
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                    internal_static_com_google_errorprone_bugpatterns_TestProtoMessage_descriptor,
+                    new java.lang.String[] {
+                      "Message", "MultiField",
+                    },
+                    com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage.class,
+                    com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage.Builder
+                        .class);
+            return null;
+          }
+        };
+    com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
+        descriptorData, new com.google.protobuf.Descriptors.FileDescriptor[] {}, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }

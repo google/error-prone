@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** @author alexloh@google.com (Alex Loh) */
 public class ClassCanBeStaticPositiveCase3 {
 
   static int outerVar;
@@ -27,7 +25,6 @@ public class ClassCanBeStaticPositiveCase3 {
   static class NonStaticOuter {
     int nonStaticVar = outerVar;
     // BUG: Diagnostic contains: public static class Inner3
-    public class Inner3 {
-    }
+    public class Inner3 {}
   }
 }

@@ -20,33 +20,33 @@ import java.util.Objects;
 
 /**
  * Java 7 specific tests
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class ArrayHashCodeNegativeCases2 {
-  
+
   private Object[] objArray = {1, 2, 3};
   private String[] stringArray = {"1", "2", "3"};
   private int[] intArray = {1, 2, 3};
   private byte[] byteArray = {1, 2, 3};
   private Object obj = new Object();
   private String str = "foo";
-    
+
   public void nonVaragsHashCodeOnNonArrayType() {
     int hashCode;
-    hashCode = Objects.hashCode(obj);    
+    hashCode = Objects.hashCode(obj);
     hashCode = Objects.hashCode(str);
   }
-    
+
   public void varagsHashCodeOnNonArrayType() {
     int hashCode;
     hashCode = Objects.hash(obj);
     hashCode = Objects.hash(str);
   }
-  
+
   public void varagsHashCodeOnObjectOrStringArray() {
     int hashCode;
-    hashCode = Objects.hash(objArray);  
-    hashCode = Objects.hash((Object[]) stringArray);    
+    hashCode = Objects.hash(objArray);
+    hashCode = Objects.hash((Object[]) stringArray);
   }
 }

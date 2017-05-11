@@ -16,5 +16,4 @@
 
 package com.google.errorprone.testdata;
 
-public class FlowSub extends FlowSuper {
-}
+public class FlowSub extends FlowSuper {}

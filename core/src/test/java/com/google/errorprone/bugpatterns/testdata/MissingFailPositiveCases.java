@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
-
 import org.junit.Assert;
 import org.mockito.Mockito;
 
@@ -30,7 +29,8 @@ public class MissingFailPositiveCases extends TestCase {
     try {
       // BUG: Diagnostic contains: fail()
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void catchAssert() {
@@ -55,7 +55,8 @@ public class MissingFailPositiveCases extends TestCase {
     try {
       // BUG: Diagnostic contains: fail()
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
     throw new Exception();
   }
 
@@ -64,7 +65,8 @@ public class MissingFailPositiveCases extends TestCase {
       dummyMethod();
       // BUG: Diagnostic contains: fail()
       assertDummy();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
     throw new Exception();
   }
 
@@ -123,13 +125,16 @@ public class MissingFailPositiveCases extends TestCase {
       try {
         // BUG: Diagnostic contains: fail()
         dummyMethod();
-      } catch (Exception expected) {}
+      } catch (Exception expected) {
+      }
     }
   }
 
   private static class Dummy {
 
-    String dummy() { return ""; }
+    String dummy() {
+      return "";
+    }
   }
 
   private static class Logger {

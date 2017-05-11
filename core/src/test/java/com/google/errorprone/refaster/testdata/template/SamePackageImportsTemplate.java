@@ -21,15 +21,13 @@ import com.google.errorprone.refaster.ImportPolicy;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
-
 import java.util.AbstractMap;
 import java.util.Map;
 
-/**
- * Sample template generating references to nested classes in java.util.
- */
+/** Sample template generating references to nested classes in java.util. */
 public class SamePackageImportsTemplate<K, V> {
-  @BeforeTemplate Map.Entry<K, V> immutableEntry(K k, V v) {
+  @BeforeTemplate
+  Map.Entry<K, V> immutableEntry(K k, V v) {
     return Maps.immutableEntry(k, v);
   }
 
@@ -39,4 +37,3 @@ public class SamePackageImportsTemplate<K, V> {
     return new AbstractMap.SimpleImmutableEntry<>(k, v);
   }
 }
-

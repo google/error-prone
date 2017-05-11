@@ -19,9 +19,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.util.concurrent.Future;
 
-/**
- * Positive cases for {@link FuturesGetCheckedIllegalExceptionType}.
- */
+/** Positive cases for {@link FuturesGetCheckedIllegalExceptionType}. */
 public class FuturesGetCheckedIllegalExceptionTypePositiveCases {
   <T extends RuntimeException> void runtime(
       Future<?> future, Class<? extends RuntimeException> c1, Class<T> c2) throws Exception {

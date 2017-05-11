@@ -16,9 +16,9 @@
 
 package com.google.errorprone.testdata;
 
-public class ExtendedMultipleTopLevelClassesWithNoErrors 
+public class ExtendedMultipleTopLevelClassesWithNoErrors
     extends MultipleTopLevelClassesWithNoErrors {
   ExtendedMultipleTopLevelClassesWithNoErrors() {
-    super(0,0);
+    super(0, 0);
   }
 }

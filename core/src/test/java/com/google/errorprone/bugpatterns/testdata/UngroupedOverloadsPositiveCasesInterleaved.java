@@ -17,7 +17,8 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 /** @author hanuszczak@google.com (Łukasz Hanuszczak) */
-// BUG: Diagnostic contains: Overloaded methods ("bar", "baz") of this class are not grouped together
+// BUG: Diagnostic contains: Overloaded methods ("bar", "baz") of this class are not grouped
+// together
 public class UngroupedOverloadsPositiveCasesInterleaved {
 
   private int foo;

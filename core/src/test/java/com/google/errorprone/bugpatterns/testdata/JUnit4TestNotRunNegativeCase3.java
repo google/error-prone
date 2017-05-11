@@ -20,36 +20,36 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunNegativeCase3 {
   // Doesn't begin with "test".
   public void thisIsATest() {}
-  
+
   // Isn't public.
   void testTest1() {}
-  
+
   // Have checked annotation.
   @Test
   public void testTest2() {}
-    
+
   @Before
   public void testBefore() {}
-  
+
   @After
   public void testAfter() {}
-  
+
   @BeforeClass
   public void testBeforeClass() {}
-  
+
   @AfterClass
   public void testAfterClass() {}
-  
+
   // Has parameters.
   public void testTest3(int foo) {}
 
   // Doesn't return void
-  public int testSomething() { return 42; }
+  public int testSomething() {
+    return 42;
+  }
 }

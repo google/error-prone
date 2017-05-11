@@ -14,12 +14,11 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 public class OverridesNegativeCase1 {
   abstract class Base {
     abstract void varargsMethod(Object... xs);
+
     abstract void arrayMethod(Object[] xs);
   }
 
@@ -34,20 +33,20 @@ public class OverridesNegativeCase1 {
   }
 
   static class StaticClass {
-    static void staticVarargsMethod(Object... xs) {
-    }
-    
-    static void staticArrayMethod(Object[] xs) {
-    }
+    static void staticVarargsMethod(Object... xs) {}
+
+    static void staticArrayMethod(Object[] xs) {}
   }
 
   interface Interface {
     void varargsMethod(Object... xs);
+
     void arrayMethod(Object[] xs);
   }
 
   abstract class ImplementsInterface implements Interface {
     public abstract void varargsMethod(Object... xs);
+
     public abstract void arrayMethod(Object[] xs);
   }
 }

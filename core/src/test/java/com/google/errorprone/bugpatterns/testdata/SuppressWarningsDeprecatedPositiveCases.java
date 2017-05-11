@@ -17,57 +17,52 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Positive cases for {@link SuppressWarningsDeprecated}.
- * 
+ *
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 public class SuppressWarningsDeprecatedPositiveCases {
 
   // BUG: Diagnostic contains: @SuppressWarnings("deprecation")
   @SuppressWarnings("deprecated")
-  public static void positiveCase1() {
-  }
-  
+  public static void positiveCase1() {}
+
   // BUG: Diagnostic contains: @SuppressWarnings("deprecation")
   @SuppressWarnings({"deprecated"})
-  public static void positiveCase2() {
-  }
-  
+  public static void positiveCase2() {}
+
   // BUG: Diagnostic contains: @SuppressWarnings({"deprecation", "foobarbaz"})
   @SuppressWarnings({"deprecated", "foobarbaz"})
-  public static void positiveCase3() {
-  }
-  
+  public static void positiveCase3() {}
+
   public static void positiveCase4() {
     // BUG: Diagnostic contains: @SuppressWarnings({"deprecation", "foobarbaz"})
     @SuppressWarnings({"deprecated", "foobarbaz"})
     int a = 3;
   }
-  
+
   public static void positiveCase5() {
     // BUG: Diagnostic contains: @SuppressWarnings("deprecation")
     @SuppressWarnings("deprecated")
     int a = 3;
   }
-  
+
   public static void positiveCase6() {
     // BUG: Diagnostic contains: @SuppressWarnings("deprecation")
     @SuppressWarnings("deprecated")
-    class Foo { };
+    class Foo {};
   }
-  
+
   public static void positiveCase7() {
     // BUG: Diagnostic contains: @SuppressWarnings({"deprecation", "foobarbaz"})
     @SuppressWarnings({"deprecated", "foobarbaz"})
-    class Foo { };
+    class Foo {};
   }
-  
+
   // BUG: Diagnostic contains: @SuppressWarnings("deprecation")
   @SuppressWarnings(value = {"deprecated"})
-  public static void positiveCase8() {
-  }
-  
+  public static void positiveCase8() {}
+
   // BUG: Diagnostic contains: @SuppressWarnings("deprecation")
   @SuppressWarnings(value = "deprecated")
-  public static void positiveCase9() {
-  }
+  public static void positiveCase9() {}
 }

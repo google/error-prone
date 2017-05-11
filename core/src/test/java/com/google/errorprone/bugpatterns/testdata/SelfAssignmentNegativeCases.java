@@ -25,44 +25,44 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SelfAssignmentNegativeCases {
   private int a;
-  
+
   private static int b = StaticClass.b;
   private static final int C = SelfAssignmentNegativeCases.b;
   private static final int D = checkNotNull(SelfAssignmentNegativeCases.C);
   private static final int E = StaticClass.getIntArr().length;
-  
+
   public void test1(int a) {
     int b = SelfAssignmentNegativeCases.b;
     this.a = a;
     this.a = checkNotNull(a);
   }
-  
+
   public void test2() {
     int a = 0;
     int b = a;
     a = b;
   }
-  
+
   public void test3() {
     int a = 10;
   }
-  
+
   public void test4() {
     int i = 1;
     i += i;
   }
-  
+
   public void test5(SelfAssignmentNegativeCases n) {
     a = n.a;
   }
-  
+
   public void test6() {
     Foo foo = new Foo();
     Bar bar = new Bar();
     foo.a = bar.a;
     foo.a = checkNotNull(bar.a);
   }
-  
+
   public void test7() {
     Foobar f1 = new Foobar();
     f1.foo = new Foo();
@@ -70,30 +70,30 @@ public class SelfAssignmentNegativeCases {
     f1.foo.a = f1.bar.a;
     f1.foo.a = checkNotNull(f1.bar.a);
   }
-  
+
   public void test8(SelfAssignmentNegativeCases that) {
     this.a = that.a;
     this.a = checkNotNull(that.a);
   }
-  
+
   private static class Foo {
     int a;
   }
-  
+
   private static class Bar {
     int a;
   }
-  
+
   private static class Foobar {
     Foo foo;
     Bar bar;
   }
-  
+
   private static class StaticClass {
     static int b;
+
     public static int[] getIntArr() {
       return new int[10];
     }
   }
-  
 }

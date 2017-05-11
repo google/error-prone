@@ -19,14 +19,12 @@ package com.google.errorprone.bugpatterns.testdata;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 public class DeadExceptionTestingNegativeCases extends TestCase {
 
   public void testShouldAllowTestingOfExceptionConstructorSideEffects() {
     try {
-      new IllegalArgumentException((Throwable)null);
+      new IllegalArgumentException((Throwable) null);
       fail();
     } catch (NullPointerException e) {
       // expected
@@ -36,7 +34,7 @@ public class DeadExceptionTestingNegativeCases extends TestCase {
   @Test
   public void shouldAllowTestingOfExceptionConstructorSideEffects() {
     try {
-      new IllegalArgumentException((Throwable)null);
+      new IllegalArgumentException((Throwable) null);
       fail();
     } catch (NullPointerException e) {
       // expected

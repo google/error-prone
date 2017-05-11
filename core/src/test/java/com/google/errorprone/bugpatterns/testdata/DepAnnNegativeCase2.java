@@ -16,26 +16,21 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @deprecated
- */
+/** @deprecated */
 @Deprecated
 public class DepAnnNegativeCase2 {
-  
+
   abstract class Builder2<P> {
     class SummaryRowKey<P> {}
-    
+
     @Deprecated
     /** @deprecated use {@link Selector.Builder#withSummary()} */
-    
-    abstract public void withSummaryRowKeys(int summaryRowKeys);
-    
+    public abstract void withSummaryRowKeys(int summaryRowKeys);
+
     /** @deprecated use {@link Selector.Builder#withSummary()} */
     @Deprecated
-    abstract public void m1();
-    
-    abstract public void m2();
-    
+    public abstract void m1();
+
+    public abstract void m2();
   }
-  
 }

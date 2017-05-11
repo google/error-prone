@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author sebastian.h.monte@gmail.com (Sebastian Monte)
- */
+/** @author sebastian.h.monte@gmail.com (Sebastian Monte) */
 public class AssertFalsePositiveCases {
   public void assertFalse() {
     // BUG: Diagnostic contains: throw new AssertionError()

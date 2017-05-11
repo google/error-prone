@@ -21,7 +21,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Example Refaster template matching a {@code try} statement with unioned catch types.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class TryMultiCatchTemplate {
@@ -33,7 +33,7 @@ public class TryMultiCatchTemplate {
       e.printStackTrace();
     }
   }
-  
+
   @AfterTemplate
   <T> void after(T result, Class<T> clazz) {
     try {

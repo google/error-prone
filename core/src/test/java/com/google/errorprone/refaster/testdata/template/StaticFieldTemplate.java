@@ -20,7 +20,6 @@ import static java.util.Collections.EMPTY_LIST;
 
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
-
 import java.util.Collections;
 import java.util.List;
 

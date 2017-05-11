@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import java.util.Properties;
 
-/**
- * This is a regression test for Issue 222.
- */
+/** This is a regression test for Issue 222. */
 public class CollectionIncompatibleTypeOutOfBounds {
   public void test() {
     Properties properties = new Properties();

@@ -21,14 +21,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * Mockito test runner that uses JUnit 4.
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(MockitoJUnitRunner.class)
 public class JUnit4TestNotRunPositiveCase2 {
   // BUG: Diagnostic contains: @Test
   public void testThisIsATest() {}
-  
+
   // BUG: Diagnostic contains: @Test
   public static void testThisIsAStaticTest() {}
 }

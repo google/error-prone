@@ -16,16 +16,14 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.common.base.Splitter;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Splitter;
-
-/**
- * @author mdempsky@google.com (Matthew Dempsky)
- */
+/** @author mdempsky@google.com (Matthew Dempsky) */
 public class InvalidPatternSyntaxPositiveCases {
   public static final String INVALID = "*";
   public static final String DOT = ".";
+
   {
     // BUG: Diagnostic contains: Unclosed character class
     Pattern.matches("[^\\]", "");
@@ -34,26 +32,25 @@ public class InvalidPatternSyntaxPositiveCases {
     // BUG: Diagnostic contains: Illegal repetition
     Pattern.matches("{", "");
 
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     Pattern.matches(INVALID, "");
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     "".matches(INVALID);
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     "".replaceAll(INVALID, "");
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     "".replaceFirst(INVALID, "");
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     "".split(INVALID);
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     "".split(INVALID, 0);
 
     // BUG: Diagnostic contains: "foo.bar".split("\\.")
     "foo.bar".split(".");
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     "foo.bonk".split(DOT);
-    
+
     // BUG: Diagnostic contains: Splitter.onPattern("\\.")
     Splitter.onPattern(".");
-
   }
 }

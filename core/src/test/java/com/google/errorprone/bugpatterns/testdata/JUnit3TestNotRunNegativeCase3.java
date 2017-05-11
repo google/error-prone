@@ -29,7 +29,11 @@ import org.junit.runner.Runner;
 @RunWith(Runner.class)
 public class JUnit3TestNotRunNegativeCase3 extends TestCase {
 
-  @Test public void name() {}
+  @Test
+  public void name() {}
+
   public void tesMisspelled() {}
-  @Test public void tesBothIssuesAtOnce() {}
+
+  @Test
+  public void tesBothIssuesAtOnce() {}
 }

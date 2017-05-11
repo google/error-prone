@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.File;
 
-/**
- * @author cpovirk@google.com (Chris Povirk)
- */
+/** @author cpovirk@google.com (Chris Povirk) */
 public class ChainingConstructorIgnoresParameterNegativeCases {
   static class ImplicitThisCall {
     ImplicitThisCall() {}

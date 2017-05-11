@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.*;
 
-/**
- * @author adgar@google.com (Mike Edgar)
- */
+/** @author adgar@google.com (Mike Edgar) */
 public class ArrayToStringPositiveCases {
 
   public void intArray() {
@@ -66,7 +64,7 @@ public class ArrayToStringPositiveCases {
       System.out.println("array string is nonempty!");
     }
   }
-  
+
   public void throwable() {
     Exception e = new RuntimeException();
     // BUG: Diagnostic contains: Throwables.getStackTraceAsString(e)

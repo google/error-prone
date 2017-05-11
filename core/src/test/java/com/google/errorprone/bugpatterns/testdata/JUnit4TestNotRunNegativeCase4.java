@@ -22,7 +22,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * May be a JUnit 3 test -- has @RunWith annotation on the class but also extends TestCase.
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)

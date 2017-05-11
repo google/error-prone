@@ -58,11 +58,12 @@ public abstract class ReturnPlaceholderTemplate<T> {
          */
         return firstCompare(left, right);
       }
-    }.compound(new Ordering<T>() {
-      @Override
-      public int compare(T left, T right) {
-        return secondCompare(left, right);
-      }
-    });
+    }.compound(
+        new Ordering<T>() {
+          @Override
+          public int compare(T left, T right) {
+            return secondCompare(left, right);
+          }
+        });
   }
 }

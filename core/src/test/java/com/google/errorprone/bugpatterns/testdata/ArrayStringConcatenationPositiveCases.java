@@ -18,15 +18,13 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.*;
 
-/**
- * @author adgar@google.com (Mike Edgar)
- */
+/** @author adgar@google.com (Mike Edgar) */
 public class ArrayStringConcatenationPositiveCases {
 
   private static final int[] a = {1, 2, 3};
 
   public void stringLiteralLeftOperandIsArray() {
-    // BUG: Diagnostic contains: Arrays.toString(a) + 
+    // BUG: Diagnostic contains: Arrays.toString(a) +
     String b = a + " a string";
   }
 

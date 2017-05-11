@@ -17,12 +17,9 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.NoAllocation;
-
 import java.util.Arrays;
 
-/**
- * @author agoode@google.com (Adam Goode)
- */
+/** @author agoode@google.com (Adam Goode) */
 public class NoAllocationCheckerNegativeCases {
   // Calling safe methods is fine.
   @NoAllocation
@@ -207,7 +204,7 @@ public class NoAllocationCheckerNegativeCases {
   }
 
   public int[] returnArrayInitializer(int a, int b) {
-    return new int[]{a, b};
+    return new int[] {a, b};
   }
 
   public String newString(String s) {
@@ -215,7 +212,7 @@ public class NoAllocationCheckerNegativeCases {
   }
 
   public String allocateString() {
-   return new String();
+    return new String();
   }
 
   public String getString() {

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.Ordering;
-
 import java.util.Comparator;
 
 /**
@@ -29,13 +28,14 @@ public class OrderingFromPositiveCases {
 
   public static void positiveCase1() {
     // BUG: Diagnostic contains: new Ordering<String>(
-    Ordering<String> ord = Ordering.from(new Comparator<String>() {
-      @Override
-      public int compare(String first, String second) {
-        int compare = first.length() - second.length();
-        return (compare != 0) ? compare : first.compareTo(second);
-      }
-    });
+    Ordering<String> ord =
+        Ordering.from(
+            new Comparator<String>() {
+              @Override
+              public int compare(String first, String second) {
+                int compare = first.length() - second.length();
+                return (compare != 0) ? compare : first.compareTo(second);
+              }
+            });
   }
-
 }

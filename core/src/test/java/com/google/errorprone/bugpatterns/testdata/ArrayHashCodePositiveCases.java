@@ -18,17 +18,15 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class ArrayHashCodePositiveCases {
   private Object[] objArray = {1, 2, 3};
   private String[] stringArray = {"1", "2", "3"};
   private int[] intArray = {1, 2, 3};
   private byte[] byteArray = {1, 2, 3};
-  private int[][] multidimensionalIntArray = { {1, 2, 3}, {4, 5, 6} };
-  private String[][] multidimensionalStringArray = { {"1", "2", "3"}, {"4", "5", "6"} };
-  
+  private int[][] multidimensionalIntArray = {{1, 2, 3}, {4, 5, 6}};
+  private String[][] multidimensionalStringArray = {{"1", "2", "3"}, {"4", "5", "6"}};
+
   public void objectHashCode() {
     int hashCode;
     // BUG: Diagnostic contains: Arrays.hashCode(objArray)
@@ -37,12 +35,11 @@ public class ArrayHashCodePositiveCases {
     hashCode = stringArray.hashCode();
     // BUG: Diagnostic contains: Arrays.hashCode(intArray)
     hashCode = intArray.hashCode();
-    
+
     // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalIntArray)
     hashCode = multidimensionalIntArray.hashCode();
     // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalStringArray)
     hashCode = multidimensionalStringArray.hashCode();
-
   }
 
   public void guavaObjectsHashCode() {
@@ -51,20 +48,22 @@ public class ArrayHashCodePositiveCases {
     hashCode = Objects.hashCode(intArray);
     // BUG: Diagnostic contains: Arrays.hashCode(byteArray)
     hashCode = Objects.hashCode(byteArray);
-    
+
     // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalIntArray)
     hashCode = Objects.hashCode(multidimensionalIntArray);
     // BUG: Diagnostic contains: Arrays.deepHashCode(multidimensionalStringArray)
     hashCode = Objects.hashCode(multidimensionalStringArray);
   }
-  
+
   public void varargsHashCodeOnMoreThanOneArg() {
     int hashCode;
-    // BUG: Diagnostic contains: Objects.hashCode(Arrays.hashCode(objArray), Arrays.hashCode(intArray))
+    // BUG: Diagnostic contains: Objects.hashCode(Arrays.hashCode(objArray),
+    // Arrays.hashCode(intArray))
     hashCode = Objects.hashCode(objArray, intArray);
-    // BUG: Diagnostic contains: Objects.hashCode(Arrays.hashCode(stringArray), Arrays.hashCode(byteArray))
+    // BUG: Diagnostic contains: Objects.hashCode(Arrays.hashCode(stringArray),
+    // Arrays.hashCode(byteArray))
     hashCode = Objects.hashCode(stringArray, byteArray);
-    
+
     Object obj1 = new Object();
     Object obj2 = new Object();
     // BUG: Diagnostic contains: Objects.hashCode(obj1, obj2, Arrays.hashCode(intArray))
@@ -73,10 +72,12 @@ public class ArrayHashCodePositiveCases {
     hashCode = Objects.hashCode(obj1, intArray, obj2);
     // BUG: Diagnostic contains: Objects.hashCode(Arrays.hashCode(intArray), obj1, obj2)
     hashCode = Objects.hashCode(intArray, obj1, obj2);
-    
-    // BUG: Diagnostic contains: Objects.hashCode(obj1, obj2, Arrays.deepHashCode(multidimensionalIntArray))
+
+    // BUG: Diagnostic contains: Objects.hashCode(obj1, obj2,
+    // Arrays.deepHashCode(multidimensionalIntArray))
     hashCode = Objects.hashCode(obj1, obj2, multidimensionalIntArray);
-    // BUG: Diagnostic contains: Objects.hashCode(obj1, obj2, Arrays.deepHashCode(multidimensionalStringArray))
+    // BUG: Diagnostic contains: Objects.hashCode(obj1, obj2,
+    // Arrays.deepHashCode(multidimensionalStringArray))
     hashCode = Objects.hashCode(obj1, obj2, multidimensionalStringArray);
   }
 }

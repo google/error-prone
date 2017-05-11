@@ -19,30 +19,28 @@ package com.google.errorprone.bugpatterns.testdata;
 import javax.annotation.CheckReturnValue;
 import org.junit.rules.ExpectedException;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class CheckReturnValuePositiveCases {
-  
+
   IntValue intValue = new IntValue(0);
-  
+
   @CheckReturnValue
   private int increment(int bar) {
     return bar + 1;
   }
-  
+
   public void foo() {
     int i = 1;
     // BUG: Diagnostic contains: remove this line
     increment(i);
     System.out.println(i);
   }
-  
+
   public void bar() {
     // BUG: Diagnostic contains: this.intValue = this.intValue.increment()
     this.intValue.increment();
   }
-  
+
   public void testIntValue() {
     IntValue value = new IntValue(10);
     // BUG: Diagnostic contains: value = value.increment()
@@ -78,12 +76,10 @@ public class CheckReturnValuePositiveCases {
      */
     new MyObject() {};
 
-    class MySubObject1 extends MyObject {
-    }
+    class MySubObject1 extends MyObject {}
 
     class MySubObject2 extends MyObject {
-      MySubObject2() {
-      }
+      MySubObject2() {}
     }
 
     class MySubObject3 extends MyObject {
@@ -95,27 +91,27 @@ public class CheckReturnValuePositiveCases {
     // TODO(cpovirk): This one probably ought to be treated as a bug:
     new MyObject();
   }
-  
+
   private class IntValue {
     final int i;
-    
+
     public IntValue(int i) {
       this.i = i;
     }
-    
+
     @CheckReturnValue
     public IntValue increment() {
       return new IntValue(i + 1);
     }
-    
+
     public void increment2() {
       // BUG: Diagnostic contains: remove this line
       this.increment();
     }
-    
+
     public void increment3() {
       // BUG: Diagnostic contains: remove this line
-     increment();
+      increment();
     }
   }
 
@@ -125,13 +121,14 @@ public class CheckReturnValuePositiveCases {
   }
 
   private abstract static class LB1<A> {}
+
   private static class LB2<A> extends LB1<A> {
-    
+
     @CheckReturnValue
     public static <T> LB2<T> lb1() {
-        return new LB2<T>();
+      return new LB2<T>();
     }
-    
+
     public static <T> LB2<T> lb2() {
       // BUG: Diagnostic contains: remove this line
       lb1();

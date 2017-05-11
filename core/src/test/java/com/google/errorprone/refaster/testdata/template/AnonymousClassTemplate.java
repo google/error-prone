@@ -17,9 +17,7 @@ package com.google.errorprone.refaster.testdata.template;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.OfKind;
-
 import com.sun.source.tree.Tree.Kind;
-
 import java.util.AbstractList;
 import java.util.Collections;
 import java.util.List;

@@ -22,9 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author glorioso@google.com (Nick Glorioso)
- */
+/** @author glorioso@google.com (Nick Glorioso) */
 public class SizeGreaterThanOrEqualsZeroNegativeCases {
   private List<Integer> intList = new ArrayList<>();
   private Set<Integer> intSet = new HashSet<>();
@@ -77,6 +75,9 @@ public class SizeGreaterThanOrEqualsZeroNegativeCases {
 
   private static class HasASizeMethod {
     public int length = 0;
-    public int size() { return length; }
+
+    public int size() {
+      return length;
+    }
   }
 }

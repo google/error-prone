@@ -16,11 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** @author alexloh@google.com (Alex Loh) */
 public class ClassCanBeStaticPositiveCase1 {
-  
+
   int outerVar;
 
   // Non-static inner class that does not use outer scope

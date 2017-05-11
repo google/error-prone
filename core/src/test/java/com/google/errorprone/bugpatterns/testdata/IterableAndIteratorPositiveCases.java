@@ -18,22 +18,16 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Iterator;
 
-/**
- * @author jsjeon@google.com (Jinseong Jeon)
- */
+/** @author jsjeon@google.com (Jinseong Jeon) */
 public class IterableAndIteratorPositiveCases {
 
-  /**
-   * Test Node
-   */
+  /** Test Node */
   public static class MyNode {
     String tag;
     MyNode next;
   }
 
-  /**
-   * Test List that implements only Iterator
-   */
+  /** Test List that implements only Iterator */
   public static class MyList1 implements Iterator<MyNode> {
     private MyNode head;
 
@@ -69,9 +63,7 @@ public class IterableAndIteratorPositiveCases {
     }
   }
 
-  /**
-   * Test List that implements only Iterable
-   */
+  /** Test List that implements only Iterable */
   public static class MyList2 implements Iterable<MyNode> {
 
     @Override

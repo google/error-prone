@@ -16,12 +16,10 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 /**
  * Not a JUnit 4 test (no @RunWith annotation on the class).
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class JUnit4TestNotRunNegativeCase1 {

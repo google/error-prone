@@ -18,12 +18,11 @@ package com.google.errorprone.refaster.testdata.template;
 
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
-
 import org.junit.Assert;
 
 /**
  * Example template using the assert keyword.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class AssertTemplate {

@@ -17,14 +17,12 @@
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-/**
- * Test for CannotMockFinalClass in the absence of @RunWith(JUnit4.class).
- */
+/** Test for CannotMockFinalClass in the absence of @RunWith(JUnit4.class). */
 public class CannotMockFinalClassNegativeCases2 {
   static final class FinalClass {}
 
   @Mock FinalClass impossible;
-  
+
   public void method() {
     FinalClass local = Mockito.mock(FinalClass.class);
   }

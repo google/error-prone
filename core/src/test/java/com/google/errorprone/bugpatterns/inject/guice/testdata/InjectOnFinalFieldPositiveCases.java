@@ -19,18 +19,13 @@ package com.google.errorprone.bugpatterns.inject.guice.testdata;
 import com.google.inject.Inject;
 import javax.annotation.Nullable;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class InjectOnFinalFieldPositiveCases {
-  /**
-   * Class has a final injectable(com.google.inject.Inject) field.
-   */
+  /** Class has a final injectable(com.google.inject.Inject) field. */
   public class TestClass1 {
     // BUG: Diagnostic contains: @Inject int a
     @Inject final int a = 0;
 
-    
     @Inject
     // BUG: Diagnostic contains: public int b
     public final int b = 0;

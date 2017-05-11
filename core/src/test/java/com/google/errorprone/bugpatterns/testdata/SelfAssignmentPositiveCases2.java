@@ -20,18 +20,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Tests for self assignment
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class SelfAssignmentPositiveCases2 {
   private int a;
   private Foo foo;
-  
+
   // BUG: Diagnostic contains: private static final Object obj
   private static final Object obj = SelfAssignmentPositiveCases2.obj;
   // BUG: Diagnostic contains: private static final Object obj2
   private static final Object obj2 = checkNotNull(SelfAssignmentPositiveCases2.obj2);
-    
+
   public void test6() {
     Foo foo = new Foo();
     foo.a = 2;
@@ -40,7 +40,7 @@ public class SelfAssignmentPositiveCases2 {
     // BUG: Diagnostic contains: checkNotNull(foo.a)
     foo.a = checkNotNull(foo.a);
   }
-  
+
   public void test7() {
     Foobar f = new Foobar();
     f.foo = new Foo();
@@ -50,7 +50,7 @@ public class SelfAssignmentPositiveCases2 {
     // BUG: Diagnostic contains: checkNotNull(f.foo.a)
     f.foo.a = checkNotNull(f.foo.a);
   }
-  
+
   public void test8() {
     foo = new Foo();
     // BUG: Diagnostic contains: remove this line
@@ -58,29 +58,29 @@ public class SelfAssignmentPositiveCases2 {
     // BUG: Diagnostic contains: checkNotNull(foo.a)
     this.foo.a = checkNotNull(foo.a);
   }
-  
+
   public void test9(Foo fao, Foo bar) {
     // BUG: Diagnostic contains: this.foo = fao
     this.foo = foo;
     // BUG: Diagnostic contains: this.foo = checkNotNull(fao)
     this.foo = checkNotNull(foo);
   }
-  
+
   public void test10(Foo foo) {
     // BUG: Diagnostic contains: this.foo = foo
     foo = foo;
     // BUG: Diagnostic contains: this.foo = checkNotNull(foo)
     foo = checkNotNull(foo);
   }
-     
+
   private static class Foo {
     int a;
   }
-  
+
   private static class Bar {
     int a;
   }
-  
+
   private static class Foobar {
     Foo foo;
     Bar bar;

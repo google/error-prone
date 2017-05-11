@@ -25,16 +25,16 @@ import java.util.*;
 public class ElementsCountedInLoopNegativeCases {
   public int testEnhancedFor(List<Object> iterable) {
     int count = 0;
-    // The following cases are considered negative because they are incrementing the counter by more 
+    // The following cases are considered negative because they are incrementing the counter by more
     // than 1.
     for (Object item : iterable) {
       count += 2;
     }
     for (Object item : iterable) {
-      count  = count + 3;
+      count = count + 3;
     }
     for (Object item : iterable) {
-      count  = 2 + count;
+      count = 2 + count;
     }
     return count;
   }
@@ -61,7 +61,7 @@ public class ElementsCountedInLoopNegativeCases {
   public boolean hasNext() {
     return true;
   }
-  
+
   public double testEnhancedForFloats(List<Object> iterable) {
     double count = 0;
     // The following cases are considered negative because they are incrementing the counter by a
@@ -70,10 +70,10 @@ public class ElementsCountedInLoopNegativeCases {
       count += 2.0;
     }
     for (Object item : iterable) {
-      count  = count + 3.0;
+      count = count + 3.0;
     }
     for (Object item : iterable) {
-      count  = 0.1 + count;
+      count = 0.1 + count;
     }
     return count;
   }

@@ -28,30 +28,18 @@ import javax.inject.Scope;
  */
 public class ScopeAnnotationOnInterfaceOrAbstractClassNegativeCases {
 
-  /**
-   * A concrete class that has no scoping annotation.
-   */
-  public class TestClass1 {
-  }
+  /** A concrete class that has no scoping annotation. */
+  public class TestClass1 {}
 
-  /**
-   * An abstract class that has no scoping annotation.
-   */
-  public abstract class TestClass2 {
-  }
+  /** An abstract class that has no scoping annotation. */
+  public abstract class TestClass2 {}
 
-  /**
-   *An interface that has no scoping annotation.
-   */
-  public interface TestClass3 {
-  }
+  /** An interface that has no scoping annotation. */
+  public interface TestClass3 {}
 
-  /**
-   * A concrete class that has scoping annotation.
-   */
+  /** A concrete class that has scoping annotation. */
   @Singleton
-  public class TestClass4 {
-  }
+  public class TestClass4 {}
 
   @Scope
   @interface CustomScope {}
