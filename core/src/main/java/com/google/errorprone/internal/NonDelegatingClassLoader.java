@@ -22,15 +22,13 @@ import java.net.URLClassLoader;
 import java.util.Set;
 
 /**
- * A non-delegating {@link java.net.URLClassLoader} that searches its own
- * resource path <i>before</i> the runtime classpath, reversing the usual
- * classloader delegation model. This makes it possible to override runtime
- * classes.
+ * A non-delegating {@link java.net.URLClassLoader} that searches its own resource path
+ * <i>before</i> the runtime classpath, reversing the usual classloader delegation model. This makes
+ * it possible to override runtime classes.
  *
- * <p>The classloader is also given the classloader from the environment it is
- * created in, and a whitelist of classes that it should load from that
- * environment. This list must include anything that crosses classloader
- * boundaries (for example, the input or return types of the callback).
+ * <p>The classloader is also given the classloader from the environment it is created in, and a
+ * whitelist of classes that it should load from that environment. This list must include anything
+ * that crosses classloader boundaries (for example, the input or return types of the callback).
  *
  * @author cushon@google.com
  */
@@ -38,16 +36,12 @@ public class NonDelegatingClassLoader extends URLClassLoader {
   private final ClassLoader original;
   private final ImmutableSet<String> whiteList;
 
-  public static NonDelegatingClassLoader create(
-      Set<String> whiteList,
-      URLClassLoader original) {
+  public static NonDelegatingClassLoader create(Set<String> whiteList, URLClassLoader original) {
     return create(whiteList, original.getURLs(), original);
   }
 
   public static NonDelegatingClassLoader create(
-      Set<String> whiteList,
-      URL[] urls,
-      ClassLoader original) {
+      Set<String> whiteList, URL[] urls, ClassLoader original) {
     return new NonDelegatingClassLoader(original, urls, whiteList);
   }
 

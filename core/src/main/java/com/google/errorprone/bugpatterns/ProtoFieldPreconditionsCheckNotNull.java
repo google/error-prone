@@ -74,11 +74,14 @@ public class ProtoFieldPreconditionsCheckNotNull extends BugChecker
       };
 
   @SuppressWarnings({"unchecked"})
-  private static final Matcher<MethodInvocationTree> CHECK_NOT_NULL_MATCHER = allOf(
-      staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
-      argument(0, Matchers.<ExpressionTree>allOf(
-          Matchers.<ExpressionTree>kindIs(Kind.METHOD_INVOCATION),
-          PROTO_MESSAGE_INVOCATION_MATCHER)));
+  private static final Matcher<MethodInvocationTree> CHECK_NOT_NULL_MATCHER =
+      allOf(
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
+          argument(
+              0,
+              Matchers.<ExpressionTree>allOf(
+                  Matchers.<ExpressionTree>kindIs(Kind.METHOD_INVOCATION),
+                  PROTO_MESSAGE_INVOCATION_MATCHER)));
 
   private static boolean isProtoMessageGetInvocation(ExpressionTree tree, VisitorState state) {
     return (isGetMethodInvocation(tree, state) || isGetListMethodInvocation(tree, state))
@@ -135,8 +138,7 @@ public class ProtoFieldPreconditionsCheckNotNull extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!CHECK_NOT_NULL_MATCHER.matches(tree, state)
-        || tree.getArguments().isEmpty()) {
+    if (!CHECK_NOT_NULL_MATCHER.matches(tree, state) || tree.getArguments().isEmpty()) {
       return Description.NO_MATCH;
     }
 

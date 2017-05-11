@@ -39,8 +39,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
- * Utility main which consumes the same tab-delimited text file and generates GitHub pages for
- * the BugPatterns.
+ * Utility main which consumes the same tab-delimited text file and generates GitHub pages for the
+ * BugPatterns.
  */
 public class DocGenTool {
 
@@ -129,7 +129,7 @@ public class DocGenTool {
             options.usePygments,
             options.baseUrl);
     try (Writer w =
-            Files.newBufferedWriter(wikiDir.resolve("bugpatterns.md"), StandardCharsets.UTF_8)) {
+        Files.newBufferedWriter(wikiDir.resolve("bugpatterns.md"), StandardCharsets.UTF_8)) {
       List<BugPatternInstance> patterns = readLines(bugPatterns.toFile(), UTF_8, generator);
       new BugPatternIndexWriter().dump(patterns, w, options.target, enabledChecks());
     }

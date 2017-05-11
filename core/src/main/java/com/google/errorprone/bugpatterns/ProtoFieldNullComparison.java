@@ -78,18 +78,19 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
   private static final Set<Kind> COMPARISON_OPERATORS =
       EnumSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
 
-  private static final Matcher<BinaryTree> MATCHER = new Matcher<BinaryTree>() {
-    @Override
-    public boolean matches(BinaryTree tree, VisitorState state) {
-      if (!COMPARISON_OPERATORS.contains(tree.getKind())) {
-        return false;
-      }
-      ExpressionTree leftOperand = tree.getLeftOperand();
-      ExpressionTree rightOperand = tree.getRightOperand();
-      return (isNull(rightOperand) && isProtoMessageGetInvocation(leftOperand, state))
-          || (isNull(leftOperand) && isProtoMessageGetInvocation(rightOperand, state));
-    }
-  };
+  private static final Matcher<BinaryTree> MATCHER =
+      new Matcher<BinaryTree>() {
+        @Override
+        public boolean matches(BinaryTree tree, VisitorState state) {
+          if (!COMPARISON_OPERATORS.contains(tree.getKind())) {
+            return false;
+          }
+          ExpressionTree leftOperand = tree.getLeftOperand();
+          ExpressionTree rightOperand = tree.getRightOperand();
+          return (isNull(rightOperand) && isProtoMessageGetInvocation(leftOperand, state))
+              || (isNull(leftOperand) && isProtoMessageGetInvocation(rightOperand, state));
+        }
+      };
 
   private static boolean isNull(ExpressionTree tree) {
     return tree.getKind() == Kind.NULL_LITERAL;
@@ -184,7 +185,7 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
     if (isGetMethodInvocation(methodInvocation, state)) {
       String methodName = getMethodName(methodInvocation);
       String hasMethod = methodName.replaceFirst("get", "has");
-      
+
       // proto3 does not generate has methods for scalar types, e.g. ByteString and String.
       // Do not provide a replacement in these cases.
       Set<MethodSymbol> hasMethods =

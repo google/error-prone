@@ -38,7 +38,7 @@ public class ULiteralTest extends AbstractUTreeTest {
     assertUnifiesAndInlines("null", lit);
     assertEquals(Kind.NULL_LITERAL, lit.getKind());
   }
-  
+
   @Test
   public void stringLiteral() {
     ULiteral lit = ULiteral.stringLit("foo");
@@ -87,7 +87,7 @@ public class ULiteralTest extends AbstractUTreeTest {
     assertUnifiesAndInlines("false", lit);
     assertEquals(Kind.BOOLEAN_LITERAL, lit.getKind());
   }
-  
+
   @Test
   public void equality() {
     new EqualsTester()
@@ -101,7 +101,7 @@ public class ULiteralTest extends AbstractUTreeTest {
         .addEqualityGroup(ULiteral.intLit('0'))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(ULiteral.intLit(1));

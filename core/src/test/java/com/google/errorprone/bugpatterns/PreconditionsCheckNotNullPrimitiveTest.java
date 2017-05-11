@@ -37,9 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstractTest {
   private CompilationTestHelper compilationHelper;
@@ -52,24 +50,23 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
 
   @Test
   public void testPositiveCases() throws Exception {
-    compilationHelper.addSourceFile("PreconditionsCheckNotNullPrimitivePositiveCases.java")
+    compilationHelper
+        .addSourceFile("PreconditionsCheckNotNullPrimitivePositiveCases.java")
         .doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.addSourceFile("PreconditionsCheckNotNullPrimitiveNegativeCases.java")
+    compilationHelper
+        .addSourceFile("PreconditionsCheckNotNullPrimitiveNegativeCases.java")
         .doTest();
   }
 
   @Test
   public void testGetVariableUses() {
-    writeFile("A.java",
-        "public class A {",
-        "  public String b;",
-        "  void foo() {}",
-        "}");
-    writeFile("B.java",
+    writeFile("A.java", "public class A {", "  public String b;", "  void foo() {}", "}");
+    writeFile(
+        "B.java",
         "public class B {",
         "  A my;",
         "  B bar() { return null; }",
@@ -87,18 +84,19 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
         "  }",
         "}");
 
-    TestScanner scanner = new TestScanner.Builder()
-        .add("x.trim().intern()", "x")
-        .add("a.b.trim().intern()", "a")
-        .add("this.my.foo()", "this")
-        .add("my.foo()", "my")
-        .add("this.bar()", "this")
-        .add("String.valueOf(0)")
-        .add("java.lang.String.valueOf(1)")
-        .add("bar().bar()")
-        .add("System.out.println()")
-        .add("a.b.indexOf(x.substring(1))", "a", "x")
-        .build();
+    TestScanner scanner =
+        new TestScanner.Builder()
+            .add("x.trim().intern()", "x")
+            .add("a.b.trim().intern()", "a")
+            .add("this.my.foo()", "this")
+            .add("my.foo()", "my")
+            .add("this.bar()", "this")
+            .add("String.valueOf(0)")
+            .add("java.lang.String.valueOf(1)")
+            .add("bar().bar()")
+            .add("System.out.println()")
+            .add("a.b.indexOf(x.substring(1))", "a", "x")
+            .build();
     assertCompiles(scanner);
     scanner.assertFoundAll();
   }
@@ -146,13 +144,17 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
 
     private void assertMatch(ExpressionTree node, List<String> expected) {
       List<IdentifierTree> uses = PreconditionsCheckNotNullPrimitive.getVariableUses(node);
-      assertEquals("variables used in " + node, expected,
-          Lists.transform(uses, new Function<IdentifierTree, String>() {
-            @Override
-            public String apply(IdentifierTree ident) {
-              return ident.toString();
-            }
-          }));
+      assertEquals(
+          "variables used in " + node,
+          expected,
+          Lists.transform(
+              uses,
+              new Function<IdentifierTree, String>() {
+                @Override
+                public String apply(IdentifierTree ident) {
+                  return ident.toString();
+                }
+              }));
     }
 
     public void assertFoundAll() {

@@ -51,12 +51,14 @@ import java.util.List;
 public class PreconditionsCheckNotNull extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings({"unchecked"})
-  private static final Matcher<MethodInvocationTree> matcher = allOf(
-      staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
-      argument(0, Matchers.<ExpressionTree>kindIs(STRING_LITERAL)));
+  private static final Matcher<MethodInvocationTree> matcher =
+      allOf(
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
+          argument(0, Matchers.<ExpressionTree>kindIs(STRING_LITERAL)));
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Description matchMethodInvocation(
+      MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (!matcher.matches(methodInvocationTree, state)) {
       return Description.NO_MATCH;
     }

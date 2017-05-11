@@ -29,7 +29,7 @@ import java.util.Collection;
 
 /**
  * Matches an instance method like {@link Collection#contains}, for which we just need to compare
- * the method argument's type to the receiver's type argument.  This is the common case.
+ * the method argument's type to the receiver's type argument. This is the common case.
  */
 class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
 
@@ -44,8 +44,7 @@ class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
    * @param typeArgIndex The index of the type argument that should match the method argument
    * @param methodArgIndex The index of the method argument that should match the type argument
    */
-  public MethodArgMatcher(
-      String typeName, String signature, int typeArgIndex, int methodArgIndex) {
+  public MethodArgMatcher(String typeName, String signature, int typeArgIndex, int methodArgIndex) {
     this.methodMatcher = instanceMethod().onDescendantOf(typeName).withSignature(signature);
     this.typeName = typeName;
     this.typeArgIndex = typeArgIndex;

@@ -37,8 +37,10 @@ public class MethodInvocation implements Matcher<ExpressionTree> {
    *
    * @param matchType how to apply the argument matcher to the method's arguments
    */
-  public MethodInvocation(Matcher<ExpressionTree> methodSelectMatcher,
-      MatchType matchType, Matcher<ExpressionTree> methodArgumentMatcher) {
+  public MethodInvocation(
+      Matcher<ExpressionTree> methodSelectMatcher,
+      MatchType matchType,
+      Matcher<ExpressionTree> methodArgumentMatcher) {
     this.methodSelectMatcher = methodSelectMatcher;
     this.methodArgumentMatcher = new MethodArgumentMatcher(matchType, methodArgumentMatcher);
   }

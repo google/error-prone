@@ -54,35 +54,35 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
    * Matches calls to varargs hashcode methods {@link com.google.common.base.Objects#hashCode} and
    * {@link java.util.Objects#hash} in which at least one argument is of array type.
    */
-  private static final Matcher<MethodInvocationTree> varargsHashCodeMethodMatcher = allOf(
-      Matchers.anyOf(
-        staticMethod().onClass("com.google.common.base.Objects").named("hashCode"),
-        staticMethod().onClass("java.util.Objects").named("hash")),
-      hasArguments(MatchType.AT_LEAST_ONE, Matchers.<ExpressionTree>isArrayType()));
+  private static final Matcher<MethodInvocationTree> varargsHashCodeMethodMatcher =
+      allOf(
+          Matchers.anyOf(
+              staticMethod().onClass("com.google.common.base.Objects").named("hashCode"),
+              staticMethod().onClass("java.util.Objects").named("hash")),
+          hasArguments(MatchType.AT_LEAST_ONE, Matchers.<ExpressionTree>isArrayType()));
 
   /**
    * Matches calls to the JDK7 method {@link java.util.Objects#hashCode} with an argument of array
    * type. This method is not varargs, so we don't need to check the number of arguments.
    */
   @SuppressWarnings({"unchecked"})
-  private static final Matcher<MethodInvocationTree> jdk7HashCodeMethodMatcher = allOf(
-      staticMethod().onClass("java.util.Objects").named("hashCode"),
-      argument(0, Matchers.<ExpressionTree>isArrayType()));
+  private static final Matcher<MethodInvocationTree> jdk7HashCodeMethodMatcher =
+      allOf(
+          staticMethod().onClass("java.util.Objects").named("hashCode"),
+          argument(0, Matchers.<ExpressionTree>isArrayType()));
 
-  /**
-   * Matches calls to the hashCode instance method on an array.
-   */
+  /** Matches calls to the hashCode instance method on an array. */
   private static final Matcher<ExpressionTree> instanceHashCodeMethodMatcher =
       instanceMethod().onClass(isArray()).named("hashCode");
 
   /**
-   * Wraps identity hashcode computations in calls to {@link java.util.Arrays#hashCode} if the
-   * array is single dimensional or {@link java.util.Arrays#deepHashCode} if the array is
+   * Wraps identity hashcode computations in calls to {@link java.util.Arrays#hashCode} if the array
+   * is single dimensional or {@link java.util.Arrays#deepHashCode} if the array is
    * multidimensional.
    *
    * <p>If there is only one argument to the hashcode method or the instance hashcode method is
-   * used, replaces the whole method invocation.  If there are multiple arguments, wraps any that
-   * are of array type with the appropriate {@link java.util.Arrays} hashcode method.
+   * used, replaces the whole method invocation. If there are multiple arguments, wraps any that are
+   * of array type with the appropriate {@link java.util.Arrays} hashcode method.
    */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -91,15 +91,17 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
     if (jdk7HashCodeMethodMatcher.matches(tree, state)) {
       // java.util.Objects#hashCode takes a single argument, so rewrite the whole method call
       // to use Arrays.hashCode/deepHashCode instead.
-      fix = SuggestedFix.builder()
-          .replace(tree, rewriteArrayArgument(tree.getArguments().get(0), types));
+      fix =
+          SuggestedFix.builder()
+              .replace(tree, rewriteArrayArgument(tree.getArguments().get(0), types));
     } else if (instanceHashCodeMethodMatcher.matches(tree, state)) {
       // Rewrite call to instance hashCode method to use Arrays.hashCode/deepHashCode instead.
-      fix = SuggestedFix.builder()
-          .replace(tree,
-              rewriteArrayArgument(
-                  ((JCFieldAccess) tree.getMethodSelect()).getExpression(),
-                  types));
+      fix =
+          SuggestedFix.builder()
+              .replace(
+                  tree,
+                  rewriteArrayArgument(
+                      ((JCFieldAccess) tree.getMethodSelect()).getExpression(), types));
     } else if (varargsHashCodeMethodMatcher.matches(tree, state)) {
       // Varargs hash code methods, java.util.Objects#hash and
       // com.google.common.base.Objects#hashCode
@@ -110,8 +112,7 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
         ExpressionTree arg = tree.getArguments().get(0);
         Type elemType = types.elemtype(ASTHelpers.getType(arg));
         if (elemType.isPrimitive() || types.isArray(elemType)) {
-          fix = SuggestedFix.builder()
-              .replace(tree, rewriteArrayArgument(arg, types));
+          fix = SuggestedFix.builder().replace(tree, rewriteArrayArgument(arg, types));
         }
       } else {
         // If more than one argument, wrap each argument in a call to Arrays#hashCode/deepHashCode.
@@ -134,8 +135,8 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
 
   /**
    * Given an {@link ExpressionTree} that represents an argument of array type, rewrites it to wrap
-   * it in a call to either {@link java.util.Arrays#hashCode} if it is single dimensional, or
-   * {@link java.util.Arrays#deepHashCode} if it is multidimensional.
+   * it in a call to either {@link java.util.Arrays#hashCode} if it is single dimensional, or {@link
+   * java.util.Arrays#deepHashCode} if it is multidimensional.
    */
   private static String rewriteArrayArgument(ExpressionTree arg, Types types) {
     Type argType = ASTHelpers.getType(arg);

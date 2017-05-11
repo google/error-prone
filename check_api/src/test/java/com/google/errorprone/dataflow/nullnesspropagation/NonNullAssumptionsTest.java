@@ -32,9 +32,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Tests to verify assumptions about specific JDK and other methods and fields built into
- * {@link NullnessPropagationTransfer} by running the referenced methods and reading the referenced
- * fields where possible/feasible.
+ * Tests to verify assumptions about specific JDK and other methods and fields built into {@link
+ * NullnessPropagationTransfer} by running the referenced methods and reading the referenced fields
+ * where possible/feasible.
  *
  * @author kmb@google.com (Kevin Bierhoff)
  */
@@ -48,8 +48,7 @@ public class NonNullAssumptionsTest {
       int found = 0;
       Class<?> clazz = loadClass(classname);
       for (Field field : clazz.getDeclaredFields()) {
-        if (Modifier.isFinal(field.getModifiers())
-            && Modifier.isStatic(field.getModifiers())) {
+        if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
           ++found;
           field.setAccessible(true);
           assertThat(field.get(null)).named(field.toString()).isNotNull();
@@ -99,9 +98,13 @@ public class NonNullAssumptionsTest {
         for (int nonNullParam : nonNullParameters) {
           try {
             invokeWithSingleNullArgument(method, nonNullParam);
-            fail("InvocationTargetException expected calling " + method + " with null parameter "
-                + nonNullParam);
-          } catch (InvocationTargetException expected) {}
+            fail(
+                "InvocationTargetException expected calling "
+                    + method
+                    + " with null parameter "
+                    + nonNullParam);
+          } catch (InvocationTargetException expected) {
+          }
         }
       }
       assertWithMessage(member.clazz + "#" + member.member + "()").that(found).isGreaterThan(0);
@@ -120,9 +123,10 @@ public class NonNullAssumptionsTest {
         args[i] = ArbitraryInstances.get(params[i]);
       }
     }
-    Object receiver = Modifier.isStatic(method.getModifiers())
-        ? null
-        : ArbitraryInstances.get(method.getDeclaringClass());
+    Object receiver =
+        Modifier.isStatic(method.getModifiers())
+            ? null
+            : ArbitraryInstances.get(method.getDeclaringClass());
     method.setAccessible(true);
     return method.invoke(receiver, args);
   }

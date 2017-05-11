@@ -37,7 +37,7 @@ public class UAssignTest {
         .addEqualityGroup(UAssign.create(UFreeIdent.create("foo"), ULiteral.intLit(20)))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(

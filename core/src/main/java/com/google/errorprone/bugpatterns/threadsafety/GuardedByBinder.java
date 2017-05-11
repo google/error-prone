@@ -44,37 +44,36 @@ import javax.lang.model.element.Name;
 public class GuardedByBinder {
 
   /**
-   * Creates a {@link GuardedByExpression} from a bound AST node, or returns
-   * {@code Optional.absent()} if the AST node doesn't correspond to a 'simple'
-   * lock expression.
+   * Creates a {@link GuardedByExpression} from a bound AST node, or returns {@code
+   * Optional.absent()} if the AST node doesn't correspond to a 'simple' lock expression.
    */
-  public static Optional<GuardedByExpression> bindExpression(JCTree.JCExpression exp,
-      VisitorState visitorState) {
+  public static Optional<GuardedByExpression> bindExpression(
+      JCTree.JCExpression exp, VisitorState visitorState) {
     try {
-      return Optional.of(bind(
-          exp,
-          BinderContext.of(
-              ALREADY_BOUND_RESOLVER,
-              ASTHelpers.getSymbol(visitorState.findEnclosing(ClassTree.class)),
-              visitorState.getTypes(),
-              Names.instance(visitorState.context))));
+      return Optional.of(
+          bind(
+              exp,
+              BinderContext.of(
+                  ALREADY_BOUND_RESOLVER,
+                  ASTHelpers.getSymbol(visitorState.findEnclosing(ClassTree.class)),
+                  visitorState.getTypes(),
+                  Names.instance(visitorState.context))));
     } catch (IllegalGuardedBy expected) {
       return Optional.absent();
     }
   }
 
-  /**
-   * Creates a {@link GuardedByExpression} from a string, given the resolution context.
-   */
+  /** Creates a {@link GuardedByExpression} from a string, given the resolution context. */
   static Optional<GuardedByExpression> bindString(String string, GuardedBySymbolResolver resolver) {
     try {
-      return Optional.of(bind(
-          GuardedByUtils.parseString(string, resolver.context()),
-          BinderContext.of(
-              resolver,
-              resolver.enclosingClass(),
-              Types.instance(resolver.context()),
-              Names.instance(resolver.context()))));
+      return Optional.of(
+          bind(
+              GuardedByUtils.parseString(string, resolver.context()),
+              BinderContext.of(
+                  resolver,
+                  resolver.enclosingClass(),
+                  Types.instance(resolver.context()),
+                  Names.instance(resolver.context()))));
     } catch (IllegalGuardedBy expected) {
       return Optional.absent();
     }
@@ -87,14 +86,14 @@ public class GuardedByBinder {
     final Names names;
 
     public BinderContext(Resolver resolver, ClassSymbol thisClass, Types types, Names names) {
-     this.resolver = resolver;
-     this.thisClass = thisClass;
-     this.types = types;
-     this.names = names;
+      this.resolver = resolver;
+      this.thisClass = thisClass;
+      this.types = types;
+      this.names = names;
     }
 
-    public static BinderContext of(Resolver resolver, ClassSymbol thisClass, Types types,
-        Names names) {
+    public static BinderContext of(
+        Resolver resolver, ClassSymbol thisClass, Types types, Names names) {
       return new BinderContext(resolver, thisClass, types, names);
     }
   }
@@ -107,8 +106,8 @@ public class GuardedByBinder {
   }
 
   /**
-   * A context containing the information necessary to resolve a
-   * {@link com.sun.tools.javac.code.Symbol} from an AST node.
+   * A context containing the information necessary to resolve a {@link
+   * com.sun.tools.javac.code.Symbol} from an AST node.
    *
    * <p>Guard expressions can be bound from the string value of an {@code @GuardedBy} annotation, or
    * from an actual java expression. In the first case, the string is parsed into an AST which will
@@ -119,8 +118,8 @@ public class GuardedByBinder {
 
     Symbol.MethodSymbol resolveMethod(MethodInvocationTree node, Name name);
 
-    Symbol.MethodSymbol resolveMethod(MethodInvocationTree node, GuardedByExpression base,
-        Name identifier);
+    Symbol.MethodSymbol resolveMethod(
+        MethodInvocationTree node, GuardedByExpression base, Name identifier);
 
     Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node);
 
@@ -129,41 +128,40 @@ public class GuardedByBinder {
     Symbol resolveEnclosingClass(ExpressionTree expression);
   }
 
-  /**
-   * A resolver for AST nodes that have already been bound by javac.
-   */
-  static final Resolver ALREADY_BOUND_RESOLVER = new Resolver() {
-    @Override
-    public Symbol resolveIdentifier(IdentifierTree node) {
-      return ASTHelpers.getSymbol(node);
-    }
+  /** A resolver for AST nodes that have already been bound by javac. */
+  static final Resolver ALREADY_BOUND_RESOLVER =
+      new Resolver() {
+        @Override
+        public Symbol resolveIdentifier(IdentifierTree node) {
+          return ASTHelpers.getSymbol(node);
+        }
 
-    @Override
-    public Symbol.MethodSymbol resolveMethod(MethodInvocationTree node, Name name) {
-      return ASTHelpers.getSymbol(node);
-    }
+        @Override
+        public Symbol.MethodSymbol resolveMethod(MethodInvocationTree node, Name name) {
+          return ASTHelpers.getSymbol(node);
+        }
 
-    @Override
-    public Symbol.MethodSymbol resolveMethod(MethodInvocationTree node, GuardedByExpression base,
-        Name identifier) {
-      return ASTHelpers.getSymbol(node);
-    }
+        @Override
+        public Symbol.MethodSymbol resolveMethod(
+            MethodInvocationTree node, GuardedByExpression base, Name identifier) {
+          return ASTHelpers.getSymbol(node);
+        }
 
-    @Override
-    public Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node) {
-      return ASTHelpers.getSymbol(node);
-    }
+        @Override
+        public Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node) {
+          return ASTHelpers.getSymbol(node);
+        }
 
-    @Override
-    public Symbol resolveTypeLiteral(ExpressionTree expression) {
-      return ASTHelpers.getSymbol(expression);
-    }
+        @Override
+        public Symbol resolveTypeLiteral(ExpressionTree expression) {
+          return ASTHelpers.getSymbol(expression);
+        }
 
-    @Override
-    public Symbol resolveEnclosingClass(ExpressionTree expression) {
-      return ASTHelpers.getSymbol(expression);
-    }
-  };
+        @Override
+        public Symbol resolveEnclosingClass(ExpressionTree expression) {
+          return ASTHelpers.getSymbol(expression);
+        }
+      };
 
   private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
@@ -316,9 +314,8 @@ public class GuardedByBinder {
         }
 
         /**
-         * Returns the owner if the given member is declared in a lexically enclosing scope, and
-         *
-         * @{code null} otherwise.
+         * Returns the owner if the given member is declared in a lexically enclosing scope,
+         * and @{code null} otherwise.
          */
         private ClassSymbol isEnclosedIn(ClassSymbol startingClass, Symbol member, Types types) {
           for (ClassSymbol scope = startingClass.owner.enclClass();

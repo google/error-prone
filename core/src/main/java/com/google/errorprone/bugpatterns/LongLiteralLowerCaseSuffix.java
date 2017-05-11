@@ -48,19 +48,20 @@ import java.util.regex.Pattern;
 )
 public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {
 
-  private static final Matcher<LiteralTree> matcher = new Matcher<LiteralTree>() {
-    @Override
-    public boolean matches(LiteralTree literalTree, VisitorState state) {
-      if (literalTree.getKind() == Kind.LONG_LITERAL) {
-        // The javac AST doesn't seem to record whether the suffix is present, or whether it's
-        // an 'l' or 'L'. We have to look at the original source
-        String longLiteral = getLongLiteral(literalTree, state);
-        return longLiteral != null && longLiteral.endsWith("l");
-      } else {
-        return false;
-      }
-    }
-  };
+  private static final Matcher<LiteralTree> matcher =
+      new Matcher<LiteralTree>() {
+        @Override
+        public boolean matches(LiteralTree literalTree, VisitorState state) {
+          if (literalTree.getKind() == Kind.LONG_LITERAL) {
+            // The javac AST doesn't seem to record whether the suffix is present, or whether it's
+            // an 'l' or 'L'. We have to look at the original source
+            String longLiteral = getLongLiteral(literalTree, state);
+            return longLiteral != null && longLiteral.endsWith("l");
+          } else {
+            return false;
+          }
+        }
+      };
 
   // Doesn't need to be strict, just shouldn't read past the end
   // of the literal.
@@ -78,8 +79,8 @@ public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTre
       return null;
     }
     int start = longLiteral.getStartPosition();
-    java.util.regex.Matcher matcher = LONG_LITERAL_PATTERN.matcher(
-        sourceFile.subSequence(start, sourceFile.length()));
+    java.util.regex.Matcher matcher =
+        LONG_LITERAL_PATTERN.matcher(sourceFile.subSequence(start, sourceFile.length()));
     if (matcher.lookingAt()) {
       return matcher.group();
     }

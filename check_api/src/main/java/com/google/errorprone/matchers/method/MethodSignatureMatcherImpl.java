@@ -32,8 +32,8 @@ public class MethodSignatureMatcherImpl extends AbstractChainedMatcher<MatchStat
   }
 
   @Override
-  protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
-      VisitorState state) {
+  protected Optional<MatchState> matchResult(
+      ExpressionTree item, MatchState method, VisitorState state) {
     // TODO(cushon): build a way to match signatures (including varargs ones!) that doesn't
     // rely on MethodSymbol#toString().
     boolean matches =

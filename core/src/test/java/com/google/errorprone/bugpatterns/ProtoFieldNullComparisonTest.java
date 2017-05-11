@@ -21,9 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author flx@google.com (Felix Berger)
- */
+/** @author flx@google.com (Felix Berger) */
 @RunWith(JUnit4.class)
 public class ProtoFieldNullComparisonTest {
 
@@ -31,9 +29,9 @@ public class ProtoFieldNullComparisonTest {
 
   @Before
   public void setUp() throws Exception {
-    compilationHelper = CompilationTestHelper
-        .newInstance(ProtoFieldNullComparison.class, getClass())
-        .addSourceFile("proto/ProtoTest.java");
+    compilationHelper =
+        CompilationTestHelper.newInstance(ProtoFieldNullComparison.class, getClass())
+            .addSourceFile("proto/ProtoTest.java");
   }
 
   @Test
@@ -45,7 +43,7 @@ public class ProtoFieldNullComparisonTest {
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("ProtoFieldNullComparisonNegativeCases.java").doTest();
   }
-  
+
   @Test
   public void testProto3() {
     CompilationTestHelper.newInstance(ProtoFieldNullComparison.class, getClass())

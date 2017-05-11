@@ -51,13 +51,13 @@ abstract class UClassIdent extends UIdent {
   public static UClassIdent create(ClassSymbol sym) {
     return create(sym.outermostClass().getQualifiedName(), sym.getQualifiedName());
   }
-  
+
   private static UClassIdent create(CharSequence topLevelClass, CharSequence name) {
     return new AutoValue_UClassIdent(topLevelClass.toString(), StringName.of(name));
   }
-  
+
   public abstract String getTopLevelClass();
-  
+
   @Override
   public abstract StringName getName();
 
@@ -75,11 +75,11 @@ abstract class UClassIdent extends UIdent {
   protected Choice<Unifier> defaultAction(Tree tree, @Nullable Unifier unifier) {
     return unify(ASTHelpers.getSymbol(tree), unifier);
   }
-  
+
   @Nullable
   public Choice<Unifier> unify(@Nullable Symbol symbol, Unifier unifier) {
-    return symbol != null 
-        ? getName().unify(symbol.getQualifiedName(), unifier) 
+    return symbol != null
+        ? getName().unify(symbol.getQualifiedName(), unifier)
         : Choice.<Unifier>none();
   }
 }

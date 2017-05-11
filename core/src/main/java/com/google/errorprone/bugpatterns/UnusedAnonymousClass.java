@@ -46,12 +46,7 @@ public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatc
   // (2) and has no instance initializer blocks or field initializers
   @Override
   public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {
-    if (state
-            .getPath()
-            .getParentPath()
-            .getLeaf()
-            .getKind()
-        != Kind.EXPRESSION_STATEMENT) {
+    if (state.getPath().getParentPath().getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {
       return Description.NO_MATCH;
     }
     if (newClassTree.getClassBody() == null) {

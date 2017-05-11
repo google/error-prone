@@ -27,88 +27,91 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian
- */
+/** @author eaftan@google.com (Eddie Aftandilian */
 @RunWith(JUnit4.class)
 public class InstanceMethodTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatch() {
-    writeFile("A.java",
-      "public class A {",
-      "  public int getHash() {",
-      "    int[] arr = new int[10];",
-      "    return arr.hashCode();",
-      "  }",
-      "}"
-    );
-    assertCompiles(memberSelectMatches(true, new InstanceMethod(
-        Matchers.<ExpressionTree>isArrayType(), "hashCode")));
-  }
-
-  @Test
-  public void shouldMatchWildCard() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  public int getHash() {",
         "    int[] arr = new int[10];",
         "    return arr.hashCode();",
         "  }",
-        "}"
-      );
-    assertCompiles(memberSelectMatches(
-        true, InstanceMethod.methodReceiverMatcher(Matchers.<ExpressionTree>isArrayType())));
+        "}");
+    assertCompiles(
+        memberSelectMatches(
+            true, new InstanceMethod(Matchers.<ExpressionTree>isArrayType(), "hashCode")));
+  }
+
+  @Test
+  public void shouldMatchWildCard() {
+    writeFile(
+        "A.java",
+        "public class A {",
+        "  public int getHash() {",
+        "    int[] arr = new int[10];",
+        "    return arr.hashCode();",
+        "  }",
+        "}");
+    assertCompiles(
+        memberSelectMatches(
+            true, InstanceMethod.methodReceiverMatcher(Matchers.<ExpressionTree>isArrayType())));
   }
 
   @Test
   public void shouldNotMatchWhenMethodNamesDiffer() {
-    writeFile("A.java",
-      "public class A {",
-      "  public int getHash() {",
-      "    int[] arr = new int[10];",
-      "    return arr.hashCode();",
-      "  }",
-      "}"
-    );
-    assertCompiles(memberSelectMatches(false, new InstanceMethod(
-        Matchers.<ExpressionTree>isArrayType(), "notHashCode")));
+    writeFile(
+        "A.java",
+        "public class A {",
+        "  public int getHash() {",
+        "    int[] arr = new int[10];",
+        "    return arr.hashCode();",
+        "  }",
+        "}");
+    assertCompiles(
+        memberSelectMatches(
+            false, new InstanceMethod(Matchers.<ExpressionTree>isArrayType(), "notHashCode")));
   }
 
   @Test
   public void shouldNotMatchWhenMatcherFails() {
-    writeFile("A.java",
-      "public class A {",
-      "  public int getHash() {",
-      "    Object obj = new Object();",
-      "    return obj.hashCode();",
-      "  }",
-      "}"
-    );
-    assertCompiles(memberSelectMatches(false, new InstanceMethod(
-        Matchers.<ExpressionTree>isArrayType(), "hashCode")));
+    writeFile(
+        "A.java",
+        "public class A {",
+        "  public int getHash() {",
+        "    Object obj = new Object();",
+        "    return obj.hashCode();",
+        "  }",
+        "}");
+    assertCompiles(
+        memberSelectMatches(
+            false, new InstanceMethod(Matchers.<ExpressionTree>isArrayType(), "hashCode")));
   }
 
   @Test
   public void shouldNotMatchStaticMethod() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "package com.google;",
         "public class A { ",
         "  public static int count() {",
         "    return 1;",
         "  }",
-        "}"
-    );
-    writeFile("B.java",
+        "}");
+    writeFile(
+        "B.java",
         "import com.google.A;",
         "public class B {",
         "  public int count() {",
         "    return A.count();",
         "  }",
-        "}"
-      );
-    assertCompiles(memberSelectMatches(false, new InstanceMethod(
-        Matchers.<ExpressionTree>anything(), "count")));
+        "}");
+    assertCompiles(
+        memberSelectMatches(
+            false, new InstanceMethod(Matchers.<ExpressionTree>anything(), "count")));
   }
 
   private Scanner memberSelectMatches(final boolean shouldMatch, final InstanceMethod toMatch) {
@@ -116,8 +119,7 @@ public class InstanceMethodTest extends CompilerBasedAbstractTest {
       @Override
       public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
         if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
-          assertTrue(node.toString(),
-              !shouldMatch ^ toMatch.matches(node, visitorState));
+          assertTrue(node.toString(), !shouldMatch ^ toMatch.matches(node, visitorState));
         }
         return super.visitMemberSelect(node, visitorState);
       }

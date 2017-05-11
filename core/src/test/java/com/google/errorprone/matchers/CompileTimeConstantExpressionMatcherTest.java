@@ -189,24 +189,24 @@ public class CompileTimeConstantExpressionMatcherTest {
   private void assertCompilerMatchesOnAssignment(
       final Map<String, Boolean> expectedMatches, String... lines) {
     final Matcher<ExpressionTree> matcher = new CompileTimeConstantExpressionMatcher();
-    final Scanner scanner = new Scanner() {
-      @Override
-      public Void visitAssignment(AssignmentTree t, VisitorState state) {
-        ExpressionTree lhs = t.getVariable();
-        if (expectedMatches.containsKey(lhs.toString())) {
-          boolean matches = matcher.matches(t.getExpression(), state);
-          if (expectedMatches.get(lhs.toString())) {
-            assertTrue("Matcher should match expression" + t.getExpression(), matches);
-          } else {
-            assertFalse("Matcher should not match expression" + t.getExpression(), matches);
+    final Scanner scanner =
+        new Scanner() {
+          @Override
+          public Void visitAssignment(AssignmentTree t, VisitorState state) {
+            ExpressionTree lhs = t.getVariable();
+            if (expectedMatches.containsKey(lhs.toString())) {
+              boolean matches = matcher.matches(t.getExpression(), state);
+              if (expectedMatches.get(lhs.toString())) {
+                assertTrue("Matcher should match expression" + t.getExpression(), matches);
+              } else {
+                assertFalse("Matcher should not match expression" + t.getExpression(), matches);
+              }
+            }
+            return super.visitAssignment(t, state);
           }
-        }
-        return super.visitAssignment(t, state);
-      }
-    };
+        };
 
-    CompilationTestHelper
-        .newInstance(ScannerSupplier.fromScanner(scanner), getClass())
+    CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner), getClass())
         .expectResult(Result.OK)
         .addSourceLines("test/CompileTimeConstantExpressionMatcherTestCase.java", lines)
         .doTest();

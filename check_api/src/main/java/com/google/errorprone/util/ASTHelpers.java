@@ -97,14 +97,12 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 
-/**
- * This class contains utility methods to work with the javac AST.
- */
+/** This class contains utility methods to work with the javac AST. */
 public class ASTHelpers {
   /**
    * Determines whether two expressions refer to the same variable. Note that returning false
-   * doesn't necessarily mean the expressions do *not* refer to the same field. We don't attempt
-   * to do any complex analysis here, just catch the obvious cases.
+   * doesn't necessarily mean the expressions do *not* refer to the same field. We don't attempt to
+   * do any complex analysis here, just catch the obvious cases.
    */
   public static boolean sameVariable(ExpressionTree expr1, ExpressionTree expr2) {
     // Throw up our hands if we're not comparing identifiers and/or field accesses.
@@ -239,8 +237,8 @@ public class ASTHelpers {
   }
 
   /**
-   * Given a TreePath, walks up the tree until it finds a node of the given type.  Returns null
-   * if no such node is found.
+   * Given a TreePath, walks up the tree until it finds a node of the given type. Returns null if no
+   * such node is found.
    */
   @Nullable
   public static <T> T findEnclosingNode(TreePath path, Class<T> klass) {
@@ -249,21 +247,20 @@ public class ASTHelpers {
   }
 
   /**
-   * Find the root assignable expression of a chain of field accesses.  If there is no root
-   * (i.e, a bare method call or a static method call), return null.
+   * Find the root assignable expression of a chain of field accesses. If there is no root (i.e, a
+   * bare method call or a static method call), return null.
    *
    * <p>Examples:
-   * <pre>
-   * {@code
-   *    a.trim().intern() ==> a
-   *    a.b.trim().intern() ==> a.b
-   *    this.intValue.foo() ==> this.intValue
-   *    this.foo() ==> this
-   *    intern() ==> null
-   *    String.format() ==> null
-   *    java.lang.String.format() ==> null
-   * }
-   * </pre>
+   *
+   * <pre>{@code
+   * a.trim().intern() ==> a
+   * a.b.trim().intern() ==> a.b
+   * this.intValue.foo() ==> this.intValue
+   * this.foo() ==> this
+   * intern() ==> null
+   * String.format() ==> null
+   * java.lang.String.format() ==> null
+   * }</pre>
    */
   public static ExpressionTree getRootAssignable(MethodInvocationTree methodInvocationTree) {
     if (!(methodInvocationTree instanceof JCMethodInvocation)) {
@@ -296,7 +293,7 @@ public class ASTHelpers {
   /**
    * Gives the return type of an ExpressionTree that represents a method select.
    *
-   * TODO(eaftan): Are there other places this could be used?
+   * <p>TODO(eaftan): Are there other places this could be used?
    */
   public static Type getReturnType(ExpressionTree expressionTree) {
     if (expressionTree instanceof JCFieldAccess) {
@@ -362,20 +359,19 @@ public class ASTHelpers {
    * Returns the receiver of an expression.
    *
    * <p>Examples:
-   * <pre>
-   * {@code
-   *    a.foo() ==> a
-   *    a.b.foo() ==> a.b
-   *    a.bar().foo() ==> a.bar()
-   *    a.b.c ==> a.b
-   *    a.b().c ==> a.b()
-   *    this.foo() ==> this
-   *    foo() ==> null
-   *    TheClass.aStaticMethod() ==> TheClass
-   *    aStaticMethod() ==> null
-   *    aStaticallyImportedMethod() ==> null
-   * }
-   * </pre>
+   *
+   * <pre>{@code
+   * a.foo() ==> a
+   * a.b.foo() ==> a.b
+   * a.bar().foo() ==> a.bar()
+   * a.b.c ==> a.b
+   * a.b().c ==> a.b()
+   * this.foo() ==> this
+   * foo() ==> null
+   * TheClass.aStaticMethod() ==> TheClass
+   * aStaticMethod() ==> null
+   * aStaticallyImportedMethod() ==> null
+   * }</pre>
    */
   @Nullable
   public static ExpressionTree getReceiver(ExpressionTree expressionTree) {
@@ -390,16 +386,17 @@ public class ASTHelpers {
     } else if (expressionTree instanceof MemberReferenceTree) {
       return ((MemberReferenceTree) expressionTree).getQualifierExpression();
     } else {
-      throw new IllegalStateException(String.format(
-          "Expected expression '%s' to be a method invocation or field access, but was %s",
-          expressionTree, expressionTree.getKind()));
+      throw new IllegalStateException(
+          String.format(
+              "Expected expression '%s' to be a method invocation or field access, but was %s",
+              expressionTree, expressionTree.getKind()));
     }
   }
 
   /**
    * Given a BinaryTree to match against and a list of two matchers, applies the matchers to the
-   * operands in both orders.  If both matchers match, returns a list with the operand that
-   * matched each matcher in the corresponding position.
+   * operands in both orders. If both matchers match, returns a list with the operand that matched
+   * each matcher in the corresponding position.
    *
    * @param tree a BinaryTree AST node
    * @param matchers a list of matchers
@@ -455,7 +452,7 @@ public class ASTHelpers {
    * match the given {@code predicate}.
    *
    * @return The (possibly empty) set of methods in any superclass that match {@code predicate} and
-   * have the given {@code name}.
+   *     have the given {@code name}.
    */
   public static Set<MethodSymbol> findMatchingMethods(
       Name name, final Predicate<MethodSymbol> predicate, Type startClass, Types types) {
@@ -589,8 +586,8 @@ public class ASTHelpers {
         if ((var.flags() & Flags.ENUM) != 0) {
           /**
            * Javac gives us the members backwards, apparently. It's worth making an effort to
-           * preserve declaration order because it's useful for diagnostics (e.g. in
-           * {@link MissingCasesInEnumSwitch}).
+           * preserve declaration order because it's useful for diagnostics (e.g. in {@link
+           * MissingCasesInEnumSwitch}).
            */
           values.push(sym.name.toString());
         }
@@ -599,7 +596,7 @@ public class ASTHelpers {
     return new LinkedHashSet<>(values);
   }
 
-  /** Returns true if the given tree is a generated constructor. **/
+  /** Returns true if the given tree is a generated constructor. * */
   public static boolean isGeneratedConstructor(MethodTree tree) {
     if (!(tree instanceof JCMethodDecl)) {
       return false;
@@ -631,8 +628,8 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if the
-   * type could not be determined.
+   * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if the type
+   * could not be determined.
    */
   @Nullable
   public static ClassType getType(ClassTree tree) {
@@ -656,8 +653,7 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns the {@link Nullness} for an expression as determined by the nullness dataflow
-   * analysis.
+   * Returns the {@link Nullness} for an expression as determined by the nullness dataflow analysis.
    */
   public static Nullness getNullnessValue(
       ExpressionTree expr, VisitorState state, NullnessAnalysis nullnessAnalysis) {
@@ -694,9 +690,7 @@ public class ASTHelpers {
     return clazz.isInstance(value) ? clazz.cast(value) : null;
   }
 
-  /**
-   * Return true if the given type is 'void' or 'Void'.
-   */
+  /** Return true if the given type is 'void' or 'Void'. */
   public static boolean isVoidType(Type type, VisitorState state) {
     if (type == null) {
       return false;
@@ -705,9 +699,7 @@ public class ASTHelpers {
         || state.getTypes().isSameType(Suppliers.JAVA_LANG_VOID_TYPE.get(state), type);
   }
 
-  /**
-   * Returns true if {@code erasure(s) <: erasure(t)}.
-   */
+  /** Returns true if {@code erasure(s) <: erasure(t)}. */
   public static boolean isSubtype(Type s, Type t, VisitorState state) {
     if (s == null || t == null) {
       return false;
@@ -716,9 +708,7 @@ public class ASTHelpers {
     return types.isSubtype(types.erasure(s), types.erasure(t));
   }
 
-  /**
-   * Returns true if {@code erasure(s)} is castable to {@code erasure(t)}.
-   */
+  /** Returns true if {@code erasure(s)} is castable to {@code erasure(t)}. */
   public static boolean isCastable(Type s, Type t, VisitorState state) {
     if (s == null || t == null) {
       return false;
@@ -751,8 +741,8 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns the upper bound of a type if it has one, or the type itself if not. Correctly
-   * handles wildcards and capture variables.
+   * Returns the upper bound of a type if it has one, or the type itself if not. Correctly handles
+   * wildcards and capture variables.
    */
   public static Type getUpperBound(Type type, Types types) {
     if (type.hasTag(TypeTag.WILDCARD)) {

@@ -45,7 +45,7 @@ public class UnlockMethodChecker extends AbstractLockMethodChecker {
   @Override
   protected ImmutableList<String> getLockExpressions(MethodTree tree) {
     UnlockMethod unlockMethod = ASTHelpers.getAnnotation(tree, UnlockMethod.class);
-    return unlockMethod == null 
+    return unlockMethod == null
         ? ImmutableList.<String>of()
         : ImmutableList.copyOf(unlockMethod.value());
   }
@@ -63,6 +63,7 @@ public class UnlockMethodChecker extends AbstractLockMethodChecker {
   @Override
   protected String buildMessage(String unhandled) {
     return "The following locks are specified by this method's @UnlockMethod anotation but are not"
-        + " released: " + unhandled;
+        + " released: "
+        + unhandled;
   }
 }

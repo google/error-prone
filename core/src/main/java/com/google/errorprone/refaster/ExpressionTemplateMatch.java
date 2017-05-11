@@ -20,11 +20,11 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 
 /**
  * A complete representation of a match against an {@code ExpressionTemplate}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 class ExpressionTemplateMatch extends TemplateMatch {
-  
+
   public ExpressionTemplateMatch(JCExpression location, Unifier unifier) {
     super(location, unifier);
   }

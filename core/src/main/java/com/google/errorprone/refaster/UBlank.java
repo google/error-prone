@@ -35,9 +35,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Equivalent to a no-arg block placeholder invocation.
- */
+/** Equivalent to a no-arg block placeholder invocation. */
 @AutoValue
 abstract class UBlank implements UStatement {
   static UBlank create() {
@@ -58,11 +56,13 @@ abstract class UBlank implements UStatement {
 
   private static final TreeScanner<Boolean, Unifier> FORBIDDEN_REFERENCE_SCANNER =
       new TreeScanner<Boolean, Unifier>() {
-        @Override public Boolean reduce(Boolean l, Boolean r) {
+        @Override
+        public Boolean reduce(Boolean l, Boolean r) {
           return firstNonNull(l, false) || firstNonNull(r, false);
         }
 
-        @Override public Boolean scan(Tree t, Unifier unifier) {
+        @Override
+        public Boolean scan(Tree t, Unifier unifier) {
           if (t != null) {
             Boolean forbidden =
                 t.accept(PlaceholderUnificationVisitor.FORBIDDEN_REFERENCE_VISITOR, unifier);
@@ -98,19 +98,22 @@ abstract class UBlank implements UStatement {
     }
     Collection<Integer> breakPoints =
         ContiguousSet.create(Range.closed(0, goodIndex), DiscreteDomain.integers());
-    return Choice.from(breakPoints).transform(
-        new Function<Integer, UnifierWithUnconsumedStatements>() {
-          @Override public UnifierWithUnconsumedStatements apply(Integer k) {
-            Unifier unifier = state.unifier().fork();
-            unifier.putBinding(key(), state.unconsumedStatements().subList(0, k));
-            List<? extends StatementTree> remaining = state.unconsumedStatements()
-                .subList(k, state.unconsumedStatements().size());
-            return UnifierWithUnconsumedStatements.create(unifier, remaining);
-          }
-        });
+    return Choice.from(breakPoints)
+        .transform(
+            new Function<Integer, UnifierWithUnconsumedStatements>() {
+              @Override
+              public UnifierWithUnconsumedStatements apply(Integer k) {
+                Unifier unifier = state.unifier().fork();
+                unifier.putBinding(key(), state.unconsumedStatements().subList(0, k));
+                List<? extends StatementTree> remaining =
+                    state.unconsumedStatements().subList(k, state.unconsumedStatements().size());
+                return UnifierWithUnconsumedStatements.create(unifier, remaining);
+              }
+            });
   }
 
-  @Override public com.sun.tools.javac.util.List<JCStatement> inlineStatements(Inliner inliner) {
+  @Override
+  public com.sun.tools.javac.util.List<JCStatement> inlineStatements(Inliner inliner) {
     ListBuffer<JCStatement> buffer = new ListBuffer<>();
     for (StatementTree stmt :
         inliner.getOptionalBinding(key()).or(ImmutableList.<StatementTree>of())) {
@@ -119,4 +122,3 @@ abstract class UBlank implements UStatement {
     return buffer.toList();
   }
 }
-

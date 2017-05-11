@@ -56,9 +56,8 @@ import javax.lang.model.element.TypeElement;
 // TODO(cushon): merge the implementation with RequiredModifiersChecker
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
-  private static final String MESSAGE_TEMPLATE = "%s has specified that it should not be used"
-      + " together with the following modifiers: %s";
-
+  private static final String MESSAGE_TEMPLATE =
+      "%s has specified that it should not be used" + " together with the following modifiers: %s";
 
   // TODO(cushon): deprecate and remove
   private static final String GUAVA_ANNOTATION =
@@ -74,7 +73,8 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
 
   private static Set<Modifier> getIncompatibleModifiers(AnnotationTree tree, VisitorState state) {
     for (Attribute.Compound c : ASTHelpers.getSymbol(tree).getAnnotationMirrors()) {
-      if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
+      if (((TypeElement) c.getAnnotationType().asElement())
+          .getQualifiedName()
           .contentEquals(GUAVA_ANNOTATION)) {
         @SuppressWarnings("unchecked")
         List<Attribute.Enum> modifiers =
@@ -104,21 +104,19 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
       return Description.NO_MATCH;
     }
 
-    Set<Modifier> incompatible = Sets.intersection(
-        incompatibleModifiers,
-        ((ModifiersTree) parent).getFlags());
+    Set<Modifier> incompatible =
+        Sets.intersection(incompatibleModifiers, ((ModifiersTree) parent).getFlags());
 
     if (incompatible.isEmpty()) {
       return Description.NO_MATCH;
     }
 
     String annotationName = ASTHelpers.getAnnotationName(tree);
-    String nameString = annotationName != null
-        ? String.format("The annotation '@%s'", annotationName)
-        : "This annotation";
+    String nameString =
+        annotationName != null
+            ? String.format("The annotation '@%s'", annotationName)
+            : "This annotation";
     String customMessage = String.format(MESSAGE_TEMPLATE, nameString, incompatible.toString());
-    return buildDescription(tree)
-        .setMessage(customMessage)
-        .build();
+    return buildDescription(tree).setMessage(customMessage).build();
   }
 }

@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-/**
- * Checks added to the java compiler which detect common bug patterns.
- */
+/** Checks added to the java compiler which detect common bug patterns. */
 package com.google.errorprone.bugpatterns;

@@ -33,7 +33,7 @@ import java.util.Iterator;
 /**
  * A representation of a choice with zero or more options, which may be evaluated lazily or
  * strictly.
- * 
+ *
  * <p>This resembles the list monad in Haskell.
  *
  * @author lowasser@google.com (Louis Wasserman)
@@ -47,59 +47,56 @@ public abstract class Choice<T> {
    * cases, avoids overly nested results.
    */
 
-  private static final Choice<Object> NONE = new Choice<Object>() {
+  private static final Choice<Object> NONE =
+      new Choice<Object>() {
 
-    @Override
-    protected Iterator<Object> iterator() {
-      return Collections.emptyIterator();
-    }
+        @Override
+        protected Iterator<Object> iterator() {
+          return Collections.emptyIterator();
+        }
 
-    @Override
-    public <R> Choice<R> thenChoose(Function<? super Object, Choice<R>> function) {
-      checkNotNull(function);
-      return none();
-    }
+        @Override
+        public <R> Choice<R> thenChoose(Function<? super Object, Choice<R>> function) {
+          checkNotNull(function);
+          return none();
+        }
 
-    @Override
-    public <R> Choice<R> thenOption(Function<? super Object, Optional<R>> function) {
-      checkNotNull(function);
-      return none();
-    }
+        @Override
+        public <R> Choice<R> thenOption(Function<? super Object, Optional<R>> function) {
+          checkNotNull(function);
+          return none();
+        }
 
-    @Override
-    public <R> Choice<R> transform(Function<? super Object, R> function) {
-      checkNotNull(function);
-      return none();
-    }
+        @Override
+        public <R> Choice<R> transform(Function<? super Object, R> function) {
+          checkNotNull(function);
+          return none();
+        }
 
-    @Override
-    public Choice<Object> or(Choice<Object> other) {
-      return checkNotNull(other);
-    }
+        @Override
+        public Choice<Object> or(Choice<Object> other) {
+          return checkNotNull(other);
+        }
 
-    @Override
-    public Choice<Object> condition(Predicate<? super Object> predicate) {
-      checkNotNull(predicate);
-      return this;
-    }
+        @Override
+        public Choice<Object> condition(Predicate<? super Object> predicate) {
+          checkNotNull(predicate);
+          return this;
+        }
 
-    @Override
-    public String toString() {
-      return "Choice.NONE";
-    }
-  };
+        @Override
+        public String toString() {
+          return "Choice.NONE";
+        }
+      };
 
-  /**
-   * The empty {@code Choice}.
-   */
+  /** The empty {@code Choice}. */
   @SuppressWarnings("unchecked")
   public static <T> Choice<T> none() {
     return (Choice) NONE;
   }
 
-  /**
-   * Returns a {@code Choice} with only one option, {@code t}.
-   */
+  /** Returns a {@code Choice} with only one option, {@code t}. */
   public static <T> Choice<T> of(final T t) {
     checkNotNull(t);
     return new Choice<T>() {
@@ -139,10 +136,10 @@ public abstract class Choice<T> {
       }
     };
   }
-  
+
   /**
-   * Returns a {@code Choice} with {@code t} as an option if {@code condition},
-   * and no options otherwise.
+   * Returns a {@code Choice} with {@code t} as an option if {@code condition}, and no options
+   * otherwise.
    */
   public static <T> Choice<T> condition(boolean condition, T t) {
     return condition ? of(t) : Choice.<T>none();
@@ -176,15 +173,13 @@ public abstract class Choice<T> {
     }
   }
 
-  /**
-   * Returns a choice between any of the options from any of the specified choices.
-   */
+  /** Returns a choice between any of the options from any of the specified choices. */
   public static <T> Choice<T> any(final Collection<Choice<T>> choices) {
     return from(choices).thenChoose(Functions.<Choice<T>>identity());
   }
-  
+
   private Choice() {}
-  
+
   @VisibleForTesting
   Iterable<T> asIterable() {
     return new Iterable<T>() {
@@ -204,9 +199,7 @@ public abstract class Choice<T> {
     return Iterables.toString(asIterable());
   }
 
-  /**
-   * Returns the first valid option from this {@code Choice}.
-   */
+  /** Returns the first valid option from this {@code Choice}. */
   public Optional<T> first() {
     Iterator<T> itr = iterator();
     return itr.hasNext() ? Optional.of(itr.next()) : Optional.<T>absent();
@@ -233,12 +226,14 @@ public abstract class Choice<T> {
           throw new RuntimeException(new InterruptedException());
         }
         return Iterators.concat(
-            Iterators.transform(thisChoice.iterator(), new Function<T, Iterator<R>>() {
-              @Override
-              public Iterator<R> apply(T t) {
-                return function.apply(t).iterator();
-              }
-            }));
+            Iterators.transform(
+                thisChoice.iterator(),
+                new Function<T, Iterator<R>>() {
+                  @Override
+                  public Iterator<R> apply(T t) {
+                    return function.apply(t).iterator();
+                  }
+                }));
       }
     };
   }
@@ -261,9 +256,7 @@ public abstract class Choice<T> {
     };
   }
 
-  /**
-   * Maps the choices with the specified function.
-   */
+  /** Maps the choices with the specified function. */
   public <R> Choice<R> transform(final Function<? super T, R> function) {
     checkNotNull(function);
     final Choice<T> thisChoice = this;
@@ -275,9 +268,7 @@ public abstract class Choice<T> {
     };
   }
 
-  /**
-   * Returns a choice of the options from this {@code Choice} or from {@code other}.
-   */
+  /** Returns a choice of the options from this {@code Choice} or from {@code other}. */
   public Choice<T> or(final Choice<T> other) {
     checkNotNull(other);
     if (other == none()) {
@@ -298,16 +289,12 @@ public abstract class Choice<T> {
     }
   }
 
-  /**
-   * Returns this choice if {@code condition}, otherwise the empty choice.
-   */
+  /** Returns this choice if {@code condition}, otherwise the empty choice. */
   public Choice<T> condition(boolean condition) {
     return condition ? this : Choice.<T>none();
   }
 
-  /**
-   * Filters the choices to those that satisfy the provided {@code Predicate}.
-   */
+  /** Filters the choices to those that satisfy the provided {@code Predicate}. */
   public Choice<T> condition(final Predicate<? super T> predicate) {
     checkNotNull(predicate);
     final Choice<T> thisChoice = this;

@@ -29,13 +29,13 @@ import com.sun.tools.javac.util.List;
 
 /**
  * {@code UTree} representation of an {@code AnnotatedTypeTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
 abstract class UAnnotatedType extends UExpression implements AnnotatedTypeTree {
   public static UAnnotatedType create(Iterable<UAnnotation> annotations, UExpression type) {
-    return new AutoValue_UAnnotatedType(ImmutableList.copyOf(annotations), type); 
+    return new AutoValue_UAnnotatedType(ImmutableList.copyOf(annotations), type);
   }
 
   @Override
@@ -56,9 +56,11 @@ abstract class UAnnotatedType extends UExpression implements AnnotatedTypeTree {
 
   @Override
   public JCAnnotatedType inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().AnnotatedType(
-        List.convert(JCAnnotation.class, inliner.inlineList(getAnnotations())),
-        getUnderlyingType().inline(inliner));
+    return inliner
+        .maker()
+        .AnnotatedType(
+            List.convert(JCAnnotation.class, inliner.inlineList(getAnnotations())),
+            getUnderlyingType().inline(inliner));
   }
 
   @Override
@@ -66,5 +68,4 @@ abstract class UAnnotatedType extends UExpression implements AnnotatedTypeTree {
 
   @Override
   public abstract UExpression getUnderlyingType();
-
 }

@@ -52,7 +52,7 @@ public abstract class UMethodType extends UType {
     // Don't unify the return type, which doesn't matter in overload resolution.
     return unifyList(unifier, getParameterTypes(), methodTy.getParameterTypes());
   }
-  
+
   @Override
   public MethodType inline(Inliner inliner) throws CouldNotResolveImportException {
     return new MethodType(

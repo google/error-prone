@@ -27,10 +27,9 @@ import com.sun.tools.javac.util.List;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 
-
 /**
  * {@code UTree} representation of a {@code ModifiersTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -38,21 +37,22 @@ abstract class UModifiers extends UTree<JCModifiers> implements ModifiersTree {
   public static UModifiers create(long flagBits, UAnnotation... annotations) {
     return create(flagBits, ImmutableList.copyOf(annotations));
   }
-  
+
   public static UModifiers create(long flagBits, Iterable<? extends UAnnotation> annotations) {
     return new AutoValue_UModifiers(flagBits, ImmutableList.copyOf(annotations));
   }
-  
+
   abstract long flagBits();
 
   @Override
   public abstract ImmutableList<UAnnotation> getAnnotations();
-  
+
   @Override
   public JCModifiers inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Modifiers(
-        flagBits(), 
-        List.convert(JCAnnotation.class, inliner.inlineList(getAnnotations())));
+    return inliner
+        .maker()
+        .Modifiers(
+            flagBits(), List.convert(JCAnnotation.class, inliner.inlineList(getAnnotations())));
   }
 
   @Override

@@ -57,12 +57,15 @@ public abstract class CodeTransformerTestHelper {
         new DiagnosticCollector<JavaFileObject>();
     StandardJavaFileManager fileManager =
         compiler.getStandardFileManager(diagnosticsCollector, Locale.ENGLISH, UTF_8);
-    JavacTaskImpl task = (JavacTaskImpl) compiler.getTask(CharStreams.nullWriter(),
-        fileManager,
-        diagnosticsCollector,
-        ImmutableList.<String>of(),
-        null,
-        ImmutableList.of(original));
+    JavacTaskImpl task =
+        (JavacTaskImpl)
+            compiler.getTask(
+                CharStreams.nullWriter(),
+                fileManager,
+                diagnosticsCollector,
+                ImmutableList.<String>of(),
+                null,
+                ImmutableList.of(original));
 
     try {
       SourceFile sourceFile = SourceFile.create(original);

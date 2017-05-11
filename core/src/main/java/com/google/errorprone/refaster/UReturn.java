@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 /**
  * {@link UTree} representation of a {@link ReturnTree}.
- * 
+ *
  * @author lowasser@google.com
  */
 @AutoValue

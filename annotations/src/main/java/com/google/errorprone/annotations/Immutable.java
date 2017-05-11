@@ -75,9 +75,8 @@ import java.lang.annotation.Target;
 public @interface Immutable {
 
   /**
-   * When annotating a generic type as immutable, {@code containerOf} specifies
-   * which type parameters must be instantiated with immutable types for the
-   * container to be deeply immutable.
+   * When annotating a generic type as immutable, {@code containerOf} specifies which type
+   * parameters must be instantiated with immutable types for the container to be deeply immutable.
    */
   String[] containerOf() default {};
 }

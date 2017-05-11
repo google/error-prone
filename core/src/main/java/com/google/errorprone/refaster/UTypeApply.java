@@ -28,8 +28,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 /**
- * {@link UTree} version of {@link ParameterizedTypeTree}. This is the AST version of
- * {@link UClassType}.
+ * {@link UTree} version of {@link ParameterizedTypeTree}. This is the AST version of {@link
+ * UClassType}.
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
@@ -78,8 +78,8 @@ abstract class UTypeApply extends UExpression implements ParameterizedTypeTree {
 
   @Override
   public JCTypeApply inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().TypeApply(
-        getType().inline(inliner),
-        inliner.<JCExpression>inlineList(getTypeArguments()));
+    return inliner
+        .maker()
+        .TypeApply(getType().inline(inliner), inliner.<JCExpression>inlineList(getTypeArguments()));
   }
 }

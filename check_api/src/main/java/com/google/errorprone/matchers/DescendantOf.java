@@ -24,8 +24,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 
 /**
- * Matches an instance method that is a descendant of a method with the given class and
- * name.
+ * Matches an instance method that is a descendant of a method with the given class and name.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
@@ -45,8 +44,11 @@ public class DescendantOf implements Matcher<ExpressionTree> {
       return false;
     }
     if (!(sym instanceof MethodSymbol)) {
-      throw new IllegalArgumentException("DescendantOf matcher expects a method call but found "
-          + sym.getClass() + ". Expression: " + expressionTree);
+      throw new IllegalArgumentException(
+          "DescendantOf matcher expects a method call but found "
+              + sym.getClass()
+              + ". Expression: "
+              + expressionTree);
     }
     if (sym.isStatic()) {
       return false;
@@ -56,8 +58,9 @@ public class DescendantOf implements Matcher<ExpressionTree> {
       Type accessedReferenceType = sym.owner.type;
       Type collectionType = state.getTypeFromString(fullClassName);
       if (collectionType != null) {
-        return state.getTypes().isSubtype(accessedReferenceType,
-            state.getTypes().erasure(collectionType));
+        return state
+            .getTypes()
+            .isSubtype(accessedReferenceType, state.getTypes().erasure(collectionType));
       }
     }
 

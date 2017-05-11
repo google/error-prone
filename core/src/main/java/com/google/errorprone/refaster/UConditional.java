@@ -49,12 +49,16 @@ abstract class UConditional extends UExpression implements ConditionalExpression
   @Nullable
   public Choice<Unifier> visitConditionalExpression(
       ConditionalExpressionTree conditional, Unifier unifier) {
-    return getCondition().unify(conditional.getCondition(), unifier.fork())
+    return getCondition()
+        .unify(conditional.getCondition(), unifier.fork())
         .thenChoose(unifications(getTrueExpression(), conditional.getTrueExpression()))
         .thenChoose(unifications(getFalseExpression(), conditional.getFalseExpression()))
-        .or(getCondition().negate().unify(conditional.getCondition(), unifier.fork())
-            .thenChoose(unifications(getFalseExpression(), conditional.getTrueExpression()))
-            .thenChoose(unifications(getTrueExpression(), conditional.getFalseExpression())));
+        .or(
+            getCondition()
+                .negate()
+                .unify(conditional.getCondition(), unifier.fork())
+                .thenChoose(unifications(getFalseExpression(), conditional.getTrueExpression()))
+                .thenChoose(unifications(getTrueExpression(), conditional.getFalseExpression())));
   }
 
   @Override
@@ -69,9 +73,11 @@ abstract class UConditional extends UExpression implements ConditionalExpression
 
   @Override
   public JCConditional inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Conditional(
-        getCondition().inline(inliner),
-        getTrueExpression().inline(inliner), 
-        getFalseExpression().inline(inliner));
+    return inliner
+        .maker()
+        .Conditional(
+            getCondition().inline(inliner),
+            getTrueExpression().inline(inliner),
+            getFalseExpression().inline(inliner));
   }
 }

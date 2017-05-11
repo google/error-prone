@@ -26,9 +26,10 @@ import com.sun.source.tree.Tree;
 /**
  * A {@link BugChecker} that flags {@link ExpressionStatementTree}s that satisfy both of the
  * following:
+ *
  * <ul>
- * <li>The text of the tree is the same as the given {@code expressionStatement}, and
- * <li>The given {@code matcher} matches the tree
+ *   <li>The text of the tree is the same as the given {@code expressionStatement}, and
+ *   <li>The given {@code matcher} matches the tree
  * </ul>
  *
  * <p>Useful for testing {@link Matcher}s.

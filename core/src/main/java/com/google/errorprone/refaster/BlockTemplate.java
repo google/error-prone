@@ -54,22 +54,32 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     return create(ImmutableMap.<String, UType>of(), templateStatements);
   }
 
-  public static BlockTemplate create(Map<String, ? extends UType> expressionArgumentTypes,
-      UStatement... templateStatements) {
+  public static BlockTemplate create(
+      Map<String, ? extends UType> expressionArgumentTypes, UStatement... templateStatements) {
     return create(ImmutableList.<UTypeVar>of(), expressionArgumentTypes, templateStatements);
   }
 
-  public static BlockTemplate create(Iterable<UTypeVar> typeVariables,
-      Map<String, ? extends UType> expressionArgumentTypes, UStatement... templateStatements) {
-    return create(ImmutableClassToInstanceMap.<Annotation>builder().build(), typeVariables,
-        expressionArgumentTypes, ImmutableList.copyOf(templateStatements));
+  public static BlockTemplate create(
+      Iterable<UTypeVar> typeVariables,
+      Map<String, ? extends UType> expressionArgumentTypes,
+      UStatement... templateStatements) {
+    return create(
+        ImmutableClassToInstanceMap.<Annotation>builder().build(),
+        typeVariables,
+        expressionArgumentTypes,
+        ImmutableList.copyOf(templateStatements));
   }
 
-  public static BlockTemplate create(ImmutableClassToInstanceMap<Annotation> annotations,
-      Iterable<UTypeVar> typeVariables, Map<String, ? extends UType> expressionArgumentTypes,
+  public static BlockTemplate create(
+      ImmutableClassToInstanceMap<Annotation> annotations,
+      Iterable<UTypeVar> typeVariables,
+      Map<String, ? extends UType> expressionArgumentTypes,
       Iterable<? extends UStatement> templateStatements) {
-    return new AutoValue_BlockTemplate(annotations, ImmutableList.copyOf(typeVariables),
-        ImmutableMap.copyOf(expressionArgumentTypes), ImmutableList.copyOf(templateStatements));
+    return new AutoValue_BlockTemplate(
+        annotations,
+        ImmutableList.copyOf(typeVariables),
+        ImmutableMap.copyOf(expressionArgumentTypes),
+        ImmutableList.copyOf(templateStatements));
   }
 
   public BlockTemplate withStatements(Iterable<? extends UStatement> templateStatements) {
@@ -89,7 +99,8 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     if (tree instanceof JCBlock) {
       JCBlock block = (JCBlock) tree;
       ImmutableList<JCStatement> targetStatements = ImmutableList.copyOf(block.getStatements());
-      return matchesStartingAnywhere(block, 0, targetStatements, context).first()
+      return matchesStartingAnywhere(block, 0, targetStatements, context)
+          .first()
           .or(List.<BlockTemplateMatch>nil());
     }
     return ImmutableList.of();
@@ -97,8 +108,8 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
 
   private Choice<List<BlockTemplateMatch>> matchesStartingAtBeginning(
       final JCBlock block,
-      final int offset, 
-      final ImmutableList<? extends StatementTree> statements, 
+      final int offset,
+      final ImmutableList<? extends StatementTree> statements,
       final Context context) {
     if (statements.isEmpty()) {
       return Choice.none();
@@ -116,15 +127,24 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
             Unifier unifier = state.unifier();
             Inliner inliner = unifier.createInliner();
             try {
-              Optional<Unifier> checkedUnifier = typecheck(unifier, inliner,
-                  new Warner(firstStatement), expectedTypes(inliner), actualTypes(inliner));
+              Optional<Unifier> checkedUnifier =
+                  typecheck(
+                      unifier,
+                      inliner,
+                      new Warner(firstStatement),
+                      expectedTypes(inliner),
+                      actualTypes(inliner));
               if (checkedUnifier.isPresent()) {
                 int consumedStatements = statements.size() - state.unconsumedStatements().size();
-                BlockTemplateMatch match = new BlockTemplateMatch(block, checkedUnifier.get(),
-                    offset, offset + consumedStatements);
-                return matchesStartingAnywhere(block, offset + consumedStatements,
-                    statements.subList(consumedStatements, statements.size()), context).transform(
-                    prepend(match));
+                BlockTemplateMatch match =
+                    new BlockTemplateMatch(
+                        block, checkedUnifier.get(), offset, offset + consumedStatements);
+                return matchesStartingAnywhere(
+                        block,
+                        offset + consumedStatements,
+                        statements.subList(consumedStatements, statements.size()),
+                        context)
+                    .transform(prepend(match));
               }
             } catch (CouldNotResolveImportException e) {
               // fall through
@@ -144,21 +164,21 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
   }
 
   private Choice<List<BlockTemplateMatch>> matchesStartingAnywhere(
-      JCBlock block, 
+      JCBlock block,
       int offset,
-      final ImmutableList<? extends StatementTree> statements, 
+      final ImmutableList<? extends StatementTree> statements,
       final Context context) {
     Choice<List<BlockTemplateMatch>> choice = Choice.none();
     for (int i = 0; i < statements.size(); i++) {
-      choice = choice.or(matchesStartingAtBeginning(block, offset + i,
-          statements.subList(i, statements.size()), context));
+      choice =
+          choice.or(
+              matchesStartingAtBeginning(
+                  block, offset + i, statements.subList(i, statements.size()), context));
     }
     return choice.or(Choice.of(List.<BlockTemplateMatch>nil()));
   }
 
-  /**
-   * Returns a {@code String} representation of a statement, including semicolon.
-   */
+  /** Returns a {@code String} representation of a statement, including semicolon. */
   private static String printStatement(Context context, JCStatement statement) {
     StringWriter writer = new StringWriter();
     try {
@@ -173,8 +193,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
    * Returns a {@code String} representation of a sequence of statements, with semicolons and
    * newlines.
    */
-  private static String printStatements(
-      Context context, Iterable<JCStatement> statements) {
+  private static String printStatements(Context context, Iterable<JCStatement> statements) {
     StringWriter writer = new StringWriter();
     try {
       pretty(context, writer).printStats(com.sun.tools.javac.util.List.from(statements));
@@ -206,20 +225,17 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
       int nTargets = targetStatements.size();
       if (nInlined <= nTargets) {
         for (int i = 0; i < nInlined; i++) {
-          fix.replace(targetStatements.get(i),
-              printStatement(context, inlinedStatements.get(i)));
+          fix.replace(targetStatements.get(i), printStatement(context, inlinedStatements.get(i)));
         }
         for (int i = nInlined; i < nTargets; i++) {
           fix.delete(targetStatements.get(i));
         }
       } else {
         for (int i = 0; i < nTargets - 1; i++) {
-          fix.replace(targetStatements.get(i),
-              printStatement(context, inlinedStatements.get(i)));
+          fix.replace(targetStatements.get(i), printStatement(context, inlinedStatements.get(i)));
         }
         int last = nTargets - 1;
-        ImmutableList<JCStatement> remainingInlined =
-            inlinedStatements.subList(last, nInlined);
+        ImmutableList<JCStatement> remainingInlined = inlinedStatements.subList(last, nInlined);
         fix.replace(
             targetStatements.get(last),
             CharMatcher.whitespace().trimTrailingFrom(printStatements(context, remainingInlined)));

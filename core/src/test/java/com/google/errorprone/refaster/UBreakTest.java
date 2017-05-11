@@ -37,7 +37,7 @@ public class UBreakTest {
         .addEqualityGroup(UBreak.create("bar"))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(UBreak.create("bar"));

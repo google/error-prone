@@ -37,7 +37,7 @@ public class UArrayTypeTest {
         .addEqualityGroup(UArrayType.create(UArrayType.create(UPrimitiveType.INT)))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(

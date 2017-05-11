@@ -25,7 +25,7 @@ import com.sun.tools.javac.tree.JCTree.JCSynchronized;
 
 /**
  * {@link UTree} representation of a {@link SynchronizedTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -52,13 +52,15 @@ abstract class USynchronized extends USimpleStatement implements SynchronizedTre
 
   @Override
   public JCSynchronized inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Synchronized(
-        getExpression().inline(inliner), getBlock().inline(inliner));
+    return inliner
+        .maker()
+        .Synchronized(getExpression().inline(inliner), getBlock().inline(inliner));
   }
 
   @Override
   public Choice<Unifier> visitSynchronized(SynchronizedTree synced, Unifier unifier) {
-    return getExpression().unify(synced.getExpression(), unifier)
+    return getExpression()
+        .unify(synced.getExpression(), unifier)
         .thenChoose(unifications(getBlock(), synced.getBlock()));
   }
 }

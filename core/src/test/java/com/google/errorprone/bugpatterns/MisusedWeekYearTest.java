@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Test cases for {@link MisusedWeekYear}.
- */
+/** Test cases for {@link MisusedWeekYear}. */
 @RunWith(JUnit4.class)
 public class MisusedWeekYearTest {
 
@@ -39,7 +37,7 @@ public class MisusedWeekYearTest {
   public void testPositiveCases() throws Exception {
     compilationHelper.addSourceFile("MisusedWeekYearPositiveCases.java").doTest();
   }
-  
+
   @Test
   public void testPositiveCases2() throws Exception {
     compilationHelper.addSourceFile("MisusedWeekYearPositiveCases2.java").doTest();
@@ -49,5 +47,4 @@ public class MisusedWeekYearTest {
   public void testNegativeCases() throws Exception {
     compilationHelper.addSourceFile("MisusedWeekYearNegativeCases.java").doTest();
   }
-
 }

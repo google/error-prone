@@ -23,14 +23,12 @@ import java.lang.annotation.Annotation;
 
 /**
  * Interface for a transformation over Java source.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public interface CodeTransformer {
-  /**
-   * Apply recursively from the leaf node in the given {@link TreePath}.
-   */
+  /** Apply recursively from the leaf node in the given {@link TreePath}. */
   void apply(TreePath path, Context context, DescriptionListener listener);
-  
+
   ImmutableClassToInstanceMap<Annotation> annotations();
 }

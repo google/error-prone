@@ -29,9 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author adgar@google.com (Mike Edgar)
- */
+/** @author adgar@google.com (Mike Edgar) */
 @RunWith(JUnit4.class)
 public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
 
@@ -40,10 +38,13 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     Set<Kind> operators = new HashSet<Kind>();
     operators.add(Kind.PLUS_ASSIGNMENT);
     operators.add(Kind.IF);
-    assertCompiles(compoundAssignmentMatches(true, new CompoundAssignment(
-        operators,
-        Matchers.<ExpressionTree>anything(),
-        Matchers.<ExpressionTree>anything())));
+    assertCompiles(
+        compoundAssignmentMatches(
+            true,
+            new CompoundAssignment(
+                operators,
+                Matchers.<ExpressionTree>anything(),
+                Matchers.<ExpressionTree>anything())));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -51,83 +52,98 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     Set<Kind> operators = new HashSet<Kind>();
     operators.add(Kind.PLUS);
     operators.add(Kind.PLUS_ASSIGNMENT);
-    assertCompiles(compoundAssignmentMatches(true, new CompoundAssignment(
-        operators,
-        Matchers.<ExpressionTree>anything(),
-        Matchers.<ExpressionTree>anything())));
+    assertCompiles(
+        compoundAssignmentMatches(
+            true,
+            new CompoundAssignment(
+                operators,
+                Matchers.<ExpressionTree>anything(),
+                Matchers.<ExpressionTree>anything())));
   }
 
   @Test
   public void shouldMatch() {
-    writeFile("A.java",
-      "public class A {",
-      "  public void getHash(int a, long b) {",
-      "    long c = a;",
-      "    c += b;",
-      "  }",
-      "}"
-    );
+    writeFile(
+        "A.java",
+        "public class A {",
+        "  public void getHash(int a, long b) {",
+        "    long c = a;",
+        "    c += b;",
+        "  }",
+        "}");
     Set<Kind> operators = new HashSet<Kind>();
     operators.add(Kind.PLUS_ASSIGNMENT);
     operators.add(Kind.LEFT_SHIFT_ASSIGNMENT);
-    assertCompiles(compoundAssignmentMatches(true, new CompoundAssignment(
-        operators,
-        Matchers.<ExpressionTree>anything(),
-        Matchers.<ExpressionTree>anything())));
+    assertCompiles(
+        compoundAssignmentMatches(
+            true,
+            new CompoundAssignment(
+                operators,
+                Matchers.<ExpressionTree>anything(),
+                Matchers.<ExpressionTree>anything())));
   }
 
   @Test
   public void shouldNotMatchWhenOperatorDiffers() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  public void getHash(int a, long b) {",
         "    long c = a;",
         "    c -= b;",
         "  }",
-        "}"
-      );
-      Set<Kind> operators = new HashSet<Kind>();
-      operators.add(Kind.PLUS_ASSIGNMENT);
-      assertCompiles(compoundAssignmentMatches(false, new CompoundAssignment(
-          operators,
-          Matchers.<ExpressionTree>anything(),
-          Matchers.<ExpressionTree>anything())));
+        "}");
+    Set<Kind> operators = new HashSet<Kind>();
+    operators.add(Kind.PLUS_ASSIGNMENT);
+    assertCompiles(
+        compoundAssignmentMatches(
+            false,
+            new CompoundAssignment(
+                operators,
+                Matchers.<ExpressionTree>anything(),
+                Matchers.<ExpressionTree>anything())));
   }
 
   @Test
   public void shouldNotMatchWhenLeftOperandMatcherFails() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  public void getHash(int a, long b) {",
         "    long c = a;",
         "    c += b;",
         "  }",
-        "}"
-      );
-      Set<Kind> operators = new HashSet<Kind>();
-      operators.add(Kind.PLUS_ASSIGNMENT);
-      assertCompiles(compoundAssignmentMatches(false, new CompoundAssignment(
-          operators,
-          Matchers.<ExpressionTree>isArrayType(),
-          Matchers.<ExpressionTree>anything())));
+        "}");
+    Set<Kind> operators = new HashSet<Kind>();
+    operators.add(Kind.PLUS_ASSIGNMENT);
+    assertCompiles(
+        compoundAssignmentMatches(
+            false,
+            new CompoundAssignment(
+                operators,
+                Matchers.<ExpressionTree>isArrayType(),
+                Matchers.<ExpressionTree>anything())));
   }
 
   @Test
   public void shouldNotMatchWhenRightOperandMatcherFails() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  public void getHash(int a, long b) {",
         "    long c = a;",
         "    c += b;",
         "  }",
-        "}"
-      );
-      Set<Kind> operators = new HashSet<Kind>();
-      operators.add(Kind.PLUS_ASSIGNMENT);
-      assertCompiles(compoundAssignmentMatches(false, new CompoundAssignment(
-          operators,
-          Matchers.<ExpressionTree>anything(),
-          Matchers.<ExpressionTree>isArrayType())));
+        "}");
+    Set<Kind> operators = new HashSet<Kind>();
+    operators.add(Kind.PLUS_ASSIGNMENT);
+    assertCompiles(
+        compoundAssignmentMatches(
+            false,
+            new CompoundAssignment(
+                operators,
+                Matchers.<ExpressionTree>anything(),
+                Matchers.<ExpressionTree>isArrayType())));
   }
 
   private Scanner compoundAssignmentMatches(
@@ -135,8 +151,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     return new Scanner() {
       @Override
       public Void visitCompoundAssignment(CompoundAssignmentTree node, VisitorState visitorState) {
-        assertTrue(node.toString(),
-            !shouldMatch ^ toMatch.matches(node, visitorState));
+        assertTrue(node.toString(), !shouldMatch ^ toMatch.matches(node, visitorState));
         return super.visitCompoundAssignment(node, visitorState);
       }
     };

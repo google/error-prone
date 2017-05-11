@@ -53,8 +53,8 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 /**
- * Reads each line of the bugpatterns.txt tab-delimited data file, and generates a GitHub
- * Jekyll page for each one.
+ * Reads each line of the bugpatterns.txt tab-delimited data file, and generates a GitHub Jekyll
+ * page for each one.
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -78,14 +78,12 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
   private List<BugPatternInstance> result;
 
   /**
-   * Enables pygments-style code highlighting blocks instead of github flavoured markdown style
-   * code fences, because the latter make jekyll unhappy.
+   * Enables pygments-style code highlighting blocks instead of github flavoured markdown style code
+   * fences, because the latter make jekyll unhappy.
    */
   private final boolean usePygments;
 
-  /**
-   * Controls whether yaml front-matter is generated.
-   */
+  /** Controls whether yaml front-matter is generated. */
   private final boolean generateFrontMatter;
 
   /** The base url for links to bugpatterns. */
@@ -121,9 +119,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
     }
   }
 
-  /**
-   * A function to convert a test case file into an {@link ExampleInfo}.
-   */
+  /** A function to convert a test case file into an {@link ExampleInfo}. */
   private static class PathToExampleInfo implements Function<Path, ExampleInfo> {
 
     private final String checkerClass;
@@ -173,8 +169,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
     // replace spaces in filename with underscores
     Path checkPath = Paths.get(pattern.name.replace(' ', '_') + ".md");
 
-    try (Writer writer = Files.newBufferedWriter(
-        outputDir.resolve(checkPath), UTF_8)) {
+    try (Writer writer = Files.newBufferedWriter(outputDir.resolve(checkPath), UTF_8)) {
 
       // load side-car explanation file, if it exists
       Path sidecarExplanation = explanationDir.resolve(checkPath);

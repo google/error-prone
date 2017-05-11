@@ -53,8 +53,8 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
     }
 
     @Override
-    protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
-        VisitorState state) {
+    protected Optional<MatchState> matchResult(
+        ExpressionTree item, MatchState method, VisitorState state) {
       if (!method.sym().getSimpleName().contentEquals(name)) {
         return Optional.absent();
       }
@@ -69,8 +69,8 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
     }
 
     @Override
-    protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
-        VisitorState state) {
+    protected Optional<MatchState> matchResult(
+        ExpressionTree item, MatchState method, VisitorState state) {
       return Optional.of(method);
     }
   }
@@ -85,10 +85,9 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
       this.regex = regex;
     }
 
-
     @Override
-    protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
-        VisitorState state) {
+    protected Optional<MatchState> matchResult(
+        ExpressionTree item, MatchState method, VisitorState state) {
       if (!regex.matcher(method.sym().getSimpleName().toString()).matches()) {
         return Optional.absent();
       }

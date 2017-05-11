@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@code RefasterRule}.
- */
+/** Tests for {@code RefasterRule}. */
 @RunWith(JUnit4.class)
 public final class RefasterRuleTest {
   @Test

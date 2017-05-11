@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 /**
  * {@code UTree} representation of an assertion.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -35,7 +35,7 @@ abstract class UAssert extends USimpleStatement implements AssertTree {
   static UAssert create(UExpression condition, @Nullable UExpression detail) {
     return new AutoValue_UAssert(condition, detail);
   }
-  
+
   @Override
   public Kind getKind() {
     return Kind.ASSERT;
@@ -55,15 +55,17 @@ abstract class UAssert extends USimpleStatement implements AssertTree {
 
   @Override
   public Choice<Unifier> visitAssert(AssertTree node, Unifier unifier) {
-    return getCondition().unify(node.getCondition(), unifier)
+    return getCondition()
+        .unify(node.getCondition(), unifier)
         .thenChoose(unifications(getDetail(), node.getDetail()));
   }
 
   @Override
   public JCStatement inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Assert(
-        getCondition().inline(inliner),
-        (getDetail() == null) ? null : getDetail().inline(inliner));
+    return inliner
+        .maker()
+        .Assert(
+            getCondition().inline(inliner),
+            (getDetail() == null) ? null : getDetail().inline(inliner));
   }
-
 }

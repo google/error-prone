@@ -28,9 +28,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.tools.javac.code.Type;
 
-/**
- * A collection of {@link TypePredicate}s.
- */
+/** A collection of {@link TypePredicate}s. */
 public final class TypePredicates {
 
   /** Match arrays. */

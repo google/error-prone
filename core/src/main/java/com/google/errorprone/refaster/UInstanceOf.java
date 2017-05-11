@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 /**
  * {@link UTree} representation of a {@link InstanceOfTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -59,7 +59,8 @@ abstract class UInstanceOf extends UExpression implements InstanceOfTree {
   @Override
   @Nullable
   public Choice<Unifier> visitInstanceOf(InstanceOfTree instanceOf, @Nullable Unifier unifier) {
-    return getExpression().unify(instanceOf.getExpression(), unifier)
+    return getExpression()
+        .unify(instanceOf.getExpression(), unifier)
         .thenChoose(unifications(getType(), instanceOf.getType()));
   }
 }

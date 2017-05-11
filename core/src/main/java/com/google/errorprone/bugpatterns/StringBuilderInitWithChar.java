@@ -53,11 +53,15 @@ public class StringBuilderInitWithChar extends BugChecker implements NewClassTre
       if (type.getKind() == TypeKind.CHAR) {
         if (argument.getKind() == Kind.CHAR_LITERAL) {
           char ch = (Character) ((LiteralTree) argument).getValue();
-          return describeMatch(tree,
+          return describeMatch(
+              tree,
               SuggestedFix.replace(argument, "\"" + Convert.quote(Character.toString(ch)) + "\""));
         } else {
-          return describeMatch(tree, SuggestedFix.replace(tree,
-              "new StringBuilder().append(" + state.getSourceForNode((JCTree) argument) + ")"));
+          return describeMatch(
+              tree,
+              SuggestedFix.replace(
+                  tree,
+                  "new StringBuilder().append(" + state.getSourceForNode((JCTree) argument) + ")"));
         }
       }
     }

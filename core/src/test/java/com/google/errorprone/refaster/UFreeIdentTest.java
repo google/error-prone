@@ -37,10 +37,10 @@ public class UFreeIdentTest extends AbstractUTreeTest {
   @Test
   public void inlinesExpression() {
     bind(new UFreeIdent.Key("foo"), parseExpression("\"abcdefg\".charAt(x + 1)"));
-    assertInlines(parseExpression("\"abcdefg\".charAt(x + 1)").toString(), 
-        UFreeIdent.create("foo"));
+    assertInlines(
+        parseExpression("\"abcdefg\".charAt(x + 1)").toString(), UFreeIdent.create("foo"));
   }
-  
+
   @Test
   public void binds() {
     JCExpression expr = parseExpression("\"abcdefg\".charAt(x + 1)");
@@ -48,7 +48,7 @@ public class UFreeIdentTest extends AbstractUTreeTest {
     assertNotNull(ident.unify(expr, unifier));
     assertEquals(ImmutableMap.of(new UFreeIdent.Key("foo"), expr), unifier.getBindings());
   }
-  
+
   @Test
   public void equality() {
     new EqualsTester()
@@ -56,7 +56,7 @@ public class UFreeIdentTest extends AbstractUTreeTest {
         .addEqualityGroup(UFreeIdent.create("bar"))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(UFreeIdent.create("foo"));

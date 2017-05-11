@@ -20,9 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author awturner@google.com (Andy Turner)
- */
+/** @author awturner@google.com (Andy Turner) */
 @RunWith(JUnit4.class)
 public class ProtoFieldPreconditionsCheckNotNullTest {
 
@@ -30,20 +28,22 @@ public class ProtoFieldPreconditionsCheckNotNullTest {
 
   @Before
   public void setUp() throws Exception {
-    compilationHelper = CompilationTestHelper
-        .newInstance(ProtoFieldPreconditionsCheckNotNull.class, getClass())
-        .addSourceFile("proto/ProtoTest.java");
+    compilationHelper =
+        CompilationTestHelper.newInstance(ProtoFieldPreconditionsCheckNotNull.class, getClass())
+            .addSourceFile("proto/ProtoTest.java");
   }
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("ProtoFieldPreconditionsCheckNotNullPositiveCases.java")
+    compilationHelper
+        .addSourceFile("ProtoFieldPreconditionsCheckNotNullPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.addSourceFile("ProtoFieldPreconditionsCheckNotNullNegativeCases.java")
+    compilationHelper
+        .addSourceFile("ProtoFieldPreconditionsCheckNotNullNegativeCases.java")
         .doTest();
   }
 }

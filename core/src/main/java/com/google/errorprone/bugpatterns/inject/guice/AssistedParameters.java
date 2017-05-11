@@ -98,7 +98,6 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
         }
       };
 
-
   @Override
   public final Description matchMethod(MethodTree constructor, final VisitorState state) {
     if (!IS_CONSTRUCTOR_WITH_INJECT_OR_ASSISTED.matches(constructor, state)) {
@@ -216,5 +215,4 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
 
     return multimap;
   }
-
 }

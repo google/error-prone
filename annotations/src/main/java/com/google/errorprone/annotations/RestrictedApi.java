@@ -24,16 +24,16 @@ import java.lang.annotation.Target;
 /**
  * Restrict this method to callsites with a whitelist annotation.
  *
- * <p>Callers that are not whitelisted will cause a configurable compiler diagnostic.
- * Whitelisting can either allow the call outright, or make the compiler emit a warning when the API
- * is called. Paths matching a regular expression, e.g. unit tests, can also be excluded.
+ * <p>Callers that are not whitelisted will cause a configurable compiler diagnostic. Whitelisting
+ * can either allow the call outright, or make the compiler emit a warning when the API is called.
+ * Paths matching a regular expression, e.g. unit tests, can also be excluded.
  *
- * <p>The following example shows a hypothetical, potentially unsafe {@code Foo.bar} method.
- * It is marked with the {@code @RestrictedApi} annotations such that callers annotated with
+ * <p>The following example shows a hypothetical, potentially unsafe {@code Foo.bar} method. It is
+ * marked with the {@code @RestrictedApi} annotations such that callers annotated with
  * {@code @LegacyFooBar} raise a warning, whereas the {@code @ReviewedFooBar} annotation silently
  * allows the call.
  *
- * <p> The {@code @LegacyFooBar} annotation can be used to allow existing call sites until they are
+ * <p>The {@code @LegacyFooBar} annotation can be used to allow existing call sites until they are
  * refactored, while prohibiting new call-sites. Call-sites determined to be acceptable, for example
  * through code review, could be marked {@code @ReviewedFooBar}.
  *
@@ -84,7 +84,7 @@ import java.lang.annotation.Target;
 public @interface RestrictedApi {
   /** Very short name for the diagnostic message. Used in error-prone. */
   public String checkerName() default "RestrictedApi";
-  
+
   /** Explanation why the API is restricted, to be inserted into the compiler output. */
   public String explanation();
 
@@ -94,8 +94,8 @@ public @interface RestrictedApi {
   /**
    * Allow the restricted API on paths matching this regular expression.
    *
-   * <p> Leave empty (the default) to enforce the API restrictions on all paths.
-   * */
+   * <p>Leave empty (the default) to enforce the API restrictions on all paths.
+   */
   public String allowedOnPath() default "";
 
   /** Allow calls to the restricted API in methods or classes with this annotation. */
@@ -104,9 +104,9 @@ public @interface RestrictedApi {
   /**
    * Emit warnings, not errors, on calls to the restricted API for callers with this annotation.
    *
-   * <p> This should only be used if callers should aggressively move away from this API (or change
+   * <p>This should only be used if callers should aggressively move away from this API (or change
    * to a whitelist annotation after review). Too many warnings will lead to ALL warnings being
    * ignored, so tread very carefully.
-   * */
+   */
   public Class<? extends Annotation>[] whitelistWithWarningAnnotations() default {};
 }

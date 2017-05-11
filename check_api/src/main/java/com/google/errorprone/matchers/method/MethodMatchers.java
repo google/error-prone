@@ -30,25 +30,25 @@ public class MethodMatchers {
   public interface InstanceMethodMatcher extends Matcher<ExpressionTree> {
     /** Match on types with satisfy the given predicate. */
     MethodClassMatcher onClass(TypePredicate predicate);
-    
+
     /** Match on types with the given fully-qualified name. (e.g. java.lang.String) */
     MethodClassMatcher onExactClass(String className);
-    
+
     /** Match on the given type exactly. */
     MethodClassMatcher onExactClass(Supplier<Type> classType);
-    
+
     /** Match on descendants of the given fully-qualified type name. */
     MethodClassMatcher onDescendantOf(String className);
-    
+
     /** Match on descendants of the given type. */
     MethodClassMatcher onDescendantOf(Supplier<Type> classType);
-    
+
     /** Match on types that are descendants of any of the given types. */
     MethodClassMatcher onDescendantOfAny(String... classTypes);
-    
+
     /** Match on types that are descendants of any of the given types. */
     MethodClassMatcher onDescendantOfAny(Iterable<String> classTypes);
-    
+
     /** Match on any class. */
     MethodClassMatcher anyClass();
   }
@@ -59,16 +59,16 @@ public class MethodMatchers {
 
     /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String} */
     MethodClassMatcher onClass(String className);
-    
+
     /** Match on the given type exactly. */
     MethodClassMatcher onClass(Supplier<Type> classType);
-    
+
     /** Match on types that are equal to any of the given types. */
     MethodClassMatcher onClassAny(Iterable<String> classNames);
-    
+
     /** Match on types that are equal to any of the given types. */
     MethodClassMatcher onClassAny(String... classNames);
-    
+
     /** Match on any class. */
     MethodClassMatcher anyClass();
   }
@@ -84,30 +84,29 @@ public class MethodMatchers {
   public interface MethodClassMatcher extends Matcher<ExpressionTree> {
     /** Match methods with the given name. (e.g. {@code toString}) */
     MethodNameMatcher named(String name);
-    
+
     /** Match methods with any name. */
     MethodNameMatcher withAnyName();
 
     /** Match methods with a name that matches the given regular expression. */
     MethodNameMatcher withNameMatching(Pattern pattern);
-    
+
     /**
      * Match methods with the given signature. The implementation uses javac internals to
      * pretty-print the signatures, and the signature format is not well-specified. This matcher
      * should be used with caution.
-     * 
-     * Example: {@code format(java.lang.String,java.lang.Object...)}
+     *
+     * <p>Example: {@code format(java.lang.String,java.lang.Object...)}
      */
     MethodSignatureMatcher withSignature(String signature);
   }
 
-  public interface MethodSignatureMatcher extends Matcher<ExpressionTree> {
-  }
+  public interface MethodSignatureMatcher extends Matcher<ExpressionTree> {}
 
   public interface MethodNameMatcher extends Matcher<ExpressionTree> {
     /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParameters(String... parameters);
-    
+
     /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParameters(Iterable<String> parameters);
   }
@@ -115,7 +114,7 @@ public class MethodMatchers {
   public interface ConstructorMatcher extends Matcher<ExpressionTree> {
     /** Match on the given type exactly. */
     ConstructorClassMatcher forClass(String className);
-    
+
     /** Match on the given type exactly. */
     ConstructorClassMatcher forClass(Supplier<Type> classType);
   }
@@ -123,13 +122,12 @@ public class MethodMatchers {
   public interface ConstructorClassMatcher extends Matcher<ExpressionTree> {
     /** Match constructors whose formal parameters have the given types. */
     ParameterMatcher withParameters(String... parameters);
-    
+
     /** Match constructors whose formal parameters have the given types. */
     ParameterMatcher withParameters(Iterable<Supplier<Type>> parameters);
   }
 
-  public interface ParameterMatcher extends Matcher<ExpressionTree> {
-  }
+  public interface ParameterMatcher extends Matcher<ExpressionTree> {}
 
   // Method matcher factories
 

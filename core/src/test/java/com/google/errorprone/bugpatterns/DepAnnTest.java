@@ -50,7 +50,8 @@ public class DepAnnTest {
 
   @Test
   public void testDisableable() throws Exception {
-    compilationHelper.setArgs(ImmutableList.of("-Xep:DepAnn:OFF"))
+    compilationHelper
+        .setArgs(ImmutableList.of("-Xep:DepAnn:OFF"))
         .expectNoDiagnostics()
         .addSourceFile("DepAnnPositiveCases.java")
         .doTest();

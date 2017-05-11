@@ -48,8 +48,10 @@ import java.util.Set;
  */
 @AutoValue
 abstract class PlaceholderMethod implements Serializable {
-  static PlaceholderMethod create(CharSequence name, UType returnType,
-      ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> parameters, 
+  static PlaceholderMethod create(
+      CharSequence name,
+      UType returnType,
+      ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> parameters,
       ClassToInstanceMap<Annotation> annotations) {
     final boolean allowsIdentity = annotations.getInstance(Placeholder.class).allowsIdentity();
     final Class<? extends Matcher<? super ExpressionTree>> matchesClass =
@@ -90,9 +92,9 @@ abstract class PlaceholderMethod implements Serializable {
 
   abstract UType returnType();
 
-  abstract ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> 
+  abstract ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>>
       annotatedParameters();
-  
+
   abstract Matcher<ExpressionTree> matcher();
 
   abstract ImmutableClassToInstanceMap<Annotation> annotations();
@@ -100,18 +102,18 @@ abstract class PlaceholderMethod implements Serializable {
   ImmutableSet<UVariableDecl> parameters() {
     return annotatedParameters().keySet();
   }
-  
-  /**
-   * Parameters which must be referenced in any tree matched to this placeholder.
-   */
+
+  /** Parameters which must be referenced in any tree matched to this placeholder. */
   Set<UVariableDecl> requiredParameters() {
-    return Maps.filterValues(annotatedParameters(),
-        new Predicate<ImmutableClassToInstanceMap<Annotation>>() {
-          @Override
-          public boolean apply(ImmutableClassToInstanceMap<Annotation> annotations) {
-            return !annotations.containsKey(MayOptionallyUse.class);
-          }
-        }).keySet();
+    return Maps.filterValues(
+            annotatedParameters(),
+            new Predicate<ImmutableClassToInstanceMap<Annotation>>() {
+              @Override
+              public boolean apply(ImmutableClassToInstanceMap<Annotation> annotations) {
+                return !annotations.containsKey(MayOptionallyUse.class);
+              }
+            })
+        .keySet();
   }
 
   PlaceholderExpressionKey exprKey() {
@@ -122,10 +124,10 @@ abstract class PlaceholderMethod implements Serializable {
     return new PlaceholderBlockKey(name().contents(), this);
   }
 
-  static final class PlaceholderExpressionKey extends Bindings.Key<JCExpression> 
+  static final class PlaceholderExpressionKey extends Bindings.Key<JCExpression>
       implements Comparable<PlaceholderExpressionKey> {
     final PlaceholderMethod method;
-    
+
     private PlaceholderExpressionKey(String str, PlaceholderMethod method) {
       super(str);
       this.method = method;
@@ -139,7 +141,7 @@ abstract class PlaceholderMethod implements Serializable {
 
   static final class PlaceholderBlockKey extends Bindings.Key<List<JCStatement>> {
     final PlaceholderMethod method;
-    
+
     private PlaceholderBlockKey(String str, PlaceholderMethod method) {
       super(str);
       this.method = method;

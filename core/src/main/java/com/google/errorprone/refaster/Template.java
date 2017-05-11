@@ -77,7 +77,7 @@ import javax.annotation.Nullable;
 
 /**
  * Abstract superclass for templates that can be used to search and replace in a Java syntax tree.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  * @param <M> Type of a match for this template.
  */
@@ -87,26 +87,29 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
   public static final boolean AUTOBOXING_DEFAULT = true;
 
   public abstract ImmutableClassToInstanceMap<Annotation> annotations();
+
   public abstract ImmutableList<UTypeVar> templateTypeVariables();
+
   public abstract ImmutableMap<String, UType> expressionArgumentTypes();
-  
+
   public abstract Iterable<M> match(JCTree tree, Context context);
+
   public abstract Fix replace(M match);
-  
+
   Iterable<UTypeVar> typeVariables(Context context) {
     ImmutableList<UTypeVar> ruleTypeVars = context.get(RefasterRule.RULE_TYPE_VARS);
     return Iterables.concat(
         (ruleTypeVars == null) ? ImmutableList.<UTypeVar>of() : ruleTypeVars,
         templateTypeVariables());
   }
-  
+
   boolean autoboxing() {
     return !annotations().containsKey(NoAutoboxing.class);
   }
 
   /**
-   * Returns a list of the expected types to be matched.  This consists of the argument types from
-   * the @BeforeTemplate method, concatenated with the return types of expression placeholders, 
+   * Returns a list of the expected types to be matched. This consists of the argument types from
+   * the @BeforeTemplate method, concatenated with the return types of expression placeholders,
    * sorted by the name of the placeholder method.
    *
    * @throws CouldNotResolveImportException if a referenced type could not be resolved
@@ -130,18 +133,18 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       result.add(types.get(i).inline(inliner));
     }
     for (PlaceholderExpressionKey key :
-        Ordering.natural().immutableSortedCopy(
-            Iterables.filter(inliner.bindings.keySet(), PlaceholderExpressionKey.class))) {
+        Ordering.natural()
+            .immutableSortedCopy(
+                Iterables.filter(inliner.bindings.keySet(), PlaceholderExpressionKey.class))) {
       result.add(key.method.returnType().inline(inliner));
     }
     return List.from(result);
   }
 
   /**
-   * Returns a list of the actual types to be matched.  This consists of the types of the 
-   * expressions bound to the @BeforeTemplate method parameters, concatenated with the types
-   * of the expressions bound to expression placeholders, sorted by the name of the placeholder 
-   * method.
+   * Returns a list of the actual types to be matched. This consists of the types of the expressions
+   * bound to the @BeforeTemplate method parameters, concatenated with the types of the expressions
+   * bound to expression placeholders, sorted by the name of the placeholder method.
    */
   protected List<Type> actualTypes(Inliner inliner) {
     ArrayList<Type> result = new ArrayList<>();
@@ -168,19 +171,25 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       }
     }
     for (PlaceholderExpressionKey key :
-        Ordering.natural().immutableSortedCopy(
-            Iterables.filter(inliner.bindings.keySet(), PlaceholderExpressionKey.class))) {
+        Ordering.natural()
+            .immutableSortedCopy(
+                Iterables.filter(inliner.bindings.keySet(), PlaceholderExpressionKey.class))) {
       result.add(inliner.getBinding(key).type);
     }
     return List.from(result);
   }
 
   @Nullable
-  protected Optional<Unifier> typecheck(Unifier unifier, Inliner inliner, Warner warner,
-      List<Type> expectedTypes, List<Type> actualTypes) {
+  protected Optional<Unifier> typecheck(
+      Unifier unifier,
+      Inliner inliner,
+      Warner warner,
+      List<Type> expectedTypes,
+      List<Type> actualTypes) {
     try {
       ImmutableList<UTypeVar> freeTypeVars = freeTypeVars(unifier);
-      infer(warner,
+      infer(
+          warner,
           inliner,
           inliner.<Type>inlineList(freeTypeVars),
           expectedTypes,
@@ -188,16 +197,18 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
           actualTypes);
 
       for (UTypeVar var : freeTypeVars) {
-        Type instantiationForVar = infer(warner,
-            inliner,
-            inliner.<Type>inlineList(freeTypeVars),
-            expectedTypes,
-            var.inline(inliner),
-            actualTypes);
-        unifier.putBinding(var.key(), 
-            TypeWithExpression.create(instantiationForVar.getReturnType()));
+        Type instantiationForVar =
+            infer(
+                warner,
+                inliner,
+                inliner.<Type>inlineList(freeTypeVars),
+                expectedTypes,
+                var.inline(inliner),
+                actualTypes);
+        unifier.putBinding(
+            var.key(), TypeWithExpression.create(instantiationForVar.getReturnType()));
       }
-      
+
       if (!checkBounds(unifier, inliner, warner)) {
         return Optional.absent();
       }
@@ -210,7 +221,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       return Optional.absent();
     }
   }
-  
+
   private boolean checkBounds(Unifier unifier, Inliner inliner, Warner warner)
       throws CouldNotResolveImportException {
     Types types = unifier.types();
@@ -226,14 +237,15 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       List<Type> bounds = types.getBounds(inliner.inlineAsVar(typeVar));
       bounds = types.subst(bounds, vars, bindings);
       if (!types.isSubtypeUnchecked(unifier.getBinding(typeVar.key()).type(), bounds, warner)) {
-        logger.log(FINE,
+        logger.log(
+            FINE,
             String.format("%s is not a subtype of %s", inliner.getBinding(typeVar.key()), bounds));
         return false;
       }
     }
     return true;
   }
-  
+
   protected static Pretty pretty(Context context, final Writer writer) {
     final JCCompilationUnit unit = context.get(JCCompilationUnit.class);
     try {
@@ -365,15 +377,17 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
   /**
    * Returns the inferred method type of the template based on the given actual argument types.
    *
-   * @throws InferException if no instances of the specified type variables would allow the
-   *         {@code actualArgTypes} to match the {@code expectedArgTypes}
+   * @throws InferException if no instances of the specified type variables would allow the {@code
+   *     actualArgTypes} to match the {@code expectedArgTypes}
    */
-  private Type infer(Warner warner,
+  private Type infer(
+      Warner warner,
       Inliner inliner,
       List<Type> freeTypeVariables,
       List<Type> expectedArgTypes,
       Type returnType,
-      List<Type> actualArgTypes) throws InferException {
+      List<Type> actualArgTypes)
+      throws InferException {
     Symtab symtab = inliner.symtab();
 
     Type methodType =
@@ -388,8 +402,8 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
 
     Type site = symtab.methodClass.type;
 
-    Env<AttrContext> env = enter.getTopLevelEnv(
-        TreeMaker.instance(inliner.getContext()).TopLevel(List.<JCTree>nil()));
+    Env<AttrContext> env =
+        enter.getTopLevelEnv(TreeMaker.instance(inliner.getContext()).TopLevel(List.<JCTree>nil()));
 
     // Set up the resolution phase:
     try {
@@ -429,9 +443,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     }
   }
 
-  /**
-   * Reflectively instantiate the package-private {@code MethodResolutionPhase} enum.
-   */
+  /** Reflectively instantiate the package-private {@code MethodResolutionPhase} enum. */
   private static Object newMethodResolutionPhase(boolean autoboxing) {
     for (Class<?> c : Resolve.class.getDeclaredClasses()) {
       if (!c.getName().equals("com.sun.tools.javac.comp.Resolve$MethodResolutionPhase")) {
@@ -450,37 +462,44 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
    * Reflectively invoke Resolve.checkMethod(), which despite being package-private is apparently
    * the only useful entry-point into javac8's type inference implementation.
    */
-  private MethodType callCheckMethod(Warner warner,
+  private MethodType callCheckMethod(
+      Warner warner,
       Inliner inliner,
       Object resultInfo,
       List<Type> actualArgTypes,
       MethodSymbol methodSymbol,
       Type site,
-      Env<AttrContext> env) throws InferException {
+      Env<AttrContext> env)
+      throws InferException {
     try {
       Method checkMethod;
-      checkMethod = Resolve.class.getDeclaredMethod(
-          "checkMethod",
-          Env.class,
-          Type.class,
-          Symbol.class,
-         Class.forName("com.sun.tools.javac.comp.Attr$ResultInfo"), // ResultInfo is package-private
-         List.class,
-         List.class,
-         Warner.class);
+      checkMethod =
+          Resolve.class.getDeclaredMethod(
+              "checkMethod",
+              Env.class,
+              Type.class,
+              Symbol.class,
+              Class.forName(
+                  "com.sun.tools.javac.comp.Attr$ResultInfo"), // ResultInfo is package-private
+              List.class,
+              List.class,
+              Warner.class);
       checkMethod.setAccessible(true);
-      return (MethodType) checkMethod.invoke(Resolve.instance(inliner.getContext()),
-        env,
-        site,
-        methodSymbol,
-        resultInfo,
-        actualArgTypes,
-        /*freeTypeVariables=*/List.<Type>nil(),
-        warner);
+      return (MethodType)
+          checkMethod.invoke(
+              Resolve.instance(inliner.getContext()),
+              env,
+              site,
+              methodSymbol,
+              resultInfo,
+              actualArgTypes,
+              /*freeTypeVariables=*/ List.<Type>nil(),
+              warner);
     } catch (InvocationTargetException e) {
       if (e.getCause() instanceof Resolve.InapplicableMethodException) {
-        throw new InferException(ImmutableList.of(
-            ((Resolve.InapplicableMethodException) e.getTargetException()).getDiagnostic()));
+        throw new InferException(
+            ImmutableList.of(
+                ((Resolve.InapplicableMethodException) e.getTargetException()).getDiagnostic()));
       }
       throw new LinkageError(e.getMessage(), e.getCause());
     } catch (ReflectiveOperationException e) {

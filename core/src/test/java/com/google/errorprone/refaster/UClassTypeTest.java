@@ -40,28 +40,26 @@ public class UClassTypeTest extends AbstractUTreeTest {
         .addEqualityGroup(UClassType.create("java.util.List", stringType))
         .addEqualityGroup(UClassType.create("java.util.Map", stringType, stringType))
         .addEqualityGroup(UClassType.create("java.lang.Integer"))
-        .addEqualityGroup(UClassType.create("java.util.List", 
-            UClassType.create("java.lang.Integer")))
+        .addEqualityGroup(
+            UClassType.create("java.util.List", UClassType.create("java.lang.Integer")))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     UClassType stringType = UClassType.create("java.lang.String");
     UClassType integerType = UClassType.create("java.lang.Integer");
     SerializableTester.reserializeAndAssert(stringType);
     SerializableTester.reserializeAndAssert(integerType);
-    SerializableTester.reserializeAndAssert(
-        UClassType.create("java.util.List", stringType));
-    SerializableTester.reserializeAndAssert(
-        UClassType.create("java.util.List", integerType));
+    SerializableTester.reserializeAndAssert(UClassType.create("java.util.List", stringType));
+    SerializableTester.reserializeAndAssert(UClassType.create("java.util.List", integerType));
     SerializableTester.reserializeAndAssert(
         UClassType.create("java.util.Map", stringType, stringType));
   }
-  
+
   @Test
   public void unifies() {
-    assertNotNull(UClassType.create("java.lang.String").unify(
-        Symtab.instance(context).stringType, unifier));
+    assertNotNull(
+        UClassType.create("java.lang.String").unify(Symtab.instance(context).stringType, unifier));
   }
 }

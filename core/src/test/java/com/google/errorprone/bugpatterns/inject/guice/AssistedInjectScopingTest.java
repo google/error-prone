@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class AssistedInjectScopingTest {
 
@@ -32,8 +30,7 @@ public class AssistedInjectScopingTest {
 
   @Before
   public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(AssistedInjectScoping.class, getClass());
+    compilationHelper = CompilationTestHelper.newInstance(AssistedInjectScoping.class, getClass());
   }
 
   @Test

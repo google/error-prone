@@ -36,16 +36,15 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class UUnaryTest extends AbstractUTreeTest {
   UExpression fooIdent;
-  
+
   @Before
   public void initializeFooIdentifier() throws CouldNotResolveImportException {
     fooIdent = mock(UExpression.class);
-    when(fooIdent.unify(ident("foo"), isA(Unifier.class))).thenReturn(
-        Choice.of(unifier));
-    when(fooIdent.inline(isA(Inliner.class))).thenReturn(
-        inliner.maker().Ident(inliner.asName("foo")));
+    when(fooIdent.unify(ident("foo"), isA(Unifier.class))).thenReturn(Choice.of(unifier));
+    when(fooIdent.inline(isA(Inliner.class)))
+        .thenReturn(inliner.maker().Ident(inliner.asName("foo")));
   }
-  
+
   @Test(expected = IllegalArgumentException.class)
   public void rejectsNonUnaryOperations() {
     ULiteral sevenLit = ULiteral.intLit(7);
@@ -60,8 +59,7 @@ public class UUnaryTest extends AbstractUTreeTest {
   @Test
   public void logicalNegation() {
     assertUnifiesAndInlines(
-        "!false",
-        UUnary.create(Kind.LOGICAL_COMPLEMENT, ULiteral.booleanLit(false)));
+        "!false", UUnary.create(Kind.LOGICAL_COMPLEMENT, ULiteral.booleanLit(false)));
   }
 
   @Test

@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class PrimitiveArrayPassedToVarargsMethodTest {
 
@@ -38,14 +36,15 @@ public class PrimitiveArrayPassedToVarargsMethodTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("PrimitiveArrayPassedToVarargsMethodPositiveCases.java")
+    compilationHelper
+        .addSourceFile("PrimitiveArrayPassedToVarargsMethodPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.addSourceFile("PrimitiveArrayPassedToVarargsMethodNegativeCases.java")
+    compilationHelper
+        .addSourceFile("PrimitiveArrayPassedToVarargsMethodNegativeCases.java")
         .doTest();
   }
-
 }

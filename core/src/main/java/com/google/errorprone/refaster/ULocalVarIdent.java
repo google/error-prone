@@ -29,22 +29,20 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
  */
 @AutoValue
 abstract class ULocalVarIdent extends UIdent {
-  /**
-   * A key in a {@code Bindings} associated with a local variable of the specified name.
-   */
+  /** A key in a {@code Bindings} associated with a local variable of the specified name. */
   static final class Key extends Bindings.Key<LocalVarBinding> {
     Key(CharSequence name) {
       super(name.toString());
     }
   }
-  
+
   public static ULocalVarIdent create(CharSequence identifier) {
     return new AutoValue_ULocalVarIdent(StringName.of(identifier));
   }
-  
+
   @Override
   public abstract StringName getName();
-  
+
   private Key key() {
     return new Key(getName());
   }
@@ -53,15 +51,14 @@ abstract class ULocalVarIdent extends UIdent {
   public Choice<Unifier> visitIdentifier(IdentifierTree ident, Unifier unifier) {
     LocalVarBinding binding = unifier.getBinding(key());
     return Choice.condition(
-        binding != null && ASTHelpers.getSymbol(ident).equals(binding.getSymbol()),
-        unifier);
+        binding != null && ASTHelpers.getSymbol(ident).equals(binding.getSymbol()), unifier);
   }
 
   @Override
   public JCIdent inline(Inliner inliner) throws CouldNotResolveImportException {
     Optional<LocalVarBinding> binding = inliner.getOptionalBinding(key());
-    return inliner.maker().Ident(binding.isPresent()
-        ? binding.get().getName()
-        : getName().inline(inliner));
+    return inliner
+        .maker()
+        .Ident(binding.isPresent() ? binding.get().getName() : getName().inline(inliner));
   }
 }

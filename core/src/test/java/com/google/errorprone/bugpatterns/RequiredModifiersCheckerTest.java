@@ -38,25 +38,25 @@ public class RequiredModifiersCheckerTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper
-        .newInstance(RequiredModifiersChecker.class, getClass())
-        .addSourceLines(
-            "test/AbstractRequired.java",
-            "package test;",
-            "import static javax.lang.model.element.Modifier.ABSTRACT;",
-            "import com.google.errorprone.annotations.RequiredModifiers;",
-            "@RequiredModifiers(ABSTRACT)",
-            "public @interface AbstractRequired {",
-            "}")
-        .addSourceLines(
-            "test/PublicAndFinalRequired.java",
-            "package test;",
-            "import static javax.lang.model.element.Modifier.FINAL;",
-            "import static javax.lang.model.element.Modifier.PUBLIC;",
-            "import com.google.errorprone.annotations.RequiredModifiers;",
-            "@RequiredModifiers({PUBLIC, FINAL})",
-            "public @interface PublicAndFinalRequired {",
-            "}");
+    compilationHelper =
+        CompilationTestHelper.newInstance(RequiredModifiersChecker.class, getClass())
+            .addSourceLines(
+                "test/AbstractRequired.java",
+                "package test;",
+                "import static javax.lang.model.element.Modifier.ABSTRACT;",
+                "import com.google.errorprone.annotations.RequiredModifiers;",
+                "@RequiredModifiers(ABSTRACT)",
+                "public @interface AbstractRequired {",
+                "}")
+            .addSourceLines(
+                "test/PublicAndFinalRequired.java",
+                "package test;",
+                "import static javax.lang.model.element.Modifier.FINAL;",
+                "import static javax.lang.model.element.Modifier.PUBLIC;",
+                "import com.google.errorprone.annotations.RequiredModifiers;",
+                "@RequiredModifiers({PUBLIC, FINAL})",
+                "public @interface PublicAndFinalRequired {",
+                "}");
   }
 
   @Test
@@ -203,10 +203,7 @@ public class RequiredModifiersCheckerTest {
             "@Target(ElementType.PACKAGE)",
             "public @interface Anno {",
             "}")
-        .addSourceLines(
-            "testdata/package-info.java",
-            "@Anno",
-            "package testdata;")
+        .addSourceLines("testdata/package-info.java", "@Anno", "package testdata;")
         .doTest();
   }
 }

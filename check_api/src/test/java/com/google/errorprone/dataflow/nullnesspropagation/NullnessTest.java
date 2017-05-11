@@ -26,25 +26,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** 
+/**
  * Unit tests for {@link Nullness}.
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
-public class NullnessTest {  
+public class NullnessTest {
   @Test
   public void testLeastUpperBound() {
     assertEquals(NULLABLE, NULLABLE.leastUpperBound(NULLABLE));
     assertEquals(NULLABLE, NULLABLE.leastUpperBound(NULL));
     assertEquals(NULLABLE, NULLABLE.leastUpperBound(NONNULL));
     assertEquals(NULLABLE, NULLABLE.leastUpperBound(BOTTOM));
-    
+
     assertEquals(NULLABLE, NULL.leastUpperBound(NULLABLE));
     assertEquals(NULL, NULL.leastUpperBound(NULL));
     assertEquals(NULLABLE, NULL.leastUpperBound(NONNULL));
     assertEquals(NULL, NULL.leastUpperBound(BOTTOM));
-    
+
     assertEquals(NULLABLE, NONNULL.leastUpperBound(NULLABLE));
     assertEquals(NULLABLE, NONNULL.leastUpperBound(NULL));
     assertEquals(NONNULL, NONNULL.leastUpperBound(NONNULL));
@@ -55,19 +55,19 @@ public class NullnessTest {
     assertEquals(NONNULL, BOTTOM.leastUpperBound(NONNULL));
     assertEquals(BOTTOM, BOTTOM.leastUpperBound(BOTTOM));
   }
-  
+
   @Test
   public void testGreatestLowerBound() {
     assertEquals(NULLABLE, NULLABLE.greatestLowerBound(NULLABLE));
     assertEquals(NULL, NULLABLE.greatestLowerBound(NULL));
     assertEquals(NONNULL, NULLABLE.greatestLowerBound(NONNULL));
     assertEquals(BOTTOM, NULLABLE.greatestLowerBound(BOTTOM));
-    
+
     assertEquals(NULL, NULL.greatestLowerBound(NULLABLE));
     assertEquals(NULL, NULL.greatestLowerBound(NULL));
     assertEquals(BOTTOM, NULL.greatestLowerBound(NONNULL));
     assertEquals(BOTTOM, NULL.greatestLowerBound(BOTTOM));
-    
+
     assertEquals(NONNULL, NONNULL.greatestLowerBound(NULLABLE));
     assertEquals(BOTTOM, NONNULL.greatestLowerBound(NULL));
     assertEquals(NONNULL, NONNULL.greatestLowerBound(NONNULL));
@@ -78,7 +78,7 @@ public class NullnessTest {
     assertEquals(BOTTOM, BOTTOM.greatestLowerBound(NONNULL));
     assertEquals(BOTTOM, BOTTOM.greatestLowerBound(BOTTOM));
   }
-  
+
   @Test
   public void testDeducedValueWhenNotEqual() {
     assertEquals(NULLABLE, NULLABLE.deducedValueWhenNotEqual());

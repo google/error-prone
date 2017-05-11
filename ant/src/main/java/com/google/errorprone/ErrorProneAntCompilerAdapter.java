@@ -29,6 +29,7 @@ import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
 
 /**
  * Adapts the error-prone compiler to be used in an Ant build.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class ErrorProneAntCompilerAdapter extends DefaultCompilerAdapter {
@@ -59,8 +60,9 @@ public class ErrorProneAntCompilerAdapter extends DefaultCompilerAdapter {
       throw new BuildException("Unexpected ClassLoader: " + originalLoader.getClass());
     }
 
-    ClassLoader loader = NonDelegatingClassLoader.create(
-        ImmutableSet.<String>of(Function.class.getName()), urls, originalLoader);
+    ClassLoader loader =
+        NonDelegatingClassLoader.create(
+            ImmutableSet.<String>of(Function.class.getName()), urls, originalLoader);
 
     String[] args = setupModernJavacCommand().getArguments();
 

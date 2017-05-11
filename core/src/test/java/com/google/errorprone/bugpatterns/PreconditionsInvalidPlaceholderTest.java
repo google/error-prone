@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class PreconditionsInvalidPlaceholderTest {
 
@@ -38,14 +36,11 @@ public class PreconditionsInvalidPlaceholderTest {
 
   @Test
   public void testPositiveCase1() throws Exception {
-    compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderPositiveCase1.java")
-        .doTest();
+    compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderPositiveCase1.java").doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderNegativeCase1.java")
-        .doTest();
+    compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderNegativeCase1.java").doTest();
   }
-
 }

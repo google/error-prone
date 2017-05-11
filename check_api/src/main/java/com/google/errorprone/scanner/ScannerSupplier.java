@@ -39,16 +39,14 @@ import java.util.Set;
 import javax.annotation.CheckReturnValue;
 
 /**
- * Supplies {@link Scanner}s and provides access to the backing sets of all {@link
- * BugChecker}s and enabled {@link BugChecker}s.
+ * Supplies {@link Scanner}s and provides access to the backing sets of all {@link BugChecker}s and
+ * enabled {@link BugChecker}s.
  */
 public abstract class ScannerSupplier implements Supplier<Scanner> {
 
   /* Static factory methods and helpers */
 
-  /**
-   * Returns a {@link ScannerSupplier} with a specific list of {@link BugChecker} classes.
-   */
+  /** Returns a {@link ScannerSupplier} with a specific list of {@link BugChecker} classes. */
   @SafeVarargs
   public static ScannerSupplier fromBugCheckerClasses(
       Class<? extends BugChecker>... checkerClasses) {
@@ -64,9 +62,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     return severities.build();
   }
 
-  /**
-   * Returns a {@link ScannerSupplier} with a specific list of {@link BugChecker} classes.
-   */
+  /** Returns a {@link ScannerSupplier} with a specific list of {@link BugChecker} classes. */
   public static ScannerSupplier fromBugCheckerClasses(
       Iterable<Class<? extends BugChecker>> checkers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -76,9 +72,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     return fromBugCheckerInfos(builder.build());
   }
 
-  /**
-   * Returns a {@link ScannerSupplier} built from a list of {@link BugCheckerInfo}s.
-   */
+  /** Returns a {@link ScannerSupplier} built from a list of {@link BugCheckerInfo}s. */
   public static ScannerSupplier fromBugCheckerInfos(Iterable<BugCheckerInfo> checkers) {
     ImmutableBiMap.Builder<String, BugCheckerInfo> builder = ImmutableBiMap.builder();
     for (BugCheckerInfo checker : checkers) {
@@ -91,8 +85,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
 
   /**
    * Returns a {@link ScannerSupplier} that just returns the {@link Scanner} that was passed in.
-   * Used mostly for testing.  Does not implement any method other than
-   * {@link ScannerSupplier#get()}.
+   * Used mostly for testing. Does not implement any method other than {@link
+   * ScannerSupplier#get()}.
    */
   public static ScannerSupplier fromScanner(Scanner scanner) {
     return new InstanceReturningScannerSupplierImpl(scanner);
@@ -120,17 +114,18 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    * Applies options to this {@link ScannerSupplier}.
    *
    * <p>Command-line options to override check severities may do any of the following:
+   *
    * <ul>
-   * <li>Enable a check that is currently off</li>
-   * <li>Disable a check that is currently on</li>
-   * <li>Change the severity of a check that is on, promoting a warning to an error or demoting
-   * an error to a warning</li>
+   *   <li>Enable a check that is currently off
+   *   <li>Disable a check that is currently on
+   *   <li>Change the severity of a check that is on, promoting a warning to an error or demoting an
+   *       error to a warning
    * </ul>
    *
    * @param errorProneOptions an {@link ErrorProneOptions} object that encapsulates the overrides
-   * for this compilation
-   * @throws InvalidCommandLineOptionException if the override map attempts to disable a check
-   * that may not be disabled
+   *     for this compilation
+   * @throws InvalidCommandLineOptionException if the override map attempts to disable a check that
+   *     may not be disabled
    */
   @CheckReturnValue
   public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions)
@@ -220,9 +215,9 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   }
 
   /**
-   * Composes this {@link ScannerSupplier} with the {@code other}
-   * {@link ScannerSupplier}. The set of checks that are turned on is the
-   * intersection of the checks on in {@code this} and {@code other}.
+   * Composes this {@link ScannerSupplier} with the {@code other} {@link ScannerSupplier}. The set
+   * of checks that are turned on is the intersection of the checks on in {@code this} and {@code
+   * other}.
    */
   @CheckReturnValue
   public ScannerSupplier plus(ScannerSupplier other) {
@@ -241,8 +236,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   }
 
   /**
-   * Filters this {@link ScannerSupplier} based on the provided predicate. Returns a
-   * {@link ScannerSupplier} with only the checks enabled that satisfy the predicate.
+   * Filters this {@link ScannerSupplier} based on the provided predicate. Returns a {@link
+   * ScannerSupplier} with only the checks enabled that satisfy the predicate.
    */
   @CheckReturnValue
   public ScannerSupplier filter(Predicate<? super BugCheckerInfo> predicate) {

@@ -32,8 +32,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
  */
 @AutoValue
 public abstract class UStaticIdent extends UIdent {
-  public static UStaticIdent create(
-      UClassIdent classIdent, CharSequence member, UType memberType) {
+  public static UStaticIdent create(UClassIdent classIdent, CharSequence member, UType memberType) {
     return new AutoValue_UStaticIdent(classIdent, StringName.of(member), memberType);
   }
 
@@ -46,7 +45,7 @@ public abstract class UStaticIdent extends UIdent {
   }
 
   abstract UClassIdent classIdent();
-  
+
   @Override
   public abstract StringName getName();
 
@@ -54,17 +53,18 @@ public abstract class UStaticIdent extends UIdent {
 
   @Override
   public JCExpression inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.importPolicy().staticReference(
-        inliner, classIdent().getTopLevelClass(), 
-        classIdent().getName(), 
-        getName());
+    return inliner
+        .importPolicy()
+        .staticReference(
+            inliner, classIdent().getTopLevelClass(), classIdent().getName(), getName());
   }
 
   @Override
   protected Choice<Unifier> defaultAction(Tree node, Unifier unifier) {
     Symbol symbol = ASTHelpers.getSymbol(node);
     if (symbol != null) {
-      return classIdent().unify(symbol.getEnclosingElement(), unifier)
+      return classIdent()
+          .unify(symbol.getEnclosingElement(), unifier)
           .thenChoose(unifications(getName(), symbol.getSimpleName()))
           .thenChoose(unifications(memberType(), symbol.asType()));
     }

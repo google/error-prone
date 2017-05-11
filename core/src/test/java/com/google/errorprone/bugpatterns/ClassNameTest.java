@@ -47,93 +47,56 @@ public class ClassNameTest {
 
   @Test
   public void packageInfo() throws Exception {
-      compilationHelper
-          .addSourceLines(
-              "a/package-info.java",
-              "/** Documentation for our package */",
-              "package a;")
-          .addSourceLines(
-              "b/Test.java",
-              "// BUG: Diagnostic contains: Test inside Test.java, instead found: Green",
-              "package b;",
-              "class Green {}")
-          .doTest();
+    compilationHelper
+        .addSourceLines("a/package-info.java", "/** Documentation for our package */", "package a;")
+        .addSourceLines(
+            "b/Test.java",
+            "// BUG: Diagnostic contains: Test inside Test.java, instead found: Green",
+            "package b;",
+            "class Green {}")
+        .doTest();
   }
 
   @Test
   public void negative() throws Exception {
-      compilationHelper
-          .addSourceLines(
-              "a/A.java",
-              "package a;",
-              "class A {}")
-          .addSourceLines(
-              "b/B.java",
-              "package b;",
-              "class B {}")
-          .doTest();
+    compilationHelper
+        .addSourceLines("a/A.java", "package a;", "class A {}")
+        .addSourceLines("b/B.java", "package b;", "class B {}")
+        .doTest();
   }
 
   @Test
   public void negativeMultipleTopLevel() throws Exception {
-      compilationHelper
-          .addSourceLines(
-              "a/A.java",
-              "package a;",
-              "class A {}")
-          .addSourceLines(
-              "b/B.java",
-              "package b;",
-              "class B {}",
-              "class C {}")
-          .doTest();
+    compilationHelper
+        .addSourceLines("a/A.java", "package a;", "class A {}")
+        .addSourceLines("b/B.java", "package b;", "class B {}", "class C {}")
+        .doTest();
   }
 
   @Test
   public void negativeInnerClass() throws Exception {
-      compilationHelper
-          .addSourceLines(
-              "b/B.java",
-              "package b;",
-              "class B {",
-              "  static class Inner {}",
-              "}")
-          .doTest();
+    compilationHelper
+        .addSourceLines("b/B.java", "package b;", "class B {", "  static class Inner {}", "}")
+        .doTest();
   }
 
   @Test
   public void negativeInterface() throws Exception {
-      compilationHelper
-          .addSourceLines(
-              "b/B.java",
-              "package b;",
-              "interface B {",
-              "  static class Inner {}",
-              "}")
-          .doTest();
+    compilationHelper
+        .addSourceLines("b/B.java", "package b;", "interface B {", "  static class Inner {}", "}")
+        .doTest();
   }
 
   @Test
   public void negativeEnum() throws Exception {
-      compilationHelper
-          .addSourceLines(
-              "b/B.java",
-              "package b;",
-              "enum B {",
-              "  ONE;",
-              "}")
-          .doTest();
- }
+    compilationHelper.addSourceLines("b/B.java", "package b;", "enum B {", "  ONE;", "}").doTest();
+  }
 
   @Test
   public void negativeAnnotation() throws Exception {
-      compilationHelper
-          .addSourceLines(
-              "b/B.java",
-              "package b;",
-              "public @interface B {",
-              "}")
-          .doTest();
+    compilationHelper
+        .addSourceLines("b/B.java", "package b;", "public @interface B {", "}")
+        .doTest();
   }
 
   @Test
@@ -149,7 +112,7 @@ public class ClassNameTest {
         .matchAllDiagnostics()
         .doTest();
   }
-  
+
   @Test
   public void suppression() throws Exception {
     compilationHelper

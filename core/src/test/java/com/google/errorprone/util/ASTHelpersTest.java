@@ -94,52 +94,46 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void testGetStartPositionUnix() {
-    String fileContent = UNIX_LINE_JOINER.join(
-        "public class A { ",
-        "  public void foo() {",
-        "    int i;",
-        "    i = -1;",
-        "  }",
-        "}");
+    String fileContent =
+        UNIX_LINE_JOINER.join(
+            "public class A { ", "  public void foo() {", "    int i;", "    i = -1;", "  }", "}");
     writeFile("A.java", fileContent);
     assertCompiles(literalExpressionMatches(literalHasStartPosition(59)));
   }
 
   @Test
   public void testGetStartPositionWindows() {
-    String fileContent = WINDOWS_LINE_JOINER.join(
-        "public class A { ",
-        "  public void foo() {",
-        "    int i;",
-        "    i = -1;",
-        "  }",
-        "}");
+    String fileContent =
+        WINDOWS_LINE_JOINER.join(
+            "public class A { ", "  public void foo() {", "    int i;", "    i = -1;", "  }", "}");
     writeFile("A.java", fileContent);
     assertCompiles(literalExpressionMatches(literalHasStartPosition(62)));
   }
 
   @Test
   public void testGetStartPositionWithWhitespaceUnix() {
-    String fileContent = UNIX_LINE_JOINER.join(
-        "public class A { ",
-        "  public void foo() {",
-        "    int i;",
-        "    i = -     1;",
-        "  }",
-        "}");
+    String fileContent =
+        UNIX_LINE_JOINER.join(
+            "public class A { ",
+            "  public void foo() {",
+            "    int i;",
+            "    i = -     1;",
+            "  }",
+            "}");
     writeFile("A.java", fileContent);
     assertCompiles(literalExpressionMatches(literalHasStartPosition(59)));
   }
 
   @Test
   public void testGetStartPositionWithWhitespaceWindows() {
-    String fileContent = WINDOWS_LINE_JOINER.join(
-        "public class A { ",
-        "  public void foo() {",
-        "    int i;",
-        "    i = -     1;",
-        "  }",
-        "}");
+    String fileContent =
+        WINDOWS_LINE_JOINER.join(
+            "public class A { ",
+            "  public void foo() {",
+            "    int i;",
+            "    i = -     1;",
+            "  }",
+            "}");
     writeFile("A.java", fileContent);
     assertCompiles(literalExpressionMatches(literalHasStartPosition(62)));
   }
@@ -155,21 +149,23 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   private Scanner literalExpressionMatches(final Matcher<LiteralTree> matcher) {
-    TestScanner scanner = new TestScanner() {
-      @Override
-      public Void visitLiteral(LiteralTree node, VisitorState state) {
-        assertMatch(node, state, matcher);
-        setAssertionsComplete();
-        return super.visitLiteral(node, state);
-      }
-    };
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitLiteral(LiteralTree node, VisitorState state) {
+            assertMatch(node, state, matcher);
+            setAssertionsComplete();
+            return super.visitLiteral(node, state);
+          }
+        };
     tests.add(scanner);
     return scanner;
   }
 
   @Test
   public void testGetReceiver() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "package p;",
         "public class A { ",
         "  public B b;",
@@ -178,7 +174,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         "    return null;",
         "  }",
         "}");
-    writeFile("B.java",
+    writeFile(
+        "B.java",
         "package p;",
         "public class B { ",
         "  public static void bar() {}",
@@ -240,8 +237,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         });
   }
 
-  private Scanner expressionStatementMatches(final String expectedExpression,
-      final Matcher<ExpressionTree> matcher) {
+  private Scanner expressionStatementMatches(
+      final String expectedExpression, final Matcher<ExpressionTree> matcher) {
     return new TestScanner() {
       @Override
       public Void visitExpressionStatement(ExpressionStatementTree node, VisitorState state) {
@@ -257,17 +254,18 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void testAnnotationHelpers() {
-    writeFile("com/google/errorprone/util/InheritedAnnotation.java",
+    writeFile(
+        "com/google/errorprone/util/InheritedAnnotation.java",
         "package com.google.errorprone.util;",
         "import java.lang.annotation.Inherited;",
         "@Inherited",
         "public @interface InheritedAnnotation {}");
-    writeFile("B.java",
+    writeFile(
+        "B.java",
         "import com.google.errorprone.util.InheritedAnnotation;",
         "@InheritedAnnotation",
         "public class B {}");
-    writeFile("C.java",
-        "public class C extends B {}");
+    writeFile("C.java", "public class C extends B {}");
 
     TestScanner scanner =
         new TestScanner() {
@@ -295,12 +293,14 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   // verify that hasAnnotation(Symbol, String, VisitorState) uses binary names for inner classes
   @Test
   public void testInnerAnnotationType() {
-    writeFile("test/Lib.java",
+    writeFile(
+        "test/Lib.java",
         "package test;",
         "public class Lib {",
         "  public @interface MyAnnotation {}",
         "}");
-    writeFile("test/Test.java",
+    writeFile(
+        "test/Test.java",
         "package test;",
         "import test.Lib.MyAnnotation;",
         "@MyAnnotation",
@@ -334,47 +334,34 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void testGetTypeOnNestedAnnotationType() {
-    writeFile("A.java",
-        "public class A { ",
-        "  @B.MyAnnotation",
-        "  public void bar() {}",
-        "}");
-    writeFile("B.java",
-        "public class B { ",
-        "  @interface MyAnnotation {}",
-        "}");
-    TestScanner scanner = new TestScanner() {
-      @Override
-      public Void visitAnnotation(AnnotationTree tree, VisitorState state) {
-        setAssertionsComplete();
-        assertEquals("B.MyAnnotation", ASTHelpers.getType(tree.getAnnotationType()).toString());
-        return super.visitAnnotation(tree, state);
-      }
-    };
+    writeFile("A.java", "public class A { ", "  @B.MyAnnotation", "  public void bar() {}", "}");
+    writeFile("B.java", "public class B { ", "  @interface MyAnnotation {}", "}");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitAnnotation(AnnotationTree tree, VisitorState state) {
+            setAssertionsComplete();
+            assertEquals("B.MyAnnotation", ASTHelpers.getType(tree.getAnnotationType()).toString());
+            return super.visitAnnotation(tree, state);
+          }
+        };
     tests.add(scanner);
     assertCompiles(scanner);
   }
 
   @Test
   public void testGetTypeOnNestedClassType() {
-    writeFile("A.java",
-        "public class A { ",
-        "  public void bar() {",
-        "    B.C foo;",
-        "  }",
-        "}");
-    writeFile("B.java",
-        "public class B { ",
-        "  public static class C {}",
-        "}");
-    TestScanner scanner = new TestScanner() {
-      @Override
-      public Void visitVariable(VariableTree tree, VisitorState state) {
-        setAssertionsComplete();
-        assertEquals("B.C", ASTHelpers.getType(tree.getType()).toString());
-        return super.visitVariable(tree, state);
-      }
-    };
+    writeFile("A.java", "public class A { ", "  public void bar() {", "    B.C foo;", "  }", "}");
+    writeFile("B.java", "public class B { ", "  public static class C {}", "}");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitVariable(VariableTree tree, VisitorState state) {
+            setAssertionsComplete();
+            assertEquals("B.C", ASTHelpers.getType(tree.getType()).toString());
+            return super.visitVariable(tree, state);
+          }
+        };
     tests.add(scanner);
     assertCompiles(scanner);
   }
@@ -382,11 +369,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @Test
   public void testGetTypeOnParameterizedType() {
     writeFile(
-        "Pair.java",
-        "public class Pair<A, B> { ",
-        "  public A first;",
-        "  public B second;",
-        "}");
+        "Pair.java", "public class Pair<A, B> { ", "  public A first;", "  public B second;", "}");
     writeFile(
         "Test.java",
         "public class Test {",
@@ -400,7 +383,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
           public Void visitReturn(ReturnTree tree, VisitorState state) {
             setAssertionsComplete();
             assertThat(ASTHelpers.getType(tree.getExpression()).toString())
-                  .isEqualTo("java.lang.Integer");
+                .isEqualTo("java.lang.Integer");
             return super.visitReturn(tree, state);
           }
         };
@@ -456,11 +439,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @Test
   public void testGetUpperBoundUnboundedWildcard() {
     writeFile(
-        "A.java",
-        "import java.util.List;",
-        "public class A {",
-        "  public List<?> myList;",
-        "}");
+        "A.java", "import java.util.List;", "public class A {", "  public List<?> myList;", "}");
     TestScanner scanner = getUpperBoundScanner("java.lang.Object");
     tests.add(scanner);
     assertCompiles(scanner);
@@ -483,11 +462,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @Test
   public void testGetUpperBoundTypeVariable() {
     writeFile(
-        "A.java",
-        "import java.util.List;",
-        "public class A<T> {",
-        "  public List<T> myList;",
-        "}");
+        "A.java", "import java.util.List;", "public class A<T> {", "  public List<T> myList;", "}");
     TestScanner scanner = getUpperBoundScanner("java.lang.Object");
     tests.add(scanner);
     assertCompiles(scanner);
@@ -508,7 +483,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         new TestScanner() {
           @Override
           public Void visitMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-            if (!"super()".equals(tree.toString())) {  // ignore synthetic super call
+            if (!"super()".equals(tree.toString())) { // ignore synthetic super call
               setAssertionsComplete();
               Type type = ASTHelpers.getType(tree);
               assertThat(type instanceof TypeVar).isTrue();
@@ -597,7 +572,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @BugPattern(
     name = "HasDirectAnnotationWithSimpleNameChecker",
     category = Category.ONE_OFF,
-    
     severity = SeverityLevel.ERROR,
     summary =
         "Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() "
@@ -663,7 +637,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   /* Test infrastructure */
 
-  private static abstract class TestScanner extends Scanner {
+  private abstract static class TestScanner extends Scanner {
     private boolean assertionsComplete = false;
 
     /**
@@ -674,8 +648,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
       this.assertionsComplete = true;
     }
 
-    <T extends Tree> void assertMatch(T node, VisitorState visitorState,
-        Matcher<T> matcher) {
+    <T extends Tree> void assertMatch(T node, VisitorState visitorState, Matcher<T> matcher) {
       VisitorState state = visitorState.withPath(getCurrentPath());
       assertTrue(matcher.matches(node, state));
     }

@@ -31,7 +31,7 @@ abstract class UArrayType extends UType {
   public static UArrayType create(UType componentType) {
     return new AutoValue_UArrayType(componentType);
   }
-  
+
   abstract UType componentType();
 
   @Override
@@ -39,9 +39,9 @@ abstract class UArrayType extends UType {
   public Choice<Unifier> visitArrayType(ArrayType arrayType, @Nullable Unifier unifier) {
     return componentType().unify(arrayType.getComponentType(), unifier);
   }
-  
+
   @Override
   public ArrayType inline(Inliner inliner) throws CouldNotResolveImportException {
-    return new ArrayType(componentType().inline(inliner), inliner.symtab().arrayClass); 
+    return new ArrayType(componentType().inline(inliner), inliner.symtab().arrayClass);
   }
 }

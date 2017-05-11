@@ -69,9 +69,8 @@ public class DepAnn extends BugChecker
   }
 
   /**
-   * Reports a dep-ann error for a declaration if:
-   *   (1) javadoc contains the deprecated javadoc tag
-   *   (2) the declaration is not annotated with {@link java.lang.Deprecated}
+   * Reports a dep-ann error for a declaration if: (1) javadoc contains the deprecated javadoc tag
+   * (2) the declaration is not annotated with {@link java.lang.Deprecated}
    */
   @SuppressWarnings("javadoc")
   private Description checkDeprecatedAnnotation(Tree tree, VisitorState state) {

@@ -29,20 +29,20 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 public class Suppliers {
 
   /**
    * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for
-   * the expression c and n=1, the result is the type of {@code B}. If there are an insufficient number of
-   * type arguments, this method will return the {@code java.lang.Object} type from symbol table.
+   * the expression c and n=1, the result is the type of {@code B}. If there are an insufficient
+   * number of type arguments, this method will return the {@code java.lang.Object} type from symbol
+   * table.
    *
    * @param expressionSupplier a supplier of the expression which has a generic type
    * @param n the position of the generic argument
    */
-  public static Supplier<Type> genericTypeOf(final Supplier<ExpressionTree> expressionSupplier, final int n) {
+  public static Supplier<Type> genericTypeOf(
+      final Supplier<ExpressionTree> expressionSupplier, final int n) {
     return new Supplier<Type>() {
       @Override
       public Type get(VisitorState state) {
@@ -57,8 +57,8 @@ public class Suppliers {
 
   /**
    * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for
-   * the type of c and n=1, the result is the type of {@code B}. If there are an insufficient number of
-   * type arguments, this method will return the {@code java.lang.Object} type from symbol table.
+   * the type of c and n=1, the result is the type of {@code B}. If there are an insufficient number
+   * of type arguments, this method will return the {@code java.lang.Object} type from symbol table.
    *
    * @param typeSupplier a supplier of the expression which has a generic type
    * @param n the position of the generic argument
@@ -77,11 +77,9 @@ public class Suppliers {
   }
 
   /**
-   * Supplies the expression which gives the instance of an object that will receive the method call.
-   * For example, in
-   * {@code a.getB().getC()}
-   * if the visitor is currently visiting the {@code getC()} method invocation, then this supplier gives the
-   * expression {@code a.getB()}.
+   * Supplies the expression which gives the instance of an object that will receive the method
+   * call. For example, in {@code a.getB().getC()} if the visitor is currently visiting the {@code
+   * getC()} method invocation, then this supplier gives the expression {@code a.getB()}.
    */
   public static Supplier<Type> receiverType() {
     return new Supplier<Type>() {
@@ -94,11 +92,9 @@ public class Suppliers {
   }
 
   /**
-   * Supplies the expression which gives the instance of an object that will receive the method call.
-   * For example, in
-   * {@code a.getB().getC()}
-   * if the visitor is currently visiting the {@code getC()} method invocation, then this supplier gives the
-   * expression {@code a.getB()}.
+   * Supplies the expression which gives the instance of an object that will receive the method
+   * call. For example, in {@code a.getB().getC()} if the visitor is currently visiting the {@code
+   * getC()} method invocation, then this supplier gives the expression {@code a.getB()}.
    */
   public static Supplier<ExpressionTree> receiverInstance() {
     return new Supplier<ExpressionTree>() {
@@ -129,26 +125,29 @@ public class Suppliers {
     return typeFromString(inputClass.getName());
   }
 
-  public static final Supplier<Type> JAVA_LANG_VOID_TYPE = new Supplier<Type>() {
-      @Override
-      public Type get(VisitorState state) {
-        return state.getTypeFromString("java.lang.Void");
-      }
-    };
+  public static final Supplier<Type> JAVA_LANG_VOID_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getTypeFromString("java.lang.Void");
+        }
+      };
 
-  public static final Supplier<Type> VOID_TYPE = new Supplier<Type>() {
-      @Override
-      public Type get(VisitorState state) {
-        return state.getSymtab().voidType;
-      }
-    };
+  public static final Supplier<Type> VOID_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().voidType;
+        }
+      };
 
-  public static final Supplier<Type> JAVA_LANG_BOOLEAN_TYPE = new Supplier<Type>() {
-      @Override
-      public Type get(VisitorState state) {
-        return state.getTypeFromString("java.lang.Boolean");
-      }
-    };
+  public static final Supplier<Type> JAVA_LANG_BOOLEAN_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getTypeFromString("java.lang.Boolean");
+        }
+      };
 
   public static final Supplier<Type> STRING_TYPE =
       new Supplier<Type>() {
@@ -158,12 +157,13 @@ public class Suppliers {
         }
       };
 
-  public static final Supplier<Type> BOOLEAN_TYPE = new Supplier<Type>() {
-      @Override
-      public Type get(VisitorState state) {
-        return state.getSymtab().booleanType;
-      }
-    };
+  public static final Supplier<Type> BOOLEAN_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().booleanType;
+        }
+      };
 
   public static final Supplier<Type> BYTE_TYPE =
       new Supplier<Type>() {
@@ -173,12 +173,13 @@ public class Suppliers {
         }
       };
 
-  public static final Supplier<Type> INT_TYPE = new Supplier<Type>() {
-      @Override
-      public Type get(VisitorState state) {
-        return state.getSymtab().intType;
-      }
-    };
+  public static final Supplier<Type> INT_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().intType;
+        }
+      };
 
   public static final Supplier<Type> CHAR_TYPE =
       new Supplier<Type>() {
@@ -188,19 +189,21 @@ public class Suppliers {
         }
       };
 
-  public static final Supplier<Type> OBJECT_TYPE = new Supplier<Type>() {
-      @Override
-      public Type get(VisitorState state) {
-        return state.getSymtab().objectType;
-      }
-    };
+  public static final Supplier<Type> OBJECT_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().objectType;
+        }
+      };
 
-  public static final Supplier<Type> EXCEPTION_TYPE = new Supplier<Type>() {
-      @Override
-      public Type get(VisitorState state) {
-        return state.getSymtab().exceptionType;
-      }
-    };
+  public static final Supplier<Type> EXCEPTION_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().exceptionType;
+        }
+      };
 
   public static final Supplier<Type> ANNOTATION_TYPE =
       new Supplier<Type>() {

@@ -34,16 +34,16 @@ import javax.lang.model.type.TypeKind;
 abstract class UPrimitiveType extends UType {
 
   public static UPrimitiveType create(TypeKind typeKind) {
-    checkArgument(isDeFactoPrimitive(typeKind), 
-        "Non-primitive type %s passed to UPrimitiveType", typeKind);
+    checkArgument(
+        isDeFactoPrimitive(typeKind), "Non-primitive type %s passed to UPrimitiveType", typeKind);
     return new AutoValue_UPrimitiveType(typeKind);
   }
 
   public abstract TypeKind getKind();
-  
+
   private static final ImmutableSet<TypeKind> HONORARY_PRIMITIVES =
       ImmutableSet.of(TypeKind.VOID, TypeKind.NULL);
-  
+
   public static final UPrimitiveType BYTE = create(TypeKind.BYTE);
   public static final UPrimitiveType SHORT = create(TypeKind.SHORT);
   public static final UPrimitiveType INT = create(TypeKind.INT);
@@ -54,7 +54,7 @@ abstract class UPrimitiveType extends UType {
   public static final UPrimitiveType CHAR = create(TypeKind.CHAR);
   public static final UPrimitiveType NULL = create(TypeKind.NULL);
   public static final UPrimitiveType VOID = create(TypeKind.VOID);
-  
+
   public static boolean isDeFactoPrimitive(TypeKind kind) {
     return kind.isPrimitive() || HONORARY_PRIMITIVES.contains(kind);
   }
@@ -63,7 +63,7 @@ abstract class UPrimitiveType extends UType {
   public Choice<Unifier> visitType(Type target, Unifier unifier) {
     return Choice.condition(getKind().equals(target.getKind()), unifier);
   }
-  
+
   @Override
   public Type inline(Inliner inliner) {
     Symtab symtab = inliner.symtab();

@@ -60,9 +60,8 @@ import java.lang.annotation.Annotation;
 )
 public class BadAnnotationImplementation extends BugChecker implements ClassTreeMatcher {
 
-  private static final Matcher<ClassTree> CLASS_TREE_MATCHER = allOf(
-      anyOf(kindIs(CLASS), kindIs(ENUM)),
-      isSubtypeOf(ANNOTATION_TYPE));
+  private static final Matcher<ClassTree> CLASS_TREE_MATCHER =
+      allOf(anyOf(kindIs(CLASS), kindIs(ENUM)), isSubtypeOf(ANNOTATION_TYPE));
 
   @Override
   public Description matchClass(ClassTree classTree, final VisitorState state) {
@@ -85,26 +84,29 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     MethodSymbol hashCode = null;
     final Types types = state.getTypes();
     Name equalsName = state.getName("equals");
-    Predicate<MethodSymbol> equalsPredicate = new Predicate<MethodSymbol>() {
-      @Override public boolean apply(MethodSymbol methodSymbol) {
-        return !methodSymbol.isStatic()
-            && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
-            && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
-            && methodSymbol.getParameters().size() == 1
-            && types.isSameType(
-                methodSymbol.getParameters().get(0).type,
-                state.getSymtab().objectType);
-      }
-    };
+    Predicate<MethodSymbol> equalsPredicate =
+        new Predicate<MethodSymbol>() {
+          @Override
+          public boolean apply(MethodSymbol methodSymbol) {
+            return !methodSymbol.isStatic()
+                && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
+                && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
+                && methodSymbol.getParameters().size() == 1
+                && types.isSameType(
+                    methodSymbol.getParameters().get(0).type, state.getSymtab().objectType);
+          }
+        };
     Name hashCodeName = state.getName("hashCode");
-    Predicate<MethodSymbol> hashCodePredicate = new Predicate<MethodSymbol>() {
-      @Override public boolean apply(MethodSymbol methodSymbol) {
-        return !methodSymbol.isStatic()
-            && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
-            && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
-            && methodSymbol.getParameters().isEmpty();
-      }
-    };
+    Predicate<MethodSymbol> hashCodePredicate =
+        new Predicate<MethodSymbol>() {
+          @Override
+          public boolean apply(MethodSymbol methodSymbol) {
+            return !methodSymbol.isStatic()
+                && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
+                && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
+                && methodSymbol.getParameters().isEmpty();
+          }
+        };
 
     for (Type sup : types.closure(ASTHelpers.getSymbol(classTree).type)) {
       if (equals == null) {

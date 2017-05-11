@@ -27,12 +27,12 @@ import org.junit.runners.JUnit4;
 
 /**
  * Unit tests for {@link SourceFile}s.
- * 
+ *
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 @RunWith(JUnit4.class)
 public class SourceFileTest {
-  
+
   private static final String DUMMY_PATH = "java/com/google/foo/bar/FooBar.java";
   private static final String SOURCE_TEXT =
       "// Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do\n"
@@ -45,7 +45,7 @@ public class SourceFileTest {
           + "// est laborum.\n";
 
   private SourceFile sourceFile;
-  
+
   @Before
   public void setUp() {
     sourceFile = new SourceFile(DUMMY_PATH, SOURCE_TEXT);
@@ -55,10 +55,10 @@ public class SourceFileTest {
   public void getSourceText() {
     assertEquals(SOURCE_TEXT, sourceFile.getSourceText());
   }
-  
+
   @Test
   public void getPath() {
-    assertEquals(DUMMY_PATH, sourceFile.getPath());    
+    assertEquals(DUMMY_PATH, sourceFile.getPath());
   }
 
   @Test
@@ -66,28 +66,25 @@ public class SourceFileTest {
     List<String> lines = sourceFile.getLines();
     assertEquals(8, lines.size());
     assertEquals(
-        "// Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do",
-        lines.get(0));
+        "// Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do", lines.get(0));
     assertEquals("// est laborum.", lines.get(7));
   }
-  
+
   @Test
   public void replaceChars() {
     sourceFile.replaceChars(3, 8, "Sasquatch");
-    assertEquals(
-        SOURCE_TEXT.replaceAll("Lorem", "Sasquatch"),
-        sourceFile.getSourceText());
+    assertEquals(SOURCE_TEXT.replaceAll("Lorem", "Sasquatch"), sourceFile.getSourceText());
     assertEquals(
         "// Sasquatch ipsum dolor sit amet, consectetur adipisicing elit, sed do",
         sourceFile.getLines().get(0));
   }
-  
+
   @Test
   public void replaceLines() {
     sourceFile.replaceLines(Arrays.asList("Line1", "Line2"));
     assertEquals("Line1\nLine2\n", sourceFile.getSourceText());
   }
-  
+
   @Test
   public void replaceLines_numbered() {
     sourceFile.replaceLines(2, 5, Arrays.asList("cat", "dog"));
@@ -100,26 +97,22 @@ public class SourceFileTest {
             + "// est laborum.\n",
         sourceFile.getSourceText());
   }
-  
+
   @Test
   public void getFragmentByChars() {
     assertEquals("Lorem", sourceFile.getFragmentByChars(3, 8));
   }
-  
+
   @Test
   public void getFragmentByLines() {
     assertEquals(
         "// eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut\n",
         sourceFile.getFragmentByLines(2, 2));
-    assertEquals(
-        "// est laborum.\n",
-        sourceFile.getFragmentByLines(8, 8));
+    assertEquals("// est laborum.\n", sourceFile.getFragmentByLines(8, 8));
     assertEquals(
         "// eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut\n"
             + "// enim ad minim veniam, quis nostrud exercitation ullamco\n",
         sourceFile.getFragmentByLines(2, 3));
-    assertEquals(
-        SOURCE_TEXT,
-        sourceFile.getFragmentByLines(1, 8));
+    assertEquals(SOURCE_TEXT, sourceFile.getFragmentByLines(1, 8));
   }
 }

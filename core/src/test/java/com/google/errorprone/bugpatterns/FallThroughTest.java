@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
 import org.junit.Test;

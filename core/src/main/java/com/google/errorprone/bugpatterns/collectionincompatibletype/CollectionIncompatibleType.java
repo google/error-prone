@@ -75,16 +75,12 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
 
   private final FixType fixType;
 
-  /**
-   * Creates a new {@link CollectionIncompatibleType} checker that provides no fix.
-   */
+  /** Creates a new {@link CollectionIncompatibleType} checker that provides no fix. */
   public CollectionIncompatibleType() {
     this(FixType.NONE);
   }
 
-  /**
-   * Creates a new {@link CollectionIncompatibleType} checker with the given {@code fixType}.
-   */
+  /** Creates a new {@link CollectionIncompatibleType} checker with the given {@code fixType}. */
   public CollectionIncompatibleType(FixType fixType) {
     this.fixType = fixType;
   }
@@ -136,7 +132,6 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
               "java.util.Collection", // type of the method argument
               0)); // index of the method argument's type argument to extract
 
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
 
@@ -173,18 +168,13 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
           String.format(
               "Argument '%s' should not be passed to this method; its type %s has a type argument "
                   + "%s that is not compatible with its collection's type argument %s",
-              result.sourceTree(),
-              sourceTreeType,
-              sourceType,
-              targetType));
+              result.sourceTree(), sourceTreeType, sourceType, targetType));
     } else {
       description.setMessage(
           String.format(
               "Argument '%s' should not be passed to this method; its type %s is not compatible "
                   + "with its collection's type argument %s",
-              result.sourceTree(),
-              sourceType,
-              targetType));
+              result.sourceTree(), sourceType, targetType));
     }
 
     switch (fixType) {
@@ -194,8 +184,7 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
                 tree,
                 String.format(
                     "/* expected: %s, actual: %s */",
-                    ASTHelpers.getUpperBound(result.targetType(), types),
-                    result.sourceType())));
+                    ASTHelpers.getUpperBound(result.targetType(), types), result.sourceType())));
         break;
       case CAST:
         Fix fix;
@@ -203,10 +192,11 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
           TypeArgOfMethodArgMatcher matcher = (TypeArgOfMethodArgMatcher) typeArgResult.matcher();
           String fullyQualifiedType = matcher.getMethodArgTypeName();
           String simpleType = Iterables.getLast(Splitter.on('.').split(fullyQualifiedType));
-          fix = SuggestedFix.builder()
-              .prefixWith(result.sourceTree(), String.format("(%s<?>) ", simpleType))
-              .addImport(fullyQualifiedType)
-              .build();
+          fix =
+              SuggestedFix.builder()
+                  .prefixWith(result.sourceTree(), String.format("(%s<?>) ", simpleType))
+                  .addImport(fullyQualifiedType)
+                  .build();
         } else {
           fix = SuggestedFix.prefixWith(result.sourceTree(), "(Object) ");
         }
@@ -222,7 +212,6 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
         break;
       case NONE:
         break;
-
     }
 
     return description.build();
@@ -242,5 +231,4 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
 
     return null;
   }
-
 }

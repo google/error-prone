@@ -34,7 +34,7 @@ import javax.tools.Diagnostic.Kind;
 
 /**
  * Enforces {@code @RequiredAnnotation} as an annotation processor.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @SupportedAnnotationTypes("*")
@@ -66,7 +66,7 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
     }
     return null;
   }
-  
+
   private void validateElements(Iterable<? extends Element> elements) {
     for (Element element : elements) {
       validateElement(element);
@@ -78,8 +78,9 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
         processingEnv.getElementUtils().getTypeElement(RequiredAnnotation.class.getName()).asType();
     for (final AnnotationMirror annotation :
         processingEnv.getElementUtils().getAllAnnotationMirrors(element)) {
-      AnnotationMirror requiredAnnotationMirror = getAnnotationMirror(
-          annotation.getAnnotationType().asElement(), requiredAnnotationTypeMirror);
+      AnnotationMirror requiredAnnotationMirror =
+          getAnnotationMirror(
+              annotation.getAnnotationType().asElement(), requiredAnnotationTypeMirror);
       if (requiredAnnotationMirror == null) {
         continue;
       }
@@ -91,7 +92,8 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
         @Override
         public Void visitType(TypeMirror t, Void p) {
           if (getAnnotationMirror(element, t) == null) {
-            printError(element,
+            printError(
+                element,
                 annotation,
                 "Annotation %s on %s also requires %s",
                 annotation,
@@ -113,15 +115,15 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
     validateElements(element.getEnclosedElements());
   }
 
-  private void printError(Element element, AnnotationMirror annotation, String message,
-      Object... args) {
-    processingEnv.getMessager().printMessage(Kind.ERROR, String.format(message, args), element,
-        annotation);
+  private void printError(
+      Element element, AnnotationMirror annotation, String message, Object... args) {
+    processingEnv
+        .getMessager()
+        .printMessage(Kind.ERROR, String.format(message, args), element, annotation);
   }
 
   @Override
   public SourceVersion getSupportedSourceVersion() {
     return SourceVersion.latest();
   }
-
 }

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2014 Google Inc. All rights reserved.
  *
@@ -38,7 +37,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for Refaster templates.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -58,12 +57,13 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
                 .filter(ClassTree.class));
     return Iterables.getOnlyElement(RefasterRuleBuilderScanner.extractRules(classTree, context));
   }
-  
-  private void expectTransforms(CodeTransformer transformer, JavaFileObject input,
-      JavaFileObject expectedOutput) throws IOException {
-    JavaFileObject transformedInput = 
+
+  private void expectTransforms(
+      CodeTransformer transformer, JavaFileObject input, JavaFileObject expectedOutput)
+      throws IOException {
+    JavaFileObject transformedInput =
         CodeTransformerTestHelper.create(transformer).transform(input);
-    
+
     // TODO(lowasser): modify compile-testing to enable direct tree comparison
     assert_().about(javaSource()).that(transformedInput).compilesWithoutError();
     String expectedSource = expectedOutput.getCharContent(false).toString();
@@ -71,187 +71,188 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
     assertThat(CharMatcher.whitespace().collapseFrom(actualSource, ' '))
         .isEqualTo(CharMatcher.whitespace().collapseFrom(expectedSource, ' '));
   }
-  
+
   private static final String TEMPLATE_DIR = "com/google/errorprone/refaster/testdata/template";
   private static final String INPUT_DIR = "com/google/errorprone/refaster/testdata/input";
   private static final String OUTPUT_DIR = "com/google/errorprone/refaster/testdata/output";
 
   private void runTest(String testName) throws IOException {
-    CodeTransformer transformer = extractRefasterRule(
-        JavaFileObjects.forResource(String.format("%s/%s.java", TEMPLATE_DIR, testName)));
-    
-    JavaFileObject input = 
+    CodeTransformer transformer =
+        extractRefasterRule(
+            JavaFileObjects.forResource(String.format("%s/%s.java", TEMPLATE_DIR, testName)));
+
+    JavaFileObject input =
         JavaFileObjects.forResource(String.format("%s/%sExample.java", INPUT_DIR, testName));
-    JavaFileObject output = 
+    JavaFileObject output =
         JavaFileObjects.forResource(String.format("%s/%sExample.java", OUTPUT_DIR, testName));
     expectTransforms(transformer, input, output);
   }
-  
+
   @Test
   public void binary() throws IOException {
     runTest("BinaryTemplate");
   }
-  
+
   @Test
   public void parenthesesOptional() throws IOException {
     runTest("ParenthesesOptionalTemplate");
   }
-  
+
   @Test
   public void multipleReferencesToIdentifier() throws IOException {
     runTest("MultipleReferencesToIdentifierTemplate");
   }
-  
+
   @Test
   public void methodInvocation() throws IOException {
     runTest("MethodInvocationTemplate");
   }
-  
+
   @Test
   public void explicitTypesPreserved() throws IOException {
     runTest("ExplicitTypesPreservedTemplate");
   }
-  
+
   @Test
   public void implicitTypesInlined() throws IOException {
     runTest("ImplicitTypesInlinedTemplate");
   }
-  
+
   @Test
   public void autoboxing() throws IOException {
     runTest("AutoboxingTemplate");
   }
-  
+
   @Test
   public void array() throws IOException {
     runTest("ArrayTemplate");
   }
-  
+
   @Test
   public void precedenceSensitive() throws IOException {
     runTest("PrecedenceSensitiveTemplate");
   }
-  
+
   @Test
   public void staticField() throws IOException {
     runTest("StaticFieldTemplate");
   }
-  
+
   @Test
   public void isInstance() throws IOException {
     runTest("IsInstanceTemplate");
   }
-  
+
   @Test
   public void anyOf() throws IOException {
     runTest("AnyOfTemplate");
   }
-  
+
   @Test
   public void repeated() throws IOException {
     runTest("VarargTemplate");
   }
-  
+
   @Test
   public void ifTemplate() throws IOException {
     runTest("IfTemplate");
   }
-  
+
   @Test
   public void variableDecl() throws IOException {
     runTest("VariableDeclTemplate");
   }
-  
+
   @Test
   public void inferredThis() throws IOException {
     runTest("InferredThisTemplate");
   }
-  
+
   @Test
   public void twoLinesToOne() throws IOException {
     runTest("TwoLinesToOneTemplate");
   }
-  
+
   @Test
   public void oneLineToTwo() throws IOException {
     runTest("OneLineToTwoTemplate");
   }
-  
+
   @Test
   public void tryCatch() throws IOException {
     runTest("TryTemplate");
   }
-  
+
   @Test
   public void tryMultiCatch() throws IOException {
     runTest("TryMultiCatchTemplate");
   }
-  
+
   @Test
   public void wildcard() throws IOException {
     runTest("WildcardTemplate");
   }
-  
+
   @Test
   public void freeIdentWildcardCapture() throws IOException {
     runTest("WildcardUnificationTemplate");
   }
-  
+
   @Test
   public void labeledStatements() throws IOException {
     runTest("LabelTemplate");
   }
-  
+
   @Test
   public void expressionPlaceholder() throws IOException {
     runTest("PlaceholderTemplate");
   }
-  
+
   @Test
   public void expressionPlaceholderAllowsIdentity() throws IOException {
     runTest("PlaceholderAllowsIdentityTemplate");
   }
-  
+
   @Test
   public void blockPlaceholder() throws IOException {
     runTest("BlockPlaceholderTemplate");
   }
-  
+
   @Test
   public void genericPlaceholder() throws IOException {
     runTest("GenericPlaceholderTemplate");
   }
-  
+
   @Test
   public void mayOptionallyUse() throws IOException {
     runTest("MayOptionallyUseTemplate");
   }
-  
+
   @Test
   public void comparisonChain() throws IOException {
     runTest("ComparisonChainTemplate");
   }
-  
+
   @Test
   public void multibound() throws IOException {
     runTest("MultiBoundTemplate");
   }
-  
+
   @Test
   public void topLevel() throws IOException {
     runTest("TopLevelTemplate");
   }
-  
+
   @Test
   public void diamond() throws IOException {
     runTest("DiamondTemplate");
   }
-  
+
   @Test
   public void anonymousClass() throws IOException {
     runTest("AnonymousClassTemplate");
   }
-  
+
   @Test
   public void returnPlaceholder() throws IOException {
     runTest("ReturnPlaceholderTemplate");
@@ -306,12 +307,12 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void lambdaImplicitType() throws IOException {
     runTest("LambdaImplicitType");
   }
-  
+
   @Test
   public void inferLambdaBodyType() throws IOException {
     runTest("InferLambdaBodyType");
   }
-  
+
   @Test
   public void asVarargs() throws IOException {
     runTest("AsVarargsTemplate");

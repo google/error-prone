@@ -47,10 +47,11 @@ public class ErrorProneOptionsTest {
 
   @Test
   public void malformedOptionThrowsProperException() throws Exception {
-    List<String> badArgs = Arrays.asList(
-        "-Xep:Foo:WARN:jfkdlsdf", // too many parts
-        "-Xep:", // no check name
-        "-Xep:Foo:FJDKFJSD"); // nonexistent severity level
+    List<String> badArgs =
+        Arrays.asList(
+            "-Xep:Foo:WARN:jfkdlsdf", // too many parts
+            "-Xep:", // no check name
+            "-Xep:Foo:FJDKFJSD"); // nonexistent severity level
 
     badArgs.forEach(
         arg -> {
@@ -66,47 +67,43 @@ public class ErrorProneOptionsTest {
   public void handlesErrorProneFlags() throws Exception {
     String[] args1 = {"-Xep:Check1"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args1);
-    Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
-        .put("Check1", Severity.DEFAULT)
-        .build();
+    Map<String, Severity> expectedSeverityMap =
+        ImmutableMap.<String, Severity>builder().put("Check1", Severity.DEFAULT).build();
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
 
     String[] args2 = {"-Xep:Check1", "-Xep:Check2:OFF", "-Xep:Check3:WARN"};
     options = ErrorProneOptions.processArgs(args2);
-    expectedSeverityMap = ImmutableMap.<String, Severity>builder()
-        .put("Check1", Severity.DEFAULT)
-        .put("Check2", Severity.OFF)
-        .put("Check3", Severity.WARN)
-        .build();
+    expectedSeverityMap =
+        ImmutableMap.<String, Severity>builder()
+            .put("Check1", Severity.DEFAULT)
+            .put("Check2", Severity.OFF)
+            .put("Check3", Severity.WARN)
+            .build();
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
   }
 
   @Test
   public void combineErrorProneFlagsWithNonErrorProneFlags() throws Exception {
     String[] args = {
-        "-classpath", "/this/is/classpath",
-        "-verbose",
-        "-Xep:Check1:WARN",
-        "-Xep:Check2:ERROR"};
+      "-classpath", "/this/is/classpath", "-verbose", "-Xep:Check1:WARN", "-Xep:Check2:ERROR"
+    };
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     String[] expectedRemainingArgs = {"-classpath", "/this/is/classpath", "-verbose"};
     assertThat(options.getRemainingArgs()).isEqualTo(expectedRemainingArgs);
-    Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
-        .put("Check1", Severity.WARN)
-        .put("Check2", Severity.ERROR)
-        .build();
+    Map<String, Severity> expectedSeverityMap =
+        ImmutableMap.<String, Severity>builder()
+            .put("Check1", Severity.WARN)
+            .put("Check2", Severity.ERROR)
+            .build();
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
   }
 
   @Test
   public void lastCheckFlagWins() throws Exception {
-    String[] args = {
-        "-Xep:Check1:ERROR",
-        "-Xep:Check1:OFF"};
+    String[] args = {"-Xep:Check1:ERROR", "-Xep:Check1:OFF"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
-    Map<String, Severity> expectedSeverityMap = ImmutableMap.<String, Severity>builder()
-        .put("Check1", Severity.OFF)
-        .build();
+    Map<String, Severity> expectedSeverityMap =
+        ImmutableMap.<String, Severity>builder().put("Check1", Severity.OFF).build();
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
   }
 

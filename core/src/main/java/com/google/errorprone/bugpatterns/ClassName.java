@@ -74,9 +74,10 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
         names.add(classMember.getSimpleName().toString());
       }
     }
-    String message = String.format(
-        "Expected a class declaration named %s inside %s.java, instead found: %s",
-        filename, filename, Joiner.on(", ").join(names));
+    String message =
+        String.format(
+            "Expected a class declaration named %s inside %s.java, instead found: %s",
+            filename, filename, Joiner.on(", ").join(names));
     return buildDescription(tree.getPackageName()).setMessage(message).build();
   }
 }

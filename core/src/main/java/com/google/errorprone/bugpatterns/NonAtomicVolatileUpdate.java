@@ -68,11 +68,9 @@ import javax.lang.model.element.Modifier;
 public class NonAtomicVolatileUpdate extends BugChecker
     implements UnaryTreeMatcher, CompoundAssignmentTreeMatcher, AssignmentTreeMatcher {
 
-  /**
-   * Extracts the expression from a UnaryTree and applies a matcher to it.
-   */
+  /** Extracts the expression from a UnaryTree and applies a matcher to it. */
   private static Matcher<UnaryTree> expressionFromUnaryTree(
-      final Matcher <ExpressionTree> exprMatcher) {
+      final Matcher<ExpressionTree> exprMatcher) {
     return new Matcher<UnaryTree>() {
       @Override
       public boolean matches(UnaryTree tree, VisitorState state) {
@@ -81,11 +79,9 @@ public class NonAtomicVolatileUpdate extends BugChecker
     };
   }
 
-  /**
-   * Extracts the variable from a CompoundAssignmentTree and applies a matcher to it.
-   */
+  /** Extracts the variable from a CompoundAssignmentTree and applies a matcher to it. */
   private static Matcher<CompoundAssignmentTree> variableFromCompoundAssignmentTree(
-      final Matcher <ExpressionTree> exprMatcher) {
+      final Matcher<ExpressionTree> exprMatcher) {
     return new Matcher<CompoundAssignmentTree>() {
       @Override
       public boolean matches(CompoundAssignmentTree tree, VisitorState state) {
@@ -94,11 +90,9 @@ public class NonAtomicVolatileUpdate extends BugChecker
     };
   }
 
-  /**
-   * Extracts the variable from an AssignmentTree and applies a matcher to it.
-   */
+  /** Extracts the variable from an AssignmentTree and applies a matcher to it. */
   private static Matcher<AssignmentTree> variableFromAssignmentTree(
-      final Matcher <ExpressionTree> exprMatcher) {
+      final Matcher<ExpressionTree> exprMatcher) {
     return new Matcher<AssignmentTree>() {
       @Override
       public boolean matches(AssignmentTree tree, VisitorState state) {
@@ -108,8 +102,8 @@ public class NonAtomicVolatileUpdate extends BugChecker
   }
 
   /**
-   * Matches patterns like i++ and i-- in which i is volatile, and the pattern is not enclosed
-   * by a synchronized block.
+   * Matches patterns like i++ and i-- in which i is volatile, and the pattern is not enclosed by a
+   * synchronized block.
    */
   private static final Matcher<UnaryTree> unaryIncrementDecrementMatcher =
       allOf(
@@ -121,7 +115,6 @@ public class NonAtomicVolatileUpdate extends BugChecker
               kindIs(Kind.POSTFIX_DECREMENT),
               kindIs(Kind.PREFIX_DECREMENT)));
 
-
   @Override
   public Description matchUnary(UnaryTree tree, VisitorState state) {
     if (unaryIncrementDecrementMatcher.matches(tree, state)) {
@@ -131,18 +124,15 @@ public class NonAtomicVolatileUpdate extends BugChecker
   }
 
   /**
-   * Matches patterns like i += 1 and i -= 1 in which i is volatile, and the pattern is not
-   * enclosed by a synchronized block.
+   * Matches patterns like i += 1 and i -= 1 in which i is volatile, and the pattern is not enclosed
+   * by a synchronized block.
    */
   private static final Matcher<CompoundAssignmentTree> compoundAssignmentIncrementDecrementMatcher =
       allOf(
           variableFromCompoundAssignmentTree(
               Matchers.<ExpressionTree>hasModifier(Modifier.VOLATILE)),
           not(inSynchronized()),
-          anyOf(
-              kindIs(Kind.PLUS_ASSIGNMENT),
-              kindIs(Kind.MINUS_ASSIGNMENT)));
-
+          anyOf(kindIs(Kind.PLUS_ASSIGNMENT), kindIs(Kind.MINUS_ASSIGNMENT)));
 
   @Override
   public Description matchCompoundAssignment(CompoundAssignmentTree tree, VisitorState state) {
@@ -159,20 +149,15 @@ public class NonAtomicVolatileUpdate extends BugChecker
   private static Matcher<AssignmentTree> assignmentIncrementDecrementMatcher(
       ExpressionTree variable) {
     return allOf(
-          variableFromAssignmentTree(
-              Matchers.<ExpressionTree>hasModifier(Modifier.VOLATILE)),
-          not(inSynchronized()),
-          assignment(
-              Matchers.<ExpressionTree>anything(),
-              toType(
-                  BinaryTree.class,
-                  Matchers.<BinaryTree>allOf(
-                      Matchers.<BinaryTree>anyOf(
-                          kindIs(Kind.PLUS),
-                          kindIs(Kind.MINUS)),
-                      binaryTree(
-                          sameVariable(variable),
-                          Matchers.<ExpressionTree>anything())))));
+        variableFromAssignmentTree(Matchers.<ExpressionTree>hasModifier(Modifier.VOLATILE)),
+        not(inSynchronized()),
+        assignment(
+            Matchers.<ExpressionTree>anything(),
+            toType(
+                BinaryTree.class,
+                Matchers.<BinaryTree>allOf(
+                    Matchers.<BinaryTree>anyOf(kindIs(Kind.PLUS), kindIs(Kind.MINUS)),
+                    binaryTree(sameVariable(variable), Matchers.<ExpressionTree>anything())))));
   }
 
   @Override

@@ -43,19 +43,19 @@ import javax.annotation.Nullable;
 abstract class UUnary extends UExpression implements UnaryTree {
   private static final ImmutableBiMap<Kind, JCTree.Tag> UNARY_OP_CODES =
       new ImmutableBiMap.Builder<Kind, JCTree.Tag>()
-        .put(Kind.PREFIX_INCREMENT, JCTree.Tag.PREINC)
-        .put(Kind.PREFIX_DECREMENT, JCTree.Tag.PREDEC)
-        .put(Kind.POSTFIX_INCREMENT, JCTree.Tag.POSTINC)
-        .put(Kind.POSTFIX_DECREMENT, JCTree.Tag.POSTDEC)
-        .put(Kind.UNARY_PLUS, JCTree.Tag.POS)
-        .put(Kind.UNARY_MINUS, JCTree.Tag.NEG)
-        .put(Kind.BITWISE_COMPLEMENT, JCTree.Tag.COMPL)
-        .put(Kind.LOGICAL_COMPLEMENT, JCTree.Tag.NOT)
-        .build();
+          .put(Kind.PREFIX_INCREMENT, JCTree.Tag.PREINC)
+          .put(Kind.PREFIX_DECREMENT, JCTree.Tag.PREDEC)
+          .put(Kind.POSTFIX_INCREMENT, JCTree.Tag.POSTINC)
+          .put(Kind.POSTFIX_DECREMENT, JCTree.Tag.POSTDEC)
+          .put(Kind.UNARY_PLUS, JCTree.Tag.POS)
+          .put(Kind.UNARY_MINUS, JCTree.Tag.NEG)
+          .put(Kind.BITWISE_COMPLEMENT, JCTree.Tag.COMPL)
+          .put(Kind.LOGICAL_COMPLEMENT, JCTree.Tag.NOT)
+          .build();
 
   public static UUnary create(Kind unaryOp, UExpression expression) {
-    checkArgument(UNARY_OP_CODES.containsKey(unaryOp), 
-        "%s is not a recognized unary operation", unaryOp);
+    checkArgument(
+        UNARY_OP_CODES.containsKey(unaryOp), "%s is not a recognized unary operation", unaryOp);
     return new AutoValue_UUnary(unaryOp, expression);
   }
 
@@ -84,9 +84,11 @@ abstract class UUnary extends UExpression implements UnaryTree {
     if (getKind() == Kind.LOGICAL_COMPLEMENT) {
       return new TreeCopier<Void>(maker) {
         @SuppressWarnings("unchecked")
-            // essentially depends on T being a superclass of JCExpression
-        @Override public <T extends JCTree> T copy(T t, Void v) {
-          if (t instanceof BinaryTree || t instanceof UnaryTree
+        // essentially depends on T being a superclass of JCExpression
+        @Override
+        public <T extends JCTree> T copy(T t, Void v) {
+          if (t instanceof BinaryTree
+              || t instanceof UnaryTree
               || t instanceof ConditionalExpressionTree) {
             return super.copy(t, v);
           } else {
@@ -98,7 +100,8 @@ abstract class UUnary extends UExpression implements UnaryTree {
           return maker.Unary(JCTree.Tag.NOT, (JCExpression) expr);
         }
 
-        @Override public JCExpression visitBinary(BinaryTree tree, Void v) {
+        @Override
+        public JCExpression visitBinary(BinaryTree tree, Void v) {
           if (UBinary.DEMORGAN.containsKey(tree.getKind())) {
             JCExpression negLeft = copy((JCExpression) tree.getLeftOperand());
             JCExpression negRight = copy((JCExpression) tree.getRightOperand());
@@ -114,7 +117,8 @@ abstract class UUnary extends UExpression implements UnaryTree {
           }
         }
 
-        @Override public JCExpression visitUnary(UnaryTree tree, Void v) {
+        @Override
+        public JCExpression visitUnary(UnaryTree tree, Void v) {
           if (tree.getKind() == Kind.LOGICAL_COMPLEMENT) {
             return (JCExpression) tree.getExpression();
           } else {
@@ -122,8 +126,8 @@ abstract class UUnary extends UExpression implements UnaryTree {
           }
         }
 
-        @Override public JCConditional visitConditionalExpression(
-            ConditionalExpressionTree tree, Void v) {
+        @Override
+        public JCConditional visitConditionalExpression(ConditionalExpressionTree tree, Void v) {
           return maker.Conditional(
               (JCExpression) tree.getCondition(),
               copy((JCExpression) tree.getTrueExpression()),
@@ -134,7 +138,7 @@ abstract class UUnary extends UExpression implements UnaryTree {
       return inliner.maker().Unary(UNARY_OP_CODES.get(getKind()), getExpression().inline(inliner));
     }
   }
-  
+
   @Override
   public UExpression negate() {
     return (getKind() == Kind.LOGICAL_COMPLEMENT) ? getExpression() : super.negate();

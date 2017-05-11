@@ -43,9 +43,7 @@ public class HasIdentifier implements Matcher<Tree> {
     return firstNonNull(matches, false);
   }
 
-  /**
-   * AST Visitor that matches identifiers in a Tree
-   */
+  /** AST Visitor that matches identifiers in a Tree */
   private static class HasIdentifierScanner extends TreePathScanner<Boolean, Void> {
 
     private Matcher<IdentifierTree> idMatcher;
@@ -53,7 +51,7 @@ public class HasIdentifier implements Matcher<Tree> {
 
     public HasIdentifierScanner(VisitorState ancestorState, Matcher<IdentifierTree> idMatcher) {
       this.ancestorState = ancestorState;
-      this.idMatcher = idMatcher; 
+      this.idMatcher = idMatcher;
     }
 
     @Override

@@ -91,8 +91,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
 
   private static final Matcher<ExpressionTree> FUTURES_GET_CHECKED_MATCHER =
       anyOf(
-          staticMethod().onClass(
-              Futures.class.getName()).named("getChecked"));
+          staticMethod().onClass(Futures.class.getName()).named("getChecked"));
 
   private static final Matcher<ExpressionTree> CLASS_OBJECT_FOR_CLASS_EXTENDING_RUNTIME_EXCEPTION =
       new Matcher<ExpressionTree>() {
@@ -117,31 +116,32 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
       argument(1, CLASS_OBJECT_FOR_CLASS_EXTENDING_RUNTIME_EXCEPTION);
 
   private static final Matcher<ExpressionTree> CLASS_OBJECT_FOR_CLASS_WITHOUT_USABLE_CONSTRUCTOR =
-      classLiteral(new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree tree, VisitorState state) {
-          ClassSymbol classSymbol = (ClassSymbol) getSymbol(tree);
-          if (classSymbol == null) {
-            return false;
-          }
+      classLiteral(
+          new Matcher<ExpressionTree>() {
+            @Override
+            public boolean matches(ExpressionTree tree, VisitorState state) {
+              ClassSymbol classSymbol = (ClassSymbol) getSymbol(tree);
+              if (classSymbol == null) {
+                return false;
+              }
 
-          if (classSymbol.isInner()) {
-            return true;
-          }
+              if (classSymbol.isInner()) {
+                return true;
+              }
 
-          for (Symbol enclosedSymbol : classSymbol.getEnclosedElements()) {
-            if (!enclosedSymbol.isConstructor()) {
-              continue;
+              for (Symbol enclosedSymbol : classSymbol.getEnclosedElements()) {
+                if (!enclosedSymbol.isConstructor()) {
+                  continue;
+                }
+                MethodSymbol constructorSymbol = (MethodSymbol) enclosedSymbol;
+                if (canBeUsedByGetChecked(constructorSymbol, state)) {
+                  return false;
+                }
+              }
+
+              return true;
             }
-            MethodSymbol constructorSymbol = (MethodSymbol) enclosedSymbol;
-            if (canBeUsedByGetChecked(constructorSymbol, state)) {
-              return false;
-            }
-          }
-
-          return true;
-        }
-      });
+          });
 
   private static final Matcher<MethodInvocationTree> PASSED_TYPE_WITHOUT_USABLE_CONSTRUCTOR =
       argument(1, CLASS_OBJECT_FOR_CLASS_WITHOUT_USABLE_CONSTRUCTOR);
@@ -167,8 +167,9 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
 
   private Description describeUncheckedExceptionTypeMatch(Tree tree, Fix fix) {
     return buildDescription(tree)
-        .setMessage("The exception class passed to getChecked must be a checked exception, "
-            + "not a RuntimeException.")
+        .setMessage(
+            "The exception class passed to getChecked must be a checked exception, "
+                + "not a RuntimeException.")
         .addFix(fix)
         .build();
   }
@@ -177,7 +178,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
     return buildDescription(tree)
         .setMessage(
             "The exception class passed to getChecked must declare a public constructor whose "
-            + "only parameters are of type String or Throwable.")
+                + "only parameters are of type String or Throwable.")
         .build();
   }
 }

@@ -33,8 +33,9 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
 /**
- * Simple data object containing the information captured about an AST match.
- * Can be printed in a UI, or output in structured format for use by tools.
+ * Simple data object containing the information captured about an AST match. Can be printed in a
+ * UI, or output in structured format for use by tools.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class Description {
@@ -45,32 +46,24 @@ public class Description {
 
   private static final String UNDEFINED_CHECK_NAME = "Undefined";
 
-  /**
-   * The AST node that matched.
-   */
+  /** The AST node that matched. */
   public final Tree node;
 
-  /**
-   * The name of the check that produced the match.
-   */
+  /** The name of the check that produced the match. */
   public final String checkName;
 
-  /**
-   * The raw message, not including the check name or the link.
-   */
+  /** The raw message, not including the check name or the link. */
   private final String rawMessage;
 
   /** The raw link URL for the check. May be null if there is no link. */
   @Nullable private final String linkUrl;
   /**
-   * A list of fixes to suggest in an error message or use in automated refactoring.  Fixes are
-   * in order of decreasing preference, from most preferred to least preferred.
+   * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
+   * order of decreasing preference, from most preferred to least preferred.
    */
   public final ImmutableList<Fix> fixes;
 
-  /**
-   * Is this a warning, error, etc.?
-   */
+  /** Is this a warning, error, etc.? */
   public final BugPattern.SeverityLevel severity;
 
   /**
@@ -92,9 +85,7 @@ public class Description {
     return rawMessage;
   }
 
-  /**
-   * Returns the message, not including the check name but including the link.
-   */
+  /** Returns the message, not including the check name but including the link. */
   public String getMessageWithoutCheckName() {
     return linkUrl != null
         ? String.format("%s\n%s", rawMessage, linkTextForDiagnostic(linkUrl))
@@ -144,24 +135,20 @@ public class Description {
   }
 
   /**
-   * Construct the link text to include in the compiler error message. Returns null if there is
-   * no link.
+   * Construct the link text to include in the compiler error message. Returns null if there is no
+   * link.
    */
   private static String linkTextForDiagnostic(String linkUrl) {
     return isNullOrEmpty(linkUrl) ? null : "  (see " + linkUrl + ")";
   }
 
-  /**
-   * Returns a new builder for {@link Description}s.
-   */
+  /** Returns a new builder for {@link Description}s. */
   public static Builder builder(
       Tree node, String name, @Nullable String link, SeverityLevel severity, String message) {
     return new Builder(node, name, link, severity, message);
   }
 
-  /**
-   * Builder for {@code Description}s.
-   */
+  /** Builder for {@code Description}s. */
   public static class Builder {
     private final Tree node;
     private final String name;
@@ -211,9 +198,9 @@ public class Description {
       }
       return this;
     }
-    
+
     /**
-     * Set a custom error message for this {@code Description}.  The custom message will be used
+     * Set a custom error message for this {@code Description}. The custom message will be used
      * instead of the summary field as the text for the diagnostic message.
      *
      * @param message A custom error message without the check name ("[checkname]") or link
@@ -230,5 +217,4 @@ public class Description {
       return new Description(node, name, rawMessage, linkUrl, fixListBuilder.build(), severity);
     }
   }
-
 }

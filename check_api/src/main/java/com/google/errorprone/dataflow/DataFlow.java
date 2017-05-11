@@ -46,12 +46,11 @@ import org.checkerframework.dataflow.cfg.UnderlyingAST;
  */
 public final class DataFlow {
 
-  /**
-   * A pair of Analysis and ControlFlowGraph.
-   */
-  public static interface Result<A extends AbstractValue<A>, S extends Store<S>,
-      T extends TransferFunction<A, S>> {
+  /** A pair of Analysis and ControlFlowGraph. */
+  public static interface Result<
+      A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>> {
     Analysis<A, S, T> getAnalysis();
+
     ControlFlowGraph getControlFlowGraph();
   }
 
@@ -122,11 +121,10 @@ public final class DataFlow {
    * Run the {@code transfer} dataflow analysis over the method or lambda which is the leaf of the
    * {@code methodPath}.
    *
-   * <p>For caching, we make the following assumptions:
-   * - if two paths to methods are {@code equal}, their control flow graph is the same.
-   * - if two transfer functions are {@code equal}, and are run over the same control flow graph,
-   *   the analysis result is the same.
-   * - for all contexts, the analysis result is the same.
+   * <p>For caching, we make the following assumptions: - if two paths to methods are {@code equal},
+   * their control flow graph is the same. - if two transfer functions are {@code equal}, and are
+   * run over the same control flow graph, the analysis result is the same. - for all contexts, the
+   * analysis result is the same.
    */
   private static <A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>>
       Result<A, S, T> methodDataflow(TreePath methodPath, Context context, T transfer) {
@@ -153,13 +151,12 @@ public final class DataFlow {
    * Run the {@code transfer} dataflow analysis to compute the abstract value of the expression
    * which is the leaf of {@code exprPath}.
    *
-   * @return dataflow result for the given expression or {@code null} if the expression is not
-   *     part of a method or lambda
+   * @return dataflow result for the given expression or {@code null} if the expression is not part
+   *     of a method or lambda
    */
   @Nullable
-  public static <A extends AbstractValue<A>, S extends Store<S>,
-                 T extends TransferFunction<A, S>> A
-      expressionDataflow(TreePath exprPath, Context context, T transfer) {
+  public static <A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>>
+      A expressionDataflow(TreePath exprPath, Context context, T transfer) {
     final Tree leaf = exprPath.getLeaf();
     Preconditions.checkArgument(
         leaf instanceof ExpressionTree,

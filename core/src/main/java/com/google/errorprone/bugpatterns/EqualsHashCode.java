@@ -99,5 +99,4 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
     }
     return Description.NO_MATCH;
   }
-
 }

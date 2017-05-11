@@ -27,54 +27,48 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 @RunWith(JUnit4.class)
 public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTest {
-  @Before public void setUp() {
-    writeFile("Thing.java",
-        "public @interface Thing {",
-        "  String stuff();",
-        "}");
+  @Before
+  public void setUp() {
+    writeFile("Thing.java", "public @interface Thing {", "  String stuff();", "}");
   }
 
   @Test
   public void testMatches() {
-    writeFile("A.java",
-        "@Thing(stuff=\"y\")",
-        "public class A {}");
-    assertCompiles(annotationMatches(true, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
+    writeFile("A.java", "@Thing(stuff=\"y\")", "public class A {}");
+    assertCompiles(
+        annotationMatches(true, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
   }
 
   @Test
   public void testMatchesExtraParentheses() {
-    writeFile("Thing2.java",
-        "public @interface Thing2 {",
-        "  String value();",
-        "}");
-    writeFile("A.java",
-        "@Thing2((\"y\"))",
-        "public class A {}");
-    assertCompiles(annotationMatches(true, new AnnotationHasArgumentWithValue("value", stringLiteral("y"))));
+    writeFile("Thing2.java", "public @interface Thing2 {", "  String value();", "}");
+    writeFile("A.java", "@Thing2((\"y\"))", "public class A {}");
+    assertCompiles(
+        annotationMatches(true, new AnnotationHasArgumentWithValue("value", stringLiteral("y"))));
   }
 
-  @Test public void notMatches() {
-    writeFile("A.java",
-        "@Thing(stuff=\"n\")",
-        "public class A{}");
-    assertCompiles(annotationMatches(false, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
-    assertCompiles(annotationMatches(false, new AnnotationHasArgumentWithValue("other", stringLiteral("n"))));
+  @Test
+  public void notMatches() {
+    writeFile("A.java", "@Thing(stuff=\"n\")", "public class A{}");
+    assertCompiles(
+        annotationMatches(false, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
+    assertCompiles(
+        annotationMatches(false, new AnnotationHasArgumentWithValue("other", stringLiteral("n"))));
   }
 
-  @Test public void arrayValuedElement() {
-    writeFile("A.java",
-        "@SuppressWarnings({\"unchecked\",\"fallthrough\"})",
-        "public class A{}");
-    assertCompiles(annotationMatches(true, new AnnotationHasArgumentWithValue("value", stringLiteral("unchecked"))));
+  @Test
+  public void arrayValuedElement() {
+    writeFile("A.java", "@SuppressWarnings({\"unchecked\",\"fallthrough\"})", "public class A{}");
+    assertCompiles(
+        annotationMatches(
+            true, new AnnotationHasArgumentWithValue("value", stringLiteral("unchecked"))));
   }
 
-  private Scanner annotationMatches(final boolean shouldMatch, final AnnotationHasArgumentWithValue toMatch) {
+  private Scanner annotationMatches(
+      final boolean shouldMatch, final AnnotationHasArgumentWithValue toMatch) {
     return new Scanner() {
       @Override
       public Void visitAnnotation(AnnotationTree node, VisitorState visitorState) {

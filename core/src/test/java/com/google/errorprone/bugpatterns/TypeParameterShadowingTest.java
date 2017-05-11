@@ -369,5 +369,4 @@ public class TypeParameterShadowingTest {
             "}")
         .doTest();
   }
-
 }

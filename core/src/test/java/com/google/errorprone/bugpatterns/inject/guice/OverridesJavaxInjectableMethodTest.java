@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @RunWith(JUnit4.class)
 public class OverridesJavaxInjectableMethodTest {
   private CompilationTestHelper compilationHelper;
@@ -37,15 +35,11 @@ public class OverridesJavaxInjectableMethodTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper
-        .addSourceFile("OverridesJavaxInjectableMethodPositiveCases.java")
-        .doTest();
+    compilationHelper.addSourceFile("OverridesJavaxInjectableMethodPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper
-        .addSourceFile("OverridesJavaxInjectableMethodNegativeCases.java")
-        .doTest();
+    compilationHelper.addSourceFile("OverridesJavaxInjectableMethodNegativeCases.java").doTest();
   }
 }

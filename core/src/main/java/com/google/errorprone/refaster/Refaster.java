@@ -23,7 +23,7 @@ package com.google.errorprone.refaster;
  */
 public class Refaster {
   private Refaster() {}
-  
+
   /**
    * Indicates that Refaster should treat this {@code @Repeated} argument specifically as a varargs
    * argument.
@@ -49,10 +49,10 @@ public class Refaster {
    * <p>For example, instead of writing
    *
    * <pre><code>
-   *{@literal @}BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfSingleton(E element) {
+   * {@literal @}BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfSingleton(E element) {
    *   return ImmutableList.copyOf(Collections.singletonList(element));
    * }
-   *{@literal @}BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfArrayList(E element) {
+   * {@literal @}BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfArrayList(E element) {
    *   return ImmutableList.copyOf(Lists.newArrayList(element));
    * }
    * </code></pre>
@@ -60,7 +60,7 @@ public class Refaster {
    * <p>one could alternately write
    *
    * <pre><code>
-   *{@literal @}BeforeTemplate &lt;E&gt; List&lt;E&gt; singleton(E element) {
+   * {@literal @}BeforeTemplate &lt;E&gt; List&lt;E&gt; singleton(E element) {
    *   return ImmutableList.copyOf(Refaster.anyOf(
    *     Collections.singletonList(element),
    *     Lists.newArrayList(element)));
@@ -73,14 +73,14 @@ public class Refaster {
   }
 
   /**
-   * This is a placeholder for the Java instanceof operator that can be used with Refaster
-   * type variables.  The type argument must always be specified explicitly, e.g.
-   * {@code Refaster.<String>isInstance(o)}.
+   * This is a placeholder for the Java instanceof operator that can be used with Refaster type
+   * variables. The type argument must always be specified explicitly, e.g. {@code
+   * Refaster.<String>isInstance(o)}.
    *
    * <p>For example, instead of writing the broken
    *
    * <pre><code>
-   *{@literal @}AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
+   * {@literal @}AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
    *   return o instanceof T; // you want to match this, but it won't compile
    * }
    * </code></pre>
@@ -88,7 +88,7 @@ public class Refaster {
    * <p>you would instead write
    *
    * <pre><code>
-   *{@literal @}AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
+   * {@literal @}AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
    *   return Refaster.&lt;T&gt;isInstance(o); // generates the replacement "o instanceof T"
    * }
    * </code></pre>
@@ -107,7 +107,7 @@ public class Refaster {
    * <p>For example, instead of writing the broken
    *
    * <pre><code>
-   *{@literal @}AfterTemplate &lt;T&gt; T[] newTArray(int size) {
+   * {@literal @}AfterTemplate &lt;T&gt; T[] newTArray(int size) {
    *   return new T[size]; // you want to generate this code, but it won't compile
    * }
    * </code></pre>
@@ -115,7 +115,7 @@ public class Refaster {
    * <p>you would instead write
    *
    * <pre><code>
-   *{@literal @}AfterTemplate &lt;T&gt; T[] newTArray(int size) {
+   * {@literal @}AfterTemplate &lt;T&gt; T[] newTArray(int size) {
    *   return Refaster.&lt;T&gt;newArray(size);
    * }
    * </code></pre>
@@ -127,13 +127,13 @@ public class Refaster {
   }
 
   /**
-   * This is a placeholder for the expression T.class.  The type argument must always
-   * be specified explicitly, e.g. {@code Refaster.<String>clazz()}.
+   * This is a placeholder for the expression T.class. The type argument must always be specified
+   * explicitly, e.g. {@code Refaster.<String>clazz()}.
    *
    * <p>For example, instead of writing the broken
    *
    * <pre><code>
-   *{@literal @}AfterTemplate &lt;T&gt; T[] getEnumConstants() {
+   * {@literal @}AfterTemplate &lt;T&gt; T[] getEnumConstants() {
    *   return T.class.getEnumConstants(); // you want to inline this, but it won't compile
    * }
    * </code></pre>
@@ -141,7 +141,7 @@ public class Refaster {
    * you would instead write
    *
    * <pre><code>
-   *{@literal @}AfterTemplate &lt;T&gt; T[] getEnumConstants() {
+   * {@literal @}AfterTemplate &lt;T&gt; T[] getEnumConstants() {
    *   return Refaster.&lt;T&gt;clazz().getEnumConstants();
    * }
    * </code></pre>
@@ -153,13 +153,13 @@ public class Refaster {
   }
 
   /**
-   * This is a placeholder for the expression E.valueOf(string).  The type argument must always
-   * be specified explicitly, e.g. {@code Refaster.<RoundingMode>valueOf(string)}.
+   * This is a placeholder for the expression E.valueOf(string). The type argument must always be
+   * specified explicitly, e.g. {@code Refaster.<RoundingMode>valueOf(string)}.
    *
    * <p>For example, instead of writing the broken
    *
    * <pre><code>
-   *{@literal @}BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
+   * {@literal @}BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
    *   return E.valueOf(str);
    * }
    * </code></pre>
@@ -167,7 +167,7 @@ public class Refaster {
    * <p>you would instead write
    *
    * <pre><code>
-   *{@literal @}BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
+   * {@literal @}BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
    *   return Refaster.&lt;E&gt;enumValueOf(str);
    * }
    * </code></pre>
@@ -177,15 +177,15 @@ public class Refaster {
   public static <E extends Enum<E>> E enumValueOf(String string) {
     throw new UnsupportedOperationException();
   }
-  
+
   /**
-   * This is a special method to emit a comment before an expression.  The comment argument must
-   * always be a string literal.  This method cannot be static imported.
+   * This is a special method to emit a comment before an expression. The comment argument must
+   * always be a string literal. This method cannot be static imported.
    *
    * <p>For example, instead of writing
    *
    * <pre><code>
-   *{@literal @}AfterTemplate int lengthWithComment(String str) {
+   * {@literal @}AfterTemplate int lengthWithComment(String str) {
    *   return /* comment \*\/ str.length();
    * }
    * </code></pre>
@@ -193,7 +193,7 @@ public class Refaster {
    * <p>you would instead write
    *
    * <pre><code>
-   *{@literal @}AfterTemplate int lengthWithComment(String str) {
+   * {@literal @}AfterTemplate int lengthWithComment(String str) {
    *   return Refaster.emitCommentBefore("comment", str.length());
    * }
    * </code></pre>
@@ -203,13 +203,13 @@ public class Refaster {
   }
 
   /**
-   * This is a special method to emit a one-line comment.  The comment argument must always
-   * be a string literal.  This method cannot be static imported.
+   * This is a special method to emit a one-line comment. The comment argument must always be a
+   * string literal. This method cannot be static imported.
    *
    * <p>For example, instead of writing
    *
    * <pre><code>
-   *{@literal @}AfterTemplate void printWithComment(String str) {
+   * {@literal @}AfterTemplate void printWithComment(String str) {
    *   // comment
    *   System.out.println(str);
    * }
@@ -218,7 +218,7 @@ public class Refaster {
    * <p>you would instead write
    *
    * <pre><code>
-   *{@literal @}AfterTemplate void printWithComment(String str) {
+   * {@literal @}AfterTemplate void printWithComment(String str) {
    *   Refaster.emitComment("comment");
    *   System.out.println(str);
    * }

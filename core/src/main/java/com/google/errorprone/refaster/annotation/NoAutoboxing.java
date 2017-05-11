@@ -23,11 +23,10 @@ import java.lang.annotation.Target;
 
 /**
  * Indicates that a Refaster rule should not allow autoboxing when it is typechecking a match.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 @RequiredAnnotation(BeforeTemplate.class)
-public @interface NoAutoboxing {
-}
+public @interface NoAutoboxing {}

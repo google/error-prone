@@ -24,9 +24,7 @@ import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 
-/**
- * Combines multiple {@code CodeTransformer}s into one.
- */
+/** Combines multiple {@code CodeTransformer}s into one. */
 @AutoValue
 public abstract class CompositeCodeTransformer implements CodeTransformer, Serializable {
   public static CodeTransformer compose(CodeTransformer... transformers) {

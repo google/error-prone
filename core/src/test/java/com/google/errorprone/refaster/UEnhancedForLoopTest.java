@@ -32,22 +32,37 @@ public class UEnhancedForLoopTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UEnhancedForLoop.create(
-            UVariableDecl.create("c", UPrimitiveTypeTree.CHAR, null), 
-            UMethodInvocation.create(UMemberSelect.create(ULiteral.stringLit("foo"), "toCharArray", 
-                UMethodType.create(UArrayType.create(UPrimitiveType.CHAR)))), USkip.INSTANCE))
-        .addEqualityGroup(UEnhancedForLoop.create(
-            UVariableDecl.create("c", UClassIdent.create("java.lang.Character"), null), 
-            UMethodInvocation.create(UMemberSelect.create(ULiteral.stringLit("foo"), "toCharArray",
-                UMethodType.create(UArrayType.create(UPrimitiveType.CHAR)))), USkip.INSTANCE))
+        .addEqualityGroup(
+            UEnhancedForLoop.create(
+                UVariableDecl.create("c", UPrimitiveTypeTree.CHAR, null),
+                UMethodInvocation.create(
+                    UMemberSelect.create(
+                        ULiteral.stringLit("foo"),
+                        "toCharArray",
+                        UMethodType.create(UArrayType.create(UPrimitiveType.CHAR)))),
+                USkip.INSTANCE))
+        .addEqualityGroup(
+            UEnhancedForLoop.create(
+                UVariableDecl.create("c", UClassIdent.create("java.lang.Character"), null),
+                UMethodInvocation.create(
+                    UMemberSelect.create(
+                        ULiteral.stringLit("foo"),
+                        "toCharArray",
+                        UMethodType.create(UArrayType.create(UPrimitiveType.CHAR)))),
+                USkip.INSTANCE))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UEnhancedForLoop.create(
-        UVariableDecl.create("c", UPrimitiveTypeTree.CHAR, null), 
-        UMethodInvocation.create(UMemberSelect.create(ULiteral.stringLit("foo"), "toCharArray", 
-            UMethodType.create(UArrayType.create(UPrimitiveType.CHAR)))), USkip.INSTANCE));
+    SerializableTester.reserializeAndAssert(
+        UEnhancedForLoop.create(
+            UVariableDecl.create("c", UPrimitiveTypeTree.CHAR, null),
+            UMethodInvocation.create(
+                UMemberSelect.create(
+                    ULiteral.stringLit("foo"),
+                    "toCharArray",
+                    UMethodType.create(UArrayType.create(UPrimitiveType.CHAR)))),
+            USkip.INSTANCE));
   }
 }

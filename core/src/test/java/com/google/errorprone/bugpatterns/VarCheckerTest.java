@@ -38,11 +38,7 @@ public class VarCheckerTest {
   @Test
   public void nonFinalField() {
     compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  public int x = 42;",
-            "}")
+        .addSourceLines("Test.java", "class Test {", "  public int x = 42;", "}")
         .doTest();
   }
 

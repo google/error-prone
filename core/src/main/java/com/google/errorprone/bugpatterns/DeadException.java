@@ -59,13 +59,14 @@ import com.sun.source.tree.Tree;
 )
 public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
-  public static final Matcher<Tree> MATCHER = allOf(
-      parentNode(kindIs(EXPRESSION_STATEMENT)),
-      isSubtypeOf(EXCEPTION_TYPE),
-      not(enclosingMethod(JUnitMatchers.wouldRunInJUnit4)),
-      anyOf(not(enclosingMethod(JUnitMatchers.isJunit3TestCase)),
-            not(enclosingClass(JUnitMatchers.isJUnit3TestClass)))
-  );
+  public static final Matcher<Tree> MATCHER =
+      allOf(
+          parentNode(kindIs(EXPRESSION_STATEMENT)),
+          isSubtypeOf(EXCEPTION_TYPE),
+          not(enclosingMethod(JUnitMatchers.wouldRunInJUnit4)),
+          anyOf(
+              not(enclosingMethod(JUnitMatchers.isJunit3TestCase)),
+              not(enclosingClass(JUnitMatchers.isJUnit3TestClass))));
 
   @Override
   public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {
@@ -75,12 +76,13 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
     StatementTree parent = (StatementTree) state.getPath().getParentPath().getLeaf();
 
-    boolean isLastStatement = anyOf(
-        new ChildOfBlockOrCase<>(ChildMultiMatcher.MatchType.LAST,
-            Matchers.<StatementTree>isSame(parent)),
-        // it could also be a bare if statement with no braces
-        parentNode(parentNode(kindIs(IF))))
-        .matches(newClassTree, state);
+    boolean isLastStatement =
+        anyOf(
+                new ChildOfBlockOrCase<>(
+                    ChildMultiMatcher.MatchType.LAST, Matchers.<StatementTree>isSame(parent)),
+                // it could also be a bare if statement with no braces
+                parentNode(parentNode(kindIs(IF))))
+            .matches(newClassTree, state);
 
     Fix fix;
     if (isLastStatement) {
@@ -91,8 +93,8 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
     return describeMatch(newClassTree, fix);
   }
-  
-  private static class ChildOfBlockOrCase<T extends Tree> 
+
+  private static class ChildOfBlockOrCase<T extends Tree>
       extends ChildMultiMatcher<T, StatementTree> {
     public ChildOfBlockOrCase(MatchType matchType, Matcher<StatementTree> nodeMatcher) {
       super(matchType, nodeMatcher);

@@ -28,7 +28,7 @@ public class CompileTimeConstantCheckerTest {
 
   public static final String ERROR_MESSAGE =
       "[CompileTimeConstant] Non-compile-time constant expression passed "
-      + "to parameter with @CompileTimeConstant type annotation";
+          + "to parameter with @CompileTimeConstant type annotation";
 
   private CompilationTestHelper compilationHelper;
 

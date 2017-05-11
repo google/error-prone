@@ -44,8 +44,7 @@ public abstract class UForAll extends UType {
     try {
       Type myType = inline(new Inliner(unifier.getContext(), Bindings.create()));
       return Choice.condition(
-          types.overrideEquivalent(types.erasure(myType), types.erasure(target)),
-          unifier);
+          types.overrideEquivalent(types.erasure(myType), types.erasure(target)), unifier);
     } catch (CouldNotResolveImportException e) {
       return Choice.none();
     }
@@ -53,7 +52,6 @@ public abstract class UForAll extends UType {
 
   @Override
   public Type inline(Inliner inliner) throws CouldNotResolveImportException {
-    return new ForAll(
-        inliner.<Type>inlineList(getTypeVars()), getQuantifiedType().inline(inliner));
+    return new ForAll(inliner.<Type>inlineList(getTypeVars()), getQuantifiedType().inline(inliner));
   }
 }

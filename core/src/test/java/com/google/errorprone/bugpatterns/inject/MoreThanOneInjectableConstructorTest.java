@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @RunWith(JUnit4.class)
 public class MoreThanOneInjectableConstructorTest {
 
@@ -38,15 +36,11 @@ public class MoreThanOneInjectableConstructorTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper
-        .addSourceFile("MoreThanOneInjectableConstructorPositiveCases.java")
-        .doTest();
+    compilationHelper.addSourceFile("MoreThanOneInjectableConstructorPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper
-        .addSourceFile("MoreThanOneInjectableConstructorNegativeCases.java")
-        .doTest();
+    compilationHelper.addSourceFile("MoreThanOneInjectableConstructorNegativeCases.java").doTest();
   }
 }

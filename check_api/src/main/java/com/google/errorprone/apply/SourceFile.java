@@ -29,9 +29,9 @@ import javax.tools.JavaFileObject;
 
 /**
  * Representation of a mutable Java source file.
- * 
- * This class is not thread-safe.
- * 
+ *
+ * <p>This class is not thread-safe.
+ *
  * @author sjnickerson@google.com (Simon Nickerson)
  * @author alexeagle@google.com (Alex Eagle)
  */
@@ -39,7 +39,7 @@ public class SourceFile {
 
   private final String path;
   private final StringBuilder sourceBuilder;
-  
+
   public static SourceFile create(JavaFileObject fileObject) throws IOException {
     return new SourceFile(fileObject.toUri().getPath(), fileObject.getCharContent(false));
   }
@@ -48,17 +48,13 @@ public class SourceFile {
     this.path = path;
     sourceBuilder = new StringBuilder(source);
   }
-  
-  /**
-   * Returns the path for this source file
-   */
+
+  /** Returns the path for this source file */
   public String getPath() {
     return path;
   }
-  
-  /**
-   * Returns a copy of code as a list of lines.
-   */
+
+  /** Returns a copy of code as a list of lines. */
   public List<String> getLines() {
     try {
       return CharSource.wrap(sourceBuilder).readLines();
@@ -67,29 +63,24 @@ public class SourceFile {
     }
   }
 
-  /**
-   * Returns a copy of the code as a string.
-   */
+  /** Returns a copy of the code as a string. */
   public String getSourceText() {
     return sourceBuilder.toString();
   }
-  
+
   public CharSequence getAsSequence() {
     return CharBuffer.wrap(sourceBuilder).asReadOnlyBuffer();
   }
-  
-  /**
-   * Clears the current source test for this SourceFile and resets it to
-   * the passed-in value.
-   */
+
+  /** Clears the current source test for this SourceFile and resets it to the passed-in value. */
   public void setSourceText(CharSequence source) {
-    sourceBuilder.setLength(0);     // clear StringBuilder
+    sourceBuilder.setLength(0); // clear StringBuilder
     sourceBuilder.append(source);
   }
 
   /**
    * Returns a fragment of the source code as a string.
-   * 
+   *
    * <p>This method uses the same conventions as {@link String#substring(int, int)} for its start
    * and end parameters.
    */
@@ -100,14 +91,14 @@ public class SourceFile {
   /**
    * Returns a fragment of the source code between the two stated line numbers. The parameters
    * represent <b>inclusive</b> line numbers.
-   * 
+   *
    * <p>The returned fragment will end in a newline.
    */
   public String getFragmentByLines(int startLine, int endLine) {
     Preconditions.checkArgument(startLine <= endLine);
     return Joiner.on("\n").join(getLines(startLine, endLine)) + "\n";
   }
-  
+
   private List<String> getLines(int startLine, int endLine) {
     LineNumberReader reader = new LineNumberReader(new StringReader(sourceBuilder.toString()));
     List<String> lines = new ArrayList<>(endLine - startLine + 1);
@@ -126,17 +117,13 @@ public class SourceFile {
       throw new AssertionError("Wrapped StringReader should not produce I/O exceptions");
     }
   }
-  
-  /**
-   * Replace the source code with the new lines of code.
-   */
+
+  /** Replace the source code with the new lines of code. */
   public void replaceLines(List<String> lines) {
     sourceBuilder.replace(0, sourceBuilder.length(), Joiner.on("\n").join(lines) + "\n");
   }
-  
-  /**
-   * Replace the source code between the start and end lines with some new lines of code.
-   */
+
+  /** Replace the source code between the start and end lines with some new lines of code. */
   public void replaceLines(int startLine, int endLine, List<String> replacementLines) {
     Preconditions.checkArgument(startLine <= endLine);
     List<String> originalLines = getLines();
@@ -156,7 +143,7 @@ public class SourceFile {
 
   /**
    * Replace the source code between the start and end character positions with a new string.
-   * 
+   *
    * <p>This method uses the same conventions as {@link String#substring(int, int)} for its start
    * and end parameters.
    */
@@ -165,8 +152,9 @@ public class SourceFile {
       sourceBuilder.replace(startPosition, endPosition, replacement);
     } catch (StringIndexOutOfBoundsException e) {
       throw new IndexOutOfBoundsException(
-          String.format("Replacement cannot be made. Source file %s has length %d, requested start "
-              + "position %d, requested end position %d, replacement %s",
+          String.format(
+              "Replacement cannot be made. Source file %s has length %d, requested start "
+                  + "position %d, requested end position %d, replacement %s",
               path, sourceBuilder.length(), startPosition, endPosition, replacement));
     }
   }

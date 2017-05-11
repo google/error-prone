@@ -26,44 +26,42 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author deminguyen@google.com (Demi Nguyen)
- */
-
+/** @author deminguyen@google.com (Demi Nguyen) */
 @RunWith(JUnit4.class)
 public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest {
-  
+
   @Test
   public void shouldMatch() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "import java.util.StringTokenizer;",
         "public class A {",
         "  public void testNextToken() {",
         "    StringTokenizer st = new StringTokenizer(\"test string\");",
         "    st.nextToken();",
         "  }",
-        "}"
-    );
+        "}");
     assertCompiles(methodInvocationMatches(true, Matchers.methodReturnsNonNull()));
   }
-  
+
   @Test
   public void shouldNotMatchOtherMethod() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "import java.util.StringTokenizer;",
         "public class A {",
         "  public void testOtherMethod() {",
         "    StringTokenizer st = new StringTokenizer(\"test string\");",
         "    st.hasMoreTokens();",
         "  }",
-        "}"
-    );
+        "}");
     assertCompiles(methodInvocationMatches(false, Matchers.methodReturnsNonNull()));
   }
-  
+
   @Test
   public void shouldNotMatchOverridenMethod() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "import java.util.StringTokenizer;",
         "public class A extends StringTokenizer {",
         "  public A(String str, String delim, boolean returnDelims) {",
@@ -76,11 +74,10 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
         "  public void testOverridenNextToken() {",
         "    nextToken();",
         "  }",
-        "}"
-    );
+        "}");
     assertCompiles(methodInvocationMatches(false, Matchers.methodReturnsNonNull()));
   }
-  
+
   private Scanner methodInvocationMatches(
       final boolean shouldMatch, final Matcher<ExpressionTree> toMatch) {
     return new Scanner() {

@@ -23,7 +23,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link Bindings}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -33,24 +33,24 @@ public class BindingsTest {
       super(identifier);
     }
   }
-  
+
   private static class OtherKey extends Bindings.Key<String> {
     OtherKey(String identifier) {
       super(identifier);
     }
   }
-  
+
   @Test(expected = ClassCastException.class)
   public void testPutRestricts() {
     Bindings.create().put(new Key("foo"), 3);
   }
-  
+
   @Test
   public void testKeyClassesDistinct() {
     new EqualsTester()
-      .addEqualityGroup(new Key("foo"))
-      .addEqualityGroup(new Key("bar"))
-      .addEqualityGroup(new OtherKey("foo"))
-      .testEquals();
+        .addEqualityGroup(new Key("foo"))
+        .addEqualityGroup(new Key("bar"))
+        .addEqualityGroup(new OtherKey("foo"))
+        .testEquals();
   }
 }

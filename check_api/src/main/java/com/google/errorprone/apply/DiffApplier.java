@@ -61,13 +61,14 @@ public class DiffApplier extends AbstractService {
     this.stopwatch = Stopwatch.createUnstarted();
     // configure a bounded queue and a rejectedexecutionpolicy.
     // In this case CallerRuns may be appropriate.
-    this.workerService = new ThreadPoolExecutor(
-        0,
-        diffParallelism,
-        5,
-        TimeUnit.SECONDS,
-        new ArrayBlockingQueue<Runnable>(50),
-        new ThreadPoolExecutor.CallerRunsPolicy());
+    this.workerService =
+        new ThreadPoolExecutor(
+            0,
+            diffParallelism,
+            5,
+            TimeUnit.SECONDS,
+            new ArrayBlockingQueue<Runnable>(50),
+            new ThreadPoolExecutor.CallerRunsPolicy());
   }
 
   @Override
@@ -79,7 +80,7 @@ public class DiffApplier extends AbstractService {
 
   @Override
   protected void doStop() {
-    decrementTasks();  // matches the increment in doStart();
+    decrementTasks(); // matches the increment in doStart();
   }
 
   private final void decrementTasks() {
@@ -91,11 +92,14 @@ public class DiffApplier extends AbstractService {
       } catch (Exception e) {
         notifyFailed(e);
       }
-      logger.log(Level.INFO,
-        String.format("Completed %d files in %s", completedFiles.get(), stopwatch));
+      logger.log(
+          Level.INFO, String.format("Completed %d files in %s", completedFiles.get(), stopwatch));
       if (!diffsFailedPaths.isEmpty()) {
-        logger.log(Level.SEVERE, String.format("Diffs failed to apply to %d files: %s",
-            diffsFailedPaths.size(), Iterables.limit(diffsFailedPaths, 30)));
+        logger.log(
+            Level.SEVERE,
+            String.format(
+                "Diffs failed to apply to %d files: %s",
+                diffsFailedPaths.size(), Iterables.limit(diffsFailedPaths, 30)));
       }
     }
   }
@@ -116,12 +120,10 @@ public class DiffApplier extends AbstractService {
 
         int completed = completedFiles.incrementAndGet();
         if (completed % 100 == 0) {
-          logger.log(Level.INFO,
-                     String.format("Completed %d files in %s", completed, stopwatch));
+          logger.log(Level.INFO, String.format("Completed %d files in %s", completed, stopwatch));
         }
       } catch (IOException | DiffNotApplicableException e) {
-        logger.log(Level.WARNING, "Failed to apply diff to file " + diff.getRelevantFileName(),
-                   e);
+        logger.log(Level.WARNING, "Failed to apply diff to file " + diff.getRelevantFileName(), e);
         diffsFailedPaths.add(diff.getRelevantFileName());
       } finally {
         decrementTasks();

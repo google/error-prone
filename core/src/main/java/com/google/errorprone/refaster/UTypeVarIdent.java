@@ -30,8 +30,8 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 
 /**
- * Identifier for a type variable in an AST; this is a syntactic representation of a
- * {@link UTypeVar}.
+ * Identifier for a type variable in an AST; this is a syntactic representation of a {@link
+ * UTypeVar}.
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
@@ -51,14 +51,14 @@ abstract class UTypeVarIdent extends UIdent {
               && ASTHelpers.getSymbol(node).getKind() == ElementKind.PACKAGE;
         }
       };
-  
+
   public static UTypeVarIdent create(CharSequence name) {
     return new AutoValue_UTypeVarIdent(StringName.of(name));
   }
-  
+
   @Override
   public abstract StringName getName();
-  
+
   UTypeVar.Key key() {
     return new UTypeVar.Key(getName());
   }

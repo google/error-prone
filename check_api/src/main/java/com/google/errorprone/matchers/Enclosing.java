@@ -27,12 +27,13 @@ import com.sun.source.util.TreePath;
 /**
  * Adapt matchers to match against a parent node of a given type. For example, match a node if the
  * enclosing class matches a predicate.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class Enclosing {
   private Enclosing() {}
 
-  private static abstract class EnclosingMatcher<T extends Tree, U extends Tree>
+  private abstract static class EnclosingMatcher<T extends Tree, U extends Tree>
       implements Matcher<U> {
     protected final Matcher<T> matcher;
     protected final java.lang.Class<T> clazz;

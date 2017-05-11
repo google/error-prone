@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link AsyncFunctionReturnsNull}.
- */
+/** Tests for {@link AsyncFunctionReturnsNull}. */
 @RunWith(JUnit4.class)
 public class AsyncFunctionReturnsNullTest {
   private CompilationTestHelper compilationHelper;

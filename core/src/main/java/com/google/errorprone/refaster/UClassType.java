@@ -41,16 +41,18 @@ public abstract class UClassType extends UType {
   public static UClassType create(String fullyQualifiedClass, UType... typeArguments) {
     return create(fullyQualifiedClass, ImmutableList.copyOf(typeArguments));
   }
-  
+
   abstract StringName fullyQualifiedClass();
+
   abstract List<UType> typeArguments();
 
   @Override
   public Choice<Unifier> visitClassType(ClassType classType, Unifier unifier) {
-    return fullyQualifiedClass().unify(classType.tsym.getQualifiedName(), unifier)
+    return fullyQualifiedClass()
+        .unify(classType.tsym.getQualifiedName(), unifier)
         .thenChoose(unifications(typeArguments(), classType.getTypeArguments()));
   }
-  
+
   @Override
   public ClassType inline(Inliner inliner) throws CouldNotResolveImportException {
     ClassSymbol classSymbol = inliner.resolveClass(fullyQualifiedClass());

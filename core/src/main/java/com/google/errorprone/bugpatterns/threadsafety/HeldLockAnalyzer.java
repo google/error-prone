@@ -64,9 +64,7 @@ import javax.lang.model.element.Modifier;
  */
 public class HeldLockAnalyzer {
 
-  /**
-   * Listener interface for accesses to guarded members.
-   */
+  /** Listener interface for accesses to guarded members. */
   public interface LockEventListener {
 
     /**
@@ -95,8 +93,7 @@ public class HeldLockAnalyzer {
       "com.google.common.util.concurrent.Monitor.Guard";
 
   private static HeldLockSet handleMonitorGuards(VisitorState state, HeldLockSet locks) {
-    JCNewClass newClassTree =
-        ASTHelpers.findEnclosingNode(state.getPath(), JCNewClass.class);
+    JCNewClass newClassTree = ASTHelpers.findEnclosingNode(state.getPath(), JCNewClass.class);
     if (newClassTree == null) {
       return locks;
     }
@@ -107,8 +104,9 @@ public class HeldLockAnalyzer {
     if (!((ClassSymbol) clazzSym).fullname.contentEquals(MONITOR_GUARD_CLASS)) {
       return locks;
     }
-    Optional<GuardedByExpression> lockExpression = GuardedByBinder.bindExpression(
-        Iterables.getOnlyElement(newClassTree.getArguments()), state);
+    Optional<GuardedByExpression> lockExpression =
+        GuardedByBinder.bindExpression(
+            Iterables.getOnlyElement(newClassTree.getArguments()), state);
     if (!lockExpression.isPresent()) {
       return locks;
     }
@@ -146,8 +144,8 @@ public class HeldLockAnalyzer {
       // for invocations.
       String guard = GuardedByUtils.getGuardValue(tree);
       if (guard != null) {
-        Optional<GuardedByExpression> bound = GuardedByBinder.bindString(
-            guard, GuardedBySymbolResolver.from(tree, visitorState));
+        Optional<GuardedByExpression> bound =
+            GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
         if (bound.isPresent()) {
           locks = locks.plus(bound.get());
         }
@@ -183,11 +181,8 @@ public class HeldLockAnalyzer {
     public Void visitSynchronized(SynchronizedTree tree, HeldLockSet locks) {
       // The synchronized expression is held in the body of the synchronized statement:
       Optional<GuardedByExpression> lockExpression =
-          GuardedByBinder.bindExpression(
-              (JCExpression) tree.getExpression(), visitorState);
-      scan(tree.getBlock(), lockExpression.isPresent()
-          ? locks.plus(lockExpression.get())
-          : locks);
+          GuardedByBinder.bindExpression((JCExpression) tree.getExpression(), visitorState);
+      scan(tree.getBlock(), lockExpression.isPresent() ? locks.plus(lockExpression.get()) : locks);
       return null;
     }
 
@@ -231,8 +226,8 @@ public class HeldLockAnalyzer {
         return;
       }
 
-      Optional<GuardedByExpression> guard = GuardedByBinder.bindString(guardString,
-          GuardedBySymbolResolver.from(tree, visitorState));
+      Optional<GuardedByExpression> guard =
+          GuardedByBinder.bindString(guardString, GuardedBySymbolResolver.from(tree, visitorState));
       if (!guard.isPresent()) {
         return;
       }
@@ -249,9 +244,7 @@ public class HeldLockAnalyzer {
     }
   }
 
-  /**
-   * An abstraction over the lock classes we understand.
-   */
+  /** An abstraction over the lock classes we understand. */
   @AutoValue
   abstract static class LockResource {
 
@@ -277,13 +270,12 @@ public class HeldLockAnalyzer {
     }
   }
 
-  /**
-   * The set of supported lock classes.
-   */
-  private static final ImmutableList<LockResource> LOCK_RESOURCES = ImmutableList.of(
-      LockResource.create("java.util.concurrent.locks.Lock", "lock", "unlock"),
-      LockResource.create("com.google.common.util.concurrent.Monitor", "enter", "leave"),
-      LockResource.create("java.util.concurrent.Semaphore", "acquire", "release"));
+  /** The set of supported lock classes. */
+  private static final ImmutableList<LockResource> LOCK_RESOURCES =
+      ImmutableList.of(
+          LockResource.create("java.util.concurrent.locks.Lock", "lock", "unlock"),
+          LockResource.create("com.google.common.util.concurrent.Monitor", "enter", "leave"),
+          LockResource.create("java.util.concurrent.Semaphore", "acquire", "release"));
 
   private static class LockOperationFinder extends TreeScanner<Void, Void> {
 
@@ -310,8 +302,7 @@ public class HeldLockAnalyzer {
     private final VisitorState state;
     private final Set<GuardedByExpression> locks = new HashSet<>();
 
-    private LockOperationFinder(
-        VisitorState state, Matcher<ExpressionTree> lockOperationMatcher) {
+    private LockOperationFinder(VisitorState state, Matcher<ExpressionTree> lockOperationMatcher) {
       this.state = state;
       this.lockOperationMatcher = lockOperationMatcher;
     }
@@ -324,10 +315,10 @@ public class HeldLockAnalyzer {
     }
 
     /**
-     * Checks for locks that are released directly. Currently only
-     * {@link java.util.concurrent.locks.Lock#unlock()} is supported.
+     * Checks for locks that are released directly. Currently only {@link
+     * java.util.concurrent.locks.Lock#unlock()} is supported.
      *
-     * TODO(cushon): Semaphores, CAS, ... ?
+     * <p>TODO(cushon): Semaphores, CAS, ... ?
      */
     private void handleReleasedLocks(MethodInvocationTree tree) {
       if (!lockOperationMatcher.matches(tree, state)) {
@@ -353,21 +344,19 @@ public class HeldLockAnalyzer {
       }
     }
 
-    /**
-     * Checks {@link UnlockMethod}-annotated methods.
-     */
+    /** Checks {@link UnlockMethod}-annotated methods. */
     private void handleUnlockAnnotatedMethods(MethodInvocationTree tree) {
       UnlockMethod annotation = ASTHelpers.getAnnotation(tree, UnlockMethod.class);
       if (annotation == null) {
         return;
       }
       for (String lockString : annotation.value()) {
-        Optional<GuardedByExpression> guard = GuardedByBinder.bindString(
-            lockString, GuardedBySymbolResolver.from(tree, state));
+        Optional<GuardedByExpression> guard =
+            GuardedByBinder.bindString(lockString, GuardedBySymbolResolver.from(tree, state));
         // TODO(cushon): http://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent
         if (guard.isPresent()) {
           Optional<GuardedByExpression> lock =
-            ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state);
+              ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state);
           if (lock.isPresent()) {
             locks.add(lock.get());
           }
@@ -377,8 +366,8 @@ public class HeldLockAnalyzer {
   }
 
   /**
-   * Find the locks that are released in the given tree.
-   * (e.g. the 'finally' clause of a try/finally)
+   * Find the locks that are released in the given tree. (e.g. the 'finally' clause of a
+   * try/finally)
    */
   static class ReleasedLockFinder {
 
@@ -387,7 +376,8 @@ public class HeldLockAnalyzer {
         Matchers.<ExpressionTree>anyOf(unlockMatchers());
 
     private static Iterable<Matcher<ExpressionTree>> unlockMatchers() {
-      return Iterables.transform(LOCK_RESOURCES,
+      return Iterables.transform(
+          LOCK_RESOURCES,
           new Function<LockResource, Matcher<ExpressionTree>>() {
             @Override
             public Matcher<ExpressionTree> apply(LockResource res) {
@@ -402,8 +392,8 @@ public class HeldLockAnalyzer {
   }
 
   /**
-   * Find the locks that are acquired in the given tree.
-   * (e.g. the body of a @LockMethod-annotated method.)
+   * Find the locks that are acquired in the given tree. (e.g. the body of a @LockMethod-annotated
+   * method.)
    */
   static class AcquiredLockFinder {
 
@@ -412,7 +402,8 @@ public class HeldLockAnalyzer {
         Matchers.<ExpressionTree>anyOf(unlockMatchers());
 
     private static Iterable<Matcher<ExpressionTree>> unlockMatchers() {
-      return Iterables.transform(LOCK_RESOURCES,
+      return Iterables.transform(
+          LOCK_RESOURCES,
           new Function<LockResource, Matcher<ExpressionTree>>() {
             @Override
             public Matcher<ExpressionTree> apply(LockResource res) {
@@ -431,15 +422,14 @@ public class HeldLockAnalyzer {
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
     /**
-     * Determine the lock expression that needs to be held when accessing a specific guarded
-     * member.
+     * Determine the lock expression that needs to be held when accessing a specific guarded member.
      *
      * <p>If the lock expression resolves to an instance member, the result will be a select
      * expression with the same base as the original guarded member access.
      *
      * <p>For example:
-     * <pre>
-     * {@code
+     *
+     * <pre>{@code
      * class MyClass {
      *   final Object mu = new Object();
      *   @GuardedBy("mu")
@@ -448,14 +438,15 @@ public class HeldLockAnalyzer {
      * void m(MyClass myClass) {
      *   myClass.x++;
      * }
-     * }
-     * </pre>
+     * }</pre>
      *
-     * To determine the lock that must be held when accessing myClass.x,
-     * from is called with "myClass.x" and "mu", and returns "myClass.mu".
+     * To determine the lock that must be held when accessing myClass.x, from is called with
+     * "myClass.x" and "mu", and returns "myClass.mu".
      */
-    static Optional<GuardedByExpression> from(JCTree.JCExpression guardedMemberExpression,
-        GuardedByExpression guard, VisitorState state) {
+    static Optional<GuardedByExpression> from(
+        JCTree.JCExpression guardedMemberExpression,
+        GuardedByExpression guard,
+        VisitorState state) {
 
       if (isGuardReferenceAbsolute(guard)) {
         return Optional.of(guard);
@@ -474,10 +465,11 @@ public class HeldLockAnalyzer {
 
     /**
      * Returns true for guard expressions that require an 'absolute' reference, i.e. where the
-     * expression to access the lock is always the same, regardless of how the guarded member
-     * is accessed.
+     * expression to access the lock is always the same, regardless of how the guarded member is
+     * accessed.
      *
      * <p>E.g.:
+     *
      * <ul>
      *   <li>class object: 'TypeName.class'
      *   <li>static access: 'TypeName.member'
@@ -487,16 +479,12 @@ public class HeldLockAnalyzer {
      */
     private static boolean isGuardReferenceAbsolute(GuardedByExpression guard) {
 
-      GuardedByExpression instance = guard.kind() == Kind.SELECT
-          ? getSelectInstance(guard)
-          : guard;
+      GuardedByExpression instance = guard.kind() == Kind.SELECT ? getSelectInstance(guard) : guard;
 
       return instance.kind() != Kind.THIS;
     }
 
-    /**
-     * Gets the base expression of a (possibly nested) member select expression.
-     */
+    /** Gets the base expression of a (possibly nested) member select expression. */
     private static GuardedByExpression getSelectInstance(GuardedByExpression guard) {
       if (guard instanceof Select) {
         return getSelectInstance(((Select) guard).base());
@@ -507,10 +495,11 @@ public class HeldLockAnalyzer {
     private static GuardedByExpression helper(
         GuardedByExpression lockExpression, GuardedByExpression memberAccess) {
       switch (lockExpression.kind()) {
-        case SELECT: {
-          GuardedByExpression.Select lockSelect = (GuardedByExpression.Select) lockExpression;
-          return F.select(helper(lockSelect.base(), memberAccess), lockSelect.sym());
-        }
+        case SELECT:
+          {
+            GuardedByExpression.Select lockSelect = (GuardedByExpression.Select) lockExpression;
+            return F.select(helper(lockSelect.base(), memberAccess), lockSelect.sym());
+          }
         case THIS:
           return memberAccess;
         default:

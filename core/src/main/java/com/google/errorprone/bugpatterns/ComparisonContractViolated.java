@@ -260,9 +260,7 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
                   condTree,
                   String.format(
                       "%s.compare(%s, %s)",
-                      compareType,
-                      state.getSourceForNode(first),
-                      state.getSourceForNode(second))));
+                      compareType, state.getSourceForNode(first), state.getSourceForNode(second))));
         }
       }
 

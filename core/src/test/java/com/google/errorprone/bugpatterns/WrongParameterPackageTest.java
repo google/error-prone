@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/** @author scottjohnson@google.com (Scott Johnson) */
 @RunWith(JUnit4.class)
 public class WrongParameterPackageTest {
 
@@ -53,11 +51,7 @@ public class WrongParameterPackageTest {
   public void testNPE() throws Exception {
     compilationHelper
         .addSourceLines(
-            "foo/Bar.java",
-            "package foo;",
-            "public interface Bar {",
-            "    void bar();",
-            "}")
+            "foo/Bar.java", "package foo;", "public interface Bar {", "    void bar();", "}")
         .doTest();
   }
 

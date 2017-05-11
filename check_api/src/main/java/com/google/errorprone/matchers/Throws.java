@@ -31,8 +31,8 @@ public class Throws implements Matcher<StatementTree> {
   private final Matcher<? super ExpressionTree> thrownMatcher;
 
   /**
-   * New matcher for a {@code throw} statement where the thrown item is matched by the passed
-   * {@code thrownMatcher}.
+   * New matcher for a {@code throw} statement where the thrown item is matched by the passed {@code
+   * thrownMatcher}.
    */
   public Throws(Matcher<? super ExpressionTree> thrownMatcher) {
     this.thrownMatcher = thrownMatcher;

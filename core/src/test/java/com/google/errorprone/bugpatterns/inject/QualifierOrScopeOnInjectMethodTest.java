@@ -76,7 +76,6 @@ public class QualifierOrScopeOnInjectMethodTest {
         .doTest();
   }
 
-
   @Test
   public void testNegativeNotInject() {
     compilationHelper

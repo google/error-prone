@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cpovirk@google.com (Chris Povirk)
- */
+/** @author cpovirk@google.com (Chris Povirk) */
 @RunWith(JUnit4.class)
 public class ChainingConstructorIgnoresParameterTest {
   private CompilationTestHelper compilationHelper;
@@ -37,13 +35,15 @@ public class ChainingConstructorIgnoresParameterTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("ChainingConstructorIgnoresParameterPositiveCases.java")
+    compilationHelper
+        .addSourceFile("ChainingConstructorIgnoresParameterPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.addSourceFile("ChainingConstructorIgnoresParameterNegativeCases.java")
+    compilationHelper
+        .addSourceFile("ChainingConstructorIgnoresParameterNegativeCases.java")
         .doTest();
   }
 }

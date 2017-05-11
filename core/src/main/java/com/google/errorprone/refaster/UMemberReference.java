@@ -27,13 +27,16 @@ import javax.annotation.Nullable;
 
 /**
  * {@code UTree} representation of a {@code MemberReferenceTree}
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
 abstract class UMemberReference extends UExpression implements MemberReferenceTree {
-  public static UMemberReference create(ReferenceMode mode, UExpression qualifierExpression,
-      CharSequence name, @Nullable Iterable<? extends UExpression> typeArguments) {
+  public static UMemberReference create(
+      ReferenceMode mode,
+      UExpression qualifierExpression,
+      CharSequence name,
+      @Nullable Iterable<? extends UExpression> typeArguments) {
     return new AutoValue_UMemberReference(
         mode,
         qualifierExpression,

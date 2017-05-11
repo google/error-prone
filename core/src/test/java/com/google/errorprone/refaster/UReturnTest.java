@@ -24,7 +24,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Tests for {@link UReturn}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @RunWith(JUnit4.class)
@@ -37,7 +37,7 @@ public class UReturnTest {
         .addEqualityGroup(UReturn.create(null))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(UReturn.create(ULiteral.stringLit("foo")));

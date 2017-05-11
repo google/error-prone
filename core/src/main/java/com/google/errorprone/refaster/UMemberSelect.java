@@ -34,27 +34,28 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 @AutoValue
 public abstract class UMemberSelect extends UExpression implements MemberSelectTree {
   /**
-   * Use of this string as an expression in a member select will cause this method select
-   * to be inlined as an identifier. I.e., "".foo will be inlined as foo.
+   * Use of this string as an expression in a member select will cause this method select to be
+   * inlined as an identifier. I.e., "".foo will be inlined as foo.
    */
   public static final String CONVERT_TO_IDENT = "";
-  
+
   public static UMemberSelect create(UExpression expression, CharSequence identifier, UType type) {
     return new AutoValue_UMemberSelect(expression, StringName.of(identifier), type);
   }
-  
+
   @Override
   public abstract UExpression getExpression();
 
   @Override
   public abstract StringName getIdentifier();
-  
+
   abstract UType type();
 
   @Override
   public Choice<Unifier> visitMemberSelect(MemberSelectTree fieldAccess, Unifier unifier) {
     if (ASTHelpers.getSymbol(fieldAccess) != null) {
-      return getIdentifier().unify(fieldAccess.getIdentifier(), unifier)
+      return getIdentifier()
+          .unify(fieldAccess.getIdentifier(), unifier)
           .thenChoose(unifications(getExpression(), fieldAccess.getExpression()))
           .thenChoose(unifications(type(), ASTHelpers.getSymbol(fieldAccess).asType()));
     }
@@ -66,7 +67,8 @@ public abstract class UMemberSelect extends UExpression implements MemberSelectT
     Symbol sym = ASTHelpers.getSymbol(ident);
     if (sym != null && sym.owner.type != null) {
       JCExpression thisIdent = unifier.thisExpression(sym.owner.type);
-      return getIdentifier().unify(ident.getName(), unifier)
+      return getIdentifier()
+          .unify(ident.getName(), unifier)
           .thenChoose(unifications(getExpression(), thisIdent))
           .thenChoose(unifications(type(), sym.asType()));
     }
@@ -90,8 +92,6 @@ public abstract class UMemberSelect extends UExpression implements MemberSelectT
       return inliner.maker().Ident(getIdentifier().inline(inliner));
     }
     // TODO(lowasser): consider inlining this.foo() as foo()
-    return inliner.maker().Select(
-        getExpression().inline(inliner), 
-        getIdentifier().inline(inliner));
+    return inliner.maker().Select(getExpression().inline(inliner), getIdentifier().inline(inliner));
   }
 }

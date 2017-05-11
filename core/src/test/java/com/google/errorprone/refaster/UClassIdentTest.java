@@ -35,18 +35,19 @@ public class UClassIdentTest extends AbstractUTreeTest {
   @Test
   public void equality() throws CouldNotResolveImportException {
     new EqualsTester()
-      .addEqualityGroup(UClassIdent.create("java.util.List"))
-      .addEqualityGroup(UClassIdent.create("com.sun.tools.javac.util.List"))
-      .addEqualityGroup(UClassIdent.create("java.lang.String"),
-          UClassIdent.create(inliner.resolveClass("java.lang.String")))
-      .testEquals();
+        .addEqualityGroup(UClassIdent.create("java.util.List"))
+        .addEqualityGroup(UClassIdent.create("com.sun.tools.javac.util.List"))
+        .addEqualityGroup(
+            UClassIdent.create("java.lang.String"),
+            UClassIdent.create(inliner.resolveClass("java.lang.String")))
+        .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(UClassIdent.create("java.math.BigInteger"));
   }
-  
+
   @Test
   public void inline() {
     ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
@@ -65,8 +66,7 @@ public class UClassIdentTest extends AbstractUTreeTest {
     // Will import "anotherPackage.Exception" due to conflicts
     assertInlines("anotherPackage.Exception", UClassIdent.create("anotherPackage.Exception"));
     new EqualsTester()
-        .addEqualityGroup(inliner.getImportsToAdd(),
-            ImmutableSet.of("package.Exception"))
+        .addEqualityGroup(inliner.getImportsToAdd(), ImmutableSet.of("package.Exception"))
         .testEquals();
     // Test nested class names
     inliner.addImport("package.subpackage.Foo.Bar");
@@ -76,7 +76,8 @@ public class UClassIdentTest extends AbstractUTreeTest {
     // Will not import "anotherPackage.Foo" due to conflicts
     assertInlines("anotherPackage.Foo.Bar", UClassIdent.create("anotherPackage.Foo.Bar"));
     new EqualsTester()
-        .addEqualityGroup(inliner.getImportsToAdd(),
+        .addEqualityGroup(
+            inliner.getImportsToAdd(),
             ImmutableSet.of("package.Exception", "package.subpackage.Foo.Bar", "package.Foo"))
         .testEquals();
   }

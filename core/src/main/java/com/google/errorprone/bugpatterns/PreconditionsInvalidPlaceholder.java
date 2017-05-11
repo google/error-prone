@@ -49,8 +49,8 @@ import java.util.regex.Pattern;
 public class PreconditionsInvalidPlaceholder extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static final
-      Matcher<ExpressionTree> PRECONDITIONS_CHECK = Matchers.<ExpressionTree>anyOf(
+  private static final Matcher<ExpressionTree> PRECONDITIONS_CHECK =
+      Matchers.<ExpressionTree>anyOf(
           staticMethod().onClass("com.google.common.base.Preconditions").named("checkArgument"),
           staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
           staticMethod().onClass("com.google.common.base.Preconditions").named("checkState"));
@@ -65,7 +65,8 @@ public class PreconditionsInvalidPlaceholder extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
-    if (PRECONDITIONS_CHECK.matches(t, state) && t.getArguments().size() >= 2
+    if (PRECONDITIONS_CHECK.matches(t, state)
+        && t.getArguments().size() >= 2
         && t.getArguments().get(1) instanceof LiteralTree) {
       LiteralTree formatStringTree = (LiteralTree) t.getArguments().get(1);
       if (formatStringTree.getValue() instanceof String) {
@@ -81,10 +82,10 @@ public class PreconditionsInvalidPlaceholder extends BugChecker
   }
 
   /**
-   * Matches most {@code java.util.Formatter} and {@code java.text.MessageFormat}
-   * format placeholders, other than %s itself.
+   * Matches most {@code java.util.Formatter} and {@code java.text.MessageFormat} format
+   * placeholders, other than %s itself.
    *
-   * This does not need to be completely exhaustive, since it is only used to suggest fixes.
+   * <p>This does not need to be completely exhaustive, since it is only used to suggest fixes.
    */
   private static final Pattern BAD_PLACEHOLDER_REGEX =
       Pattern.compile("\\$s|%(?:\\d+\\$)??[dbBhHScCdoxXeEfgGaAtTn]|\\{\\d+\\}");
@@ -93,8 +94,7 @@ public class PreconditionsInvalidPlaceholder extends BugChecker
     LiteralTree formatTree = (LiteralTree) t.getArguments().get(1);
 
     String fixedFormatString =
-        BAD_PLACEHOLDER_REGEX.matcher(state.getSourceForNode((JCTree) formatTree))
-            .replaceAll("%s");
+        BAD_PLACEHOLDER_REGEX.matcher(state.getSourceForNode((JCTree) formatTree)).replaceAll("%s");
     if (expectedArguments(fixedFormatString) == t.getArguments().size() - 2) {
       return describeMatch(formatTree, SuggestedFix.replace(formatTree, fixedFormatString));
     } else {

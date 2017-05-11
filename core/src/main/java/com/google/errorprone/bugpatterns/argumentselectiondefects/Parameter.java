@@ -53,10 +53,10 @@ abstract class Parameter {
 
   private static final ImmutableSet<String> METHODNAME_PREFIXES_TO_REMOVE =
       ImmutableSet.of("get", "set", "is");
-  
+
   /** We use this placeholder to indicate a name which is a null literal. */
   @VisibleForTesting static final String NAME_NULL = "*NULL*";
-  
+
   /** We use this placeholder to indicate a name which we couldn't get a canonical string for. */
   @VisibleForTesting static final String NAME_NOT_PRESENT = "*NOT_PRESENT*";
 
@@ -71,7 +71,7 @@ abstract class Parameter {
   abstract Kind kind();
 
   abstract boolean constant();
-  
+
   static ImmutableList<Parameter> createListFromVarSymbols(List<VarSymbol> varSymbols) {
     return Streams.mapWithIndex(
             varSymbols.stream(),

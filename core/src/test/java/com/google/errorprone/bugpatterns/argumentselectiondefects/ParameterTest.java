@@ -273,7 +273,6 @@ public class ParameterTest {
         .doTest();
   }
 
-
   @Test
   public void getName_returnsNull_withNullLiteral() {
     CompilationTestHelper.newInstance(PrintNameOfFirstArgument.class, getClass())
@@ -356,7 +355,6 @@ public class ParameterTest {
         .doTest();
   }
 
-
   @Test
   public void getName_returnsNotConstant_withVariable() {
     CompilationTestHelper.newInstance(PrintIsConstantFirstArgument.class, getClass())
@@ -371,6 +369,4 @@ public class ParameterTest {
             "}")
         .doTest();
   }
-
-
 }

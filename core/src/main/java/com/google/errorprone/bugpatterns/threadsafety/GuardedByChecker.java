@@ -123,9 +123,9 @@ public class GuardedByChecker extends BugChecker
    * Construct a diagnostic message, e.g.:
    *
    * <ul>
-   * <li>This access should be guarded by 'this', which is not currently held
-   * <li>This access should be guarded by 'this'; instead found 'mu'
-   * <li>This access should be guarded by 'this'; instead found: 'mu1', 'mu2'
+   *   <li>This access should be guarded by 'this', which is not currently held
+   *   <li>This access should be guarded by 'this'; instead found 'mu'
+   *   <li>This access should be guarded by 'this'; instead found: 'mu1', 'mu2'
    * </ul>
    */
   private String buildMessage(GuardedByExpression guard, HeldLockSet locks) {
@@ -138,16 +138,13 @@ public class GuardedByChecker extends BugChecker
             String.format(
                 "Access should be guarded by enclosing instance '%s' of '%s',"
                     + " which is not accessible in this scope",
-                enclosing.sym().owner,
-                enclosing.base()));
+                enclosing.sym().owner, enclosing.base()));
       } else {
         message.append(
             String.format(
                 "Access should be guarded by '%s' in enclosing instance '%s' of '%s',"
                     + " which is not accessible in this scope",
-                guard.sym(),
-                enclosing.sym().owner,
-                enclosing.base()));
+                guard.sym(), enclosing.sym().owner, enclosing.base()));
       }
       if (heldLocks > 0) {
         message.append(
@@ -191,8 +188,8 @@ public class GuardedByChecker extends BugChecker
   }
 
   /**
-   * Returns true if the lock expression corresponds to a
-   * {@code java.util.concurrent.locks.ReadWriteLock}.
+   * Returns true if the lock expression corresponds to a {@code
+   * java.util.concurrent.locks.ReadWriteLock}.
    */
   private static boolean isRWLock(GuardedByExpression guard, VisitorState state) {
     Type guardType = guard.type();

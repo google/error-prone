@@ -82,10 +82,9 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
       isSubtypeOf("java.util.Comparator");
 
   /**
-   * Compute the type of the subtract BinaryTree. We use the type of the
-   * left/right operand except when they're not the same, in which case we
-   * prefer the type of the expression. This ensures that a byte/short
-   * subtracted from another byte/short isn't regarded as an int.
+   * Compute the type of the subtract BinaryTree. We use the type of the left/right operand except
+   * when they're not the same, in which case we prefer the type of the expression. This ensures
+   * that a byte/short subtracted from another byte/short isn't regarded as an int.
    */
   private static Type getTypeOfSubtract(BinaryTree expression) {
     Type expressionType = ASTHelpers.getType(expression.getLeftOperand());

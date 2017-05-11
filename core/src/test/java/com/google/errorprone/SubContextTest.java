@@ -33,11 +33,12 @@ import org.junit.runners.JUnit4;
 public class SubContextTest {
   private static final Key<String> KEY1 = new Key<String>();
   private static final Key<String> KEY2 = new Key<String>();
-  
+
   enum Enum1 {
-    VALUE1, VALUE2;
+    VALUE1,
+    VALUE2;
   }
-  
+
   enum Enum2 {
     VALUE;
   }
@@ -50,12 +51,12 @@ public class SubContextTest {
     Context overlay = new SubContext(base);
     overlay.put(KEY2, "key2");
     overlay.put(Enum2.class, Enum2.VALUE);
-    
+
     assertEquals("key1", overlay.get(KEY1));
     assertEquals(Enum1.VALUE1, overlay.get(Enum1.class));
     assertEquals("key2", overlay.get(KEY2));
     assertEquals(Enum2.VALUE, overlay.get(Enum2.class));
-    
+
     assertEquals(null, base.get(KEY2));
     assertEquals(null, base.get(Enum2.class));
   }
@@ -68,7 +69,7 @@ public class SubContextTest {
     Context overlay = new SubContext(base);
     overlay.put(KEY1, "key2");
     overlay.put(Enum1.class, Enum1.VALUE2);
-    
+
     assertEquals("key2", overlay.get(KEY1));
     assertEquals(Enum1.VALUE2, overlay.get(Enum1.class));
     assertEquals("key1", base.get(KEY1));

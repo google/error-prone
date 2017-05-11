@@ -34,15 +34,18 @@ import javax.annotation.Nullable;
  */
 @AutoValue
 abstract class UTry extends USimpleStatement implements TryTree {
-  static UTry create(Iterable<? extends UTree<?>> resources, UBlock block, 
-      Iterable<UCatch> catches, @Nullable UBlock finallyBlock) {
-    return new AutoValue_UTry(ImmutableList.copyOf(resources), block,
-        ImmutableList.copyOf(catches), finallyBlock);
+  static UTry create(
+      Iterable<? extends UTree<?>> resources,
+      UBlock block,
+      Iterable<UCatch> catches,
+      @Nullable UBlock finallyBlock) {
+    return new AutoValue_UTry(
+        ImmutableList.copyOf(resources), block, ImmutableList.copyOf(catches), finallyBlock);
   }
-  
+
   @Override
   public abstract List<UTree<?>> getResources();
-  
+
   @Override
   public abstract UBlock getBlock();
 
@@ -65,16 +68,16 @@ abstract class UTry extends USimpleStatement implements TryTree {
 
   @Override
   public JCTry inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Try(
-        inliner.<JCTree>inlineList(getResources()),
-        getBlock().inline(inliner),
-        inliner.inlineList(getCatches()),
-        inlineFinallyBlock(inliner));
+    return inliner
+        .maker()
+        .Try(
+            inliner.<JCTree>inlineList(getResources()),
+            getBlock().inline(inliner),
+            inliner.inlineList(getCatches()),
+            inlineFinallyBlock(inliner));
   }
-  
-  /**
-   * Skips the finally block if the result would be empty.
-   */
+
+  /** Skips the finally block if the result would be empty. */
   @Nullable
   private JCBlock inlineFinallyBlock(Inliner inliner) throws CouldNotResolveImportException {
     if (getFinallyBlock() != null) {

@@ -33,10 +33,9 @@ import java.lang.annotation.Target;
  * between a class and its <i>subclasses</i> only, and is not to be considered part of the
  * <i>caller</i>-facing API of either class.
  *
- * <p>The annotated method must have protected or package-private visibility, and must not be
- * {@code static}, {@code final} or declared in a {@code final} class. Overriding methods must have
- * either protected or package-private visibility, although their effective visibility is actually
- * "none".
+ * <p>The annotated method must have protected or package-private visibility, and must not be {@code
+ * static}, {@code final} or declared in a {@code final} class. Overriding methods must have either
+ * protected or package-private visibility, although their effective visibility is actually "none".
  */
 @IncompatibleModifiers({PUBLIC, PRIVATE, STATIC, FINAL})
 @Retention(CLASS) // Parent source might not be available while compiling subclass

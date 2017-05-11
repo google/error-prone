@@ -58,20 +58,24 @@ public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {
     }
     JCExpression left = (JCExpression) tree.getLeftOperand();
     JCExpression right = (JCExpression) tree.getRightOperand();
-    
+
     String leftMatch = matchNaN(left);
     if (leftMatch != null) {
-      return describeMatch(tree, SuggestedFix.replace(tree,
-          String.format("%s%s.isNaN(%s)", prefix, leftMatch, toString(right, state))));
+      return describeMatch(
+          tree,
+          SuggestedFix.replace(
+              tree, String.format("%s%s.isNaN(%s)", prefix, leftMatch, toString(right, state))));
     }
     String rightMatch = matchNaN(right);
     if (rightMatch != null) {
-      return describeMatch(tree, SuggestedFix.replace(tree,
-          String.format("%s%s.isNaN(%s)", prefix, rightMatch, toString(left, state))));
+      return describeMatch(
+          tree,
+          SuggestedFix.replace(
+              tree, String.format("%s%s.isNaN(%s)", prefix, rightMatch, toString(left, state))));
     }
     return Description.NO_MATCH;
   }
-  
+
   private CharSequence toString(JCTree tree, VisitorState state) {
     CharSequence source = state.getSourceForNode(tree);
     return (source == null) ? tree.toString() : source;
@@ -80,7 +84,9 @@ public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {
   @Nullable
   private String matchNaN(ExpressionTree tree) {
     Symbol sym = ASTHelpers.getSymbol(tree);
-    if (sym != null && sym.owner != null && sym.owner.asType() != null
+    if (sym != null
+        && sym.owner != null
+        && sym.owner.asType() != null
         && sym.getSimpleName().contentEquals("NaN")) {
       if (sym.owner.getQualifiedName().contentEquals("java.lang.Double")) {
         return "Double";

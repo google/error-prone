@@ -29,26 +29,25 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
- * Extracts the necessary information from a {@link MethodInvocationTree} to check whether
- * calls to a method are using incompatible types and to emit a helpful error message.
+ * Extracts the necessary information from a {@link MethodInvocationTree} to check whether calls to
+ * a method are using incompatible types and to emit a helpful error message.
  */
 abstract class AbstractCollectionIncompatibleTypeMatcher {
 
   /**
-   * Returns a matcher for the appropriate method invocation for this matcher.  For example,
-   * this might match {@link Collection#remove(Object)} or {@link Map#containsKey(Object)}.
+   * Returns a matcher for the appropriate method invocation for this matcher. For example, this
+   * might match {@link Collection#remove(Object)} or {@link Map#containsKey(Object)}.
    */
   abstract Matcher<ExpressionTree> methodMatcher();
 
   /**
    * Extracts the source type that must be castable to the target type. For example, in this code
    * sample:
-   * <pre>
-   * {@code
+   *
+   * <pre>{@code
    * Collection<Integer> collection;
    * collection.contains("foo");
-   * }
-   * </pre>
+   * }</pre>
    *
    * The source type is String.
    *
@@ -58,14 +57,13 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
   abstract Type extractSourceType(MethodInvocationTree tree, VisitorState state);
 
   /**
-   * Returns the AST node from which the source type was extracted.  Needed to produce readable
-   * error messages. For example, in this code sample:
-   * <pre>
-   * {@code
+   * Returns the AST node from which the source type was extracted. Needed to produce readable error
+   * messages. For example, in this code sample:
+   *
+   * <pre>{@code
    * Collection<Integer> collection;
    * collection.contains("foo");
-   * }
-   * </pre>
+   * }</pre>
    *
    * The source tree is "foo".
    *
@@ -77,12 +75,11 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
   /**
    * Extracts the target type to which the source type must be castable. For example, in this code
    * sample:
-   * <pre>
-   * {@code
+   *
+   * <pre>{@code
    * Collection<Integer> collection;
    * collection.contains("foo");
-   * }
-   * </pre>
+   * }</pre>
    *
    * The target type is Integer.
    *
@@ -94,8 +91,11 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
   @AutoValue
   abstract static class MatchResult {
     public abstract ExpressionTree sourceTree();
+
     public abstract Type sourceType();
+
     public abstract Type targetType();
+
     public abstract AbstractCollectionIncompatibleTypeMatcher matcher();
 
     public static MatchResult create(
@@ -131,8 +131,8 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
 
   /**
    * Extracts the appropriate type argument from a specific supertype of the given {@code type}.
-   * This handles the case when a subtype has different type arguments than the expected type.
-   * For example, {@code ClassToInstanceMap<T>} implements {@code Map<Class<? extends T>, T>}.
+   * This handles the case when a subtype has different type arguments than the expected type. For
+   * example, {@code ClassToInstanceMap<T>} implements {@code Map<Class<? extends T>, T>}.
    *
    * @param type the (sub)type from which to extract the type argument
    * @param superTypeSym the symbol of the supertype on which the type parameter is defined

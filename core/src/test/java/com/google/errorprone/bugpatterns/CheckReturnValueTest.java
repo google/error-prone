@@ -32,9 +32,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class CheckReturnValueTest {
 
@@ -82,10 +80,7 @@ public class CheckReturnValueTest {
   @Test
   public void testPackageAnnotation() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "package-info.java",
-            "@javax.annotation.CheckReturnValue",
-            "package lib;")
+        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
@@ -128,23 +123,14 @@ public class CheckReturnValueTest {
   @Test
   public void testVoidReturningMethodInAnnotatedPackage() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "package-info.java",
-            "@javax.annotation.CheckReturnValue",
-            "package lib;")
+        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
             "public class Lib {",
             "  public static void f() {}",
             "}")
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    lib.Lib.f();",
-            "  }",
-            "}")
+        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
         .doTest();
   }
 
@@ -213,10 +199,7 @@ public class CheckReturnValueTest {
   @Test
   public void testPackageAnnotationButCanIgnoreReturnValue() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "package-info.java",
-            "@javax.annotation.CheckReturnValue",
-            "package lib;")
+        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
@@ -224,13 +207,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
             "  public static int f() { return 42; }",
             "}")
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    lib.Lib.f();",
-            "  }",
-            "}")
+        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
         .doTest();
   }
 
@@ -245,13 +222,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
             "  public static int f() { return 42; }",
             "}")
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    lib.Lib.f();",
-            "  }",
-            "}")
+        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
         .doTest();
   }
 
@@ -310,7 +281,8 @@ public class CheckReturnValueTest {
             "    }",
             "  }",
             "}")
-        .addSourceLines("Test.java",
+        .addSourceLines(
+            "Test.java",
             "class Test {",
             "  void m() {",
             "    lib.Lib.Inner.InnerMost.f();",
@@ -321,25 +293,18 @@ public class CheckReturnValueTest {
 
   @Test
   public void testPackageWithCanIgnoreAnnotation() throws Exception {
-      compilationHelper
-          .addSourceLines(
-              "package-info.java",
-              "@javax.annotation.CheckReturnValue",
-              "package lib;")
-          .addSourceLines("lib/Lib.java",
-              "package lib;",
-              "@com.google.errorprone.annotations.CanIgnoreReturnValue",
-              "public class Lib {",
-              "  public static int f() { return 42; }",
-              "}")
-          .addSourceLines("Test.java",
-              "class Test {",
-              "  void m() {",
-              "    lib.Lib.f();",
-              "  }",
-              "}")
-          .doTest();
-    }
+    compilationHelper
+        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
+        .addSourceLines(
+            "lib/Lib.java",
+            "package lib;",
+            "@com.google.errorprone.annotations.CanIgnoreReturnValue",
+            "public class Lib {",
+            "  public static int f() { return 42; }",
+            "}")
+        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
+        .doTest();
+  }
 
   @Test
   public void errorBothClass() throws Exception {
@@ -373,10 +338,7 @@ public class CheckReturnValueTest {
   @Test
   public void testJavaLangVoidReturningMethodInAnnotatedPackage() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "package-info.java",
-            "@javax.annotation.CheckReturnValue",
-            "package lib;")
+        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
@@ -385,13 +347,7 @@ public class CheckReturnValueTest {
             "    return null;",
             "  }",
             "}")
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    lib.Lib.f();",
-            "  }",
-            "}")
+        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
         .doTest();
   }
 

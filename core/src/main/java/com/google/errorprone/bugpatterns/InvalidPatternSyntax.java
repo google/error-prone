@@ -15,6 +15,7 @@
  */
 
 package com.google.errorprone.bugpatterns;
+
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -52,26 +53,27 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
   private static final String MESSAGE_BASE = "Invalid syntax used for a regular expression: ";
 
   /* Match string literals that are not valid syntax for regular expressions. */
-  private static final Matcher<ExpressionTree> BAD_REGEX_LITERAL = new Matcher<ExpressionTree>() {
-    @Override
-    public boolean matches(ExpressionTree tree, VisitorState state) {
-      Object value = ((JCExpression) tree).type.constValue();
-      return value instanceof String && !isValidSyntax((String) value);
-    }
+  private static final Matcher<ExpressionTree> BAD_REGEX_LITERAL =
+      new Matcher<ExpressionTree>() {
+        @Override
+        public boolean matches(ExpressionTree tree, VisitorState state) {
+          Object value = ((JCExpression) tree).type.constValue();
+          return value instanceof String && !isValidSyntax((String) value);
+        }
 
-    private boolean isValidSyntax(String regex) {
-      // Actually valid, but useless.
-      if (".".equals(regex)) {
-        return false;
-      }
-      try {
-        Pattern.compile(regex);
-        return true;
-      } catch (PatternSyntaxException e) {
-        return false;
-      }
-    }
-  };
+        private boolean isValidSyntax(String regex) {
+          // Actually valid, but useless.
+          if (".".equals(regex)) {
+            return false;
+          }
+          try {
+            Pattern.compile(regex);
+            return true;
+          } catch (PatternSyntaxException e) {
+            return false;
+          }
+        }
+      };
 
   /*
    * Match invocations to regex-accepting methods with bad string literals.
@@ -83,15 +85,20 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
   private static final Matcher<MethodInvocationTree> BAD_REGEX_USAGE =
       allOf(
           anyOf(
-              instanceMethod().onDescendantOf("java.lang.String")
+              instanceMethod()
+                  .onDescendantOf("java.lang.String")
                   .withSignature("matches(java.lang.String)"),
-              instanceMethod().onDescendantOf("java.lang.String")
+              instanceMethod()
+                  .onDescendantOf("java.lang.String")
                   .withSignature("replaceAll(java.lang.String,java.lang.String)"),
-              instanceMethod().onDescendantOf("java.lang.String")
+              instanceMethod()
+                  .onDescendantOf("java.lang.String")
                   .withSignature("replaceFirst(java.lang.String,java.lang.String)"),
-              instanceMethod().onDescendantOf("java.lang.String")
+              instanceMethod()
+                  .onDescendantOf("java.lang.String")
                   .withSignature("split(java.lang.String)"),
-              instanceMethod().onDescendantOf("java.lang.String")
+              instanceMethod()
+                  .onDescendantOf("java.lang.String")
                   .withSignature("split(java.lang.String,int)"),
               staticMethod().onClass("java.util.regex.Pattern").named("matches"),
               staticMethod().onClass("com.google.common.base.Splitter").named("onPattern")),

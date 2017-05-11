@@ -39,6 +39,6 @@ public abstract class Match {
   public static Match create(Map<String, String> bindings) {
     return new AutoValue_Match(ImmutableMap.copyOf(bindings));
   }
-  
+
   abstract Map<String, String> bindings();
 }

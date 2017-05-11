@@ -21,7 +21,7 @@ import com.sun.source.tree.TreeVisitor;
 
 /**
  * Abstract supertype for {@link UTree} identifiers.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 abstract class UIdent extends UExpression implements IdentifierTree {

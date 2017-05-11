@@ -15,6 +15,7 @@
  */
 
 package com.google.errorprone.annotations;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,12 +24,17 @@ import java.lang.annotation.Target;
 import javax.lang.model.element.Modifier;
 
 /**
- * Annotation declaring that the target annotation is incompatible with any one
- * of the provided modifiers. For example, an annotation declared as: <pre>
+ * Annotation declaring that the target annotation is incompatible with any one of the provided
+ * modifiers. For example, an annotation declared as:
+ *
+ * <pre>
  * {@literal @}IncompatibleModifiers(Modifier.PUBLIC)
  * {@literal @}interface MyAnnotation {}
  * </pre>
- * <p>will be considered illegal when used as: <pre>
+ *
+ * <p>will be considered illegal when used as:
+ *
+ * <pre>
  * {@literal @}MyAnnotation public void foo() {}
  * </pre>
  *
@@ -39,11 +45,11 @@ import javax.lang.model.element.Modifier;
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface IncompatibleModifiers {
   /**
-   * The incompatible modifiers. The annotated element is illegal with the
-   * presence of any one or more of these modifiers.
+   * The incompatible modifiers. The annotated element is illegal with the presence of any one or
+   * more of these modifiers.
    *
-   * <p>Empty array has the same effect as not applying this annotation at all;
-   * duplicates are allowed but have no effect.
+   * <p>Empty array has the same effect as not applying this annotation at all; duplicates are
+   * allowed but have no effect.
    */
   Modifier[] value();
 }

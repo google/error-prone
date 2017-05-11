@@ -178,7 +178,6 @@ public class GuardedByValidatorTest {
         .doTest();
   }
 
-
   @Test
   public void testStaticGuardedByInstance() throws Exception {
     compilationHelper

@@ -34,14 +34,16 @@ public class UExpressionStatementTest {
   public void equality() {
     new EqualsTester()
         .addEqualityGroup(UExpressionStatement.create(UFreeIdent.create("foo")))
-        .addEqualityGroup(UExpressionStatement.create(
-            UBinary.create(Kind.PLUS, ULiteral.intLit(5), ULiteral.intLit(2))))
+        .addEqualityGroup(
+            UExpressionStatement.create(
+                UBinary.create(Kind.PLUS, ULiteral.intLit(5), ULiteral.intLit(2))))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
-    SerializableTester.reserializeAndAssert(UExpressionStatement.create(
-        UBinary.create(Kind.PLUS, ULiteral.intLit(5), ULiteral.intLit(2))));
+    SerializableTester.reserializeAndAssert(
+        UExpressionStatement.create(
+            UBinary.create(Kind.PLUS, ULiteral.intLit(5), ULiteral.intLit(2))));
   }
 }

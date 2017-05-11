@@ -80,5 +80,4 @@ public class OverridesJavaxInjectableMethod extends BugChecker implements Method
     }
     return Description.NO_MATCH;
   }
-
 }

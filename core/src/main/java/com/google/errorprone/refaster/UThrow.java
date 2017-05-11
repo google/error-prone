@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 
 /**
  * {@link UTree} representation of a {@link ThrowTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue

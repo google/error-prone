@@ -47,9 +47,7 @@ public class LongLiteralLowerCaseSuffixTest {
     compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixPositiveCase1.java").doTest();
   }
 
-  /**
-   * Test for Java 7 integer literals that include underscores.
-   */
+  /** Test for Java 7 integer literals that include underscores. */
   @Test
   public void testJava7PositiveCase() throws Exception {
     String[] javaVersion = JAVA_VERSION.value().split("\\.");

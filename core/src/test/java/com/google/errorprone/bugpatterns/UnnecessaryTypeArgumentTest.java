@@ -127,10 +127,7 @@ public class UnnecessaryTypeArgumentTest {
   public void negativeGenericSuper() throws Exception {
     compilationHelper
         .addSourceLines(
-            "Super.java",
-            "public class Super {",
-            "  public <T> T f(T x) { return x; }",
-            "}")
+            "Super.java", "public class Super {", "  public <T> T f(T x) { return x; }", "}")
         .addSourceLines(
             "Sub.java",
             "@SuppressWarnings(\"unchecked\")",

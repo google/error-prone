@@ -126,7 +126,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void okGenericFactory()  throws Exception {
+  public void okGenericFactory() throws Exception {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -138,7 +138,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void okWithParam()  throws Exception {
+  public void okWithParam() throws Exception {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -150,7 +150,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void okNotMyParam()  throws Exception {
+  public void okNotMyParam() throws Exception {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -208,11 +208,7 @@ public class TypeParameterUnusedInFormalsTest {
   @Test
   public void classTypeParameter() throws Exception {
     compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "abstract class Test<T> {",
-            "  abstract T get(String s);",
-            "}")
+        .addSourceLines("Test.java", "abstract class Test<T> {", "  abstract T get(String s);", "}")
         .doTest();
   }
 

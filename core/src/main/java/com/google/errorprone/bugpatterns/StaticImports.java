@@ -31,9 +31,8 @@ import com.sun.tools.javac.util.Name;
 import javax.annotation.Nullable;
 
 /**
- * Logic for inspecting static imports used by
- * {@link NonCanonicalStaticImport}, {@link NonCanonicalStaticMemberImport},
- * and {@link UnnecessaryStaticImport}.
+ * Logic for inspecting static imports used by {@link NonCanonicalStaticImport}, {@link
+ * NonCanonicalStaticMemberImport}, and {@link UnnecessaryStaticImport}.
  */
 final class StaticImports {
 
@@ -81,9 +80,9 @@ final class StaticImports {
   }
 
   /**
-   * Returns a {@link StaticImports} if the given import is a static single-type import.
-   * Returns {@code null} otherwise, e.g. because the import is non-static, or an on-demand
-   * import, or statically imports a field or method.
+   * Returns a {@link StaticImports} if the given import is a static single-type import. Returns
+   * {@code null} otherwise, e.g. because the import is non-static, or an on-demand import, or
+   * statically imports a field or method.
    */
   @Nullable
   public static StaticImportInfo tryCreate(ImportTree tree, VisitorState state) {
@@ -108,9 +107,7 @@ final class StaticImports {
     return StaticImportInfo.create(importedName, canonicalName);
   }
 
-  /**
-   * Returns a {@code StaticImportInfo} for a static field or method import.
-   */
+  /** Returns a {@code StaticImportInfo} for a static field or method import. */
   private static StaticImportInfo tryAsStaticMember(
       JCTree.JCFieldAccess access, VisitorState state) {
     Name identifier = access.getIdentifier();
@@ -165,8 +162,9 @@ final class StaticImports {
 
   /**
    * Looks for a field or method with the given {@code identifier}, in
-   * @code typeSym} or one of it's super-types or super-interfaces,
-   * and that is visible from the {@code start} symbol.
+   *
+   * @code typeSym} or one of it's super-types or super-interfaces, and that is visible from the
+   *     {@code start} symbol.
    */
   // TODO(cushon): does javac really not expose this anywhere?
   //

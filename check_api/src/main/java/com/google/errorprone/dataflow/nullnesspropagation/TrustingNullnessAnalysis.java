@@ -83,14 +83,15 @@ public final class TrustingNullnessAnalysis implements Serializable {
 
   /**
    * Returns {@link Nullness} of the initializer of the {@link VariableTree} at the leaf of the
-   * given {@code fieldDeclPath}.  Returns {@link Nullness#NULL} should there be no initializer.
+   * given {@code fieldDeclPath}. Returns {@link Nullness#NULL} should there be no initializer.
    */
   // TODO(kmb): Fold this functionality into Dataflow.expressionDataflow
   public Nullness getFieldInitializerNullness(TreePath fieldDeclPath, Context context) {
     Tree decl = fieldDeclPath.getLeaf();
     checkArgument(
         decl instanceof VariableTree && ((JCVariableDecl) decl).sym.getKind() == ElementKind.FIELD,
-        "Leaf of fieldDeclPath must be a field declaration: %s", decl);
+        "Leaf of fieldDeclPath must be a field declaration: %s",
+        decl);
 
     ExpressionTree initializer = ((VariableTree) decl).getInitializer();
     if (initializer == null) {

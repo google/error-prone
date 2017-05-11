@@ -41,7 +41,7 @@ public class UAssignOpTest {
             UAssignOp.create(UFreeIdent.create("y"), Kind.PLUS_ASSIGNMENT, ULiteral.intLit(2)))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(

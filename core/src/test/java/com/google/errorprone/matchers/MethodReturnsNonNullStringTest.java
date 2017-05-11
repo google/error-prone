@@ -26,54 +26,52 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author deminguyen@google.com (Demi Nguyen)
- */
-
+/** @author deminguyen@google.com (Demi Nguyen) */
 @RunWith(JUnit4.class)
 public class MethodReturnsNonNullStringTest extends CompilerBasedAbstractTest {
-  
+
   @Test
   public void shouldMatchInstanceMethod() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  public void testInstanceMethods() {",
         "    String testStr = \"test string\";",
         "    testStr.charAt(0);",
         "  }",
-        "}"
-    );
+        "}");
     assertCompiles(methodInvocationMatches(true, Matchers.methodReturnsNonNull()));
   }
-  
+
   @Test
   public void shouldMatchStaticMethod() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  public void testStaticMethods() {",
         "    String.valueOf(123);",
         "  }",
-        "}"
-    );
+        "}");
     assertCompiles(methodInvocationMatches(true, Matchers.methodReturnsNonNull()));
   }
-  
+
   @Test
   public void shouldNotMatchConstructorInvocation() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  public String getString() {",
         "    String str = new String(\"hi\");",
         "    return str;",
         "  }",
-        "}"
-    );
+        "}");
     assertCompiles(methodInvocationMatches(false, Matchers.methodReturnsNonNull()));
   }
-  
+
   @Test
   public void shouldNotMatchOtherClasses() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  public String getString() {",
         "    return \"test string\";",
@@ -81,11 +79,10 @@ public class MethodReturnsNonNullStringTest extends CompilerBasedAbstractTest {
         "  public void testMethodInvocation() {",
         "    getString();",
         "  }",
-        "}"
-    );
+        "}");
     assertCompiles(methodInvocationMatches(false, Matchers.methodReturnsNonNull()));
   }
-  
+
   private Scanner methodInvocationMatches(
       final boolean shouldMatch, final Matcher<ExpressionTree> toMatch) {
     return new Scanner() {
@@ -99,5 +96,4 @@ public class MethodReturnsNonNullStringTest extends CompilerBasedAbstractTest {
       }
     };
   }
-  
 }

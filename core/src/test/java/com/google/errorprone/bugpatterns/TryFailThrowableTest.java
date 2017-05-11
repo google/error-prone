@@ -21,9 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author adamwos@google.com (Adam Wos)
- */
+/** @author adamwos@google.com (Adam Wos) */
 @RunWith(JUnit4.class)
 public class TryFailThrowableTest {
 

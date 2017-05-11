@@ -35,9 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link CompilationTestHelper}.
- */
+/** Tests for {@link CompilationTestHelper}. */
 @RunWith(JUnit4.class)
 public class CompilationTestHelperTest {
 
@@ -50,11 +48,7 @@ public class CompilationTestHelperTest {
 
   @Test
   public void fileWithNoBugMarkersAndNoErrorsShouldPass() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "public class Test {}")
-        .doTest();
+    compilationHelper.addSourceLines("Test.java", "public class Test {}").doTest();
   }
 
   @Test
@@ -245,7 +239,7 @@ public class CompilationTestHelperTest {
               "  void m() {",
               "    // BUG: Diagnostic contains:",
               "    return}", // there's a syntax error on this line, but it shouldn't register as
-                             // an error-prone diagnostic
+              // an error-prone diagnostic
               "}")
           .doTest();
       fail();
@@ -259,9 +253,7 @@ public class CompilationTestHelperTest {
   public void expectedResultMatchesActualResultSucceeds() {
     compilationHelper
         .expectResult(Result.OK)
-        .addSourceLines(
-            "Test.java",
-            "public class Test {}")
+        .addSourceLines("Test.java", "public class Test {}")
         .doTest();
   }
 
@@ -270,9 +262,7 @@ public class CompilationTestHelperTest {
     try {
       compilationHelper
           .expectResult(Result.ERROR)
-          .addSourceLines(
-              "Test.java",
-              "public class Test {}")
+          .addSourceLines("Test.java", "public class Test {}")
           .doTest();
       fail();
     } catch (AssertionError expected) {
@@ -284,10 +274,7 @@ public class CompilationTestHelperTest {
   public void expectNoDiagnoticsAndNoDiagnosticsProducedSucceeds() {
     compilationHelper
         .expectNoDiagnostics()
-        .addSourceLines(
-            "Test.java",
-            "// BUG: Diagnostic contains:",
-            "public class Test {}")
+        .addSourceLines("Test.java", "// BUG: Diagnostic contains:", "public class Test {}")
         .doTest();
   }
 
@@ -295,10 +282,7 @@ public class CompilationTestHelperTest {
   public void expectNoDiagnoticsAndNoDiagnosticsProducedSucceedsWithMatches() {
     compilationHelper
         .expectNoDiagnostics()
-        .addSourceLines(
-            "Test.java",
-            "// BUG: Diagnostic matches: X",
-            "public class Test {}")
+        .addSourceLines("Test.java", "// BUG: Diagnostic matches: X", "public class Test {}")
         .expectErrorMessage("X", Predicates.containsPattern(""))
         .doTest();
   }
@@ -306,18 +290,18 @@ public class CompilationTestHelperTest {
   @Test
   public void expectNoDiagnoticsButDiagnosticsProducedFails() {
     try {
-    compilationHelper
-        .expectNoDiagnostics()
-        .addSourceLines(
-            "Test.java",
-            "public class Test {",
-            "  public boolean doIt() {",
-            "    // BUG: Diagnostic contains:",
-            "    return true;",
-            "  }",
-            "}")
-        .doTest();
-    fail();
+      compilationHelper
+          .expectNoDiagnostics()
+          .addSourceLines(
+              "Test.java",
+              "public class Test {",
+              "  public boolean doIt() {",
+              "    // BUG: Diagnostic contains:",
+              "    return true;",
+              "  }",
+              "}")
+          .doTest();
+      fail();
     } catch (AssertionError expected) {
       assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
     }
@@ -326,19 +310,19 @@ public class CompilationTestHelperTest {
   @Test
   public void expectNoDiagnoticsButDiagnosticsProducedFailsWithMatches() {
     try {
-    compilationHelper
-        .expectNoDiagnostics()
-        .addSourceLines(
-            "Test.java",
-            "public class Test {",
-            "  public boolean doIt() {",
-            "    // BUG: Diagnostic matches: X",
-            "    return true;",
-            "  }",
-            "}")
-        .expectErrorMessage("X", Predicates.containsPattern(""))
-        .doTest();
-    fail();
+      compilationHelper
+          .expectNoDiagnostics()
+          .addSourceLines(
+              "Test.java",
+              "public class Test {",
+              "  public boolean doIt() {",
+              "    // BUG: Diagnostic matches: X",
+              "    return true;",
+              "  }",
+              "}")
+          .expectErrorMessage("X", Predicates.containsPattern(""))
+          .doTest();
+      fail();
     } catch (AssertionError expected) {
       assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
     }
@@ -364,13 +348,10 @@ public class CompilationTestHelperTest {
   public void missingExpectErrorFails() {
     try {
       compilationHelper
-          .addSourceLines(
-              "Test.java",
-              " // BUG: Diagnostic matches: X",
-              "public class Test {}")
+          .addSourceLines("Test.java", " // BUG: Diagnostic matches: X", "public class Test {}")
           .doTest();
       fail();
-    } catch(AssertionError expected) {
+    } catch (AssertionError expected) {
       assertThat(expected.getMessage()).contains("No expected error message with key [X]");
     }
   }

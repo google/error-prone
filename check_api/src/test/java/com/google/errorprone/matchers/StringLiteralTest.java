@@ -27,25 +27,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 @RunWith(JUnit4.class)
 public class StringLiteralTest {
-  @Test public void matches() {
+  @Test
+  public void matches() {
     LiteralTree tree = mock(LiteralTree.class);
     when(tree.getValue()).thenReturn("a string literal");
     assertTrue(new StringLiteral("a string literal").matches(tree, null));
   }
-  
-  @Test public void notMatches() {
+
+  @Test
+  public void notMatches() {
     LiteralTree tree = mock(LiteralTree.class);
     when(tree.getValue()).thenReturn("a string literal");
     assertFalse(new StringLiteral("different string").matches(tree, null));
-    
+
     IdentifierTree idTree = mock(IdentifierTree.class);
     assertFalse(new StringLiteral("test").matches(idTree, null));
-    
+
     LiteralTree intTree = mock(LiteralTree.class);
     when(intTree.getValue()).thenReturn(5);
     assertFalse(new StringLiteral("test").matches(intTree, null));

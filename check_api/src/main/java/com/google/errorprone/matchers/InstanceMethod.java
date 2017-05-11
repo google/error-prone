@@ -45,9 +45,7 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
     this.isWildCard = isWildCard;
   }
 
-  /**
-   * @return an InstanceMethod matcher that only matches the method receiver.
-   */
+  /** @return an InstanceMethod matcher that only matches the method receiver. */
   public static InstanceMethod methodReceiverMatcher(
       Matcher<? super ExpressionTree> receiverMatcher) {
     return new InstanceMethod(receiverMatcher, "", true);
@@ -60,8 +58,11 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
     // 1) symbol is null (item is of the wrong type),
     // 2) symbol is static (not an instance method), or
     // 3) the method names don't match.
-    if (sym == null || sym.isStatic() ||
-        (!isWildCard && !sym.getQualifiedName().equals(state.getName(methodName)))) {  // methodName doesn't match
+    if (sym == null
+        || sym.isStatic()
+        || (!isWildCard
+            && !sym.getQualifiedName()
+                .equals(state.getName(methodName)))) { // methodName doesn't match
       return false;
     }
 
@@ -77,8 +78,8 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
         return false;
       }
     } else {
-      throw new IllegalStateException("Unexpected type in InstanceMethod matcher: "
-          + item.getClass().getName());
+      throw new IllegalStateException(
+          "Unexpected type in InstanceMethod matcher: " + item.getClass().getName());
     }
   }
 }

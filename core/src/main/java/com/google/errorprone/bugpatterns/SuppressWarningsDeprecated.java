@@ -49,9 +49,10 @@ import java.util.List;
 public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher {
 
   @SuppressWarnings({"varargs", "unchecked"})
-  private static final Matcher<AnnotationTree> matcher = allOf(
-      isType("java.lang.SuppressWarnings"),
-      hasArgumentWithValue("value", stringLiteral("deprecated")));
+  private static final Matcher<AnnotationTree> matcher =
+      allOf(
+          isType("java.lang.SuppressWarnings"),
+          hasArgumentWithValue("value", stringLiteral("deprecated")));
 
   @Override
   public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
@@ -60,7 +61,7 @@ public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher 
     }
     return Description.NO_MATCH;
   }
-  
+
   @Override
   protected void processSuppressWarningsValues(List<String> values) {
     for (int i = 0; i < values.size(); i++) {

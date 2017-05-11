@@ -34,18 +34,19 @@ public class JUnit3FloatingPointComparisonWithoutDeltaTest {
 
   @Before
   public void createCompilerWithErrorProneCheck() {
-    compilationHelper = CompilationTestHelper.newInstance(
-        JUnit3FloatingPointComparisonWithoutDelta.class, getClass());
+    compilationHelper =
+        CompilationTestHelper.newInstance(
+            JUnit3FloatingPointComparisonWithoutDelta.class, getClass());
   }
 
   @Test
   public void match_TwoPrimitiveDoubles() {
-     checkAssertEquals("1.0, 1.0", true);
+    checkAssertEquals("1.0, 1.0", true);
   }
 
   @Test
   public void match_PrimitiveAndReferenceDouble() {
-     checkAssertEquals("1.0, (Double) 1.0", true);
+    checkAssertEquals("1.0, (Double) 1.0", true);
   }
 
   @Test
@@ -60,12 +61,12 @@ public class JUnit3FloatingPointComparisonWithoutDeltaTest {
 
   @Test
   public void match_TwoPrimitiveDoublesWithMessage() {
-     checkAssertEquals("\"message\", 1.0, 1.0", true);
+    checkAssertEquals("\"message\", 1.0, 1.0", true);
   }
 
   @Test
   public void noMatch_DeltaArgumentUsed() {
-     checkAssertEquals("1.0, 1.0, 0.0", false);
+    checkAssertEquals("1.0, 1.0, 0.0", false);
   }
 
   @Test
@@ -130,14 +131,15 @@ public class JUnit3FloatingPointComparisonWithoutDeltaTest {
 
   @Test
   public void noMatch_notTestCase() {
-    compilationHelper.addSourceLines(
-        "SampleClass.java",
-        "public class SampleClass {",
-        "  public void assertEquals(double d1, double d2) {}",
-        "  public void f() {",
-        "    assertEquals(1.0, 1.0);",
-        "  }",
-        "}")
+    compilationHelper
+        .addSourceLines(
+            "SampleClass.java",
+            "public class SampleClass {",
+            "  public void assertEquals(double d1, double d2) {}",
+            "  public void f() {",
+            "    assertEquals(1.0, 1.0);",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -148,15 +150,16 @@ public class JUnit3FloatingPointComparisonWithoutDeltaTest {
 
   private void checkTest(String methodInvocationLine, boolean matchExpected) {
     String diagnosticLine = matchExpected ? "    // BUG: Diagnostic contains:" : "";
-    compilationHelper.addSourceLines(
-        "SampleTest.java",
-        "import junit.framework.TestCase;",
-        "public class SampleTest extends TestCase {",
-        "  public void testComparison() {",
-        diagnosticLine,
-        methodInvocationLine,
-        "  }",
-        "}")
+    compilationHelper
+        .addSourceLines(
+            "SampleTest.java",
+            "import junit.framework.TestCase;",
+            "public class SampleTest extends TestCase {",
+            "  public void testComparison() {",
+            diagnosticLine,
+            methodInvocationLine,
+            "  }",
+            "}")
         .doTest();
   }
 }

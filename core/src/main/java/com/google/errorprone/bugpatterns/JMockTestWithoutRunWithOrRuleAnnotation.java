@@ -59,23 +59,25 @@ public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker
 
   private static final String JMOCK_TEST_RUNNER_CLASS = "org.jmock.integration.junit4.JMock";
 
-  private static final Matcher<VariableTree> fieldIsMockery = allOf(
-      isSubtypeOf("org.jmock.Mockery"), 
-      isField());
-  
+  private static final Matcher<VariableTree> fieldIsMockery =
+      allOf(isSubtypeOf("org.jmock.Mockery"), isField());
+
   private static final Matcher<VariableTree> fieldHasRuleAnnotation =
       hasAnnotation("org.junit.Rule");
-  
+
   private static final Matcher<Tree> enclosingClassRunsWithJMockTestRunner =
-      enclosingClass(allOf(
-          hasAnnotation(JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION),
-          Matchers.<ClassTree>annotations(
-              AT_LEAST_ONE,
-              hasArgumentWithValue("value", classLiteral(isSameType(JMOCK_TEST_RUNNER_CLASS))))));
-  
-  private static final Matcher<VariableTree> BUG_PATTERN_MATCHER = allOf(
-      fieldIsMockery,
-      not(anyOf(fieldHasRuleAnnotation, enclosingClassRunsWithJMockTestRunner)));
+      enclosingClass(
+          allOf(
+              hasAnnotation(JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION),
+              Matchers.<ClassTree>annotations(
+                  AT_LEAST_ONE,
+                  hasArgumentWithValue(
+                      "value", classLiteral(isSameType(JMOCK_TEST_RUNNER_CLASS))))));
+
+  private static final Matcher<VariableTree> BUG_PATTERN_MATCHER =
+      allOf(
+          fieldIsMockery,
+          not(anyOf(fieldHasRuleAnnotation, enclosingClassRunsWithJMockTestRunner)));
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {

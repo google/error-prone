@@ -37,10 +37,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Tests for {@link Matchers#enclosingNode}, {@link Matchers#parentNode},
- * {@link Matchers#enclosingBlock}, {@link Enclosing.BlockOrCase}, and at least some of the code
- * paths also used by {@link Matchers#enclosingClass} and {@link Matchers#enclosingMethod}. The
- * tests focus on verifying that the {@link TreePath} is set correctly.
+ * Tests for {@link Matchers#enclosingNode}, {@link Matchers#parentNode}, {@link
+ * Matchers#enclosingBlock}, {@link Enclosing.BlockOrCase}, and at least some of the code paths also
+ * used by {@link Matchers#enclosingClass} and {@link Matchers#enclosingMethod}. The tests focus on
+ * verifying that the {@link TreePath} is set correctly.
  *
  * @author cpovirk@google.com (Chris Povirk)
  */
@@ -59,12 +59,13 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
     abstract Object interestingPartOfLoop(ForLoopTree loop);
   }
 
-  private static final Matcher<Tree> IS_LOOP_CONDITION = new IsInterestingLoopSubNode<Tree>() {
-    @Override
-    Object interestingPartOfLoop(ForLoopTree loop) {
-      return loop.getCondition();
-    }
-  };
+  private static final Matcher<Tree> IS_LOOP_CONDITION =
+      new IsInterestingLoopSubNode<Tree>() {
+        @Override
+        Object interestingPartOfLoop(ForLoopTree loop) {
+          return loop.getCondition();
+        }
+      };
   private static final Matcher<BlockTree> IS_LOOP_STATEMENT =
       new IsInterestingLoopSubNode<BlockTree>() {
         @Override
@@ -90,7 +91,8 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   /** Tests that a node is not enclosed by itself. */
   @Test
   public void usedDirectlyInLoopCondition() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  A() {",
         "    boolean foo = true;",
@@ -106,7 +108,8 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   /** Tests that a node is enclosed by its parent. */
   @Test
   public void usedAsChildTreeOfLoopCondition() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  A() {",
         "    boolean foo = true;",
@@ -122,7 +125,8 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   /** Tests that a node is enclosed by a node many levels up the tree. */
   @Test
   public void usedInSubTreeOfLoopCondition() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  A() {",
         "    boolean foo = true;",
@@ -138,7 +142,8 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   /** Tests enclosing blocks. */
   @Test
   public void usedInStatement() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  A() {",
         "    boolean foo = true;",
@@ -156,7 +161,8 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   /** Sanity checks that the scanners are doing what we expect. */
   @Test
   public void usedElsewhereInLoop() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  A() {",
         "    boolean foo = true;",
@@ -190,24 +196,25 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   }
 
   private Scanner fooMatches(final boolean shouldMatch, final Matcher<Tree> matcher) {
-    ScannerTest test = new ScannerTest() {
-      boolean matched = false;
+    ScannerTest test =
+        new ScannerTest() {
+          boolean matched = false;
 
-      @Override
-      public Void visitIdentifier(IdentifierTree tree, VisitorState state) {
-        // Normally handled by ErrorProneMatcher:
-        // TODO(cpovirk): Find a way for this to be available by default to Matcher tests.
-        state = state.withPath(getCurrentPath());
+          @Override
+          public Void visitIdentifier(IdentifierTree tree, VisitorState state) {
+            // Normally handled by ErrorProneMatcher:
+            // TODO(cpovirk): Find a way for this to be available by default to Matcher tests.
+            state = state.withPath(getCurrentPath());
 
-        matched |= tree.getName().contentEquals("foo") && matcher.matches(tree, state);
-        return null;
-      }
+            matched |= tree.getName().contentEquals("foo") && matcher.matches(tree, state);
+            return null;
+          }
 
-      @Override
-      void assertDone() {
-        assertEquals(shouldMatch, matched);
-      }
-    };
+          @Override
+          void assertDone() {
+            assertEquals(shouldMatch, matched);
+          }
+        };
     tests.add(test);
     return test;
   }

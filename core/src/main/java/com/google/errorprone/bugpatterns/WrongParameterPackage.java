@@ -89,7 +89,6 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
             return describe(tree, state);
           }
         }
-
       }
     }
     return Description.NO_MATCH;
@@ -100,7 +99,7 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
 
     MethodSymbol method = ASTHelpers.getSymbol(tree);
 
-    if (supermethod == null){
+    if (supermethod == null) {
       throw new IllegalStateException("Matching supermethod was not found");
     }
 

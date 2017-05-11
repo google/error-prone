@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 /**
  * {@code UTree} representation of a {@code CatchTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -59,7 +59,8 @@ abstract class UCatch extends UTree<JCCatch> implements CatchTree {
   @Override
   @Nullable
   public Choice<Unifier> visitCatch(CatchTree node, @Nullable Unifier unifier) {
-    return getParameter().unify(node.getParameter(), unifier)
+    return getParameter()
+        .unify(node.getParameter(), unifier)
         .thenChoose(unifications(getBlock(), node.getBlock()));
   }
 }

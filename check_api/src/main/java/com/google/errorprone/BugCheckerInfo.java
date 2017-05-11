@@ -41,14 +41,12 @@ import javax.annotation.CheckReturnValue;
  */
 public class BugCheckerInfo implements Serializable {
 
-  /**
-   * The BugChecker class.
-   */
+  /** The BugChecker class. */
   private final Class<? extends BugChecker> checker;
 
   /**
-   * The canonical name of this check. Corresponds to the {@code name} attribute from its
-   * {@code BugPattern} annotation.
+   * The canonical name of this check. Corresponds to the {@code name} attribute from its {@code
+   * BugPattern} annotation.
    */
   private final String canonicalName;
 
@@ -65,9 +63,7 @@ public class BugCheckerInfo implements Serializable {
    */
   private final String message;
 
-  /**
-   * The default type of diagnostic (error or warning) to emit when this check triggers.
-   */
+  /** The default type of diagnostic (error or warning) to emit when this check triggers. */
   private final SeverityLevel defaultSeverity;
 
   /**
@@ -84,9 +80,9 @@ public class BugCheckerInfo implements Serializable {
   private final Suppressibility suppressibility;
 
   /**
-   * A set of custom suppression annotations for this check. Computed from the
-   * {@code suppressibility} and {@code customSuppressionAnnotations} attributes from its {@code
-   * BugPattern}.  May be empty if there are no custom suppression annotations for this check.
+   * A set of custom suppression annotations for this check. Computed from the {@code
+   * suppressibility} and {@code customSuppressionAnnotations} attributes from its {@code
+   * BugPattern}. May be empty if there are no custom suppression annotations for this check.
    */
   private final Set<Class<? extends Annotation>> customSuppressionAnnotations;
 

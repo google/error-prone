@@ -44,9 +44,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
 
-/**
- * Check for non-whitelisted callers to RestrictedApiChecker.
- */
+/** Check for non-whitelisted callers to RestrictedApiChecker. */
 @BugPattern(
   name = "RestrictedApiChecker",
   summary = " Check for non-whitelisted callers to RestrictedApiChecker.",

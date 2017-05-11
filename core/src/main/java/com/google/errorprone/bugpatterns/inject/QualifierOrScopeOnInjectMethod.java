@@ -103,7 +103,6 @@ public class QualifierOrScopeOnInjectMethod extends BugChecker implements Method
     // Don't know what else to do here, deleting is the no-op change.
     deleteAll(matchingAnnotations, fixBuilder);
     return describeMatch(matchingAnnotations.get(0), fixBuilder.build());
-
   }
 
   private static void deleteAll(List<AnnotationTree> scopes, Builder fixBuilder) {

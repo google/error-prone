@@ -33,22 +33,18 @@ import java.util.Set;
 
 /**
  * Encapsulates the logic of handling suppressions, both via {@code @SuppressWarnings} and via
- * custom suppression annotations.  To do this we have to maintains 2 sets of suppression info:
- * 1) A set of the suppression strings in all {@code @Suppresswarnings} annotations down this path
- *    of the AST.
- * 2) A set of all custom suppression annotations down this path of the AST.
+ * custom suppression annotations. To do this we have to maintains 2 sets of suppression info: 1) A
+ * set of the suppression strings in all {@code @Suppresswarnings} annotations down this path of the
+ * AST. 2) A set of all custom suppression annotations down this path of the AST.
  */
 public class SuppressionHelper {
 
-  /**
-   * The set of custom suppression annotations that this SuppressionHelper should look for.
-   */
+  /** The set of custom suppression annotations that this SuppressionHelper should look for. */
   private final Set<Class<? extends Annotation>> customSuppressionAnnotations;
-
 
   /**
    * @param customSuppressionAnnotations The set of custom suppression annotations that this
-   * SuppressionHelper should look for.
+   *     SuppressionHelper should look for.
    * @param state the {@link VisitorState} of the current analysis.
    */
   public SuppressionHelper(
@@ -60,7 +56,7 @@ public class SuppressionHelper {
   }
 
   /**
-   * Container for information about suppressions.  Either reference field may be null, which
+   * Container for information about suppressions. Either reference field may be null, which
    * indicates that the suppression sets are unchanged.
    */
   public static class SuppressionInfo {
@@ -81,18 +77,18 @@ public class SuppressionHelper {
   /**
    * Extend suppression sets for both {@code @SuppressWarnings} and custom suppression annotations.
    * When we explore a new node, we have to extend the suppression sets with any new suppressed
-   * warnings or custom suppression annotations.  We also have to retain the previous suppression
-   * set so that we can reinstate it when we move up the tree.
+   * warnings or custom suppression annotations. We also have to retain the previous suppression set
+   * so that we can reinstate it when we move up the tree.
    *
-   * We do not modify the existing suppression sets, so they can be restored when moving up the
-   * tree.  We also avoid copying the suppression sets if the next node to explore does not have
-   * any suppressed warnings or custom suppression annotations.  This is the common case.
+   * <p>We do not modify the existing suppression sets, so they can be restored when moving up the
+   * tree. We also avoid copying the suppression sets if the next node to explore does not have any
+   * suppressed warnings or custom suppression annotations. This is the common case.
    *
    * @param sym The {@code Symbol} for the AST node currently being scanned
-   * @param suppressWarningsType The {@code Type} for {@code @SuppressWarnings}, as given by
-   *        javac's symbol table
+   * @param suppressWarningsType The {@code Type} for {@code @SuppressWarnings}, as given by javac's
+   *     symbol table
    * @param suppressionsOnCurrentPath The set of strings in all {@code @SuppressWarnings}
-   *        annotations on the current path through the AST
+   *     annotations on the current path through the AST
    * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations
    */
   public SuppressionInfo extendSuppressionSets(
@@ -106,9 +102,7 @@ public class SuppressionHelper {
     boolean newInGeneratedCode =
         inGeneratedCode || ASTHelpers.hasAnnotation(sym, "javax.annotation.Generated", state);
 
-    /**
-     * Handle custom suppression annotations.
-     */
+    /** Handle custom suppression annotations. */
     Set<Class<? extends Annotation>> newCustomSuppressions = null;
     for (Class<? extends Annotation> annotationType : customSuppressionAnnotations) {
       if (ASTHelpers.hasAnnotation(sym, annotationType, state)) {
@@ -125,9 +119,8 @@ public class SuppressionHelper {
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
       if ((attr.type.tsym == suppressWarningsType.tsym)
           || attr.type.tsym.getQualifiedName().contentEquals("android.annotation.SuppressLint")) {
-        for (List<Pair<MethodSymbol,Attribute>> v = attr.values;
-            v.nonEmpty(); v = v.tail) {
-          Pair<MethodSymbol,Attribute> value = v.head;
+        for (List<Pair<MethodSymbol, Attribute>> v = attr.values; v.nonEmpty(); v = v.tail) {
+          Pair<MethodSymbol, Attribute> value = v.head;
           if (value.fst.name.contentEquals("value"))
             if (value.snd
                 instanceof Attribute.Array) { // SuppressWarnings/SuppressLint take an array
@@ -154,9 +147,9 @@ public class SuppressionHelper {
    *
    * @param suppressible Holds information about the suppressibilty of a checker
    * @param suppressionsOnCurrentPath The set of strings in all {@code @SuppressWarnings}
-   *        annotations on the current path through the AST
-   * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations
-   *        on the current path through the AST
+   *     annotations on the current path through the AST
+   * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations on the
+   *     current path through the AST
    * @param severityLevel of the check to be suppressed
    * @param inGeneratedCode true if the current code is generated
    * @param disableWarningsInGeneratedCode true if warnings in generated code should be suppressed
@@ -184,5 +177,4 @@ public class SuppressionHelper {
         throw new IllegalStateException("No case for: " + suppressible.suppressibility());
     }
   }
-
 }

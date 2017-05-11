@@ -23,9 +23,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/**
- * A variable that can match a sequence of expressions.
- */
+/** A variable that can match a sequence of expressions. */
 @AutoValue
 abstract class URepeated extends UExpression {
   public static URepeated create(CharSequence identifier, UExpression expression) {
@@ -33,6 +31,7 @@ abstract class URepeated extends UExpression {
   }
 
   abstract String identifier();
+
   abstract UExpression expression();
 
   @Override
@@ -59,18 +58,14 @@ abstract class URepeated extends UExpression {
 
   /** Gets the binding of the underlying identifier in the unifier. */
   public JCExpression getUnderlyingBinding(Unifier unifier) {
-    return (unifier == null)
-        ? null
-        : unifier.getBinding(new UFreeIdent.Key(identifier()));
+    return (unifier == null) ? null : unifier.getBinding(new UFreeIdent.Key(identifier()));
   }
 
   public Key key() {
     return new Key(identifier());
   }
 
-  /**
-  * A key for a variable with count constraints. It maps to a list of expressions in a binding.
-  */
+  /** A key for a variable with count constraints. It maps to a list of expressions in a binding. */
   public static final class Key extends Bindings.Key<List<JCExpression>> {
     public Key(String name) {
       super(name);

@@ -34,36 +34,32 @@ import javax.annotation.Nullable;
 public class UTypeVar extends UType {
   // This can't be @AutoValue'd, since the fields are mutable.
 
-  /**
-   * Bindings key linked to a {@code UTypeVar}.
-   */
+  /** Bindings key linked to a {@code UTypeVar}. */
   public static final class Key extends Bindings.Key<TypeWithExpression> {
     public Key(CharSequence name) {
       super(name.toString());
     }
   }
-  
-  /**
-   * Tuple of an expression with an associated type.
-   */
+
+  /** Tuple of an expression with an associated type. */
   @AutoValue
   public abstract static class TypeWithExpression implements Inlineable<JCExpression> {
     public static TypeWithExpression create(Type type, JCExpression expression) {
       return new AutoValue_UTypeVar_TypeWithExpression(type, checkNotNull(expression));
     }
-    
+
     public static TypeWithExpression create(Type type) {
       return new AutoValue_UTypeVar_TypeWithExpression(type, null);
     }
-    
+
     public abstract Type type();
-    @Nullable abstract JCExpression expression();
+
+    @Nullable
+    abstract JCExpression expression();
 
     @Override
     public JCExpression inline(Inliner inliner) {
-      return (expression() == null)
-          ? inliner.inlineAsTree(type())
-          : expression(); 
+      return (expression() == null) ? inliner.inlineAsTree(type()) : expression();
     }
 
     @Override
@@ -71,7 +67,7 @@ public class UTypeVar extends UType {
       return type().toString();
     }
   }
-  
+
   public static UTypeVar create(String name, UType lowerBound, UType upperBound) {
     return new UTypeVar(name, lowerBound, upperBound);
   }
@@ -100,7 +96,7 @@ public class UTypeVar extends UType {
     // type variables don't matter.
     return Choice.condition(!target.isPrimitive(), unifier);
   }
-  
+
   public Key key() {
     return new Key(name);
   }
@@ -117,16 +113,12 @@ public class UTypeVar extends UType {
     return upperBound;
   }
 
-  /**
-   * @param lowerBound the lowerBound to set
-   */
+  /** @param lowerBound the lowerBound to set */
   public void setLowerBound(UType lowerBound) {
     this.lowerBound = checkNotNull(lowerBound);
   }
 
-  /**
-   * @param upperBound the upperBound to set
-   */
+  /** @param upperBound the upperBound to set */
   public void setUpperBound(UType upperBound) {
     this.upperBound = checkNotNull(upperBound);
   }
@@ -135,7 +127,7 @@ public class UTypeVar extends UType {
   public Type inline(Inliner inliner) throws CouldNotResolveImportException {
     return inliner.inlineTypeVar(this);
   }
-  
+
   @Override
   public int hashCode() {
     return Objects.hashCode(name);
@@ -156,9 +148,6 @@ public class UTypeVar extends UType {
 
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper(this)
-        .add("name", name)
-        .toString();
+    return MoreObjects.toStringHelper(this).add("name", name).toString();
   }
-
 }

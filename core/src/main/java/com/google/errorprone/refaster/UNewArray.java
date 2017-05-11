@@ -31,13 +31,12 @@ import com.sun.tools.javac.tree.JCTree.JCNewArray;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/**
- * {@link UTree} version of {@link NewArrayTree}, which represents an array instantiation.
- */
+/** {@link UTree} version of {@link NewArrayTree}, which represents an array instantiation. */
 @AutoValue
 abstract class UNewArray extends UExpression implements NewArrayTree {
 
-  public static UNewArray create(UExpression type,
+  public static UNewArray create(
+      UExpression type,
       List<? extends UExpression> dimensions,
       List<? extends UExpression> initializers) {
     return new AutoValue_UNewArray(
@@ -61,8 +60,9 @@ abstract class UNewArray extends UExpression implements NewArrayTree {
   @Override
   @Nullable
   public Choice<Unifier> visitNewArray(NewArrayTree newArray, @Nullable Unifier unifier) {
-    boolean hasRepeated = getInitializers() != null 
-        && Iterables.any(getInitializers(), Predicates.instanceOf(URepeated.class));
+    boolean hasRepeated =
+        getInitializers() != null
+            && Iterables.any(getInitializers(), Predicates.instanceOf(URepeated.class));
     return unifyNullable(unifier, getType(), newArray.getType())
         .thenChoose(unifications(getDimensions(), newArray.getDimensions()))
         .thenChoose(unifications(getInitializers(), newArray.getInitializers(), hasRepeated));

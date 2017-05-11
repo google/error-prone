@@ -162,7 +162,6 @@ public class MissingFailTest {
         .doTest();
   }
 
-
   private Fix getOnlyFix(TestScanner scanner) {
     Description warning = Iterables.getOnlyElement(scanner.suggestedChanges);
     return Iterables.getOnlyElement(warning.fixes);

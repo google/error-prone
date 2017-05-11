@@ -23,12 +23,11 @@ import com.sun.source.tree.Tree.Kind;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Matcher for a compound-assignment operator expression.
- */
+/** Matcher for a compound-assignment operator expression. */
 public class CompoundAssignment implements Matcher<CompoundAssignmentTree> {
 
   private static final Set<Kind> COMPOUND_ASSIGNMENT_OPERATORS = new HashSet<>(11);
+
   static {
     COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.AND_ASSIGNMENT);
     COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.DIVIDE_ASSIGNMENT);
@@ -53,12 +52,14 @@ public class CompoundAssignment implements Matcher<CompoundAssignmentTree> {
    * matchers.
    *
    * @param operators The set of matching compound-assignment operators. These are drawn from the
-   *        {@link Kind} enum values which link to {@link CompoundAssignmentTree} in their javadoc.
+   *     {@link Kind} enum values which link to {@link CompoundAssignmentTree} in their javadoc.
    * @param receiverMatcher The matcher which must match the receiver which will be assigned to.
    * @param expressionMatcher The matcher which must match the right-hand expression to the compound
-   *        assignment.
+   *     assignment.
    */
-  public CompoundAssignment(Set<Kind> operators, Matcher<ExpressionTree> receiverMatcher,
+  public CompoundAssignment(
+      Set<Kind> operators,
+      Matcher<ExpressionTree> receiverMatcher,
       Matcher<ExpressionTree> expressionMatcher) {
     this.operators = validateOperators(operators);
     if (receiverMatcher == null) {
@@ -79,7 +80,6 @@ public class CompoundAssignment implements Matcher<CompoundAssignmentTree> {
     return receiverMatcher.matches(compoundAssignmentTree.getVariable(), state)
         && expressionMatcher.matches(compoundAssignmentTree.getExpression(), state);
   }
-
 
   /**
    * Returns the provided set of operators if they are all compound-assignment operators. Otherwise,

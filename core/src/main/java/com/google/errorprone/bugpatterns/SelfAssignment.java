@@ -84,7 +84,9 @@ public class SelfAssignment extends BugChecker
     Tree parent = state.getPath().getParentPath().getLeaf();
 
     // must be a static class variable with member select initializer
-    if (initializer == null || initializer.getKind() != MEMBER_SELECT || parent.getKind() != CLASS
+    if (initializer == null
+        || initializer.getKind() != MEMBER_SELECT
+        || parent.getKind() != CLASS
         || !tree.getModifiers().getFlags().contains(STATIC)) {
       return Description.NO_MATCH;
     }
@@ -92,23 +94,27 @@ public class SelfAssignment extends BugChecker
     MemberSelectTree rhs = (MemberSelectTree) initializer;
     Symbol rhsClass = ASTHelpers.getSymbol(rhs.getExpression());
     Symbol lhsClass = ASTHelpers.getSymbol(parent);
-    if (rhsClass != null && lhsClass != null
-        && rhsClass.equals(lhsClass) && rhs.getIdentifier().contentEquals(tree.getName())) {
+    if (rhsClass != null
+        && lhsClass != null
+        && rhsClass.equals(lhsClass)
+        && rhs.getIdentifier().contentEquals(tree.getName())) {
       return describeForVarDecl(tree, state);
     }
     return Description.NO_MATCH;
   }
 
   /**
-   * If the given expression is a call to checkNotNull(x), returns x.
-   * Otherwise, returns the given expression.
+   * If the given expression is a call to checkNotNull(x), returns x. Otherwise, returns the given
+   * expression.
    *
-   * TODO(eaftan): Also match calls to Java 7's Objects.requireNonNull() method.
+   * <p>TODO(eaftan): Also match calls to Java 7's Objects.requireNonNull() method.
    */
   private ExpressionTree stripCheckNotNull(ExpressionTree expression, VisitorState state) {
     if (expression != null
         && expression.getKind() == METHOD_INVOCATION
-        && staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull")
+        && staticMethod()
+            .onClass("com.google.common.base.Preconditions")
+            .named("checkNotNull")
             .matches(expression, state)) {
       return ((MethodInvocationTree) expression).getArguments().get(0);
     }
@@ -129,20 +135,19 @@ public class SelfAssignment extends BugChecker
   }
 
   /**
-   * We expect that the lhs is a field and the rhs is an identifier, specifically
-   * a parameter to the method.  We base our suggested fixes on this expectation.
+   * We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to the
+   * method. We base our suggested fixes on this expectation.
    *
-   * Case 1: If lhs is a field and rhs is an identifier, find a method parameter
-   * of the same type and similar name and suggest it as the rhs.  (Guess that they
-   * have misspelled the identifier.)
+   * <p>Case 1: If lhs is a field and rhs is an identifier, find a method parameter of the same type
+   * and similar name and suggest it as the rhs. (Guess that they have misspelled the identifier.)
    *
-   * Case 2: If lhs is a field and rhs is not an identifier, find a method parameter
-   * of the same type and similar name and suggest it as the rhs.
+   * <p>Case 2: If lhs is a field and rhs is not an identifier, find a method parameter of the same
+   * type and similar name and suggest it as the rhs.
    *
-   * Case 3: If lhs is not a field and rhs is an identifier, find a class field
-   * of the same type and similar name and suggest it as the lhs.
+   * <p>Case 3: If lhs is not a field and rhs is an identifier, find a class field of the same type
+   * and similar name and suggest it as the lhs.
    *
-   * Case 4: Otherwise suggest deleting the assignment.
+   * <p>Case 4: Otherwise suggest deleting the assignment.
    */
   public Description describeForAssignment(AssignmentTree assignmentTree, VisitorState state) {
 
@@ -163,13 +168,12 @@ public class SelfAssignment extends BugChecker
       rhs = stripCheckNotNull(rhs, state);
     }
 
-
     if (lhs.getKind() == MEMBER_SELECT) {
       // find a method parameter of the same type and similar name and suggest it
       // as the rhs
 
       // rhs should be either identifier or field access
-      assert(rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
+      assert (rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
 
       // get current name of rhs
       String rhsName = null;
@@ -206,7 +210,7 @@ public class SelfAssignment extends BugChecker
       // find a field of the same type and similar name and suggest it as the lhs
 
       // lhs should be identifier
-      assert(lhs.getKind() == IDENTIFIER);
+      assert (lhs.getKind() == IDENTIFIER);
 
       // get current name of lhs
       String lhsName = ((JCIdent) rhs).name.toString();

@@ -62,22 +62,25 @@ public class CannotMockFinalClass extends BugChecker
   // TODO(lowasser): consider stopping mocks of primitive types here or in its own checker
 
   // Runners like GwtMockito allow mocking final types, so we conservatively stick to JUnit4.
-  private static final Matcher<AnnotationTree> runWithJunit4 = allOf(
-      isType("org.junit.runner.RunWith"),
-      hasArgumentWithValue("value", classLiteral(isSameType("org.junit.runners.JUnit4"))));
+  private static final Matcher<AnnotationTree> runWithJunit4 =
+      allOf(
+          isType("org.junit.runner.RunWith"),
+          hasArgumentWithValue("value", classLiteral(isSameType("org.junit.runners.JUnit4"))));
 
   private static final Matcher<Tree> enclosingClassIsJunit4Test =
       enclosingClass(Matchers.<ClassTree>annotations(AT_LEAST_ONE, runWithJunit4));
 
-  private static final Matcher<VariableTree> variableOfFinalClassAnnotatedMock = allOf(
-      variableType(hasModifier(Modifier.FINAL)),
-      hasAnnotation("org.mockito.Mock"),
-      enclosingClassIsJunit4Test);
+  private static final Matcher<VariableTree> variableOfFinalClassAnnotatedMock =
+      allOf(
+          variableType(hasModifier(Modifier.FINAL)),
+          hasAnnotation("org.mockito.Mock"),
+          enclosingClassIsJunit4Test);
 
-  private static final Matcher<MethodInvocationTree> creationOfMockForFinalClass = allOf(
-      staticMethod().onClass("org.mockito.Mockito").named("mock"),
-      argument(0, classLiteral(hasModifier(Modifier.FINAL))),
-      enclosingClassIsJunit4Test);
+  private static final Matcher<MethodInvocationTree> creationOfMockForFinalClass =
+      allOf(
+          staticMethod().onClass("org.mockito.Mockito").named("mock"),
+          argument(0, classLiteral(hasModifier(Modifier.FINAL))),
+          enclosingClassIsJunit4Test);
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {

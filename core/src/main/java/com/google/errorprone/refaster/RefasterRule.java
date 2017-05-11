@@ -44,39 +44,53 @@ import javax.tools.JavaFileManager;
 /**
  * A representation of an entire Refaster rule, corresponding to a class with @BeforeTemplates
  * and @AfterTemplates.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  * @param <M> The type of a match.
  * @param <T> The type of the template used to find matches and generate replacements.
  */
 @AutoValue
-public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M>> 
+public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M>>
     implements CodeTransformer, Serializable {
-  public static RefasterRule<?, ?> create(String qualifiedTemplateClass,
-      Collection<? extends Template<?>> beforeTemplates, 
+  public static RefasterRule<?, ?> create(
+      String qualifiedTemplateClass,
+      Collection<? extends Template<?>> beforeTemplates,
       Collection<? extends Template<?>> afterTemplates) {
-    return create(qualifiedTemplateClass, ImmutableList.<UTypeVar>of(), beforeTemplates,
-        afterTemplates, ImmutableClassToInstanceMap.<Annotation>builder().build());
+    return create(
+        qualifiedTemplateClass,
+        ImmutableList.<UTypeVar>of(),
+        beforeTemplates,
+        afterTemplates,
+        ImmutableClassToInstanceMap.<Annotation>builder().build());
   }
-  
-  public static RefasterRule<?, ?> create(String qualifiedTemplateClass,
+
+  public static RefasterRule<?, ?> create(
+      String qualifiedTemplateClass,
       Iterable<UTypeVar> typeVariables,
-      Collection<? extends Template<?>> beforeTemplates, 
+      Collection<? extends Template<?>> beforeTemplates,
       Collection<? extends Template<?>> afterTemplates,
       ImmutableClassToInstanceMap<Annotation> annotations) {
 
-    checkState(!beforeTemplates.isEmpty(),
-        "No @BeforeTemplate was found in the specified class: %s", qualifiedTemplateClass);
+    checkState(
+        !beforeTemplates.isEmpty(),
+        "No @BeforeTemplate was found in the specified class: %s",
+        qualifiedTemplateClass);
     Class<?> templateType = beforeTemplates.iterator().next().getClass();
     for (Template<?> beforeTemplate : beforeTemplates) {
-      checkState(beforeTemplate.getClass().equals(templateType),
+      checkState(
+          beforeTemplate.getClass().equals(templateType),
           "Expected all templates to be of type %s but found template of type %s in %s",
-          templateType, beforeTemplate.getClass(), qualifiedTemplateClass);
+          templateType,
+          beforeTemplate.getClass(),
+          qualifiedTemplateClass);
     }
     for (Template<?> afterTemplate : afterTemplates) {
-      checkState(afterTemplate.getClass().equals(templateType),
+      checkState(
+          afterTemplate.getClass().equals(templateType),
           "Expected all templates to be of type %s but found template of type %s in %s",
-          templateType, afterTemplate.getClass(), qualifiedTemplateClass);
+          templateType,
+          afterTemplate.getClass(),
+          qualifiedTemplateClass);
     }
     @SuppressWarnings({"unchecked", "rawtypes"})
     RefasterRule<?, ?> result =
@@ -88,17 +102,21 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
             annotations);
     return result;
   }
-  
+
   RefasterRule() {}
-  
+
   abstract String qualifiedTemplateClass();
+
   abstract ImmutableList<UTypeVar> typeVariables();
+
   abstract ImmutableList<T> beforeTemplates();
-  @Nullable abstract ImmutableList<T> afterTemplates();
-  
+
+  @Nullable
+  abstract ImmutableList<T> afterTemplates();
+
   @Override
   public abstract ImmutableClassToInstanceMap<Annotation> annotations();
-  
+
   @Override
   public void apply(TreePath path, Context context, DescriptionListener listener) {
     RefasterScanner.create(this, listener)
@@ -108,10 +126,9 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
   boolean rejectMatchesWithComments() {
     return true; // TODO(lowasser): worth making configurable?
   }
-  
-  static final Context.Key<ImmutableList<UTypeVar>> RULE_TYPE_VARS = 
-      new Context.Key<>();
-  
+
+  static final Context.Key<ImmutableList<UTypeVar>> RULE_TYPE_VARS = new Context.Key<>();
+
   private Context prepareContext(Context baseContext, JCCompilationUnit compilationUnit) {
     Context context = new SubContext(baseContext);
     if (context.get(JavaFileManager.class) == null) {

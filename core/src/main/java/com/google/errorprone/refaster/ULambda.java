@@ -36,7 +36,7 @@ import com.sun.tools.javac.util.ListBuffer;
 
 /**
  * {@code UTree} representation of a {@code LambdaExpressionTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
@@ -45,7 +45,7 @@ abstract class ULambda extends UExpression implements LambdaExpressionTree {
       ParameterKind parameterKind, Iterable<UVariableDecl> parameters, UTree<?> body) {
     return new AutoValue_ULambda(parameterKind, ImmutableList.copyOf(parameters), body);
   }
-  
+
   @Override
   public Kind getKind() {
     return Kind.LAMBDA_EXPRESSION;
@@ -100,7 +100,7 @@ abstract class ULambda extends UExpression implements LambdaExpressionTree {
     }
     return getBody().inline(inliner);
   }
-  
+
   abstract ParameterKind parameterKind();
 
   @Override

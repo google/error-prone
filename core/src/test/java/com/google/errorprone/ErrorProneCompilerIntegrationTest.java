@@ -110,9 +110,10 @@ public class ErrorProneCompilerIntegrationTest {
                 .forResources(BadShiftAmount.class, "testdata/BadShiftAmountPositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[BadShiftAmount]")));
-    assertTrue("Error should be found. " + diagnosticHelper.describe(),
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[BadShiftAmount]")));
+    assertTrue(
+        "Error should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
   }
 
@@ -129,9 +130,10 @@ public class ErrorProneCompilerIntegrationTest {
                     "testdata/NonAtomicVolatileUpdatePositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[NonAtomicVolatileUpdate]")));
-    assertTrue("Warning should be found. " + diagnosticHelper.describe(),
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[NonAtomicVolatileUpdate]")));
+    assertTrue(
+        "Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
   }
 
@@ -159,8 +161,8 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   /**
-   * Regression test for a bug in which multiple top-level classes may cause
-   * NullPointerExceptions in the matchers.
+   * Regression test for a bug in which multiple top-level classes may cause NullPointerExceptions
+   * in the matchers.
    */
   @Test
   public void fileWithMultipleTopLevelClassesExtendsWithError() throws Exception {
@@ -173,9 +175,10 @@ public class ErrorProneCompilerIntegrationTest {
                     "testdata/MultipleTopLevelClassesWithErrors.java",
                     "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[SelfAssignment]")));
-    assertTrue("Warning should be found. " + diagnosticHelper.describe(),
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
+    assertTrue(
+        "Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(4);
   }
@@ -201,17 +204,18 @@ public class ErrorProneCompilerIntegrationTest {
                     "testdata/MultipleTopLevelClassesWithErrors.java",
                     "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(CoreMatchers.<String>allOf(
-            containsString("IllegalStateException: test123"),
-            containsString("unhandled exception was thrown by the Error Prone"))));
-    assertTrue("Error should be reported. " + diagnosticHelper.describe(),
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        hasItem(
+            diagnosticMessage(
+                CoreMatchers.<String>allOf(
+                    containsString("IllegalStateException: test123"),
+                    containsString("unhandled exception was thrown by the Error Prone"))));
+    assertTrue(
+        "Error should be reported. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
   }
 
-  /**
-   * Regression test for Issue 188, error-prone doesn't work with annotation processors.
-   */
+  /** Regression test for Issue 188, error-prone doesn't work with annotation processors. */
   @Test
   public void annotationProcessingWorks() throws Exception {
     Result exitCode =
@@ -223,9 +227,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  /**
-   * Test that if javac does dataflow on a class twice error-prone only analyses it once.
-   */
+  /** Test that if javac does dataflow on a class twice error-prone only analyses it once. */
   @Test
   public void reportReadyForAnalysisOnce() throws Exception {
     Result exitCode =
@@ -261,11 +263,13 @@ public class ErrorProneCompilerIntegrationTest {
   public void ignoreGeneratedConstructors() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ConstructorMatcher.class));
     compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", "public class Test {}")));
+    Result exitCode =
+        compiler.compile(
+            Arrays.asList(
+                compiler.fileManager().forSourceLines("Test.java", "public class Test {}")));
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = not(hasItem(
-        diagnosticMessage(containsString("[ConstructorMatcher]"))));
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        not(hasItem(diagnosticMessage(containsString("[ConstructorMatcher]"))));
     assertTrue(
         "Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
@@ -292,9 +296,7 @@ public class ErrorProneCompilerIntegrationTest {
       } else {
         return Description.NO_MATCH;
       }
-      return name.contentEquals("super")
-          ? describeMatch(tree)
-          : Description.NO_MATCH;
+      return name.contentEquals("super") ? describeMatch(tree) : Description.NO_MATCH;
     }
   }
 
@@ -304,14 +306,16 @@ public class ErrorProneCompilerIntegrationTest {
   public void ignoreGeneratedSuperInvocations() throws Exception {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(SuperCallMatcher.class));
     compiler = compilerBuilder.build();
-    Result exitCode = compiler.compile(Arrays.asList(
-        compiler.fileManager().forSourceLines("Test.java",
-            "public class Test {",
-            "  public Test() {}",
-            "}")));
+    Result exitCode =
+        compiler.compile(
+            Arrays.asList(
+                compiler
+                    .fileManager()
+                    .forSourceLines(
+                        "Test.java", "public class Test {", "  public Test() {}", "}")));
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = not(hasItem(
-        diagnosticMessage(containsString("[SuperCallMatcher]"))));
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        not(hasItem(diagnosticMessage(containsString("[SuperCallMatcher]"))));
     assertTrue(
         "Warning should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
@@ -322,11 +326,14 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void invalidFlagCausesCmdErrResult() throws Exception {
     String[] args = {"-Xep:"};
-    Result exitCode = compiler.compile(args,
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java",
-            "public class Test {",
-            "  public Test() {}",
-            "}")));
+    Result exitCode =
+        compiler.compile(
+            args,
+            Arrays.asList(
+                compiler
+                    .fileManager()
+                    .forSourceLines(
+                        "Test.java", "public class Test {", "  public Test() {}", "}")));
     outputStream.flush();
 
     assertThat(outputStream.toString(), exitCode, is(Result.CMDERR));
@@ -334,25 +341,23 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void flagEnablesCheck() throws Exception {
-    String[] testFile = {"public class Test {",
-        "  public Test() {",
-        "    if (true);",
-        "  }",
-        "}"};
+    String[] testFile = {"public class Test {", "  public Test() {", "    if (true);", "  }", "}"};
 
-    Result exitCode = compiler.compile(Arrays.asList(
-        compiler.fileManager().forSourceLines("Test.java", testFile)));
+    Result exitCode =
+        compiler.compile(
+            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
     String[] args = {"-Xep:EmptyIf"};
-    exitCode = compiler.compile(args,
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    exitCode =
+        compiler.compile(
+            args, Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[EmptyIf]")));
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[EmptyIf]")));
     assertTrue(
         "Error should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
@@ -362,16 +367,12 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void severityIsResetOnNextCompilation() throws Exception {
-    String[] testFile = {
-        "public class Test {",
-        "  void doIt (int i) {",
-        "    i = i;",
-        "  }",
-        "}"};
+    String[] testFile = {"public class Test {", "  void doIt (int i) {", "    i = i;", "  }", "}"};
 
     String[] args = {"-Xep:SelfAssignment:WARN"};
-    Result exitCode = compiler.compile(args,
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    Result exitCode =
+        compiler.compile(
+            args, Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
@@ -381,34 +382,33 @@ public class ErrorProneCompilerIntegrationTest {
         matcher.matches(diagnosticHelper.getDiagnostics()));
 
     // Should reset to default severity (ERROR)
-    exitCode = compiler.compile(
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    exitCode =
+        compiler.compile(
+            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
   }
 
   @Test
   public void maturityIsResetOnNextCompilation() throws Exception {
-    String[] testFile = {"public class Test {",
-        "  public Test() {",
-        "    if (true);",
-        "  }",
-        "}"};
+    String[] testFile = {"public class Test {", "  public Test() {", "    if (true);", "  }", "}"};
 
     String[] args = {"-Xep:EmptyIf"};
-    Result exitCode = compiler.compile(args,
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    Result exitCode =
+        compiler.compile(
+            args, Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher = hasItem(
-        diagnosticMessage(containsString("[EmptyIf]")));
+    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
+        hasItem(diagnosticMessage(containsString("[EmptyIf]")));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     assertTrue(
         "Error should be found. " + diagnosticHelper.describe(),
         matcher.matches(diagnosticHelper.getDiagnostics()));
 
     diagnosticHelper.clearDiagnostics();
-    exitCode = compiler.compile(
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    exitCode =
+        compiler.compile(
+            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
@@ -481,7 +481,6 @@ public class ErrorProneCompilerIntegrationTest {
     name = "CrashOnReturn",
     explanation = "",
     summary = "",
-
     severity = ERROR,
     category = ONE_OFF
   )
@@ -555,7 +554,6 @@ public class ErrorProneCompilerIntegrationTest {
     summary = "Using 'return' is considered harmful",
     explanation = "Please refactor your code into continuation passing style.",
     category = ONE_OFF,
-
     severity = ERROR
   )
   public static class CPSChecker extends BugChecker implements ReturnTreeMatcher {

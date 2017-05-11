@@ -36,9 +36,7 @@ import java.nio.file.Path;
 import java.util.List;
 import javax.tools.JavaFileObject;
 
-/**
- * An in-memory file manager for testing that uses {@link JavacFileManager} and {@link Jimfs}.
- */
+/** An in-memory file manager for testing that uses {@link JavacFileManager} and {@link Jimfs}. */
 public class ErrorProneInMemoryFileManager extends JavacFileManager {
   private final FileSystem fileSystem;
   private final Optional<Class<?>> clazz;
@@ -47,7 +45,7 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
    * Constructs an ErrorProneInMemoryFileManager instance.
    *
    * <p>Instances constructed with this constructor may not use the {@link #forResource(String)}
-   * method to create a JavaFileObject from a source file on disk.  If you wish to use that method,
+   * method to create a JavaFileObject from a source file on disk. If you wish to use that method,
    * use the {@link #ErrorProneInMemoryFileManager(Class)} constructor instead.
    */
   public ErrorProneInMemoryFileManager() {
@@ -70,9 +68,7 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
     this.clazz = clazz;
   }
 
-  /**
-   * Loads resources of the provided class into {@link JavaFileObject}s.
-   */
+  /** Loads resources of the provided class into {@link JavaFileObject}s. */
   public List<JavaFileObject> forResources(Class<?> clazz, String... fileNames) {
     ImmutableList.Builder<JavaFileObject> result = ImmutableList.builder();
     for (String fileName : fileNames) {
@@ -81,9 +77,7 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
     return result.build();
   }
 
-  /**
-   * Loads a resource of the provided class into a {@link JavaFileObject}.
-   */
+  /** Loads a resource of the provided class into a {@link JavaFileObject}. */
   public JavaFileObject forResource(Class<?> clazz, String fileName) {
     Path path = fileSystem.getPath("/", clazz.getPackage().getName().replace('.', '/'), fileName);
     try (InputStream is = findResource(clazz, fileName)) {
@@ -108,9 +102,7 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
     throw new AssertionError("could not find resource: " + name);
   }
 
-  /**
-   * Loads a resource of the class passed into the constructor into a {@link JavaFileObject}.
-   */
+  /** Loads a resource of the class passed into the constructor into a {@link JavaFileObject}. */
   public JavaFileObject forResource(String fileName) {
     Preconditions.checkState(
         clazz.isPresent(), "clazz must be set if you want to add a source from a resource file");
@@ -124,9 +116,7 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
     return fileSystem.getPath(fileName);
   }
 
-  /**
-   * Creates a {@link JavaFileObject} with the given name and content.
-   */
+  /** Creates a {@link JavaFileObject} with the given name and content. */
   public JavaFileObject forSourceLines(String fileName, String... lines) {
     Path path = resolvePath(fileName);
     try {

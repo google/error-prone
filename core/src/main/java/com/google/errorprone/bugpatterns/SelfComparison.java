@@ -46,7 +46,7 @@ public class SelfComparison extends BugChecker implements MethodInvocationTreeMa
    * Matches calls to any instance method called "compareTo" with exactly one argument in which the
    * receiver is the same reference as the argument.
    *
-   * Example: foo.compareTo(foo)
+   * <p>Example: foo.compareTo(foo)
    */
   private static final Matcher<MethodInvocationTree> COMPARE_TO_MATCHER =
       allOf(

@@ -18,14 +18,10 @@ package com.google.errorprone.apply;
 
 import java.io.IOException;
 
-/**
- * @author sjnickerson@google.com (Simon Nickerson)
- *
- */
+/** @author sjnickerson@google.com (Simon Nickerson) */
 public interface FileDestination {
 
   void writeFile(SourceFile file) throws IOException;
 
   void flush() throws IOException;
-  
 }

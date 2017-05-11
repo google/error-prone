@@ -29,15 +29,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author deminguyen@google.com (Demi Nguyen)
- */
+/** @author deminguyen@google.com (Demi Nguyen) */
 @RunWith(JUnit4.class)
 public class NonNullLiteralTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatchPrimitiveLiterals() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  public int getInt() {",
         "    return 2;",
@@ -60,58 +59,57 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "  public String getString() {",
         "    return \"test string\";",
         "  }",
-        "}"
-      );
-      assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
+        "}");
+    assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
   }
 
   @Test
   public void shouldMatchClassLiteral() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "import java.lang.reflect.Type;",
         "public class A {",
         "  public void testClassLiteral() {",
         "    Type klass = String.class;",
         "  }",
-        "}"
-      );
-      assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
+        "}");
+    assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
   }
 
   @Test
   public void shouldNotMatchClassDeclaration() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "public class A {",
         "  protected class B {",
         "    private class C {",
         "    }",
         "  }",
-        "}"
-    );
+        "}");
     assertCompiles(nonNullLiteralMatches(false, Matchers.nonNullLiteral()));
   }
 
   @Test
   public void shouldNotMatchMemberAccess() {
-    writeFile("A.java",
+    writeFile(
+        "A.java",
         "package com.google;",
         "public class A {",
         "  public String stringVar;",
         "  public void testMemberAccess() {",
         "    this.stringVar = new String();",
         "  }",
-        "}"
-    );
+        "}");
 
-    writeFile("B.java",
+    writeFile(
+        "B.java",
         "import com.google.A;",
         "public class B {",
         "  public void testInstanceMemberAccess() {",
         "    A foo = new A();",
         "    foo.stringVar = new String();",
         "  }",
-        "}"
-    );
+        "}");
     assertCompiles(nonNullLiteralMatches(false, Matchers.nonNullLiteral()));
   }
 

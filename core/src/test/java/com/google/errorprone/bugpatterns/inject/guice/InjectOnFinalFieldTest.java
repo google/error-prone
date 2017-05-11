@@ -22,17 +22,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 @RunWith(JUnit4.class)
 public class InjectOnFinalFieldTest {
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(InjectOnFinalField.class, getClass());
+    compilationHelper = CompilationTestHelper.newInstance(InjectOnFinalField.class, getClass());
   }
 
   @Test

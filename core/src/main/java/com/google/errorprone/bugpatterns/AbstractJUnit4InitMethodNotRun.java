@@ -40,8 +40,8 @@ import javax.lang.model.element.Modifier;
 
 /**
  * Base class for JUnit4SetUp/TearDown not run. This will take care of the nitty-gritty about
- * replacing @After with @Before, adding @Before on unannotated methods, making them public
- * if necessary, fixing the imports of other @Before, etc.
+ * replacing @After with @Before, adding @Before on unannotated methods, making them public if
+ * necessary, fixing the imports of other @Before, etc.
  *
  * @author glorioso@google.com
  */
@@ -54,8 +54,8 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
   }
 
   /**
-   * Returns a matcher that selects which methods this matcher applies to
-   * (e.g. public void setUp() without @Before/@BeforeClass annotation)
+   * Returns a matcher that selects which methods this matcher applies to (e.g. public void setUp()
+   * without @Before/@BeforeClass annotation)
    */
   protected abstract Matcher<MethodTree> methodMatcher();
 
@@ -63,7 +63,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
    * Returns the fully qualified class name of the annotation this bugpattern should apply to
    * matched methods.
    *
-   * If another annotation is on the method that has the same name, the import will be replaced
+   * <p>If another annotation is on the method that has the same name, the import will be replaced
    * with the appropriate one (e.g.: com.example.Before becomes org.junit.Before)
    */
   protected abstract String correctAnnotation();
@@ -72,30 +72,27 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
    * Returns a collection of 'before-and-after' pairs of annotations that should be replaced on
    * these methods.
    *
-   * <p>If this method matcher finds a method annotated with
-   * {@link AnnotationReplacements#badAnnotation}, instead of applying
-   * {@link #correctAnnotation()}, instead replace it with
-   * {@link AnnotationReplacements#goodAnnotation}
+   * <p>If this method matcher finds a method annotated with {@link
+   * AnnotationReplacements#badAnnotation}, instead of applying {@link #correctAnnotation()},
+   * instead replace it with {@link AnnotationReplacements#goodAnnotation}
    */
   protected abstract List<AnnotationReplacements> annotationReplacements();
 
-
   /**
-   * Matches if all of the following conditions are true:
-   * 1) The method matches {@link #methodMatcher()}, (looks like setUp() or tearDown(),
-   *    and none of the overrides in the hierarchy of the method have the appropriate @Before
-   *    or @After annotations)
-   * 2) The method is not annotated with @Test
-   * 3) The enclosing class has an @RunWith annotation and does not extend TestCase. This marks
-   *    that the test is intended to run with JUnit 4.
+   * Matches if all of the following conditions are true: 1) The method matches {@link
+   * #methodMatcher()}, (looks like setUp() or tearDown(), and none of the overrides in the
+   * hierarchy of the method have the appropriate @Before or @After annotations) 2) The method is
+   * not annotated with @Test 3) The enclosing class has an @RunWith annotation and does not extend
+   * TestCase. This marks that the test is intended to run with JUnit 4.
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    boolean matches = allOf(
-        methodMatcher(),
-        not(hasAnnotationOnAnyOverriddenMethod(JUNIT_TEST)),
-        enclosingClass(isJUnit4TestClass))
-        .matches(methodTree, state);
+    boolean matches =
+        allOf(
+                methodMatcher(),
+                not(hasAnnotationOnAnyOverriddenMethod(JUNIT_TEST)),
+                enclosingClass(isJUnit4TestClass))
+            .matches(methodTree, state);
     if (!matches) {
       return Description.NO_MATCH;
     }
@@ -104,8 +101,9 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     // matches, don't try and do the rest of the work.
     Description description;
     for (AnnotationReplacements replacement : annotationReplacements()) {
-      description = tryToReplaceAnnotation(
-          methodTree, state, replacement.badAnnotation, replacement.goodAnnotation);
+      description =
+          tryToReplaceAnnotation(
+              methodTree, state, replacement.badAnnotation, replacement.goodAnnotation);
       if (description != null) {
         return description;
       }
@@ -119,9 +117,8 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
       String annotationClassName =
           ASTHelpers.getSymbol(annotationNode).getQualifiedName().toString();
       if (annotationClassName.endsWith("." + unqualifiedClassName)) {
-        SuggestedFix.Builder suggestedFix = SuggestedFix.builder()
-            .removeImport(annotationClassName)
-            .addImport(correctAnnotation);
+        SuggestedFix.Builder suggestedFix =
+            SuggestedFix.builder().removeImport(annotationClassName).addImport(correctAnnotation);
         if (makeProtectedPublic(methodTree, state, unqualifiedClassName, suggestedFix, false)
             == null) {
           // No source position available, don't suggest a fix
@@ -156,31 +153,37 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
   // null and not emit a fix in that case. Returns true if the method was upgraded from protected
   // to public
   @Nullable
-  private Boolean makeProtectedPublic(MethodTree methodTree, VisitorState state,
-      String unqualifiedClassName, SuggestedFix.Builder suggestedFix, boolean addAnnotation) {
+  private Boolean makeProtectedPublic(
+      MethodTree methodTree,
+      VisitorState state,
+      String unqualifiedClassName,
+      SuggestedFix.Builder suggestedFix,
+      boolean addAnnotation) {
     if (Matchers.<MethodTree>hasModifier(Modifier.PROTECTED).matches(methodTree, state)) {
       CharSequence methodSource = state.getSourceForNode((JCTree.JCMethodDecl) methodTree);
       if (methodSource == null) {
         return null;
       }
-      String methodString = (addAnnotation ? "@" + unqualifiedClassName + "\n" : "")
-          + methodSource.toString().replaceFirst("protected ", "public ");
+      String methodString =
+          (addAnnotation ? "@" + unqualifiedClassName + "\n" : "")
+              + methodSource.toString().replaceFirst("protected ", "public ");
       suggestedFix.replace(methodTree, methodString);
       return true;
     }
     return false;
   }
 
-
-  private Description tryToReplaceAnnotation(MethodTree methodTree, VisitorState state,
-                                             String badAnnotation, String goodAnnotation) {
+  private Description tryToReplaceAnnotation(
+      MethodTree methodTree, VisitorState state, String badAnnotation, String goodAnnotation) {
     String finalName = getUnqualifiedClassName(goodAnnotation);
     if (hasAnnotation(badAnnotation).matches(methodTree, state)) {
       AnnotationTree annotationTree = findAnnotation(methodTree, state, badAnnotation);
-      return describeMatch(annotationTree, SuggestedFix.builder()
-          .addImport(goodAnnotation)
-          .replace(annotationTree, "@" + finalName)
-          .build());
+      return describeMatch(
+          annotationTree,
+          SuggestedFix.builder()
+              .addImport(goodAnnotation)
+              .replace(annotationTree, "@" + finalName)
+              .build());
     } else {
       return null;
     }
@@ -190,12 +193,11 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     return goodAnnotation.substring(goodAnnotation.lastIndexOf(".") + 1);
   }
 
-  private AnnotationTree findAnnotation(MethodTree methodTree, VisitorState state,
-                                        String annotationName) {
+  private AnnotationTree findAnnotation(
+      MethodTree methodTree, VisitorState state, String annotationName) {
     AnnotationTree annotationNode = null;
     for (AnnotationTree annotation : methodTree.getModifiers().getAnnotations()) {
-      if (ASTHelpers.getSymbol(annotation)
-          .equals(state.getSymbolFromString(annotationName))) {
+      if (ASTHelpers.getSymbol(annotation).equals(state.getSymbolFromString(annotationName))) {
         annotationNode = annotation;
       }
     }

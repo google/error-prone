@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 /**
  * Simple supplier pattern, which allows delayed binding to access to runtime elements.
+ *
  * @author alexeagle@google.com (Alex Eagle)
  */
 public interface Supplier<T> extends Serializable {

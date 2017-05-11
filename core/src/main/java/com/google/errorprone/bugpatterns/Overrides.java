@@ -101,8 +101,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
         arrayOpenIndex--;
       }
       if (paramTypeSource.charAt(arrayOpenIndex) == '[') {
-        descriptionBuilder.addFix(
-            SuggestedFix.replace(paramType, "...", arrayOpenIndex, 0));
+        descriptionBuilder.addFix(SuggestedFix.replace(paramType, "...", arrayOpenIndex, 0));
       }
     }
 

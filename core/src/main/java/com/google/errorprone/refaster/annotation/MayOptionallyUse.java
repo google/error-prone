@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * Indicates that a parameter to a placeholder method is not required to be used in the
- * placeholder's implementation.  For example, the pattern
+ * placeholder's implementation. For example, the pattern
  *
  * <pre><code>
  * abstract class Utf8Bytes {
@@ -47,5 +47,4 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
-public @interface MayOptionallyUse {
-}
+public @interface MayOptionallyUse {}

@@ -34,34 +34,34 @@ public class IncompatibleModifiersCheckerTest {
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper
-        .newInstance(IncompatibleModifiersChecker.class, getClass())
-        .addSourceLines(
-            "test/NotPrivateOrFinal.java",
-            "package test;",
-            "import static javax.lang.model.element.Modifier.FINAL;",
-            "import static javax.lang.model.element.Modifier.PRIVATE;",
-            "import com.google.errorprone.annotations.IncompatibleModifiers;",
-            "@IncompatibleModifiers({PRIVATE, FINAL})",
-            "public @interface NotPrivateOrFinal {",
-            "}")
-        .addSourceLines(
-            "test/NotPublicOrFinal.java",
-            "package test;",
-            "import static javax.lang.model.element.Modifier.FINAL;",
-            "import static javax.lang.model.element.Modifier.PUBLIC;",
-            "import com.google.errorprone.annotations.IncompatibleModifiers;",
-            "@IncompatibleModifiers({PUBLIC, FINAL})",
-            "public @interface NotPublicOrFinal {",
-            "}")
-        .addSourceLines(
-            "test/NotAbstract.java",
-            "package test;",
-            "import static javax.lang.model.element.Modifier.ABSTRACT;",
-            "import com.google.errorprone.annotations.IncompatibleModifiers;",
-            "@IncompatibleModifiers(ABSTRACT)",
-            "public @interface NotAbstract {",
-            "}");
+    compilationHelper =
+        CompilationTestHelper.newInstance(IncompatibleModifiersChecker.class, getClass())
+            .addSourceLines(
+                "test/NotPrivateOrFinal.java",
+                "package test;",
+                "import static javax.lang.model.element.Modifier.FINAL;",
+                "import static javax.lang.model.element.Modifier.PRIVATE;",
+                "import com.google.errorprone.annotations.IncompatibleModifiers;",
+                "@IncompatibleModifiers({PRIVATE, FINAL})",
+                "public @interface NotPrivateOrFinal {",
+                "}")
+            .addSourceLines(
+                "test/NotPublicOrFinal.java",
+                "package test;",
+                "import static javax.lang.model.element.Modifier.FINAL;",
+                "import static javax.lang.model.element.Modifier.PUBLIC;",
+                "import com.google.errorprone.annotations.IncompatibleModifiers;",
+                "@IncompatibleModifiers({PUBLIC, FINAL})",
+                "public @interface NotPublicOrFinal {",
+                "}")
+            .addSourceLines(
+                "test/NotAbstract.java",
+                "package test;",
+                "import static javax.lang.model.element.Modifier.ABSTRACT;",
+                "import com.google.errorprone.annotations.IncompatibleModifiers;",
+                "@IncompatibleModifiers(ABSTRACT)",
+                "public @interface NotAbstract {",
+                "}");
   }
 
   @Test
@@ -160,7 +160,7 @@ public class IncompatibleModifiersCheckerTest {
             "package test;",
             "import test.NotAbstract;",
             "// BUG: Diagnostic contains: The annotation '@NotAbstract' has specified that it"
-            + " should not be used together with the following modifiers: [abstract]",
+                + " should not be used together with the following modifiers: [abstract]",
             "@NotAbstract public abstract class RequiredModifiersTestCase {",
             "}")
         .doTest();
@@ -225,10 +225,7 @@ public class IncompatibleModifiersCheckerTest {
             "@Target(ElementType.PACKAGE)",
             "public @interface Anno {",
             "}")
-        .addSourceLines(
-            "testdata/package-info.java",
-            "@Anno",
-            "package testdata;")
+        .addSourceLines("testdata/package-info.java", "@Anno", "package testdata;")
         .doTest();
   }
 }

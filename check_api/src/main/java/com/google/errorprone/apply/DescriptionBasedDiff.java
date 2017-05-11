@@ -29,11 +29,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Implementation of a {@link Diff} that performs the modifications that are passed to its
- * {@link #onDescribed} method, with no formatting.
- * 
+ * Implementation of a {@link Diff} that performs the modifications that are passed to its {@link
+ * #onDescribed} method, with no formatting.
+ *
  * <p>If imports are changed, they are resorted as per Google Java style.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public final class DescriptionBasedDiff implements DescriptionListener, Diff {
@@ -74,7 +74,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   public String getRelevantFileName() {
     return sourcePath;
   }
-  
+
   public boolean isEmpty() {
     return importsToAdd.isEmpty() && importsToRemove.isEmpty() && replacements.isEmpty();
   }
@@ -114,8 +114,8 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
               importStatements.toString()));
     }
     for (Replacement replacement : replacements.descending()) {
-      sourceFile.replaceChars(replacement.startPosition(), replacement.endPosition(),
-          replacement.replaceWith());
+      sourceFile.replaceChars(
+          replacement.startPosition(), replacement.endPosition(), replacement.replaceWith());
     }
   }
 }

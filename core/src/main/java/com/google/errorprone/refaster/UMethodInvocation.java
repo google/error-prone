@@ -52,7 +52,8 @@ public abstract class UMethodInvocation extends UExpression implements MethodInv
   @Nullable
   public Choice<Unifier> visitMethodInvocation(
       MethodInvocationTree methodInvocation, @Nullable Unifier unifier) {
-    return getMethodSelect().unify(methodInvocation.getMethodSelect(), unifier)
+    return getMethodSelect()
+        .unify(methodInvocation.getMethodSelect(), unifier)
         .thenChoose(unifications(getArguments(), methodInvocation.getArguments(), true));
   }
 
@@ -73,9 +74,11 @@ public abstract class UMethodInvocation extends UExpression implements MethodInv
 
   @Override
   public JCMethodInvocation inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().Apply(
-        com.sun.tools.javac.util.List.<JCExpression>nil(),
-        getMethodSelect().inline(inliner),
-        inliner.<JCExpression>inlineList(getArguments()));
+    return inliner
+        .maker()
+        .Apply(
+            com.sun.tools.javac.util.List.<JCExpression>nil(),
+            getMethodSelect().inline(inliner),
+            inliner.<JCExpression>inlineList(getArguments()));
   }
 }

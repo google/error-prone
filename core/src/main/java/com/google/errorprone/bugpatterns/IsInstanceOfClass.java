@@ -56,10 +56,7 @@ public class IsInstanceOfClass extends BugChecker implements MethodInvocationTre
               // test for the same _erased_ type.
               Matchers.<ExpressionTree>isSubtypeOf("java.lang.Class")));
 
-
-  /**
-   * Suggests removing getClass() or changing to Class.class.
-   */
+  /** Suggests removing getClass() or changing to Class.class. */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!INSTANCE_OF_CLASS.matches(tree, state)) {
@@ -118,7 +115,9 @@ public class IsInstanceOfClass extends BugChecker implements MethodInvocationTre
   @AutoValue
   abstract static class Operand {
     abstract Kind kind();
+
     abstract CharSequence value();
+
     abstract CharSequence source();
 
     static Operand create(Kind kind, CharSequence value, CharSequence source) {

@@ -64,40 +64,41 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
   private static final String MESSAGE_BASE = "equals method doesn't override Object.equals";
 
   /**
-   * Matches any method definition that:
-   * 1) is named `equals`
-   * 2) takes a single argument of a type other than Object
-   * 3) returns a boolean or Boolean
+   * Matches any method definition that: 1) is named `equals` 2) takes a single argument of a type
+   * other than Object 3) returns a boolean or Boolean
    */
-  private static final Matcher<MethodTree> MATCHER = allOf(
-      methodIsNamed("equals"),
-      methodHasParameters(variableType(not(isSameType("java.lang.Object")))),
-      anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
-
-  /**
-   * Matches if the enclosing class overrides Object#equals.
-   */
-  private static final Matcher<MethodTree> enclosingClassOverridesEquals =
-      enclosingClass(hasMethod(allOf(
+  private static final Matcher<MethodTree> MATCHER =
+      allOf(
           methodIsNamed("equals"),
-          methodReturns(BOOLEAN_TYPE),
-          methodHasParameters(variableType(isSameType(OBJECT_TYPE))),
-          not(isStatic()))));
+          methodHasParameters(variableType(not(isSameType("java.lang.Object")))),
+          anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
+
+  /** Matches if the enclosing class overrides Object#equals. */
+  private static final Matcher<MethodTree> enclosingClassOverridesEquals =
+      enclosingClass(
+          hasMethod(
+              allOf(
+                  methodIsNamed("equals"),
+                  methodReturns(BOOLEAN_TYPE),
+                  methodHasParameters(variableType(isSameType(OBJECT_TYPE))),
+                  not(isStatic()))));
 
   /**
-   * Matches method declarations for which we cannot provide a fix.  Our default fix rewrites
-   * the equals method to override Object.equals.  In these (uncommon) cases, our rewrite
-   * algorithm doesn't work:
+   * Matches method declarations for which we cannot provide a fix. Our default fix rewrites the
+   * equals method to override Object.equals. In these (uncommon) cases, our rewrite algorithm
+   * doesn't work:
+   *
    * <ul>
-   * <li>the method is static
-   * <li>the method is not public
-   * <li>the method returns a boxed Boolean
+   *   <li>the method is static
+   *   <li>the method is not public
+   *   <li>the method returns a boxed Boolean
    * </ul>
    */
-  private static final Matcher<MethodTree> noFixMatcher = anyOf(
-      isStatic(),
-      not(methodHasVisibility(Visibility.PUBLIC)),
-      methodReturns(JAVA_LANG_BOOLEAN_TYPE));
+  private static final Matcher<MethodTree> noFixMatcher =
+      anyOf(
+          isStatic(),
+          not(methodHasVisibility(Visibility.PUBLIC)),
+          methodReturns(JAVA_LANG_BOOLEAN_TYPE));
 
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
@@ -129,8 +130,10 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
        * should always be compared for reference equality. Enum defines a final equals method for
        * just this reason. */
       return buildDescription(methodTree)
-          .setMessage(MESSAGE_BASE + "; enum instances can safely be compared by reference "
-              + "equality, so please delete this")
+          .setMessage(
+              MESSAGE_BASE
+                  + "; enum instances can safely be compared by reference "
+                  + "equality, so please delete this")
           .addFix(SuggestedFix.delete(methodTree))
           .build();
     } else {
@@ -152,19 +155,24 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
       if (methodTree.getBody() != null) {
 
         // Add type check at start
-        String typeCheckStmt = "if (!(" + parameterName + " instanceof " + parameterType + ")) {\n"
-            + "  return false;\n"
-            + "}\n";
+        String typeCheckStmt =
+            "if (!("
+                + parameterName
+                + " instanceof "
+                + parameterType
+                + ")) {\n"
+                + "  return false;\n"
+                + "}\n";
         fix.prefixWith(methodTree.getBody().getStatements().get(0), typeCheckStmt);
 
         // Cast all uses of the parameter name using a recursive TreeScanner.
-        new CastScanner().scan(methodTree.getBody(), new CastState(parameterName,
-            parameterType.toString(), fix));
+        new CastScanner()
+            .scan(
+                methodTree.getBody(), new CastState(parameterName, parameterType.toString(), fix));
       }
 
       return describeMatch(methodTree, fix.build());
     }
-
   }
 
   private static class CastState {
@@ -179,10 +187,7 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
     }
   }
 
-  /**
-   * A Scanner used to replace all references to a variable with
-   * a casted version.
-   */
+  /** A Scanner used to replace all references to a variable with a casted version. */
   private static class CastScanner extends TreeScanner<Void, CastState> {
     @Override
     public Void visitIdentifier(IdentifierTree node, CastState state) {

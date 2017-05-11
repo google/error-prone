@@ -82,11 +82,12 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  public Description matchMethodInvocation(
+      MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (allOf(
             staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
             argument(0, Matchers.<ExpressionTree>isPrimitiveType()))
-            .matches(methodInvocationTree, state)) {
+        .matches(methodInvocationTree, state)) {
       return describe(methodInvocationTree, state);
     }
     return Description.NO_MATCH;
@@ -94,19 +95,19 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
 
   /**
    * If the call to Preconditions.checkNotNull is part of an expression (assignment, return, etc.),
-   * we substitute the argument for the method call. E.g.:
-   * {@code bar = Preconditions.checkNotNull(foo); ==> bar = foo;}
+   * we substitute the argument for the method call. E.g.: {@code bar =
+   * Preconditions.checkNotNull(foo); ==> bar = foo;}
    *
    * <p>If the argument to Preconditions.checkNotNull is a comparison using == or != and one of the
-   * operands is null, we call checkNotNull on the non-null operand. E.g.:
-   * {@code checkNotNull(a == null); ==> checkNotNull(a);}
+   * operands is null, we call checkNotNull on the non-null operand. E.g.: {@code checkNotNull(a ==
+   * null); ==> checkNotNull(a);}
    *
-   * <p>If the argument is a method call or binary tree and its return type is boolean, change it to a
-   * checkArgument/checkState. E.g.:
-   * {@code Preconditions.checkNotNull(foo.hasFoo()) ==> Preconditions.checkArgument(foo.hasFoo())}
+   * <p>If the argument is a method call or binary tree and its return type is boolean, change it to
+   * a checkArgument/checkState. E.g.: {@code Preconditions.checkNotNull(foo.hasFoo()) ==>
+   * Preconditions.checkArgument(foo.hasFoo())}
    *
-   * <p>Otherwise, delete the checkNotNull call. E.g.:
-   * {@code Preconditions.checkNotNull(foo); ==> [delete the line]}
+   * <p>Otherwise, delete the checkNotNull call. E.g.: {@code Preconditions.checkNotNull(foo); ==>
+   * [delete the line]}
    */
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     ExpressionTree arg1 = methodInvocationTree.getArguments().get(0);
@@ -114,28 +115,27 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
 
     // Assignment, return, etc.
     if (parent.getKind() != Kind.EXPRESSION_STATEMENT) {
-      return describeMatch(arg1,
-          SuggestedFix.replace(methodInvocationTree, arg1.toString()));
+      return describeMatch(arg1, SuggestedFix.replace(methodInvocationTree, arg1.toString()));
     }
 
     // Comparison to null
     if (arg1.getKind() == Kind.EQUAL_TO || arg1.getKind() == Kind.NOT_EQUAL_TO) {
       BinaryTree binaryExpr = (BinaryTree) arg1;
       if (binaryExpr.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
-        return describeMatch(arg1,
-            SuggestedFix.replace(arg1, binaryExpr.getRightOperand().toString()));
+        return describeMatch(
+            arg1, SuggestedFix.replace(arg1, binaryExpr.getRightOperand().toString()));
       }
       if (binaryExpr.getRightOperand().getKind() == Kind.NULL_LITERAL) {
-        return describeMatch(arg1,
-            SuggestedFix.replace(arg1, binaryExpr.getLeftOperand().toString()));
+        return describeMatch(
+            arg1, SuggestedFix.replace(arg1, binaryExpr.getLeftOperand().toString()));
       }
     }
 
-    if ((arg1 instanceof BinaryTree || arg1.getKind() == Kind.METHOD_INVOCATION ||
-         arg1.getKind() == Kind.LOGICAL_COMPLEMENT) &&
-        ((JCExpression) arg1).type == state.getSymtab().booleanType) {
-      return describeMatch(arg1,
-          createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));
+    if ((arg1 instanceof BinaryTree
+            || arg1.getKind() == Kind.METHOD_INVOCATION
+            || arg1.getKind() == Kind.LOGICAL_COMPLEMENT)
+        && ((JCExpression) arg1).type == state.getSymtab().booleanType) {
+      return describeMatch(arg1, createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));
     }
 
     return describeMatch(arg1, SuggestedFix.delete(parent));
@@ -145,8 +145,8 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
    * Creates a SuggestedFix that replaces the checkNotNull call with a checkArgument or checkState
    * call.
    */
-  private Fix createCheckArgumentOrStateCall(MethodInvocationTree methodInvocationTree,
-      VisitorState state, ExpressionTree arg1) {
+  private Fix createCheckArgumentOrStateCall(
+      MethodInvocationTree methodInvocationTree, VisitorState state, ExpressionTree arg1) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     String replacementMethod = "checkState";
     if (hasMethodParameter(state.getPath(), arg1)) {
@@ -171,10 +171,10 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
   }
 
   /**
-   * Determines whether the expression contains a reference to one of the
-   * enclosing method's parameters.
+   * Determines whether the expression contains a reference to one of the enclosing method's
+   * parameters.
    *
-   * TODO(eaftan): Extract this to ASTHelpers.
+   * <p>TODO(eaftan): Extract this to ASTHelpers.
    *
    * @param path the path to the current tree node
    * @param tree the node to compare against the parameters
@@ -209,15 +209,9 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
   /**
    * Find the root variable identifiers from an arbitrary expression.
    *
-   * Examples:
-   *    a.trim().intern() ==> {a}
-   *    a.b.trim().intern() ==> {a}
-   *    this.intValue.foo() ==> {this}
-   *    this.foo() ==> {this}
-   *    intern() ==> {}
-   *    String.format() ==> {}
-   *    java.lang.String.format() ==> {}
-   *    x.y.z(s.t) ==> {x,s}
+   * <p>Examples: a.trim().intern() ==> {a} a.b.trim().intern() ==> {a} this.intValue.foo() ==>
+   * {this} this.foo() ==> {this} intern() ==> {} String.format() ==> {} java.lang.String.format()
+   * ==> {} x.y.z(s.t) ==> {x,s}
    */
   static List<IdentifierTree> getVariableUses(ExpressionTree tree) {
     final List<IdentifierTree> freeVars = new ArrayList<>();

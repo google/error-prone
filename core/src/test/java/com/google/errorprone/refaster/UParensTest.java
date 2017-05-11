@@ -39,18 +39,18 @@ public class UParensTest extends AbstractUTreeTest {
   public void inline() {
     assertInlines("(5L)", UParens.create(ULiteral.longLit(5L)));
   }
-  
+
   @Test
   public void equality() {
     new EqualsTester()
         .addEqualityGroup(UParens.create(ULiteral.longLit(5L)))
         .addEqualityGroup(UParens.create(ULiteral.intLit(5)))
         .addEqualityGroup(UParens.create(UUnary.create(Kind.UNARY_MINUS, ULiteral.intLit(5))))
-        .addEqualityGroup(UParens.create(
-            UBinary.create(Kind.PLUS, ULiteral.intLit(5), ULiteral.intLit(1))))
+        .addEqualityGroup(
+            UParens.create(UBinary.create(Kind.PLUS, ULiteral.intLit(5), ULiteral.intLit(1))))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(UParens.create(ULiteral.longLit(5L)));

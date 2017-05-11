@@ -36,7 +36,7 @@ public class USynchronizedTest {
         .addEqualityGroup(USynchronized.create(UFreeIdent.create("bar"), UBlock.create()))
         .testEquals();
   }
-  
+
   @Test
   public void serialization() {
     SerializableTester.reserializeAndAssert(

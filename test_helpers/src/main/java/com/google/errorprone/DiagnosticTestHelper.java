@@ -55,19 +55,15 @@ public class DiagnosticTestHelper {
   // When testing a single error-prone check, the name of the check. Used to validate diagnostics.
   // Null if not testing a single error-prone check.
   private final String checkName;
-  
+
   private final Map<String, Predicate<? super String>> expectedErrorMsgs = new HashMap<>();
 
-  /**
-   * Construct a {@link DiagnosticTestHelper} not associated with a specific check.
-   */
+  /** Construct a {@link DiagnosticTestHelper} not associated with a specific check. */
   public DiagnosticTestHelper() {
     this(null);
   }
 
-  /**
-   * Construct a {@link DiagnosticTestHelper} for a check with the given name.
-   */
+  /** Construct a {@link DiagnosticTestHelper} for a check with the given name. */
   public DiagnosticTestHelper(String checkName) {
     this.checkName = checkName;
   }
@@ -78,8 +74,7 @@ public class DiagnosticTestHelper {
   public static Matcher<Diagnostic<? extends JavaFileObject>> suggestsRemovalOfLine(
       URI fileURI, int line) {
     return allOf(
-        diagnosticOnLine(fileURI, line),
-        diagnosticMessage(containsString("remove this line")));
+        diagnosticOnLine(fileURI, line), diagnosticMessage(containsString("remove this line")));
   }
 
   public List<Diagnostic<? extends JavaFileObject>> getDiagnostics() {
@@ -93,8 +88,10 @@ public class DiagnosticTestHelper {
   public String describe() {
     StringBuilder stringBuilder = new StringBuilder().append("Diagnostics:\n");
     for (Diagnostic<? extends JavaFileObject> diagnostic : getDiagnostics()) {
-      stringBuilder.append("  [")
-          .append(diagnostic.getLineNumber()).append(":")
+      stringBuilder
+          .append("  [")
+          .append(diagnostic.getLineNumber())
+          .append(":")
           .append(diagnostic.getColumnNumber())
           .append("]\t");
       stringBuilder.append(diagnostic.getMessage(Locale.getDefault()).replaceAll("\n", "\\\\n"));
@@ -107,16 +104,18 @@ public class DiagnosticTestHelper {
       final long line, final long column) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
-      protected boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
-          Description mismatchDescription) {
+      protected boolean matchesSafely(
+          Diagnostic<? extends JavaFileObject> item, Description mismatchDescription) {
         if (item.getLineNumber() != line) {
-          mismatchDescription.appendText("diagnostic not on line ")
+          mismatchDescription
+              .appendText("diagnostic not on line ")
               .appendValue(item.getLineNumber());
           return false;
         }
 
         if (item.getColumnNumber() != column) {
-          mismatchDescription.appendText("diagnostic not on column ")
+          mismatchDescription
+              .appendText("diagnostic not on column ")
               .appendValue(item.getColumnNumber());
           return false;
         }
@@ -139,10 +138,11 @@ public class DiagnosticTestHelper {
       final URI fileURI, final long line) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
-      public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
-          Description mismatchDescription) {
+      public boolean matchesSafely(
+          Diagnostic<? extends JavaFileObject> item, Description mismatchDescription) {
         if (item.getSource() == null) {
-          mismatchDescription.appendText("diagnostic not attached to a file: ")
+          mismatchDescription
+              .appendText("diagnostic not attached to a file: ")
               .appendValue(item.getMessage(ENGLISH));
           return false;
         }
@@ -153,7 +153,8 @@ public class DiagnosticTestHelper {
         }
 
         if (item.getLineNumber() != line) {
-          mismatchDescription.appendText("diagnostic not on line ")
+          mismatchDescription
+              .appendText("diagnostic not on line ")
               .appendValue(item.getLineNumber());
           return false;
         }
@@ -163,9 +164,7 @@ public class DiagnosticTestHelper {
 
       @Override
       public void describeTo(Description description) {
-        description
-            .appendText("a diagnostic on line ")
-            .appendValue(line);
+        description.appendText("a diagnostic on line ").appendValue(line);
       }
     };
   }
@@ -174,10 +173,11 @@ public class DiagnosticTestHelper {
       final URI fileURI, final long line, final Predicate<? super String> matcher) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
-      public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
-          Description mismatchDescription) {
+      public boolean matchesSafely(
+          Diagnostic<? extends JavaFileObject> item, Description mismatchDescription) {
         if (item.getSource() == null) {
-          mismatchDescription.appendText("diagnostic not attached to a file: ")
+          mismatchDescription
+              .appendText("diagnostic not attached to a file: ")
               .appendValue(item.getMessage(ENGLISH));
           return false;
         }
@@ -188,7 +188,8 @@ public class DiagnosticTestHelper {
         }
 
         if (item.getLineNumber() != line) {
-          mismatchDescription.appendText("diagnostic not on line ")
+          mismatchDescription
+              .appendText("diagnostic not on line ")
               .appendValue(item.getLineNumber());
           return false;
         }
@@ -213,15 +214,15 @@ public class DiagnosticTestHelper {
     };
   }
 
-
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticMessage(
       final Matcher<String> matcher) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
-      public boolean matchesSafely(Diagnostic<? extends JavaFileObject> item,
-          Description mismatchDescription) {
+      public boolean matchesSafely(
+          Diagnostic<? extends JavaFileObject> item, Description mismatchDescription) {
         if (!matcher.matches(item.getMessage(Locale.getDefault()))) {
-          mismatchDescription.appendText("diagnostic message does not match ")
+          mismatchDescription
+              .appendText("diagnostic message does not match ")
               .appendDescriptionOf(matcher);
           return false;
         }
@@ -237,14 +238,13 @@ public class DiagnosticTestHelper {
   }
 
   /**
-   * Comment that marks a bug on the next line in a test file.  For example,
-   * "// BUG: Diagnostic contains: foo.bar()", where "foo.bar()" is a string that should be in the
-   * diagnostic for the line.  Multiple expected strings may be separated by newlines, e.g.
-   * // BUG: Diagnostic contains: foo.bar()
-   * // bar.baz()
-   * // baz.foo()
+   * Comment that marks a bug on the next line in a test file. For example, "// BUG: Diagnostic
+   * contains: foo.bar()", where "foo.bar()" is a string that should be in the diagnostic for the
+   * line. Multiple expected strings may be separated by newlines, e.g. // BUG: Diagnostic contains:
+   * foo.bar() // bar.baz() // baz.foo()
    */
   private static final String BUG_MARKER_COMMENT_INLINE = "// BUG: Diagnostic contains:";
+
   private static final String BUG_MARKER_COMMENT_LOOKUP = "// BUG: Diagnostic matches:";
   private final Set<String> usedLookupKeys = new HashSet<>();
 
@@ -252,16 +252,18 @@ public class DiagnosticTestHelper {
     YES,
     NO;
   }
-  
+
   /**
    * Expects an error message matching {@code matcher} at the line below a comment matching the key.
    * For example, given the source
+   *
    * <pre>
    *   // BUG: Diagnostic matches: X
    *   a = b + c;
    * </pre>
-   * ... you can use
-   * {@code expectErrorMessage("X", Predicates.containsPattern("Can't add b to c"));}
+   *
+   * ... you can use {@code expectErrorMessage("X", Predicates.containsPattern("Can't add b to
+   * c"));}
    *
    * <p>Error message keys that don't match any diagnostics will cause test to fail.
    */
@@ -270,19 +272,19 @@ public class DiagnosticTestHelper {
   }
 
   /**
-   * Asserts that the diagnostics contain a diagnostic on each line of the source file that
-   * matches our bug marker pattern.  Parses the bug marker pattern for the specific string to
-   * look for in the diagnostic.
-   * @param source File in which to find matching lines
+   * Asserts that the diagnostics contain a diagnostic on each line of the source file that matches
+   * our bug marker pattern. Parses the bug marker pattern for the specific string to look for in
+   * the diagnostic.
    *
-   * TODO(eaftan): Switch to use assertThat instead of assertTrue.
+   * @param source File in which to find matching lines
+   *     <p>TODO(eaftan): Switch to use assertThat instead of assertTrue.
    */
   public void assertHasDiagnosticOnAllMatchingLines(
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
       throws IOException {
     final List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
-    final LineNumberReader reader = new LineNumberReader(
-        CharSource.wrap(source.getCharContent(false)).openStream());
+    final LineNumberReader reader =
+        new LineNumberReader(CharSource.wrap(source.getCharContent(false)).openStream());
     do {
       String line = reader.readLine();
       if (line == null) {
@@ -303,33 +305,47 @@ public class DiagnosticTestHelper {
         predicates = new ArrayList<>(lookupKeys.size());
         for (String lookupKey : lookupKeys) {
           assertTrue(
-              "No expected error message with key [" + lookupKey + "] as expected from line ["
-              + markerLineNumber + "] with diagnostic [" + line.trim() + "]",
+              "No expected error message with key ["
+                  + lookupKey
+                  + "] as expected from line ["
+                  + markerLineNumber
+                  + "] with diagnostic ["
+                  + line.trim()
+                  + "]",
               expectedErrorMsgs.containsKey(lookupKey));
           predicates.add(expectedErrorMsgs.get(lookupKey));
           usedLookupKeys.add(lookupKey);
         }
       }
-      
+
       if (predicates != null) {
         int lineNumber = reader.getLineNumber();
         for (Predicate<? super String> predicate : predicates) {
           Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> patternMatcher =
               hasItem(diagnosticOnLine(source.toUri(), lineNumber, predicate));
           assertTrue(
-              "Did not see an error on line " + lineNumber + " matching " + predicate
-                  + ". All errors:\n" + diagnostics,
+              "Did not see an error on line "
+                  + lineNumber
+                  + " matching "
+                  + predicate
+                  + ". All errors:\n"
+                  + diagnostics,
               patternMatcher.matches(diagnostics));
         }
 
         if (checkName != null && lookForCheckNameInDiagnostic == LookForCheckNameInDiagnostic.YES) {
           // Diagnostic must contain check name.
           Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> checkNameMatcher =
-              hasItem(diagnosticOnLine(
-                  source.toUri(), lineNumber, new SimpleStringContains("[" + checkName + "]")));
+              hasItem(
+                  diagnosticOnLine(
+                      source.toUri(), lineNumber, new SimpleStringContains("[" + checkName + "]")));
           assertTrue(
-              "Did not see an error on line " + lineNumber + " containing [" + checkName
-                  + "]. All errors:\n" + diagnostics,
+              "Did not see an error on line "
+                  + lineNumber
+                  + " containing ["
+                  + checkName
+                  + "]. All errors:\n"
+                  + diagnostics,
               checkNameMatcher.matches(diagnostics));
         }
 
@@ -344,9 +360,9 @@ public class DiagnosticTestHelper {
     } while (true);
     reader.close();
   }
-  
+
   /** Returns the lookup keys that weren't used. */
-  public Set<String> getUnusedLookupKeys() {    
+  public Set<String> getUnusedLookupKeys() {
     return Sets.difference(expectedErrorMsgs.keySet(), usedLookupKeys);
   }
 
@@ -360,8 +376,7 @@ public class DiagnosticTestHelper {
    * @throws IOException
    */
   private static List<String> extractPatterns(
-      String line, BufferedReader reader, String matchString)
-      throws IOException {
+      String line, BufferedReader reader, String matchString) throws IOException {
     int bugMarkerIndex = line.indexOf(matchString);
     if (bugMarkerIndex < 0) {
       throw new IllegalArgumentException("Line must contain bug marker prefix");
@@ -378,19 +393,19 @@ public class DiagnosticTestHelper {
 
     return result;
   }
-  
-  private static class SimpleStringContains implements Predicate<String>  {
+
+  private static class SimpleStringContains implements Predicate<String> {
     private final String pattern;
 
     SimpleStringContains(String pattern) {
       this.pattern = pattern;
     }
-    
+
     @Override
     public boolean apply(String input) {
       return input.contains(pattern);
     }
-    
+
     @Override
     public String toString() {
       return pattern;

@@ -58,14 +58,14 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
    * <p>Examples:
    *
    * <ul>
-   *   <li> assertThat(a).isEqualTo(a)
-   *   <li> assertThat(a).isNotEqualTo(a)
-   *   <li> assertThat(a).isNotSameAs(a)
-   *   <li> assertThat(a).isSameAs(a)
-   *   <li> assertWithMessage(msg).that(a).isEqualTo(a)
-   *   <li> assertWithMessage(msg).that(a).isNotEqualTo(a)
-   *   <li> assertWithMessage(msg).that(a).isNotSameAs(a)
-   *   <li> assertWithMessage(msg).that(a).isSameAs(a)
+   *   <li>assertThat(a).isEqualTo(a)
+   *   <li>assertThat(a).isNotEqualTo(a)
+   *   <li>assertThat(a).isNotSameAs(a)
+   *   <li>assertThat(a).isSameAs(a)
+   *   <li>assertWithMessage(msg).that(a).isEqualTo(a)
+   *   <li>assertWithMessage(msg).that(a).isNotEqualTo(a)
+   *   <li>assertWithMessage(msg).that(a).isNotSameAs(a)
+   *   <li>assertWithMessage(msg).that(a).isSameAs(a)
    * </ul>
    */
   private static final Pattern EQUALS_SAME = Pattern.compile("(isEqualTo|isSameAs)");

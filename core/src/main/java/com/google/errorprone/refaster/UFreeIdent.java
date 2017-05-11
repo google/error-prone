@@ -33,20 +33,20 @@ import javax.annotation.Nullable;
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
-public abstract class UFreeIdent extends UIdent {  
+public abstract class UFreeIdent extends UIdent {
   static class Key extends Bindings.Key<JCExpression> {
     Key(CharSequence name) {
       super(name.toString());
     }
   }
-  
+
   public static UFreeIdent create(CharSequence identifier) {
     return new AutoValue_UFreeIdent(StringName.of(identifier));
   }
 
   @Override
   public abstract StringName getName();
-  
+
   public Key key() {
     return new Key(getName());
   }
@@ -55,7 +55,7 @@ public abstract class UFreeIdent extends UIdent {
   public JCExpression inline(Inliner inliner) {
     return inliner.getBinding(key());
   }
-  
+
   private static boolean trueOrNull(@Nullable Boolean condition) {
     return condition == null || condition;
   }
@@ -63,7 +63,7 @@ public abstract class UFreeIdent extends UIdent {
   @Override
   public Choice<Unifier> visitIdentifier(IdentifierTree node, Unifier unifier) {
     Names names = Names.instance(unifier.getContext());
-    return node.getName().equals(names._super) 
+    return node.getName().equals(names._super)
         ? Choice.<Unifier>none()
         : defaultAction(node, unifier);
   }
@@ -72,28 +72,30 @@ public abstract class UFreeIdent extends UIdent {
   protected Choice<Unifier> defaultAction(Tree target, final Unifier unifier) {
     if (target instanceof JCExpression) {
       JCExpression expression = (JCExpression) target;
-      
-      JCExpression currentBinding = unifier.getBinding(key());
-      
-      // Check that the expression does not reference any template-local variables.
-      boolean isGood = trueOrNull(new TreeScanner<Boolean, Void>() {
-        @Override
-        public Boolean reduce(@Nullable Boolean left, @Nullable Boolean right) {
-          return trueOrNull(left) && trueOrNull(right);
-        }
 
-        @Override
-        public Boolean visitIdentifier(IdentifierTree ident, Void v) {
-          Symbol identSym = ASTHelpers.getSymbol(ident);
-          for (ULocalVarIdent.Key key : 
-              Iterables.filter(unifier.getBindings().keySet(), ULocalVarIdent.Key.class)) {
-            if (identSym == unifier.getBinding(key).getSymbol()) {
-              return false;
-            }
-          }
-          return true;
-        }
-      }.scan(expression, null));
+      JCExpression currentBinding = unifier.getBinding(key());
+
+      // Check that the expression does not reference any template-local variables.
+      boolean isGood =
+          trueOrNull(
+              new TreeScanner<Boolean, Void>() {
+                @Override
+                public Boolean reduce(@Nullable Boolean left, @Nullable Boolean right) {
+                  return trueOrNull(left) && trueOrNull(right);
+                }
+
+                @Override
+                public Boolean visitIdentifier(IdentifierTree ident, Void v) {
+                  Symbol identSym = ASTHelpers.getSymbol(ident);
+                  for (ULocalVarIdent.Key key :
+                      Iterables.filter(unifier.getBindings().keySet(), ULocalVarIdent.Key.class)) {
+                    if (identSym == unifier.getBinding(key).getSymbol()) {
+                      return false;
+                    }
+                  }
+                  return true;
+                }
+              }.scan(expression, null));
       if (!isGood) {
         return Choice.none();
       } else if (currentBinding == null) {

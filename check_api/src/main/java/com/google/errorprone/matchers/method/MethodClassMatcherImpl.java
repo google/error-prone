@@ -38,8 +38,8 @@ class MethodClassMatcherImpl extends AbstractChainedMatcher<MatchState, MatchSta
   }
 
   @Override
-  protected Optional<MatchState> matchResult(ExpressionTree item, MatchState method,
-      VisitorState state) {
+  protected Optional<MatchState> matchResult(
+      ExpressionTree item, MatchState method, VisitorState state) {
     return predicate.apply(method.ownerType(), state)
         ? Optional.of(method)
         : Optional.<MatchState>absent();

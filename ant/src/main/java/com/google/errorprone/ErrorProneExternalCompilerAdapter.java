@@ -29,9 +29,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 
-/**
- * Ant component to launch an external javac with error-prone enabled.
- */
+/** Ant component to launch an external javac with error-prone enabled. */
 public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
   private Path classpath;
   private String memoryStackSize;
@@ -90,7 +88,8 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
       }
 
       Path bootclasspath = new Path(getProject());
-      addResourceSource(bootclasspath, "com/google/errorprone/ErrorProneExternalCompilerAdapter.class");
+      addResourceSource(
+          bootclasspath, "com/google/errorprone/ErrorProneExternalCompilerAdapter.class");
       cmd.createArgument().setValue("-Xbootclasspath/p:" + bootclasspath);
 
       if (classpath != null) {
@@ -104,16 +103,16 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
       logAndAddFilesToCompile(cmd);
       return executeExternalCompile(cmd.getCommandline(), firstFile, true) == 0;
     } else {
-      attributes.log("You must set fork=\"yes\" to use the external Error Prone compiler",
-          Project.MSG_ERR);
+      attributes.log(
+          "You must set fork=\"yes\" to use the external Error Prone compiler", Project.MSG_ERR);
       return false;
     }
   }
 
   private void addResourceSource(Path classpath, String resource) {
-    final File f = LoaderUtils.getResourceSource(
-        ErrorProneExternalCompilerAdapter.class.getClassLoader(),
-        resource);
+    final File f =
+        LoaderUtils.getResourceSource(
+            ErrorProneExternalCompilerAdapter.class.getClassLoader(), resource);
     if (f != null) {
       attributes.log("Found " + f.getAbsolutePath(), Project.MSG_DEBUG);
       classpath.createPath().setLocation(f);

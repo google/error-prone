@@ -28,13 +28,9 @@ public enum Nullness implements AbstractValue<Nullness> {
   /**
    * The lattice for nullness looks like:
    *
-   *        Nullable
-   *       /        \
-   *   Null          Non-null
-   *        \      /
-   *         Bottom
+   * <p>Nullable / \ Null Non-null \ / Bottom
    */
-  NULLABLE("Nullable"),     // TODO(eaftan): Rename to POSSIBLY_NULL?
+  NULLABLE("Nullable"), // TODO(eaftan): Rename to POSSIBLY_NULL?
   NULL("Null"),
   NONNULL("Non-null"),
   BOTTOM("Bottom");
@@ -90,9 +86,9 @@ public enum Nullness implements AbstractValue<Nullness> {
    * union these complement sets over all possible values of {@code var2}, the set that results is
    * what this method returns, assuming that {@code this} is the {@code Nullness} of {@code var2}.
    *
-   * <p>Example 1: Suppose {@code nv2 == NULL}. Then {@code var2} can have exactly one value,
-   * {@code null}, and {@code var1} must have a value in the set of all values except {@code null}.
-   * That set is exactly {@code NONNULL}.
+   * <p>Example 1: Suppose {@code nv2 == NULL}. Then {@code var2} can have exactly one value, {@code
+   * null}, and {@code var1} must have a value in the set of all values except {@code null}. That
+   * set is exactly {@code NONNULL}.
    *
    * <p>Example 2: Suppose {@code nv2 == NONNULL}. Then {@code var2} can have any value except
    * {@code null}. Suppose {@code var2} has value {@code "foo"}. Then {@code var1} must have a value

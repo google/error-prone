@@ -27,9 +27,9 @@ import com.sun.tools.javac.tree.JCTree.JCSkip;
  */
 final class USkip extends USimpleStatement implements EmptyStatementTree {
   public static final USkip INSTANCE = new USkip();
-  
+
   private USkip() {}
-  
+
   Object readResolve() {
     return INSTANCE;
   }

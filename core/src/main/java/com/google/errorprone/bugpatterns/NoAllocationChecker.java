@@ -177,50 +177,43 @@ public class NoAllocationChecker extends BugChecker
 
   /**
    * Matches if a Tree has a ThrowTree or an AnnotationTree before any MethodTree in its hierarchy.
-   * We don't want the throw to nullify any {@code @NoAnnotation} in a method in an anonymous
-   * class below it.
+   * We don't want the throw to nullify any {@code @NoAnnotation} in a method in an anonymous class
+   * below it.
    */
-  private static final Matcher<Tree> withinThrowOrAnnotation = new Matcher<Tree>() {
-    @Override
-    public boolean matches(Tree tree, VisitorState state) {
-      // TODO(agoode): Make this accept statements in a block that definitely will lead to a throw.
-      TreePath path = state.getPath().getParentPath();
-      while (path != null) {
-        Tree node = path.getLeaf();
-        state = state.withPath(path);
-        switch (node.getKind()) {
-          case METHOD:
-            // We've gotten to the top of the method without finding a throw.
-            return false;
-          case THROW:
-          case ANNOTATION:
-            return true;
-          default:
-            path = path.getParentPath();
+  private static final Matcher<Tree> withinThrowOrAnnotation =
+      new Matcher<Tree>() {
+        @Override
+        public boolean matches(Tree tree, VisitorState state) {
+          // TODO(agoode): Make this accept statements in a block that definitely will lead to a
+          // throw.
+          TreePath path = state.getPath().getParentPath();
+          while (path != null) {
+            Tree node = path.getLeaf();
+            state = state.withPath(path);
+            switch (node.getKind()) {
+              case METHOD:
+                // We've gotten to the top of the method without finding a throw.
+                return false;
+              case THROW:
+              case ANNOTATION:
+                return true;
+              default:
+                path = path.getParentPath();
+            }
+          }
+          return false;
         }
-      }
-      return false;
-    }
-  };
+      };
 
   /**
-   * Matches a new array statement if the enclosing method is annotated with
-   * {@code @NoAllocation}.
+   * Matches a new array statement if the enclosing method is annotated with {@code @NoAllocation}.
    */
   private static final Matcher<NewArrayTree> newArrayMatcher =
-      allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(noAllocationMethodMatcher)
-      );
+      allOf(not(withinThrowOrAnnotation), enclosingMethod(noAllocationMethodMatcher));
 
-  /**
-   * Matches a new statement if the enclosing method is annotated with {@code @NoAllocation}.
-   */
+  /** Matches a new statement if the enclosing method is annotated with {@code @NoAllocation}. */
   private static final Matcher<NewClassTree> newClassMatcher =
-      allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(noAllocationMethodMatcher)
-      );
+      allOf(not(withinThrowOrAnnotation), enclosingMethod(noAllocationMethodMatcher));
 
   /**
    * Matches if a method without {@code @NoAllocation} is invoked from a method with
@@ -228,25 +221,19 @@ public class NoAllocationChecker extends BugChecker
    */
   private static final Matcher<MethodInvocationTree> methodMatcher =
       allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(noAllocationMethodMatcher),
-        not(noAllocationMethodInvocationMatcher)
-      );
+          not(withinThrowOrAnnotation),
+          enclosingMethod(noAllocationMethodMatcher),
+          not(noAllocationMethodInvocationMatcher));
 
-  /**
-   * Matches string concatenation. Includes all string conversions.
-   */
+  /** Matches string concatenation. Includes all string conversions. */
   private static final Matcher<BinaryTree> stringConcatenationMatcher =
       allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(noAllocationMethodMatcher),
-        kindIs(PLUS),
-        binaryTree(anyExpression, isString)
-      );
+          not(withinThrowOrAnnotation),
+          enclosingMethod(noAllocationMethodMatcher),
+          kindIs(PLUS),
+          binaryTree(anyExpression, isString));
 
-  /**
-   * Matches string and boxing compound assignment.
-   */
+  /** Matches string and boxing compound assignment. */
   private static final Matcher<CompoundAssignmentTree> compoundAssignmentMatcher =
       allOf(
           not(withinThrowOrAnnotation),
@@ -255,135 +242,118 @@ public class NoAllocationChecker extends BugChecker
               compoundAssignment(PLUS_ASSIGNMENT, isString, anyExpression),
               compoundAssignment(ALL_COMPOUND_OPERATORS, not(primitiveExpression), anyExpression)));
 
-  /**
-   * Matches if foreach is used on a non-array or if boxing occurs with an array.
-   */
+  /** Matches if foreach is used on a non-array or if boxing occurs with an array. */
   private static final Matcher<EnhancedForLoopTree> foreachMatcher =
       allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(noAllocationMethodMatcher),
-        anyOf(
-          not(enhancedForLoop(anyVariable, arrayExpression, anyStatement)),
-          enhancedForLoop(variableType(not(isPrimitiveType())), primitiveArrayExpression,
-            anyStatement)
-        )
-      );
+          not(withinThrowOrAnnotation),
+          enclosingMethod(noAllocationMethodMatcher),
+          anyOf(
+              not(enhancedForLoop(anyVariable, arrayExpression, anyStatement)),
+              enhancedForLoop(
+                  variableType(not(isPrimitiveType())), primitiveArrayExpression, anyStatement)));
 
-  /**
-   * Matches boxing assignment.
-   */
+  /** Matches boxing assignment. */
   private static final Matcher<AssignmentTree> boxingAssignment =
       allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(noAllocationMethodMatcher),
-        assignment(not(primitiveExpression), primitiveExpression)
-      );
+          not(withinThrowOrAnnotation),
+          enclosingMethod(noAllocationMethodMatcher),
+          assignment(not(primitiveExpression), primitiveExpression));
 
-  /**
-   * Matches boxing during variable initialization.
-   */
+  /** Matches boxing during variable initialization. */
   private static final Matcher<VariableTree> boxingInitialization =
       allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(noAllocationMethodMatcher),
-        variableInitializer(primitiveExpression),
-        variableType(not(isPrimitiveType()))
-      );
+          not(withinThrowOrAnnotation),
+          enclosingMethod(noAllocationMethodMatcher),
+          variableInitializer(primitiveExpression),
+          variableType(not(isPrimitiveType())));
 
-  /**
-   * Matches boxing by explicit cast.
-   */
+  /** Matches boxing by explicit cast. */
   private static final Matcher<TypeCastTree> boxingCast =
       allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(noAllocationMethodMatcher),
-        typeCast(not(isPrimitiveType()), primitiveExpression)
-      );
+          not(withinThrowOrAnnotation),
+          enclosingMethod(noAllocationMethodMatcher),
+          typeCast(not(isPrimitiveType()), primitiveExpression));
 
-  /**
-   * Matches boxing by return.
-   */
-  private static final Matcher<ReturnTree> boxingReturn = new Matcher<ReturnTree>() {
-    @Override
-    public boolean matches(ReturnTree tree, VisitorState state) {
-      return allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(allOf(noAllocationMethodMatcher, methodReturnsNonPrimitiveType())),
-        isPrimitiveType()
-      ).matches(tree.getExpression(), state);
-    }
-  };
+  /** Matches boxing by return. */
+  private static final Matcher<ReturnTree> boxingReturn =
+      new Matcher<ReturnTree>() {
+        @Override
+        public boolean matches(ReturnTree tree, VisitorState state) {
+          return allOf(
+                  not(withinThrowOrAnnotation),
+                  enclosingMethod(
+                      allOf(noAllocationMethodMatcher, methodReturnsNonPrimitiveType())),
+                  isPrimitiveType())
+              .matches(tree.getExpression(), state);
+        }
+      };
 
-  /**
-   * Matches boxing by method invocation, including varargs.
-   */
+  /** Matches boxing by method invocation, including varargs. */
   private static final Matcher<MethodInvocationTree> boxingInvocation =
       new Matcher<MethodInvocationTree>() {
-    @Override
-    public boolean matches(MethodInvocationTree tree, VisitorState state) {
-      if (!enclosingMethod(noAllocationMethodMatcher).matches(tree, state)) {
-        return false;
-      }
+        @Override
+        public boolean matches(MethodInvocationTree tree, VisitorState state) {
+          if (!enclosingMethod(noAllocationMethodMatcher).matches(tree, state)) {
+            return false;
+          }
 
-      // Get the arguments.
-      JCMethodInvocation methodInvocation = (JCMethodInvocation) tree;
-      List<JCExpression> arguments = methodInvocation.getArguments();
+          // Get the arguments.
+          JCMethodInvocation methodInvocation = (JCMethodInvocation) tree;
+          List<JCExpression> arguments = methodInvocation.getArguments();
 
-      // Get the parameters.
-      MethodSymbol methodSymbol = ASTHelpers.getSymbol(tree);
-      List<VarSymbol> params = methodSymbol.getParameters();
+          // Get the parameters.
+          MethodSymbol methodSymbol = ASTHelpers.getSymbol(tree);
+          List<VarSymbol> params = methodSymbol.getParameters();
 
-      // If there is a length mismatch, this implies varargs boxing.
-      if (arguments.size() != params.size()) {
-        return true;
-      }
-
-      // Check for boxing at each argument.
-      int numArgs = arguments.size();
-      int i = 0;
-      Iterator<JCExpression> argument = arguments.iterator();
-      Iterator<VarSymbol> param = params.iterator();
-      while (param.hasNext() && argument.hasNext()) {
-        JCExpression a = argument.next();
-        VarSymbol p = param.next();
-
-        if (a.type.isPrimitive() && !p.type.isPrimitive()) {
-          // Boxing occurs here.
-          return true;
-        }
-
-        // Check last parameter. If unassignable, this implies varargs boxing.
-        if (i == numArgs - 1) {
-          if (!state.getTypes().isAssignable(a.type, p.type)) {
+          // If there is a length mismatch, this implies varargs boxing.
+          if (arguments.size() != params.size()) {
             return true;
           }
+
+          // Check for boxing at each argument.
+          int numArgs = arguments.size();
+          int i = 0;
+          Iterator<JCExpression> argument = arguments.iterator();
+          Iterator<VarSymbol> param = params.iterator();
+          while (param.hasNext() && argument.hasNext()) {
+            JCExpression a = argument.next();
+            VarSymbol p = param.next();
+
+            if (a.type.isPrimitive() && !p.type.isPrimitive()) {
+              // Boxing occurs here.
+              return true;
+            }
+
+            // Check last parameter. If unassignable, this implies varargs boxing.
+            if (i == numArgs - 1) {
+              if (!state.getTypes().isAssignable(a.type, p.type)) {
+                return true;
+              }
+            }
+            i++;
+          }
+
+          return false;
         }
-        i++;
-      }
+      };
 
-      return false;
-    }
-  };
-
-  /**
-   * Matches boxing by unary operator.
-   */
-  private static final Matcher<UnaryTree> boxingUnary = new Matcher<UnaryTree>() {
-    @Override
-    public boolean matches(UnaryTree tree, VisitorState state) {
-      return allOf(
-        not(withinThrowOrAnnotation),
-        enclosingMethod(noAllocationMethodMatcher),
-        anyOf(
-          kindIs(POSTFIX_DECREMENT),
-          kindIs(POSTFIX_INCREMENT),
-          kindIs(PREFIX_DECREMENT),
-          kindIs(PREFIX_INCREMENT)
-        )
-      ).matches(tree, state)
-      && not(isPrimitiveType()).matches(tree, state);
-    }
-  };
+  /** Matches boxing by unary operator. */
+  private static final Matcher<UnaryTree> boxingUnary =
+      new Matcher<UnaryTree>() {
+        @Override
+        public boolean matches(UnaryTree tree, VisitorState state) {
+          return allOf(
+                      not(withinThrowOrAnnotation),
+                      enclosingMethod(noAllocationMethodMatcher),
+                      anyOf(
+                          kindIs(POSTFIX_DECREMENT),
+                          kindIs(POSTFIX_INCREMENT),
+                          kindIs(PREFIX_DECREMENT),
+                          kindIs(PREFIX_INCREMENT)))
+                  .matches(tree, state)
+              && not(isPrimitiveType()).matches(tree, state);
+        }
+      };
 
   @Override
   public Description matchNewArray(NewArrayTree tree, VisitorState state) {
@@ -411,9 +381,11 @@ public class NoAllocationChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage("Calling a method that is not annotated with @NoAllocation, calling a varargs"
-          + " method without exactly matching the signature, or passing a primitive value as"
-          + " non-primitive method argument " + COMMON_MESSAGE_SUFFIX)
+        .setMessage(
+            "Calling a method that is not annotated with @NoAllocation, calling a varargs"
+                + " method without exactly matching the signature, or passing a primitive value as"
+                + " non-primitive method argument "
+                + COMMON_MESSAGE_SUFFIX)
         .build();
   }
 
@@ -433,8 +405,10 @@ public class NoAllocationChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage("Compound assignment to a String or boxed primitive allocates a new object,"
-          + " which " + COMMON_MESSAGE_SUFFIX)
+        .setMessage(
+            "Compound assignment to a String or boxed primitive allocates a new object,"
+                + " which "
+                + COMMON_MESSAGE_SUFFIX)
         .build();
   }
 
@@ -444,8 +418,10 @@ public class NoAllocationChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage("Iterating over a Collection or iterating over a primitive array using a"
-          + " non-primitive element type will trigger allocation, which " + COMMON_MESSAGE_SUFFIX)
+        .setMessage(
+            "Iterating over a Collection or iterating over a primitive array using a"
+                + " non-primitive element type will trigger allocation, which "
+                + COMMON_MESSAGE_SUFFIX)
         .build();
   }
 
@@ -455,8 +431,10 @@ public class NoAllocationChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage("Assigning a primitive value to a non-primitive variable or array element"
-          + " will autobox the value, which " + COMMON_MESSAGE_SUFFIX)
+        .setMessage(
+            "Assigning a primitive value to a non-primitive variable or array element"
+                + " will autobox the value, which "
+                + COMMON_MESSAGE_SUFFIX)
         .build();
   }
 
@@ -466,8 +444,10 @@ public class NoAllocationChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage("Initializing a non-primitive variable with a primitive value will autobox the"
-          + " value, which " + COMMON_MESSAGE_SUFFIX)
+        .setMessage(
+            "Initializing a non-primitive variable with a primitive value will autobox the"
+                + " value, which "
+                + COMMON_MESSAGE_SUFFIX)
         .build();
   }
 
@@ -477,8 +457,10 @@ public class NoAllocationChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage("Casting a primitive value to a non-primitive type will autobox the value,"
-          + " which " + COMMON_MESSAGE_SUFFIX)
+        .setMessage(
+            "Casting a primitive value to a non-primitive type will autobox the value,"
+                + " which "
+                + COMMON_MESSAGE_SUFFIX)
         .build();
   }
 
@@ -488,8 +470,10 @@ public class NoAllocationChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage("Returning a primitive value from a method with a non-primitive return type"
-          + " will autobox the value, which " + COMMON_MESSAGE_SUFFIX)
+        .setMessage(
+            "Returning a primitive value from a method with a non-primitive return type"
+                + " will autobox the value, which "
+                + COMMON_MESSAGE_SUFFIX)
         .build();
   }
 
@@ -499,8 +483,10 @@ public class NoAllocationChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage("Pre- and post- increment/decrement operations on a non-primitive variable or"
-          + " array element will autobox the result, which " + COMMON_MESSAGE_SUFFIX)
+        .setMessage(
+            "Pre- and post- increment/decrement operations on a non-primitive variable or"
+                + " array element will autobox the result, which "
+                + COMMON_MESSAGE_SUFFIX)
         .build();
   }
 }

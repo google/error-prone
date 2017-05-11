@@ -33,9 +33,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO(eaftan): I'm worried about this performance of this code,
- * specifically the part that handles SuppressWarnings.  We should
- * profile it and see where the hotspots are.
+ * TODO(eaftan): I'm worried about this performance of this code, specifically the part that handles
+ * SuppressWarnings. We should profile it and see where the hotspots are.
  *
  * @author alexeagle@google.com (Alex Eagle)
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -43,8 +42,7 @@ import java.util.Set;
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
   private Set<String> suppressions = new HashSet<>();
-  private Set<Class<? extends Annotation>> customSuppressions =
-      new HashSet<>();
+  private Set<Class<? extends Annotation>> customSuppressions = new HashSet<>();
   private boolean inGeneratedCode = false;
   // This must be lazily initialized, because the list of custom suppression annotations will
   // not be available until after the subclass's constructor has run.
@@ -56,9 +54,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     }
   }
 
-  /**
-   * Scan a tree from a position identified by a TreePath.
-   */
+  /** Scan a tree from a position identified by a TreePath. */
   @Override
   public Void scan(TreePath path, VisitorState state) {
     SuppressionHelper.SuppressionInfo prevSuppressionInfo =
@@ -74,10 +70,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     }
   }
 
-  /**
-   * Scan a single node.
-   * The current path is updated for the duration of the scan.
-   */
+  /** Scan a single node. The current path is updated for the duration of the scan. */
   @Override
   public Void scan(Tree tree, VisitorState state) {
     if (tree == null) {
@@ -96,8 +89,8 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   /**
-   * Updates current suppression state with information for the given {@code tree}.  Returns
-   * the previous suppression state so that it can be restored when going up the tree.
+   * Updates current suppression state with information for the given {@code tree}. Returns the
+   * previous suppression state so that it can be restored when going up the tree.
    */
   private SuppressionHelper.SuppressionInfo updateSuppressions(Tree tree, VisitorState state) {
     SuppressionHelper.SuppressionInfo prevSuppressionInfo =
@@ -145,15 +138,15 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   /**
-   * Returns a set of all the custom suppression annotation types used by the {@code BugChecker}s
-   * in this{@code Scanner}.
+   * Returns a set of all the custom suppression annotation types used by the {@code BugChecker}s in
+   * this{@code Scanner}.
    */
   protected Set<Class<? extends Annotation>> getCustomSuppressionAnnotations() {
     return Collections.<Class<? extends Annotation>>emptySet();
   }
 
-  protected <T extends Tree> void reportMatch(Description description, T match, VisitorState state)
-  {
+  protected <T extends Tree> void reportMatch(
+      Description description, T match, VisitorState state) {
     if (description == null || description == Description.NO_MATCH) {
       return;
     }
@@ -163,9 +156,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   /** Handles an exception thrown by an individual check. */
   protected void handleError(Suppressible s, Throwable t) {}
 
-  /**
-   * Returns a mapping between the canonical names of checks and their {@link SeverityLevel}.
-   */
+  /** Returns a mapping between the canonical names of checks and their {@link SeverityLevel}. */
   public Map<String, SeverityLevel> severityMap() {
     return Collections.emptyMap();
   }

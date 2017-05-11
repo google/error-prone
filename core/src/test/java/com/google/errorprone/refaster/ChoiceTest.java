@@ -37,27 +37,35 @@ public class ChoiceTest {
     assertThat(Choice.none().first()).isAbsent();
     assertThat(Choice.none().condition(true)).isSameAs(Choice.none());
     assertThat(Choice.none().condition(Predicates.alwaysTrue())).isSameAs(Choice.none());
-    assertThat(Choice.none().thenChoose(Functions.constant(Choice.of("foo")))).isSameAs(
-        Choice.none());
+    assertThat(Choice.none().thenChoose(Functions.constant(Choice.of("foo"))))
+        .isSameAs(Choice.none());
   }
 
   @Test
   public void testThenOption() {
-    assertThat(Choice.from(ImmutableList.of(1, 2, 3)).thenOption(
-        Functions.forMap(ImmutableMap.of(2, Optional.of("foo")), Optional.<String>absent()))
-        .asIterable()).containsExactly("foo");
+    assertThat(
+            Choice.from(ImmutableList.of(1, 2, 3))
+                .thenOption(
+                    Functions.forMap(
+                        ImmutableMap.of(2, Optional.of("foo")), Optional.<String>absent()))
+                .asIterable())
+        .containsExactly("foo");
   }
 
   @Test
   public void testThenChoose() {
-    assertThat(Choice.from(ImmutableList.of(1, 2, 3))
-        .thenChoose(Functions.forMap(ImmutableMap.of(2, Choice.of("foo")), Choice.<String>none()))
-        .asIterable()).containsExactly("foo");
+    assertThat(
+            Choice.from(ImmutableList.of(1, 2, 3))
+                .thenChoose(
+                    Functions.forMap(ImmutableMap.of(2, Choice.of("foo")), Choice.<String>none()))
+                .asIterable())
+        .containsExactly("foo");
   }
 
   @Test
   public void testOr() {
     assertThat(Choice.of(2).or(Choice.from(ImmutableList.of(1, 3))).asIterable())
-        .containsExactly(2, 1, 3).inOrder();
+        .containsExactly(2, 1, 3)
+        .inOrder();
   }
 }

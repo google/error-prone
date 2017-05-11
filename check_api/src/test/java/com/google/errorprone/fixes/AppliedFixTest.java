@@ -15,6 +15,7 @@
  */
 
 package com.google.errorprone.fixes;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -31,48 +32,47 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 @RunWith(MockitoJUnitRunner.class)
 public class AppliedFixTest {
   @Mock JCTree node;
-  final EndPosTable endPositions = new EndPosTable() {
-    
-    final Map<JCTree, Integer> map = new HashMap<>();
-    
-    @Override
-    public void storeEnd(JCTree tree, int endpos) {
-      map.put(tree, endpos);
-    }
-    
-    @Override
-    public int replaceTree(JCTree oldtree, JCTree newtree) {
-      Integer endpos = map.get(oldtree);
-      if (endpos == null) {
-        endpos = Position.NOPOS;
-      }
-      map.put(newtree, endpos);
-      return endpos;
-    }
-    
-    @Override
-    public int getEndPos(JCTree tree) {
-      Integer result = map.get(tree);
-      if (result == null) {
-        result = Position.NOPOS;
-      }
-      return result;
-    }
-  };
-  
+  final EndPosTable endPositions =
+      new EndPosTable() {
+
+        final Map<JCTree, Integer> map = new HashMap<>();
+
+        @Override
+        public void storeEnd(JCTree tree, int endpos) {
+          map.put(tree, endpos);
+        }
+
+        @Override
+        public int replaceTree(JCTree oldtree, JCTree newtree) {
+          Integer endpos = map.get(oldtree);
+          if (endpos == null) {
+            endpos = Position.NOPOS;
+          }
+          map.put(newtree, endpos);
+          return endpos;
+        }
+
+        @Override
+        public int getEndPos(JCTree tree) {
+          Integer result = map.get(tree);
+          if (result == null) {
+            result = Position.NOPOS;
+          }
+          return result;
+        }
+      };
+
   @Test
   public void shouldApplySingleFixOnALine() {
     when(node.getStartPosition()).thenReturn(11);
     when(node.getEndPosition(same(endPositions))).thenReturn(14);
 
-    AppliedFix fix = AppliedFix.fromSource("import org.me.B;", endPositions)
-        .apply(SuggestedFix.delete(node));
+    AppliedFix fix =
+        AppliedFix.fromSource("import org.me.B;", endPositions).apply(SuggestedFix.delete(node));
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("import org.B;"));
   }
 
@@ -81,14 +81,10 @@ public class AppliedFixTest {
     when(node.getStartPosition()).thenReturn(25);
     when(node.getEndPosition(same(endPositions))).thenReturn(26);
 
-    AppliedFix fix = AppliedFix.fromSource(
-        "public class Foo {\n" +
-        "  int 3;\n" +
-        "}", endPositions)
-        .apply(SuggestedFix.builder()
-            .prefixWith(node, "three")
-            .postfixWith(node, "tres")
-            .build());
+    AppliedFix fix =
+        AppliedFix.fromSource("public class Foo {\n" + "  int 3;\n" + "}", endPositions)
+            .apply(
+                SuggestedFix.builder().prefixWith(node, "three").postfixWith(node, "tres").build());
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("int three3tres;"));
   }
 
@@ -102,9 +98,9 @@ public class AppliedFixTest {
 
   @Test
   public void shouldReturnNullOnImportOnlyFix() {
-    AppliedFix fix = AppliedFix.fromSource(
-        "public class Foo {}", endPositions)
-        .apply(SuggestedFix.builder().addImport("foo.bar.Baz").build());
+    AppliedFix fix =
+        AppliedFix.fromSource("public class Foo {}", endPositions)
+            .apply(SuggestedFix.builder().addImport("foo.bar.Baz").build());
     assertNull(fix);
   }
 

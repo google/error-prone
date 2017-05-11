@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation to specify what tree kinds are allowed or disallowed to match a given expression.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @Target(ElementType.PARAMETER)

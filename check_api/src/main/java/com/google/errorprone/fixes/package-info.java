@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-/**
- * Support code for providing automated corrections for defects we find.
- */
+/** Support code for providing automated corrections for defects we find. */
 package com.google.errorprone.fixes;

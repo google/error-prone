@@ -21,9 +21,7 @@ import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.StatementTree;
 
-/**
- * Matches assert statements which have a condition expression matched by the given matcher.
- */
+/** Matches assert statements which have a condition expression matched by the given matcher. */
 public class Asserts implements Matcher<StatementTree> {
 
   private final Matcher<ExpressionTree> expressionMatcher;

@@ -68,13 +68,18 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
    * (those could be improved with regex lookahead, but I prefer simpler regex).
    *  TODO(rburny): see if we can cleanup intentional ".test" misspellings
    */
-  private static final Pattern MISSPELLED_NAME = Pattern.compile(
-      "t.est|te.st|"    +  // letter inserted
-      "tst|tet|tes|"    +  // letter removed
-      "etst|tset|tets|" +  // letters swapped
-      "t.st|te.t|"      +  // letter changed
-      "[tT][eE][sS][tT]"   // miscapitalized
-      );
+  private static final Pattern MISSPELLED_NAME =
+      Pattern.compile(
+          "t.est|te.st|"
+              + // letter inserted
+              "tst|tet|tes|"
+              + // letter removed
+              "etst|tset|tets|"
+              + // letters swapped
+              "t.st|te.t|"
+              + // letter changed
+              "[tT][eE][sS][tT]" // miscapitalized
+          );
 
   private static final Matcher<MethodTree> LOOKS_LIKE_TEST_CASE =
       allOf(
@@ -84,11 +89,9 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
           methodHasParameters());
 
   /**
-   * Matches if:
-   * 1) Method's name begins with misspelled variation of "test".
-   * 2) Method is public, returns void, and has no parameters.
-   * 3) Enclosing class is JUnit3 test (extends TestCase, has no RunWith annotation,
-   *    and is not abstract).
+   * Matches if: 1) Method's name begins with misspelled variation of "test". 2) Method is public,
+   * returns void, and has no parameters. 3) Enclosing class is JUnit3 test (extends TestCase, has
+   * no RunWith annotation, and is not abstract).
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {

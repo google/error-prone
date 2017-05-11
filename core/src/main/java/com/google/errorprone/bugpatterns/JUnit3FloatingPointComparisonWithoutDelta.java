@@ -76,9 +76,7 @@ public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     return describeMatch(methodInvocationTree, fix);
   }
 
-  /**
-   * Gets the argument types, excluding the message argument if present.
-   */
+  /** Gets the argument types, excluding the message argument if present. */
   private List<Type> getArgumentTypesWithoutMessage(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     List<Type> argumentTypes = new ArrayList<>();
@@ -90,9 +88,7 @@ public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     return argumentTypes;
   }
 
-  /**
-   * Removes the message argument if it is present.
-   */
+  /** Removes the message argument if it is present. */
   private void removeMessageArgumentIfPresent(VisitorState state, List<Type> argumentTypes) {
     if (argumentTypes.size() == 2) {
       return;
@@ -129,9 +125,7 @@ public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     return false;
   }
 
-  /**
-   * Determines if the type is a floating-point type, including reference types.
-   */
+  /** Determines if the type is a floating-point type, including reference types. */
   private boolean isFloatingPoint(VisitorState state, Type type) {
     Type trueType = unboxedTypeOrType(state, type);
     return (trueType.getKind() == TypeKind.DOUBLE) || (trueType.getKind() == TypeKind.FLOAT);
@@ -147,38 +141,28 @@ public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     return trueType.isNumeric();
   }
 
-  /**
-   * Gets the unboxed type, or the original type if it is not unboxable.
-   */
+  /** Gets the unboxed type, or the original type if it is not unboxable. */
   private Type unboxedTypeOrType(VisitorState state, Type type) {
     Types types = state.getTypes();
     return types.unboxedTypeOrType(type);
   }
 
-  /**
-   * Creates the fix to add a delta argument.
-   */
+  /** Creates the fix to add a delta argument. */
   private Fix addDeltaArgument(
-      MethodInvocationTree methodInvocationTree,
-      VisitorState state,
-      List<Type> argumentTypes) {
+      MethodInvocationTree methodInvocationTree, VisitorState state, List<Type> argumentTypes) {
     int insertionIndex = getDeltaInsertionIndex(methodInvocationTree, state);
     String deltaArgument = getDeltaArgument(state, argumentTypes);
     return SuggestedFix.replace(insertionIndex, insertionIndex, deltaArgument);
   }
 
-  /**
-   * Gets the index of where to insert the delta argument.
-   */
+  /** Gets the index of where to insert the delta argument. */
   private int getDeltaInsertionIndex(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     JCTree lastArgument = (JCTree) Iterables.getLast(methodInvocationTree.getArguments());
     return state.getEndPosition(lastArgument);
   }
 
-  /**
-   * Gets the text for the delta argument to be added.
-   */
+  /** Gets the text for the delta argument to be added. */
   private String getDeltaArgument(VisitorState state, List<Type> argumentTypes) {
     Type firstType = argumentTypes.get(0);
     Type secondType = argumentTypes.get(1);
@@ -186,9 +170,7 @@ public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     return doublePrecisionUsed ? ", 0.0" : ", 0.0f";
   }
 
-  /**
-   * Determines if the type is a double, including reference types.
-   */
+  /** Determines if the type is a double, including reference types. */
   private boolean isDouble(VisitorState state, Type type) {
     Type trueType = unboxedTypeOrType(state, type);
     return trueType.getKind() == TypeKind.DOUBLE;

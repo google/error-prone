@@ -68,9 +68,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 @RunWith(JUnit4.class)
 public class ErrorProneJavaCompilerTest {
 
@@ -293,23 +291,21 @@ public class ErrorProneJavaCompilerTest {
     PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
     JavaCompiler errorProneJavaCompiler = new ErrorProneJavaCompiler();
-    List<String> args = Lists.newArrayList(
-        "-d", tempDir.getRoot().getAbsolutePath(),
-        "-proc:none",
-        "-Xep:ChainingConstructorIgnoresParameter:WARN");
+    List<String> args =
+        Lists.newArrayList(
+            "-d",
+            tempDir.getRoot().getAbsolutePath(),
+            "-proc:none",
+            "-Xep:ChainingConstructorIgnoresParameter:WARN");
     List<JavaFileObject> sources =
         fileManager.forResources(
             ChainingConstructorIgnoresParameter.class,
             "testdata/ChainingConstructorIgnoresParameterPositiveCases.java");
     fileManager.close();
 
-    JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
-        printWriter,
-        fileManager,
-        diagnosticHelper.collector,
-        args,
-        null,
-        sources);
+    JavaCompiler.CompilationTask task =
+        errorProneJavaCompiler.getTask(
+            printWriter, fileManager, diagnosticHelper.collector, args, null, sources);
     boolean succeeded = task.call();
     assertThat(succeeded).isTrue();
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
@@ -326,13 +322,9 @@ public class ErrorProneJavaCompilerTest {
     fileManager.close();
     args.remove("-Xep:ChainingConstructorIgnoresParameter:WARN");
 
-    task = errorProneJavaCompiler.getTask(
-        printWriter,
-        fileManager,
-        diagnosticHelper.collector,
-        args,
-        null,
-        sources);
+    task =
+        errorProneJavaCompiler.getTask(
+            printWriter, fileManager, diagnosticHelper.collector, args, null, sources);
     succeeded = task.call();
     assertThat(succeeded).isFalse();
     assertTrue(matcher.matches(diagnosticHelper.getDiagnostics()));
@@ -345,22 +337,16 @@ public class ErrorProneJavaCompilerTest {
     PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
     JavaCompiler errorProneJavaCompiler = new ErrorProneJavaCompiler();
-    List<String> args = Lists.newArrayList(
-        "-d", tempDir.getRoot().getAbsolutePath(),
-        "-proc:none",
-        "-Xep:EmptyIf");
+    List<String> args =
+        Lists.newArrayList("-d", tempDir.getRoot().getAbsolutePath(), "-proc:none", "-Xep:EmptyIf");
     List<JavaFileObject> sources =
         fileManager.forResources(
             BadShiftAmount.class, "testdata/EmptyIfStatementPositiveCases.java");
     fileManager.close();
 
-    JavaCompiler.CompilationTask task = errorProneJavaCompiler.getTask(
-        printWriter,
-        null,
-        diagnosticHelper.collector,
-        args,
-        null,
-        sources);
+    JavaCompiler.CompilationTask task =
+        errorProneJavaCompiler.getTask(
+            printWriter, null, diagnosticHelper.collector, args, null, sources);
     boolean succeeded = task.call();
     assertThat(succeeded).isFalse();
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
@@ -369,13 +355,9 @@ public class ErrorProneJavaCompilerTest {
 
     diagnosticHelper.clearDiagnostics();
     args.remove("-Xep:EmptyIf");
-    task = errorProneJavaCompiler.getTask(
-        printWriter,
-        null,
-        diagnosticHelper.collector,
-        args,
-        null,
-        sources);
+    task =
+        errorProneJavaCompiler.getTask(
+            printWriter, null, diagnosticHelper.collector, args, null, sources);
     fileManager.close();
     succeeded = task.call();
     assertThat(succeeded).isTrue();
@@ -390,7 +372,6 @@ public class ErrorProneJavaCompilerTest {
     explanation = "",
     category = JDK,
     severity = ERROR,
-    
     suppressibility = UNSUPPRESSIBLE
   )
   public static class DeleteMethod extends BugChecker implements ClassTreeMatcher {
@@ -436,14 +417,13 @@ public class ErrorProneJavaCompilerTest {
     PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
     ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
-    List<String> args = Lists.newArrayList(
-        "-d", tempDir.getRoot().getAbsolutePath(),
-        "-proc:none");
+    List<String> args = Lists.newArrayList("-d", tempDir.getRoot().getAbsolutePath(), "-proc:none");
     args.addAll(extraArgs);
 
-    JavaCompiler errorProneJavaCompiler = (customCheckers.isEmpty())
-        ? new ErrorProneJavaCompiler()
-        : new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(customCheckers));
+    JavaCompiler errorProneJavaCompiler =
+        (customCheckers.isEmpty())
+            ? new ErrorProneJavaCompiler()
+            : new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(customCheckers));
     JavaCompiler.CompilationTask task =
         errorProneJavaCompiler.getTask(
             printWriter,

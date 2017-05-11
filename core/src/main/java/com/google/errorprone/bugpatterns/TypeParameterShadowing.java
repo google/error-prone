@@ -84,12 +84,13 @@ public class TypeParameterShadowing extends BugChecker
     }
 
     List<TypeVariableSymbol> conflictingTypeSymbols = new ArrayList<>();
-    typeParameters.forEach(param ->
-        enclosingTypeSymbols
-        .stream()
-        .filter(tvs -> tvs.name.contentEquals(param.getName()))
-        .findFirst()
-        .ifPresent(conflictingTypeSymbols::add));
+    typeParameters.forEach(
+        param ->
+            enclosingTypeSymbols
+                .stream()
+                .filter(tvs -> tvs.name.contentEquals(param.getName()))
+                .findFirst()
+                .ifPresent(conflictingTypeSymbols::add));
 
     if (conflictingTypeSymbols.isEmpty()) {
       return Description.NO_MATCH;
@@ -156,8 +157,10 @@ public class TypeParameterShadowing extends BugChecker
       VisitorState state) {
 
     TypeParameterTree matchingTypeParam =
-        typeParameters.stream().filter(t -> t.getName().contentEquals(typeVariable)).collect(
-            MoreCollectors.onlyElement());
+        typeParameters
+            .stream()
+            .filter(t -> t.getName().contentEquals(typeVariable))
+            .collect(MoreCollectors.onlyElement());
     Symbol typeVariableSymbol = ASTHelpers.getSymbol(matchingTypeParam);
 
     // replace only the type parameter name (and not any upper bounds)
@@ -210,5 +213,4 @@ public class TypeParameterShadowing extends BugChecker
     }
     return typeVarScopes;
   }
-
 }

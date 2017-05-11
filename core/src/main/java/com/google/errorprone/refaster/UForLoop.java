@@ -30,17 +30,21 @@ import javax.annotation.Nullable;
 
 /**
  * {@link UTree} representation of a {@link ForLoopTree}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
 abstract class UForLoop extends USimpleStatement implements ForLoopTree {
-  
+
   public static UForLoop create(
-      Iterable<? extends UStatement> initializer, @Nullable UExpression condition,
-      Iterable<? extends UExpressionStatement> update, UStatement statement) {
+      Iterable<? extends UStatement> initializer,
+      @Nullable UExpression condition,
+      Iterable<? extends UExpressionStatement> update,
+      UStatement statement) {
     return new AutoValue_UForLoop(
-        ImmutableList.copyOf(initializer), condition, ImmutableList.copyOf(update), 
+        ImmutableList.copyOf(initializer),
+        condition,
+        ImmutableList.copyOf(update),
         (USimpleStatement) statement);
   }
 
@@ -65,7 +69,7 @@ abstract class UForLoop extends USimpleStatement implements ForLoopTree {
         .thenChoose(unifications(getUpdate(), loop.getUpdate()))
         .thenChoose(unifications(getStatement(), loop.getStatement()));
   }
-  
+
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
     return visitor.visitForLoop(this, data);
@@ -78,11 +82,13 @@ abstract class UForLoop extends USimpleStatement implements ForLoopTree {
 
   @Override
   public JCForLoop inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner.maker().ForLoop(
-        UBlock.inlineStatementList(getInitializer(), inliner),
-        (getCondition() == null) ? null : getCondition().inline(inliner), 
-        com.sun.tools.javac.util.List.convert(
-            JCExpressionStatement.class, inliner.<JCStatement>inlineList(getUpdate())), 
-        getStatement().inline(inliner));
+    return inliner
+        .maker()
+        .ForLoop(
+            UBlock.inlineStatementList(getInitializer(), inliner),
+            (getCondition() == null) ? null : getCondition().inline(inliner),
+            com.sun.tools.javac.util.List.convert(
+                JCExpressionStatement.class, inliner.<JCStatement>inlineList(getUpdate())),
+            getStatement().inline(inliner));
   }
 }

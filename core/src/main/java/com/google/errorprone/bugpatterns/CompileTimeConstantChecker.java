@@ -76,27 +76,28 @@ import java.util.Iterator;
 public class CompileTimeConstantChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
-  private static final String DID_YOU_MEAN_FINAL_FMT_MESSAGE =
-      " Did you mean to make '%s' final?";
+  private static final String DID_YOU_MEAN_FINAL_FMT_MESSAGE = " Did you mean to make '%s' final?";
 
   private final Matcher<ExpressionTree> compileTimeConstExpressionMatcher =
       new CompileTimeConstantExpressionMatcher();
 
   /**
-   * Matches formal parameters with
-   * {@link com.google.errorprone.annotations.CompileTimeConstant} annotations against
-   * corresponding actual parameters.
+   * Matches formal parameters with {@link com.google.errorprone.annotations.CompileTimeConstant}
+   * annotations against corresponding actual parameters.
    *
-   * @param state        the visitor state
+   * @param state the visitor state
    * @param calleeSymbol the method whose formal parameters to consider
    * @param actualParams the list of actual parameters
-   * @return a {@code Description} of the match <i>iff</i> for any of the actual parameters that
-   * is annotated with {@link com.google.errorprone.annotations.CompileTimeConstant}, the
-   * corresponding formal parameter is not a compile-time-constant expression in the sense of
-   * {@link CompileTimeConstantExpressionMatcher}. Otherwise returns {@code Description.NO_MATCH}.
+   * @return a {@code Description} of the match <i>iff</i> for any of the actual parameters that is
+   *     annotated with {@link com.google.errorprone.annotations.CompileTimeConstant}, the
+   *     corresponding formal parameter is not a compile-time-constant expression in the sense of
+   *     {@link CompileTimeConstantExpressionMatcher}. Otherwise returns {@code
+   *     Description.NO_MATCH}.
    */
-  private Description matchArguments(VisitorState state, final Symbol.MethodSymbol calleeSymbol,
-                                     Iterator<? extends ExpressionTree> actualParams) {
+  private Description matchArguments(
+      VisitorState state,
+      final Symbol.MethodSymbol calleeSymbol,
+      Iterator<? extends ExpressionTree> actualParams) {
     Symbol.VarSymbol lastFormalParam = null;
     for (Symbol.VarSymbol formalParam : calleeSymbol.getParameters()) {
       lastFormalParam = formalParam;
@@ -110,8 +111,7 @@ public class CompileTimeConstantChecker extends BugChecker
         return Description.NO_MATCH;
       }
       ExpressionTree actualParam = actualParams.next();
-      if (hasCompileTimeConstantAnnotation(
-          state, formalParam)) {
+      if (hasCompileTimeConstantAnnotation(state, formalParam)) {
         if (!compileTimeConstExpressionMatcher.matches(actualParam, state)) {
           return handleMatch(actualParam, state);
         }
@@ -123,8 +123,7 @@ public class CompileTimeConstantChecker extends BugChecker
     if (lastFormalParam == null || (lastFormalParam.flags() & Flags.VARARGS) == 0) {
       return Description.NO_MATCH;
     }
-    if (!hasCompileTimeConstantAnnotation(
-        state, lastFormalParam)) {
+    if (!hasCompileTimeConstantAnnotation(state, lastFormalParam)) {
       return Description.NO_MATCH;
     }
     while (actualParams.hasNext()) {
@@ -150,8 +149,8 @@ public class CompileTimeConstantChecker extends BugChecker
       return describeMatch(actualParam);
     }
     return buildDescription(actualParam)
-        .setMessage(this.message()
-            + String.format(DID_YOU_MEAN_FINAL_FMT_MESSAGE, var.getSimpleName()))
+        .setMessage(
+            this.message() + String.format(DID_YOU_MEAN_FINAL_FMT_MESSAGE, var.getSimpleName()))
         .build();
   }
 

@@ -50,4 +50,3 @@ public class NonCanonicalStaticMemberImport extends BugChecker implements Import
     return describeMatch(tree, SuggestedFix.replace(tree, importInfo.importStatement()));
   }
 }
-

@@ -18,13 +18,11 @@ package com.google.errorprone.apply;
 
 import java.util.logging.Logger;
 
-/**
- * File destination which simply throws away the generated file.
- */
+/** File destination which simply throws away the generated file. */
 public class DiscardingFileDestination implements FileDestination {
 
   private static final Logger log = Logger.getLogger(DiscardingFileDestination.class.toString());
-  
+
   @Override
   public void writeFile(SourceFile file) {
     log.info(String.format("Altered file %s thrown away", file.getPath()));
