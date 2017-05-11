@@ -26,28 +26,28 @@ public class MisusedWeekYearNegativeCases {
     simpleDateFormat = new SimpleDateFormat("MM-dd");
     simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", DateFormatSymbols.getInstance());
     simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    
+
     // Don't flag if the pattern contains "ww", the week-in-year specifier.
     simpleDateFormat = new SimpleDateFormat("YYYY-ww");
   }
-  
+
   void testLiteralPatternWithFolding() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy" + "-MM-dd");
   }
-  
+
   private static final String WEEK_YEAR_PATTERN = "yyyy-MM-dd";
-  
+
   void testConstantPattern() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN);
   }
-  
+
   private static class MySimpleDateFormat extends SimpleDateFormat {
     public MySimpleDateFormat(String pattern) {
       super(pattern);
     }
   }
-  
-  // Don't match on subtypes, since we don't know what their applyPattern and 
+
+  // Don't match on subtypes, since we don't know what their applyPattern and
   // applyLocalizedPattern methods might do.
   void testSubtype() {
     MySimpleDateFormat mySdf = new MySimpleDateFormat("YYYY-MM-dd");

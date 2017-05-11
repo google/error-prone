@@ -20,22 +20,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
 import junit.framework.TestCase;
-
 import org.junit.Assert;
 
-import java.util.Arrays;
-
-/**
- * @author adamwos@google.com (Adam Wos)
- */
+/** @author adamwos@google.com (Adam Wos) */
 public class TryFailThrowablePositiveCases {
 
   public static void emptyCatch_failNoMessage() {
     try {
       dummyMethod();
       Assert.fail();
-    // BUG: Diagnostic contains: catch (Exception t)
+      // BUG: Diagnostic contains: catch (Exception t)
     } catch (Throwable t) {
     }
   }
@@ -44,7 +40,7 @@ public class TryFailThrowablePositiveCases {
     try {
       dummyMethod();
       Assert.fail();
-    // BUG: Diagnostic contains: catch (Exception t123)
+      // BUG: Diagnostic contains: catch (Exception t123)
     } catch (Throwable t123) {
       // expected!
       ;
@@ -56,7 +52,7 @@ public class TryFailThrowablePositiveCases {
     try {
       dummyMethod();
       Assert.fail("Faaail!");
-    // BUG: Diagnostic contains: catch (Exception t)
+      // BUG: Diagnostic contains: catch (Exception t)
     } catch (Throwable t) {
       // expected!
     }
@@ -67,7 +63,7 @@ public class TryFailThrowablePositiveCases {
       dummyMethod();
       fail("Faaail!");
       dummyMethod();
-    // BUG: Diagnostic contains: catch (Exception t)
+      // BUG: Diagnostic contains: catch (Exception t)
     } catch (Throwable t) {
       // expected!
     }
@@ -77,7 +73,7 @@ public class TryFailThrowablePositiveCases {
     try {
       dummyMethod();
       assertEquals(1, 2);
-    // BUG: Diagnostic contains: catch (Exception t)
+      // BUG: Diagnostic contains: catch (Exception t)
     } catch (Throwable t) {
       // expected!
     }
@@ -88,7 +84,7 @@ public class TryFailThrowablePositiveCases {
       dummyMethod();
       assertTrue("foobar!", true);
       dummyRecover();
-    // BUG: Diagnostic contains: catch (Exception t)
+      // BUG: Diagnostic contains: catch (Exception t)
     } catch (Throwable t) {
       // expected!
     }
@@ -99,7 +95,7 @@ public class TryFailThrowablePositiveCases {
       dummyMethod();
       CustomMoreAsserts.assertFoobar();
       dummyMethod();
-    // BUG: Diagnostic contains: catch (Exception t)
+      // BUG: Diagnostic contains: catch (Exception t)
     } catch (Throwable t) {
       // expected!
     }
@@ -110,7 +106,7 @@ public class TryFailThrowablePositiveCases {
       dummyMethod();
       CustomMoreAsserts.fail("param", 0x42);
       dummyMethod();
-    // BUG: Diagnostic contains: catch (Exception t)
+      // BUG: Diagnostic contains: catch (Exception t)
     } catch (Throwable t) {
       // expected!
     }
@@ -121,7 +117,7 @@ public class TryFailThrowablePositiveCases {
       try {
         dummyMethod();
         fail("message");
-      // BUG: Diagnostic contains: catch (Exception codeCatch_oldAssertFailWithMessage)
+        // BUG: Diagnostic contains: catch (Exception codeCatch_oldAssertFailWithMessage)
       } catch (Throwable codeCatch_oldAssertFailWithMessage) {
         // comment
         /* another */
@@ -131,6 +127,7 @@ public class TryFailThrowablePositiveCases {
 
   static final class CustomMoreAsserts {
     static void assertFoobar() {}
+
     static void fail(String param1, int param2) {}
   }
 

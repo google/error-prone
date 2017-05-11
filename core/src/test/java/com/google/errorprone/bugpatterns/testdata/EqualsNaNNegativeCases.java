@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author lowasser@google.com (Louis Wasserman)
- */
+/** @author lowasser@google.com (Louis Wasserman) */
 public class EqualsNaNNegativeCases {
   static final boolean NAN_AFTER_MATH = (0.0 / 0.0) == 1.0;
   static final boolean NORMAL_COMPARISON = 1.0 == 2.0;

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.common.collect.ClassToInstanceMap;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -33,9 +32,7 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-/**
- * Positive test cases for {@link CollectionIncompatibleType}.
- */
+/** Positive test cases for {@link CollectionIncompatibleType}. */
 public class CollectionIncompatibleTypePositiveCases {
 
   /* Tests for API coverage */
@@ -47,7 +44,8 @@ public class CollectionIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains:
     collection1.remove("bad");
     // BUG: Diagnostic contains: Argument 'collection2' should not be passed to this method
-    // its type Collection<String> has a type argument String that is not compatible with its collection's type argument Integer
+    // its type Collection<String> has a type argument String that is not compatible with its
+    // collection's type argument Integer
     collection1.containsAll(collection2);
     // BUG: Diagnostic contains:
     collection1.removeAll(collection2);
@@ -62,7 +60,8 @@ public class CollectionIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains:
     arrayList1.remove("bad");
     // BUG: Diagnostic contains: Argument 'arrayList2' should not be passed to this method
-    // its type ArrayList<String> has a type argument String that is not compatible with its collection's type argument Integer
+    // its type ArrayList<String> has a type argument String that is not compatible with its
+    // collection's type argument Integer
     arrayList1.containsAll(arrayList2);
     // BUG: Diagnostic contains:
     arrayList1.removeAll(arrayList2);
@@ -179,7 +178,8 @@ public class CollectionIncompatibleTypePositiveCases {
   public boolean errorMessageUsesFullyQualifedNamesWhenSimpleNamesAreTheSame(
       Collection<java.util.Date> collection1, Collection<Date> collection2) {
     // BUG: Diagnostic contains: Argument 'new Date()' should not be passed to this method
-    // its type com.google.errorprone.bugpatterns.collectionincompatibletype.testdata.CollectionIncompatibleTypePositiveCases.Date is not compatible with its collection's type argument java.util.Date
+    // its type
+    // com.google.errorprone.bugpatterns.collectionincompatibletype.testdata.CollectionIncompatibleTypePositiveCases.Date is not compatible with its collection's type argument java.util.Date
     return collection1.contains(new Date());
   }
 
@@ -203,8 +203,9 @@ public class CollectionIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains:
     return map.get(s);
   }
-  
+
   private static class MyArrayList extends ArrayList<Integer> {}
+
   public void methodArgumentIsSubclassWithDifferentTypeParameters(
       Collection<String> collection, MyArrayList myArrayList) {
     // BUG: Diagnostic contains:
@@ -219,9 +220,13 @@ public class CollectionIncompatibleTypePositiveCases {
   }
 
   interface Interface {}
+
   private static final class FinalClass1 {}
+
   private static final class FinalClass2 {}
+
   private static class NonFinalClass1 {}
+
   private static class NonFinalClass2 {}
 
   public boolean oneInterfaceAndOneFinalClass(

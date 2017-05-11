@@ -19,7 +19,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Sample Refaster template using {@code if} syntax.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class IfTemplate<T> {

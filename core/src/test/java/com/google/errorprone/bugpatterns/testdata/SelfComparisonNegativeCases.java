@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Negative test cases for {@link SelfComparison} check.
+ *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 public class SelfComparisonNegativeCases implements Comparable<Object> {

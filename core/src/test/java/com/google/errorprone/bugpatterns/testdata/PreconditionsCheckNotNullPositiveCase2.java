@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Test case for fully qualified methodIs call.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class PreconditionsCheckNotNullPositiveCase2 {

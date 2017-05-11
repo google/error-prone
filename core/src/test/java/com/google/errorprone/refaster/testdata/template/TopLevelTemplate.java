@@ -18,18 +18,15 @@ package com.google.errorprone.refaster.testdata.template;
 
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
-
 import java.util.logging.Logger;
 
-/**
- * Example Refaster refactoring that refactors top-level declarations.
- */
+/** Example Refaster refactoring that refactors top-level declarations. */
 public class TopLevelTemplate {
   @BeforeTemplate
   void declareAnonymousLogger(String name) {
     Logger logger = Logger.getAnonymousLogger(name);
   }
-  
+
   @AfterTemplate
   void declareLogger(String name) {
     Logger logger = Logger.getLogger(name);

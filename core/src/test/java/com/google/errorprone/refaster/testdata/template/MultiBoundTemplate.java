@@ -18,21 +18,17 @@ package com.google.errorprone.refaster.testdata.template;
 
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
-
 import java.io.Serializable;
 
-/**
- * Example of a Refaster template using multiply bounded type parameters.
- */
+/** Example of a Refaster template using multiply bounded type parameters. */
 public class MultiBoundTemplate {
   @BeforeTemplate
   <T extends CharSequence & Serializable> void before(T t) {
     System.out.println(t);
   }
-  
+
   @AfterTemplate
   <T extends CharSequence & Serializable> void after(T t) {
     System.err.println(t);
   }
-
 }

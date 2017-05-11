@@ -19,8 +19,8 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.common.base.Preconditions;
 
 /**
- * Test for methodIs call including string concatenation.
- * (Not yet supported, so this is a negative case)
+ * Test for methodIs call including string concatenation. (Not yet supported, so this is a negative
+ * case)
  *
  * @author sjnickerson@google.com (Simon Nickerson)
  */

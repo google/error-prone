@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.android.testdata;
 
 import android.app.Fragment;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 public class FragmentNotInstantiableNegativeCases {
   public static class NotAFragment1 {
     public NotAFragment1(int x) {}

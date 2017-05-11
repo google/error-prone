@@ -20,12 +20,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import junit.framework.TestCase;
-
 import org.junit.Assert;
 
-/**
- * @author adamwos@google.com (Adam Wos)
- */
+/** @author adamwos@google.com (Adam Wos) */
 public class TryFailThrowableNegativeCases {
 
   public static void withoutFail() {
@@ -54,9 +51,7 @@ public class TryFailThrowableNegativeCases {
     }
   }
 
-  /**
-   * For now, this isn't supported.
-   */
+  /** For now, this isn't supported. */
   public static void multipleCatches() {
     try {
       dummyMethod();
@@ -123,7 +118,7 @@ public class TryFailThrowableNegativeCases {
     }
   }
 
-  @SuppressWarnings("deprecation")  // deprecated in JUnit 4.11
+  @SuppressWarnings("deprecation") // deprecated in JUnit 4.11
   public static void codeCatch_oldAssertFail() {
     try {
       dummyMethod();
@@ -133,7 +128,7 @@ public class TryFailThrowableNegativeCases {
     }
   }
 
-  @SuppressWarnings("deprecation")  // deprecated in JUnit 4.11
+  @SuppressWarnings("deprecation") // deprecated in JUnit 4.11
   public static void codeCatch_oldAssertFailWithMessage() {
     try {
       dummyMethod();
@@ -151,7 +146,6 @@ public class TryFailThrowableNegativeCases {
       dummyRecover();
     }
   }
-
 
   public static void codeCatch_assert() {
     try {
@@ -186,5 +180,4 @@ public class TryFailThrowableNegativeCases {
   private static void dummyRecover() {}
 
   private static void dummyMethod() {}
-
 }

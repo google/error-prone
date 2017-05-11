@@ -20,14 +20,16 @@ import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.Placeholder;
 
-/**
- * Example of a Refaster template using block placeholders.
- */
+/** Example of a Refaster template using block placeholders. */
 public abstract class BlockPlaceholderTemplate<T extends AutoCloseable> {
-  @Placeholder abstract T open();
-  @Placeholder abstract void operateOn(T resource);
-  
-  @BeforeTemplate void before() throws Exception {
+  @Placeholder
+  abstract T open();
+
+  @Placeholder
+  abstract void operateOn(T resource);
+
+  @BeforeTemplate
+  void before() throws Exception {
     T resource = open();
     try {
       operateOn(resource);
@@ -35,8 +37,9 @@ public abstract class BlockPlaceholderTemplate<T extends AutoCloseable> {
       resource.close();
     }
   }
-  
-  @AfterTemplate void after() throws Exception {
+
+  @AfterTemplate
+  void after() throws Exception {
     try (T resource = open()) {
       operateOn(resource);
     }

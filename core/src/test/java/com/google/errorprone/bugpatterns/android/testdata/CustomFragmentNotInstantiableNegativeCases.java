@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.android.testdata;
 
-/**
- * @author jasonlong@google.com (Jason Long)
- */
+/** @author jasonlong@google.com (Jason Long) */
 public class CustomFragmentNotInstantiableNegativeCases {
   public static class NotAFragment1 {
     public NotAFragment1(int x) {}

@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
 public class PreconditionsCheckNotNullPrimitiveNegativeCases {
   public void test() {
     Object obj1 = new Object();
-    
+
     Preconditions.checkNotNull(obj1);
     checkNotNull(obj1);
     Preconditions.checkNotNull(obj1, "obj1 should not be null");

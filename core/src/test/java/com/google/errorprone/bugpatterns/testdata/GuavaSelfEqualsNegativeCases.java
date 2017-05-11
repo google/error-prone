@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
-/**
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/** @author bhagwani@google.com (Sumit Bhagwani) */
 public class GuavaSelfEqualsNegativeCases {
   private String field;
 

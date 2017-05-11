@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 public class ComparisonContractViolatedNegativeCases {
-  static abstract class IntOrInfinity implements Comparable<IntOrInfinity> {}
+  abstract static class IntOrInfinity implements Comparable<IntOrInfinity> {}
 
   static class IntOrInfinityInt extends IntOrInfinity {
     private final int value;

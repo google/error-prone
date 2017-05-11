@@ -18,22 +18,16 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Iterator;
 
-/**
- * @author jsjeon@google.com (Jinseong Jeon)
- */
+/** @author jsjeon@google.com (Jinseong Jeon) */
 public class IterableAndIteratorNegativeCases {
 
-  /**
-   * Test Node
-   */
+  /** Test Node */
   public static class MyNode {
     String tag;
     MyNode next;
   }
 
-  /**
-   * Test List that implements both Iterator and Iterable
-   */
+  /** Test List that implements both Iterator and Iterable */
   // BUG: Diagnostic contains: both
   public static class MyBadList implements Iterator<MyNode>, Iterable<MyNode> {
     private MyNode head;
@@ -75,17 +69,12 @@ public class IterableAndIteratorNegativeCases {
     }
   }
 
-  /**
-   * Test List that extends the above bad implementation
-   * Diagnostic should bypass this
-   */
+  /** Test List that extends the above bad implementation Diagnostic should bypass this */
   public static class MyBadListInherited extends MyBadList {
     public MyBadListInherited() {}
   }
 
-  /**
-   * Test List that implements only Iterator
-   */
+  /** Test List that implements only Iterator */
   public static class MyGoodList implements Iterator<MyNode> {
     private MyNode head;
 
@@ -121,9 +110,7 @@ public class IterableAndIteratorNegativeCases {
     }
   }
 
-  /**
-   * Test List that implicitly implements both interfaces
-   */
+  /** Test List that implicitly implements both interfaces */
   // BUG: Diagnostic contains: both
   public static class MyImplicitlyBadList extends MyGoodList implements Iterable<MyNode> {
 

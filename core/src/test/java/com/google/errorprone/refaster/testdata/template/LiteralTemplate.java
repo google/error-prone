@@ -18,13 +18,12 @@ package com.google.errorprone.refaster.testdata.template;
 
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
  * Test template to demonstrate matching literals, either inline or via constants.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class LiteralTemplate {
@@ -32,7 +31,7 @@ public class LiteralTemplate {
   Charset forName() {
     return Charset.forName("UTF-8");
   }
-  
+
   @AfterTemplate
   Charset utf8() {
     return StandardCharsets.UTF_8;

@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inject.testdata;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class OverlappingQualifierAndScopeAnnotationPositiveCases {
 
   @javax.inject.Scope

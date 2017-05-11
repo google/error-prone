@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.android.testdata;
 
 import android.graphics.Rect;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 public class RectIntersectReturnValueIgnoredPositiveCases {
   void checkSimpleCall(Rect rect, int aLeft, int aTop, int aRight, int aBottom) {
     // BUG: Diagnostic contains: Return value of android.graphics.Rect.intersect() must be checked

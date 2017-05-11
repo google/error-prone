@@ -14,12 +14,8 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 public class OverridesNegativeCase2 {
   abstract class Base {
     abstract void varargsMethod(Object... xs);
@@ -29,12 +25,12 @@ public class OverridesNegativeCase2 {
     @Override
     abstract void varargsMethod(Object... newNames);
   }
-  
+
   abstract class SubTwo extends SubOne {
     @Override
     abstract void varargsMethod(Object... xs);
   }
-  
+
   abstract class SubThree extends SubTwo {
     @Override
     abstract void varargsMethod(Object... newNames);

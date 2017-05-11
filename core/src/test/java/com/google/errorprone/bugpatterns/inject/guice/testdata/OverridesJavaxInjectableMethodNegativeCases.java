@@ -16,29 +16,20 @@
 
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
-
-/**
- * @author sgoldfeder@gooogle.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@gooogle.com (Steven Goldfeder) */
 public class OverridesJavaxInjectableMethodNegativeCases {
-  /**
-   * Class with a method foo() with no annotations.
-   */
+  /** Class with a method foo() with no annotations. */
   public class TestClass1 {
     public void foo() {}
   }
 
-  /**
-   * Class with a method foo() annotated with @com.google.inject.Inject.
-   */
+  /** Class with a method foo() annotated with @com.google.inject.Inject. */
   public class TestClass2 {
     @com.google.inject.Inject
     public void foo() {}
   }
 
-  /**
-   * Class with a method foo() annotated with @javax.inject.Inject.
-   */
+  /** Class with a method foo() annotated with @javax.inject.Inject. */
   public class TestClass3 {
     @javax.inject.Inject
     public void foo() {}
@@ -71,12 +62,11 @@ public class OverridesJavaxInjectableMethodNegativeCases {
   public class TestClass8 extends TestClass5 {
     public void foo() {}
   }
-  
+
   /** Explicitly suppressed warning */
   public class TestClass9 extends TestClass3 {
-    @Override 
+    @Override
     @SuppressWarnings("OverridesJavaxInjectableMethod")
     public void foo() {}
   }
-  
 }

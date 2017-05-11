@@ -16,13 +16,10 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 public class DivZeroNegativeCases {
-  
+
   void method(int a) {
     double y = (double) a / 0.0;
   }
 }
-

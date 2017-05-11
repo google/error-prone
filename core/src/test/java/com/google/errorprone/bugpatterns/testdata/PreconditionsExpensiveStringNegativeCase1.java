@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * Preconditions calls which shouldn't be picked up for expensive string operations
- * 
+ *
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 public class PreconditionsExpensiveStringNegativeCase1 {

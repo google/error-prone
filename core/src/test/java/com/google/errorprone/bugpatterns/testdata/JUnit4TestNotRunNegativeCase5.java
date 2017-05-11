@@ -21,7 +21,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Methods that override methods with @Test should not trigger an error (JUnit 4 will run them).
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)

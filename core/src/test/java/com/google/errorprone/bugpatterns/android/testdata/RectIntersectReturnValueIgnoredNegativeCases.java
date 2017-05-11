@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.android.testdata;
 
 import android.graphics.Rect;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 public class RectIntersectReturnValueIgnoredNegativeCases {
   boolean checkSimpleCall(Rect rect, int aLeft, int aTop, int aRight, int aBottom) {
     return rect.intersect(aLeft, aTop, aRight, aBottom);

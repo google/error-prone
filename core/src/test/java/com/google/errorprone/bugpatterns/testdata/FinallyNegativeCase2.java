@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.IOException;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 public class FinallyNegativeCase2 {
   public void test1(boolean flag) {
     try {
@@ -28,7 +26,7 @@ public class FinallyNegativeCase2 {
     } finally {
     }
   }
-  
+
   public void test2() throws Exception {
     try {
     } catch (Exception e) {
@@ -36,7 +34,7 @@ public class FinallyNegativeCase2 {
     } finally {
     }
   }
-  
+
   public void returnInAnonymousClass(boolean flag) {
     try {
     } finally {
@@ -47,7 +45,7 @@ public class FinallyNegativeCase2 {
       };
     }
   }
-  
+
   public void throwFromNestedTryInFinally() throws Exception {
     try {
     } finally {
@@ -58,7 +56,7 @@ public class FinallyNegativeCase2 {
       }
     }
   }
-  
+
   public void nestedTryInFinally2() throws Exception {
     try {
     } finally {
@@ -69,7 +67,7 @@ public class FinallyNegativeCase2 {
         // situations where the end of a finally block is unreachable as
         // definied by JLS 14.21.
         throw new IOException();
-      } catch(Exception e) {
+      } catch (Exception e) {
       }
     }
   }

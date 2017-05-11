@@ -23,7 +23,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Example Refaster template matching a {@code try} statement.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class TryTemplate {
@@ -35,7 +35,7 @@ public class TryTemplate {
       result = defaultValue;
     }
   }
-  
+
   @AfterTemplate
   void oneLiner(int result, String str, int defaultValue) {
     result = MoreObjects.firstNonNull(Ints.tryParse(str), defaultValue);

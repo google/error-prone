@@ -19,11 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/** @author scottjohnson@google.com (Scott Johnson) */
 public class ModifyingCollectionWithItselfPositiveCases {
-  
+
   List<Integer> a = new ArrayList<Integer>();
   List<Integer> c = new ArrayList<Integer>();
 
@@ -34,7 +32,7 @@ public class ModifyingCollectionWithItselfPositiveCases {
     // BUG: Diagnostic contains: a.addAll(1, b)
     a.addAll(1, a);
   }
-  
+
   public void containsAll(List<Integer> b) {
     // BUG: Diagnostic contains: this.a.containsAll(b)
     this.a.containsAll(this.a);

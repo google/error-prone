@@ -19,25 +19,23 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/** @author scottjohnson@google.com (Scott Johnson) */
 public class ModifyingCollectionWithItselfNegativeCases {
-  
+
   List<Integer> a = new ArrayList<Integer>();
-  
+
   public boolean addAll(List<Integer> b) {
     return a.addAll(b);
   }
-  
+
   public boolean removeAll(List<Integer> b) {
     return a.removeAll(b);
   }
-  
+
   public boolean retainAll(List<Integer> b) {
     return a.retainAll(b);
   }
-  
+
   public boolean containsAll(List<Integer> b) {
     return a.containsAll(b);
   }

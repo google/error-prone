@@ -19,9 +19,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * @author scottjohnson@google.com (Scott Johnsson)
- */
+/** @author scottjohnson@google.com (Scott Johnsson) */
 @NonRuntimeAnnotationNegativeCases.Runtime
 public class NonRuntimeAnnotationNegativeCases {
 
@@ -29,10 +27,7 @@ public class NonRuntimeAnnotationNegativeCases {
     return this.getClass().getAnnotation(NonRuntimeAnnotationNegativeCases.Runtime.class);
   }
 
-  /**
-   * Annotation that is retained at runtime
-   */
+  /** Annotation that is retained at runtime */
   @Retention(RetentionPolicy.RUNTIME)
-  public @interface Runtime {
-  }
+  public @interface Runtime {}
 }

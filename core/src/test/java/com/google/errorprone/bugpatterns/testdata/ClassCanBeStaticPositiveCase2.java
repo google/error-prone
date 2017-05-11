@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** @author alexloh@google.com (Alex Loh) */
 public class ClassCanBeStaticPositiveCase2 {
 
   int outerVar1;
@@ -29,6 +27,7 @@ public class ClassCanBeStaticPositiveCase2 {
   private /* COMMENT */ final class Inner2 {
     int outerVar1;
     int innerVar = outerVar1;
+
     int localMethod(int outerVar2) {
       return outerVar2;
     }

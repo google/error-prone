@@ -20,9 +20,7 @@ import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * Positive cases for {@link AsyncFunctionReturnsNull}.
- */
+/** Positive cases for {@link AsyncFunctionReturnsNull}. */
 public class AsyncFunctionReturnsNullPositiveCases {
   static {
     new AsyncFunction<String, Object>() {

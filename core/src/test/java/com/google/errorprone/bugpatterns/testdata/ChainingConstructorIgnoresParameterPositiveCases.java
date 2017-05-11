@@ -18,13 +18,10 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.errorprone.bugpatterns.testdata.ChainingConstructorIgnoresParameterPositiveCases.Location.TEST_TARGET;
 
-/**
- * @author cpovirk@google.com (Chris Povirk)
- */
+/** @author cpovirk@google.com (Chris Povirk) */
 public class ChainingConstructorIgnoresParameterPositiveCases {
   static class MissileLauncher {
-    MissileLauncher(Location target, boolean askForConfirmation) {
-    }
+    MissileLauncher(Location target, boolean askForConfirmation) {}
 
     MissileLauncher(Location target) {
       this(target, false);
@@ -96,9 +93,10 @@ public class ChainingConstructorIgnoresParameterPositiveCases {
       this(TEST_TARGET, false);
     }
 
-    MultipleQueuedErrors(Location target, boolean askForConfirmation) {
-    }
+    MultipleQueuedErrors(Location target, boolean askForConfirmation) {}
   }
 
-  enum Location { TEST_TARGET }
+  enum Location {
+    TEST_TARGET
+  }
 }

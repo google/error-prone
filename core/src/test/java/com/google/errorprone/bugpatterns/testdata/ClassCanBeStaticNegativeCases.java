@@ -16,11 +16,10 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** @author alexloh@google.com (Alex Loh) */
 public class ClassCanBeStaticNegativeCases {
   int outerVar;
+
   public int outerMethod() {
     return 0;
   }
@@ -48,20 +47,18 @@ public class ClassCanBeStaticNegativeCases {
   // outer class is a nested but non-static, and thus cannot have a static class
   class NonStaticOuter {
     int nonStaticVar = outerVar;
-    class Inner5 {
-    }
+
+    class Inner5 {}
   }
 
   // inner class is local and thus cannot be static
   void foo() {
-    class Inner6 {
-    }
+    class Inner6 {}
   }
 
   // inner class is anonymous and thus cannot be static
   Object bar() {
-    return new Object() {
-    };
+    return new Object() {};
   }
 
   // enums are already static
@@ -75,8 +72,8 @@ public class ClassCanBeStaticNegativeCases {
   void baz() {
     class NonStaticOuter2 {
       int nonStaticVar = outerVar;
-      class Inner8 {
-      }
+
+      class Inner8 {}
     }
   }
 
@@ -84,6 +81,7 @@ public class ClassCanBeStaticNegativeCases {
   public static interface OuterInter {
     int outerInterMethod();
   }
+
   abstract static class AbstractOuter implements OuterInter {
     class Inner8 {
       int localMethod() {
@@ -92,4 +90,3 @@ public class ClassCanBeStaticNegativeCases {
     }
   }
 }
-

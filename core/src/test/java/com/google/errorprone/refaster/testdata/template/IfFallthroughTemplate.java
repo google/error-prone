@@ -18,9 +18,7 @@ import com.google.common.collect.Ordering;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
-/**
- * Test template to make sure if fallthrough works.
- */
+/** Test template to make sure if fallthrough works. */
 public class IfFallthroughTemplate<T> {
   @BeforeTemplate
   public int before(T left, T right, Ordering<? super T> ordering) {

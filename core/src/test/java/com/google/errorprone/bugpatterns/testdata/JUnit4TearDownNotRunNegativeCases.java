@@ -17,15 +17,12 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.internal.runners.JUnit38ClassRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Not a JUnit 4 class (no @RunWith annotation on the class).
- */
+/** Not a JUnit 4 class (no @RunWith annotation on the class). */
 public class JUnit4TearDownNotRunNegativeCases {
   public void tearDown() {}
 }
@@ -58,13 +55,17 @@ class J4TearDownPackageLocal {
 
 @RunWith(JUnit4.class)
 class J4TearDownNonVoidReturnType {
-  int tearDown() { return 42; }
+  int tearDown() {
+    return 42;
+  }
 }
 
 @RunWith(JUnit4.class)
 class J4TearDownTearDownHasParameters {
   public void tearDown(int ignored) {}
+
   public void tearDown(boolean ignored) {}
+
   public void tearDown(String ignored) {}
 }
 

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ClassToInstanceMap;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -35,9 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-/**
- * Negative test cases for {@link CollectionIncompatibleType}.
- */
+/** Negative test cases for {@link CollectionIncompatibleType}. */
 public class CollectionIncompatibleTypeNegativeCases {
 
   /* Tests for API coverage */
@@ -193,6 +190,7 @@ public class CollectionIncompatibleTypeNegativeCases {
       return true;
     }
   }
+
   public boolean doesntExtendCollection() {
     DoesntExtendCollection<String> collection = new DoesntExtendCollection<>();
     return collection.contains(new Date());
@@ -236,7 +234,9 @@ public class CollectionIncompatibleTypeNegativeCases {
   }
 
   interface Interface1 {}
+
   interface Interface2 {}
+
   private static class NonFinalClass {}
 
   public boolean bothInterfaces(Collection<Interface1> collection, Interface2 iface2) {
@@ -252,25 +252,24 @@ public class CollectionIncompatibleTypeNegativeCases {
       Collection<NonFinalClass> collection, Interface1 iface) {
     return collection.contains(iface);
   }
-  
+
   public void methodArgHasSubtypeTypeArgument(
       Collection<Number> collection1, Collection<Integer> collection2) {
     collection1.containsAll(collection2);
   }
-  
+
   public void methodArgHasSuperTypeArgument(
       Collection<Integer> collection1, Collection<Number> collection2) {
     collection1.containsAll(collection2);
   }
-  
+
   public void methodArgHasWildcardTypeArgument(
       Collection<? extends Number> collection1, Collection<? extends Integer> collection2) {
     collection1.containsAll(collection2);
   }
-  
+
   public void methodArgCastToCollectionWildcard(
       Collection<Integer> collection1, Collection<String> collection2) {
     collection1.containsAll((Collection<?>) collection2);
   }
-
 }

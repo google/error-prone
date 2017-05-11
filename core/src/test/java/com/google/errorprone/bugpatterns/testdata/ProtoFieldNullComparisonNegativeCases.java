@@ -16,12 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
-/**
- * Negative examples for invalid null comparison of a proto message field.
- */
+/** Negative examples for invalid null comparison of a proto message field. */
 public class ProtoFieldNullComparisonNegativeCases {
   public static void main(String[] args) {
     TestProtoMessage message = TestProtoMessage.newBuilder().build();

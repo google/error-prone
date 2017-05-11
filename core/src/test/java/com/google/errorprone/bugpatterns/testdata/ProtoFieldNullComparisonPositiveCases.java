@@ -16,31 +16,28 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
-/**
- * Positive examples for invalid null comparison of a proto message field.
- */
+/** Positive examples for invalid null comparison of a proto message field. */
 public class ProtoFieldNullComparisonPositiveCases {
   public static void main(String[] args) {
     TestProtoMessage message = TestProtoMessage.newBuilder().build();
     // BUG: Diagnostic contains: message.hasMessage()
     if (message.getMessage() != null) {
       System.out.println("always true");
-    // BUG: Diagnostic contains: !message.hasMessage()
+      // BUG: Diagnostic contains: !message.hasMessage()
     } else if (message.getMessage() == null) {
       System.out.println("impossible");
-    // BUG: Diagnostic contains: message.hasMessage()
+      // BUG: Diagnostic contains: message.hasMessage()
     } else if (null != message.getMessage()) {
       System.out.println("always true");
-    // BUG: Diagnostic contains: message.getMessage().hasField()
+      // BUG: Diagnostic contains: message.getMessage().hasField()
     } else if (message.getMessage().getField() != null) {
       System.out.println("always true");
-    // BUG: Diagnostic contains: !message.getMultiFieldList().isEmpty()
+      // BUG: Diagnostic contains: !message.getMultiFieldList().isEmpty()
     } else if (message.getMultiFieldList() != null) {
       System.out.println("always true");
-    // BUG: Diagnostic contains: message.getMultiFieldList().isEmpty()
+      // BUG: Diagnostic contains: message.getMultiFieldList().isEmpty()
     } else if (null == message.getMultiFieldList()) {
       System.out.println("impossible");
     }

@@ -20,7 +20,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Example template using {@link Refaster#isInstance} in the {@code @AfterTemplate}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class IsInstanceTemplate {

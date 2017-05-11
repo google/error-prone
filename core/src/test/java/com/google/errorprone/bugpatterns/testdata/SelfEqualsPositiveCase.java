@@ -88,7 +88,7 @@ public class SelfEqualsPositiveCase {
       return false;
     }
     SelfEqualsPositiveCase other = (SelfEqualsPositiveCase) obj;
-    return simpleField.equals(((SelfEqualsPositiveCase)other).simpleField);
+    return simpleField.equals(((SelfEqualsPositiveCase) other).simpleField);
   }
 
   private static class SubClass extends SelfEqualsPositiveCase {

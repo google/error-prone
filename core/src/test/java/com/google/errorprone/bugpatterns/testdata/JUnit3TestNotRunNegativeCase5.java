@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
@@ -28,7 +27,11 @@ public class JUnit3TestNotRunNegativeCase5 extends JUnit3TestNotRunNegativeCase3
 
   public void testEasyCase() {}
 
-  @Test public void name() {}
+  @Test
+  public void name() {}
+
   public void tesMisspelled() {}
-  @Test public void tesBothIssuesAtOnce() {}
+
+  @Test
+  public void tesBothIssuesAtOnce() {}
 }

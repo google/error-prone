@@ -19,14 +19,16 @@ import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.Placeholder;
 
-/**
- * Example use of placeholder methods in a {@code ComparisonChain} refactoring.
- */
+/** Example use of placeholder methods in a {@code ComparisonChain} refactoring. */
 public abstract class ComparisonChainTemplate<A extends Comparable<A>, B extends Comparable<B>> {
-  @Placeholder(allowsIdentity = true) abstract <T> A propertyA(T t);
-  @Placeholder(allowsIdentity = true) abstract <T> B propertyB(T t);
-  
-  @BeforeTemplate <T> int before(T left, T right) {
+  @Placeholder(allowsIdentity = true)
+  abstract <T> A propertyA(T t);
+
+  @Placeholder(allowsIdentity = true)
+  abstract <T> B propertyB(T t);
+
+  @BeforeTemplate
+  <T> int before(T left, T right) {
     int cmp = propertyA(left).compareTo(propertyA(right));
     if (cmp == 0) {
       return propertyB(left).compareTo(propertyB(right));
@@ -34,8 +36,9 @@ public abstract class ComparisonChainTemplate<A extends Comparable<A>, B extends
       return cmp;
     }
   }
-  
-  @AfterTemplate <T> int after(T left, T right) {
+
+  @AfterTemplate
+  <T> int after(T left, T right) {
     return ComparisonChain.start()
         .compare(propertyA(left), propertyA(right))
         .compare(propertyB(left), propertyB(right))

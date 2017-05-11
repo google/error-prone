@@ -19,15 +19,13 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-/**
- * Test for CannotMockFinalClass.
- */
+/** Test for CannotMockFinalClass. */
 @RunWith(JUnit4.class)
 public class CannotMockFinalClassNegativeCases {
   static class NonFinalClass {}
-  
+
   @Mock NonFinalClass okToMock;
-  
+
   public void method() {
     NonFinalClass local = Mockito.mock(NonFinalClass.class);
   }

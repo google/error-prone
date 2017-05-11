@@ -23,11 +23,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 public class ReturnValueIgnoredPositiveCases {
   String a = "thing";
+
   { // String methods
     // BUG: Diagnostic contains: remove this line
     String.format("%d", 10);
@@ -64,14 +63,16 @@ public class ReturnValueIgnoredPositiveCases {
     // BUG: Diagnostic contains: a = a.substring(0, 1)
     a.substring(0, 1);
   }
-  
+
   StringBuffer sb = new StringBuffer("hello");
+
   {
     // BUG: Diagnostic contains: remove this line
     sb.toString().trim();
   }
 
   BigInteger b = new BigInteger("123456789");
+
   { // BigInteger methods
     // BUG: Diagnostic contains: b = b.add(new BigInteger("3"))
     b.add(new BigInteger("3"));
@@ -84,6 +85,7 @@ public class ReturnValueIgnoredPositiveCases {
   }
 
   BigDecimal c = new BigDecimal("1234.5678");
+
   { // BigDecimal methods
     // BUG: Diagnostic contains: c = c.add(new BigDecimal("1.3"))
     c.add(new BigDecimal("1.3"));
@@ -94,8 +96,9 @@ public class ReturnValueIgnoredPositiveCases {
     // BUG: Diagnostic contains: remove this line
     new BigDecimal("10").add(c);
   }
-  
+
   Path p = Paths.get("foo/bar/baz");
+
   { // Path methods
     // BUG: Diagnostic contains: p = p.getFileName();
     p.getFileName();

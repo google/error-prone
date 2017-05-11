@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author Bill Pugh (bill.pugh@gmail.com)
- */
+/** @author Bill Pugh (bill.pugh@gmail.com) */
 public class BadShiftAmountNegativeCases {
 
   public void foo() {
@@ -30,5 +28,4 @@ public class BadShiftAmountNegativeCases {
     result += x >>> 3;
     result += (long) (x & 0xff) >> 40;
   }
-
 }

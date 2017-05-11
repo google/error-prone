@@ -25,9 +25,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import javax.inject.Scope;
 
-/**
- * @author sgoldfeder@google.com(Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com(Steven Goldfeder) */
 public class InvalidTargetingOnScopingAnnotationNegativeCases {
 
   /** A scoping annotation with no specified target. */

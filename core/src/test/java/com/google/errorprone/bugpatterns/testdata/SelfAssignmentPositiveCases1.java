@@ -18,28 +18,28 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Tests for self assignment
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class SelfAssignmentPositiveCases1 {
   private int a;
-  
+
   public void test1(int b) {
     // BUG: Diagnostic contains: this.a = b
     this.a = a;
-  } 
-  
+  }
+
   public void test2(int b) {
     // BUG: Diagnostic contains: remove this line
     a = this.a;
   }
-  
+
   public void test3() {
     int a = 0;
     // BUG: Diagnostic contains: this.a = a
     a = a;
   }
-  
+
   public void test4() {
     // BUG: Diagnostic contains: remove this line
     this.a = this.a;

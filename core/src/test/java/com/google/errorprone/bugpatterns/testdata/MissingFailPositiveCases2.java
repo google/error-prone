@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 // unused import to make sure we don't introduce an import conflict.
-import static junit.framework.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,16 +31,17 @@ public class MissingFailPositiveCases2 {
     try {
       // BUG: Diagnostic contains: fail()
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void expectedException_helperMethod() {
     try {
       // BUG: Diagnostic contains: fail()
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   private static void dummyMethod() {}
 }
-

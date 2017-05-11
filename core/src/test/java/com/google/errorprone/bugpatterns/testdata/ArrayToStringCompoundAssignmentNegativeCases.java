@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author adgar@google.com (Mike Edgar)
- */
+/** @author adgar@google.com (Mike Edgar) */
 public class ArrayToStringCompoundAssignmentNegativeCases {
   public void concatenateCompoundAssign_object() {
     Object a = new Object();

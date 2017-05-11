@@ -25,9 +25,9 @@ public class PreconditionsCheckNotNullPositiveCase1 {
     // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull("string literal");
     String thing = null;
-    // BUG: Diagnostic contains: (thing, 
+    // BUG: Diagnostic contains: (thing,
     checkNotNull("thing is null", thing);
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     Preconditions.checkNotNull("a string literal " + "that's got two parts", thing);
   }
 }

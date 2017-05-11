@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 public class EqualsIncompatibleTypePositiveCases {
   class A {}
 
@@ -33,7 +31,9 @@ public class EqualsIncompatibleTypePositiveCases {
 
   class C {}
 
-  abstract class C1 extends C { public abstract boolean equals(Object o); }
+  abstract class C1 extends C {
+    public abstract boolean equals(Object o);
+  }
 
   abstract class C2 extends C1 {}
 

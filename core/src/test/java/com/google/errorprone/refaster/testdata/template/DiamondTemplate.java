@@ -16,20 +16,19 @@ package com.google.errorprone.refaster.testdata.template;
 
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Tests that BeforeTemplates using diamond syntax match whether diamond is used or not.
- */
+/** Tests that BeforeTemplates using diamond syntax match whether diamond is used or not. */
 public class DiamondTemplate {
-  @BeforeTemplate <T> List<T> linkedList() {
+  @BeforeTemplate
+  <T> List<T> linkedList() {
     return new LinkedList<>();
   }
-  
-  @AfterTemplate <T> List<T> arrayList() {
+
+  @AfterTemplate
+  <T> List<T> arrayList() {
     return new ArrayList<>();
   }
 }

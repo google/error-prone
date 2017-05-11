@@ -22,43 +22,40 @@ import com.google.inject.BindingAnnotation;
 import java.lang.annotation.Retention;
 import javax.inject.Qualifier;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class MoreThanOneQualifierPositiveCases {
-
 
   /**
    * A class in which the class, a constructor, a field, a method, and a method parameter each have
    * two com.google.inject.BindingAnnotation annotations.
    */
   // BUG: Diagnostic contains: remove
-  @Foo1 
+  @Foo1
   // BUG: Diagnostic contains: remove
   @Foo2
   public class TestClass1 {
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Foo2
     private int n;
 
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Foo2
     public TestClass1() {}
 
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Foo2
     public void setN(
         // BUG: Diagnostic contains: remove
-        @Foo1 
-        // BUG: Diagnostic contains: remove
-        @Foo2 
-        int n) {}
+        @Foo1
+            // BUG: Diagnostic contains: remove
+            @Foo2
+            int n) {}
   }
 
   /**
@@ -67,12 +64,12 @@ public class MoreThanOneQualifierPositiveCases {
    */
 
   // BUG: Diagnostic contains: remove
-  @Bar1 
+  @Bar1
   // BUG: Diagnostic contains: remove
   @Bar2
   public class TestClass2 {
     // BUG: Diagnostic contains: remove
-    @Bar1 
+    @Bar1
     // BUG: Diagnostic contains: remove
     @Bar2
     private int n;
@@ -84,15 +81,15 @@ public class MoreThanOneQualifierPositiveCases {
     public TestClass2() {}
 
     // BUG: Diagnostic contains: remove
-    @Bar1 
+    @Bar1
     // BUG: Diagnostic contains: remove
     @Bar2
     public void setN(
         // BUG: Diagnostic contains: remove
-        @Bar1 
-        // BUG: Diagnostic contains: remove
-         @Bar2
-         int n) {}
+        @Bar1
+            // BUG: Diagnostic contains: remove
+            @Bar2
+            int n) {}
   }
 
   /**
@@ -101,46 +98,46 @@ public class MoreThanOneQualifierPositiveCases {
    */
 
   // BUG: Diagnostic contains: remove
-  @Foo1 
+  @Foo1
   // BUG: Diagnostic contains: remove
   @Bar1
   public class TestClass3 {
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Bar1
     private int n;
 
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Bar1
     public TestClass3() {}
 
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Bar1
     public void setN(
         // BUG: Diagnostic contains: remove
-        @Foo1 
-        // BUG: Diagnostic contains: remove
-        @Bar1 
-        int n) {}
+        @Foo1
+            // BUG: Diagnostic contains: remove
+            @Bar1
+            int n) {}
   }
 
   @Qualifier
   @Retention(RUNTIME)
   public @interface Foo1 {}
-  
+
   @Qualifier
   @Retention(RUNTIME)
   public @interface Foo2 {}
-  
+
   @BindingAnnotation
   @Retention(RUNTIME)
   public @interface Bar1 {}
-  
+
   @BindingAnnotation
   @Retention(RUNTIME)
   public @interface Bar2 {}

@@ -18,23 +18,23 @@ import com.google.common.base.Joiner;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.Placeholder;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Example template using a placeholder with generics to be inferred.
- */
+/** Example template using a placeholder with generics to be inferred. */
 public abstract class GenericPlaceholderTemplate<E> {
-  @Placeholder abstract E generate();
-  
-  @BeforeTemplate void before(int n) {
+  @Placeholder
+  abstract E generate();
+
+  @BeforeTemplate
+  void before(int n) {
     for (int i = 0; i < n; i++) {
       System.out.println(generate()); // E can only be inferred by looking at the actual type here
     }
   }
-  
-  @AfterTemplate void after(int n) {
+
+  @AfterTemplate
+  void after(int n) {
     List<E> list = new ArrayList<>();
     for (int i = 0; i < n; i++) {
       list.add(generate());
@@ -42,4 +42,3 @@ public abstract class GenericPlaceholderTemplate<E> {
     System.out.println(Joiner.on('\n').join(list));
   }
 }
-

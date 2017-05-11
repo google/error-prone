@@ -18,56 +18,43 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 
 import javax.inject.Inject;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class JavaxInjectOnAbstractMethodNegativeCases {
 
-  /**
-   * Concrete class has no methods or annotations.
-   */
-  public class TestClass1 {
-  }
+  /** Concrete class has no methods or annotations. */
+  public class TestClass1 {}
 
-  /**
-   * Abstract class has a single abstract method with no annotation.
-   */
+  /** Abstract class has a single abstract method with no annotation. */
   public abstract class TestClass2 {
     abstract void abstractMethod();
   }
 
-  /**
-   * Concrete class has an injectable method.
-   */
+  /** Concrete class has an injectable method. */
   public class TestClass3 {
     @Inject
     public void foo() {}
   }
 
-  /**
-   * Abstract class has an injectable concrete method.
-   */
+  /** Abstract class has an injectable concrete method. */
   public abstract class TestClass4 {
     abstract void abstractMethod();
 
     @Inject
     public void concreteMethod() {}
   }
-  
+
   /**
-   * Abstract class has an com.google.inject.Inject abstract method (This is allowed;
-   * Injecting abstract methods is only forbidden with javax.inject.Inject). 
+   * Abstract class has an com.google.inject.Inject abstract method (This is allowed; Injecting
+   * abstract methods is only forbidden with javax.inject.Inject).
    */
   public abstract class TestClass5 {
-    @com.google.inject.Inject    
+    @com.google.inject.Inject
     abstract void abstractMethod();
   }
-  
-  /**
-   * Abstract class has an injectable(javax.inject.Inject) abstract method. Error is suppressed.
-   */
+
+  /** Abstract class has an injectable(javax.inject.Inject) abstract method. Error is suppressed. */
   public abstract class TestClass6 {
-    @SuppressWarnings("JavaxInjectOnAbstractMethod")  
+    @SuppressWarnings("JavaxInjectOnAbstractMethod")
     @javax.inject.Inject
     abstract void abstractMethod();
   }

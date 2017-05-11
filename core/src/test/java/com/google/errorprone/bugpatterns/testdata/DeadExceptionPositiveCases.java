@@ -34,7 +34,7 @@ public class DeadExceptionPositiveCases {
       System.out.println("another statement after exception");
     }
 
-    switch(0) {
+    switch (0) {
       default:
         // BUG: Diagnostic contains: remove this line
         new RuntimeException("oops");
@@ -47,13 +47,12 @@ public class DeadExceptionPositiveCases {
       // BUG: Diagnostic contains: throw new InterruptedException
       new InterruptedException("this should be thrown");
 
-    if (true)
-      return;
+    if (true) return;
     else
       // BUG: Diagnostic contains: throw new ArithmeticException
       new ArithmeticException("should also be thrown");
 
-    switch(4) {
+    switch (4) {
       case 4:
         System.out.println("4");
         break;

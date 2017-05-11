@@ -22,7 +22,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Example Refaster template using labeled statements, {@code break}, and {@code continue}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class LabelTemplate {
@@ -36,10 +36,11 @@ public class LabelTemplate {
       builder.append(',');
     }
   }
-  
+
   @BeforeTemplate
   void join2(StringBuilder builder, Object[] elements) {
-    loop: for (int i = 0; i < elements.length; i++) {
+    loop:
+    for (int i = 0; i < elements.length; i++) {
       builder.append(elements[i]);
       if (i == elements.length - 1) {
         break loop;
@@ -47,10 +48,11 @@ public class LabelTemplate {
       builder.append(',');
     }
   }
-  
+
   @BeforeTemplate
   void join3(StringBuilder builder, Object[] elements) {
-    loop: for (int i = 0; i < elements.length; i++) {
+    loop:
+    for (int i = 0; i < elements.length; i++) {
       builder.append(elements[i]);
       if (i == elements.length - 1) {
         continue loop;
@@ -58,7 +60,7 @@ public class LabelTemplate {
       builder.append(',');
     }
   }
-  
+
   @AfterTemplate
   void joiner(StringBuilder builder, Object[] elements) {
     Joiner.on(',').appendTo(builder, elements);

@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** @author alexeagle@google.com (Alex Eagle) */
 public class GuavaSelfEqualsPositiveCase {
   private String field = "";
 
@@ -42,7 +40,7 @@ public class GuavaSelfEqualsPositiveCase {
     retVal &= Objects.equal(this.field, field);
     // BUG: Diagnostic contains: Objects.equal(this.field, other.field)
     retVal &= Objects.equal(this.field, this.field);
-    
+
     return retVal;
   }
 
@@ -50,13 +48,13 @@ public class GuavaSelfEqualsPositiveCase {
   public int hashCode() {
     return Objects.hashCode(field);
   }
-  
+
   public static void test() {
     ForTesting tester = new ForTesting();
     // BUG: Diagnostic contains: Objects.equal(tester.testing.testing, tester.testing)
     Objects.equal(tester.testing.testing, tester.testing.testing);
   }
-  
+
   private static class ForTesting {
     public ForTesting testing;
     public String string;

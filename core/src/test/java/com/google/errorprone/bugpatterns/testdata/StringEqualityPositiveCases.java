@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author ptoomey@google.com (Patrick Toomey)
- */
+/** @author ptoomey@google.com (Patrick Toomey) */
 public class StringEqualityPositiveCases {
 
   public boolean testEquality(String x, String y) {

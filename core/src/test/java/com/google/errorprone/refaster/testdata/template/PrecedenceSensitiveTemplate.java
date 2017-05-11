@@ -16,12 +16,10 @@ package com.google.errorprone.refaster.testdata.template;
 
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
-
 import java.util.Objects;
 
 /**
- * Example Refaster template that may require outputs to be parenthesized even if the input was 
- * not.
+ * Example Refaster template that may require outputs to be parenthesized even if the input was not.
  *
  * @author mdempsky@google.com (Matthew Dempsky)
  */

@@ -22,12 +22,10 @@ import com.google.inject.Inject;
 /** A negative test case for InjectedConstructorAnnotation. */
 public class InjectedConstructorAnnotationsNegativeCases {
 
-  private @interface TestAnnotation {
-  }
+  private @interface TestAnnotation {}
 
   @BindingAnnotation
-  private @interface TestBindingAnnotation {
-  }
+  private @interface TestBindingAnnotation {}
 
   /** A class with a constructor that has no annotations. */
   public class TestClass1 {
@@ -53,4 +51,3 @@ public class InjectedConstructorAnnotationsNegativeCases {
     public TestClass4() {}
   }
 }
-

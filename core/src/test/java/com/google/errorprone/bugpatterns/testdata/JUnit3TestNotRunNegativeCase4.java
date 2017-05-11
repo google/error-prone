@@ -26,7 +26,11 @@ import org.junit.Test;
  */
 public abstract class JUnit3TestNotRunNegativeCase4 extends TestCase {
 
-  @Test public void name() {}
+  @Test
+  public void name() {}
+
   public void tesMisspelled() {}
-  @Test public void tesBothIssuesAtOnce() {}
+
+  @Test
+  public void tesBothIssuesAtOnce() {}
 }

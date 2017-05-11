@@ -20,7 +20,6 @@ import com.google.errorprone.refaster.ImportPolicy;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
-
 import java.util.Map;
 
 /**
@@ -29,7 +28,8 @@ import java.util.Map;
  * @author Louis Wasserman
  */
 public class ImportClassDirectlyTemplate<K, V> {
-  @BeforeTemplate void forEachKeys(Map<K, V> map) {
+  @BeforeTemplate
+  void forEachKeys(Map<K, V> map) {
     for (K k : map.keySet()) {
       System.out.println(k + " " + map.get(k));
     }
@@ -43,4 +43,3 @@ public class ImportClassDirectlyTemplate<K, V> {
     }
   }
 }
-

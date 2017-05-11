@@ -18,30 +18,28 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class ArrayHashCodeNegativeCases {
-  
+
   private Object[] objArray = {1, 2, 3};
   private String[] stringArray = {"1", "2", "3"};
   private int[] intArray = {1, 2, 3};
   private byte[] byteArray = {1, 2, 3};
   private Object obj = new Object();
   private String str = "foo";
-  
+
   public void objectHashCodeOnNonArrayType() {
     int hashCode;
     hashCode = obj.hashCode();
     hashCode = str.hashCode();
   }
-  
+
   public void varagsHashCodeOnNonArrayType() {
     int hashCode;
-    hashCode = Objects.hashCode(obj);    
+    hashCode = Objects.hashCode(obj);
     hashCode = Objects.hashCode(str);
   }
-  
+
   public void varagsHashCodeOnObjectOrStringArray() {
     int hashCode;
     hashCode = Objects.hashCode(objArray);

@@ -19,7 +19,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Example template taking one line in input to two lines in output.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class OneLineToTwoTemplate {

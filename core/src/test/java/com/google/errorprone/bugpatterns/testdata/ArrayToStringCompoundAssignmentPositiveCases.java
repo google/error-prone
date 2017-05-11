@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.*;
 
-/**
- * @author adgar@google.com (Mike Edgar)
- */
+/** @author adgar@google.com (Mike Edgar) */
 public class ArrayToStringCompoundAssignmentPositiveCases {
 
   private static final int[] a = {1, 2, 3};

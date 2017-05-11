@@ -19,30 +19,27 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.ibm.icu.text.DateFormatSymbols;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.ULocale;
-
 import java.util.Locale;
 
-/**
- * Tests for {@link com.ibm.icu.text.SimpleDateFormat}.
- */
+/** Tests for {@link com.ibm.icu.text.SimpleDateFormat}. */
 public class MisusedWeekYearPositiveCases2 {
-  
+
   void testConstructors() {
     // BUG: Diagnostic contains: new SimpleDateFormat("yyyy-MM-dd")
     SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
 
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", DateFormatSymbols.getInstance());
-    
+
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", DateFormatSymbols.getInstance(), ULocale.CANADA);
 
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", Locale.getDefault());
-    
+
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", "", ULocale.CANADA);
-    
+
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", ULocale.CANADA);
   }

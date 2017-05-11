@@ -16,70 +16,67 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * Positive test cases for {@code NonAtomicVolatileUpdate} checker.
- */
+/** Positive test cases for {@code NonAtomicVolatileUpdate} checker. */
 public class NonAtomicVolatileUpdatePositiveCases {
-    
+
   private static class VolatileContainer {
     public volatile int volatileInt = 0;
   }
-  
+
   private volatile int myVolatileInt = 0;
   private VolatileContainer container = new VolatileContainer();
- 
+
   public void increment() {
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     myVolatileInt++;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     ++myVolatileInt;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     myVolatileInt += 1;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     myVolatileInt = myVolatileInt + 1;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     myVolatileInt = 1 + myVolatileInt;
-    
-    // BUG: Diagnostic contains: 
+
+    // BUG: Diagnostic contains:
     if (myVolatileInt++ == 0) {
       System.out.println("argh");
     }
 
-    
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     container.volatileInt++;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     ++container.volatileInt;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     container.volatileInt += 1;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     container.volatileInt = container.volatileInt + 1;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     container.volatileInt = 1 + container.volatileInt;
   }
-  
+
   public void decrement() {
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     myVolatileInt--;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     --myVolatileInt;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     myVolatileInt -= 1;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     myVolatileInt = myVolatileInt - 1;
-    
-    // BUG: Diagnostic contains: 
+
+    // BUG: Diagnostic contains:
     container.volatileInt--;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     --container.volatileInt;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     container.volatileInt -= 1;
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     container.volatileInt = container.volatileInt - 1;
   }
-  
+
   private volatile String myVolatileString = "";
-  
+
   public void stringUpdate() {
     // BUG: Diagnostic contains:
     myVolatileString += "update";
@@ -87,4 +84,3 @@ public class NonAtomicVolatileUpdatePositiveCases {
     myVolatileString = myVolatileString + "update";
   }
 }
-

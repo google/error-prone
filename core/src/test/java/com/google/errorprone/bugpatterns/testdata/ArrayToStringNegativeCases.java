@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.*;
 
-/**
- * @author adgar@google.com (Mike Edgar)
- */
+/** @author adgar@google.com (Mike Edgar) */
 public class ArrayToStringNegativeCases {
   public void objectEquals() {
     Object a = new Object();

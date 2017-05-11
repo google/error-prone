@@ -20,6 +20,7 @@ public class EqualsHashCodeTestNegativeCases {
     public boolean equals(Object o) {
       return false;
     }
+
     public int hashCode() {
       return 42;
     }
@@ -31,6 +32,5 @@ public class EqualsHashCodeTestNegativeCases {
     }
   }
 
-  public static class Neither {
-  }
+  public static class Neither {}
 }

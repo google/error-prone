@@ -24,17 +24,17 @@ import org.junit.runners.JUnit4;
 
 /**
  * Base class for test cases to extend.
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunBaseClass {
   @Before
   public void testSetUp() {}
-  
+
   @After
   public void testTearDown() {}
-  
+
   @Test
   public void testOverrideThis() {}
 }

@@ -20,7 +20,7 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
 /**
  * Example refactoring using {@code Refaster.anyOf}.
- * 
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class AnyOfTemplate {
@@ -28,7 +28,7 @@ public class AnyOfTemplate {
   boolean signumIsZero(double d) {
     return Refaster.anyOf(Math.signum(d) == 0.0, 0.0 == Math.signum(d));
   }
-  
+
   @AfterTemplate
   boolean isZero(double d) {
     return d == 0.0;

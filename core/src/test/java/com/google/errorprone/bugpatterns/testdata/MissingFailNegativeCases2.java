@@ -22,7 +22,8 @@ public class MissingFailNegativeCases2 {
   public void expectedException_emptyCatch() {
     try {
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void catchAssert() {
@@ -37,4 +38,3 @@ public class MissingFailNegativeCases2 {
 
   private static void assertDummy() {}
 }
-

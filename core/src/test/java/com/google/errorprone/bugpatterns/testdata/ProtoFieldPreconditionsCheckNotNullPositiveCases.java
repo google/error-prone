@@ -21,8 +21,8 @@ import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
 /**
- * Positive examples for checking a proto message field using
- * {@link Preconditions#checkNotNull(Object)} and related methods.
+ * Positive examples for checking a proto message field using {@link
+ * Preconditions#checkNotNull(Object)} and related methods.
  */
 public class ProtoFieldPreconditionsCheckNotNullPositiveCases {
   public static void main(String[] args) {
