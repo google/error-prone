@@ -379,6 +379,7 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           AmbiguousMethodReference.class,
           ArgumentSelectionDefectChecker.class,
+          AssertEqualsArgumentOrderChecker.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BoxedPrimitiveConstructor.class,
@@ -438,7 +439,6 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
           AutoFactoryAtInject.class,
-          AssertEqualsArgumentOrderChecker.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,
