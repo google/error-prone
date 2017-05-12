@@ -25,13 +25,13 @@ import java.lang.annotation.RetentionPolicy;
 public class NonRuntimeAnnotationPositiveCases {
 
   public NonRuntime testAnnotation() {
-    // BUG: Diagnostic contains: null
+    // BUG: Diagnostic contains:
     NonRuntimeAnnotationPositiveCases.class.getAnnotation(
         NonRuntimeAnnotationPositiveCases.NonRuntime.class);
-    // BUG: Diagnostic contains: null
+    // BUG: Diagnostic contains:
     NonRuntimeAnnotationPositiveCases.class.getAnnotation(
         NonRuntimeAnnotationPositiveCases.NotSpecified.class);
-    // BUG: Diagnostic contains: null
+    // BUG: Diagnostic contains:
     return this.getClass().getAnnotation(NonRuntimeAnnotationPositiveCases.NonRuntime.class);
   }
 

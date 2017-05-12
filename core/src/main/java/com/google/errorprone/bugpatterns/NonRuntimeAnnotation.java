@@ -16,21 +16,24 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.getUpperBound;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.MemberSelectTree;
+import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import java.lang.annotation.Retention;
+import com.sun.tools.javac.code.Attribute.RetentionPolicy;
+import com.sun.tools.javac.code.Type;
 
 /** @author scottjohnson@google.com (Scott Johnson) */
 @BugPattern(
@@ -44,22 +47,38 @@ import java.lang.annotation.Retention;
 )
 public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {
 
+  private static final Matcher<ExpressionTree> MATCHER =
+      instanceMethod()
+          .onExactClass("java.lang.Class")
+          .named("getAnnotation")
+          .withParameters("java.lang.Class");
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!instanceMethod()
-        .onDescendantOf("java.lang.Class")
-        .named("getAnnotation")
-        .matches(tree, state)) {
-      return Description.NO_MATCH;
+    if (!MATCHER.matches(tree, state)) {
+      return NO_MATCH;
     }
-    MemberSelectTree memTree = (MemberSelectTree) tree.getArguments().get(0);
-    TypeSymbol annotation = ASTHelpers.getSymbol(memTree.getExpression()).type.tsym;
-
-    Retention retention = ASTHelpers.getAnnotation(annotation, Retention.class);
-    if (retention != null && retention.value().equals(RUNTIME)) {
-      return Description.NO_MATCH;
+    Type classType = getType(getOnlyElement(tree.getArguments()));
+    if (classType == null || classType.getTypeArguments().isEmpty()) {
+      return NO_MATCH;
     }
-
-    return describeMatch(tree, SuggestedFix.replace(tree, "null"));
+    Type type = getUpperBound(getOnlyElement(classType.getTypeArguments()), state.getTypes());
+    if (isSameType(type, state.getSymtab().annotationType, state)) {
+      return NO_MATCH;
+    }
+    RetentionPolicy retention = state.getTypes().getRetention(type.asElement());
+    switch (retention) {
+      case RUNTIME:
+        break;
+      case SOURCE:
+      case CLASS:
+        return buildDescription(tree)
+            .setMessage(
+                String.format(
+                    "%s; %s has %s retention",
+                    message(), type.asElement().getSimpleName(), retention))
+            .build();
+    }
+    return NO_MATCH;
   }
 }
