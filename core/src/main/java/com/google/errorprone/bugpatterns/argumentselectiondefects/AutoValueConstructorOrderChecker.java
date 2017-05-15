@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -46,7 +46,7 @@ import java.util.function.Function;
       "AutoValue constructors are synthesized with their parameters in the same order as the "
           + "abstract accessor methods. Calls to the constructor need to match this ordering.",
   category = GUAVA,
-  severity = WARNING
+  severity = ERROR
 )
 public class AutoValueConstructorOrderChecker extends BugChecker implements NewClassTreeMatcher {
 
