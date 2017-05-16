@@ -924,6 +924,25 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void positiveImplicitContainerOf() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Super.java",
+            "package threadsafety;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf={\"T\"}) class Super<T> {",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "class Test<U> extends Super<U> {",
+            "  // BUG: Diagnostic contains: mutable type for 'U'",
+            "  public final Test<Object> x = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(
