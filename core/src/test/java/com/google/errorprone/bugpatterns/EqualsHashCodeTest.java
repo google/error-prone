@@ -103,4 +103,16 @@ public class EqualsHashCodeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suppressOnEquals() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @SuppressWarnings(\"EqualsHashCode\")",
+            "  public boolean equals(Object o) { return false; }",
+            "}")
+        .doTest();
+  }
 }
