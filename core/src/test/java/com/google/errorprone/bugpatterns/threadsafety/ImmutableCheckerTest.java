@@ -897,8 +897,27 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
-            "// BUG: Diagnostic contains:",
             "class Test extends Super {",
+            "  // BUG: Diagnostic contains: non-final",
+            "  public int x = 0;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveContainerOf() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Super.java",
+            "package threadsafety;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf={\"T\"}) class Super<T> {",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "class Test extends Super<Integer> {",
+            "  // BUG: Diagnostic contains: non-final",
             "  public int x = 0;",
             "}")
         .doTest();
@@ -1329,8 +1348,9 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "Test.java",
             "import " + ClassPathTest.class.getCanonicalName() + ";",
-            "// BUG: Diagnostic contains: is not annotated",
-            "class Test extends ClassPathTest {",
+            "class Test extends ClassPathTest<String> {",
+            "  // BUG: Diagnostic contains: non-final",
+            "  int x;",
             "}")
         .setArgs(Arrays.asList("-cp", libJar.toString()))
         .doTest();
