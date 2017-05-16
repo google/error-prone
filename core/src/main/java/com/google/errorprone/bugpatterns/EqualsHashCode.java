@@ -82,7 +82,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
         equals = methodTree;
       }
     }
-    if (equals == null) {
+    if (equals == null || isSuppressed(equals)) {
       return Description.NO_MATCH;
     }
 
