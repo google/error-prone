@@ -35,6 +35,7 @@ import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -42,6 +43,7 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.Type.WildcardType;
+import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Filter;
 import java.util.HashMap;
@@ -438,45 +440,75 @@ public class ImmutableAnalysis {
     if (known != null) {
       return known;
     }
-    Compound attr = null;
-    Symbol annotated = sym;
-    while (annotated instanceof ClassSymbol) {
-      attr = annotated.attribute(state.getSymbolFromString(Immutable.class.getName()));
-      if (attr != null) {
-        break;
-      }
-      // @Immutable is inherited from supertypes
-      annotated = ((ClassSymbol) annotated).getSuperclass().tsym;
-    }
-    if (attr == null) {
+    return getInheritedAnnotation(sym, state);
+  }
+
+  /**
+   * Gets the possibly inherited {@code @Immutable} annotation on the given symbol, and
+   * reverse-propagates containerOf spec's from super-classes.
+   */
+  static ImmutableAnnotationInfo getInheritedAnnotation(Symbol sym, VisitorState state) {
+    if (!(sym instanceof ClassSymbol)) {
       return null;
     }
+    Compound attr = sym.attribute(state.getSymbolFromString(Immutable.class.getName()));
+    if (attr != null) {
+      return ImmutableAnnotationInfo.create(
+          sym.getQualifiedName().toString(), containerOf(state, attr));
+    }
+    // @Immutable is inherited from supertypes
+    Type superClass = ((ClassSymbol) sym).getSuperclass();
+    ImmutableAnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
+    if (superAnnotation == null) {
+      return null;
+    }
+    // If an annotated super-type was found, look for any type arguments to the super-type that
+    // are in the super-type's containerOf spec, and where the arguments are type parameters
+    // of the current class.
+    // E.g. for `Foo<X> extends Super<X>` if `Super<Y>` is annotated `@Immutable(containerOf={"Y"})`
+    // then `Foo<X>` is implicitly annotated `@Immutable(containerOf={"X"})`.
     ImmutableList.Builder<String> containerOf = ImmutableList.builder();
-    // don't inherit containerOf specs from annotations on supertypes
-    if (sym == annotated) {
-      Attribute m = attr.member(state.getName("containerOf"));
-      if (m != null) {
-        m.accept(
-            new SimpleAnnotationValueVisitor8<Void, Void>() {
-              @Override
-              public Void visitString(String s, Void unused) {
-                containerOf.add(s);
-                return null;
-              }
-
-              @Override
-              public Void visitArray(List<? extends AnnotationValue> list, Void unused) {
-                for (AnnotationValue value : list) {
-                  value.accept(this, null);
-                }
-                return null;
-              }
-            },
-            null);
+    for (int i = 0; i < superClass.getTypeArguments().size(); i++) {
+      Type arg = superClass.getTypeArguments().get(i);
+      TypeVariableSymbol formal = superClass.asElement().getTypeParameters().get(i);
+      if (!arg.hasTag(TypeTag.TYPEVAR)) {
+        continue;
+      }
+      TypeSymbol argSym = arg.asElement();
+      if (argSym.owner == sym
+          && superAnnotation.containerOf().contains(formal.getSimpleName().toString())) {
+        containerOf.add(argSym.getSimpleName().toString());
       }
     }
     return ImmutableAnnotationInfo.create(sym.getQualifiedName().toString(), containerOf.build());
   }
+
+  private static ImmutableList<String> containerOf(VisitorState state, Compound attr) {
+    Attribute m = attr.member(state.getName("containerOf"));
+    if (m == null) {
+      return ImmutableList.of();
+    }
+    ImmutableList.Builder<String> containerOf = ImmutableList.builder();
+    m.accept(
+        new SimpleAnnotationValueVisitor8<Void, Void>() {
+          @Override
+          public Void visitString(String s, Void unused) {
+            containerOf.add(s);
+            return null;
+          }
+
+          @Override
+          public Void visitArray(List<? extends AnnotationValue> list, Void unused) {
+            for (AnnotationValue value : list) {
+              value.accept(this, null);
+            }
+            return null;
+          }
+        },
+        null);
+    return containerOf.build();
+  }
+
   /**
    * Gets the {@link Tree}'s {@code @Immutable} annotation info, either from an annotation on the
    * symbol or from the list of well-known immutable types.
