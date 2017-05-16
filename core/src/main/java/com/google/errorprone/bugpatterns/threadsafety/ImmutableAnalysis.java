@@ -438,30 +438,42 @@ public class ImmutableAnalysis {
     if (known != null) {
       return known;
     }
-    Compound attr = sym.attribute(state.getSymbolFromString(Immutable.class.getName()));
+    Compound attr = null;
+    Symbol annotated = sym;
+    while (annotated instanceof ClassSymbol) {
+      attr = annotated.attribute(state.getSymbolFromString(Immutable.class.getName()));
+      if (attr != null) {
+        break;
+      }
+      // @Immutable is inherited from supertypes
+      annotated = ((ClassSymbol) annotated).getSuperclass().tsym;
+    }
     if (attr == null) {
       return null;
     }
     ImmutableList.Builder<String> containerOf = ImmutableList.builder();
-    Attribute m = attr.member(state.getName("containerOf"));
-    if (m != null) {
-      m.accept(
-          new SimpleAnnotationValueVisitor8<Void, Void>() {
-            @Override
-            public Void visitString(String s, Void unused) {
-              containerOf.add(s);
-              return null;
-            }
-
-            @Override
-            public Void visitArray(List<? extends AnnotationValue> list, Void unused) {
-              for (AnnotationValue value : list) {
-                value.accept(this, null);
+    // don't inherit containerOf specs from annotations on supertypes
+    if (sym == annotated) {
+      Attribute m = attr.member(state.getName("containerOf"));
+      if (m != null) {
+        m.accept(
+            new SimpleAnnotationValueVisitor8<Void, Void>() {
+              @Override
+              public Void visitString(String s, Void unused) {
+                containerOf.add(s);
+                return null;
               }
-              return null;
-            }
-          },
-          null);
+
+              @Override
+              public Void visitArray(List<? extends AnnotationValue> list, Void unused) {
+                for (AnnotationValue value : list) {
+                  value.accept(this, null);
+                }
+                return null;
+              }
+            },
+            null);
+      }
     }
     return ImmutableAnnotationInfo.create(sym.getQualifiedName().toString(), containerOf.build());
   }
