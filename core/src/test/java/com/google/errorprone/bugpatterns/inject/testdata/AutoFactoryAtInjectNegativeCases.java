@@ -36,4 +36,12 @@ class AutoFactoryAtInjectNegativeCases {
     @AutoFactory
     static class InnerType {}
   }
+
+  static class OnDifferentConstructors {
+    @Inject
+    OnDifferentConstructors(String string) {}
+
+    @AutoFactory
+    OnDifferentConstructors(Object object) {}
+  }
 }

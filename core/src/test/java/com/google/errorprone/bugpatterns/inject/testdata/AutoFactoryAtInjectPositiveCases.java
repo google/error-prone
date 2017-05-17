@@ -41,13 +41,4 @@ class AssistedInjectAndInjectOnSameConstructorPositiveCases {
     @AutoFactory
     HasAutoFactoryOnConstructor() {}
   }
-
-  static class HasAutoFactoryOnOtherConstructor {
-    // BUG: Diagnostic contains: remove
-    @Inject
-    HasAutoFactoryOnOtherConstructor() {}
-
-    @AutoFactory
-    HasAutoFactoryOnOtherConstructor(String string) {}
-  }
 }

@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getConstructors;
+import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.common.collect.ImmutableList;
@@ -73,7 +74,9 @@ public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMat
     ImmutableList<Tree> potentiallyAnnotatedTrees =
         new ImmutableList.Builder<Tree>().add(classTree).addAll(getConstructors(classTree)).build();
     for (Tree potentiallyAnnotatedTree : potentiallyAnnotatedTrees) {
-      if (HAS_AUTO_FACTORY_ANNOTATION.matches(potentiallyAnnotatedTree, state)) {
+      if (HAS_AUTO_FACTORY_ANNOTATION.matches(potentiallyAnnotatedTree, state)
+          && (potentiallyAnnotatedTree.getKind().equals(CLASS)
+              || potentiallyAnnotatedTree.equals(annotatedTree))) {
         return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
       }
     }
