@@ -241,7 +241,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
         refactoringResult = refactoringCollection.applyChanges(event.getSourceFile().toUri());
       } catch (Exception e) {
         PrintWriter out = Log.instance(context).getWriter(WriterKind.ERROR);
-        out.append(e.getMessage());
+        out.println(e.getMessage());
         out.flush();
         return;
       }
