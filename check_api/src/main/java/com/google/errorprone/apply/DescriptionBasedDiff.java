@@ -25,6 +25,8 @@ import com.google.errorprone.fixes.Replacements;
 import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -38,7 +40,7 @@ import java.util.Set;
  */
 public final class DescriptionBasedDiff implements DescriptionListener, Diff {
 
-  private final String sourcePath;
+  private final Path sourcePath;
   private final boolean ignoreOverlappingFixes;
   private final JCCompilationUnit compilationUnit;
   private final Set<String> importsToAdd;
@@ -62,7 +64,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
       boolean ignoreOverlappingFixes,
       ImportOrganizer importOrganizer) {
     this.compilationUnit = checkNotNull(compilationUnit);
-    this.sourcePath = compilationUnit.getSourceFile().toUri().getPath();
+    this.sourcePath = Paths.get(compilationUnit.getSourceFile().toUri());
     this.ignoreOverlappingFixes = ignoreOverlappingFixes;
     this.importsToAdd = new LinkedHashSet<>();
     this.importsToRemove = new LinkedHashSet<>();
@@ -71,7 +73,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   }
 
   @Override
-  public String getRelevantFileName() {
+  public Path getPath() {
     return sourcePath;
   }
 

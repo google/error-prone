@@ -19,21 +19,13 @@ package com.google.errorprone.apply;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 /** A {@link FileDestination} that writes content to a destination on the local filesystem. */
 public final class FsFileDestination implements FileDestination {
 
-  private final Path rootPath;
-
-  public FsFileDestination(Path rootPath) {
-    this.rootPath = rootPath;
-  }
-
   @Override
   public void writeFile(SourceFile update) throws IOException {
-    Path targetPath = rootPath.resolve(update.getPath());
-    Files.write(targetPath, update.getSourceText().getBytes(StandardCharsets.UTF_8));
+    Files.write(update.getPath(), update.getSourceText().getBytes(StandardCharsets.UTF_8));
   }
 
   @Override

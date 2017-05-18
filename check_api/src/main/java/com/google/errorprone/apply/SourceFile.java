@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.nio.CharBuffer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javax.tools.JavaFileObject;
@@ -37,20 +39,26 @@ import javax.tools.JavaFileObject;
  */
 public class SourceFile {
 
-  private final String path;
+  private final Path path;
   private final StringBuilder sourceBuilder;
 
   public static SourceFile create(JavaFileObject fileObject) throws IOException {
-    return new SourceFile(fileObject.toUri().getPath(), fileObject.getCharContent(false));
+    Path path;
+    try {
+      path = Paths.get(fileObject.toUri());
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException(fileObject.toUri().toString(), e);
+    }
+    return new SourceFile(path, fileObject.getCharContent(false));
   }
 
-  public SourceFile(String path, CharSequence source) {
+  public SourceFile(Path path, CharSequence source) {
     this.path = path;
     sourceBuilder = new StringBuilder(source);
   }
 
   /** Returns the path for this source file */
-  public String getPath() {
+  public Path getPath() {
     return path;
   }
 
