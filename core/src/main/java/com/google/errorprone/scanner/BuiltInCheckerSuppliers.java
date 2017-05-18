@@ -112,6 +112,7 @@ import com.google.errorprone.bugpatterns.MultiVariableDeclaration;
 import com.google.errorprone.bugpatterns.MultipleTopLevelClasses;
 import com.google.errorprone.bugpatterns.MustBeClosedChecker;
 import com.google.errorprone.bugpatterns.MutableConstantField;
+import com.google.errorprone.bugpatterns.NCopiesOfChar;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
 import com.google.errorprone.bugpatterns.NoAllocationChecker;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
@@ -340,6 +341,7 @@ public class BuiltInCheckerSuppliers {
           MoreThanOneInjectableConstructor.class,
           MoreThanOneScopeAnnotationOnClass.class,
           MustBeClosedChecker.class,
+          NCopiesOfChar.class,
           NonCanonicalStaticImport.class,
           NonFinalCompileTimeConstant.class,
           NonRuntimeAnnotation.class,
