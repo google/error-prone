@@ -20,6 +20,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.AbstractService;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -40,8 +41,8 @@ import java.util.logging.Logger;
 public class DiffApplier extends AbstractService {
   private static final Logger logger = Logger.getLogger(DiffApplier.class.getName());
   private final ExecutorService workerService;
-  private final Set<String> refactoredPaths;
-  private final Set<String> diffsFailedPaths;
+  private final Set<Path> refactoredPaths;
+  private final Set<Path> diffsFailedPaths;
   private final FileSource source;
   private final FileDestination destination;
   private final AtomicInteger completedFiles;
@@ -67,7 +68,7 @@ public class DiffApplier extends AbstractService {
             diffParallelism,
             5,
             TimeUnit.SECONDS,
-            new ArrayBlockingQueue<Runnable>(50),
+            new ArrayBlockingQueue<>(50),
             new ThreadPoolExecutor.CallerRunsPolicy());
   }
 
@@ -114,7 +115,7 @@ public class DiffApplier extends AbstractService {
     @Override
     public void run() {
       try {
-        SourceFile file = source.readFile(diff.getRelevantFileName());
+        SourceFile file = source.readFile(diff.getPath());
         diff.applyDifferences(file);
         destination.writeFile(file);
 
@@ -123,8 +124,8 @@ public class DiffApplier extends AbstractService {
           logger.log(Level.INFO, String.format("Completed %d files in %s", completed, stopwatch));
         }
       } catch (IOException | DiffNotApplicableException e) {
-        logger.log(Level.WARNING, "Failed to apply diff to file " + diff.getRelevantFileName(), e);
-        diffsFailedPaths.add(diff.getRelevantFileName());
+        logger.log(Level.WARNING, "Failed to apply diff to file " + diff.getPath(), e);
+        diffsFailedPaths.add(diff.getPath());
       } finally {
         decrementTasks();
       }
@@ -132,7 +133,7 @@ public class DiffApplier extends AbstractService {
   }
 
   public Future<?> put(Diff diff) {
-    if (refactoredPaths.add(diff.getRelevantFileName())) {
+    if (refactoredPaths.add(diff.getPath())) {
       runState.incrementAndGet();
       return workerService.submit(new Task(diff));
     }

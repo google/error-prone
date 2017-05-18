@@ -16,14 +16,16 @@
 
 package com.google.errorprone.apply;
 
+import java.nio.file.Path;
+
 /**
  * All the differences to be applied to a source file to be applied in a refactoring.
  *
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 public interface Diff {
-  /** Gets the name of the file this difference applies to */
-  public String getRelevantFileName();
+  /** Gets the path of the file this difference applies to */
+  public Path getPath();
 
   /**
    * Applies this difference to the supplied {@code sourceFile}.

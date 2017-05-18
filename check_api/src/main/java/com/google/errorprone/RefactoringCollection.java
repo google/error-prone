@@ -82,7 +82,7 @@ class RefactoringCollection implements DescriptionListener.Factory {
     Function<URI, RefactoringResult> postProcess;
 
     if (patchingOptions.inPlace()) {
-      fileDestination = new FsFileDestination(rootPath);
+      fileDestination = new FsFileDestination();
       postProcess =
           uri ->
               RefactoringResult.create(
@@ -160,7 +160,7 @@ class RefactoringCollection implements DescriptionListener.Factory {
       return RefactoringResult.create("", RefactoringResultType.NO_CHANGES);
     }
 
-    doApplyProcess(fileDestination, new FsFileSource(rootPath), listeners);
+    doApplyProcess(fileDestination, new FsFileSource(), listeners);
     return postProcess.apply(uri);
   }
 
@@ -186,19 +186,16 @@ class RefactoringCollection implements DescriptionListener.Factory {
       Collection<DelegatingDescriptionListener> listeners) {
     for (DelegatingDescriptionListener listener : listeners) {
       try {
-        SourceFile file = fileSource.readFile(listener.base.getRelevantFileName());
+        SourceFile file = fileSource.readFile(listener.base.getPath());
         listener.base.applyDifferences(file);
         fileDestination.writeFile(file);
       } catch (IOException e) {
-        logger.log(
-            Level.WARNING,
-            "Failed to apply diff to file " + listener.base.getRelevantFileName(),
-            e);
+        logger.log(Level.WARNING, "Failed to apply diff to file " + listener.base.getPath(), e);
       }
     }
   }
 
-  private final class DelegatingDescriptionListener implements DescriptionListener {
+  private static final class DelegatingDescriptionListener implements DescriptionListener {
     final DescriptionBasedDiff base;
     final DescriptionListener listener;
 

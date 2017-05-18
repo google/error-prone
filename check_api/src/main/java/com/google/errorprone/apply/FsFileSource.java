@@ -24,15 +24,8 @@ import java.nio.file.Path;
 /** A FileSource that reads source files from the local filesystem. */
 public final class FsFileSource implements FileSource {
 
-  private final Path rootPath;
-
-  public FsFileSource(Path rootPath) {
-    this.rootPath = rootPath;
-  }
-
   @Override
-  public SourceFile readFile(String path) throws IOException {
-    return new SourceFile(
-        path, new String(Files.readAllBytes(rootPath.resolve(path)), StandardCharsets.UTF_8));
+  public SourceFile readFile(Path path) throws IOException {
+    return new SourceFile(path, new String(Files.readAllBytes(path), StandardCharsets.UTF_8));
   }
 }

@@ -69,9 +69,11 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void oneDiff() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
+    int idx =
+        sourceFile.getSourceText().indexOf("foo", sourceFile.getSourceText().indexOf("class"));
     diff.onDescribed(
         new Description(
-            null, "message", SuggestedFix.replace(117, 120, "bar"), SeverityLevel.SUGGESTION));
+            null, "message", SuggestedFix.replace(idx, idx + 3, "bar"), SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -89,9 +91,11 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void prefixDiff() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
+    int idx =
+        sourceFile.getSourceText().indexOf("foo", sourceFile.getSourceText().indexOf("class")) + 3;
     diff.onDescribed(
         new Description(
-            null, "message", SuggestedFix.replace(120, 120, "bar"), SeverityLevel.SUGGESTION));
+            null, "message", SuggestedFix.replace(idx, idx, "bar"), SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -109,11 +113,18 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void twoDiffs() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
+    int idx1 =
+        sourceFile.getSourceText().indexOf("out", sourceFile.getSourceText().indexOf("class"));
+    int idx2 =
+        sourceFile.getSourceText().indexOf("foo", sourceFile.getSourceText().indexOf("class"));
     diff.onDescribed(
         new Description(
             null,
             "message",
-            SuggestedFix.builder().replace(104, 107, "longer").replace(117, 120, "bar").build(),
+            SuggestedFix.builder()
+                .replace(idx1, idx1 + 3, "longer")
+                .replace(idx2, idx2 + 3, "bar")
+                .build(),
             SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
@@ -132,6 +143,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void overlappingDiffs_throws() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
+    int idx =
+        sourceFile.getSourceText().indexOf("foo", sourceFile.getSourceText().indexOf("class"));
     assertThrows(
         IllegalArgumentException.class,
         () ->
@@ -140,8 +153,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
                     null,
                     "message",
                     SuggestedFix.builder()
-                        .replace(117, 120, "baz")
-                        .replace(117, 120, "bar")
+                        .replace(idx, idx + 3, "baz")
+                        .replace(idx, idx + 3, "bar")
                         .build(),
                     SeverityLevel.SUGGESTION)));
 
@@ -150,7 +163,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
         new Description(
             null,
             "bah",
-            SuggestedFix.builder().replace(117, 120, "baz").build(),
+            SuggestedFix.builder().replace(idx, idx + 3, "baz").build(),
             SeverityLevel.SUGGESTION));
 
     assertThrows(
@@ -160,7 +173,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
                 new Description(
                     null,
                     "message",
-                    SuggestedFix.builder().replace(117, 120, "bar").build(),
+                    SuggestedFix.builder().replace(idx, idx + 3, "bar").build(),
                     SeverityLevel.SUGGESTION)));
 
     DescriptionBasedDiff diff3 =
@@ -170,14 +183,14 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
         new Description(
             null,
             "bah",
-            SuggestedFix.builder().replace(117, 120, "baz").build(),
+            SuggestedFix.builder().replace(idx, idx + 3, "baz").build(),
             SeverityLevel.SUGGESTION));
     // No throw, since it's lenient. Refactors to the first "baz" replacement and ignores this.
     diff3.onDescribed(
         new Description(
             null,
             "message",
-            SuggestedFix.builder().replace(117, 120, "bar").build(),
+            SuggestedFix.builder().replace(idx, idx + 3, "bar").build(),
             SeverityLevel.SUGGESTION));
     diff3.applyDifferences(sourceFile);
 
@@ -244,13 +257,17 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void twoDiffsWithImport() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
+    int idx1 =
+        sourceFile.getSourceText().indexOf("out", sourceFile.getSourceText().indexOf("class"));
+    int idx2 =
+        sourceFile.getSourceText().indexOf("foo", sourceFile.getSourceText().indexOf("class"));
     diff.onDescribed(
         new Description(
             null,
             "message",
             SuggestedFix.builder()
-                .replace(104, 107, "longer")
-                .replace(117, 120, "bar")
+                .replace(idx1, idx1 + 3, "longer")
+                .replace(idx2, idx2 + 3, "bar")
                 .addImport("com.google.foo.Bar")
                 .build(),
             SeverityLevel.SUGGESTION));

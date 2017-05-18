@@ -17,9 +17,10 @@
 package com.google.errorprone.apply;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /** @author sjnickerson@google.com (Simon Nickerson) */
 public interface FileSource {
 
-  SourceFile readFile(String path) throws IOException;
+  SourceFile readFile(Path path) throws IOException;
 }
