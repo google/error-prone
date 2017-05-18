@@ -34,21 +34,22 @@ import javax.annotation.Nullable;
  * Logic for inspecting static imports used by {@link NonCanonicalStaticImport}, {@link
  * NonCanonicalStaticMemberImport}, and {@link UnnecessaryStaticImport}.
  */
-final class StaticImports {
+public final class StaticImports {
 
+  /** Information about a static import. */
   @AutoValue
   public abstract static class StaticImportInfo {
     /** @return the fully qualified name used to import the type (possibly non-canonical) */
-    abstract String importedName();
+    public abstract String importedName();
 
     /** @return the fully-qualified canonical name of the type */
-    abstract String canonicalName();
+    public abstract String canonicalName();
 
     /** The simple name of the imported member. */
-    abstract Optional<String> simpleName();
+    public abstract Optional<String> simpleName();
 
     /** The field or variable symbol for a static non-type member import. */
-    abstract ImmutableSet<Symbol> members();
+    public abstract ImmutableSet<Symbol> members();
 
     /**
      * Returns true if the import is canonical, i.e. the fully qualified name used to import the
