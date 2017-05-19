@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -57,7 +58,11 @@ public class LiteralClassName extends BugChecker implements MethodInvocationTree
     if (!CLASS_NAME.matches(tree, state)) {
       return NO_MATCH;
     }
-    String className = constValue(getOnlyElement(tree.getArguments()), String.class);
+    Tree argument = getOnlyElement(tree.getArguments());
+    if (argument.getKind() != STRING_LITERAL) {
+      return NO_MATCH;
+    }
+    String className = constValue(argument, String.class);
     if (className == null) {
       return NO_MATCH;
     }

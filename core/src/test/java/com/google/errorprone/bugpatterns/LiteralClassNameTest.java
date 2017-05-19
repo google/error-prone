@@ -87,4 +87,18 @@ public class LiteralClassNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void onlyLiterals() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private static final String CONST_NAME = \"java.lang.String\";",
+            "  void f() throws Exception {",
+            "    Class<?> c = Class.forName(CONST_NAME);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
