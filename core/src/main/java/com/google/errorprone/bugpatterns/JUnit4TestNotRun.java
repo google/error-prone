@@ -48,7 +48,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.util.Options;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 
@@ -90,10 +89,6 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
           enclosingClass(isJUnit4TestClass),
           not(enclosingClass(hasModifier(ABSTRACT))));
 
-  protected boolean useExpandedHeuristic(VisitorState state) {
-    return Options.instance(state.context).getBoolean("expandedTestNotRunHeuristic");
-  }
-
   /**
    * Matches if:
    *
@@ -121,22 +116,19 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
       return describeFixes(methodTree, state);
     }
 
-    // TODO(b/34062183): Remove check for flag once cleanup complete.
-    if (useExpandedHeuristic(state)) {
 
-      // Method is annotated, probably not a test.
-      List<? extends AnnotationTree> annotations = methodTree.getModifiers().getAnnotations();
-      if (annotations != null && !annotations.isEmpty()) {
-        return NO_MATCH;
-      }
+    // Method is annotated, probably not a test.
+    List<? extends AnnotationTree> annotations = methodTree.getModifiers().getAnnotations();
+    if (annotations != null && !annotations.isEmpty()) {
+      return NO_MATCH;
+    }
 
-      // Method non-static and contains call(s) to testing method, probably a test,
-      // unless it is called elsewhere in the class, in which case it is a helper method.
-      if (not(hasModifier(STATIC)).matches(methodTree, state)
-          && containsTestMethod(methodTree)
-          && !calledElsewhere(methodTree, state)) {
-        return describeFixes(methodTree, state);
-      }
+    // Method non-static and contains call(s) to testing method, probably a test,
+    // unless it is called elsewhere in the class, in which case it is a helper method.
+    if (not(hasModifier(STATIC)).matches(methodTree, state)
+        && containsTestMethod(methodTree)
+        && !calledElsewhere(methodTree, state)) {
+      return describeFixes(methodTree, state);
     }
     return NO_MATCH;
   }

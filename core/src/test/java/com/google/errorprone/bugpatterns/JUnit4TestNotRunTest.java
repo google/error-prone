@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
@@ -33,14 +32,8 @@ public class JUnit4TestNotRunTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(JUnit4TestNotRun.class, getClass());
 
-  // TODO(b/34062183): Remove flag once cleanup complete.
-  private final CompilationTestHelper expandedHeuristicCompilationHelper =
-      CompilationTestHelper.newInstance(JUnit4TestNotRun.class, getClass())
-          .setArgs(ImmutableList.of("-XDexpandedTestNotRunHeuristic=true"));
-
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new JUnit4TestNotRun(), getClass())
-          .setArgs("-XDexpandedTestNotRunHeuristic=true");
+      BugCheckerRefactoringTestHelper.newInstance(new JUnit4TestNotRun(), getClass());
 
   @Test
   public void testPositiveCase1() throws Exception {
@@ -54,7 +47,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsVerifyAsIdentifier() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import static org.mockito.Mockito.verify;",
@@ -72,7 +65,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsQualifiedVerify() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import org.junit.runner.RunWith;",
@@ -90,7 +83,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsAssertAsIdentifier() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import org.junit.runner.RunWith;",
@@ -114,7 +107,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsQualifiedAssert() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import org.junit.runner.RunWith;",
@@ -132,7 +125,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsCheckAsIdentifier() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import static com.google.common.base.Preconditions.checkState;",
@@ -150,7 +143,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsQualifiedCheck() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import com.google.common.base.Preconditions;",
@@ -168,7 +161,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsFailAsIdentifier() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import static org.junit.Assert.fail;",
@@ -186,7 +179,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsQualifiedFail() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import org.junit.Assert;",
@@ -204,7 +197,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsExpectAsIdentifier() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import static org.junit.Assert.expectThrows;",
@@ -222,7 +215,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testContainsQualifiedExpect() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import org.junit.Assert;",
@@ -240,7 +233,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void noTestKeyword() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import org.junit.runner.RunWith;",
@@ -257,7 +250,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void staticMethodWithTestKeyword() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import org.junit.runner.RunWith;",
@@ -276,7 +269,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void hasOtherAnnotation() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import org.junit.runner.RunWith;",
@@ -294,7 +287,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void hasOtherAnnotationAndNamedTest() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import org.junit.runner.RunWith;",
@@ -308,24 +301,6 @@ public class JUnit4TestNotRunTest {
             "    Collections.sort(Collections.<Integer>emptyList());",
             "  }",
             "  private void verify() {}",
-            "}")
-        .doTest();
-  }
-
-  // TODO(b/34062183): Remove this test once cleanup complete.
-  @Test
-  public void shouldNotUseExpandedHeuristicWithoutFlag() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import com.google.common.truth.Truth;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  public void shouldDoSomething() {",
-            "    Truth.assertThat(1).isEqualTo(1);",
-            "  }",
             "}")
         .doTest();
   }
@@ -450,7 +425,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void helperMethodCalledElsewhere() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "TestStuff.java",
             "import org.junit.runner.RunWith;",
@@ -472,7 +447,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void helperMethodCallFoundInNestedInvocation() {
-    expandedHeuristicCompilationHelper
+    compilationHelper
         .addSourceLines(
             "TestStuff.java",
             "import org.junit.runner.RunWith;",
