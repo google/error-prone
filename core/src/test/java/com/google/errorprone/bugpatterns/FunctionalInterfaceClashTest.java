@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -202,6 +203,9 @@ public class FunctionalInterfaceClashTest {
         .doTest();
   }
 
+  // TODO(b/38460312): Fix and enable test
+  @Test
+  @Ignore
   public void suppressWarningsOnMethod() {
     testHelper
         .addSourceLines(
