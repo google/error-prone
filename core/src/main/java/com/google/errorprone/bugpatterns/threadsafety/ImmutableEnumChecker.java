@@ -55,6 +55,11 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
 
   private final WellKnownMutability wellKnownMutability;
 
+  @Deprecated // Used reflectively, but you should pass in ErrorProneFlags to get custom mutability
+  public ImmutableEnumChecker() {
+    this(ErrorProneFlags.empty());
+  }
+
   public ImmutableEnumChecker(ErrorProneFlags flags) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
   }
