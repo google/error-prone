@@ -40,7 +40,6 @@ import java.util.Set;
  */
 public final class DescriptionBasedDiff implements DescriptionListener, Diff {
 
-  private final Path sourcePath;
   private final boolean ignoreOverlappingFixes;
   private final JCCompilationUnit compilationUnit;
   private final Set<String> importsToAdd;
@@ -64,7 +63,6 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
       boolean ignoreOverlappingFixes,
       ImportOrganizer importOrganizer) {
     this.compilationUnit = checkNotNull(compilationUnit);
-    this.sourcePath = Paths.get(compilationUnit.getSourceFile().toUri());
     this.ignoreOverlappingFixes = ignoreOverlappingFixes;
     this.importsToAdd = new LinkedHashSet<>();
     this.importsToRemove = new LinkedHashSet<>();
@@ -74,7 +72,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
 
   @Override
   public Path getPath() {
-    return sourcePath;
+    return Paths.get(compilationUnit.getSourceFile().toUri());
   }
 
   public boolean isEmpty() {
