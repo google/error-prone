@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneFlags;
 
 /**
  * An implementation of a {@link ScannerSupplier} that just returns the {@link Scanner} that was
@@ -52,6 +53,11 @@ class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
 
   @Override
   protected ImmutableSet<String> disabled() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public ErrorProneFlags getFlags() {
     throw new UnsupportedOperationException();
   }
 

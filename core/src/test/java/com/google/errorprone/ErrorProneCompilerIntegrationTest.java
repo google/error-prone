@@ -20,6 +20,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
@@ -294,7 +296,7 @@ public class ErrorProneCompilerIntegrationTest {
       } else if (select instanceof IdentifierTree) {
         name = ((IdentifierTree) select).getName();
       } else {
-        return Description.NO_MATCH;
+        return NO_MATCH;
       }
       return name.contentEquals("super") ? describeMatch(tree) : Description.NO_MATCH;
     }
@@ -721,5 +723,83 @@ public class ErrorProneCompilerIntegrationTest {
             .run(new String[] {"@" + params.toAbsolutePath().toString()});
     assertThat(result).isEqualTo(Result.ERROR);
     assertThat(output.toString()).contains("[EqualsIncompatibleType]");
+  }
+
+  /**
+   * Trivial bug checker for testing command line flags. Forbids methods from returning the string
+   * provided by "-XepOpt:Forbidden=<VALUE>" flag.
+   */
+  @BugPattern(
+    name = "ForbiddenString",
+    summary = "Please don't return this const value",
+    category = ONE_OFF,
+    severity = ERROR
+  )
+  public static class ForbiddenString extends BugChecker implements ReturnTreeMatcher {
+    private final String forbiddenString;
+
+    public ForbiddenString(ErrorProneFlags flags) {
+      forbiddenString = flags.get("Forbidden").orElse("default");
+    }
+
+    @Override
+    public Description matchReturn(ReturnTree tree, VisitorState state) {
+      if (this.forbiddenString.equalsIgnoreCase(constValue(tree.getExpression()).toString())) {
+        return describeMatch(tree);
+      } else {
+        return NO_MATCH;
+      }
+    }
+  }
+
+  @Test
+  public void checkerWithFlags() throws Exception {
+    String[] args = {
+      "-XepOpt:Forbidden=xylophone",
+    };
+    List<JavaFileObject> sources =
+        Arrays.asList(
+            compiler
+                .fileManager()
+                .forSourceLines(
+                    "Test.java",
+                    "package test;",
+                    "public class Test {",
+                    "  Object f() { return \"XYLOPHONE\"; }",
+                    "}"));
+
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ForbiddenString.class));
+    compiler = compilerBuilder.build();
+    compiler.compile(args, sources);
+    outputStream.flush();
+    String output = diagnosticHelper.getDiagnostics().toString();
+    assertThat(output).contains("Please don't return this const value");
+  }
+
+  @Test
+  public void flagsAreResetOnNextCompilation() throws Exception {
+    String[] args = {"-XepOpt:Forbidden=bananas"};
+    List<JavaFileObject> sources =
+        Arrays.asList(
+            compiler
+                .fileManager()
+                .forSourceLines(
+                    "Test.java",
+                    "package test;",
+                    "public class Test {",
+                    "  Object f() { return \"BANANAS\"; }",
+                    "}"));
+
+    // First compile forbids "bananas", should fail.
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ForbiddenString.class));
+    compiler = compilerBuilder.build();
+    Result exitCode = compiler.compile(args, sources);
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+
+    // Flags should reset, compile should succeed.
+    exitCode = compiler.compile(sources);
+    outputStream.flush();
+    assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 }

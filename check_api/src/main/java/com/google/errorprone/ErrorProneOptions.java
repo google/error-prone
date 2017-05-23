@@ -45,7 +45,7 @@ import java.util.Set;
  */
 public class ErrorProneOptions {
 
-  private static final String CUSTOM_ENABLEMENT_PREFIX = "-Xep:";
+  private static final String SEVERITY_PREFIX = "-Xep:";
   private static final String PATCH_CHECKS_PREFIX = "-XepPatchChecks:";
   private static final String PATCH_OUTPUT_LOCATION = "-XepPatchLocation:";
   private static final String PATCH_IMPORT_ORDER_PREFIX = "-XepPatchImportOrder:";
@@ -59,7 +59,8 @@ public class ErrorProneOptions {
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
   public static int isSupportedOption(String option) {
     boolean isSupported =
-        option.startsWith(CUSTOM_ENABLEMENT_PREFIX)
+        option.startsWith(SEVERITY_PREFIX)
+            || option.startsWith(ErrorProneFlags.PREFIX)
             || option.startsWith(PATCH_OUTPUT_LOCATION)
             || option.startsWith(PATCH_CHECKS_PREFIX)
             || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG)
@@ -150,6 +151,7 @@ public class ErrorProneOptions {
   private final boolean dropErrorsToWarnings;
   private final boolean enableAllChecksAsWarnings;
   private final boolean disableAllChecks;
+  private final ErrorProneFlags flags;
   private final PatchingOptions patchingOptions;
 
   private ErrorProneOptions(
@@ -160,6 +162,7 @@ public class ErrorProneOptions {
       boolean dropErrorsToWarnings,
       boolean enableAllChecksAsWarnings,
       boolean disableAllChecks,
+      ErrorProneFlags flags,
       PatchingOptions patchingOptions) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
@@ -168,6 +171,7 @@ public class ErrorProneOptions {
     this.dropErrorsToWarnings = dropErrorsToWarnings;
     this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     this.disableAllChecks = disableAllChecks;
+    this.flags = flags;
     this.patchingOptions = patchingOptions;
   }
 
@@ -191,6 +195,10 @@ public class ErrorProneOptions {
     return dropErrorsToWarnings;
   }
 
+  public ErrorProneFlags getFlags() {
+    return flags;
+  }
+
   public PatchingOptions patchingOptions() {
     return patchingOptions;
   }
@@ -202,7 +210,34 @@ public class ErrorProneOptions {
     private boolean enableAllChecksAsWarnings = false;
     private boolean disableAllChecks = false;
     private Map<String, Severity> severityMap = new HashMap<>();
+    private final ErrorProneFlags.Builder flagsBuilder = ErrorProneFlags.builder();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
+
+    private void parseSeverity(String arg) {
+      // Strip prefix
+      String remaining = arg.substring(SEVERITY_PREFIX.length());
+      // Split on ':'
+      String[] parts = remaining.split(":");
+      if (parts.length > 2 || parts[0].isEmpty()) {
+        throw new InvalidCommandLineOptionException("invalid flag: " + arg);
+      }
+      String checkName = parts[0];
+      Severity severity;
+      if (parts.length == 1) {
+        severity = Severity.DEFAULT;
+      } else { // parts.length == 2
+        try {
+          severity = Severity.valueOf(parts[1]);
+        } catch (IllegalArgumentException e) {
+          throw new InvalidCommandLineOptionException("invalid flag: " + arg);
+        }
+      }
+      severityMap.put(checkName, severity);
+    }
+
+    public void parseFlag(String flag) {
+      flagsBuilder.parseFlag(flag);
+    }
 
     public void setIgnoreUnknownChecks(boolean ignoreUnknownChecks) {
       this.ignoreUnknownChecks = ignoreUnknownChecks;
@@ -219,10 +254,6 @@ public class ErrorProneOptions {
           .filter(e -> e.getValue() == Severity.ERROR)
           .forEach(e -> e.setValue(Severity.WARN));
       this.dropErrorsToWarnings = dropErrorsToWarnings;
-    }
-
-    public void putSeverity(String checkName, Severity severity) {
-      severityMap.put(checkName, severity);
     }
 
     public void setEnableAllChecksAsWarnings(boolean enableAllChecksAsWarnings) {
@@ -254,6 +285,7 @@ public class ErrorProneOptions {
           dropErrorsToWarnings,
           enableAllChecksAsWarnings,
           disableAllChecks,
+          flagsBuilder.build(),
           patchingOptionsBuilder.build());
     }
   }
@@ -281,7 +313,7 @@ public class ErrorProneOptions {
      * the command line.
      *
      * You can pass the IGNORE_UNKNOWN_CHECKS_FLAG to opt-out of that checking.  This allows you to
-     * use command lines from different versions of error-prone interchangably.
+     * use command lines from different versions of error-prone interchangeably.
      */
     Builder builder = new Builder();
     for (String arg : args) {
@@ -302,8 +334,10 @@ public class ErrorProneOptions {
           builder.setDisableAllChecks(true);
           break;
         default:
-          if (arg.startsWith(CUSTOM_ENABLEMENT_PREFIX)) {
-            parseCustomFlagIntoOptionsBuilder(builder, arg);
+          if (arg.startsWith(SEVERITY_PREFIX)) {
+            builder.parseSeverity(arg);
+          } else if (arg.startsWith(ErrorProneFlags.PREFIX)) {
+            builder.parseFlag(arg);
           } else if (arg.startsWith(PATCH_OUTPUT_LOCATION)) {
             String remaining = arg.substring(PATCH_OUTPUT_LOCATION.length());
             if (remaining.equals("IN_PLACE")) {
@@ -346,28 +380,6 @@ public class ErrorProneOptions {
     }
 
     return builder.build(outputArgs.build());
-  }
-
-  private static void parseCustomFlagIntoOptionsBuilder(Builder builder, String arg) {
-    // Strip prefix
-    String remaining = arg.substring(CUSTOM_ENABLEMENT_PREFIX.length());
-    // Split on ':'
-    String[] parts = remaining.split(":");
-    if (parts.length > 2 || parts[0].isEmpty()) {
-      throw new InvalidCommandLineOptionException("invalid flag: " + arg);
-    }
-    String checkName = parts[0];
-    Severity severity;
-    if (parts.length == 1) {
-      severity = Severity.DEFAULT;
-    } else { // parts.length == 2
-      try {
-        severity = Severity.valueOf(parts[1]);
-      } catch (IllegalArgumentException e) {
-        throw new InvalidCommandLineOptionException("invalid flag: " + arg);
-      }
-    }
-    builder.putSeverity(checkName, severity);
   }
 
   /**
