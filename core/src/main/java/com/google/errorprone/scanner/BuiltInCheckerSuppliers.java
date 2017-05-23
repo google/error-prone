@@ -192,6 +192,7 @@ import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
+import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterChecker;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
@@ -416,6 +417,7 @@ public class BuiltInCheckerSuppliers {
           MissingFail.class,
           MissingOverride.class,
           MutableConstantField.class,
+          NamedParameterChecker.class,
           NarrowingCompoundAssignment.class,
           NonAtomicVolatileUpdate.class,
           NonOverridingEquals.class,
