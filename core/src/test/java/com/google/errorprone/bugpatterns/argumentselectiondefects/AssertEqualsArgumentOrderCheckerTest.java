@@ -72,6 +72,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test(Object expected, Object actual) {",
             "    // BUG: Diagnostic contains: assertEquals(expected, actual)",
+            "    // assertEquals(/*expected=*/actual, /*actual=*/expected)",
             "    assertEquals(actual, expected);",
             "  }",
             "}")
@@ -228,6 +229,20 @@ public class AssertEqualsArgumentOrderCheckerTest {
             "  abstract MyEnum enumValue();",
             "  void test(Object other) {",
             "    assertEquals(other, enumValue());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assertEqualsCheck_makesNoChange_withCommentedNames() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "ErrorProneTest.java",
+            "abstract class ErrorProneTest {",
+            "  static void assertEquals(Object expected, Object actual) {};",
+            "  void test(Object expected, Object actual) {",
+            "    assertEquals(/*expected=*/actual, /*actual=*/expected);",
             "  }",
             "}")
         .doTest();

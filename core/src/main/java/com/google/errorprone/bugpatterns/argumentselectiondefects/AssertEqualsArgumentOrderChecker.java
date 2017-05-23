@@ -60,6 +60,7 @@ public class AssertEqualsArgumentOrderChecker extends BugChecker
           .setDistanceFunction(buildDistanceFunction())
           .addHeuristic(changeMustBeBetterThanOriginal())
           .addHeuristic(new CreatesDuplicateCallHeuristic())
+          .addHeuristic(new NameInCommentHeuristic())
           .build();
 
   @Override
@@ -83,6 +84,7 @@ public class AssertEqualsArgumentOrderChecker extends BugChecker
 
     return buildDescription(invocationInfo.tree())
         .addFix(changes.buildPermuteArgumentsFix(invocationInfo))
+        .addFix(changes.buildCommentArgumentsFix(invocationInfo))
         .build();
   }
 
