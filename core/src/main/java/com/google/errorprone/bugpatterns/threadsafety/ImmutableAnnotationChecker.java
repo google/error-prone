@@ -22,9 +22,9 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -36,6 +36,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import java.util.Optional;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -49,6 +50,12 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
 
   public static final String ANNOTATED_ANNOTATION_MESSAGE =
       "annotations are immutable by default; annotating them with @Immutable is unnecessary";
+
+  private final WellKnownMutability wellKnownMutability;
+
+  public ImmutableAnnotationChecker(ErrorProneFlags flags) {
+    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+  }
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -77,6 +84,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
         new ImmutableAnalysis(
                 this,
                 state,
+                wellKnownMutability,
                 "annotations should be immutable, and cannot have non-final fields",
                 "annotations should be immutable")
             .checkForImmutability(Optional.of(tree), ImmutableSet.of(), getType(tree));

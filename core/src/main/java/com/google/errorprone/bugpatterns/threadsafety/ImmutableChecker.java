@@ -18,14 +18,13 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.getImmutableAnnotation;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -41,6 +40,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -52,12 +52,19 @@ import java.util.Set;
 )
 public class ImmutableChecker extends BugChecker implements BugChecker.ClassTreeMatcher {
 
+  private final WellKnownMutability wellKnownMutability;
+
+  public ImmutableChecker(ErrorProneFlags flags) {
+    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+  }
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ImmutableAnalysis analysis =
         new ImmutableAnalysis(
             this,
             state,
+            wellKnownMutability,
             "@Immutable classes cannot have non-final fields",
             "@Immutable class has mutable field");
     if (tree.getSimpleName().length() == 0) {
@@ -66,7 +73,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
       return handleAnonymousClass(tree, state, analysis);
     }
 
-    ImmutableAnnotationInfo annotation = getImmutableAnnotation(tree, state);
+    ImmutableAnnotationInfo annotation = analysis.getImmutableAnnotation(tree, state);
     if (annotation == null) {
       // If the type isn't annotated we don't check for immutability, but we do
       // report an error if it extends/implements any @Immutable-annotated types.
@@ -75,7 +82,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
 
     // Special-case visiting declarations of known-immutable types; these uses
     // of the annotation are "trusted".
-    if (WellKnownMutability.KNOWN_IMMUTABLE.containsValue(annotation)) {
+    if (wellKnownMutability.getKnownImmutableClasses().containsValue(annotation)) {
       return Description.NO_MATCH;
     }
 
@@ -101,7 +108,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     Violation info =
         analysis.checkForImmutability(
             Optional.of(tree),
-            immutableTypeParametersInScope(ASTHelpers.getSymbol(tree), state),
+            immutableTypeParametersInScope(ASTHelpers.getSymbol(tree), state, analysis),
             ASTHelpers.getType(tree));
 
     if (!info.isPresent()) {
@@ -136,7 +143,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // public static <@Immutable T> ImmutableBox<T> create(T t) {
     //   return new ImmutableBox<>(t);
     // }
-    ImmutableSet<String> typarams = immutableTypeParametersInScope(sym, state);
+    ImmutableSet<String> typarams = immutableTypeParametersInScope(sym, state, analysis);
     Violation info =
         analysis.areFieldsImmutable(Optional.of(tree), typarams, ASTHelpers.getType(tree));
     if (!info.isPresent()) {
@@ -214,7 +221,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
    * </pre>
    */
   private static ImmutableSet<String> immutableTypeParametersInScope(
-      Symbol sym, VisitorState state) {
+      Symbol sym, VisitorState state, ImmutableAnalysis analysis) {
     if (sym == null) {
       return ImmutableSet.of();
     }
@@ -229,7 +236,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
         default:
           break;
       }
-      ImmutableAnnotationInfo annotation = getImmutableAnnotation(s, state);
+      ImmutableAnnotationInfo annotation = analysis.getImmutableAnnotation(s, state);
       if (annotation == null) {
         continue;
       }

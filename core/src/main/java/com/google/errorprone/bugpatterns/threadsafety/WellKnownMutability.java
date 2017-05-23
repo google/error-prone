@@ -24,28 +24,57 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.common.primitives.Primitives;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.tools.javac.code.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /** A collection of types with with known mutability. */
 final class WellKnownMutability {
 
 
+  private WellKnownMutability(List<String> knownImmutable, List<String> knownUnsafe) {
+    knownImmutableClasses = buildImmutableClasses(knownImmutable);
+    knownUnsafeClasses = buildUnsafeClasses(knownUnsafe);
+  }
+
+  public static WellKnownMutability fromFlags(ErrorProneFlags flags) {
+    ImmutableList<String> immutable =
+        flags.getList("Immutable:KnownImmutable").orElse(ImmutableList.of());
+    ImmutableList<String> unsafe =
+        flags.getList("Immutable:KnownUnsafe").orElse(ImmutableList.of());
+    return new WellKnownMutability(immutable, unsafe);
+  }
+
+  public ImmutableMap<String, ImmutableAnnotationInfo> getKnownImmutableClasses() {
+    return knownImmutableClasses;
+  }
+
+  public ImmutableSet<String> getKnownUnsafeClasses() {
+    return knownUnsafeClasses;
+  }
+
   /** Types that are known to be immutable. */
-  static final ImmutableMap<String, ImmutableAnnotationInfo> KNOWN_IMMUTABLE =
-      getBootstrapClasses();
+  private final ImmutableMap<String, ImmutableAnnotationInfo> knownImmutableClasses;
 
   static class Builder {
     final ImmutableMap.Builder<String, ImmutableAnnotationInfo> mapBuilder = ImmutableMap.builder();
 
-    public Builder addAll(Set<Class<?>> clazzs) {
+    public Builder addClasses(Set<Class<?>> clazzs) {
       for (Class<?> clazz : clazzs) {
         add(clazz);
+      }
+      return this;
+    }
+
+    public Builder addStrings(List<String> classNames) {
+      for (String className : classNames) {
+        add(className);
       }
       return this;
     }
@@ -82,10 +111,12 @@ final class WellKnownMutability {
 
   // TODO(b/35724557): share this list with other code analyzing types for immutability
   // TODO(cushon): generate this at build-time to get type-safety without added compile-time deps
-  private static ImmutableMap<String, ImmutableAnnotationInfo> getBootstrapClasses() {
+  private static ImmutableMap<String, ImmutableAnnotationInfo> buildImmutableClasses(
+      List<String> extraKnownImmutables) {
     return new Builder()
-        .addAll(Primitives.allPrimitiveTypes())
-        .addAll(Primitives.allWrapperTypes())
+        .addStrings(extraKnownImmutables)
+        .addClasses(Primitives.allPrimitiveTypes())
+        .addClasses(Primitives.allWrapperTypes())
         .add("com.google.protobuf.ByteString")
         .add("com.google.protobuf.Descriptors$Descriptor")
         .add("com.google.protobuf.Descriptors$EnumDescriptor")
@@ -190,10 +221,11 @@ final class WellKnownMutability {
   }
 
   /** Types that are known to be mutable. */
-  static final ImmutableSet<String> KNOWN_UNSAFE = getKnownUnsafeClasses();
+  private final ImmutableSet<String> knownUnsafeClasses;
 
-  private static ImmutableSet<String> getKnownUnsafeClasses() {
+  private static ImmutableSet<String> buildUnsafeClasses(List<String> knownUnsafes) {
     ImmutableSet.Builder<String> result = ImmutableSet.<String>builder();
+    result.addAll(knownUnsafes);
     for (Class<?> clazz :
         ImmutableSet.<Class<?>>of(
             java.lang.Iterable.class,

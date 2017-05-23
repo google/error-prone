@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -49,6 +48,7 @@ import com.sun.tools.javac.util.Filter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -107,6 +107,7 @@ public class ImmutableAnalysis {
 
   private final BugChecker bugChecker;
   private final VisitorState state;
+  private final WellKnownMutability wellKnownMutability;
 
   private final String nonFinalFieldMessage;
   private final String mutableFieldMessage;
@@ -114,10 +115,12 @@ public class ImmutableAnalysis {
   public ImmutableAnalysis(
       BugChecker bugChecker,
       VisitorState state,
+      WellKnownMutability wellKnownMutability,
       String nonFinalFieldMessage,
       String mutableFieldMessage) {
     this.bugChecker = bugChecker;
     this.state = state;
+    this.wellKnownMutability = wellKnownMutability;
     this.nonFinalFieldMessage = nonFinalFieldMessage;
     this.mutableFieldMessage = mutableFieldMessage;
   }
@@ -212,7 +215,7 @@ public class ImmutableAnalysis {
 
     // Recursive case: check if the supertype is 'effectively' immutable.
     Violation info =
-        checkForImmutability(Optional.<ClassTree>absent(), immutableTyParams, superType);
+        checkForImmutability(Optional.<ClassTree>empty(), immutableTyParams, superType);
     if (!info.isPresent()) {
       return Violation.absent();
     }
@@ -254,7 +257,7 @@ public class ImmutableAnalysis {
     List<Symbol> members =
         ImmutableList.copyOf(classSym.members().getSymbols(instanceFieldFilter)).reverse();
     for (Symbol member : members) {
-      Optional<Tree> memberTree = Optional.fromNullable(declarations.get(member));
+      Optional<Tree> memberTree = Optional.ofNullable(declarations.get(member));
       Violation info =
           isFieldImmutable(memberTree, immutableTyParams, classSym, classType, (VarSymbol) member);
       if (info.isPresent()) {
@@ -415,7 +418,7 @@ public class ImmutableAnalysis {
         return immutableInstantiation(immutableTyParams, annotation, type);
       }
       String nameStr = type.tsym.flatName().toString();
-      if (WellKnownMutability.KNOWN_UNSAFE.contains(nameStr)) {
+      if (wellKnownMutability.getKnownUnsafeClasses().contains(nameStr)) {
         return Violation.of(String.format("'%s' is mutable", type.tsym.getSimpleName()));
       }
       if (WellKnownMutability.isProto2MessageClass(state, type)) {
@@ -434,9 +437,9 @@ public class ImmutableAnalysis {
    * Gets the {@link Symbol}'s {@code @Immutable} annotation info, either from an annotation on the
    * symbol or from the list of well-known immutable types.
    */
-  static ImmutableAnnotationInfo getImmutableAnnotation(Symbol sym, VisitorState state) {
+  ImmutableAnnotationInfo getImmutableAnnotation(Symbol sym, VisitorState state) {
     String nameStr = sym.flatName().toString();
-    ImmutableAnnotationInfo known = WellKnownMutability.KNOWN_IMMUTABLE.get(nameStr);
+    ImmutableAnnotationInfo known = wellKnownMutability.getKnownImmutableClasses().get(nameStr);
     if (known != null) {
       return known;
     }
@@ -513,7 +516,7 @@ public class ImmutableAnalysis {
    * Gets the {@link Tree}'s {@code @Immutable} annotation info, either from an annotation on the
    * symbol or from the list of well-known immutable types.
    */
-  static ImmutableAnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
+  ImmutableAnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     return sym == null ? null : getImmutableAnnotation(sym, state);
   }

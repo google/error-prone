@@ -22,10 +22,10 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -37,6 +37,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -51,6 +52,12 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
 
   public static final String ANNOTATED_ENUM_MESSAGE =
       "enums are immutable by default; annotating them with @Immutable is unnecessary";
+
+  private final WellKnownMutability wellKnownMutability;
+
+  public ImmutableEnumChecker(ErrorProneFlags flags) {
+    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+  }
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -78,6 +85,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
         new ImmutableAnalysis(
                 this,
                 state,
+                wellKnownMutability,
                 "enums should be immutable, and cannot have non-final fields",
                 "enums should only have immutable fields")
             .checkForImmutability(Optional.of(tree), ImmutableSet.of(), getType(tree));

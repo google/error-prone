@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.Immutable;
@@ -1372,6 +1373,39 @@ public class ImmutableCheckerTest {
             "  int x;",
             "}")
         .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .doTest();
+  }
+
+  @Test
+  public void knownImmutableFlag() {
+    CompilationTestHelper.newInstance(ImmutableChecker.class, getClass())
+        .setArgs(ImmutableList.of("-XepOpt:Immutable:KnownImmutable=threadsafety.SomeImmutable"))
+        .addSourceLines(
+            "threadsafety/SomeImmutable.java", "package threadsafety;", "class SomeImmutable {}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class Test {",
+            "  public final SomeImmutable s = new SomeImmutable();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void knownUnsafeFlag() {
+    CompilationTestHelper.newInstance(ImmutableChecker.class, getClass())
+        .setArgs(ImmutableList.of("-XepOpt:Immutable:KnownUnsafe=threadsafety.SomeUnsafe"))
+        .addSourceLines(
+            "threadsafety/SomeUnsafe.java", "package threadsafety;", "class SomeUnsafe {}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class Test {",
+            "  // BUG: Diagnostic contains: 'SomeUnsafe' is mutable",
+            "  public final SomeUnsafe s = new SomeUnsafe();",
+            "}")
         .doTest();
   }
 }
