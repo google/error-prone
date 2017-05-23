@@ -64,7 +64,7 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
-  public void handlesErrorProneFlags() throws Exception {
+  public void handlesErrorProneSeverityFlags() throws Exception {
     String[] args1 = {"-Xep:Check1"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args1);
     Map<String, Severity> expectedSeverityMap =
@@ -83,9 +83,27 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void handlesErrorProneCustomFlags() throws Exception {
+    String[] args = {"-XepOpt:Flag1", "-XepOpt:Flag2=Value2", "-XepOpt:Flag3=a,b,c"};
+    ErrorProneOptions options = ErrorProneOptions.processArgs(args);
+    Map<String, String> expectedFlagsMap =
+        ImmutableMap.<String, String>builder()
+            .put("Flag1", "true")
+            .put("Flag2", "Value2")
+            .put("Flag3", "a,b,c")
+            .build();
+    assertThat(options.getFlags().getFlagsMap()).isEqualTo(expectedFlagsMap);
+  }
+
+  @Test
   public void combineErrorProneFlagsWithNonErrorProneFlags() throws Exception {
     String[] args = {
-      "-classpath", "/this/is/classpath", "-verbose", "-Xep:Check1:WARN", "-Xep:Check2:ERROR"
+      "-classpath",
+      "/this/is/classpath",
+      "-verbose",
+      "-Xep:Check1:WARN",
+      "-XepOpt:Check1:Flag1=Value1",
+      "-Xep:Check2:ERROR"
     };
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     String[] expectedRemainingArgs = {"-classpath", "/this/is/classpath", "-verbose"};
@@ -96,15 +114,25 @@ public class ErrorProneOptionsTest {
             .put("Check2", Severity.ERROR)
             .build();
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+    Map<String, String> expectedFlagsMap = ImmutableMap.of("Check1:Flag1", "Value1");
+    assertThat(options.getFlags().getFlagsMap()).containsExactlyEntriesIn(expectedFlagsMap);
   }
 
   @Test
-  public void lastCheckFlagWins() throws Exception {
+  public void lastSeverityFlagWins() throws Exception {
     String[] args = {"-Xep:Check1:ERROR", "-Xep:Check1:OFF"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     Map<String, Severity> expectedSeverityMap =
         ImmutableMap.<String, Severity>builder().put("Check1", Severity.OFF).build();
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+  }
+
+  @Test
+  public void lastCustomFlagWins() {
+    String[] args = {"-XepOpt:Flag1=First", "-XepOpt:Flag1=Second"};
+    ErrorProneOptions options = ErrorProneOptions.processArgs(args);
+    Map<String, String> expectedFlagsMap = ImmutableMap.of("Flag1", "Second");
+    assertThat(options.getFlags().getFlagsMap()).containsExactlyEntriesIn(expectedFlagsMap);
   }
 
   @Test

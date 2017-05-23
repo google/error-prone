@@ -19,18 +19,18 @@ package com.google.errorprone.scanner;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.getFirst;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugCheckerInfo;
-import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.BugChecker;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known {@link
@@ -39,13 +39,15 @@ import java.io.Serializable;
  */
 class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   private final ImmutableBiMap<String, BugCheckerInfo> checks;
-  private final ImmutableMap<String, BugPattern.SeverityLevel> severities;
+  private final ImmutableMap<String, SeverityLevel> severities;
   private final ImmutableSet<String> disabled;
+  private final ErrorProneFlags flags;
 
   ScannerSupplierImpl(
       ImmutableBiMap<String, BugCheckerInfo> checks,
-      ImmutableMap<String, BugPattern.SeverityLevel> severities,
-      ImmutableSet<String> disabled) {
+      ImmutableMap<String, SeverityLevel> severities,
+      ImmutableSet<String> disabled,
+      ErrorProneFlags flags) {
     checkArgument(
         Sets.difference(severities.keySet(), checks.keySet()).isEmpty(),
         "enabledChecks must be a subset of allChecks");
@@ -55,24 +57,42 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
     this.checks = checks;
     this.severities = severities;
     this.disabled = disabled;
+    this.flags = flags;
   }
 
-  private static final Function<BugCheckerInfo, BugChecker> INSTANTIATE_CHECKER =
-      new Function<BugCheckerInfo, BugChecker>() {
-        @Override
-        public BugChecker apply(BugCheckerInfo checkerClass) {
-          try {
-            return checkerClass.checkerClass().getConstructor().newInstance();
-          } catch (ReflectiveOperationException e) {
-            throw new LinkageError("Could not instantiate BugChecker.", e);
-          }
-        }
-      };
+  private BugChecker instantiateChecker(BugCheckerInfo checker) {
+    // Invoke BugChecker(ErrorProneFlags) constructor, if it exists.
+    @SuppressWarnings("unchecked")
+    /* getConstructors() actually returns Constructor<BugChecker>[], though the return type is
+     * Constructor<?>[]. See getConstructors() javadoc for more info. */
+    Optional<Constructor<BugChecker>> flagsConstructor =
+        Arrays.stream((Constructor<BugChecker>[]) checker.checkerClass().getConstructors())
+            .filter(
+                c -> Arrays.equals(c.getParameterTypes(), new Class<?>[] {ErrorProneFlags.class}))
+            .findFirst();
+    if (flagsConstructor.isPresent()) {
+      try {
+        return flagsConstructor.get().newInstance(getFlags());
+      } catch (ReflectiveOperationException e) {
+        // Invoking flags constructor failed, do nothing and try default constructor.
+      }
+    }
+    // If no flags constructor, invoke default constructor.
+    try {
+      return checker.checkerClass().getConstructor().newInstance();
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError("Could not instantiate BugChecker.", e);
+    }
+  }
 
   @Override
   public ErrorProneScanner get() {
     return new ErrorProneScanner(
-        Iterables.transform(getEnabledChecks(), INSTANTIATE_CHECKER), severities);
+        getEnabledChecks()
+            .stream()
+            .map(this::instantiateChecker)
+            .collect(ImmutableSet.toImmutableSet()),
+        severities);
   }
 
   @Override
@@ -81,7 +101,7 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   }
 
   @Override
-  public ImmutableMap<String, BugPattern.SeverityLevel> severities() {
+  public ImmutableMap<String, SeverityLevel> severities() {
     return severities;
   }
 
@@ -92,15 +112,16 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
 
   @Override
   public ImmutableSet<BugCheckerInfo> getEnabledChecks() {
-    return FluentIterable.from(getAllChecks().values())
-        .filter(
-            new Predicate<BugCheckerInfo>() {
-              @Override
-              public boolean apply(BugCheckerInfo input) {
-                return !disabled.contains(input.canonicalName());
-              }
-            })
-        .toSet();
+    return getAllChecks()
+        .values()
+        .stream()
+        .filter(input -> !disabled.contains(input.canonicalName()))
+        .collect(ImmutableSet.toImmutableSet());
+  }
+
+  @Override
+  public ErrorProneFlags getFlags() {
+    return flags;
   }
 
   /** Returns the name of the first check, or {@code null}. */

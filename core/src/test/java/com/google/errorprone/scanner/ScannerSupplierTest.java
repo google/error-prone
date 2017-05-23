@@ -125,11 +125,21 @@ public class ScannerSupplierTest {
             LongLiteralLowerCaseSuffix.class);
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(Collections.emptyList());
 
-    assertScanner(ss.applyOverrides(epOptions))
+    ScannerSupplier overridden = ss.applyOverrides(epOptions);
+    assertScanner(overridden)
         .hasEnabledChecks(
             ChainingConstructorIgnoresParameter.class,
             DepAnn.class,
             LongLiteralLowerCaseSuffix.class);
+  }
+
+  @Test
+  public void applyOverridesWorksOnEmptyFlagsMap() throws Exception {
+    ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses();
+    ErrorProneOptions epOptions = ErrorProneOptions.processArgs(Collections.emptyList());
+
+    ScannerSupplier overridden = ss.applyOverrides(epOptions);
+    assertThat(overridden.getFlags().isEmpty()).isTrue();
   }
 
   @Test
@@ -373,6 +383,26 @@ public class ScannerSupplierTest {
             "StringEquality", SeverityLevel.ERROR);
 
     assertScanner(overriddenScannerSupplier).hasSeverities(expected);
+  }
+
+  @Test
+  public void applyOverridesSetsFlags() {
+    ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses();
+    assertThat(ss.getFlags().isEmpty()).isTrue();
+
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(
+            ImmutableList.of(
+                "-XepOpt:FirstFlag=overridden", "-XepOpt:SecondFlag=AValue", "-XepOpt:FirstFlag"));
+    ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(epOptions);
+
+    Map<String, String> expected =
+        ImmutableMap.of(
+            "FirstFlag", "true",
+            "SecondFlag", "AValue");
+
+    assertThat(overriddenScannerSupplier.getFlags().getFlagsMap())
+        .containsExactlyEntriesIn(expected);
   }
 
   @Test

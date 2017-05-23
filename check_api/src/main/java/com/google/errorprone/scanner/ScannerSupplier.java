@@ -25,8 +25,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugCheckerInfo;
-import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.InvalidCommandLineOptionException;
@@ -53,9 +53,9 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     return fromBugCheckerClasses(Arrays.asList(checkerClasses));
   }
 
-  private static ImmutableMap<String, BugPattern.SeverityLevel> defaultSeverities(
+  private static ImmutableMap<String, SeverityLevel> defaultSeverities(
       Iterable<BugCheckerInfo> checkers) {
-    ImmutableMap.Builder<String, BugPattern.SeverityLevel> severities = ImmutableMap.builder();
+    ImmutableMap.Builder<String, SeverityLevel> severities = ImmutableMap.builder();
     for (BugCheckerInfo check : checkers) {
       severities.put(check.canonicalName(), check.defaultSeverity());
     }
@@ -80,7 +80,10 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     }
     ImmutableBiMap<String, BugCheckerInfo> allChecks = builder.build();
     return new ScannerSupplierImpl(
-        allChecks, defaultSeverities(allChecks.values()), ImmutableSet.<String>of());
+        allChecks,
+        defaultSeverities(allChecks.values()),
+        ImmutableSet.<String>of(),
+        ErrorProneFlags.empty());
   }
 
   /**
@@ -106,9 +109,11 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   public abstract ImmutableSet<BugCheckerInfo> getEnabledChecks();
 
-  public abstract ImmutableMap<String, BugPattern.SeverityLevel> severities();
+  public abstract ImmutableMap<String, SeverityLevel> severities();
 
   protected abstract ImmutableSet<String> disabled();
+
+  public abstract ErrorProneFlags getFlags();
 
   /**
    * Applies options to this {@link ScannerSupplier}.
@@ -132,6 +137,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       throws InvalidCommandLineOptionException {
     Map<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
     if (severityOverrides.isEmpty()
+        && errorProneOptions.getFlags().isEmpty()
         && !errorProneOptions.isEnableAllChecksAsWarnings()
         && !errorProneOptions.isDropErrorsToWarnings()
         && !errorProneOptions.isDisableAllChecks()) {
@@ -211,7 +217,10 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
         });
 
     return new ScannerSupplierImpl(
-        checks, ImmutableMap.copyOf(severities), ImmutableSet.copyOf(disabled));
+        checks,
+        ImmutableMap.copyOf(severities),
+        ImmutableSet.copyOf(disabled),
+        errorProneOptions.getFlags());
   }
 
   /**
@@ -227,12 +236,13 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
             .putAll(other.getAllChecks())
             .build();
     ImmutableMap<String, SeverityLevel> combinedSeverities =
-        ImmutableMap.<String, BugPattern.SeverityLevel>builder()
+        ImmutableMap.<String, SeverityLevel>builder()
             .putAll(severities())
             .putAll(other.severities())
             .build();
     ImmutableSet<String> disabled = ImmutableSet.copyOf(Sets.union(disabled(), other.disabled()));
-    return new ScannerSupplierImpl(combinedAllChecks, combinedSeverities, disabled);
+    ErrorProneFlags combinedFlags = this.getFlags().plus(other.getFlags());
+    return new ScannerSupplierImpl(combinedAllChecks, combinedSeverities, disabled, combinedFlags);
   }
 
   /**
@@ -247,6 +257,6 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
         disabled.add(check.canonicalName());
       }
     }
-    return new ScannerSupplierImpl(getAllChecks(), severities(), disabled.build());
+    return new ScannerSupplierImpl(getAllChecks(), severities(), disabled.build(), getFlags());
   }
 }
