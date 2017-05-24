@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -24,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -41,10 +43,12 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.List;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -88,9 +92,24 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
       }
       Collection<MethodSymbol> clash =
           new ArrayList<>(methods.removeAll(functionalInterfaceSignature(state, msym)));
+
+      // Ignore inherited methods that are overridden in the original class. Note that we have to
+      // handle transitive inheritance explicitly to handle cases where the visibility of an
+      // overridded method is expanded somewhere in the type hierarchy.
+      Deque<MethodSymbol> worklist = new ArrayDeque<>();
+      worklist.push(msym);
       clash.remove(msym);
-      // ignore inherited methods that are overridden in the original class
-      clash.removeIf(m -> msym.overrides(m, origin, types, false));
+      while (!worklist.isEmpty()) {
+        MethodSymbol msym2 = worklist.removeFirst();
+        ImmutableList<MethodSymbol> overrides =
+            clash
+                .stream()
+                .filter(m -> msym2.overrides(m, origin, types, /*checkResult=*/ false))
+                .collect(toImmutableList());
+        worklist.addAll(overrides);
+        clash.removeAll(overrides);
+      }
+
       if (!clash.isEmpty()) {
         String message =
             "When passing lambda arguments to this function, callers will need a cast to"
