@@ -3,9 +3,11 @@ title: Command-line flags
 layout: documentation
 ---
 
-Error Prone lets the user enable and disable specific checks as well as
-override their built-in severity levels (warning vs. error) by passing options
-to the Error Prone compiler invocation.
+### Severity
+
+Error Prone lets the user enable and disable specific checks as well as override
+their built-in severity levels (warning vs. error) by passing options to the
+Error Prone compiler invocation.
 
 A valid Error Prone command-line option looks like:
 
@@ -14,8 +16,8 @@ A valid Error Prone command-line option looks like:
 ```
 
 `checkName` is required and is the canonical name of the check, e.g.
-"ReferenceEquality".  `severity` is one of {"OFF", "WARN", "ERROR"}.  Multiple
-flags must be passed to enable or disable multiple checks.  The last flag for a
+"ReferenceEquality". `severity` is one of {"OFF", "WARN", "ERROR"}. Multiple
+flags must be passed to enable or disable multiple checks. The last flag for a
 specific check wins.
 
 Examples of usage follow:
@@ -28,12 +30,68 @@ Examples of usage follow:
 -Xep:ReferenceEquality:OFF -Xep:ReferenceEquality  [turns on ReferenceEquality check]
 ```
 
+There are also a few blanket severity-changing flags:
+
+*   `-XepAllErrorsAsWarnings`
+*   `-XepAllDisabledChecksAsWarnings`
+*   `-XepDisableAllChecks`
+*   `-XepDisableWarningsInGeneratedCode`
+
 If you pass a flag that refers to an unknown check name, by default Error Prone
-will throw an error. You can allow the use of unknown check names by passing
-the `-XepIgnoreUnknownCheckNames` flag.
+will throw an error. You can allow the use of unknown check names by passing the
+`-XepIgnoreUnknownCheckNames` flag.
 
 We no longer support the old-style Error Prone disabling flags that used the
 `-Xepdisable:<checkName>` syntax.
+
+### Patching
+
+There are a couple of flags for configuration of patching in suggested fixes,
+e.g. `-XepPatchChecks:VALUE` and `-XepPatchLocation:VALUE`. See the [patching
+docs](http://errorprone.info/docs/patching) for more info.
+
+### Pass Additional Info to BugCheckers
+
+To configure checks, you can use custom flags to pass info directly to
+BugCheckers. A valid custom flag looks like this:
+
+```bash
+-XepOpt:[Namespace:]FlagName[=Value]
+```
+
+By convention, if a flag is only relevant to one check or a group of checks, to
+prevent name collision, you should prefix your flag's name with an optional
+namespace and a colon, e.g. `-XepOpt:JUnit4TestNotRun:ExpandedHeuristic=true`.
+
+If a flag is set with no value provided, that flag is set to `true`, e.g.
+`-XepOpt:MakeAwesome` is equivalent to `-XepOpt:MakeAwesome=true`.
+
+Some examples:
+
+```bash
+-XepOpt:FlagName=SomeValue        (flags["FlagName"] = "SomeValue")
+-XepOpt:BooleanFlag               (flags["BooleanFlag"] = "true")
+-XepOpt:ListFlag=1,2,3            (flags["ListFlag"] = "1,2,3")
+-XepOpt:Namespace:SomeFlag=AValue (flags["Namespace:SomeFlag"] = "AValue")
+```
+
+These flags can be accessed in a BugChecker just by adding a one-argument
+constructor that takes an `ErrorProneFlags` object, like so:
+
+```java
+public class MyChecker extends BugChecker implements SomeTreeMatcher {
+
+  private final boolean coolness;
+
+  public MyChecker(ErrorProneFlags flags) {
+    // The ErrorProneFlags get* methods return an Optional<*>, use
+    // Optional.orElse(...) and related methods to get with default, etc.
+    this.coolness = flags.getBoolean("ErrorProne:IsCool").orElse(true);
+  }
+
+  public Description matchSomething(...) {...}
+}
+```
 
 ## Maven
 
