@@ -54,6 +54,11 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
 
   private final WellKnownMutability wellKnownMutability;
 
+  @Deprecated // Used reflectively, but you should pass in ErrorProneFlags to get custom mutability
+  public ImmutableChecker() {
+    this(ErrorProneFlags.empty());
+  }
+
   public ImmutableChecker(ErrorProneFlags flags) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
   }
