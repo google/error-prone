@@ -21,32 +21,23 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
-import com.google.common.io.Resources;
-import com.google.common.jimfs.Jimfs;
 import com.google.errorprone.apply.SourceFile;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
-import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Context;
-import java.io.IOError;
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
-import org.junit.After;
 
 /**
  * Abstract skeleton for tests that run the compiler on the fly.
@@ -58,8 +49,6 @@ public class CompilerBasedTest {
   protected SourceFile sourceFile;
   protected Iterable<JCCompilationUnit> compilationUnits;
   private Map<String, JCMethodDecl> methods;
-  private final JavacFileManager fileManager = new JavacFileManager(new Context(), false, UTF_8);
-  private final FileSystem fileSystem = Jimfs.newFileSystem();
 
   protected void compile(TreeScanner scanner, JavaFileObject fileObject) {
     JavaCompiler compiler = JavacTool.create();
@@ -118,37 +107,10 @@ public class CompilerBasedTest {
   }
 
   protected void compile(String... lines) {
-    try {
-      Path dir = fileSystem.getRootDirectories().iterator().next().resolve("tmp");
-      Files.createDirectories(dir);
-      Path path = Files.createTempFile(dir, "CompilerBasedTestInput", ".java");
-      Files.write(path, Arrays.asList(lines), UTF_8);
-      compile(fileManager.getJavaFileObject(path));
-    } catch (IOException e) {
-      throw new IOError(e);
-    }
-  }
-
-  JavaFileObject forResource(String name) {
-    try {
-      Path dir = fileSystem.getRootDirectories().iterator().next().resolve("tmp");
-      Files.createDirectories(dir);
-      Path path = Files.createTempDirectory(dir, "tmp").resolve(name);
-      Files.createDirectories(path.getParent());
-      Files.write(path, Resources.toByteArray(Resources.getResource(name)));
-      return fileManager.getJavaFileObject(path);
-    } catch (IOException e) {
-      throw new IOError(e);
-    }
+    compile(JavaFileObjects.forSourceLines("CompilerBasedTestInput", lines));
   }
 
   protected JCMethodDecl getMethodDeclaration(String name) {
     return methods.get(name);
-  }
-
-  @After
-  public void close() throws IOException {
-    fileSystem.close();
-    fileManager.close();
   }
 }
