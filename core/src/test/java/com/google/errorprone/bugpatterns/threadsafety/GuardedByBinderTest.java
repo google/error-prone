@@ -16,10 +16,10 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.ErrorProneInMemoryFileManager;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
@@ -27,11 +27,14 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import org.junit.Ignore;
@@ -493,7 +496,8 @@ public class GuardedByBinderTest {
     JavacTaskImpl task =
         (JavacTaskImpl)
             javaCompiler.getTask(
-                new PrintWriter(System.err, true),
+                new PrintWriter(
+                    new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)), true),
                 fileManager,
                 null,
                 Collections.<String>emptyList(),
