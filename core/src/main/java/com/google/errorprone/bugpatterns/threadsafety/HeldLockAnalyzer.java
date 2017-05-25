@@ -20,7 +20,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -53,6 +52,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 
@@ -142,7 +142,7 @@ public class HeldLockAnalyzer {
 
       // @GuardedBy annotations on methods are trusted for declarations, and checked
       // for invocations.
-      String guard = GuardedByUtils.getGuardValue(tree);
+      String guard = GuardedByUtils.getGuardValue(tree, visitorState);
       if (guard != null) {
         Optional<GuardedByExpression> bound =
             GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
@@ -221,7 +221,7 @@ public class HeldLockAnalyzer {
     }
 
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
-      String guardString = GuardedByUtils.getGuardValue(tree);
+      String guardString = GuardedByUtils.getGuardValue(tree, visitorState);
       if (guardString == null) {
         return;
       }
@@ -456,7 +456,7 @@ public class HeldLockAnalyzer {
           GuardedByBinder.bindExpression(guardedMemberExpression, state);
 
       if (!guardedMember.isPresent()) {
-        return Optional.absent();
+        return Optional.empty();
       }
 
       GuardedByExpression memberBase = ((GuardedByExpression.Select) guardedMember.get()).base();

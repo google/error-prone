@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.util.ASTHelpers;
@@ -34,6 +33,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Names;
+import java.util.Optional;
 import javax.lang.model.element.Name;
 
 /**
@@ -45,7 +45,7 @@ public class GuardedByBinder {
 
   /**
    * Creates a {@link GuardedByExpression} from a bound AST node, or returns {@code
-   * Optional.absent()} if the AST node doesn't correspond to a 'simple' lock expression.
+   * Optional.empty()} if the AST node doesn't correspond to a 'simple' lock expression.
    */
   public static Optional<GuardedByExpression> bindExpression(
       JCTree.JCExpression exp, VisitorState visitorState) {
@@ -59,7 +59,7 @@ public class GuardedByBinder {
                   visitorState.getTypes(),
                   Names.instance(visitorState.context))));
     } catch (IllegalGuardedBy expected) {
-      return Optional.absent();
+      return Optional.empty();
     }
   }
 
@@ -75,7 +75,7 @@ public class GuardedByBinder {
                   Types.instance(resolver.context()),
                   Names.instance(resolver.context()))));
     } catch (IllegalGuardedBy expected) {
-      return Optional.absent();
+      return Optional.empty();
     }
   }
 
