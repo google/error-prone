@@ -61,10 +61,10 @@ import java.util.stream.Collectors;
   explanation =
       "For clarity, and to avoid potentially incorrectly swapping arguments, arguments may be "
           + "explicitly matched to their parameter by preceding them with a block comment "
-          + "containing the parameter name followed by a colon. Mismatches between the name in the "
-          + "comment and the actual name will then cause a compilation error. If the called method "
-          + "is annotated with RequiresNamedParameters then an error will occur if any names are "
-          + "omitted.",
+          + "containing the parameter name followed by an equals sign (\"=\"). Mismatches between "
+          + "the name in the comment and the actual name will then cause a compilation error. If "
+          + "the called method is annotated with RequiresNamedParameters then an error will occur "
+          + "if any names are omitted.",
   category = JDK,
   severity = WARNING
 )
