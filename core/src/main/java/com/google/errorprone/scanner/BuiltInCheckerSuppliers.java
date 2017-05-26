@@ -226,6 +226,7 @@ import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
+import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker;
@@ -462,6 +463,7 @@ public class BuiltInCheckerSuppliers {
           EmptyTopLevelDeclaration.class,
           ExpectedExceptionChecker.class,
           HardCodedSdCardPath.class,
+          InconsistentOverloads.class,
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
           InvalidTargetingOnScopingAnnotation.class,
