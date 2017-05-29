@@ -68,8 +68,13 @@ public class SuggestedFix implements Fix {
     StringBuilder result = new StringBuilder("replace ");
     for (Replacement replacement : getReplacements(compilationUnit.endPositions)) {
       result
-          .append("position " + replacement.startPosition() + ":" + replacement.endPosition())
-          .append(" with \"" + replacement.replaceWith() + "\" ");
+          .append("position ")
+          .append(replacement.startPosition())
+          .append(":")
+          .append(replacement.endPosition())
+          .append(" with \"")
+          .append(replacement.replaceWith())
+          .append("\" ");
     }
     return result.toString();
   }

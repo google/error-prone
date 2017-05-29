@@ -73,7 +73,7 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker implements Ann
       StringBuilder sb = new StringBuilder("@SuppressWarnings({\"" + values.get(0) + "\"");
       for (int i = 1; i < values.size(); i++) {
         sb.append(", ");
-        sb.append("\"" + values.get(i) + "\"");
+        sb.append('"').append(values.get(i)).append('"');
       }
       sb.append("})");
       return SuggestedFix.replace(annotationTree, sb.toString());

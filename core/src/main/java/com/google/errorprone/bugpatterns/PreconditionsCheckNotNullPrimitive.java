@@ -157,10 +157,10 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
 
     // Was the original call to Preconditions.checkNotNull a static import or not?
     if (methodInvocationTree.getMethodSelect().getKind() == Kind.IDENTIFIER) {
-      replacement.append(replacementMethod + "(");
+      replacement.append(replacementMethod).append("(");
       fix.addStaticImport("com.google.common.base.Preconditions." + replacementMethod);
     } else {
-      replacement.append("Preconditions." + replacementMethod + "(");
+      replacement.append("Preconditions.").append(replacementMethod).append("(");
     }
 
     Joiner.on(", ").appendTo(replacement, methodInvocationTree.getArguments());
