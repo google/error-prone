@@ -80,7 +80,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     fix.replace(
         state.getEndPosition(ASTHelpers.getReceiver(tree)),
         state.getEndPosition(tree),
-        String.format(".getDeclaredConstructor().newInstance()"));
+        ".getDeclaredConstructor().newInstance()");
     boolean fixedExceptions = fixExceptions(state, fix);
     if (!fixedExceptions) {
       fixThrows(state, fix);

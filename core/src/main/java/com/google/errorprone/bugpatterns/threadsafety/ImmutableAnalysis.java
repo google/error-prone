@@ -369,7 +369,7 @@ public class ImmutableAnalysis {
 
     @Override
     public Violation visitArrayType(ArrayType t, Void s) {
-      return Violation.of(String.format("arrays are mutable"));
+      return Violation.of("arrays are mutable");
     }
 
     @Override
