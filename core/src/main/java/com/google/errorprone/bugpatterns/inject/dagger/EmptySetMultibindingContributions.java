@@ -237,7 +237,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
 
   private String createReplacementClassModifiers(
       VisitorState state, JCModifiers enclosingClassModifiers) {
-    ImmutableList.Builder<String> classModifierStringsBuilder = new ImmutableList.Builder<String>();
+    ImmutableList.Builder<String> classModifierStringsBuilder = new ImmutableList.Builder<>();
 
     for (JCAnnotation annotation : enclosingClassModifiers.annotations) {
       classModifierStringsBuilder.add(state.getSourceForNode(annotation));

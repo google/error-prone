@@ -69,7 +69,7 @@ public class DiagnosticTestHelper {
   }
 
   public final ClearableDiagnosticCollector<JavaFileObject> collector =
-      new ClearableDiagnosticCollector<JavaFileObject>();
+      new ClearableDiagnosticCollector<>();
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> suggestsRemovalOfLine(
       URI fileURI, int line) {
@@ -381,7 +381,7 @@ public class DiagnosticTestHelper {
     if (bugMarkerIndex < 0) {
       throw new IllegalArgumentException("Line must contain bug marker prefix");
     }
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
     String restOfLine = line.substring(bugMarkerIndex + matchString.length()).trim();
     result.add(restOfLine);
     line = reader.readLine().trim();

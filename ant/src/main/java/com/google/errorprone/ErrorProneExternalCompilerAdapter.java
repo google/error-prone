@@ -33,7 +33,7 @@ import org.apache.tools.ant.util.LoaderUtils;
 public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
   private Path classpath;
   private String memoryStackSize;
-  private List<Argument> jvmArgs = new ArrayList<Argument>();
+  private List<Argument> jvmArgs = new ArrayList<>();
 
   public void setClasspath(Path classpath) {
     this.classpath = classpath;

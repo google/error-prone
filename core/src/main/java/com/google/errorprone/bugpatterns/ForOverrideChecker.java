@@ -191,7 +191,7 @@ public class ForOverrideChecker extends BugChecker
           "getOverriddenMethods may not be called on a static method");
     }
 
-    List<MethodSymbol> list = new LinkedList<MethodSymbol>();
+    List<MethodSymbol> list = new LinkedList<>();
     list.add(method);
 
     // Iterate over supertypes of the type that owns this method, collecting a list of all method

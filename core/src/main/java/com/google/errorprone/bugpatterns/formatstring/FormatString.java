@@ -65,7 +65,7 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
     if (!FORMAT_METHOD.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    Deque<ExpressionTree> args = new ArrayDeque<ExpressionTree>(tree.getArguments());
+    Deque<ExpressionTree> args = new ArrayDeque<>(tree.getArguments());
     // skip the first argument of printf(Locale,String,Object...)
     if (ASTHelpers.isSameType(
         ASTHelpers.getType(args.peekFirst()),
