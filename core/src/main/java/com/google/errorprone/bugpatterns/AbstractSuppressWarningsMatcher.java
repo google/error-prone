@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 
+import com.google.common.base.Joiner;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.AnnotationTree;
@@ -70,13 +71,8 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker implements Ann
     } else if (values.size() == 1) {
       return SuggestedFix.replace(annotationTree, "@SuppressWarnings(\"" + values.get(0) + "\")");
     } else {
-      StringBuilder sb = new StringBuilder("@SuppressWarnings({\"" + values.get(0) + "\"");
-      for (int i = 1; i < values.size(); i++) {
-        sb.append(", ");
-        sb.append('"').append(values.get(i)).append('"');
-      }
-      sb.append("})");
-      return SuggestedFix.replace(annotationTree, sb.toString());
+      return SuggestedFix.replace(
+          annotationTree, "@SuppressWarnings({\"" + Joiner.on("\", \"").join(values) + "})");
     }
   }
 }
