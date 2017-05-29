@@ -204,7 +204,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
                 .put("title", pattern.name)
                 .put("summary", pattern.summary)
                 .put("layout", "bugpattern")
-                .put("category", pattern.category.toString())
+                .put("category", pattern.category)
                 .put("severity", pattern.severity.toString())
                 .build();
         DumperOptions options = new DumperOptions();
