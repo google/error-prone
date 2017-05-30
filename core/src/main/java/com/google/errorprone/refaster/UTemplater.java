@@ -458,7 +458,9 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
           template(strArg));
     } else if (anyMatch(AS_VARARGS, tree.getMethodSelect(), new Unifier(context))) {
       ExpressionTree arg = Iterables.getOnlyElement(tree.getArguments());
-      checkArgument(ASTHelpers.hasAnnotation(arg, Repeated.class, new VisitorState(context)));
+      checkArgument(
+          ASTHelpers.hasAnnotation(
+              ASTHelpers.getSymbol(arg), Repeated.class, new VisitorState(context)));
       return template(arg);
     }
     Map<MethodSymbol, PlaceholderMethod> placeholderMethods =

@@ -34,6 +34,7 @@ import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.methodReturnsNonPrimitiveType;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.typeCast;
 import static com.google.errorprone.matchers.Matchers.variableInitializer;
 import static com.google.errorprone.matchers.Matchers.variableType;
@@ -144,7 +145,7 @@ public class NoAllocationChecker extends BugChecker
       hasAnnotation(NoAllocation.class.getName());
 
   private static final Matcher<MethodInvocationTree> noAllocationMethodInvocationMatcher =
-      hasAnnotation(NoAllocation.class.getName());
+      symbolHasAnnotation(NoAllocation.class.getName());
 
   private static final Matcher<ExpressionTree> anyExpression = anything();
 
