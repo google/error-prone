@@ -72,7 +72,7 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker implements Ann
       return SuggestedFix.replace(annotationTree, "@SuppressWarnings(\"" + values.get(0) + "\")");
     } else {
       return SuggestedFix.replace(
-          annotationTree, "@SuppressWarnings({\"" + Joiner.on("\", \"").join(values) + "})");
+          annotationTree, "@SuppressWarnings({\"" + Joiner.on("\", \"").join(values) + "\"})");
     }
   }
 }
