@@ -569,6 +569,29 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
+  @Test
+  public void testHasAnnotationOnMethodInvocation() {
+    writeFile(
+        "A.java", //
+        "public class A {",
+        "  @Deprecated public void doIt() {}",
+        "  void caller() { doIt(); }",
+        "}");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+            if (ASTHelpers.getSymbol(tree).toString().equals("doIt()")) {
+              setAssertionsComplete();
+              assertThat(ASTHelpers.hasAnnotation(tree, Deprecated.class, state)).isFalse();
+            }
+            return super.visitMethodInvocation(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
   @BugPattern(
     name = "HasDirectAnnotationWithSimpleNameChecker",
     category = Category.ONE_OFF,

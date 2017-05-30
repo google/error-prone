@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
@@ -240,7 +240,7 @@ public class NamedParameterChecker extends BugChecker
   }
 
   private static Matcher<Tree> hasRequiresNamedParametersAnnotation() {
-    return hasAnnotation(RequiresNamedParameters.class.getCanonicalName());
+    return symbolHasAnnotation(RequiresNamedParameters.class.getCanonicalName());
   }
 
   /** Information about an argument, the name attached to it with a comment */
