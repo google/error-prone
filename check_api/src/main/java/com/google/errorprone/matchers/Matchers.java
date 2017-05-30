@@ -723,6 +723,22 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(T tree, VisitorState state) {
+        return ASTHelpers.hasAnnotation(ASTHelpers.getDeclaredSymbol(tree), annotationClass, state);
+      }
+    };
+  }
+
+  /**
+   * Determines whether an expression refers to a symbol that has an annotation of the given type.
+   * This includes annotations inherited from superclasses due to @Inherited.
+   *
+   * @param annotationClass the binary class name of the annotation (e.g.
+   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
+   */
+  public static <T extends Tree> Matcher<T> symbolHasAnnotation(final String annotationClass) {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
         return ASTHelpers.hasAnnotation(ASTHelpers.getSymbol(tree), annotationClass, state);
       }
     };
@@ -735,6 +751,22 @@ public class Matchers {
    * @param inputClass The class of the annotation to look for (e.g, Produces.class).
    */
   public static <T extends Tree> Matcher<T> hasAnnotation(
+      final Class<? extends Annotation> inputClass) {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
+        return ASTHelpers.hasAnnotation(ASTHelpers.getDeclaredSymbol(tree), inputClass, state);
+      }
+    };
+  }
+
+  /**
+   * Determines whether an expression refers to a symbol that has an annotation of the given type.
+   * This includes annotations inherited from superclasses due to @Inherited.
+   *
+   * @param inputClass The class of the annotation to look for (e.g, Produces.class).
+   */
+  public static <T extends Tree> Matcher<T> symbolHasAnnotation(
       final Class<? extends Annotation> inputClass) {
     return new Matcher<T>() {
       @Override

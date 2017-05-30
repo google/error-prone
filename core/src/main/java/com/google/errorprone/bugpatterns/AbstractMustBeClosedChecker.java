@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
@@ -52,7 +52,7 @@ import javax.lang.model.element.ElementKind;
 public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
   protected static final Matcher<Tree> HAS_MUST_BE_CLOSED_ANNOTATION =
-      hasAnnotation(MustBeClosed.class.getCanonicalName());
+      symbolHasAnnotation(MustBeClosed.class.getCanonicalName());
 
   private static final Matcher<ExpressionTree> CLOSE_METHOD =
       instanceMethod().onDescendantOf("java.lang.AutoCloseable").named("close");

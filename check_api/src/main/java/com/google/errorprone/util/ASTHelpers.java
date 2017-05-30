@@ -142,33 +142,10 @@ public class ASTHelpers {
   }
 
   /**
-   * Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is of
-   * the wrong type, if {@code tree} is null, or if the symbol cannot be found due to a compilation
-   * error.
+   * Gets the symbol declared by a tree. Returns null if this tree does not declare a symbol, if
+   * {@code tree} is null.
    */
-  // TODO(eaftan): refactor other code that accesses symbols to use this method
-  public static Symbol getSymbol(Tree tree) {
-    if (tree instanceof ClassTree) {
-      return getSymbol((ClassTree) tree);
-    }
-    if (tree instanceof MethodTree) {
-      return getSymbol((MethodTree) tree);
-    }
-    if (tree instanceof VariableTree) {
-      return getSymbol((VariableTree) tree);
-    }
-    if (tree instanceof JCFieldAccess) {
-      return ((JCFieldAccess) tree).sym;
-    }
-    if (tree instanceof JCIdent) {
-      return ((JCIdent) tree).sym;
-    }
-    if (tree instanceof JCMethodInvocation) {
-      return ASTHelpers.getSymbol((MethodInvocationTree) tree);
-    }
-    if (tree instanceof JCNewClass) {
-      return ASTHelpers.getSymbol((NewClassTree) tree);
-    }
+  public static Symbol getDeclaredSymbol(Tree tree) {
     if (tree instanceof AnnotationTree) {
       return getSymbol(((AnnotationTree) tree).getAnnotationType());
     }
@@ -182,11 +159,42 @@ public class ASTHelpers {
       Type type = ((JCTypeParameter) tree).type;
       return type == null ? null : type.tsym;
     }
+    if (tree instanceof ClassTree) {
+      return getSymbol((ClassTree) tree);
+    }
+    if (tree instanceof MethodTree) {
+      return getSymbol((MethodTree) tree);
+    }
+    if (tree instanceof VariableTree) {
+      return getSymbol((VariableTree) tree);
+    }
+    return null;
+  }
+
+  /**
+   * Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is of
+   * the wrong type, if {@code tree} is null, or if the symbol cannot be found due to a compilation
+   * error.
+   */
+  // TODO(eaftan): refactor other code that accesses symbols to use this method
+  public static Symbol getSymbol(Tree tree) {
+    if (tree instanceof JCFieldAccess) {
+      return ((JCFieldAccess) tree).sym;
+    }
+    if (tree instanceof JCIdent) {
+      return ((JCIdent) tree).sym;
+    }
+    if (tree instanceof JCMethodInvocation) {
+      return ASTHelpers.getSymbol((MethodInvocationTree) tree);
+    }
+    if (tree instanceof JCNewClass) {
+      return ASTHelpers.getSymbol((NewClassTree) tree);
+    }
     if (tree instanceof MemberReferenceTree) {
       return ((JCMemberReference) tree).sym;
     }
 
-    return null;
+    return getDeclaredSymbol(tree);
   }
 
   /** Gets the symbol for a class. */
@@ -546,7 +554,7 @@ public class ASTHelpers {
    */
   public static boolean hasAnnotation(
       Tree tree, Class<? extends Annotation> annotationClass, VisitorState state) {
-    Symbol sym = getSymbol(tree);
+    Symbol sym = getDeclaredSymbol(tree);
     return hasAnnotation(sym, annotationClass.getName(), state);
   }
 

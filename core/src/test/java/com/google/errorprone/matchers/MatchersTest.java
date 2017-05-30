@@ -31,9 +31,11 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.MatcherChecker;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import org.junit.Before;
 import org.junit.Test;
@@ -319,6 +321,41 @@ public class MatchersTest {
         .doTest();
   }
 
+  @Test
+  public void methodInvocationDoesntMatchAnnotation() {
+    CompilationTestHelper.newInstance(NoAnnotatedCallsChecker.class, getClass())
+        .addSourceLines(
+            "test/MethodInvocationDoesntMatchAnnotation.java",
+            "package test;",
+            "public class MethodInvocationDoesntMatchAnnotation {",
+            "  @Deprecated",
+            "  public void matches() {",
+            "  }",
+            "  public void doesntMatch() {",
+            "    matches();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodInvocationHasDeclarationAnnotation() {
+    CompilationTestHelper.newInstance(NoAnnotatedDeclarationCallsChecker.class, getClass())
+        .addSourceLines(
+            "test/MethodInvocationMatchesDeclAnnotation.java",
+            "package test;",
+            "public class MethodInvocationMatchesDeclAnnotation {",
+            "  @Deprecated",
+            "  public void matches() {",
+            "  }",
+            "  public void callsMatch() {",
+            "    // BUG: Diagnostic contains:",
+            "    matches();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   @BugPattern(
     name = "InLoopChecker",
     summary = "Checker that flags the given expression statement if the given matcher matches",
@@ -351,6 +388,42 @@ public class MatchersTest {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
       return matcher.matches(tree, state) ? describeMatch(tree) : Description.NO_MATCH;
+    }
+  }
+
+  /** Simple checker to make sure hasAnnotation doesn't match on MethodInvocationTree. */
+  @BugPattern(
+    name = "MethodInvocationTreeChecker",
+    summary = "Checker that flags the given method invocation if the given matcher matches",
+    category = ONE_OFF,
+    severity = ERROR
+  )
+  public static class NoAnnotatedCallsChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (Matchers.hasAnnotation("java.lang.Deprecated").matches(tree, state)) {
+        return describeMatch(tree);
+      }
+      return Description.NO_MATCH;
+    }
+  }
+
+  /** Checker that makes sure symbolHasAnnotation matches on MethodInvocationTree. */
+  @BugPattern(
+    name = "NoAnnotatedDeclarationCallsChecker",
+    summary = "Checker that flags the given method invocation if the given matcher matches",
+    category = ONE_OFF,
+    severity = ERROR
+  )
+  public static class NoAnnotatedDeclarationCallsChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (Matchers.symbolHasAnnotation("java.lang.Deprecated").matches(tree, state)) {
+        return describeMatch(tree);
+      }
+      return Description.NO_MATCH;
     }
   }
 }
