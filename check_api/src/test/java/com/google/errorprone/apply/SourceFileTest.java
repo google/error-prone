@@ -18,8 +18,6 @@ package com.google.errorprone.apply;
 
 import static org.junit.Assert.assertEquals;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
@@ -35,7 +33,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SourceFileTest {
 
-  private static final Path DUMMY_PATH = Paths.get("java/com/google/foo/bar/FooBar.java");
+  private static final String DUMMY_PATH = "java/com/google/foo/bar/FooBar.java";
   private static final String SOURCE_TEXT =
       "// Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do\n"
           + "// eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut\n"

@@ -25,6 +25,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.CodeTransformer;
+import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
@@ -77,10 +78,13 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
 
   private void runTest(String testName) throws IOException {
     CodeTransformer transformer =
-        extractRefasterRule(forResource(String.format("%s/%s.java", TEMPLATE_DIR, testName)));
+        extractRefasterRule(
+            JavaFileObjects.forResource(String.format("%s/%s.java", TEMPLATE_DIR, testName)));
 
-    JavaFileObject input = forResource(String.format("%s/%sExample.java", INPUT_DIR, testName));
-    JavaFileObject output = forResource(String.format("%s/%sExample.java", OUTPUT_DIR, testName));
+    JavaFileObject input =
+        JavaFileObjects.forResource(String.format("%s/%sExample.java", INPUT_DIR, testName));
+    JavaFileObject output =
+        JavaFileObjects.forResource(String.format("%s/%sExample.java", OUTPUT_DIR, testName));
     expectTransforms(transformer, input, output);
   }
 
@@ -314,4 +318,3 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
     runTest("AsVarargsTemplate");
   }
 }
-

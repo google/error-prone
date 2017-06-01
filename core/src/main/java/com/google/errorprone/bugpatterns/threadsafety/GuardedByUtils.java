@@ -16,37 +16,46 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
+import java.util.Optional;
+import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 public class GuardedByUtils {
-  static String getGuardValue(Tree tree) {
-    {
-      net.jcip.annotations.GuardedBy guardedBy =
-          ASTHelpers.getAnnotation(tree, net.jcip.annotations.GuardedBy.class);
-      if (guardedBy != null) {
-        return guardedBy.value();
-      }
+  static String getGuardValue(Tree tree, VisitorState state) {
+    Symbol sym = getSymbol(tree);
+    if (sym == null) {
+      return null;
     }
+    return sym.getRawAttributes()
+        .stream()
+        .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals("GuardedBy"))
+        .findFirst()
+        .flatMap(
+            a -> Optional.ofNullable(a.member(state.getName("value"))).flatMap(v -> asString(v)))
+        .orElse(null);
+  }
 
-    {
-      javax.annotation.concurrent.GuardedBy guardedBy =
-          ASTHelpers.getAnnotation(tree, javax.annotation.concurrent.GuardedBy.class);
-      if (guardedBy != null) {
-        return guardedBy.value();
-      }
-    }
-
-    return null;
+  private static Optional<String> asString(Attribute v) {
+    return Optional.ofNullable(
+        v.accept(
+            new SimpleAnnotationValueVisitor8<String, Void>() {
+              @Override
+              public String visitString(String s, Void aVoid) {
+                return s;
+              }
+            },
+            null));
   }
 
   public static JCTree.JCExpression parseString(String guardedByString, Context context) {
@@ -81,7 +90,7 @@ public class GuardedByUtils {
   }
 
   public static GuardedByValidationResult isGuardedByValid(Tree tree, VisitorState state) {
-    String guard = GuardedByUtils.getGuardValue(tree);
+    String guard = GuardedByUtils.getGuardValue(tree, state);
     if (guard == null) {
       return GuardedByValidationResult.ok();
     }
@@ -92,7 +101,7 @@ public class GuardedByUtils {
       return GuardedByValidationResult.invalid("could not resolve guard");
     }
 
-    Symbol treeSym = ASTHelpers.getSymbol(tree);
+    Symbol treeSym = getSymbol(tree);
     if (treeSym == null) {
       // this shouldn't happen unless the compilation had already failed.
       return GuardedByValidationResult.ok();

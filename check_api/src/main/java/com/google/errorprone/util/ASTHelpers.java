@@ -89,9 +89,11 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
@@ -438,13 +440,27 @@ public class ASTHelpers {
   }
 
   public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
+    return findSuperMethods(methodSymbol, types, false)
+        .collect(Collectors.toCollection(LinkedHashSet::new));
+  }
+
+  /**
+   * Finds (if it exists) first (in the class hierarchy) non-interface super method of given {@code
+   * method}.
+   */
+  public static Optional<MethodSymbol> findSuperMethod(MethodSymbol methodSymbol, Types types) {
+    return findSuperMethods(methodSymbol, types, true).findFirst();
+  }
+
+  private static Stream<MethodSymbol> findSuperMethods(
+      MethodSymbol methodSymbol, Types types, boolean skipInterfaces) {
     TypeSymbol owner = (TypeSymbol) methodSymbol.owner;
     return types
         .closure(owner.type)
         .stream()
+        .filter(closureTypes -> skipInterfaces ? !closureTypes.isInterface() : true)
         .map(type -> findSuperMethodInType(methodSymbol, type, types))
-        .filter(x -> x != null)
-        .collect(Collectors.toCollection(LinkedHashSet::new));
+        .filter(Objects::nonNull);
   }
 
   /**
