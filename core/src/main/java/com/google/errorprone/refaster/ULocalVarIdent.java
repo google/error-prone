@@ -21,6 +21,7 @@ import com.google.common.base.Optional;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import java.util.Objects;
 
 /**
  * Identifier corresponding to a template local variable.
@@ -51,7 +52,8 @@ abstract class ULocalVarIdent extends UIdent {
   public Choice<Unifier> visitIdentifier(IdentifierTree ident, Unifier unifier) {
     LocalVarBinding binding = unifier.getBinding(key());
     return Choice.condition(
-        binding != null && ASTHelpers.getSymbol(ident).equals(binding.getSymbol()), unifier);
+        binding != null && Objects.equals(ASTHelpers.getSymbol(ident), binding.getSymbol()),
+        unifier);
   }
 
   @Override

@@ -120,7 +120,6 @@ abstract class UMethodDecl extends UTree<JCMethodDecl> implements MethodTree {
 
   @Override
   public VariableTree getReceiverParameter() {
-    // TODO(cushon): java 8.
-    throw new IllegalStateException();
+    return null;
   }
 }

@@ -19,6 +19,7 @@ package com.google.errorprone.refaster;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
@@ -83,6 +84,16 @@ abstract class UPlaceholderStatement implements UStatement {
       return new AutoValue_UPlaceholderStatement_ConsumptionState(
           consumedStatements() + 1, placeholderImplInReverseOrder().prepend(impl));
     }
+  }
+
+  public boolean reverify(Unifier unifier) {
+    return MoreObjects.firstNonNull(
+        new PlaceholderVerificationVisitor(
+                Collections2.transform(
+                    placeholder().requiredParameters(), Functions.forMap(arguments())),
+                arguments().values())
+            .scan(unifier.getBinding(placeholder().blockKey()), unifier),
+        true);
   }
 
   @Override
