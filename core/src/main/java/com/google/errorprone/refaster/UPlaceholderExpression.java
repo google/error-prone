@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
@@ -133,6 +134,16 @@ public abstract class UPlaceholderExpression extends UExpression {
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
     return visitor.visitOther(this, data);
+  }
+
+  public boolean reverify(Unifier unifier) {
+    return MoreObjects.firstNonNull(
+        new PlaceholderVerificationVisitor(
+                Collections2.transform(
+                    placeholder().requiredParameters(), Functions.forMap(arguments())),
+                arguments().values())
+            .scan(unifier.getBinding(placeholder().exprKey()), unifier),
+        true);
   }
 
   @Override

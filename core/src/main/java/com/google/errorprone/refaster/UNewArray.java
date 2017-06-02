@@ -92,13 +92,11 @@ abstract class UNewArray extends UExpression implements NewArrayTree {
 
   @Override
   public List<? extends AnnotationTree> getAnnotations() {
-    // TODO(cushon): java 8.
-    throw new IllegalStateException();
+    return ImmutableList.of();
   }
 
   @Override
   public List<? extends List<? extends AnnotationTree>> getDimAnnotations() {
-    // TODO(cushon): java 8.
-    throw new IllegalStateException();
+    return ImmutableList.of();
   }
 }

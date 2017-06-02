@@ -317,4 +317,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void asVarargs() throws IOException {
     runTest("AsVarargsTemplate");
   }
+
+  @Test
+  public void placeholderAllowedVars() throws IOException {
+    runTest("PlaceholderAllowedVarsTemplate");
+  }
 }
