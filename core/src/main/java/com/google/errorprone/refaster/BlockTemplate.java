@@ -139,6 +139,13 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
                 BlockTemplateMatch match =
                     new BlockTemplateMatch(
                         block, checkedUnifier.get(), offset, offset + consumedStatements);
+                boolean verified =
+                    ExpressionTemplate.trueOrNull(
+                        ExpressionTemplate.PLACEHOLDER_VERIFIER.scan(
+                            templateStatements(), checkedUnifier.get()));
+                if (!verified) {
+                  return Choice.none();
+                }
                 return matchesStartingAnywhere(
                         block,
                         offset + consumedStatements,
