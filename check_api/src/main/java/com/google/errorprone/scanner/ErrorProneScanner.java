@@ -17,6 +17,7 @@
 package com.google.errorprone.scanner;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
@@ -147,6 +148,7 @@ public class ErrorProneScanner extends Scanner {
   private final Set<Class<? extends Annotation>> customSuppressionAnnotations = new HashSet<>();
 
   private final Map<String, SeverityLevel> severities;
+  private final ImmutableSet<BugChecker> bugCheckers;
 
   /**
    * Create an error-prone scanner for a non-hardcoded set of checkers.
@@ -182,8 +184,9 @@ public class ErrorProneScanner extends Scanner {
    * @param severities The default check severities.
    */
   public ErrorProneScanner(Iterable<BugChecker> checkers, Map<String, SeverityLevel> severities) {
+    this.bugCheckers = ImmutableSet.copyOf(checkers);
     this.severities = severities;
-    for (BugChecker checker : checkers) {
+    for (BugChecker checker : this.bugCheckers) {
       registerNodeTypes(checker);
     }
   }
@@ -1204,5 +1207,9 @@ public class ErrorProneScanner extends Scanner {
   @Override
   public Map<String, SeverityLevel> severityMap() {
     return severities;
+  }
+
+  public ImmutableSet<BugChecker> getBugCheckers() {
+    return this.bugCheckers;
   }
 }
