@@ -1,0 +1,14 @@
+<idea-plugin version="2">
+  <name>Error-prone plugin</name>
+  <description>Checks Java source code for common mistakes when compiling.
+    See http://error-prone.googlecode.com</description>
+  <version>1.0.8b</version>
+  <vendor>Google</vendor>
+
+  <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="129.105"/>
+
+  <extensions defaultExtensionNs="com.intellij">
+      <java.compiler implementation="com.google.errorprone.intellij.ErrorProneIdeaCompiler"/>
+  </extensions>
+</idea-plugin>
