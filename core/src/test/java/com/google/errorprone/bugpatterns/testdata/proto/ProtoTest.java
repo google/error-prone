@@ -363,16 +363,9 @@ public final class ProtoTest {
               onChanged();
               return this;
             default:
-              {
-                if (!parseUnknownField(
-                    input, unknownFields,
-                    extensionRegistry, tag)) {
-                  this.setUnknownFields(unknownFields.build());
-                  onChanged();
-                  return this;
-                }
-                break;
-              }
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
             case 10:
               {
                 com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
@@ -953,16 +946,9 @@ public final class ProtoTest {
               onChanged();
               return this;
             default:
-              {
-                if (!parseUnknownField(
-                    input, unknownFields,
-                    extensionRegistry, tag)) {
-                  this.setUnknownFields(unknownFields.build());
-                  onChanged();
-                  return this;
-                }
-                break;
-              }
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
             case 10:
               {
                 com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage.Builder
