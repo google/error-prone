@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -56,7 +57,8 @@ import com.sun.tools.javac.tree.TreeInfo;
           + " the target type (JLS 5.1.3). In a compare or compareTo method, this can cause"
           + " incorrect and unstable sort orders.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
   /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */

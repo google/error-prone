@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BreakTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ContinueTreeMatcher;
@@ -62,7 +63,8 @@ import com.sun.tools.javac.util.Name;
           + " try-catch block will be ignored. Consider using try-with-resources instead.",
   category = JDK,
   severity = WARNING,
-  generateExamplesFromTestCases = false
+  generateExamplesFromTestCases = false,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class Finally extends BugChecker
     implements ContinueTreeMatcher, ThrowTreeMatcher, BreakTreeMatcher, ReturnTreeMatcher {

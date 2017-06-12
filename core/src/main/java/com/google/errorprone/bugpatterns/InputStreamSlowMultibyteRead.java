@@ -28,6 +28,7 @@ import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -55,7 +56,8 @@ import javax.lang.model.element.ElementKind;
       "Please also override int read(byte[], int, int), otherwise multi-byte reads from this "
           + "input stream are likely to be slow.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.PERFORMANCE
 )
 public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTreeMatcher {
 

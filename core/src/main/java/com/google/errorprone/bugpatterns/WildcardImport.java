@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -58,6 +59,7 @@ import javax.lang.model.element.ElementKind;
   severity = SUGGESTION,
   linkType = CUSTOM,
   documentSuppression = false,
+  tags = StandardTags.STYLE,
   link = "https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports"
 )
 public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {

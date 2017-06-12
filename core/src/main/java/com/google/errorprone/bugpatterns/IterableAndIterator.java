@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 
 import com.google.common.collect.Lists;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -43,7 +44,8 @@ import java.util.List;
           + "while an `Iterable` is a representation of literally iterable elements. "
           + "An `Iterable` can generate multiple valid `Iterator`s, though.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class IterableAndIterator extends BugChecker implements ClassTreeMatcher {
 

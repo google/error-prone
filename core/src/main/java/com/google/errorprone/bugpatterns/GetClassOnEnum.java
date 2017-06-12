@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -34,7 +35,8 @@ import com.sun.source.tree.MethodInvocationTree;
   name = "GetClassOnEnum",
   category = JDK,
   summary = "Calling getClass() on an enum may return a subclass of the enum type",
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class GetClassOnEnum extends BugChecker implements BugChecker.MethodInvocationTreeMatcher {
 

@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -41,7 +42,8 @@ import java.util.Set;
           + " generics: operations on the type parameter are unchecked, it hides unsafe casts at"
           + " invocations of the method, and it interacts badly with method overload resolution.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class TypeParameterUnusedInFormals extends BugChecker implements MethodTreeMatcher {
 

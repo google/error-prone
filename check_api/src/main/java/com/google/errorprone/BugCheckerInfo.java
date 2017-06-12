@@ -57,6 +57,9 @@ public class BugCheckerInfo implements Serializable {
    */
   private final ImmutableSet<String> allNames;
 
+  /** Set of String tags associated with the checker. */
+  private final ImmutableSet<String> tags;
+
   /**
    * The error message to print in compiler diagnostics when this check triggers. Corresponds to the
    * {@code summary} attribute from its {@code BugPattern}.
@@ -105,19 +108,18 @@ public class BugCheckerInfo implements Serializable {
   }
 
   private BugCheckerInfo(Class<? extends BugChecker> checker, BugPattern pattern) {
-    this.checker = checker;
-    canonicalName = pattern.name();
-    allNames = ImmutableSet.<String>builder().add(canonicalName).add(pattern.altNames()).build();
-    message = pattern.summary();
-    defaultSeverity = pattern.severity();
-    linkUrl = createLinkUrl(pattern);
-    suppressibility = pattern.suppressibility();
-    if (suppressibility == Suppressibility.CUSTOM_ANNOTATION) {
-      customSuppressionAnnotations =
-          new HashSet<>(Arrays.asList(pattern.customSuppressionAnnotations()));
-    } else {
-      customSuppressionAnnotations = Collections.<Class<? extends Annotation>>emptySet();
-    }
+    this(
+        checker,
+        pattern.name(),
+        ImmutableSet.<String>builder().add(pattern.name()).add(pattern.altNames()).build(),
+        pattern.summary(),
+        pattern.severity(),
+        createLinkUrl(pattern),
+        pattern.suppressibility(),
+        pattern.suppressibility() == Suppressibility.CUSTOM_ANNOTATION
+            ? new HashSet<>(Arrays.asList(pattern.customSuppressionAnnotations()))
+            : Collections.emptySet(),
+        ImmutableSet.copyOf(pattern.tags()));
   }
 
   private BugCheckerInfo(
@@ -128,7 +130,8 @@ public class BugCheckerInfo implements Serializable {
       SeverityLevel defaultSeverity,
       String linkUrl,
       Suppressibility suppressibility,
-      Set<Class<? extends Annotation>> customSuppressionAnnotations) {
+      Set<Class<? extends Annotation>> customSuppressionAnnotations,
+      ImmutableSet<String> tags) {
     this.checker = checker;
     this.canonicalName = canonicalName;
     this.allNames = allNames;
@@ -137,6 +140,7 @@ public class BugCheckerInfo implements Serializable {
     this.linkUrl = linkUrl;
     this.suppressibility = suppressibility;
     this.customSuppressionAnnotations = customSuppressionAnnotations;
+    this.tags = tags;
   }
 
   /**
@@ -156,7 +160,8 @@ public class BugCheckerInfo implements Serializable {
         defaultSeverity,
         linkUrl,
         suppressibility,
-        customSuppressionAnnotations);
+        customSuppressionAnnotations,
+        tags);
   }
 
   private static final String URL_FORMAT = "http://errorprone.info/bugpattern/%s";
@@ -227,6 +232,10 @@ public class BugCheckerInfo implements Serializable {
 
   public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
     return customSuppressionAnnotations;
+  }
+
+  public ImmutableSet<String> getTags() {
+    return tags;
   }
 
   public Class<? extends BugChecker> checkerClass() {

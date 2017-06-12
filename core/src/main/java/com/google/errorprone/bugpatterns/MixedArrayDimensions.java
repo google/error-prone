@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -44,6 +45,7 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
   summary = "C-style array declarations should not be used",
   severity = SUGGESTION,
   linkType = CUSTOM,
+  tags = StandardTags.STYLE,
   link = "https://google.github.io/styleguide/javaguide.html#s4.8.3.2-array-declarations"
 )
 public class MixedArrayDimensions extends BugChecker

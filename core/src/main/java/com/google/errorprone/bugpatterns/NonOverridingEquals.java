@@ -36,6 +36,7 @@ import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 import static com.sun.tools.javac.code.Flags.ENUM;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -57,7 +58,8 @@ import com.sun.tools.javac.util.Name;
   name = "NonOverridingEquals",
   summary = "equals method doesn't override Object.equals",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher {
 

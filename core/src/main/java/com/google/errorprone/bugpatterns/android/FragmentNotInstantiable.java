@@ -30,6 +30,7 @@ import static javax.lang.model.element.NestingKind.MEMBER;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -50,7 +51,8 @@ import java.util.stream.Collectors;
       "Subclasses of Fragment must be instantiable via Class#newInstance():"
           + " the class must be public, static and have a public nullary constructor",
   category = ANDROID,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.LIKELY_ERROR
 )
 public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatcher {
   private static final String MESSAGE_BASE = "Fragment is not instantiable: ";
