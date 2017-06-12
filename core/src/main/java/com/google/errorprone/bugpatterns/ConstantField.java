@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.CaseFormat;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -37,7 +38,8 @@ import javax.lang.model.element.Modifier;
   name = "ConstantField",
   category = JDK,
   summary = "Field name is CONSTANT_CASE, but field is not static and final",
-  severity = SUGGESTION
+  severity = SUGGESTION,
+  tags = StandardTags.STYLE
 )
 public class ConstantField extends BugChecker implements VariableTreeMatcher {
 

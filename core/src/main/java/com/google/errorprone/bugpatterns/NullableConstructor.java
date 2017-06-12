@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -36,7 +37,8 @@ import com.sun.tools.javac.code.Symbol;
   summary = "Constructors should not be annotated with @Nullable since they cannot return null",
   explanation = "Constructors never return null.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.STYLE
 )
 public class NullableConstructor extends BugChecker implements MethodTreeMatcher {
 

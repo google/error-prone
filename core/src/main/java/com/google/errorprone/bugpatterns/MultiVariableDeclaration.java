@@ -26,6 +26,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BlockTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -47,6 +48,7 @@ import java.util.List;
   category = JDK,
   severity = SUGGESTION,
   linkType = CUSTOM,
+  tags = StandardTags.STYLE,
   link = "https://google.github.io/styleguide/javaguide.html#s4.8.2.1-variables-per-declaration"
 )
 public class MultiVariableDeclaration extends BugChecker
