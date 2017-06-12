@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -43,7 +44,8 @@ import javax.lang.model.element.NestingKind;
           + " of its enclosing class. An inner class that is made non-static unnecessarily"
           + " uses more memory and does not make the intent of the class clear.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = {StandardTags.STYLE, StandardTags.PERFORMANCE}
 )
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
 

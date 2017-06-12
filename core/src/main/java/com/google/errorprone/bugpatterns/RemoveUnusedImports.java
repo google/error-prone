@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
@@ -60,7 +61,8 @@ import javax.annotation.Nullable;
   explanation = "This import is unused.",
   category = JDK,
   severity = SUGGESTION,
-  documentSuppression = false
+  documentSuppression = false,
+  tags = StandardTags.STYLE
 )
 public final class RemoveUnusedImports extends BugChecker implements CompilationUnitTreeMatcher {
   @Override

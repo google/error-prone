@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.sameVariable;
 import static com.google.errorprone.matchers.Matchers.toType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
@@ -63,7 +64,8 @@ import javax.lang.model.element.Modifier;
           + "on this variable in a synchronized block.  If the variable is an integer, you could "
           + "use an AtomicInteger instead of a volatile int.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class NonAtomicVolatileUpdate extends BugChecker
     implements UnaryTreeMatcher, CompoundAssignmentTreeMatcher, AssignmentTreeMatcher {

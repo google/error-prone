@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
@@ -44,7 +45,8 @@ import java.util.Optional;
   altNames = "Immutable",
   category = JDK,
   summary = "Annotations should always be immutable",
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.LIKELY_ERROR
 )
 public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeMatcher {
 

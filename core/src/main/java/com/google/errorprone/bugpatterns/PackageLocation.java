@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.Suppressibility.CUSTOM_ANNOTATION
 
 import com.google.common.base.CharMatcher;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.SuppressPackageLocation;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -37,7 +38,8 @@ import com.sun.source.tree.CompilationUnitTree;
   severity = SUGGESTION,
   suppressibility = CUSTOM_ANNOTATION,
   documentSuppression = false,
-  customSuppressionAnnotations = SuppressPackageLocation.class
+  customSuppressionAnnotations = SuppressPackageLocation.class,
+  tags = StandardTags.STYLE
 )
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
 

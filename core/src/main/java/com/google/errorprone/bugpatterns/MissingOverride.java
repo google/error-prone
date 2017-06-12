@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -38,7 +39,8 @@ import javax.lang.model.element.Modifier;
   name = "MissingOverride",
   summary = "method overrides method in supertype; expected @Override",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.STYLE
 )
 public class MissingOverride extends BugChecker implements MethodTreeMatcher {
 

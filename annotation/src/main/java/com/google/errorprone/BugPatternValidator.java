@@ -16,7 +16,6 @@
 
 package com.google.errorprone;
 
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Collections2;
 import java.lang.annotation.Annotation;
@@ -30,14 +29,6 @@ import java.util.Set;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class BugPatternValidator {
-
-  private static final Function<Class<? extends Annotation>, String> GET_CANONICAL_NAME =
-      new Function<Class<? extends Annotation>, String>() {
-        @Override
-        public String apply(Class<? extends Annotation> input) {
-          return input.getCanonicalName();
-        }
-      };
 
   private static final Joiner COMMA_JOINER = Joiner.on(", ");
 
@@ -81,7 +72,8 @@ public class BugPatternValidator {
               String.format(
                   "Expected no custom suppression annotations but found these: %s",
                   COMMA_JOINER.join(
-                      Collections2.transform(customSuppressionAnnotations, GET_CANONICAL_NAME))));
+                      Collections2.transform(
+                          customSuppressionAnnotations, Class::getCanonicalName))));
         }
         break;
     }

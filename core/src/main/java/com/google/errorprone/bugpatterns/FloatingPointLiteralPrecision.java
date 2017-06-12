@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.constValue;
 
 import com.google.common.base.CharMatcher;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -37,7 +38,8 @@ import java.math.BigDecimal;
   name = "FloatingPointLiteralPrecision",
   category = JDK,
   summary = "Floating point literal loses precision",
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.STYLE
 )
 public class FloatingPointLiteralPrecision extends BugChecker implements LiteralTreeMatcher {
   @Override

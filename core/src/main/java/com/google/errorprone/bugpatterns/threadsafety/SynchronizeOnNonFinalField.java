@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
@@ -43,7 +44,8 @@ import com.sun.tools.javac.tree.TreeInfo;
           + "* If the field needs to be mutable, create a separate lock by adding a private"
           + "  final field and synchronizing on it to guard all accesses.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class SynchronizeOnNonFinalField extends BugChecker
     implements BugChecker.SynchronizedTreeMatcher {

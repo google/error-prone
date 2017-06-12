@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.TypeParameterTreeMatcher;
@@ -44,7 +45,8 @@ import com.sun.tools.javac.util.Names;
   name = "JavaLangClash",
   category = JDK,
   summary = "Never reuse class names from java.lang",
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.STYLE
 )
 public class JavaLangClash extends BugChecker
     implements ClassTreeMatcher, TypeParameterTreeMatcher {

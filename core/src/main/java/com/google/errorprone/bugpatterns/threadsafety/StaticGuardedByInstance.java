@@ -21,6 +21,7 @@ import com.google.common.collect.Multimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.SynchronizedTreeMatcher;
@@ -45,11 +46,12 @@ import java.util.Map.Entry;
   name = "StaticGuardedByInstance",
   category = Category.JDK,
   summary = "Writes to static fields should not be guarded by instance locks",
-  severity = SeverityLevel.WARNING
+  severity = SeverityLevel.WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class StaticGuardedByInstance extends BugChecker implements SynchronizedTreeMatcher {
 
-  public static final String MESSAGE =
+  private static final String MESSAGE =
       "Write to static variable should not be guarded by instance lock '%s'";
 
   @Override

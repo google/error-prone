@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -46,7 +47,8 @@ import java.util.List;
       "Creation of a Set/HashSet/HashMap of java.net.URL."
           + " equals() and hashCode() of java.net.URL class make blocking internet connections.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class URLEqualsHashCode extends BugChecker implements NewClassTreeMatcher {
 
