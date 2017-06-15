@@ -28,7 +28,13 @@ public enum Nullness implements AbstractValue<Nullness> {
   /**
    * The lattice for nullness looks like:
    *
-   * <p>Nullable / \ Null Non-null \ / Bottom
+   * <pre>
+   *        Nullable
+   *       /        \
+   *   Null          Non-null
+   *        \      /
+   *         Bottom
+   * </pre>
    */
   NULLABLE("Nullable"), // TODO(eaftan): Rename to POSSIBLY_NULL?
   NULL("Null"),
