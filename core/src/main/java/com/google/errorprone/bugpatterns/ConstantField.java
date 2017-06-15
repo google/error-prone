@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.CaseFormat;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -38,8 +37,11 @@ import javax.lang.model.element.Modifier;
   name = "ConstantField",
   category = JDK,
   summary = "Field name is CONSTANT_CASE, but field is not static and final",
-  severity = SUGGESTION,
-  tags = StandardTags.STYLE
+  severity = SUGGESTION
+  // TODO(glorioso): This feels like a Style change, but we suggest adding static and final
+  // to a field which may not compile if we do. We'll want to be more aggressive about not making
+  // breaking changes before we consider this a Style change.
+  // tags = StandardTags.STYLE
 )
 public class ConstantField extends BugChecker implements VariableTreeMatcher {
 
