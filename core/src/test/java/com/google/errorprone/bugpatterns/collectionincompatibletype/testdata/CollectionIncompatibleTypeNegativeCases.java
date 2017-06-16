@@ -112,6 +112,7 @@ public class CollectionIncompatibleTypeNegativeCases {
   public boolean map() {
     Map<Integer, String> map = new HashMap<>();
     String result = map.get(1);
+    result = map.getOrDefault(1, "hello");
     boolean result2 = map.containsKey(1);
     result2 = map.containsValue("ok");
     result2 &= map.containsValue(null);

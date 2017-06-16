@@ -118,6 +118,8 @@ public class CollectionIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains:
     String result = map.get("bad");
     // BUG: Diagnostic contains:
+    result = map.getOrDefault("bad", "soBad");
+    // BUG: Diagnostic contains:
     boolean result2 = map.containsKey("bad");
     // BUG: Diagnostic contains:
     result2 = map.containsValue(1);

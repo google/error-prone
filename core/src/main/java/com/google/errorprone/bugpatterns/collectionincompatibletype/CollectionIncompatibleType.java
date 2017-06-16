@@ -100,6 +100,7 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
           new MethodArgMatcher("java.util.Map", "containsKey(java.lang.Object)", 0, 0),
           new MethodArgMatcher("java.util.Map", "containsValue(java.lang.Object)", 1, 0),
           new MethodArgMatcher("java.util.Map", "get(java.lang.Object)", 0, 0),
+          new MethodArgMatcher("java.util.Map", "getOrDefault(java.lang.Object,V)", 0, 0),
           new MethodArgMatcher("java.util.Map", "remove(java.lang.Object)", 0, 0),
           new MethodArgMatcher("java.util.Stack", "search(java.lang.Object)", 0, 0),
           new MethodArgMatcher("java.util.Vector", "indexOf(java.lang.Object,int)", 0, 0),
@@ -134,7 +135,6 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-
     MatchResult directResult = firstNonNullMatchResult(DIRECT_MATCHERS, tree, state);
     MatchResult typeArgResult = null;
     if (directResult == null) {
