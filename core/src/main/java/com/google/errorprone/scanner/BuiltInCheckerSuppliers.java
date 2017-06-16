@@ -128,6 +128,7 @@ import com.google.errorprone.bugpatterns.NumericEquality;
 import com.google.errorprone.bugpatterns.OperatorPrecedence;
 import com.google.errorprone.bugpatterns.OptionalEquality;
 import com.google.errorprone.bugpatterns.Overrides;
+import com.google.errorprone.bugpatterns.OvershadowingSubclassFields;
 import com.google.errorprone.bugpatterns.PackageInfo;
 import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
@@ -481,6 +482,7 @@ public class BuiltInCheckerSuppliers {
           NoAllocationChecker.class,
           NonCanonicalStaticMemberImport.class,
           NumericEquality.class,
+          OvershadowingSubclassFields.class,
           PackageLocation.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           PrivateConstructorForUtilityClass.class,
