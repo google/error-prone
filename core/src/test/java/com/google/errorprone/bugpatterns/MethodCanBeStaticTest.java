@@ -108,6 +108,34 @@ public class MethodCanBeStaticTest {
   }
 
   @Test
+  public void negativeSuppressed() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @SuppressWarnings(\"MethodCanBeStatic\")",
+            "  private String f() {",
+            "    return \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeSuppressedAlt() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @SuppressWarnings(\"static-method\")",
+            "  private String f() {",
+            "    return \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeOverride() {
     testHelper
         .addSourceLines(
