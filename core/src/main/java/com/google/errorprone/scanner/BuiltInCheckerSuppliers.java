@@ -52,7 +52,6 @@ import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
-import com.google.errorprone.bugpatterns.ElementsCountedInLoop;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
 import com.google.errorprone.bugpatterns.EqualsHashCode;
@@ -396,7 +395,6 @@ public class BuiltInCheckerSuppliers {
           ClassNewInstance.class,
           DefaultCharset.class,
           DoubleCheckedLocking.class,
-          ElementsCountedInLoop.class,
           EqualsHashCode.class,
           EqualsIncompatibleType.class,
           Finally.class,
