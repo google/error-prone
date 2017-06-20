@@ -40,6 +40,7 @@ import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ClassNewInstance;
+import com.google.errorprone.bugpatterns.ComparableAndComparator;
 import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
@@ -238,7 +239,6 @@ import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 import java.util.Arrays;
-
 /**
  * Static helper class that provides {@link ScannerSupplier}s and {@link BugChecker}s for the
  * built-in Error Prone checks, as opposed to plugin checks or checks used in tests.
@@ -393,6 +393,7 @@ public class BuiltInCheckerSuppliers {
           CannotMockFinalClass.class,
           ClassCanBeStatic.class,
           ClassNewInstance.class,
+          ComparableAndComparator.class,
           DefaultCharset.class,
           DoubleCheckedLocking.class,
           EqualsHashCode.class,
