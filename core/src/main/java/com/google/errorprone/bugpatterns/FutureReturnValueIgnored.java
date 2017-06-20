@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -58,7 +59,8 @@ import java.util.concurrent.ForkJoinTask;
           + "If you don’t check the return value of these methods, you will never find out if they "
           + "threw an exception.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
 

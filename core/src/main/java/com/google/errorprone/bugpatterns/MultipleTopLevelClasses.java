@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -40,6 +41,7 @@ import java.util.List;
   severity = SUGGESTION,
   documentSuppression = false,
   linkType = CUSTOM,
+  tags = StandardTags.STYLE,
   link = "https://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class"
 )
 public class MultipleTopLevelClasses extends BugChecker implements CompilationUnitTreeMatcher {

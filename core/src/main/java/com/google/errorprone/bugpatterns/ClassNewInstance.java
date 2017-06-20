@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -62,7 +63,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
   summary =
       "Class.newInstance() bypasses exception checking; prefer"
           + " getDeclaredConstructor().newInstance()",
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class ClassNewInstance extends BugChecker implements MethodInvocationTreeMatcher {
 

@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -51,7 +52,8 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
           + "If you meant to check whether an optional field has been set, you should use the "
           + "hasField() method instead.",
   category = GUAVA,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.LIKELY_ERROR
 )
 public class ProtoFieldPreconditionsCheckNotNull extends BugChecker
     implements MethodInvocationTreeMatcher {

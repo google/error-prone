@@ -23,6 +23,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.RequiredModifiers;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -46,7 +47,8 @@ import javax.lang.model.element.Modifier;
           + "use it on an  element that is missing one or more required modifiers.",
   linkType = NONE,
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.LIKELY_ERROR
 )
 public class RequiredModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 

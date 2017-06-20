@@ -72,7 +72,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test(Object expected, Object actual) {",
             "    // BUG: Diagnostic contains: assertEquals(expected, actual)",
-            "    // assertEquals(/*expected=*/actual, /*actual=*/expected)",
+            "    // assertEquals(/* expected= */actual, /* actual= */expected)",
             "    assertEquals(actual, expected);",
             "  }",
             "}")
@@ -242,7 +242,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
             "abstract class ErrorProneTest {",
             "  static void assertEquals(Object expected, Object actual) {};",
             "  void test(Object expected, Object actual) {",
-            "    assertEquals(/*expected=*/actual, /*actual=*/expected);",
+            "    assertEquals(/* expected= */actual, /* actual= */expected);",
             "  }",
             "}")
         .doTest();

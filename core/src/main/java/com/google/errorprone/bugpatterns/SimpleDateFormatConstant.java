@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.base.CaseFormat;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -45,7 +46,8 @@ import javax.lang.model.element.Modifier;
   name = "SimpleDateFormatConstant",
   category = JDK,
   summary = "SimpleDateFormat is not thread-safe, and should not be used as a constant field.",
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class SimpleDateFormatConstant extends BugChecker implements VariableTreeMatcher {
 

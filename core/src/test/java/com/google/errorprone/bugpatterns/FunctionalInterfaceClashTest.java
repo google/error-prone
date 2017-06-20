@@ -220,4 +220,46 @@ public class FunctionalInterfaceClashTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void shouldIgnore_transitiveInheritanceWithExpandedVisibility() {
+    testHelper
+        .addSourceLines(
+            "pkg1/FunctionalInterface.java",
+            "package pkg1;",
+            "public interface FunctionalInterface {",
+            "  String apply(String s);",
+            "}")
+        .addSourceLines(
+            "pkg2/BaseClass.java",
+            "package pkg2;",
+            "import pkg1.FunctionalInterface;",
+            "public abstract class BaseClass {",
+            "  abstract String doIt(FunctionalInterface fi);",
+            "}")
+        .addSourceLines(
+            "pkg2/DerivedClass.java",
+            "package pkg2;",
+            "import pkg1.FunctionalInterface;",
+            "public class DerivedClass extends BaseClass {",
+            "  @Override public String doIt(FunctionalInterface fi) {",
+            "    return null;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "pkg3/Test.java",
+            "package pkg3;",
+            "import pkg1.FunctionalInterface;",
+            "import pkg2.DerivedClass;",
+            "public class Test {",
+            "  DerivedClass getDerivedClass() {",
+            "    return new DerivedClass() {",
+            "      @Override public String doIt(FunctionalInterface fi) {",
+            "        return null;",
+            "      }",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

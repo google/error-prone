@@ -128,12 +128,11 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
 
   @Override
   public ModifiersTree getModifiers() {
-    throw new UnsupportedOperationException();
+    return null;
   }
 
   @Override
   public ExpressionTree getNameExpression() {
-    // TODO(cushon): java 8.
-    throw new IllegalStateException();
+    return null;
   }
 }

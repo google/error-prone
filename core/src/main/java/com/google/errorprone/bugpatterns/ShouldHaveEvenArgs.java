@@ -51,7 +51,9 @@ public class ShouldHaveEvenArgs extends BugChecker implements MethodInvocationTr
       instanceMethod()
           .onDescendantOfAny(
               "com.google.common.truth.MapSubject",
-              "com.google.common.truth.MapSubject.UsingCorrespondence")
+              "com.google.common.truth.MapSubject.UsingCorrespondence",
+              "com.google.common.truth.MultimapSubject",
+              "com.google.common.truth.MultimapSubject.UsingCorrespondence")
           .named("containsExactly");
 
   @Override

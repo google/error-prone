@@ -27,58 +27,11 @@ public class IterableAndIteratorNegativeCases {
     MyNode next;
   }
 
-  /** Test List that implements both Iterator and Iterable */
-  // BUG: Diagnostic contains: both
-  public static class MyBadList implements Iterator<MyNode>, Iterable<MyNode> {
-    private MyNode head;
-
-    public MyBadList() {
-      head = null;
-    }
-
-    @Override
-    public boolean hasNext() {
-      return head != null;
-    }
-
-    @Override
-    public MyNode next() {
-      if (hasNext()) {
-        MyNode ret = head;
-        head = head.next;
-        return ret;
-      }
-      return null;
-    }
-
-    @Override
-    public void remove() {
-      throw new UnsupportedOperationException("remove is not supported");
-    }
-
-    public void add(MyNode node) {
-      if (!hasNext()) {
-        head.next = node;
-      }
-      head = node;
-    }
-
-    @Override
-    public Iterator<MyNode> iterator() {
-      return this;
-    }
-  }
-
-  /** Test List that extends the above bad implementation Diagnostic should bypass this */
-  public static class MyBadListInherited extends MyBadList {
-    public MyBadListInherited() {}
-  }
-
   /** Test List that implements only Iterator */
-  public static class MyGoodList implements Iterator<MyNode> {
+  public static class MyList1 implements Iterator<MyNode> {
     private MyNode head;
 
-    public MyGoodList() {
+    public MyList1() {
       head = null;
     }
 
@@ -110,15 +63,14 @@ public class IterableAndIteratorNegativeCases {
     }
   }
 
-  /** Test List that implicitly implements both interfaces */
-  // BUG: Diagnostic contains: both
-  public static class MyImplicitlyBadList extends MyGoodList implements Iterable<MyNode> {
-
-    public MyImplicitlyBadList() {}
+  /** Test List that implements only Iterable */
+  public static class MyList2 implements Iterable<MyNode> {
 
     @Override
     public Iterator<MyNode> iterator() {
-      return this;
+      MyList1 l = new MyList1();
+      // code to populate the list goes here
+      return l;
     }
   }
 }

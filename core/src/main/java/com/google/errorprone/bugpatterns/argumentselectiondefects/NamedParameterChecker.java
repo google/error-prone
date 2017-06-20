@@ -19,21 +19,18 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.RequiresNamedParameters;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterComment.MatchType;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.Comments;
@@ -44,7 +41,6 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.parser.Tokens.Comment;
-import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import com.sun.tools.javac.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,13 +54,6 @@ import java.util.stream.Collectors;
 @BugPattern(
   name = "NamedParameters",
   summary = "Parameter name in argument comment is missing or incorrect",
-  explanation =
-      "For clarity, and to avoid potentially incorrectly swapping arguments, arguments may be "
-          + "explicitly matched to their parameter by preceding them with a block comment "
-          + "containing the parameter name followed by a colon. Mismatches between the name in the "
-          + "comment and the actual name will then cause a compilation error. If the called method "
-          + "is annotated with RequiresNamedParameters then an error will occur if any names are "
-          + "omitted.",
   category = JDK,
   severity = WARNING
 )
@@ -74,51 +63,30 @@ public class NamedParameterChecker extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     return matchNewClassOrMethodInvocation(
-        ASTHelpers.getSymbol(tree), Comments.findCommentsForArguments(tree, state), tree, state);
+        ASTHelpers.getSymbol(tree), Comments.findCommentsForArguments(tree, state), tree);
   }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     return matchNewClassOrMethodInvocation(
-        ASTHelpers.getSymbol(tree), Comments.findCommentsForArguments(tree, state), tree, state);
+        ASTHelpers.getSymbol(tree), Comments.findCommentsForArguments(tree, state), tree);
   }
 
   private Description matchNewClassOrMethodInvocation(
-      MethodSymbol symbol,
-      ImmutableList<Commented<ExpressionTree>> arguments,
-      Tree tree,
-      VisitorState state) {
+      MethodSymbol symbol, ImmutableList<Commented<ExpressionTree>> arguments, Tree tree) {
 
     if (symbol == null) {
       return Description.NO_MATCH;
     }
 
-    boolean commentsRequired = hasRequiresNamedParametersAnnotation().matches(tree, state);
-
-    // if we don't have parameter names available then raise an error if comments required, else
-    // silently ignore
+    // if we don't have parameter names available then give up
     List<VarSymbol> parameters = symbol.getParameters();
     if (containsSyntheticParameterName(parameters)) {
-      return commentsRequired
-          ? buildDescription(tree)
-              .setMessage(
-                  "Method requires parameter name comments but parameter names are not available.")
-              .build()
-          : Description.NO_MATCH;
+      return Description.NO_MATCH;
     }
 
     ImmutableList<LabelledArgument> labelledArguments =
         LabelledArgument.createFromParametersList(parameters, arguments);
-
-    ImmutableList<LabelledArgument> incorrectlyLabelledArguments =
-        labelledArguments
-            .stream()
-            .filter(labelledArgument -> !labelledArgument.isCorrectlyAnnotated(commentsRequired))
-            .collect(toImmutableList());
-
-    if (incorrectlyLabelledArguments.isEmpty()) {
-      return Description.NO_MATCH;
-    }
 
     // Build fix
     // In general: if a comment is missing and it should be there then we suggest adding it
@@ -126,71 +94,87 @@ public class NamedParameterChecker extends BugChecker
     // swapping the arguments. If a comment is wrong and matches nothing then we suggest changing it
 
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    for (LabelledArgument argumentWithBadLabel : incorrectlyLabelledArguments) {
-      switch (argumentWithBadLabel.match()) {
+    ImmutableList.Builder<String> incorrectParameterDescriptions = ImmutableList.builder();
+    for (LabelledArgument labelledArgument : labelledArguments) {
+      switch (labelledArgument.matchedComment().matchType()) {
         case NOT_ANNOTATED:
-          fixBuilder.prefixWith(
-              argumentWithBadLabel.actualParameter().tree(),
-              NamedParameterComment.toCommentText(argumentWithBadLabel.parameterName()));
+        case EXACT_MATCH:
+          break;
+        case APPROXIMATE_MATCH:
+          removeComment(labelledArgument.matchedComment().comment(), fixBuilder);
+          addComment(labelledArgument, fixBuilder);
+          incorrectParameterDescriptions.add(
+              String.format(
+                  "%s (comment does not conform to required style)",
+                  labelledArgument.parameterName()));
           break;
         case BAD_MATCH:
-        case APPROXIMATE_MATCH:
-          // we know that this has a comment because it was a bad match
-          Comment badLabel = argumentWithBadLabel.label().get();
+          Comment badLabel = labelledArgument.matchedComment().comment();
           Optional<LabelledArgument> maybeGoodTarget =
-              findGoodSwap(argumentWithBadLabel, labelledArguments);
+              findGoodSwap(labelledArgument, labelledArguments);
 
           if (maybeGoodTarget.isPresent()) {
             LabelledArgument argumentWithCorrectLabel = maybeGoodTarget.get();
             fixBuilder.swap(
-                argumentWithBadLabel.actualParameter().tree(),
+                labelledArgument.actualParameter().tree(),
                 argumentWithCorrectLabel.actualParameter().tree());
 
-            Optional<Comment> correctLabel = argumentWithCorrectLabel.label();
-            if (correctLabel.isPresent()) {
-              replaceComment(badLabel, correctLabel.get().getText(), fixBuilder);
+            if (argumentWithCorrectLabel.matchedComment().matchType() == MatchType.NOT_ANNOTATED) {
+              removeComment(badLabel, fixBuilder);
+              addComment(argumentWithCorrectLabel, fixBuilder);
             } else {
-              replaceComment(badLabel, "", fixBuilder);
-              fixBuilder.prefixWith(
-                  argumentWithCorrectLabel.actualParameter().tree(),
-                  NamedParameterComment.toCommentText(argumentWithCorrectLabel.parameterName()));
+              replaceComment(
+                  badLabel,
+                  argumentWithCorrectLabel.matchedComment().comment().getText(),
+                  fixBuilder);
             }
           } else {
             // there were no matches so maybe the comment is wrong - suggest a fix to change it
             replaceComment(
                 badLabel,
-                NamedParameterComment.toCommentText(argumentWithBadLabel.parameterName()),
+                NamedParameterComment.toCommentText(labelledArgument.parameterName()),
                 fixBuilder);
           }
+          incorrectParameterDescriptions.add(
+              String.format(
+                  "%s (comment does not match formal parameter name)",
+                  labelledArgument.parameterName()));
           break;
-        case EXACT_MATCH:
-          throw new IllegalArgumentException(
-              "There should be no good matches in the list of bad matches");
       }
+    }
+
+    if (fixBuilder.isEmpty()) {
+      return Description.NO_MATCH;
     }
 
     return buildDescription(tree)
         .setMessage(
             "Parameters with incorrectly labelled arguments: "
-                + incorrectlyLabelledArguments
-                    .stream()
-                    .map(NamedParameterChecker::describeIncorrectlyLabelledArgument)
-                    .collect(Collectors.joining(", ")))
+                + incorrectParameterDescriptions.build().stream().collect(Collectors.joining(", ")))
         .addFix(fixBuilder.build())
         .build();
   }
 
-  private static String describeIncorrectlyLabelledArgument(LabelledArgument p) {
-    switch (p.match()) {
-      case NOT_ANNOTATED:
-      case APPROXIMATE_MATCH:
-        return String.format("%s (missing name label)", p.parameterName());
-      case BAD_MATCH:
-        return String.format("%s (label doesn't match parameter name)", p.parameterName());
-      case EXACT_MATCH:
-        // fall through
-    }
-    throw new IllegalArgumentException("Impossible match type in list of bad matches");
+  private static void addComment(
+      LabelledArgument labelledArgument, SuggestedFix.Builder fixBuilder) {
+    fixBuilder.prefixWith(
+        labelledArgument.actualParameter().tree(),
+        NamedParameterComment.toCommentText(labelledArgument.parameterName()));
+  }
+
+  /**
+   * Replace the given comment with the replacementText. The replacement text is used verbatim and
+   * so should begin and end with block comment delimiters
+   */
+  private static void replaceComment(
+      Comment comment, String replacementText, SuggestedFix.Builder fixBuilder) {
+    int commentStart = comment.getSourcePos(0);
+    int commentEnd = commentStart + comment.getText().length();
+    fixBuilder.replace(commentStart, commentEnd, replacementText);
+  }
+
+  private static void removeComment(Comment comment, SuggestedFix.Builder fixBuilder) {
+    replaceComment(comment, "", fixBuilder);
   }
 
   private static boolean containsSyntheticParameterName(List<VarSymbol> parameters) {
@@ -198,13 +182,6 @@ public class NamedParameterChecker extends BugChecker
         .stream()
         .map(p -> p.getSimpleName().toString())
         .anyMatch(p -> p.matches("arg[0-9]"));
-  }
-
-  private static void replaceComment(
-      Comment comment, String replacementText, SuggestedFix.Builder fixBuilder) {
-    int commentStart = comment.getSourcePos(0);
-    int commentEnd = commentStart + comment.getText().length();
-    fixBuilder.replace(commentStart, commentEnd, replacementText);
   }
 
   /**
@@ -222,11 +199,11 @@ public class NamedParameterChecker extends BugChecker
       }
 
       boolean sourceLabelMatchesTarget =
-          NamedParameterComment.match(source.actualParameter(), target.parameterName())
+          NamedParameterComment.match(source.actualParameter(), target.parameterName()).matchType()
               == MatchType.EXACT_MATCH;
 
       MatchType targetCommentMatch =
-          NamedParameterComment.match(target.actualParameter(), source.parameterName());
+          NamedParameterComment.match(target.actualParameter(), source.parameterName()).matchType();
 
       boolean targetLabelMatchesSource =
           targetCommentMatch == MatchType.EXACT_MATCH
@@ -239,10 +216,6 @@ public class NamedParameterChecker extends BugChecker
     return Optional.empty();
   }
 
-  private static Matcher<Tree> hasRequiresNamedParametersAnnotation() {
-    return hasAnnotation(RequiresNamedParameters.class.getCanonicalName());
-  }
-
   /** Information about an argument, the name attached to it with a comment */
   @AutoValue
   abstract static class LabelledArgument {
@@ -251,28 +224,7 @@ public class NamedParameterChecker extends BugChecker
 
     abstract Commented<ExpressionTree> actualParameter();
 
-    abstract MatchType match();
-
-    boolean isCorrectlyAnnotated(boolean commentRequired) {
-      switch (match()) {
-        case EXACT_MATCH:
-          return true;
-        case BAD_MATCH:
-        case APPROXIMATE_MATCH:
-          return false;
-        case NOT_ANNOTATED:
-          return !commentRequired;
-      }
-      return false;
-    }
-
-    Optional<Comment> label() {
-      return Streams.findLast(
-          actualParameter()
-              .beforeComments()
-              .stream()
-              .filter(c -> c.getStyle() == CommentStyle.BLOCK));
-    }
+    abstract NamedParameterComment.MatchedComment matchedComment();
 
     static ImmutableList<LabelledArgument> createFromParametersList(
         List<VarSymbol> parameters, ImmutableList<Commented<ExpressionTree>> actualParameters) {

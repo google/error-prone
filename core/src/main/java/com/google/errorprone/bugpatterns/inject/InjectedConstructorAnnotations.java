@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
+import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -60,7 +61,7 @@ public class InjectedConstructorAnnotations extends BugChecker implements Method
       new Matcher<AnnotationTree>() {
         @Override
         public boolean matches(AnnotationTree annotationTree, VisitorState state) {
-          return hasAnnotation(GUICE_BINDING_ANNOTATION)
+          return symbolHasAnnotation(GUICE_BINDING_ANNOTATION)
               .matches(annotationTree.getAnnotationType(), state);
         }
       };

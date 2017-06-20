@@ -30,7 +30,9 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refaster.annotation.AlsoNegation;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
@@ -55,6 +57,7 @@ import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 /**
  * Implementation of a template to match and replace an expression anywhere in an AST.
@@ -130,10 +133,39 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
     return ImmutableList.of();
   }
 
+  static boolean trueOrNull(@Nullable Boolean b) {
+    return b == null || b;
+  }
+
+  /**
+   * Placeholders' verification step only checks that they use variables that haven't *yet* been
+   * matched to another local variable. This scanner reruns the verification step for the whole
+   * tree, returning false if a violation was found, and true or null otherwise.
+   */
+  static final TreeScanner<Boolean, Unifier> PLACEHOLDER_VERIFIER =
+      new TreeScanner<Boolean, Unifier>() {
+        @Override
+        public Boolean reduce(Boolean a, Boolean b) {
+          return trueOrNull(a) && trueOrNull(b);
+        }
+
+        @Override
+        public Boolean visitOther(Tree t, Unifier u) {
+          if (t instanceof UPlaceholderExpression) {
+            return ((UPlaceholderExpression) t).reverify(u);
+          } else if (t instanceof UPlaceholderStatement) {
+            return ((UPlaceholderStatement) t).reverify(u);
+          } else {
+            return super.visitOther(t, u);
+          }
+        }
+      };
+
   @Override
   public Choice<Unifier> unify(final JCExpression target, Unifier unifier) {
     return expression()
         .unify(target, unifier)
+        .condition(u -> trueOrNull(PLACEHOLDER_VERIFIER.scan(expression(), u)))
         .thenOption(
             new Function<Unifier, Optional<Unifier>>() {
 

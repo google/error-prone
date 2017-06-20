@@ -23,22 +23,32 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree;
+import java.util.Iterator;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ * @author sulku@google.com (Marsela Sulku)
+ * @author mariasam@google.com (Maria Sam)
+ */
 @BugPattern(
   name = "ShortCircuitBoolean",
   category = JDK,
   summary = "Prefer the short-circuiting boolean operators && and || to & and |.",
-  severity = WARNING
+  severity = WARNING,
+  tags = StandardTags.FRAGILE_CODE
 )
 public class ShortCircuitBoolean extends BugChecker implements BinaryTreeMatcher {
+
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     switch (tree.getKind()) {
@@ -51,11 +61,43 @@ public class ShortCircuitBoolean extends BugChecker implements BinaryTreeMatcher
     if (!isSameType(getType(tree), state.getSymtab().booleanType, state)) {
       return NO_MATCH;
     }
-    return describeMatch(
-        tree,
-        SuggestedFix.replace(
+
+    Iterator<Tree> stateIterator = state.getPath().getParentPath().iterator();
+    Tree parent = stateIterator.next();
+
+    if (parent instanceof BinaryTree
+        && (parent.getKind() == Kind.AND || parent.getKind() == Kind.OR)) {
+      return NO_MATCH;
+    } else {
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      new TreeScannerBinary(state).scan(tree, fix);
+      return describeMatch(tree, fix.build());
+    }
+  }
+
+  /** Replaces the operators when visiting the binary nodes */
+  public static class TreeScannerBinary extends TreeScanner<Void, SuggestedFix.Builder> {
+    /** saved state */
+    public VisitorState state;
+
+    /** constructor */
+    public TreeScannerBinary(VisitorState currState) {
+      this.state = currState;
+    }
+
+    @Override
+    public Void visitBinary(BinaryTree tree, SuggestedFix.Builder p) {
+      if (tree.getKind() == Kind.AND || tree.getKind() == Kind.OR) {
+        p.replace(
             state.getEndPosition(tree.getLeftOperand()),
             ((JCTree) tree.getRightOperand()).getStartPosition(),
-            tree.getKind() == Tree.Kind.AND ? " && " : " || "));
+            tree.getKind() == Tree.Kind.AND ? " && " : " || ");
+      }
+
+      return super.visitBinary(tree, p);
+    }
   }
 }
+
+
+

@@ -80,7 +80,6 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Options;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -643,7 +642,7 @@ public class SuggestedFixes {
         try {
           fixSource =
               new SourceFile(
-                  Paths.get(modifiedFile.toUri()),
+                  modifiedFile.getName(),
                   modifiedFile.getCharContent(false /*ignoreEncodingErrors*/));
         } catch (IOException e) {
           return false;
