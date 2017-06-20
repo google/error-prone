@@ -21,23 +21,24 @@ package com.google.errorprone.bugpatterns.testdata;
  */
 public class OvershadowingSubclassFieldsNegativeCases {
   // base class
-  class ClassA {
+  static class ClassA {
     private int varOne;
   }
 
   // subclass with member variables of different names
-  class ClassB extends ClassA {
+  static class ClassB extends ClassA {
     private String varTwo;
     private int varThree;
+    public static int varFour;
   }
 
   // subclass with initialized member variable of different name
-  class ClassC extends ClassB {
+  static class ClassC extends ClassB {
     private String varFour = "Test";
   }
 
   // subclass with member *methods* with the same name as superclass member variable -- this is ok
-  class ClassD extends ClassC {
+  static class ClassD extends ClassC {
     public void varThree() {}
 
     public void varTwo() {}

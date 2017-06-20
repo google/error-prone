@@ -28,24 +28,37 @@ public class OvershadowingSubclassFieldsPositiveCases1 {
     String varThree;
   }
 
+
   /** ClassB has a variable name as parent */
-  // BUG: Diagnostic contains: Overshadowing variables of superclass
   public static class ClassB extends ClassA {
+    // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
+    // This variable is overshadowing a variable in superclass:  ClassA
     private String varOne = "Test";
   }
 
   /** ClassC has same variable name as grandparent */
-  // BUG: Diagnostic contains: Overshadowing variables of superclass
   public static class ClassC extends ClassB {
+    // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
+    // This variable is overshadowing a variable in superclass:  ClassA
     public int varTwo;
   }
 
   /** ClassD has same variable name as grandparent and other unrelated members */
-  // BUG: Diagnostic contains: Overshadowing variables of superclass
   public static class ClassD extends ClassB {
+    // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
+    // This variable is overshadowing a variable in superclass:  ClassA
     protected int varThree;
-    int varOne;
+    // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
+    // This variable is overshadowing a variable in superclass:  ClassA
+    int varTwo;
     String randOne;
     String randTwo;
+  }
+
+  /** ClassF has same variable name as grandparent */
+  public static class ClassF extends ClassC {
+    // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
+    // This variable is overshadowing a variable in superclass:  ClassC
+    public String varTwo;
   }
 }
