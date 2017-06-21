@@ -16,7 +16,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.contains;
 
 import com.google.errorprone.BugPattern;
@@ -43,7 +43,7 @@ import com.sun.tools.javac.code.Types;
   category = JDK,
   summary =
       "Nested instanceOf conditions of disjoint types create blocks of code that never execute",
-  severity = SUGGESTION
+  severity = WARNING
 )
 public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatcher {
 

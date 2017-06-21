@@ -239,6 +239,7 @@ import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 import java.util.Arrays;
+
 /**
  * Static helper class that provides {@link ScannerSupplier}s and {@link BugChecker}s for the
  * built-in Error Prone checks, as opposed to plugin checks or checks used in tests.
@@ -420,6 +421,7 @@ public class BuiltInCheckerSuppliers {
           MissingOverride.class,
           MutableConstantField.class,
           NarrowingCompoundAssignment.class,
+          NestedInstanceOfConditions.class,
           NonAtomicVolatileUpdate.class,
           NonOverridingEquals.class,
           NullableConstructor.class,
@@ -427,6 +429,7 @@ public class BuiltInCheckerSuppliers {
           NullableVoid.class,
           OperatorPrecedence.class,
           OverridesGuiceInjectableMethod.class,
+          OvershadowingSubclassFields.class,
           PreconditionsInvalidPlaceholder.class,
           ProtoFieldPreconditionsCheckNotNull.class,
           ReferenceEquality.class,
@@ -479,11 +482,9 @@ public class BuiltInCheckerSuppliers {
           MultiVariableDeclaration.class,
           MultipleTopLevelClasses.class,
           NamedParameterChecker.class,
-          NestedInstanceOfConditions.class,
           NoAllocationChecker.class,
           NonCanonicalStaticMemberImport.class,
           NumericEquality.class,
-          OvershadowingSubclassFields.class,
           PackageLocation.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           PrivateConstructorForUtilityClass.class,
