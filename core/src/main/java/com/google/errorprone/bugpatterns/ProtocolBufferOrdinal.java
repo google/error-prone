@@ -41,10 +41,10 @@ import com.sun.source.tree.MethodInvocationTree;
 )
 public class ProtocolBufferOrdinal extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final String PROTO_SUPER_CLASS = "com.google.protobuf.ProtocolMessageEnum";
+  private static final String PROTO_SUPER_CLASS = "com.google.protobuf.Internal.EnumLite";
 
   private static final Matcher<ExpressionTree> PROTO_MSG_ORDINAL_MATCHER =
-      instanceMethod().onDescendantOf(PROTO_SUPER_CLASS).named("ordinal");
+      instanceMethod().onDescendantOf(PROTO_SUPER_CLASS).named("ordinal").withParameters();
 
   @Override
   public Description matchMethodInvocation(

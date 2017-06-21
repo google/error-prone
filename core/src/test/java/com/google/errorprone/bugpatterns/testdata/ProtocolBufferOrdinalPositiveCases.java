@@ -24,5 +24,23 @@ public class ProtocolBufferOrdinalPositiveCases {
   public static void checkCallOnOrdinal() {
     // BUG: Diagnostic contains: ProtocolBufferOrdinal
     TestEnum.TEST_ENUM_VAL.ordinal();
+
+    // BUG: Diagnostic contains: ProtocolBufferOrdinal
+    ProtoLiteEnum.FOO.ordinal();
+  }
+
+  enum ProtoLiteEnum implements com.google.protobuf.Internal.EnumLite {
+    FOO(1),
+    BAR(2);
+    private final int number;
+
+    private ProtoLiteEnum(int number) {
+      this.number = number;
+    }
+
+    @Override
+    public int getNumber() {
+      return number;
+    }
   }
 }
