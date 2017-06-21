@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ForkJoinTask;
+import java.util.regex.Pattern;
 
 /** See BugPattern annotation. */
 @BugPattern(
@@ -74,7 +75,12 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
               .withParameters(),
           // CompletionService is intended to be used in a way where the Future returned
           // from submit is discarded, because the Futures are available later via e.g. take()
-          instanceMethod().onDescendantOf(CompletionService.class.getName()).named("submit"));
+          instanceMethod().onDescendantOf(CompletionService.class.getName()).named("submit"),
+          // ChannelFuture#addListern(s) returns itself for chaining. Any exception during the
+          // future execution should be dealt by the listener(s).
+          instanceMethod()
+              .onDescendantOf("io.netty.channel.ChannelFuture")
+              .withNameMatching(Pattern.compile("addListeners?")));
 
   private static final Matcher<MethodInvocationTree> MATCHER =
       new Matcher<MethodInvocationTree>() {

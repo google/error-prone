@@ -274,6 +274,13 @@
       <version>1.0-rc2</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>4.1.12.Final</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

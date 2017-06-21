@@ -21,6 +21,7 @@ import static com.google.common.util.concurrent.Futures.immediateFuture;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import io.netty.channel.ChannelFuture;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,5 +88,13 @@ public class FutureReturnValueIgnoredNegativeCases {
 
   void ignoreExecutorCompletionServiceSubmit(ExecutorCompletionService s) {
     s.submit(() -> null);
+  }
+
+  void ignoreChannelFutureAddListener(ChannelFuture cf) {
+    cf.addListener((ChannelFuture f) -> {});
+  }
+
+  void ignoreChannelFutureAddListeners(ChannelFuture cf) {
+    cf.addListeners((ChannelFuture f) -> {}, (ChannelFuture f) -> {});
   }
 }
