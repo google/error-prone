@@ -79,6 +79,7 @@ import com.google.errorprone.bugpatterns.IndexOfChar;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
+import com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
@@ -411,6 +412,7 @@ public class BuiltInCheckerSuppliers {
           IncompatibleModifiersChecker.class,
           InjectOnConstructorOfAbstractClass.class,
           InputStreamSlowMultibyteRead.class,
+          InstanceOfAndCastMatchWrongType.class,
           IterableAndIterator.class,
           JavaLangClash.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
