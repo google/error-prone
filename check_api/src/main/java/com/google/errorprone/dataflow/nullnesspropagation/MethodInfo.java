@@ -29,4 +29,6 @@ public interface MethodInfo {
   boolean isStatic();
 
   boolean isPrimitive();
+
+  boolean isKnownNonNullReturning();
 }

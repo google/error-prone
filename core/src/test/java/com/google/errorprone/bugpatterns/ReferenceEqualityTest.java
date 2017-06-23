@@ -44,6 +44,33 @@ public class ReferenceEqualityTest {
       BugCheckerRefactoringTestHelper.newInstance(new ReferenceEquality(), getClass());
 
   @Test
+  public void protoGetter_nonnull() throws Exception {
+    refactoringTestHelper
+        .addInput("proto/ProtoTest.java")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Foo.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Foo {",
+            "  void something(TestProtoMessage f1, TestProtoMessage f2) {",
+            "     boolean b = f1 == f2;",
+            "     b = f1.getMessage() == f2.getMessage();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Foo.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "import java.util.Objects;",
+            "class Foo {",
+            "  void something(TestProtoMessage f1, TestProtoMessage f2) {",
+            "     boolean b = Objects.equals(f1, f2);",
+            "     b = f1.getMessage().equals(f2.getMessage());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative_const() throws Exception {
     compilationHelper
         .addSourceLines(

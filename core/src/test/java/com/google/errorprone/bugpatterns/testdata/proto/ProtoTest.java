@@ -19,6 +19,7 @@
 
 package com.google.errorprone.bugpatterns.proto;
 
+@SuppressWarnings("ReferenceEquality")
 public final class ProtoTest {
   private ProtoTest() {}
 

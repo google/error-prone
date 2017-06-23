@@ -307,7 +307,7 @@ abstract class AbstractNullnessPropagationTransfer
      * if I'm careful to give it its correct Nullness instead of hardcoding it to NONNULL as the
      * current code does. To avoid problems, we return a RegularTransferResult when possible.
      */
-    if (tryGetMethodSymbol(node.getTree()).isBoolean) {
+    if (tryGetMethodSymbol(node.getTree(), null).isBoolean) {
       ResultingStore thenStore = updateStore(input.getThenStore(), thenUpdates, bothUpdates);
       ResultingStore elseStore = updateStore(input.getElseStore(), elseUpdates, bothUpdates);
       return conditionalResult(

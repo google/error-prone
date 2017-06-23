@@ -47,8 +47,12 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -191,6 +195,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         return true;
       }
       if (methodInfo.isPrimitive()) {
+        return true;
+      }
+      if (methodInfo.isKnownNonNullReturning()) {
         return true;
       }
       if (CLASSES_WITH_NON_NULLABLE_RETURNS.contains(methodInfo.clazz())) {
@@ -473,7 +480,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates,
       LocalVariableUpdates bothUpdates) {
-    ClassAndMethod callee = tryGetMethodSymbol(node.getTree());
+    ClassAndMethod callee = tryGetMethodSymbol(node.getTree(), Types.instance(context));
     setReceiverNonnull(bothUpdates, node.getTarget().getReceiver(), callee);
     setUnconditionalArgumentNullness(bothUpdates, node.getArguments(), callee);
     setConditionalArgumentNullness(elseUpdates, node.getArguments(), callee);
@@ -575,10 +582,10 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return null;
   }
 
-  static ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree) {
+  static ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree, Types types) {
     Symbol symbol = tryGetSymbol(tree.getMethodSelect());
     if (symbol instanceof MethodSymbol) {
-      return ClassAndMethod.make((MethodSymbol) symbol);
+      return ClassAndMethod.make((MethodSymbol) symbol, types);
     }
     return null;
   }
@@ -791,6 +798,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     final boolean isStatic;
     final boolean isPrimitive;
     final boolean isBoolean;
+    final boolean isNonNullReturning;
 
     private ClassAndMethod(
         String clazz,
@@ -798,28 +806,61 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         List<String> annotations,
         boolean isStatic,
         boolean isPrimitive,
-        boolean isBoolean) {
+        boolean isBoolean,
+        boolean isNonNullReturning) {
       this.clazz = clazz;
       this.method = method;
       this.annotations = ImmutableList.copyOf(annotations);
       this.isStatic = isStatic;
       this.isPrimitive = isPrimitive;
       this.isBoolean = isBoolean;
+      this.isNonNullReturning = isNonNullReturning;
     }
 
-    static ClassAndMethod make(MethodSymbol symbol) {
-      List<? extends AnnotationMirror> annotationMirrors = symbol.getAnnotationMirrors();
+    static ClassAndMethod make(MethodSymbol methodSymbol, @Nullable Types types) {
+      List<? extends AnnotationMirror> annotationMirrors = methodSymbol.getAnnotationMirrors();
       List<String> annotations = new ArrayList<>(annotationMirrors.size());
       for (AnnotationMirror annotationMirror : annotationMirrors) {
         annotations.add(annotationMirror.getAnnotationType().toString());
       }
+
+      ClassSymbol clazzSymbol = (ClassSymbol) methodSymbol.owner;
+
       return new ClassAndMethod(
-          symbol.owner.getQualifiedName().toString(),
-          symbol.getSimpleName().toString(),
+          clazzSymbol.getQualifiedName().toString(),
+          methodSymbol.getSimpleName().toString(),
           annotations,
-          symbol.isStatic(),
-          symbol.getReturnType().isPrimitive(),
-          symbol.getReturnType().getTag() == BOOLEAN);
+          methodSymbol.isStatic(),
+          methodSymbol.getReturnType().isPrimitive(),
+          methodSymbol.getReturnType().getTag() == BOOLEAN,
+          knownNonNullMethod(methodSymbol, clazzSymbol, types));
+    }
+
+    private static boolean knownNonNullMethod(
+        MethodSymbol methodSymbol, ClassSymbol clazzSymbol, @Nullable Types types) {
+      if (types == null) {
+        return false;
+      }
+
+      // Proto getters are not null
+      if (methodSymbol.name.toString().startsWith("get")
+          && methodSymbol.params().isEmpty()
+          && !methodSymbol.isStatic()) {
+        Type type = clazzSymbol.type;
+        while (type != null) {
+          TypeSymbol typeSymbol = type.asElement();
+          if (typeSymbol == null) {
+            break;
+          }
+          if (typeSymbol
+              .getQualifiedName()
+              .contentEquals("com.google.protobuf.AbstractMessageLite")) {
+            return true;
+          }
+          type = types.supertype(type);
+        }
+      }
+      return false;
     }
 
     @Override
@@ -849,6 +890,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     @Override
     public boolean isPrimitive() {
       return isPrimitive;
+    }
+
+    @Override
+    public boolean isKnownNonNullReturning() {
+      return isNonNullReturning;
     }
   }
 
