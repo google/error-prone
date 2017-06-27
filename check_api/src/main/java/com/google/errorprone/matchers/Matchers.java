@@ -1123,6 +1123,18 @@ public class Matchers {
     };
   }
 
+  /** Matches an AST node that is transient. */
+  public static <T extends Tree> Matcher<T> isTransient() {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(Tree tree, VisitorState state) {
+        Symbol sym = ASTHelpers.getSymbol(tree);
+        // NOTE(yorick): there is no isTransient() on Symbol. This is what it would be.
+        return sym.getModifiers().contains(Modifier.TRANSIENT);
+      }
+    };
+  }
+
   /**
    * Matches a {@code throw} statement where the thrown item is matched by the passed {@code
    * thrownMatcher}.
