@@ -23,6 +23,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ENGLISH;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -38,6 +39,7 @@ import java.nio.file.Paths;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -93,6 +95,9 @@ public class ErrorProneJavacPluginTest {
 
   @Test
   public void applyFixes() throws IOException {
+    // TODO(b/63064865): Test is broken on Windows.  Disable for now.
+    Assume.assumeFalse(StandardSystemProperty.OS_NAME.value().startsWith("Windows"));
+
     Path tmp = temporaryFolder.newFolder().toPath();
     Path fileA = tmp.resolve("A.java");
     Path fileB = tmp.resolve("B.java");
@@ -142,6 +147,9 @@ public class ErrorProneJavacPluginTest {
 
   @Test
   public void applyToPatchFile() throws IOException {
+    // TODO(b/63064865): Test is broken on Windows.  Disable for now.
+    Assume.assumeFalse(StandardSystemProperty.OS_NAME.value().startsWith("Windows"));
+
     Path tmp = temporaryFolder.newFolder().toPath();
     Path patchDir = temporaryFolder.newFolder().toPath();
     Files.createDirectories(patchDir);
