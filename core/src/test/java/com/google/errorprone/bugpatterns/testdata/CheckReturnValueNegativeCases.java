@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import java.util.function.Supplier;
+import javax.annotation.CheckReturnValue;
+
 /** @author eaftan@google.com (Eddie Aftandilian) */
 public class CheckReturnValueNegativeCases {
 
@@ -27,4 +30,21 @@ public class CheckReturnValueNegativeCases {
 
   @SuppressWarnings("foo") // wrong annotation
   public void test2() {}
+
+  @CheckReturnValue
+  private int mustCheck() {
+    return 5;
+  }
+
+  private void callSupplier(Supplier<Integer> supplier) {
+    supplier.get();
+  }
+
+  public void testResolvedToVoidLambda() {
+    callSupplier(() -> mustCheck());
+  }
+
+  public void testMethodReference() {
+    callSupplier(this::mustCheck);
+  }
 }

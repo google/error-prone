@@ -47,6 +47,29 @@ public class CheckReturnValuePositiveCases {
     value.increment();
   }
 
+  private void callRunnable(Runnable runnable) {
+    runnable.run();
+  }
+
+  public void testResolvedToVoidLambda() {
+    // BUG: Diagnostic contains: Ignored return value
+    callRunnable(() -> this.intValue.increment());
+  }
+
+  public void testResolvedToVoidMethodReference() {
+    // TODO(b/62960293): This should be an error too, but it's tricky to adapt existing code to
+    // catch it.
+    callRunnable(this.intValue::increment);
+  }
+
+  public void testRegularLambda() {
+    callRunnable(
+        () -> {
+          // BUG: Diagnostic contains: Ignored return value
+          this.intValue.increment();
+        });
+  }
+
   public void testBeforeAndAfterRule() {
     // BUG: Diagnostic contains: remove this line
     new IntValue(1).increment();

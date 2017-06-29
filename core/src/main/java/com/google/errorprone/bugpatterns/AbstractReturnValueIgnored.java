@@ -42,6 +42,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -49,6 +50,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.util.regex.Pattern;
 
@@ -64,7 +66,10 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (allOf(
-            parentNode(Matchers.<MethodInvocationTree>kindIs(Kind.EXPRESSION_STATEMENT)),
+            parentNode(
+                anyOf(
+                    AbstractReturnValueIgnored::isVoidReturningLambdaExpression,
+                    Matchers.<Tree>kindIs(Kind.EXPRESSION_STATEMENT))),
             not(
                 methodSelect(
                     Matchers.<ExpressionTree>allOf(
@@ -76,6 +81,15 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       return describe(methodInvocationTree, state);
     }
     return Description.NO_MATCH;
+  }
+
+  private static boolean isVoidReturningLambdaExpression(Tree tree, VisitorState state) {
+    if (!(tree instanceof LambdaExpressionTree)) {
+      return false;
+    }
+
+    return ASTHelpers.isVoidType(
+        state.getTypes().findDescriptorType(((JCLambda) tree).type).getReturnType(), state);
   }
 
   /**
@@ -184,7 +198,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD))),
           // assertThrows(Throwable.class, () => { me(); })
           allOf(
-              isLastStatementInBlock(),
+              anyOf(
+                  isLastStatementInBlock(),
+                  parentNode(AbstractReturnValueIgnored::isVoidReturningLambdaExpression)),
               enclosingNode(
                   // Extra kindIs is needed as methodInvocation will cast each parent node to
                   // ExpressionTree.

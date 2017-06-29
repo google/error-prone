@@ -64,6 +64,30 @@ public class ConstantFieldTest {
   }
 
   @Test
+  public void skipStaticFixOnInners() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  class Inner {",
+            "    // BUG: Diagnostic matches: F",
+            "    final String CONSTANT_CASE_NAME = \"a\";",
+            "  }",
+            "  enum InnerEnum {",
+            "   FOO {",
+            "     // BUG: Diagnostic matches: F",
+            "     final String CONSTANT_CASE_NAME = \"a\";",
+            "   };",
+            "   // BUG: Diagnostic contains: static final String CAN_MAKE_STATIC",
+            "   final String CAN_MAKE_STATIC = \"\";",
+            "  }",
+            "}")
+        .expectErrorMessage(
+            "F", d -> !d.contains("static final String") && d.contains("ConstantField"))
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(
