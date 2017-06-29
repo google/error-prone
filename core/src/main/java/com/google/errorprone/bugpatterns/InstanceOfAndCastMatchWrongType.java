@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -30,9 +31,11 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -40,7 +43,6 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import javax.annotation.Nullable;
@@ -101,7 +103,7 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
         TreeScannerInstanceOfWrongType treeScannerInstanceOfWrongType =
             new TreeScannerInstanceOfWrongType(state);
         treeScannerInstanceOfWrongType.scan(
-            parenTree.getExpression(), ASTHelpers.getSymbol(((TypeCastTree) tree).getExpression()));
+            parenTree.getExpression(), ((TypeCastTree) tree).getExpression());
 
         Tree treeInstance = treeScannerInstanceOfWrongType.getRelevantTree();
 
@@ -124,7 +126,7 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
 
         // Scan for earliest assignment expression in "then" block of if statement
         treeScannerInstanceOfWrongType.scan(
-            ifTree.getThenStatement(), ASTHelpers.getSymbol(instanceOfTree.getExpression()));
+            ifTree.getThenStatement(), instanceOfTree.getExpression());
         int pos = treeScannerInstanceOfWrongType.earliestStart;
         if (pos < ((JCTree) tree).getStartPosition()) {
           return false;
@@ -135,16 +137,15 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
                 types.erasure(ASTHelpers.getType(instanceOfTree.getType())),
                 types.erasure(ASTHelpers.getType(tree)));
 
-        Symbol typeCastExp = ASTHelpers.getSymbol(((TypeCastTree) tree).getExpression());
-        boolean isSameExpression =
-            typeCastExp.equals(ASTHelpers.getSymbol(instanceOfTree.getExpression()));
+        ExpressionTree typeCastExp = ((TypeCastTree) tree).getExpression();
+        boolean isSameExpression = expressionsEqual(typeCastExp, instanceOfTree.getExpression());
         return isSameExpression && !isCastable;
       }
       return false;
     }
   }
 
-  static class TreeScannerInstanceOfWrongType extends TreeScanner<Void, Symbol> {
+  static class TreeScannerInstanceOfWrongType extends TreeScanner<Void, ExpressionTree> {
 
     // represents the earliest position of a relevant assignment
     int earliestStart = Integer.MAX_VALUE;
@@ -165,35 +166,67 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
     }
 
     @Override
-    public Void visitBinary(BinaryTree binTree, Symbol symbol) {
+    public Void visitBinary(BinaryTree binTree, ExpressionTree expr) {
       if (binTree.getKind().equals(Kind.CONDITIONAL_OR)) {
         notApplicable = true;
       }
-      return super.visitBinary(binTree, symbol);
+      return super.visitBinary(binTree, expr);
     }
 
     @Override
-    public Void visitUnary(UnaryTree tree, Symbol symbol) {
+    public Void visitUnary(UnaryTree tree, ExpressionTree expr) {
       if (tree.getKind().equals(Kind.LOGICAL_COMPLEMENT)) {
         notApplicable = true;
       }
-      return super.visitUnary(tree, symbol);
+      return super.visitUnary(tree, expr);
     }
 
     @Override
-    public Void visitInstanceOf(InstanceOfTree tree, Symbol sym) {
-      if (ASTHelpers.getSymbol(tree.getExpression()).equals(sym)) {
+    public Void visitInstanceOf(InstanceOfTree tree, ExpressionTree expr) {
+      if (expressionsEqual(tree.getExpression(), expr)) {
         relevantTree = tree;
       }
-      return super.visitInstanceOf(tree, sym);
+      return super.visitInstanceOf(tree, expr);
     }
 
     @Override
-    public Void visitAssignment(AssignmentTree tree, Symbol sym) {
-      if (ASTHelpers.getSymbol(tree.getVariable()).equals(sym)) {
+    public Void visitAssignment(AssignmentTree tree, ExpressionTree expr) {
+      if (expressionsEqual(tree.getVariable(), expr)) {
         earliestStart = Math.min(earliestStart, state.getEndPosition(tree));
       }
-      return super.visitAssignment(tree, sym);
+      return super.visitAssignment(tree, expr);
     }
+  }
+
+  /**
+   * Determines whether two {@link ExpressionTree} instances are equal. Only handles the cases
+   * relevant to this checker: array accesses, identifiers, and literals. Returns false for all
+   * other cases.
+   */
+  private static boolean expressionsEqual(ExpressionTree expr1, ExpressionTree expr2) {
+    if (!expr1.getKind().equals(expr2.getKind())) {
+      return false;
+    }
+
+    if (!expr1.getKind().equals(Kind.ARRAY_ACCESS)
+        && !expr1.getKind().equals(Kind.IDENTIFIER)
+        && !(expr1 instanceof LiteralTree)) {
+      return false;
+    }
+
+    if (expr1.getKind() == Kind.ARRAY_ACCESS) {
+      ArrayAccessTree arrayAccessTree1 = (ArrayAccessTree) expr1;
+      ArrayAccessTree arrayAccessTree2 = (ArrayAccessTree) expr2;
+      return expressionsEqual(arrayAccessTree1.getExpression(), arrayAccessTree2.getExpression())
+          && expressionsEqual(arrayAccessTree1.getIndex(), arrayAccessTree2.getIndex());
+    }
+
+    if (expr1 instanceof LiteralTree) {
+      LiteralTree literalTree1 = (LiteralTree) expr1;
+      LiteralTree literalTree2 = (LiteralTree) expr2;
+      return literalTree1.getValue().equals(literalTree2.getValue());
+    }
+
+    return Objects.equal(ASTHelpers.getSymbol(expr1), ASTHelpers.getSymbol(expr2));
   }
 }
