@@ -112,10 +112,9 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">SuppressionHelper</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">Encapsulates the logic of handling suppressions, both via <code>@SuppressWarnings</code> and via
- custom suppression annotations.  To do this we have to maintains 2 sets of suppression info:
- 1) A set of the suppression strings in all <code>@Suppresswarnings</code> annotations down this path
-    of the AST.
- 2) A set of all custom suppression annotations down this path of the AST.</div>
+ custom suppression annotations. To do this we have to maintains 2 sets of suppression info: 1) A
+ set of the suppression strings in all <code>@Suppresswarnings</code> annotations down this path of the
+ AST. 2) A set of all custom suppression annotations down this path of the AST.</div>
 </li>
 </ul>
 </div>
@@ -228,7 +227,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>customSuppressionAnnotations</code> - The set of custom suppression annotations that this
- SuppressionHelper should look for.</dd>
+     SuppressionHelper should look for.</dd>
 <dd><code>state</code> - the <a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> of the current analysis.</dd>
 </dl>
 </li>
@@ -255,19 +254,19 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
                                                                <a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Extend suppression sets for both <code>@SuppressWarnings</code> and custom suppression annotations.
  When we explore a new node, we have to extend the suppression sets with any new suppressed
- warnings or custom suppression annotations.  We also have to retain the previous suppression
- set so that we can reinstate it when we move up the tree.
+ warnings or custom suppression annotations. We also have to retain the previous suppression set
+ so that we can reinstate it when we move up the tree.
 
- We do not modify the existing suppression sets, so they can be restored when moving up the
- tree.  We also avoid copying the suppression sets if the next node to explore does not have
- any suppressed warnings or custom suppression annotations.  This is the common case.</div>
+ <p>We do not modify the existing suppression sets, so they can be restored when moving up the
+ tree. We also avoid copying the suppression sets if the next node to explore does not have any
+ suppressed warnings or custom suppression annotations. This is the common case.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>sym</code> - The <code>Symbol</code> for the AST node currently being scanned</dd>
-<dd><code>suppressWarningsType</code> - The <code>Type</code> for <code>@SuppressWarnings</code>, as given by
-        javac's symbol table</dd>
+<dd><code>suppressWarningsType</code> - The <code>Type</code> for <code>@SuppressWarnings</code>, as given by javac's
+     symbol table</dd>
 <dd><code>suppressionsOnCurrentPath</code> - The set of strings in all <code>@SuppressWarnings</code>
-        annotations on the current path through the AST</dd>
+     annotations on the current path through the AST</dd>
 <dd><code>customSuppressionsOnCurrentPath</code> - The set of all custom suppression annotations</dd>
 </dl>
 </li>
@@ -289,9 +288,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>suppressible</code> - Holds information about the suppressibilty of a checker</dd>
 <dd><code>suppressionsOnCurrentPath</code> - The set of strings in all <code>@SuppressWarnings</code>
-        annotations on the current path through the AST</dd>
-<dd><code>customSuppressionsOnCurrentPath</code> - The set of all custom suppression annotations
-        on the current path through the AST</dd>
+     annotations on the current path through the AST</dd>
+<dd><code>customSuppressionsOnCurrentPath</code> - The set of all custom suppression annotations on the
+     current path through the AST</dd>
 <dd><code>severityLevel</code> - of the check to be suppressed</dd>
 <dd><code>inGeneratedCode</code> - true if the current code is generated</dd>
 <dd><code>disableWarningsInGeneratedCode</code> - true if warnings in generated code should be suppressed</dd>

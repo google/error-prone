@@ -52,9 +52,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.math.BigDecimal;
 
-/**
- * @author endobson@google.com (Eric Dobson)
- */
+/** @author endobson@google.com (Eric Dobson) */
 public class BigDecimalLiteralDoublePositiveCases {
 
   public void foo() {
@@ -118,9 +116,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.math.BigDecimal;
 
-/**
- * @author endobson@google.com (Eric Dobson)
- */
+/** @author endobson@google.com (Eric Dobson) */
 public class BigDecimalLiteralDoubleNegativeCases {
 
   public void foo() {

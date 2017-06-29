@@ -271,19 +271,19 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;describe(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
                             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">If the call to Preconditions.checkNotNull is part of an expression (assignment, return, etc.),
- we substitute the argument for the method call. E.g.:
- <code>bar = Preconditions.checkNotNull(foo); ==&gt; bar = foo;</code>
+ we substitute the argument for the method call. E.g.: <code>bar =
+ Preconditions.checkNotNull(foo); ==&gt; bar = foo;</code>
 
  <p>If the argument to Preconditions.checkNotNull is a comparison using == or != and one of the
- operands is null, we call checkNotNull on the non-null operand. E.g.:
- <code>checkNotNull(a == null); ==&gt; checkNotNull(a);</code>
+ operands is null, we call checkNotNull on the non-null operand. E.g.: <code>checkNotNull(a ==
+ null); ==&gt; checkNotNull(a);</code>
 
- <p>If the argument is a method call or binary tree and its return type is boolean, change it to a
- checkArgument/checkState. E.g.:
- <code>Preconditions.checkNotNull(foo.hasFoo()) ==&gt; Preconditions.checkArgument(foo.hasFoo())</code>
+ <p>If the argument is a method call or binary tree and its return type is boolean, change it to
+ a checkArgument/checkState. E.g.: <code>Preconditions.checkNotNull(foo.hasFoo()) ==&gt;
+ Preconditions.checkArgument(foo.hasFoo())</code>
 
- <p>Otherwise, delete the checkNotNull call. E.g.:
- <code>Preconditions.checkNotNull(foo); ==&gt; [delete the line]</code></div>
+ <p>Otherwise, delete the checkNotNull call. E.g.: <code>Preconditions.checkNotNull(foo); ==&gt;
+ [delete the line]</code></div>
 </li>
 </ul>
 </li>

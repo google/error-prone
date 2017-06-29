@@ -44,16 +44,14 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-/**
- * Test for CannotMockFinalClass.
- */
+/** Test for CannotMockFinalClass. */
 @RunWith(JUnit4.class)
 public class CannotMockFinalClassPositiveCases {
   static final class FinalClass {}
-  
+
   // BUG: Diagnostic contains: Mockito cannot mock
   @Mock FinalClass impossible;
-  
+
   public void method() {
     // BUG: Diagnostic contains: Mockito cannot mock
     FinalClass local = Mockito.mock(FinalClass.class);
@@ -86,15 +84,13 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-/**
- * Test for CannotMockFinalClass.
- */
+/** Test for CannotMockFinalClass. */
 @RunWith(JUnit4.class)
 public class CannotMockFinalClassNegativeCases {
   static class NonFinalClass {}
-  
+
   @Mock NonFinalClass okToMock;
-  
+
   public void method() {
     NonFinalClass local = Mockito.mock(NonFinalClass.class);
   }
@@ -123,14 +119,12 @@ __CannotMockFinalClassNegativeCases2.java__
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-/**
- * Test for CannotMockFinalClass in the absence of @RunWith(JUnit4.class).
- */
+/** Test for CannotMockFinalClass in the absence of @RunWith(JUnit4.class). */
 public class CannotMockFinalClassNegativeCases2 {
   static final class FinalClass {}
 
   @Mock FinalClass impossible;
-  
+
   public void method() {
     FinalClass local = Mockito.mock(FinalClass.class);
   }

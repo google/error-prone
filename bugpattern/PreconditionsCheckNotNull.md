@@ -50,9 +50,9 @@ public class PreconditionsCheckNotNullPositiveCase1 {
     // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull("string literal");
     String thing = null;
-    // BUG: Diagnostic contains: (thing, 
+    // BUG: Diagnostic contains: (thing,
     checkNotNull("thing is null", thing);
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     Preconditions.checkNotNull("a string literal " + "that's got two parts", thing);
   }
 }
@@ -81,6 +81,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Test case for fully qualified methodIs call.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class PreconditionsCheckNotNullPositiveCase2 {
@@ -116,6 +117,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Test case for static import of Precondtions.checkNotNull.
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class PreconditionsCheckNotNullPositiveCase3 {
@@ -152,7 +154,7 @@ public class PreconditionsCheckNotNullNegativeCase1 {
   public void go() {
     Preconditions.checkNotNull("this is ok");
   }
-  
+
   private static class Preconditions {
     static void checkNotNull(String string) {
       System.out.println(string);
@@ -188,7 +190,7 @@ public class PreconditionsCheckNotNullNegativeCase2 {
   public void go() {
     Object testObj = null;
     Preconditions.checkNotNull(testObj, "this is ok");
-  }  
+  }
 }
 {% endhighlight %}
 

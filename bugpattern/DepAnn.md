@@ -43,46 +43,31 @@ __DepAnnPositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @deprecated
- */
+/** @deprecated */
 // BUG: Diagnostic contains: @Deprecated
 public class DepAnnPositiveCases {
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   // BUG: Diagnostic contains: @Deprecated
-  public DepAnnPositiveCases() {
-  }
-  
-  /**
-   * @deprecated
-   */
+  public DepAnnPositiveCases() {}
+
+  /** @deprecated */
   // BUG: Diagnostic contains: @Deprecated
   int myField;
-  
-  /**
-   * @deprecated
-   */
+
+  /** @deprecated */
   // BUG: Diagnostic contains: @Deprecated
   enum Enum {
     VALUE,
   }
-  
-  /**
-   * @deprecated
-   */
+
+  /** @deprecated */
   // BUG: Diagnostic contains: @Deprecated
-  interface Interface {
-  }
-  
-  /**
-   * @deprecated 
-   */
+  interface Interface {}
+
+  /** @deprecated */
   // BUG: Diagnostic contains: @Deprecated
-  public void deprecatedMethood() {
-  }
+  public void deprecatedMethood() {}
 }
 {% endhighlight %}
 
@@ -108,56 +93,38 @@ __DepAnnNegativeCase1.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @deprecated
- */
+/** @deprecated */
 @Deprecated
 public class DepAnnNegativeCase1 {
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   @Deprecated
   public DepAnnNegativeCase1() {}
 
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  int myField;
+  /** @deprecated */
+  @Deprecated int myField;
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   @Deprecated
   enum Enum {
     VALUE,
   }
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   @Deprecated
-  interface Interface {
-  }
+  interface Interface {}
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   @Deprecated
   public void deprecatedMethood() {}
 
   @Deprecated
   public void deprecatedMethoodWithoutComment() {}
-  
-  /**
-   * deprecated
-   */
+
+  /** deprecated */
   public void deprecatedMethodWithMalformedComment() {}
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   @SuppressWarnings("dep-ann")
   public void suppressed() {}
 
@@ -186,28 +153,23 @@ __DepAnnNegativeCase2.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @deprecated
- */
+/** @deprecated */
 @Deprecated
 public class DepAnnNegativeCase2 {
-  
+
   abstract class Builder2<P> {
     class SummaryRowKey<P> {}
-    
+
     @Deprecated
     /** @deprecated use {@link Selector.Builder#withSummary()} */
-    
-    abstract public void withSummaryRowKeys(int summaryRowKeys);
-    
+    public abstract void withSummaryRowKeys(int summaryRowKeys);
+
     /** @deprecated use {@link Selector.Builder#withSummary()} */
     @Deprecated
-    abstract public void m1();
-    
-    abstract public void m2();
-    
+    public abstract void m1();
+
+    public abstract void m2();
   }
-  
 }
 {% endhighlight %}
 

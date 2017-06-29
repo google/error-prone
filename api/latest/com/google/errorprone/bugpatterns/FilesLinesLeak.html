@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -103,7 +103,12 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BugChecker</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker</a></li>
+<li>
+<ul class="inheritance">
 <li>com.google.errorprone.bugpatterns.FilesLinesLeak</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -119,7 +124,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">FilesLinesLeak</span>
-extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
+extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
@@ -165,6 +170,13 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/FilesLinesLeak.html#MATCHER">MATCHER</a></span></code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="fields.inherited.from.class.com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></h3>
+<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#HAS_MUST_BE_CLOSED_ANNOTATION">HAS_MUST_BE_CLOSED_ANNOTATION</a></code></li>
+</ul>
 </li>
 </ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -197,11 +209,24 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/FilesLinesLeak.html#addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">addFix</a></span>(<a href="../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;description,
+      com.sun.source.tree.Tree&nbsp;tree,
+      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/FilesLinesLeak.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></h3>
+<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">matchNewClassOrMethodInvocation</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">
 <!--   -->
@@ -274,7 +299,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <a name="matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>matchMethodInvocation</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethodInvocation(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
@@ -282,6 +307,21 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>addFix</h4>
+<pre>protected&nbsp;void&nbsp;addFix(<a href="../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;description,
+                      com.sun.source.tree.Tree&nbsp;tree,
+                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">addFix</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></code></dd>
 </dl>
 </li>
 </ul>

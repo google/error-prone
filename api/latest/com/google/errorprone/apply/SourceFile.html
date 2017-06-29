@@ -112,8 +112,8 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">SourceFile</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">Representation of a mutable Java source file.
- 
- This class is not thread-safe.</div>
+
+ <p>This class is not thread-safe.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>sjnickerson@google.com (Simon Nickerson), alexeagle@google.com (Alex Eagle)</dd>
@@ -219,8 +219,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/apply/SourceFile.html#setSourceText-java.lang.CharSequence-">setSourceText</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;source)</code>
-<div class="block">Clears the current source test for this SourceFile and resets it to
- the passed-in value.</div>
+<div class="block">Clears the current source test for this SourceFile and resets it to the passed-in value.</div>
 </td>
 </tr>
 </table>
@@ -323,8 +322,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>setSourceText</h4>
 <pre>public&nbsp;void&nbsp;setSourceText(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;source)</pre>
-<div class="block">Clears the current source test for this SourceFile and resets it to
- the passed-in value.</div>
+<div class="block">Clears the current source test for this SourceFile and resets it to the passed-in value.</div>
 </li>
 </ul>
 <a name="getFragmentByChars-int-int-">
@@ -336,7 +334,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getFragmentByChars(int&nbsp;startPosition,
                                  int&nbsp;endPosition)</pre>
 <div class="block">Returns a fragment of the source code as a string.
- 
+
  <p>This method uses the same conventions as <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true#substring-int-int-" title="class or interface in java.lang"><code>String.substring(int, int)</code></a> for its start
  and end parameters.</div>
 </li>
@@ -351,7 +349,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
                                  int&nbsp;endLine)</pre>
 <div class="block">Returns a fragment of the source code between the two stated line numbers. The parameters
  represent <b>inclusive</b> line numbers.
- 
+
  <p>The returned fragment will end in a newline.</div>
 </li>
 </ul>
@@ -387,7 +385,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
                          int&nbsp;endPosition,
                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replacement)</pre>
 <div class="block">Replace the source code between the start and end character positions with a new string.
- 
+
  <p>This method uses the same conventions as <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true#substring-int-int-" title="class or interface in java.lang"><code>String.substring(int, int)</code></a> for its start
  and end parameters.</div>
 </li>

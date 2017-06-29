@@ -44,37 +44,28 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-
-/**
- * @author scottjohnson@google.com (Scott Johnsson)
- */
+/** @author scottjohnson@google.com (Scott Johnsson) */
 @NonRuntimeAnnotationPositiveCases.NotSpecified
 @NonRuntimeAnnotationPositiveCases.NonRuntime
 public class NonRuntimeAnnotationPositiveCases {
 
   public NonRuntime testAnnotation() {
-    // BUG: Diagnostic contains: null
+    // BUG: Diagnostic contains:
     NonRuntimeAnnotationPositiveCases.class.getAnnotation(
         NonRuntimeAnnotationPositiveCases.NonRuntime.class);
-    // BUG: Diagnostic contains: null
+    // BUG: Diagnostic contains:
     NonRuntimeAnnotationPositiveCases.class.getAnnotation(
         NonRuntimeAnnotationPositiveCases.NotSpecified.class);
-    // BUG: Diagnostic contains: null
+    // BUG: Diagnostic contains:
     return this.getClass().getAnnotation(NonRuntimeAnnotationPositiveCases.NonRuntime.class);
   }
 
-  /**
-   * Annotation that is explicitly NOT retained at runtime
-   */
+  /** Annotation that is explicitly NOT retained at runtime */
   @Retention(RetentionPolicy.SOURCE)
-  public @interface NonRuntime {
-  }
-  
-  /**
-   * Annotation that is implicitly NOT retained at runtime
-   */
-  public @interface NotSpecified {
-  }
+  public @interface NonRuntime {}
+
+  /** Annotation that is implicitly NOT retained at runtime */
+  public @interface NotSpecified {}
 }
 {% endhighlight %}
 
@@ -103,9 +94,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * @author scottjohnson@google.com (Scott Johnsson)
- */
+/** @author scottjohnson@google.com (Scott Johnsson) */
 @NonRuntimeAnnotationNegativeCases.Runtime
 public class NonRuntimeAnnotationNegativeCases {
 
@@ -113,12 +102,9 @@ public class NonRuntimeAnnotationNegativeCases {
     return this.getClass().getAnnotation(NonRuntimeAnnotationNegativeCases.Runtime.class);
   }
 
-  /**
-   * Annotation that is retained at runtime
-   */
+  /** Annotation that is retained at runtime */
   @Retention(RetentionPolicy.RUNTIME)
-  public @interface Runtime {
-  }
+  public @interface Runtime {}
 }
 {% endhighlight %}
 

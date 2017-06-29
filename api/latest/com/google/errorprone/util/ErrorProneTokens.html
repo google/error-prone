@@ -18,8 +18,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":10,"i1":10,"i2":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -130,7 +130,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ErrorProneTokens.html#ErrorProneTokens--">ErrorProneTokens</a></span>()</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ErrorProneTokens.html#ErrorProneTokens-java.lang.String-com.sun.tools.javac.util.Context-">ErrorProneTokens</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;source,
+                com.sun.tools.javac.util.Context&nbsp;context)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -142,12 +143,20 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>com.sun.tools.javac.util.Position.LineMap</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ErrorProneTokens.html#getLineMap--">getLineMap</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;<a href="../../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ErrorProneTokens.html#getTokens--">getTokens</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static com.google.common.collect.ImmutableList&lt;<a href="../../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ErrorProneTokens.html#getTokens-java.lang.String-com.sun.tools.javac.util.Context-">getTokens</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;source,
          com.sun.tools.javac.util.Context&nbsp;context)</code>
@@ -176,13 +185,14 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ErrorProneTokens--">
+<a name="ErrorProneTokens-java.lang.String-com.sun.tools.javac.util.Context-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ErrorProneTokens</h4>
-<pre>public&nbsp;ErrorProneTokens()</pre>
+<pre>public&nbsp;ErrorProneTokens(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;source,
+                        com.sun.tools.javac.util.Context&nbsp;context)</pre>
 </li>
 </ul>
 </li>
@@ -193,6 +203,24 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="getLineMap--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLineMap</h4>
+<pre>public&nbsp;com.sun.tools.javac.util.Position.LineMap&nbsp;getLineMap()</pre>
+</li>
+</ul>
+<a name="getTokens--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTokens</h4>
+<pre>public&nbsp;com.google.common.collect.ImmutableList&lt;<a href="../../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;&nbsp;getTokens()</pre>
+</li>
+</ul>
 <a name="getTokens-java.lang.String-com.sun.tools.javac.util.Context-">
 <!--   -->
 </a>

@@ -38,6 +38,9 @@ AsyncCallable should not return a null Future, only a Future whose result is nul
 __[AsyncFunctionReturnsNull](bugpattern/AsyncFunctionReturnsNull)__<br>
 AsyncFunction should not return a null Future, only a Future whose result is null.
 
+__[AutoValueConstructorOrderChecker](bugpattern/AutoValueConstructorOrderChecker)__<br>
+Arguments to AutoValue constructor are in the wrong order
+
 __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
 
@@ -153,7 +156,7 @@ __[IsLoggableTagLength](bugpattern/IsLoggableTagLength)__<br>
 Log tag too long, cannot exceed 23 characters.
 
 __[JUnit3TestNotRun](bugpattern/JUnit3TestNotRun)__<br>
-Test method will not be run; please prefix name with &quot;test&quot;
+Test method will not be run; please correct method signature (Should be public, non-static, and method name should begin with &quot;test&quot;).
 
 __[JUnit4SetUpNotRun](bugpattern/JUnit4SetUpNotRun)__<br>
 setUp() method will not be run; Please add a @Before annotation
@@ -162,7 +165,7 @@ __[JUnit4TearDownNotRun](bugpattern/JUnit4TearDownNotRun)__<br>
 tearDown() method will not be run; Please add an @After annotation
 
 __[JUnit4TestNotRun](bugpattern/JUnit4TestNotRun)__<br>
-Test method will not be run; please add @Test annotation
+This looks like a test method but is not run; please add @Test or @Ignore, or, if this is a helper method, reduce its visibility.
 
 __[JUnitAssertSameCheck](bugpattern/JUnitAssertSameCheck)__<br>
 An object is tested for reference equality to itself using JUnit library.
@@ -198,13 +201,19 @@ __[MoreThanOneInjectableConstructor](bugpattern/MoreThanOneInjectableConstructor
 This class has more than one @Inject-annotated constructor. Please remove the @Inject annotation from all but one of them.
 
 __[MustBeClosedChecker](bugpattern/MustBeClosedChecker)__<br>
-Invocations of methods or constructors annotated with @MustBeClosed must occur within the resource variable initializer of a try-with-resources statement, or the return statement of another method annotated with @MustBeClosed.
+The result of this method must be closed.
+
+__[NCopiesOfChar](bugpattern/NCopiesOfChar)__<br>
+The first argument to nCopies is the number of copies, and the second is the item to copy
 
 __[NonCanonicalStaticImport](bugpattern/NonCanonicalStaticImport)__<br>
 Static import of type uses non-canonical name
 
 __[NonFinalCompileTimeConstant](bugpattern/NonFinalCompileTimeConstant)__<br>
 @CompileTimeConstant parameters should be final or effectively final
+
+__[NonRuntimeAnnotation](bugpattern/NonRuntimeAnnotation)__<br>
+Calling getAnnotation on an annotation that is not retained at runtime.
 
 __[OptionalEquality](bugpattern/OptionalEquality)__<br>
 Comparison using reference equality instead of value equality
@@ -227,8 +236,14 @@ Literal passed as first argument to Preconditions.checkNotNull() can never be nu
 __[PreconditionsCheckNotNullPrimitive](bugpattern/PreconditionsCheckNotNullPrimitive)__<br>
 First argument to `Preconditions.checkNotNull()` is a primitive rather than an object reference
 
+__[PredicateIncompatibleType](bugpattern/PredicateIncompatibleType)__<br>
+Using ::equals as an incompatible Predicate; the predicate will always return false
+
 __[ProtoFieldNullComparison](bugpattern/ProtoFieldNullComparison)__<br>
 Protobuf fields cannot be null
+
+__[ProtocolBufferOrdinal](bugpattern/ProtocolBufferOrdinal)__<br>
+To get the tag number of a protocol buffer enum, use getNumber() instead.
 
 __[ProvidesMethodOutsideOfModule](bugpattern/ProvidesMethodOutsideOfModule)__<br>
 @Provides methods need to be declared in a Module to have any effect.
@@ -253,6 +268,9 @@ An object is compared to itself
 
 __[SelfEquals](bugpattern/SelfEquals)__<br>
 Testing an object for equality with itself will always be true.
+
+__[ShouldHaveEvenArgs](bugpattern/ShouldHaveEvenArgs)__<br>
+This method must be called with an even number of arguments.
 
 __[SizeGreaterThanOrEqualsZero](bugpattern/SizeGreaterThanOrEqualsZero)__<br>
 Comparison of a size &gt;= 0 is always true, did you intend to check for non-emptiness?
@@ -295,6 +313,12 @@ Collection is modified in place, but the result is not used
 __[AmbiguousMethodReference](bugpattern/AmbiguousMethodReference)__<br>
 Method reference is ambiguous
 
+__[ArgumentSelectionDefectChecker](bugpattern/ArgumentSelectionDefectChecker)__<br>
+Arguments are in the wrong order or could be commented for clarity.
+
+__[AssertEqualsArgumentOrderChecker](bugpattern/AssertEqualsArgumentOrderChecker)__<br>
+Arguments are swapped in assertEquals-like call
+
 __[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
 Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
 
@@ -313,14 +337,14 @@ Inner class is non-static but does not reference enclosing class
 __[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
 Class.newInstance() bypasses exception checking; prefer getDeclaredConstructor().newInstance()
 
+__[ComparableAndComparator](bugpattern/ComparableAndComparator)__<br>
+Class should not implement both `Comparable` and `Comparator`
+
 __[DefaultCharset](bugpattern/DefaultCharset)__<br>
 Implicit use of the platform default charset, which can result in e.g. non-ASCII characters being silently replaced with &#39;?&#39; in many environments
 
 __[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
 Double-checked locking on non-volatile fields is unsafe
-
-__[ElementsCountedInLoop](bugpattern/ElementsCountedInLoop)__<br>
-This code, which counts elements using a loop, can be replaced by a simpler library method
 
 __[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
 Classes that override equals should also override hashCode.
@@ -344,7 +368,7 @@ __[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
 Overloads will be ambiguous when passing lambda arguments
 
 __[FutureReturnValueIgnored](bugpattern/FutureReturnValueIgnored)__<br>
-Return value of methods returning Future must be checked.
+Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.
 
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
@@ -364,6 +388,9 @@ Constructors on abstract classes are never directly @Injected, only the construc
 __[InputStreamSlowMultibyteRead](bugpattern/InputStreamSlowMultibyteRead)__<br>
 Please also override int read(byte[], int, int), otherwise multi-byte reads from this input stream are likely to be slow.
 
+__[InstanceOfAndCastMatchWrongType](bugpattern/InstanceOfAndCastMatchWrongType)__<br>
+Casting inside an if block should be plausibly consistent with the instanceof type
+
 __[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
 Class should not implement both `Iterable` and `Iterator`
 
@@ -373,8 +400,11 @@ Floating-point comparison without error tolerance
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
 
-__[LiteralClassName](bugpattern/LiteralClassName)__<br>
-Using Class.forName is unnecessary if the class is available at compile-time.
+__[JavaLangClash](bugpattern/JavaLangClash)__<br>
+Never reuse class names from java.lang
+
+__[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
+Assignment where a boolean expression was expected; use == if this assignment wasn&#39;t expected or add parentheses for clarity.
 
 __[MissingFail](bugpattern/MissingFail)__<br>
 Not calling fail() when expecting an exception masks bugs
@@ -386,7 +416,10 @@ __[MutableConstantField](bugpattern/MutableConstantField)__<br>
 Constant field declarations should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
 
 __[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
-Compound assignments to bytes, shorts, chars, and floats hide dangerous casts
+Compound assignments may hide dangerous casts
+
+__[NestedInstanceOfConditions](bugpattern/NestedInstanceOfConditions)__<br>
+Nested instanceOf conditions of disjoint types create blocks of code that never execute
 
 __[NonAtomicVolatileUpdate](bugpattern/NonAtomicVolatileUpdate)__<br>
 This update of a volatile variable is non-atomic
@@ -409,14 +442,14 @@ Use grouping parenthesis to make the operator precedence explicit
 __[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__<br>
 This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
 
+__[OvershadowingSubclassFields](bugpattern/OvershadowingSubclassFields)__<br>
+Overshadowing variables of superclass causes confusion and errors
+
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
 
 __[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
 Protobuf fields cannot be null, so this check is redundant
-
-__[ProtocolBufferOrdinal](bugpattern/ProtocolBufferOrdinal)__<br>
-ordinal() value of Protocol Buffer Enum can change if enumeration order is changed
 
 __[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
 Comparison using reference equality instead of value equality
@@ -455,9 +488,6 @@ __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
 
 ## Experimental : ERROR
-
-__[ArgumentParameterSwap](bugpattern/ArgumentParameterSwap)__<br>
-An argument is more similar to a different parameter; the arguments may have been swapped.
 
 __[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>
 @AssistedInject and @Inject cannot be used on the same constructor.
@@ -498,6 +528,9 @@ Injected constructors cannot be optional nor have binding annotations
 __[InsecureCryptoUsage](bugpattern/InsecureCryptoUsage)__<br>
 A standard cryptographic operation is used in a mode that is prone to vulnerabilities
 
+__[IterablePathParameter](bugpattern/IterablePathParameter)__<br>
+Path implements Iterable&lt;Path&gt;; prefer Collection&lt;Path&gt; for clarity
+
 __[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOrRuleAnnotation)__<br>
 jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation
 
@@ -513,9 +546,6 @@ Prefer &#39;L&#39; to &#39;l&#39; for the suffix to long literals
 __[NoAllocation](bugpattern/NoAllocation)__<br>
 @NoAllocation was specified on this method, but something was found that would trigger an allocation
 
-__[NonRuntimeAnnotation](bugpattern/NonRuntimeAnnotation)__<br>
-Calling getAnnotation on an annotation that is not retained at runtime.
-
 __[NumericEquality](bugpattern/NumericEquality)__<br>
 Numeric comparison using reference equality instead of value equality
 
@@ -525,19 +555,16 @@ Method parameter has wrong package
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
 
-__[QualifierOnMethodWithoutProvides](bugpattern/QualifierOnMethodWithoutProvides)__<br>
-Qualifier applied to a method that isn&#39;t a @Provides method. This method won&#39;t be used for dependency injection
+__[QualifierOrScopeOnInjectMethod](bugpattern/QualifierOrScopeOnInjectMethod)__<br>
+Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move the qualifier annotation to the binding location.
 
 __[StaticOrDefaultInterfaceMethod](bugpattern/StaticOrDefaultInterfaceMethod)__<br>
-Static and default methods in interfaces are not allowed in android builds.
+Static and default interface methods are not natively supported on older Android devices. 
 
 __[UnlockMethod](bugpattern/UnlockMethod)__<br>
 This method does not acquire the locks specified by its @UnlockMethod annotation
 
 ## Experimental : WARNING
-
-__[ArgumentParameterMismatch](bugpattern/ArgumentParameterMismatch)__<br>
-A different potential argument is more similar to the name of the parameter than the existing argument; this may be an error
 
 __[AssertFalse](bugpattern/AssertFalse)__<br>
 Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead
@@ -551,6 +578,12 @@ BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, prefer Big
 __[BindingToUnqualifiedCommonType](bugpattern/BindingToUnqualifiedCommonType)__<br>
 This code declares a binding for a common value type without a Qualifier annotation.
 
+__[ConstructorInvokesOverridable](bugpattern/ConstructorInvokesOverridable)__<br>
+Constructors should not invoke overridable methods.
+
+__[ConstructorLeaksThis](bugpattern/ConstructorLeaksThis)__<br>
+Constructors should not pass the &#39;this&#39; reference out in method invocations, since the object may not be fully constructed.
+
 __[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
 Empty top-level type declaration
 
@@ -560,8 +593,14 @@ Calls to ExpectedException#expect should always be followed by exactly one state
 __[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
 Hardcoded reference to /sdcard
 
+__[InconsistentOverloads](bugpattern/InconsistentOverloads)__<br>
+The ordering of parameters in overloaded methods should be as consistent as possible (when viewed from left to right)
+
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
+
+__[NamedParameters](bugpattern/NamedParameters)__<br>
+Parameter name in argument comment is missing or incorrect
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
@@ -601,6 +640,9 @@ __[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributio
 __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
 
+__[LiteralClassName](bugpattern/LiteralClassName)__<br>
+Using Class.forName is unnecessary if the class is available at compile-time.
+
 __[MethodCanBeStatic](bugpattern/MethodCanBeStatic)__<br>
 A private method that does not reference the enclosing instance can be static
 
@@ -633,6 +675,9 @@ Methods that can return null should be annotated @Nullable
 
 __[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
 Unchecked exceptions do not need to be declared in the method signature.
+
+__[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
+Constructors and methods with the same name should appear sequentially with no other code in between
 
 __[UnnecessaryStaticImport](bugpattern/UnnecessaryStaticImport)__<br>
 Using static imports for types is unnecessary

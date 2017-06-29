@@ -1,6 +1,6 @@
 ---
 title: JUnit4TestNotRun
-summary: Test method will not be run; please add @Test annotation
+summary: This looks like a test method but is not run; please add @Test or @Ignore, or, if this is a helper method, reduce its visibility.
 layout: bugpattern
 category: JUNIT
 severity: ERROR
@@ -44,14 +44,12 @@ package com.google.errorprone.bugpatterns.testdata;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunPositiveCase1 {
   // BUG: Diagnostic contains: @Test
   public void testThisIsATest() {}
-  
+
   // BUG: Diagnostic contains: @Test
   public static void testThisIsAStaticTest() {}
 }
@@ -83,14 +81,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * Mockito test runner that uses JUnit 4.
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(MockitoJUnitRunner.class)
 public class JUnit4TestNotRunPositiveCase2 {
   // BUG: Diagnostic contains: @Test
   public void testThisIsATest() {}
-  
+
   // BUG: Diagnostic contains: @Test
   public static void testThisIsAStaticTest() {}
 }
@@ -118,12 +116,10 @@ __JUnit4TestNotRunNegativeCase1.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 /**
  * Not a JUnit 4 test (no @RunWith annotation on the class).
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class JUnit4TestNotRunNegativeCase1 {
@@ -152,12 +148,12 @@ __JUnit4TestNotRunNegativeCase2.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import org.junit.runner.RunWith;
 import org.junit.internal.runners.JUnit38ClassRunner;
+import org.junit.runner.RunWith;
 
 /**
  * Not a JUnit 4 test (run with a JUnit3 test runner).
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit38ClassRunner.class)
@@ -191,38 +187,38 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunNegativeCase3 {
   // Doesn't begin with "test".
   public void thisIsATest() {}
-  
+
   // Isn't public.
   void testTest1() {}
-  
+
   // Have checked annotation.
   @Test
   public void testTest2() {}
-    
+
   @Before
   public void testBefore() {}
-  
+
   @After
   public void testAfter() {}
-  
+
   @BeforeClass
   public void testBeforeClass() {}
-  
+
   @AfterClass
   public void testAfterClass() {}
-  
+
   // Has parameters.
   public void testTest3(int foo) {}
 
   // Doesn't return void
-  public int testSomething() { return 42; }
+  public int testSomething() {
+    return 42;
+  }
 }
 {% endhighlight %}
 
@@ -253,7 +249,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * May be a JUnit 3 test -- has @RunWith annotation on the class but also extends TestCase.
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
@@ -288,7 +284,7 @@ import org.junit.runners.JUnit4;
 
 /**
  * Methods that override methods with @Test should not trigger an error (JUnit 4 will run them).
- * 
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)

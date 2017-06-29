@@ -47,43 +47,40 @@ import com.google.inject.BindingAnnotation;
 import java.lang.annotation.Retention;
 import javax.inject.Qualifier;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class MoreThanOneQualifierPositiveCases {
-
 
   /**
    * A class in which the class, a constructor, a field, a method, and a method parameter each have
    * two com.google.inject.BindingAnnotation annotations.
    */
   // BUG: Diagnostic contains: remove
-  @Foo1 
+  @Foo1
   // BUG: Diagnostic contains: remove
   @Foo2
   public class TestClass1 {
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Foo2
     private int n;
 
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Foo2
     public TestClass1() {}
 
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Foo2
     public void setN(
         // BUG: Diagnostic contains: remove
-        @Foo1 
-        // BUG: Diagnostic contains: remove
-        @Foo2 
-        int n) {}
+        @Foo1
+            // BUG: Diagnostic contains: remove
+            @Foo2
+            int n) {}
   }
 
   /**
@@ -92,12 +89,12 @@ public class MoreThanOneQualifierPositiveCases {
    */
 
   // BUG: Diagnostic contains: remove
-  @Bar1 
+  @Bar1
   // BUG: Diagnostic contains: remove
   @Bar2
   public class TestClass2 {
     // BUG: Diagnostic contains: remove
-    @Bar1 
+    @Bar1
     // BUG: Diagnostic contains: remove
     @Bar2
     private int n;
@@ -109,15 +106,15 @@ public class MoreThanOneQualifierPositiveCases {
     public TestClass2() {}
 
     // BUG: Diagnostic contains: remove
-    @Bar1 
+    @Bar1
     // BUG: Diagnostic contains: remove
     @Bar2
     public void setN(
         // BUG: Diagnostic contains: remove
-        @Bar1 
-        // BUG: Diagnostic contains: remove
-         @Bar2
-         int n) {}
+        @Bar1
+            // BUG: Diagnostic contains: remove
+            @Bar2
+            int n) {}
   }
 
   /**
@@ -126,46 +123,46 @@ public class MoreThanOneQualifierPositiveCases {
    */
 
   // BUG: Diagnostic contains: remove
-  @Foo1 
+  @Foo1
   // BUG: Diagnostic contains: remove
   @Bar1
   public class TestClass3 {
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Bar1
     private int n;
 
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Bar1
     public TestClass3() {}
 
     // BUG: Diagnostic contains: remove
-    @Foo1 
+    @Foo1
     // BUG: Diagnostic contains: remove
     @Bar1
     public void setN(
         // BUG: Diagnostic contains: remove
-        @Foo1 
-        // BUG: Diagnostic contains: remove
-        @Bar1 
-        int n) {}
+        @Foo1
+            // BUG: Diagnostic contains: remove
+            @Bar1
+            int n) {}
   }
 
   @Qualifier
   @Retention(RUNTIME)
   public @interface Foo1 {}
-  
+
   @Qualifier
   @Retention(RUNTIME)
   public @interface Foo2 {}
-  
+
   @BindingAnnotation
   @Retention(RUNTIME)
   public @interface Bar1 {}
-  
+
   @BindingAnnotation
   @Retention(RUNTIME)
   public @interface Bar2 {}
@@ -197,16 +194,12 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.inject.BindingAnnotation;
-import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
+import javax.inject.Qualifier;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class MoreThanOneQualifierNegativeCases {
-  /**
-   * A class in with no annotations on any of its members.
-   */
+  /** A class in with no annotations on any of its members. */
   public class TestClass1 {
     private int n;
 
@@ -221,8 +214,7 @@ public class MoreThanOneQualifierNegativeCases {
    */
   @Foo
   public class TestClass2 {
-    @Foo
-    private int n;
+    @Foo private int n;
 
     @Foo
     public TestClass2() {}
@@ -237,8 +229,7 @@ public class MoreThanOneQualifierNegativeCases {
    */
   @Bar
   public class TestClass3 {
-    @Bar
-    private int n;
+    @Bar private int n;
 
     @Bar
     public TestClass3() {}
@@ -250,7 +241,7 @@ public class MoreThanOneQualifierNegativeCases {
   @Qualifier
   @Retention(RUNTIME)
   public @interface Foo {}
-  
+
   @BindingAnnotation
   @Retention(RUNTIME)
   public @interface Bar {}

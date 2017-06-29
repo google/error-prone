@@ -181,8 +181,8 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ArrayHashCode.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Wraps identity hashcode computations in calls to <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true#hashCode-long:A-" title="class or interface in java.util"><code>Arrays.hashCode(long[])</code></a> if the
- array is single dimensional or <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true#deepHashCode-java.lang.Object:A-" title="class or interface in java.util"><code>Arrays.deepHashCode(java.lang.Object[])</code></a> if the array is
+<div class="block">Wraps identity hashcode computations in calls to <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true#hashCode-long:A-" title="class or interface in java.util"><code>Arrays.hashCode(long[])</code></a> if the array
+ is single dimensional or <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true#deepHashCode-java.lang.Object:A-" title="class or interface in java.util"><code>Arrays.deepHashCode(java.lang.Object[])</code></a> if the array is
  multidimensional.</div>
 </td>
 </tr>
@@ -247,13 +247,13 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <h4>matchMethodInvocation</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethodInvocation(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                                          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Wraps identity hashcode computations in calls to <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true#hashCode-long:A-" title="class or interface in java.util"><code>Arrays.hashCode(long[])</code></a> if the
- array is single dimensional or <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true#deepHashCode-java.lang.Object:A-" title="class or interface in java.util"><code>Arrays.deepHashCode(java.lang.Object[])</code></a> if the array is
+<div class="block">Wraps identity hashcode computations in calls to <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true#hashCode-long:A-" title="class or interface in java.util"><code>Arrays.hashCode(long[])</code></a> if the array
+ is single dimensional or <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true#deepHashCode-java.lang.Object:A-" title="class or interface in java.util"><code>Arrays.deepHashCode(java.lang.Object[])</code></a> if the array is
  multidimensional.
 
  <p>If there is only one argument to the hashcode method or the instance hashcode method is
- used, replaces the whole method invocation.  If there are multiple arguments, wraps any that
- are of array type with the appropriate <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true" title="class or interface in java.util"><code>Arrays</code></a> hashcode method.</div>
+ used, replaces the whole method invocation. If there are multiple arguments, wraps any that are
+ of array type with the appropriate <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true" title="class or interface in java.util"><code>Arrays</code></a> hashcode method.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>

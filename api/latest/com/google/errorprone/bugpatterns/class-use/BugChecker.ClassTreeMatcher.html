@@ -112,6 +112,10 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.overloading">com.google.errorprone.bugpatterns.overloading</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -151,29 +155,50 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ComparableAndComparator.html" title="class in com.google.errorprone.bugpatterns">ComparableAndComparator</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ConstructorInvokesOverridable.html" title="class in com.google.errorprone.bugpatterns">ConstructorInvokesOverridable</a></span></code>
+<div class="block">Looks for invocations of overridable methods from constructors and similar scopes (instance
+ initializers and variables).</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ConstructorLeaksThis.html" title="class in com.google.errorprone.bugpatterns">ConstructorLeaksThis</a></span></code>
+<div class="block">Looks for constructors from which the 'this' reference escapes.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/DepAnn.html" title="class in com.google.errorprone.bugpatterns">DepAnn</a></span></code>
 <div class="block">Matches the behaviour of the javac dep-ann Xlint warning.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/EqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">EqualsHashCode</a></span></code>
 <div class="block">Classes that override equals should also override hashCode.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceClash</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InputStreamSlowMultibyteRead.html" title="class in com.google.errorprone.bugpatterns">InputStreamSlowMultibyteRead</a></span></code>
 <div class="block">Checks that InputStreams should override int read(byte[], int, int);</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IterableAndIterator.html" title="class in com.google.errorprone.bugpatterns">IterableAndIterator</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JavaLangClash.html" title="class in com.google.errorprone.bugpatterns">JavaLangClash</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
@@ -185,11 +210,19 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/OvershadowingSubclassFields.html" title="class in com.google.errorprone.bugpatterns">OvershadowingSubclassFields</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TypeParameterShadowing.html" title="class in com.google.errorprone.bugpatterns">TypeParameterShadowing</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/UngroupedOverloads.html" title="class in com.google.errorprone.bugpatterns">UngroupedOverloads</a></span></code>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -293,6 +326,26 @@
 <div class="block">This checker matches iff *both* of the following conditions are true: 1) The class is assisted:
  a) If there is a constructor that is annotated with @Inject and that constructor has at least one
  parameter that is annotated with @Assisted.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.overloading">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a> in <a href="../../../../../com/google/errorprone/bugpatterns/overloading/package-summary.html">com.google.errorprone.bugpatterns.overloading</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/bugpatterns/overloading/package-summary.html">com.google.errorprone.bugpatterns.overloading</a> that implement <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/overloading/InconsistentOverloads.html" title="class in com.google.errorprone.bugpatterns.overloading">InconsistentOverloads</a></span></code>
+<div class="block">A <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that detects inconsistently overloaded methods in Java classes.</div>
 </td>
 </tr>
 </tbody>

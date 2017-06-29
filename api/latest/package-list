@@ -4,12 +4,14 @@ com.google.errorprone.annotations.concurrent
 com.google.errorprone.apply
 com.google.errorprone.bugpatterns
 com.google.errorprone.bugpatterns.android
+com.google.errorprone.bugpatterns.argumentselectiondefects
 com.google.errorprone.bugpatterns.collectionincompatibletype
 com.google.errorprone.bugpatterns.formatstring
 com.google.errorprone.bugpatterns.inject
 com.google.errorprone.bugpatterns.inject.dagger
 com.google.errorprone.bugpatterns.inject.guice
 com.google.errorprone.bugpatterns.nullness
+com.google.errorprone.bugpatterns.overloading
 com.google.errorprone.bugpatterns.threadsafety
 com.google.errorprone.dataflow
 com.google.errorprone.dataflow.nullnesspropagation
@@ -17,6 +19,7 @@ com.google.errorprone.fixes
 com.google.errorprone.internal
 com.google.errorprone.matchers
 com.google.errorprone.matchers.method
+com.google.errorprone.names
 com.google.errorprone.predicates
 com.google.errorprone.predicates.type
 com.google.errorprone.refaster

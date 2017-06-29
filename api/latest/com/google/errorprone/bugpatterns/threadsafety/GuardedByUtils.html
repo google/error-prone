@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9};
+var methods = {"i0":9,"i1":9,"i2":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -151,11 +151,17 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static com.sun.tools.javac.code.Symbol</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#bindGuardedByString-com.sun.source.tree.Tree-java.lang.String-com.google.errorprone.VisitorState-">bindGuardedByString</a></span>(com.sun.source.tree.Tree&nbsp;tree,
+                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;guard,
+                   <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#isGuardedByValid-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">isGuardedByValid</a></span>(com.sun.source.tree.Tree&nbsp;tree,
                 <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.tree.JCTree.JCExpression</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#parseString-java.lang.String-com.sun.tools.javac.util.Context-">parseString</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;guardedByString,
            com.sun.tools.javac.util.Context&nbsp;context)</code>&nbsp;</td>
@@ -212,11 +218,22 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <a name="isGuardedByValid-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>isGuardedByValid</h4>
 <pre>public static&nbsp;com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult&nbsp;isGuardedByValid(com.sun.source.tree.Tree&nbsp;tree,
                                                                                                                        <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+</li>
+</ul>
+<a name="bindGuardedByString-com.sun.source.tree.Tree-java.lang.String-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>bindGuardedByString</h4>
+<pre>public static&nbsp;com.sun.tools.javac.code.Symbol&nbsp;bindGuardedByString(com.sun.source.tree.Tree&nbsp;tree,
+                                                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;guard,
+                                                                  <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</pre>
 </li>
 </ul>
 </li>

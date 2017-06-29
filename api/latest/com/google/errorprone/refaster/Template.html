@@ -352,8 +352,8 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <h4>expectedTypes</h4>
 <pre>protected&nbsp;com.sun.tools.javac.util.List&lt;com.sun.tools.javac.code.Type&gt;&nbsp;expectedTypes(<a href="../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)
                                                                               throws <a href="../../../../com/google/errorprone/refaster/CouldNotResolveImportException.html" title="class in com.google.errorprone.refaster">CouldNotResolveImportException</a></pre>
-<div class="block">Returns a list of the expected types to be matched.  This consists of the argument types from
- the @BeforeTemplate method, concatenated with the return types of expression placeholders, 
+<div class="block">Returns a list of the expected types to be matched. This consists of the argument types from
+ the @BeforeTemplate method, concatenated with the return types of expression placeholders,
  sorted by the name of the placeholder method.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -368,10 +368,9 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <li class="blockList">
 <h4>actualTypes</h4>
 <pre>protected&nbsp;com.sun.tools.javac.util.List&lt;com.sun.tools.javac.code.Type&gt;&nbsp;actualTypes(<a href="../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</pre>
-<div class="block">Returns a list of the actual types to be matched.  This consists of the types of the 
- expressions bound to the @BeforeTemplate method parameters, concatenated with the types
- of the expressions bound to expression placeholders, sorted by the name of the placeholder 
- method.</div>
+<div class="block">Returns a list of the actual types to be matched. This consists of the types of the expressions
+ bound to the @BeforeTemplate method parameters, concatenated with the types of the expressions
+ bound to expression placeholders, sorted by the name of the placeholder method.</div>
 </li>
 </ul>
 <a name="typecheck-com.google.errorprone.refaster.Unifier-com.google.errorprone.refaster.Inliner-com.sun.tools.javac.util.Warner-com.sun.tools.javac.util.List-com.sun.tools.javac.util.List-">

@@ -97,13 +97,10 @@
  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#SOURCE" title="class or interface in java.lang.annotation">SOURCE</a>)
 public @interface <span class="memberNameLabel">AlsoNegation</span></pre>
 <div class="block">Indicates that Refaster should, additionally, refactor the negation of this rule and its
- corresponding before templates. For example, given a <code>BeforeTemplate</code> with the code
- <code>str.length() == 0</code> and an <code>@AfterTemplate @AlsoNegation</code> with the code
- <code>str.isEmpty()</code>, Refaster would also rewrite <code>str.length() != 0</code> as
- <code>!str.isEmpty()</code>.
+ corresponding before templates. For example, given a <code>BeforeTemplate</code> with the code <code>str.length() == 0</code> and an <code>@AfterTemplate @AlsoNegation</code> with the code <code>str.isEmpty()</code>, Refaster would also rewrite <code>str.length() != 0</code> as <code>!str.isEmpty()</code>.
 
- <p>If this annotation is applied, all <code>BeforeTemplate</code> and <code>AfterTemplate</code>
- templates must be expression templates with boolean return type.</div>
+ <p>If this annotation is applied, all <code>BeforeTemplate</code> and <code>AfterTemplate</code> templates
+ must be expression templates with boolean return type.</div>
 </li>
 </ul>
 </div>

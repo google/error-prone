@@ -49,7 +49,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../com/google/errorprone/ErrorProneExternalCompilerAdapter.html" title="class in com.google.errorprone"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../com/google/errorprone/ErrorProneFlags.Builder.html" title="class in com.google.errorprone"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../com/google/errorprone/ErrorProneJavaCompiler.html" title="class in com.google.errorprone"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -179,7 +179,7 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;com.sun.tools.javac.file.BaseFileManager</h3>
-<code>autoClose, charset, classLoaderClass, contentCache, deferredCloseTimeout, locations, log, options</code></li>
+<code>autoClose, charset, classLoaderClass, contentCache, deferredCloseTimeout, locations, log, multiReleaseValue, options</code></li>
 </ul>
 </li>
 </ul>
@@ -257,14 +257,14 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.sun.tools.javac.file.JavacFileManager</h3>
-<code>asPath, close, flush, getClassLoader, getFileForInput, getFileForOutput, getFileForOutput, getJavaFileForInput, getJavaFileForOutput, getJavaFileObject, getJavaFileObject, getJavaFileObjects, getJavaFileObjects, getJavaFileObjects, getJavaFileObjectsFromFiles, getJavaFileObjectsFromPaths, getJavaFileObjectsFromStrings, getLocation, getLocationAsPaths, getMessage, getRelativeName, hasLocation, inferBinaryName, isRelativeUri, isRelativeUri, isSameFile, isSymbolFileEnabled, list, preRegister, setContext, setLocation, setLocationFromPaths, setSymbolFileEnabled, testName, toArray</code></li>
+<code>asPath, close, flush, getClassLoader, getFileForInput, getFileForOutput, getFileForOutput, getJavaFileForInput, getJavaFileForOutput, getJavaFileObject, getJavaFileObject, getJavaFileObjects, getJavaFileObjects, getJavaFileObjects, getJavaFileObjectsFromFiles, getJavaFileObjectsFromPaths, getJavaFileObjectsFromStrings, getLocation, getLocationAsPaths, getLocationForModule, getLocationForModule, getMessage, getRelativeName, getServiceLoader, hasLocation, inferBinaryName, inferModuleName, isRelativeUri, isRelativeUri, isSameFile, isSymbolFileEnabled, list, listLocationsForModules, preRegister, setContext, setLocation, setLocationForModule, setLocationFromPaths, setPathFactory, setSymbolFileEnabled, testName, toArray</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.sun.tools.javac.file.BaseFileManager">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.sun.tools.javac.file.BaseFileManager</h3>
-<code>cache, createLocations, decode, deferredClose, flushCache, getCachedContent, getClassLoader, getDecoder, getEncodingName, getKind, getKind, getSource, handleOption, handleOption, handleOptions, isDefaultBootClassPath, isSupportedOption, makeByteBuffer, nullCheck, nullCheck, recycleByteBuffer</code></li>
+<code>cache, createLocations, decode, deferredClose, flushCache, getCachedContent, getClassLoader, getDecoder, getEncodingName, getKind, getKind, handleOption, handleOption, handleOptions, isDefaultBootClassPath, isSupportedOption, makeByteBuffer, nullCheck, nullCheck, recycleByteBuffer</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -311,7 +311,7 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <div class="block">Constructs an ErrorProneInMemoryFileManager instance.
 
  <p>Instances constructed with this constructor may not use the <a href="../../../com/google/errorprone/ErrorProneInMemoryFileManager.html#forResource-java.lang.String-"><code>forResource(String)</code></a>
- method to create a JavaFileObject from a source file on disk.  If you wish to use that method,
+ method to create a JavaFileObject from a source file on disk. If you wish to use that method,
  use the <a href="../../../com/google/errorprone/ErrorProneInMemoryFileManager.html#ErrorProneInMemoryFileManager-java.lang.Class-"><code>ErrorProneInMemoryFileManager(Class)</code></a> constructor instead.</div>
 </li>
 </ul>
@@ -418,7 +418,7 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../com/google/errorprone/ErrorProneExternalCompilerAdapter.html" title="class in com.google.errorprone"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../com/google/errorprone/ErrorProneFlags.Builder.html" title="class in com.google.errorprone"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../com/google/errorprone/ErrorProneJavaCompiler.html" title="class in com.google.errorprone"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

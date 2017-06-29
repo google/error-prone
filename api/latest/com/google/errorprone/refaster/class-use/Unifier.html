@@ -210,8 +210,8 @@
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Unifiable.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/Unifiable.html#unify-T-com.google.errorprone.refaster.Unifier-">unify</a></span>(<a href="../../../../../com/google/errorprone/refaster/Unifiable.html" title="type parameter in Unifiable">T</a>&nbsp;target,
      <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>
-<div class="block">Returns all valid unification paths (if any) from this <code>Unifier</code> that unify
- this with <code>target</code>.</div>
+<div class="block">Returns all valid unification paths (if any) from this <code>Unifier</code> that unify this with
+ <code>target</code>.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -349,6 +349,10 @@
              <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">UPlaceholderExpression.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UPlaceholderExpression.html#reverify-com.google.errorprone.refaster.Unifier-">reverify</a></span>(<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Template.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/Template.html#typecheck-com.google.errorprone.refaster.Unifier-com.google.errorprone.refaster.Inliner-com.sun.tools.javac.util.Warner-com.sun.tools.javac.util.List-com.sun.tools.javac.util.List-">typecheck</a></span>(<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
          <a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
@@ -356,35 +360,35 @@
          com.sun.tools.javac.util.List&lt;com.sun.tools.javac.code.Type&gt;&nbsp;expectedTypes,
          com.sun.tools.javac.util.List&lt;com.sun.tools.javac.code.Type&gt;&nbsp;actualTypes)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">ExpressionTemplate.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/ExpressionTemplate.html#unify-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.refaster.Unifier-">unify</a></span>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;target,
      <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">StringName.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/StringName.html#unify-javax.lang.model.element.Name-com.google.errorprone.refaster.Unifier-">unify</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Name.html?is-external=true" title="class or interface in javax.lang.model.element">Name</a>&nbsp;target,
      <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UTree.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UTree.html#unify-com.sun.source.tree.Tree-com.google.errorprone.refaster.Unifier-">unify</a></span>(com.sun.source.tree.Tree&nbsp;target,
      <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Unifiable.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/Unifiable.html#unify-T-com.google.errorprone.refaster.Unifier-">unify</a></span>(<a href="../../../../../com/google/errorprone/refaster/Unifiable.html" title="type parameter in Unifiable">T</a>&nbsp;target,
      <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>
-<div class="block">Returns all valid unification paths (if any) from this <code>Unifier</code> that unify
- this with <code>target</code>.</div>
+<div class="block">Returns all valid unification paths (if any) from this <code>Unifier</code> that unify this with
+ <code>target</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UType.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UType.html#unify-com.sun.tools.javac.code.Type-com.google.errorprone.refaster.Unifier-">unify</a></span>(com.sun.tools.javac.code.Type&nbsp;target,
      <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static &lt;T,U extends <a href="../../../../../com/google/errorprone/refaster/Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Unifier.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/Unifier.html#unifyList-com.google.errorprone.refaster.Unifier-java.util.List-java.util.List-">unifyList</a></span>(<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;U&gt;&nbsp;toUnify,
@@ -393,7 +397,7 @@
  specified lists, disallowing varargs.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static &lt;T,U extends <a href="../../../../../com/google/errorprone/refaster/Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Unifier.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/Unifier.html#unifyList-com.google.errorprone.refaster.Unifier-java.util.List-java.util.List-boolean-">unifyList</a></span>(<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;U&gt;&nbsp;toUnify,
@@ -403,73 +407,73 @@
  specified lists, allowing varargs if and only if <code>allowVarargs</code> is true.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static &lt;T,U extends <a href="../../../../../com/google/errorprone/refaster/Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">Unifier.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/Unifier.html#unifyNullable-com.google.errorprone.refaster.Unifier-U-T-">unifyNullable</a></span>(<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
              U&nbsp;unifiable,
              T&nbsp;target)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UClassType.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UClassType.html#visitClassType-com.sun.tools.javac.code.Type.ClassType-com.google.errorprone.refaster.Unifier-">visitClassType</a></span>(com.sun.tools.javac.code.Type.ClassType&nbsp;classType,
               <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UIntersectionClassType.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UIntersectionClassType.html#visitClassType-com.sun.tools.javac.code.Type.ClassType-com.google.errorprone.refaster.Unifier-">visitClassType</a></span>(com.sun.tools.javac.code.Type.ClassType&nbsp;t,
               <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UForAll.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UForAll.html#visitForAll-com.sun.tools.javac.code.Type.ForAll-com.google.errorprone.refaster.Unifier-">visitForAll</a></span>(com.sun.tools.javac.code.Type.ForAll&nbsp;target,
            <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UFreeIdent.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UFreeIdent.html#visitIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.refaster.Unifier-">visitIdentifier</a></span>(com.sun.source.tree.IdentifierTree&nbsp;node,
                <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UMemberSelect.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UMemberSelect.html#visitIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.refaster.Unifier-">visitIdentifier</a></span>(com.sun.source.tree.IdentifierTree&nbsp;ident,
                <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">ULiteral.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/ULiteral.html#visitLiteral-com.sun.source.tree.LiteralTree-com.google.errorprone.refaster.Unifier-">visitLiteral</a></span>(com.sun.source.tree.LiteralTree&nbsp;literal,
             <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UMemberSelect.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UMemberSelect.html#visitMemberSelect-com.sun.source.tree.MemberSelectTree-com.google.errorprone.refaster.Unifier-">visitMemberSelect</a></span>(com.sun.source.tree.MemberSelectTree&nbsp;fieldAccess,
                  <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UMethodInvocation.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UMethodInvocation.html#visitMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.refaster.Unifier-">visitMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocation,
                      <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UMethodType.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UMethodType.html#visitMethodType-com.sun.tools.javac.code.Type.MethodType-com.google.errorprone.refaster.Unifier-">visitMethodType</a></span>(com.sun.tools.javac.code.Type.MethodType&nbsp;methodTy,
                <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UReturn.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UReturn.html#visitReturn-com.sun.source.tree.ReturnTree-com.google.errorprone.refaster.Unifier-">visitReturn</a></span>(com.sun.source.tree.ReturnTree&nbsp;ret,
            <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UType.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UType.html#visitType-com.sun.tools.javac.code.Type-com.google.errorprone.refaster.Unifier-">visitType</a></span>(com.sun.tools.javac.code.Type&nbsp;t,
          <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UTypeVar.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UTypeVar.html#visitType-com.sun.tools.javac.code.Type-com.google.errorprone.refaster.Unifier-">visitType</a></span>(com.sun.tools.javac.code.Type&nbsp;target,
          <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">UVariableDecl.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UVariableDecl.html#visitVariable-com.sun.source.tree.VariableTree-com.google.errorprone.refaster.Unifier-">visitVariable</a></span>(com.sun.source.tree.VariableTree&nbsp;decl,
              <a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>

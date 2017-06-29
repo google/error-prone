@@ -97,12 +97,17 @@
  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#CLASS" title="class or interface in java.lang.annotation">CLASS</a>)
  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/ElementType.html?is-external=true#ANNOTATION_TYPE" title="class or interface in java.lang.annotation">ANNOTATION_TYPE</a>)
 public @interface <span class="memberNameLabel">RequiredModifiers</span></pre>
-<div class="block">Annotation declaring that the target annotation requires all the specified
- modifiers. For example, an annotation declared as: <pre>
+<div class="block">Annotation declaring that the target annotation requires all the specified modifiers. For
+ example, an annotation declared as:
+
+ <pre>
   @RequiredModifiers(Modifier.PUBLIC)
   @interface MyAnnotation {}
  </pre>
- <p>will be considered illegal when used on non-public elements such as: <pre>
+
+ <p>will be considered illegal when used on non-public elements such as:
+
+ <pre>
   @MyAnnotation void foo() {}
  </pre></div>
 <dl>
@@ -155,11 +160,11 @@ public @interface <span class="memberNameLabel">RequiredModifiers</span></pre>
 <li class="blockList">
 <h4>value</h4>
 <pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Modifier.html?is-external=true" title="class or interface in javax.lang.model.element">Modifier</a>[]&nbsp;value</pre>
-<div class="block">The required modifiers. The annotated element is illegal if any one or more
- of these modifiers are absent.
+<div class="block">The required modifiers. The annotated element is illegal if any one or more of these modifiers
+ are absent.
 
- <p>Empty array has the same effect as not applying this annotation at all;
- duplicates are allowed but have no effect.</div>
+ <p>Empty array has the same effect as not applying this annotation at all; duplicates are
+ allowed but have no effect.</div>
 </li>
 </ul>
 </li>

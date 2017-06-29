@@ -154,13 +154,7 @@ implements org.checkerframework.dataflow.analysis.AbstractValue&lt;<a href="../.
 </tr>
 <tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#NULLABLE">NULLABLE</a></span></code>
-<div class="block">The lattice for nullness looks like:
-
-        Nullable
-       /        \
-   Null          Non-null
-        \      /
-         Bottom</div>
+<div class="block">The lattice for nullness looks like:</div>
 </td>
 </tr>
 </table>
@@ -248,11 +242,13 @@ the order they are declared.</div>
 <pre>public static final&nbsp;<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a> NULLABLE</pre>
 <div class="block">The lattice for nullness looks like:
 
+ <pre>
         Nullable
        /        \
    Null          Non-null
         \      /
-         Bottom</div>
+         Bottom
+ </pre></div>
 </li>
 </ul>
 <a name="NULL">
@@ -370,9 +366,8 @@ not permitted.)</div>
  union these complement sets over all possible values of <code>var2</code>, the set that results is
  what this method returns, assuming that <code>this</code> is the <code>Nullness</code> of <code>var2</code>.
 
- <p>Example 1: Suppose <code>nv2 == NULL</code>. Then <code>var2</code> can have exactly one value,
- <code>null</code>, and <code>var1</code> must have a value in the set of all values except <code>null</code>.
- That set is exactly <code>NONNULL</code>.
+ <p>Example 1: Suppose <code>nv2 == NULL</code>. Then <code>var2</code> can have exactly one value, <code>null</code>, and <code>var1</code> must have a value in the set of all values except <code>null</code>. That
+ set is exactly <code>NONNULL</code>.
 
  <p>Example 2: Suppose <code>nv2 == NONNULL</code>. Then <code>var2</code> can have any value except
  <code>null</code>. Suppose <code>var2</code> has value <code>"foo"</code>. Then <code>var1</code> must have a value

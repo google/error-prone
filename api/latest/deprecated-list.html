@@ -75,6 +75,7 @@
 <ul>
 <li><a href="#method">Deprecated Methods</a></li>
 <li><a href="#constructor">Deprecated Constructors</a></li>
+<li><a href="#annotation.type.member">Deprecated Annotation Type Elements</a></li>
 </ul>
 </div>
 <div class="contentContainer"><a name="method">
@@ -104,16 +105,6 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><a href="com/google/errorprone/fixes/SuggestedFix.html#qualifyType-com.sun.tools.javac.tree.TreeMaker-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">com.google.errorprone.fixes.SuggestedFix.qualifyType(TreeMaker, SuggestedFix.Builder, Symbol.TypeSymbol)</a>
-<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-javax.lang.model.type.TypeMirror-"><code>SuggestedFixes.qualifyType(com.google.errorprone.VisitorState, com.google.errorprone.fixes.SuggestedFix.Builder, javax.lang.model.type.TypeMirror)</code></a></span></div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colOne"><a href="com/google/errorprone/fixes/SuggestedFix.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol.TypeSymbol-">com.google.errorprone.fixes.SuggestedFix.qualifyType(VisitorState, SuggestedFix.Builder, Symbol.TypeSymbol)</a>
-<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-javax.lang.model.type.TypeMirror-"><code>SuggestedFixes.qualifyType(com.google.errorprone.VisitorState, com.google.errorprone.fixes.SuggestedFix.Builder, javax.lang.model.type.TypeMirror)</code></a></span></div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colOne"><a href="com/google/errorprone/fixes/SuggestedFix.html#removeModifier-com.sun.source.tree.Tree-javax.lang.model.element.Modifier-com.google.errorprone.VisitorState-">com.google.errorprone.fixes.SuggestedFix.removeModifier(Tree, Modifier, VisitorState)</a>
 <div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/fixes/SuggestedFixes.html#removeModifiers-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-javax.lang.model.element.Modifier...-"><code>SuggestedFixes.removeModifiers(com.sun.source.tree.Tree, com.google.errorprone.VisitorState, javax.lang.model.element.Modifier...)</code></a></span></div>
 </td>
@@ -136,6 +127,40 @@
 <tr class="altColor">
 <td class="colOne"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#Builder--">com.google.errorprone.ErrorProneCompiler.Builder()</a>
 <div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/ErrorProneCompiler.html#builder--"><code>ErrorProneCompiler.builder()</code></a></span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="com/google/errorprone/matchers/Description.html#Description-com.sun.source.tree.Tree-java.lang.String-com.google.errorprone.fixes.Fix-com.google.errorprone.BugPattern.SeverityLevel-">com.google.errorprone.matchers.Description(Tree, String, Fix, BugPattern.SeverityLevel)</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationChecker.html#ImmutableAnnotationChecker--">com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker()</a></td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html#ImmutableChecker--">com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker()</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableEnumChecker.html#ImmutableEnumChecker--">com.google.errorprone.bugpatterns.threadsafety.ImmutableEnumChecker()</a></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<a name="annotation.type.member">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<table class="deprecatedSummary" border="0" cellpadding="3" cellspacing="0" summary="Deprecated Annotation Type Elements table, listing deprecated annotation type elements, and an explanation">
+<caption><span>Deprecated Annotation Type Elements</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Annotation Type Element and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="com/google/errorprone/BugPattern.html#category--">com.google.errorprone.BugPattern.category</a>
+<div class="block"><span class="deprecationComment">This category field hasn't provided much value, as the 'problem domain' of each
+     BugChecker is evident from the checker itself. We've introduced <a href="com/google/errorprone/BugPattern.html#tags--"><code>BugPattern.tags()</code></a> as a means to
+     apply general tags to checks.</span></div>
 </td>
 </tr>
 </tbody>

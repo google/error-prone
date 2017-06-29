@@ -1,6 +1,7 @@
 ---
 title: StaticOrDefaultInterfaceMethod
-summary: Static and default methods in interfaces are not allowed in android builds.
+summary: 'Static and default interface methods are not natively supported on older
+  Android devices. '
 layout: bugpattern
 category: ANDROID
 severity: ERROR
@@ -12,7 +13,15 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
+Static and default interface methods are not natively supported on Android
+versions earlier than 7.0. Enable this check for compatibility with older
+devices. See [Android Java 8
+Documentation](https://developer.android.com/guide/platform/j8-jack.html).
 
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("StaticOrDefaultInterfaceMethod")` annotation to the enclosing element.
+
+To declare default or static methods in interfaces, add a
+`@SuppressWarnings("StaticOrDefaultInterfaceMethod")` annotation to the
+enclosing element.
+

@@ -116,9 +116,8 @@ var activeTableTab = "activeTableTab";
 <pre>public final class <span class="typeNameLabel">DescriptionBasedDiff</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
 implements <a href="../../../../com/google/errorprone/DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>, <a href="../../../../com/google/errorprone/apply/Diff.html" title="interface in com.google.errorprone.apply">Diff</a></pre>
-<div class="block">Implementation of a <a href="../../../../com/google/errorprone/apply/Diff.html" title="interface in com.google.errorprone.apply"><code>Diff</code></a> that performs the modifications that are passed to its
- <a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html#onDescribed-com.google.errorprone.matchers.Description-"><code>onDescribed(com.google.errorprone.matchers.Description)</code></a> method, with no formatting.
- 
+<div class="block">Implementation of a <a href="../../../../com/google/errorprone/apply/Diff.html" title="interface in com.google.errorprone.apply"><code>Diff</code></a> that performs the modifications that are passed to its <a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html#onDescribed-com.google.errorprone.matchers.Description-"><code>onDescribed(com.google.errorprone.matchers.Description)</code></a> method, with no formatting.
+
  <p>If imports are changed, they are resorted as per Google Java style.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
@@ -165,11 +164,13 @@ implements <a href="../../../../com/google/errorprone/DescriptionListener.html" 
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html#create-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-">create</a></span>(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html#create-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-com.google.errorprone.apply.ImportOrganizer-">create</a></span>(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit,
+      <a href="../../../../com/google/errorprone/apply/ImportOrganizer.html" title="interface in com.google.errorprone.apply">ImportOrganizer</a>&nbsp;importOrganizer)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html#createIgnoringOverlaps-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-">createIgnoringOverlaps</a></span>(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html#createIgnoringOverlaps-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-com.google.errorprone.apply.ImportOrganizer-">createIgnoringOverlaps</a></span>(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit,
+                      <a href="../../../../com/google/errorprone/apply/ImportOrganizer.html" title="interface in com.google.errorprone.apply">ImportOrganizer</a>&nbsp;importOrganizer)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
@@ -213,22 +214,24 @@ implements <a href="../../../../com/google/errorprone/DescriptionListener.html" 
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="create-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-">
+<a name="create-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-com.google.errorprone.apply.ImportOrganizer-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>create</h4>
-<pre>public static&nbsp;<a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a>&nbsp;create(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</pre>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a>&nbsp;create(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit,
+                                          <a href="../../../../com/google/errorprone/apply/ImportOrganizer.html" title="interface in com.google.errorprone.apply">ImportOrganizer</a>&nbsp;importOrganizer)</pre>
 </li>
 </ul>
-<a name="createIgnoringOverlaps-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-">
+<a name="createIgnoringOverlaps-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-com.google.errorprone.apply.ImportOrganizer-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createIgnoringOverlaps</h4>
-<pre>public static&nbsp;<a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a>&nbsp;createIgnoringOverlaps(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</pre>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a>&nbsp;createIgnoringOverlaps(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit,
+                                                          <a href="../../../../com/google/errorprone/apply/ImportOrganizer.html" title="interface in com.google.errorprone.apply">ImportOrganizer</a>&nbsp;importOrganizer)</pre>
 </li>
 </ul>
 <a name="getRelevantFileName--">

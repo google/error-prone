@@ -18,12 +18,17 @@ The JSR 305 `@CheckReturnValue` annotation marks methods whose return values
 should be checked. This error is triggered when one of these methods is called
 but the result is not used.
 
-`@CheckReturnValue` may be applied to a class or package to indicate that all
+`@CheckReturnValue` may be applied to a class or package [^package-info] to
+indicate that all
 methods in that class or package must have their return values checked. For
 convenience, we provide an annotation, `@CanIgnoreReturnValue`, to exempt
 specific methods or classes from this behavior. `@CanIgnoreReturnValue` is
 available from the Error Prone annotations package,
 `com.google.errorprone.annotations`.
+
+[^package-info]: To annotate a package, create a
+    `package-info.java` file in the package directory, add a package statement,
+    and annotate the package statement.
 
 If you really want to ignore the return value of a method annotated with
 `@CheckReturnValue`, a cleaner alternative to `@SuppressWarnings` is to assign
@@ -88,34 +93,55 @@ package com.google.errorprone.bugpatterns.testdata;
 import javax.annotation.CheckReturnValue;
 import org.junit.rules.ExpectedException;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class CheckReturnValuePositiveCases {
-  
+
   IntValue intValue = new IntValue(0);
-  
+
   @CheckReturnValue
   private int increment(int bar) {
     return bar + 1;
   }
-  
+
   public void foo() {
     int i = 1;
     // BUG: Diagnostic contains: remove this line
     increment(i);
     System.out.println(i);
   }
-  
+
   public void bar() {
     // BUG: Diagnostic contains: this.intValue = this.intValue.increment()
     this.intValue.increment();
   }
-  
+
   public void testIntValue() {
     IntValue value = new IntValue(10);
     // BUG: Diagnostic contains: value = value.increment()
     value.increment();
+  }
+
+  private void callRunnable(Runnable runnable) {
+    runnable.run();
+  }
+
+  public void testResolvedToVoidLambda() {
+    // BUG: Diagnostic contains: Ignored return value
+    callRunnable(() -> this.intValue.increment());
+  }
+
+  public void testResolvedToVoidMethodReference() {
+    // TODO(b/62960293): This should be an error too, but it's tricky to adapt existing code to
+    // catch it.
+    callRunnable(this.intValue::increment);
+  }
+
+  public void testRegularLambda() {
+    callRunnable(
+        () -> {
+          // BUG: Diagnostic contains: Ignored return value
+          this.intValue.increment();
+        });
   }
 
   public void testBeforeAndAfterRule() {
@@ -147,12 +173,10 @@ public class CheckReturnValuePositiveCases {
      */
     new MyObject() {};
 
-    class MySubObject1 extends MyObject {
-    }
+    class MySubObject1 extends MyObject {}
 
     class MySubObject2 extends MyObject {
-      MySubObject2() {
-      }
+      MySubObject2() {}
     }
 
     class MySubObject3 extends MyObject {
@@ -164,27 +188,27 @@ public class CheckReturnValuePositiveCases {
     // TODO(cpovirk): This one probably ought to be treated as a bug:
     new MyObject();
   }
-  
+
   private class IntValue {
     final int i;
-    
+
     public IntValue(int i) {
       this.i = i;
     }
-    
+
     @CheckReturnValue
     public IntValue increment() {
       return new IntValue(i + 1);
     }
-    
+
     public void increment2() {
       // BUG: Diagnostic contains: remove this line
       this.increment();
     }
-    
+
     public void increment3() {
       // BUG: Diagnostic contains: remove this line
-     increment();
+      increment();
     }
   }
 
@@ -194,13 +218,14 @@ public class CheckReturnValuePositiveCases {
   }
 
   private abstract static class LB1<A> {}
+
   private static class LB2<A> extends LB1<A> {
-    
+
     @CheckReturnValue
     public static <T> LB2<T> lb1() {
-        return new LB2<T>();
+      return new LB2<T>();
     }
-    
+
     public static <T> LB2<T> lb2() {
       // BUG: Diagnostic contains: remove this line
       lb1();
@@ -232,21 +257,37 @@ __CheckReturnValueNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+import java.util.function.Supplier;
+import javax.annotation.CheckReturnValue;
+
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class CheckReturnValueNegativeCases {
-  
+
   public void test1() {
     test2();
     Object obj = new String();
     obj.toString();
   }
-  
-  @SuppressWarnings("foo")  // wrong annotation
-  public void test2() { 
+
+  @SuppressWarnings("foo") // wrong annotation
+  public void test2() {}
+
+  @CheckReturnValue
+  private int mustCheck() {
+    return 5;
   }
-  
+
+  private void callSupplier(Supplier<Integer> supplier) {
+    supplier.get();
+  }
+
+  public void testResolvedToVoidLambda() {
+    callSupplier(() -> mustCheck());
+  }
+
+  public void testMethodReference() {
+    callSupplier(this::mustCheck);
+  }
 }
 {% endhighlight %}
 

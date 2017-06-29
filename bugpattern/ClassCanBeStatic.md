@@ -41,11 +41,9 @@ __ClassCanBeStaticPositiveCase1.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** @author alexloh@google.com (Alex Loh) */
 public class ClassCanBeStaticPositiveCase1 {
-  
+
   int outerVar;
 
   // Non-static inner class that does not use outer scope
@@ -77,9 +75,7 @@ __ClassCanBeStaticPositiveCase2.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** @author alexloh@google.com (Alex Loh) */
 public class ClassCanBeStaticPositiveCase2 {
 
   int outerVar1;
@@ -90,6 +86,7 @@ public class ClassCanBeStaticPositiveCase2 {
   private /* COMMENT */ final class Inner2 {
     int outerVar1;
     int innerVar = outerVar1;
+
     int localMethod(int outerVar2) {
       return outerVar2;
     }
@@ -118,9 +115,7 @@ __ClassCanBeStaticPositiveCase3.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** @author alexloh@google.com (Alex Loh) */
 public class ClassCanBeStaticPositiveCase3 {
 
   static int outerVar;
@@ -129,8 +124,7 @@ public class ClassCanBeStaticPositiveCase3 {
   static class NonStaticOuter {
     int nonStaticVar = outerVar;
     // BUG: Diagnostic contains: public static class Inner3
-    public class Inner3 {
-    }
+    public class Inner3 {}
   }
 }
 {% endhighlight %}
@@ -157,11 +151,10 @@ __ClassCanBeStaticNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- */
+/** @author alexloh@google.com (Alex Loh) */
 public class ClassCanBeStaticNegativeCases {
   int outerVar;
+
   public int outerMethod() {
     return 0;
   }
@@ -189,20 +182,18 @@ public class ClassCanBeStaticNegativeCases {
   // outer class is a nested but non-static, and thus cannot have a static class
   class NonStaticOuter {
     int nonStaticVar = outerVar;
-    class Inner5 {
-    }
+
+    class Inner5 {}
   }
 
   // inner class is local and thus cannot be static
   void foo() {
-    class Inner6 {
-    }
+    class Inner6 {}
   }
 
   // inner class is anonymous and thus cannot be static
   Object bar() {
-    return new Object() {
-    };
+    return new Object() {};
   }
 
   // enums are already static
@@ -216,8 +207,8 @@ public class ClassCanBeStaticNegativeCases {
   void baz() {
     class NonStaticOuter2 {
       int nonStaticVar = outerVar;
-      class Inner8 {
-      }
+
+      class Inner8 {}
     }
   }
 
@@ -225,6 +216,7 @@ public class ClassCanBeStaticNegativeCases {
   public static interface OuterInter {
     int outerInterMethod();
   }
+
   abstract static class AbstractOuter implements OuterInter {
     class Inner8 {
       int localMethod() {

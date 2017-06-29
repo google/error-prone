@@ -97,22 +97,19 @@
  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation">RUNTIME</a>)
  <a href="../../../../com/google/errorprone/annotations/IncompatibleModifiers.html" title="annotation in com.google.errorprone.annotations">@IncompatibleModifiers</a>(<a href="../../../../com/google/errorprone/annotations/IncompatibleModifiers.html#value--">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Modifier.html?is-external=true#FINAL" title="class or interface in javax.lang.model.element">FINAL</a>)
 public @interface <span class="memberNameLabel">Var</span></pre>
-<div class="block">The parameter or local variable to which this annotation is applied
- is non-final.
+<div class="block">The parameter or local variable to which this annotation is applied is non-final.
 
- <p>Most references are never modified, and accidentally modifying a reference
- is a potential source of bugs. To prevent accidental modifications, the
- accompanying Error Prone <a href="http://errorprone.info/bugpattern/Var">check</a>
- prevents parameters and local variables from being modified unless
- they are explicitly annotated with @Var.
+ <p>Most references are never modified, and accidentally modifying a reference is a potential
+ source of bugs. To prevent accidental modifications, the accompanying Error Prone <a
+ href="http://errorprone.info/bugpattern/Var">check</a> prevents parameters and local variables
+ from being modified unless they are explicitly annotated with @Var.
 
- <p>Since Java 8 can infer whether a local variable or parameter is effectively
- <code>final</code>, and <code>@Var</code> makes it clear whether any variable is non-
- <code>final</code>, explicitly marking local variables and parameters as
- <code>final</code> is discouraged.
+ <p>Since Java 8 can infer whether a local variable or parameter is effectively <code>final</code>, and
+ <code>@Var</code> makes it clear whether any variable is non- <code>final</code>, explicitly marking local
+ variables and parameters as <code>final</code> is discouraged.
 
- <p>The annotation can also be applied to fields, to indicate that the field is
- deliberately non-final.</div>
+ <p>The annotation can also be applied to fields, to indicate that the field is deliberately
+ non-final.</div>
 </li>
 </ul>
 </div>

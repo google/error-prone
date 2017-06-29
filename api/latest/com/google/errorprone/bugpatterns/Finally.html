@@ -123,14 +123,13 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" 
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.ContinueTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ContinueTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.ThrowTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ThrowTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.BreakTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BreakTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></pre>
 <div class="block">Matches the behaviour of javac's finally Xlint warning.
 
- 1) Any return statement in a finally block is an error
- 2) An uncaught throw statement in a finally block is an error. We can't always know whether a
-    specific exception will be caught, so we report errors for throw statements that are not
-    contained in a try with at least one catch block.
- 3) A continue statement in a finally block is an error if it breaks out of a (possibly labeled)
-    loop that is outside the enclosing finally.
- 4) A break statement in a finally block is an error if it breaks out of a (possibly labeled)
-    loop or a switch statement that is outside the enclosing finally.</div>
+ <p>1) Any return statement in a finally block is an error 2) An uncaught throw statement in a
+ finally block is an error. We can't always know whether a specific exception will be caught, so
+ we report errors for throw statements that are not contained in a try with at least one catch
+ block. 3) A continue statement in a finally block is an error if it breaks out of a (possibly
+ labeled) loop that is outside the enclosing finally. 4) A break statement in a finally block is
+ an error if it breaks out of a (possibly labeled) loop or a switch statement that is outside the
+ enclosing finally.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>eaftan@google.com (Eddie Aftandilian), cushon@google.com (Liam Miller-Cushon)</dd>

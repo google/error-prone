@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -102,7 +102,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">MethodInfo</span></pre>
-<div class="block">Represents a Java method.  Used for custom predicates to match non-null-returning methods.</div>
+<div class="block">Represents a Java method. Used for custom predicates to match non-null-returning methods.</div>
 </li>
 </ul>
 </div>
@@ -131,13 +131,17 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html#isPrimitive--">isPrimitive</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html#isKnownNonNullReturning--">isKnownNonNullReturning</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html#isStatic--">isStatic</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html#isPrimitive--">isPrimitive</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html#isStatic--">isStatic</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html#method--">method</a></span>()</code>&nbsp;</td>
 </tr>
@@ -195,10 +199,19 @@ var activeTableTab = "activeTableTab";
 <a name="isPrimitive--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>isPrimitive</h4>
 <pre>boolean&nbsp;isPrimitive()</pre>
+</li>
+</ul>
+<a name="isKnownNonNullReturning--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>isKnownNonNullReturning</h4>
+<pre>boolean&nbsp;isKnownNonNullReturning()</pre>
 </li>
 </ul>
 </li>

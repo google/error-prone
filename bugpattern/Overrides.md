@@ -359,12 +359,11 @@ __OverridesNegativeCase1.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 public class OverridesNegativeCase1 {
   abstract class Base {
     abstract void varargsMethod(Object... xs);
+
     abstract void arrayMethod(Object[] xs);
   }
 
@@ -379,20 +378,20 @@ public class OverridesNegativeCase1 {
   }
 
   static class StaticClass {
-    static void staticVarargsMethod(Object... xs) {
-    }
-    
-    static void staticArrayMethod(Object[] xs) {
-    }
+    static void staticVarargsMethod(Object... xs) {}
+
+    static void staticArrayMethod(Object[] xs) {}
   }
 
   interface Interface {
     void varargsMethod(Object... xs);
+
     void arrayMethod(Object[] xs);
   }
 
   abstract class ImplementsInterface implements Interface {
     public abstract void varargsMethod(Object... xs);
+
     public abstract void arrayMethod(Object[] xs);
   }
 }
@@ -449,12 +448,8 @@ __OverridesNegativeCase2.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 public class OverridesNegativeCase2 {
   abstract class Base {
     abstract void varargsMethod(Object... xs);
@@ -464,12 +459,12 @@ public class OverridesNegativeCase2 {
     @Override
     abstract void varargsMethod(Object... newNames);
   }
-  
+
   abstract class SubTwo extends SubOne {
     @Override
     abstract void varargsMethod(Object... xs);
   }
-  
+
   abstract class SubThree extends SubTwo {
     @Override
     abstract void varargsMethod(Object... newNames);
@@ -496,12 +491,8 @@ __OverridesNegativeCase3.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/** @author cushon@google.com (Liam Miller-Cushon) */
 public class OverridesNegativeCase3 {
   abstract class Base {
     abstract void arrayMethod(Object[] xs);
@@ -511,12 +502,12 @@ public class OverridesNegativeCase3 {
     @Override
     abstract void arrayMethod(Object[] xs);
   }
-  
+
   abstract class SubTwo extends SubOne {
     @Override
     abstract void arrayMethod(Object[] xs);
   }
-  
+
   abstract class SubThree extends SubTwo {
     @Override
     abstract void arrayMethod(Object[] xs);

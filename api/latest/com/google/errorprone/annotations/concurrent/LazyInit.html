@@ -96,12 +96,10 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation">RUNTIME</a>)
  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation">FIELD</a>)
 public @interface <span class="memberNameLabel">LazyInit</span></pre>
-<div class="block">Use this annotation on any static or field that will be initialized lazily,
- where races yield no semantic difference in the code.  The canonical
- example of this is String.hashCode():
+<div class="block">Use this annotation on any static or field that will be initialized lazily, where races yield no
+ semantic difference in the code. The canonical example of this is String.hashCode():
 
- <pre>
- <code>
+ <pre><code>
  public int hashCode() {
    int h = hash;
    if (h == 0 &amp;&amp; value.length &gt; 0) {

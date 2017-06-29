@@ -286,8 +286,8 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.
 <pre>protected&nbsp;com.google.common.base.Optional&lt;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;implicitToStringFix(com.sun.source.tree.ExpressionTree&nbsp;tree,
                                                                    <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">AbstractToString</a></code></span></div>
-<div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from
- passing an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
+<div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
+ an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></code></dd>
@@ -306,8 +306,7 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.
                                                            com.sun.source.tree.ExpressionTree&nbsp;tree,
                                                            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">AbstractToString</a></code></span></div>
-<div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or
- <code>String.valueOf()</code>.</div>
+<div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or <code>String.valueOf()</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></code></dd>

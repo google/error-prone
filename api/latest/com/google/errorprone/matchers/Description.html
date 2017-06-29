@@ -111,8 +111,8 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">Description</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
-<div class="block">Simple data object containing the information captured about an AST match.
- Can be printed in a UI, or output in structured format for use by tools.</div>
+<div class="block">Simple data object containing the information captured about an AST match. Can be printed in a
+ UI, or output in structured format for use by tools.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>alexeagle@google.com (Alex Eagle)</dd>
@@ -205,7 +205,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;message,
            <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;suggestedFix,
            <a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity)</code>
-<div class="block">TODO(cushon): Remove this constructor and ensure that there's always a check name.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </td>
 </tr>
 </table>
@@ -225,7 +225,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Description.html#applySeverityOverride-com.google.errorprone.BugPattern.SeverityLevel-">applySeverityOverride</a></span>(<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Description.html#applySeverityOverride-com.google.errorprone.BugPattern.SeverityLevel-">applySeverityOverride</a></span>(<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity)</code>
+<div class="block">Internal-only.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
@@ -244,7 +246,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Description.html#getLink--">getLink</a></span>()</code>
-<div class="block">Returns link to be included in the error message or null if there is no link.</div>
+<div class="block">Returns a link associated with this finding or null if there is no link.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -324,8 +326,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>fixes</h4>
 <pre>public final&nbsp;com.google.common.collect.ImmutableList&lt;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt; fixes</pre>
-<div class="block">A list of fixes to suggest in an error message or use in automated refactoring.  Fixes are
- in order of decreasing preference, from most preferred to least preferred.</div>
+<div class="block">A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
+ order of decreasing preference, from most preferred to least preferred.</div>
 </li>
 </ul>
 <a name="severity">
@@ -352,10 +354,12 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockListLast">
 <li class="blockList">
 <h4>Description</h4>
-<pre>public&nbsp;Description(com.sun.source.tree.Tree&nbsp;node,
-                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;message,
-                   <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;suggestedFix,
-                   <a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity)</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
+public&nbsp;Description(com.sun.source.tree.Tree&nbsp;node,
+                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;message,
+                               <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;suggestedFix,
+                               <a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">TODO(cushon): Remove this constructor and ensure that there's always a check name.</div>
 </li>
 </ul>
@@ -386,7 +390,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>getLink</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
 public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getLink()</pre>
-<div class="block">Returns link to be included in the error message or null if there is no link.</div>
+<div class="block">Returns a link associated with this finding or null if there is no link.</div>
 </li>
 </ul>
 <a name="getRawMessage--">
@@ -417,6 +421,7 @@ public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.h
 <h4>applySeverityOverride</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation">@CheckReturnValue</a>
 public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;applySeverityOverride(<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity)</pre>
+<div class="block">Internal-only. Has no effect if applied to a Description within a BugChecker.</div>
 </li>
 </ul>
 <a name="filterFixes-com.google.common.base.Predicate-">

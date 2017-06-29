@@ -133,30 +133,27 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.ibm.icu.text.DateFormatSymbols;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.ULocale;
-
 import java.util.Locale;
 
-/**
- * Tests for {@link com.ibm.icu.text.SimpleDateFormat}.
- */
+/** Tests for {@link com.ibm.icu.text.SimpleDateFormat}. */
 public class MisusedWeekYearPositiveCases2 {
-  
+
   void testConstructors() {
     // BUG: Diagnostic contains: new SimpleDateFormat("yyyy-MM-dd")
     SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
 
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", DateFormatSymbols.getInstance());
-    
+
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", DateFormatSymbols.getInstance(), ULocale.CANADA);
 
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", Locale.getDefault());
-    
+
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", "", ULocale.CANADA);
-    
+
     // BUG: Diagnostic contains:
     sdf = new SimpleDateFormat("YYYY-MM-dd", ULocale.CANADA);
   }
@@ -203,28 +200,28 @@ public class MisusedWeekYearNegativeCases {
     simpleDateFormat = new SimpleDateFormat("MM-dd");
     simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", DateFormatSymbols.getInstance());
     simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    
+
     // Don't flag if the pattern contains "ww", the week-in-year specifier.
     simpleDateFormat = new SimpleDateFormat("YYYY-ww");
   }
-  
+
   void testLiteralPatternWithFolding() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy" + "-MM-dd");
   }
-  
+
   private static final String WEEK_YEAR_PATTERN = "yyyy-MM-dd";
-  
+
   void testConstantPattern() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN);
   }
-  
+
   private static class MySimpleDateFormat extends SimpleDateFormat {
     public MySimpleDateFormat(String pattern) {
       super(pattern);
     }
   }
-  
-  // Don't match on subtypes, since we don't know what their applyPattern and 
+
+  // Don't match on subtypes, since we don't know what their applyPattern and
   // applyLocalizedPattern methods might do.
   void testSubtype() {
     MySimpleDateFormat mySdf = new MySimpleDateFormat("YYYY-MM-dd");

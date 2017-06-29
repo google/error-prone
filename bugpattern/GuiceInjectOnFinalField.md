@@ -44,18 +44,13 @@ package com.google.errorprone.bugpatterns.inject.guice.testdata;
 import com.google.inject.Inject;
 import javax.annotation.Nullable;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class InjectOnFinalFieldPositiveCases {
-  /**
-   * Class has a final injectable(com.google.inject.Inject) field.
-   */
+  /** Class has a final injectable(com.google.inject.Inject) field. */
   public class TestClass1 {
     // BUG: Diagnostic contains: @Inject int a
     @Inject final int a = 0;
 
-    
     @Inject
     // BUG: Diagnostic contains: public int b
     public final int b = 0;
@@ -91,33 +86,23 @@ package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.Inject;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class InjectOnFinalFieldNegativeCases {
-  
-  /**
-   * Class has no final fields or @Inject annotations.
-   */
+
+  /** Class has no final fields or @Inject annotations. */
   public class TestClass1 {}
 
-  /**
-   * Class has a final field that is not injectable.
-   */
+  /** Class has a final field that is not injectable. */
   public class TestClass2 {
     public final int n = 0;
   }
-  
-  /**
-   * Class has an injectable(com.google.inject.Inject) field that is not final.
-   */
+
+  /** Class has an injectable(com.google.inject.Inject) field that is not final. */
   public class TestClass3 {
     @Inject public int n;
   }
-  
-  /**
-   * Class has an injectable(com.google.inject.Inject), final method.
-   */
+
+  /** Class has an injectable(com.google.inject.Inject), final method. */
   public class TestClass4 {
     @Inject
     final void method() {}

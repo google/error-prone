@@ -97,16 +97,16 @@
 public @interface <span class="memberNameLabel">RestrictedApi</span></pre>
 <div class="block">Restrict this method to callsites with a whitelist annotation.
 
- <p>Callers that are not whitelisted will cause a configurable compiler diagnostic.
- Whitelisting can either allow the call outright, or make the compiler emit a warning when the API
- is called. Paths matching a regular expression, e.g. unit tests, can also be excluded.
+ <p>Callers that are not whitelisted will cause a configurable compiler diagnostic. Whitelisting
+ can either allow the call outright, or make the compiler emit a warning when the API is called.
+ Paths matching a regular expression, e.g. unit tests, can also be excluded.
 
- <p>The following example shows a hypothetical, potentially unsafe <code>Foo.bar</code> method.
- It is marked with the <code>@RestrictedApi</code> annotations such that callers annotated with
+ <p>The following example shows a hypothetical, potentially unsafe <code>Foo.bar</code> method. It is
+ marked with the <code>@RestrictedApi</code> annotations such that callers annotated with
  <code>@LegacyFooBar</code> raise a warning, whereas the <code>@ReviewedFooBar</code> annotation silently
  allows the call.
 
- <p> The <code>@LegacyFooBar</code> annotation can be used to allow existing call sites until they are
+ <p>The <code>@LegacyFooBar</code> annotation can be used to allow existing call sites until they are
  refactored, while prohibiting new call-sites. Call-sites determined to be acceptable, for example
  through code review, could be marked <code>@ReviewedFooBar</code>.
 
@@ -289,7 +289,7 @@ public @interface <span class="memberNameLabel">RestrictedApi</span></pre>
 <pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;allowedOnPath</pre>
 <div class="block">Allow the restricted API on paths matching this regular expression.
 
- <p> Leave empty (the default) to enforce the API restrictions on all paths.</div>
+ <p>Leave empty (the default) to enforce the API restrictions on all paths.</div>
 <dl>
 <dt>Default:</dt>
 <dd>""</dd>
@@ -325,7 +325,7 @@ public @interface <span class="memberNameLabel">RestrictedApi</span></pre>
 <pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;[]&nbsp;whitelistWithWarningAnnotations</pre>
 <div class="block">Emit warnings, not errors, on calls to the restricted API for callers with this annotation.
 
- <p> This should only be used if callers should aggressively move away from this API (or change
+ <p>This should only be used if callers should aggressively move away from this API (or change
  to a whitelist annotation after review). Too many warnings will lead to ALL warnings being
  ignored, so tread very carefully.</div>
 <dl>

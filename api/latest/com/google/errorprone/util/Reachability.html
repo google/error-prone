@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9};
+var methods = {"i0":9,"i1":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -149,6 +149,12 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/Reachability.html#canCompleteNormally-com.sun.source.tree.CaseTree-">canCompleteNormally</a></span>(com.sun.source.tree.CaseTree&nbsp;caseTree)</code>
+<div class="block">Returns true if the given case tree can complete normally, as defined by JLS 14.21.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/Reachability.html#canCompleteNormally-com.sun.source.tree.StatementTree-">canCompleteNormally</a></span>(com.sun.source.tree.StatementTree&nbsp;statement)</code>
 <div class="block">Returns true if the given statement can complete normally, as defined by JLS 14.21.</div>
 </td>
@@ -195,11 +201,23 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <a name="canCompleteNormally-com.sun.source.tree.StatementTree-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>canCompleteNormally</h4>
 <pre>public static&nbsp;boolean&nbsp;canCompleteNormally(com.sun.source.tree.StatementTree&nbsp;statement)</pre>
 <div class="block">Returns true if the given statement can complete normally, as defined by JLS 14.21.
+
+ <p>An exception is made for <code>System.exit</code>, which cannot complete normally in practice.</div>
+</li>
+</ul>
+<a name="canCompleteNormally-com.sun.source.tree.CaseTree-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>canCompleteNormally</h4>
+<pre>public static&nbsp;boolean&nbsp;canCompleteNormally(com.sun.source.tree.CaseTree&nbsp;caseTree)</pre>
+<div class="block">Returns true if the given case tree can complete normally, as defined by JLS 14.21.
 
  <p>An exception is made for <code>System.exit</code>, which cannot complete normally in practice.</div>
 </li>

@@ -222,25 +222,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#looksLikeJUnit3SetUp">looksLikeJUnit3SetUp</a></span></code>
-<div class="block">Match a method which appears to be a JUnit 3 setUp method
-
- Matches if:
- 1) The method is named "setUp"
- 2) The method has no parameters
- 3) The method is a public or protected instance method that is not abstract
- 4) The method returns void</div>
+<div class="block">Match a method which appears to be a JUnit 3 setUp method</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#looksLikeJUnit3TearDown">looksLikeJUnit3TearDown</a></span></code>
-<div class="block">Match a method which appears to be a JUnit 3 tearDown method
-
- Matches if:
- 1) The method is named "tearDown"
- 2) The method has no parameters
- 3) The method is a public or protected instance method that is not abstract
- 4) The method returns void</div>
+<div class="block">Match a method which appears to be a JUnit 3 tearDown method</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -433,10 +421,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ClassTree&gt; isConcreteClassWithoutRunWith</pre>
 <div class="block">Match a class which appears to be missing a @RunWith annotation.
 
- Matches if:
- 1) The class does not have a JUnit 4 @RunWith annotation.
- 2) The class is concrete.
- 3) The class is a top-level class.</div>
+ <p>Matches if: 1) The class does not have a JUnit 4 @RunWith annotation. 2) The class is
+ concrete. 3) The class is a top-level class.</div>
 </li>
 </ul>
 <a name="hasJUnit4TestCases">
@@ -458,11 +444,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ClassTree&gt; isJUnit3TestClass</pre>
 <div class="block">Match a class which appears to be a JUnit 3 test class.
 
- Matches if:
- 1) The class does inherit from TestCase.
- 2) The class does not have a JUnit 4 @RunWith annotation.
- 3) The class is concrete.
- 4) This class is a top-level class.</div>
+ <p>Matches if: 1) The class does inherit from TestCase. 2) The class does not have a JUnit
+ 4 @RunWith annotation. 3) The class is concrete. 4) This class is a top-level class.</div>
 </li>
 </ul>
 <a name="isJunit3TestCase">
@@ -474,11 +457,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt; isJunit3TestCase</pre>
 <div class="block">Match a method which appears to be a JUnit 3 test case.
 
- Matches if:
- 1) The method's name begins with "test".
- 2) The method has no parameters.
- 3) The method is public.
- 4) The method returns void</div>
+ <p>Matches if: 1) The method's name begins with "test". 2) The method has no parameters. 3) The
+ method is public. 4) The method returns void</div>
 </li>
 </ul>
 <a name="looksLikeJUnit3SetUp">
@@ -490,11 +470,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt; looksLikeJUnit3SetUp</pre>
 <div class="block">Match a method which appears to be a JUnit 3 setUp method
 
- Matches if:
- 1) The method is named "setUp"
- 2) The method has no parameters
- 3) The method is a public or protected instance method that is not abstract
- 4) The method returns void</div>
+ <p>Matches if: 1) The method is named "setUp" 2) The method has no parameters 3) The method is
+ a public or protected instance method that is not abstract 4) The method returns void</div>
 </li>
 </ul>
 <a name="looksLikeJUnit3TearDown">
@@ -506,11 +483,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt; looksLikeJUnit3TearDown</pre>
 <div class="block">Match a method which appears to be a JUnit 3 tearDown method
 
- Matches if:
- 1) The method is named "tearDown"
- 2) The method has no parameters
- 3) The method is a public or protected instance method that is not abstract
- 4) The method returns void</div>
+ <p>Matches if: 1) The method is named "tearDown" 2) The method has no parameters 3) The method
+ is a public or protected instance method that is not abstract 4) The method returns void</div>
 </li>
 </ul>
 <a name="wouldRunInJUnit4">

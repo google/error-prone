@@ -41,9 +41,7 @@ __NumericEqualityPositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/** @author scottjohnson@google.com (Scott Johnson) */
 public class NumericEqualityPositiveCases {
 
   public boolean testIntegers(Integer x, Integer y) {
@@ -127,9 +125,7 @@ __NumericEqualityNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author scottjohnson@google.com (Scott Johnsson)
- */
+/** @author scottjohnson@google.com (Scott Johnsson) */
 public class NumericEqualityNegativeCases {
 
   public static final Integer NULLINT = null;

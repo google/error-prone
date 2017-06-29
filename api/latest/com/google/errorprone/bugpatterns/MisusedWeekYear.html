@@ -184,17 +184,17 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/MisusedWeekYear.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in
- which the pattern passed in contains YYYY but not ww, signifying that it was not intended to
- be a week date.</div>
+<div class="block">Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in which
+ the pattern passed in contains YYYY but not ww, signifying that it was not intended to be a
+ week date.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/MisusedWeekYear.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass</a></span>(com.sun.source.tree.NewClassTree&nbsp;tree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Match uses of the SimpleDateFormat constructor in which the pattern passed in contains
- YYYY but not ww, signifying that it was not intended to be a week date.</div>
+<div class="block">Match uses of the SimpleDateFormat constructor in which the pattern passed in contains YYYY but
+ not ww, signifying that it was not intended to be a week date.</div>
 </td>
 </tr>
 </table>
@@ -258,10 +258,10 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <h4>matchMethodInvocation</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethodInvocation(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                                          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in
- which the pattern passed in contains YYYY but not ww, signifying that it was not intended to
- be a week date.  If the pattern is a string literal, suggest replacing the YYYY with yyyy.
- If the pattern is a constant, don't give a suggested fix since the fix is nonlocal.</div>
+<div class="block">Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in which
+ the pattern passed in contains YYYY but not ww, signifying that it was not intended to be a
+ week date. If the pattern is a string literal, suggest replacing the YYYY with yyyy. If the
+ pattern is a constant, don't give a suggested fix since the fix is nonlocal.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
@@ -276,10 +276,10 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <h4>matchNewClass</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchNewClass(com.sun.source.tree.NewClassTree&nbsp;tree,
                                  <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Match uses of the SimpleDateFormat constructor in which the pattern passed in contains
- YYYY but not ww, signifying that it was not intended to be a week date.  If the pattern
- is a string literal, suggest replacing the YYYY with yyyy.  If the pattern is a constant, don't
- give a suggested fix since the fix is nonlocal.</div>
+<div class="block">Match uses of the SimpleDateFormat constructor in which the pattern passed in contains YYYY but
+ not ww, signifying that it was not intended to be a week date. If the pattern is a string
+ literal, suggest replacing the YYYY with yyyy. If the pattern is a constant, don't give a
+ suggested fix since the fix is nonlocal.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code></dd>

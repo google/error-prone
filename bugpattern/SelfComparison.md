@@ -44,6 +44,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Positive test case for {@link SelfComparison} check.
+ *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 public class SelfComparisonPositiveCase implements Comparable<Object> {
@@ -144,6 +145,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /**
  * Negative test cases for {@link SelfComparison} check.
+ *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 public class SelfComparisonNegativeCases implements Comparable<Object> {

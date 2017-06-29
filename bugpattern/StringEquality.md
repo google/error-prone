@@ -41,9 +41,7 @@ __StringEqualityPositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author ptoomey@google.com (Patrick Toomey)
- */
+/** @author ptoomey@google.com (Patrick Toomey) */
 public class StringEqualityPositiveCases {
 
   public boolean testEquality(String x, String y) {
@@ -109,9 +107,7 @@ __StringEqualityNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author ptoomey@google.com (Patrick Toomey)
- */
+/** @author ptoomey@google.com (Patrick Toomey) */
 public class StringEqualityNegativeCases {
 
   public boolean testEquality(String x, String y) {
@@ -125,16 +121,16 @@ public class StringEqualityNegativeCases {
 
     return retVal;
   }
-  
+
   @SuppressWarnings("StringEquality")
   public boolean testSuppressWarnings(String x, String y) {
     boolean retVal;
- 
+
     retVal = (x != y);
     retVal = (x == y);
 
     return retVal;
-  } 
+  }
 }
 {% endhighlight %}
 

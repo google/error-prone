@@ -93,8 +93,7 @@
 <li class="blockList">
 <h4>canonicalName</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> canonicalName</pre>
-<div class="block">The canonical name of this check. Corresponds to the <code>name</code> attribute from its
- <code>BugPattern</code> annotation.</div>
+<div class="block">The canonical name of this check. Corresponds to the <code>name</code> attribute from its <code>BugPattern</code> annotation.</div>
 </li>
 <li class="blockList">
 <h4>allNames</h4>
@@ -102,6 +101,11 @@
 <div class="block">Additional identifiers for this check, to be checked for in @SuppressWarnings annotations.
  Corresponds to the canonical name plus all <code>altName</code>s from its <code>BugPattern</code>
  annotation.</div>
+</li>
+<li class="blockList">
+<h4>tags</h4>
+<pre>com.google.common.collect.ImmutableSet&lt;E&gt; tags</pre>
+<div class="block">Set of String tags associated with the checker.</div>
 </li>
 <li class="blockList">
 <h4>message</h4>
@@ -130,8 +134,7 @@
 <li class="blockListLast">
 <h4>customSuppressionAnnotations</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">E</a>&gt; customSuppressionAnnotations</pre>
-<div class="block">A set of custom suppression annotations for this check. Computed from the
- <code>suppressibility</code> and <code>customSuppressionAnnotations</code> attributes from its <code>BugPattern</code>.  May be empty if there are no custom suppression annotations for this check.</div>
+<div class="block">A set of custom suppression annotations for this check. Computed from the <code>suppressibility</code> and <code>customSuppressionAnnotations</code> attributes from its <code>BugPattern</code>. May be empty if there are no custom suppression annotations for this check.</div>
 </li>
 </ul>
 </li>
@@ -165,6 +168,22 @@
 <li class="blockListLast">
 <h4>source</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a> source</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.google.errorprone.ErrorProneFlags">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">com.google.errorprone.ErrorProneFlags</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>flagsMap</h4>
+<pre>com.google.common.collect.ImmutableMap&lt;K,V&gt; flagsMap</pre>
 </li>
 </ul>
 </li>
@@ -220,6 +239,11 @@
 </li>
 </ul>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.AbstractReferenceEquality">
 <!--   -->
 </a>
@@ -244,16 +268,6 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/AmbiguousMethodReference.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AmbiguousMethodReference</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
-</li>
-<li class="blockList"><a name="com.google.errorprone.bugpatterns.ArgumentParameterMismatch">
-<!--   -->
-</a>
-<h3>Class <a href="com/google/errorprone/bugpatterns/ArgumentParameterMismatch.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ArgumentParameterMismatch</a> extends com.google.errorprone.bugpatterns.AbstractArgumentParameterChecker implements Serializable</h3>
-</li>
-<li class="blockList"><a name="com.google.errorprone.bugpatterns.ArgumentParameterSwap">
-<!--   -->
-</a>
-<h3>Class <a href="com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ArgumentParameterSwap</a> extends com.google.errorprone.bugpatterns.AbstractArgumentParameterChecker implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.ArrayEquals">
 <!--   -->
@@ -376,6 +390,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/ClassNewInstance.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ClassNewInstance</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.ComparableAndComparator">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/ComparableAndComparator.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ComparableAndComparator</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.ComparisonContractViolated">
 <!--   -->
 </a>
@@ -412,6 +431,16 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/ConstantOverflow.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ConstantOverflow</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.ConstructorInvokesOverridable">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/ConstructorInvokesOverridable.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ConstructorInvokesOverridable</a> extends com.google.errorprone.bugpatterns.ConstructorLeakChecker implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.ConstructorLeaksThis">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/ConstructorLeaksThis.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ConstructorLeaksThis</a> extends com.google.errorprone.bugpatterns.ConstructorLeakChecker implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.DeadException">
 <!--   -->
 </a>
@@ -436,11 +465,6 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/DoNotCallChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.DoNotCallChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
-</li>
-<li class="blockList"><a name="com.google.errorprone.bugpatterns.ElementsCountedInLoop">
-<!--   -->
-</a>
-<h3>Class <a href="com/google/errorprone/bugpatterns/ElementsCountedInLoop.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ElementsCountedInLoop</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.EmptyIfStatement">
 <!--   -->
@@ -480,7 +504,7 @@
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.FilesLinesLeak">
 <!--   -->
 </a>
-<h3>Class <a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.FilesLinesLeak</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<h3>Class <a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.FilesLinesLeak</a> extends <a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.Finally">
 <!--   -->
@@ -511,21 +535,6 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.FutureReturnValueIgnored</a> extends <a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>stackNames</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Stack.html?is-external=true" title="class or interface in java.util">Stack</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Stack.html?is-external=true" title="class or interface in java.util">E</a>&gt; stackNames</pre>
-</li>
-<li class="blockListLast">
-<h4>previousTreePath</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">E</a>&gt; previousTreePath</pre>
-</li>
-</ul>
-</li>
-</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.FuturesGetCheckedIllegalExceptionType">
 <!--   -->
@@ -587,6 +596,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/InsecureCipherMode.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.InsecureCipherMode</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/InstanceOfAndCastMatchWrongType.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.InvalidPatternSyntax">
 <!--   -->
 </a>
@@ -606,6 +620,16 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/IterableAndIterator.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.IterableAndIterator</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.IterablePathParameter">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/IterablePathParameter.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.IterablePathParameter</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.JavaLangClash">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/JavaLangClash.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.JavaLangClash</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation">
 <!--   -->
@@ -656,6 +680,11 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/LiteralClassName.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.LiteralClassName</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.LogicalAssignment">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/LogicalAssignment.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.LogicalAssignment</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix">
 <!--   -->
@@ -730,7 +759,7 @@
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.MustBeClosedChecker">
 <!--   -->
 </a>
-<h3>Class <a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.MustBeClosedChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<h3>Class <a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.MustBeClosedChecker</a> extends <a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.MutableConstantField">
 <!--   -->
@@ -741,6 +770,16 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/NarrowingCompoundAssignment.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.NarrowingCompoundAssignment</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.NCopiesOfChar">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/NCopiesOfChar.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.NCopiesOfChar</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.NestedInstanceOfConditions">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/NestedInstanceOfConditions.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.NestedInstanceOfConditions</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.NoAllocationChecker">
 <!--   -->
@@ -812,6 +851,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/Overrides.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.Overrides</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.OvershadowingSubclassFields">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/OvershadowingSubclassFields.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.OvershadowingSubclassFields</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.PackageInfo">
 <!--   -->
 </a>
@@ -836,6 +880,11 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.PredicateIncompatibleType">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/PredicateIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.PredicateIncompatibleType</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod">
 <!--   -->
@@ -922,6 +971,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/ShortCircuitBoolean.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ShortCircuitBoolean</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.ShouldHaveEvenArgs">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ShouldHaveEvenArgs</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.SimpleDateFormatConstant">
 <!--   -->
 </a>
@@ -1006,6 +1060,22 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.UngroupedOverloads">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/UngroupedOverloads.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.UngroupedOverloads</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>methodCountCutoff</h4>
+<pre>int methodCountCutoff</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch">
 <!--   -->
@@ -1092,6 +1162,21 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/android/FragmentNotInstantiable.html" title="class in com.google.errorprone.bugpatterns.android">com.google.errorprone.bugpatterns.android.FragmentNotInstantiable</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>fragmentClasses</h4>
+<pre>com.google.common.collect.ImmutableSet&lt;E&gt; fragmentClasses</pre>
+</li>
+<li class="blockListLast">
+<h4>fragmentMatcher</h4>
+<pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; fragmentMatcher</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.android.HardCodedSdCardPath">
 <!--   -->
@@ -1117,6 +1202,64 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/android/StaticOrDefaultInterfaceMethod.html" title="class in com.google.errorprone.bugpatterns.android">com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+</ul>
+</li>
+<li class="blockList">
+<h2 title="Package">Package&nbsp;com.google.errorprone.bugpatterns.argumentselectiondefects</h2>
+<ul class="blockList">
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/argumentselectiondefects/ArgumentSelectionDefectChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>argumentchangeFinder</h4>
+<pre>com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentChangeFinder argumentchangeFinder</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/argumentselectiondefects/AssertEqualsArgumentOrderChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>argumentchangeFinder</h4>
+<pre>com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentChangeFinder argumentchangeFinder</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/argumentselectiondefects/AutoValueConstructorOrderChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>argumentChangeFinder</h4>
+<pre>com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentChangeFinder argumentChangeFinder</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterChecker">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/argumentselectiondefects/NamedParameterChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 </ul>
 </li>
@@ -1229,10 +1372,10 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/inject/OverlappingQualifierAndScopeAnnotation.html" title="class in com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject.OverlappingQualifierAndScopeAnnotation</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
-<li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.QualifierOnMethodWithoutProvides">
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.QualifierOrScopeOnInjectMethod">
 <!--   -->
 </a>
-<h3>Class <a href="com/google/errorprone/bugpatterns/inject/QualifierOnMethodWithoutProvides.html" title="class in com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject.QualifierOnMethodWithoutProvides</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<h3>Class <a href="com/google/errorprone/bugpatterns/inject/QualifierOrScopeOnInjectMethod.html" title="class in com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject.QualifierOrScopeOnInjectMethod</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.inject.QualifierWithTypeUse">
 <!--   -->
@@ -1342,6 +1485,16 @@
 </ul>
 </li>
 <li class="blockList">
+<h2 title="Package">Package&nbsp;com.google.errorprone.bugpatterns.overloading</h2>
+<ul class="blockList">
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.overloading.InconsistentOverloads">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/overloading/InconsistentOverloads.html" title="class in com.google.errorprone.bugpatterns.overloading">com.google.errorprone.bugpatterns.overloading.InconsistentOverloads</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+</ul>
+</li>
+<li class="blockList">
 <h2 title="Package">Package&nbsp;com.google.errorprone.bugpatterns.threadsafety</h2>
 <ul class="blockList">
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.threadsafety.AbstractLockMethodChecker">
@@ -1368,16 +1521,49 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>wellKnownMutability</h4>
+<pre>com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability wellKnownMutability</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker">
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>wellKnownMutability</h4>
+<pre>com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability wellKnownMutability</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.threadsafety.ImmutableEnumChecker">
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableEnumChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety.ImmutableEnumChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>wellKnownMutability</h4>
+<pre>com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability wellKnownMutability</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker">
 <!--   -->

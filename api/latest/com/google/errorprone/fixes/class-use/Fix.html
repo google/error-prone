@@ -201,16 +201,16 @@
                    <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ArrayToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArrayToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
-                   <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>protected abstract com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">AbstractToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AbstractToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
                    <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Constructs a fix for an implicit toString call, e.g.</div>
 </td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">ArrayToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArrayToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
+                   <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
@@ -219,18 +219,18 @@
            <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ArrayToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArrayToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix</a></span>(com.sun.source.tree.Tree&nbsp;parent,
-           com.sun.source.tree.ExpressionTree&nbsp;tree,
-           <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>protected abstract com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">AbstractToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AbstractToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix</a></span>(com.sun.source.tree.Tree&nbsp;parent,
            com.sun.source.tree.ExpressionTree&nbsp;expression,
            <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Constructs a fix for an explicit toString call, e.g.</div>
 </td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">ArrayToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArrayToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix</a></span>(com.sun.source.tree.Tree&nbsp;parent,
+           com.sun.source.tree.ExpressionTree&nbsp;tree,
+           <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -320,14 +320,6 @@
 </div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
-<td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#removeModifiers-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-javax.lang.model.element.Modifier...-">removeModifiers</a></span>(com.sun.source.tree.Tree&nbsp;tree,
-               <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-               <a href="http://docs.oracle.com/javase/7/docs/api/javax/lang/model/element/Modifier.html?is-external=true" title="class or interface in javax.lang.model.element">Modifier</a>...&nbsp;modifiers)</code>
-<div class="block">Remove modifiers from the given class, method, or field declaration.</div>
-</td>
-</tr>
 </tbody>
 </table>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
@@ -341,6 +333,13 @@
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">AppliedFix.Applier.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/AppliedFix.Applier.html#apply-com.google.errorprone.fixes.Fix-">apply</a></span>(<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;suggestedFix)</code>
 <div class="block">Applies the suggestedFix to the source.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-">compilesWithFix</a></span>(<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
+               <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Returns true if the current compilation would succeed with the given fix applied.</div>
 </td>
 </tr>
 </tbody>
@@ -410,7 +409,7 @@
            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;message,
            <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;suggestedFix,
            <a href="../../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity)</code>
-<div class="block">TODO(cushon): Remove this constructor and ensure that there's always a check name.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </td>
 </tr>
 </tbody>

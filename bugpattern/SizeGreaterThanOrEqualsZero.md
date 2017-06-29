@@ -42,7 +42,6 @@ __SizeGreaterThanOrEqualsZeroPositiveCases.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.Iterables;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,9 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author glorioso@google.com (Nick Glorioso)
- */
+/** @author glorioso@google.com (Nick Glorioso) */
 public class SizeGreaterThanOrEqualsZeroPositiveCases {
   private List<Integer> intList = new ArrayList<>();
   private Set<Integer> intSet = new HashSet<>();
@@ -151,7 +148,6 @@ public class SizeGreaterThanOrEqualsZeroPositiveCases {
     return foo;
   }
 
-
   private static class CollectionContainer {
     List<Integer> intList;
 
@@ -190,9 +186,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author glorioso@google.com (Nick Glorioso)
- */
+/** @author glorioso@google.com (Nick Glorioso) */
 public class SizeGreaterThanOrEqualsZeroNegativeCases {
   private List<Integer> intList = new ArrayList<>();
   private Set<Integer> intSet = new HashSet<>();
@@ -245,7 +239,10 @@ public class SizeGreaterThanOrEqualsZeroNegativeCases {
 
   private static class HasASizeMethod {
     public int length = 0;
-    public int size() { return length; }
+
+    public int size() {
+      return length;
+    }
   }
 }
 {% endhighlight %}

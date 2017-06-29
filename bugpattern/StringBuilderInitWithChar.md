@@ -41,9 +41,7 @@ __StringBuilderInitWithCharPositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author lowasser@google.com (Louis Wasserman)
- */
+/** @author lowasser@google.com (Louis Wasserman) */
 public class StringBuilderInitWithCharPositiveCases {
   {
     // BUG: Diagnostic contains: new StringBuilder("a")
@@ -79,9 +77,7 @@ __StringBuilderInitWithCharNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author lowasser@google.com (Louis Wasserman)
- */
+/** @author lowasser@google.com (Louis Wasserman) */
 public class StringBuilderInitWithCharNegativeCases {
   {
     new StringBuilder("a");

@@ -41,26 +41,24 @@ __EqualsNaNPositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author lowasser@google.com (Louis Wasserman)
- */
+/** @author lowasser@google.com (Louis Wasserman) */
 public class EqualsNaNPositiveCases {
-  
+
   // BUG: Diagnostic contains: Double.isNaN(0.0)
   static final boolean ZERO_DOUBLE_NAN = 0.0 == Double.NaN;
-  
+
   // BUG: Diagnostic contains: !Double.isNaN(1.0)
   static final boolean ONE_NOT_DOUBLE_NAN = Double.NaN != 1.0;
-  
+
   // BUG: Diagnostic contains: Float.isNaN(2.f)
   static final boolean TWO_FLOAT_NAN = 2.f == Float.NaN;
 
   // BUG: Diagnostic contains: !Float.isNaN(3.0f)
   static final boolean THREE_NOT_FLOAT_NAN = 3.0f != Float.NaN;
-  
+
   // BUG: Diagnostic contains: Double.isNaN(Double.NaN)
   static final boolean NAN_IS_NAN = Double.NaN == Double.NaN;
-  
+
   // BUG: Diagnostic contains: Double.isNaN(123456)
   static final boolean INT_IS_NAN = 123456 == Double.NaN;
 }
@@ -88,9 +86,7 @@ __EqualsNaNNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author lowasser@google.com (Louis Wasserman)
- */
+/** @author lowasser@google.com (Louis Wasserman) */
 public class EqualsNaNNegativeCases {
   static final boolean NAN_AFTER_MATH = (0.0 / 0.0) == 1.0;
   static final boolean NORMAL_COMPARISON = 1.0 == 2.0;

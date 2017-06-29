@@ -113,10 +113,7 @@ __EmptyIfStatementNegativeCases.java__
  */
 
 package com.google.errorprone.bugpatterns.testdata;
-/**
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/** @author eaftan@google.com (Eddie Aftandilian) */
 public class EmptyIfStatementNegativeCases {
 
   // just a normal use of if
@@ -131,26 +128,18 @@ public class EmptyIfStatementNegativeCases {
   // empty then part but nonempty else
   public static void negativeCase2() {
     int i = 0;
-    if (i == 10)
-      ;
-    else
-      System.out.println("not 10");
+    if (i == 10) ;
+    else System.out.println("not 10");
   }
 
   // multipart if with non-empty else
   public static void negativeCase3() {
     int i = 0;
-    if (i == 10)
-      ;
-    else if (i == 11)
-      ;
-    else if (i == 12)
-      ;
-    else
-      System.out.println("not 10, 11, or 12");
+    if (i == 10) ;
+    else if (i == 11) ;
+    else if (i == 12) ;
+    else System.out.println("not 10, 11, or 12");
   }
-
-
 }
 {% endhighlight %}
 

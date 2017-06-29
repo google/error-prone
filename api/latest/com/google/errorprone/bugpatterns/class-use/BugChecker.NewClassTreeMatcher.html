@@ -88,6 +88,14 @@
 <div class="block">Checks added to the java compiler which detect common bug patterns.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.argumentselectiondefects">com.google.errorprone.bugpatterns.argumentselectiondefects</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.formatstring">com.google.errorprone.bugpatterns.formatstring</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -104,19 +112,6 @@
 <th class="colLast" scope="col">Class and Description</th>
 </tr>
 <tbody>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArgumentParameterMismatch.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterMismatch</a></span></code>
-<div class="block">Checks the lexical similarity between method parameter names and the argument names at call
- sites.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterSwap</a></span></code>
-<div class="block">This checks the similarity between the arguments and parameters.</div>
-</td>
-</tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></span></code>&nbsp;</td>
@@ -181,6 +176,60 @@
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/URLEqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">URLEqualsHashCode</a></span></code>
 <div class="block">Points out on creation of Set and HashMap of type java.net.URL.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.argumentselectiondefects">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a> in <a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/package-summary.html">com.google.errorprone.bugpatterns.argumentselectiondefects</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/package-summary.html">com.google.errorprone.bugpatterns.argumentselectiondefects</a> that implement <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/ArgumentSelectionDefectChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">ArgumentSelectionDefectChecker</a></span></code>
+<div class="block">Checks the lexical distance between method parameter names and the argument names at call sites.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/AutoValueConstructorOrderChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">AutoValueConstructorOrderChecker</a></span></code>
+<div class="block">Checker to make sure that constructors for AutoValue types are invoked with arguments in the
+ correct order.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/NamedParameterChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">NamedParameterChecker</a></span></code>
+<div class="block">A bug checker to catch cases where a developer has annotated an argument with a comment to
+ indicate the intended parameter and the parameter name is wrong.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.formatstring">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a> in <a href="../../../../../com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a> that implement <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></span></code>
+<div class="block"><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> to assert validity of methods calls with <a href="../../../../../com/google/errorprone/bugpatterns/formatstring/FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring"><code>FormatString</code></a> annotations.</div>
 </td>
 </tr>
 </tbody>

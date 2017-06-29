@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -231,6 +231,10 @@ extends <a href="../../../../com/google/errorprone/refaster/UExpression.html" ti
 <td class="colFirst"><code>com.sun.tools.javac.tree.JCTree.JCExpression</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/UPlaceholderExpression.html#inline-com.google.errorprone.refaster.Inliner-">inline</a></span>(<a href="../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
 </tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/refaster/UPlaceholderExpression.html#reverify-com.google.errorprone.refaster.Unifier-">reverify</a></span>(<a href="../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code>&nbsp;</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.refaster.UExpression">
@@ -251,7 +255,7 @@ extends <a href="../../../../com/google/errorprone/refaster/UExpression.html" ti
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.sun.source.util.SimpleTreeVisitor</h3>
-<code>visit, visit, visitAnnotatedType, visitAnnotation, visitArrayAccess, visitArrayType, visitAssert, visitAssignment, visitBinary, visitBlock, visitBreak, visitCase, visitCatch, visitClass, visitCompilationUnit, visitCompoundAssignment, visitConditionalExpression, visitContinue, visitDoWhileLoop, visitEmptyStatement, visitEnhancedForLoop, visitErroneous, visitExpressionStatement, visitForLoop, visitIdentifier, visitIf, visitImport, visitInstanceOf, visitIntersectionType, visitLabeledStatement, visitLambdaExpression, visitLiteral, visitMemberReference, visitMemberSelect, visitMethod, visitMethodInvocation, visitModifiers, visitNewArray, visitNewClass, visitOther, visitPackage, visitParameterizedType, visitParenthesized, visitPrimitiveType, visitReturn, visitSwitch, visitSynchronized, visitThrow, visitTry, visitTypeCast, visitTypeParameter, visitUnary, visitUnionType, visitVariable, visitWhileLoop, visitWildcard</code></li>
+<code>visit, visit, visitAnnotatedType, visitAnnotation, visitArrayAccess, visitArrayType, visitAssert, visitAssignment, visitBinary, visitBlock, visitBreak, visitCase, visitCatch, visitClass, visitCompilationUnit, visitCompoundAssignment, visitConditionalExpression, visitContinue, visitDoWhileLoop, visitEmptyStatement, visitEnhancedForLoop, visitErroneous, visitExports, visitExpressionStatement, visitForLoop, visitIdentifier, visitIf, visitImport, visitInstanceOf, visitIntersectionType, visitLabeledStatement, visitLambdaExpression, visitLiteral, visitMemberReference, visitMemberSelect, visitMethod, visitMethodInvocation, visitModifiers, visitModule, visitNewArray, visitNewClass, visitOpens, visitOther, visitPackage, visitParameterizedType, visitParenthesized, visitPrimitiveType, visitProvides, visitRequires, visitReturn, visitSwitch, visitSynchronized, visitThrow, visitTry, visitTypeCast, visitTypeParameter, visitUnary, visitUnionType, visitUses, visitVariable, visitWhileLoop, visitWildcard</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -324,6 +328,15 @@ extends <a href="../../../../com/google/errorprone/refaster/UExpression.html" ti
 <h4>accept</h4>
 <pre>public&nbsp;&lt;R,D&gt;&nbsp;R&nbsp;accept(com.sun.source.tree.TreeVisitor&lt;R,D&gt;&nbsp;visitor,
                       D&nbsp;data)</pre>
+</li>
+</ul>
+<a name="reverify-com.google.errorprone.refaster.Unifier-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>reverify</h4>
+<pre>public&nbsp;boolean&nbsp;reverify(<a href="../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</pre>
 </li>
 </ul>
 <a name="defaultAction-com.sun.source.tree.Tree-com.google.errorprone.refaster.Unifier-">

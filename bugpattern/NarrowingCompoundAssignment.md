@@ -1,6 +1,6 @@
 ---
 title: NarrowingCompoundAssignment
-summary: Compound assignments to bytes, shorts, chars, and floats hide dangerous casts
+summary: Compound assignments may hide dangerous casts
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -15,8 +15,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 The compound assignment `E1 op= E2` could be mistaken for being equivalent to
 `E1 = E1 op E2`. However, this is not the case: compound assignment operators
 automatically cast the result of the computation to the type on the left hand
-side. So E1 op= E2 is actually equivalent to E1 = (T) (E1 op E2), where T is
-the type of E1.
+side. So `E1 op= E2` is actually equivalent to `E1 = (T) (E1 op E2)`, where `T`
+is the type of `E1`.
 
 If the type of the expression is wider than the type of the
 variable (i.e. the variable is a byte, char, short, or float), then the

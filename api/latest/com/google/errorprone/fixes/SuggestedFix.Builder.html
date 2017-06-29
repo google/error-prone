@@ -216,8 +216,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html#replace-int-int-java.lang.String-">replace</a></span>(int&nbsp;startPos,
        int&nbsp;endPos,
        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replaceWith)</code>
-<div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the
- given string.</div>
+<div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
+ string.</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
@@ -315,8 +315,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;replace(int&nbsp;startPos,
                                     int&nbsp;endPos,
                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replaceWith)</pre>
-<div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the
- given string.</div>
+<div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
+ string.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>startPos</code> - The position from which to start replacing, inclusive</dd>
@@ -335,9 +335,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replaceWith,
                                     int&nbsp;startPosAdjustment,
                                     int&nbsp;endPosAdjustment)</pre>
-<div class="block">Replace a tree node with a string, but adjust the start and end positions as well.
- For example, if the tree node begins at index 10 and ends at index 30, this call will
- replace the characters at index 15 through 25 with "replacement":
+<div class="block">Replace a tree node with a string, but adjust the start and end positions as well. For
+ example, if the tree node begins at index 10 and ends at index 30, this call will replace the
+ characters at index 15 through 25 with "replacement":
+
  <pre>
  <code> fix.replace(node, "replacement", 5, -5)</code>
  </pre></div>
@@ -396,8 +397,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>addImport</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;addImport(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importString)</pre>
-<div class="block">Add an import statement as part of this SuggestedFix.
- Import string should be of the form "foo.bar.baz".</div>
+<div class="block">Add an import statement as part of this SuggestedFix. Import string should be of the form
+ "foo.bar.baz".</div>
 </li>
 </ul>
 <a name="addStaticImport-java.lang.String-">
@@ -407,8 +408,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>addStaticImport</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;addStaticImport(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importString)</pre>
-<div class="block">Add a static import statement as part of this SuggestedFix.
- Import string should be of the form "foo.bar.baz".</div>
+<div class="block">Add a static import statement as part of this SuggestedFix. Import string should be of the
+ form "foo.bar.baz".</div>
 </li>
 </ul>
 <a name="removeImport-java.lang.String-">
@@ -418,8 +419,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>removeImport</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;removeImport(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importString)</pre>
-<div class="block">Remove an import statement as part of this SuggestedFix.
- Import string should be of the form "foo.bar.baz".</div>
+<div class="block">Remove an import statement as part of this SuggestedFix. Import string should be of the form
+ "foo.bar.baz".</div>
 </li>
 </ul>
 <a name="removeStaticImport-java.lang.String-">
@@ -429,8 +430,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>removeStaticImport</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;removeStaticImport(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importString)</pre>
-<div class="block">Remove a static import statement as part of this SuggestedFix.
- Import string should be of the form "foo.bar.baz".</div>
+<div class="block">Remove a static import statement as part of this SuggestedFix. Import string should be of the
+ form "foo.bar.baz".</div>
 </li>
 </ul>
 <a name="merge-com.google.errorprone.fixes.SuggestedFix.Builder-">
@@ -439,8 +440,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>merge</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;merge(<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</pre>
-<div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;merge(<a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                  <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</pre>
+<div class="block">Merges all edits from <code>other</code> into <code>this</code>. If <code>other</code> is null, do nothing.</div>
 </li>
 </ul>
 <a name="merge-com.google.errorprone.fixes.SuggestedFix-">
@@ -449,8 +451,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockListLast">
 <li class="blockList">
 <h4>merge</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;merge(<a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;other)</pre>
-<div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;merge(<a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                  <a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;other)</pre>
+<div class="block">Merges all edits from <code>other</code> into <code>this</code>. If <code>other</code> is null, do nothing.</div>
 </li>
 </ul>
 </li>

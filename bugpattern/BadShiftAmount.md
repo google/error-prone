@@ -47,11 +47,9 @@ __BadShiftAmountPositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author Bill Pugh (bill.pugh@gmail.com)
- */
+/** @author Bill Pugh (bill.pugh@gmail.com) */
 public class BadShiftAmountPositiveCases {
-  
+
   public void foo() {
     int x = 0;
     long result = 0;
@@ -66,18 +64,18 @@ public class BadShiftAmountPositiveCases {
     result += x >> 40;
     // BUG: Diagnostic contains: (long) (x & 255) >> 40
     result += (x & 255) >> 40;
-    
+
     // BUG: Diagnostic contains: 1L << 48
     result += 1 << 48;
-    
+
     // BUG: Diagnostic contains: x >> 4
     result += x >> 100;
     // BUG: Diagnostic contains: x >> 31
     result += x >> -1;
-    
+
     byte b = 0;
     char c = 'a';
-    
+
     // BUG: Diagnostic contains: (long) b >> 32
     result += b >> 32;
     // BUG: Diagnostic contains: (long) b << 32
@@ -87,7 +85,6 @@ public class BadShiftAmountPositiveCases {
     // BUG: Diagnostic contains: (long) c >>> 32
     result += c >>> 32;
   }
-  
 }
 {% endhighlight %}
 
@@ -113,9 +110,7 @@ __BadShiftAmountNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * @author Bill Pugh (bill.pugh@gmail.com)
- */
+/** @author Bill Pugh (bill.pugh@gmail.com) */
 public class BadShiftAmountNegativeCases {
 
   public void foo() {
@@ -127,7 +122,6 @@ public class BadShiftAmountNegativeCases {
     result += x >>> 3;
     result += (long) (x & 0xff) >> 40;
   }
-
 }
 {% endhighlight %}
 

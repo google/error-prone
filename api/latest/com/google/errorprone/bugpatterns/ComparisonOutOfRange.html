@@ -265,13 +265,12 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Bin
 <h4>describe</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;describe(com.sun.source.tree.BinaryTree&nbsp;tree,
                             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Suggested fixes are as follows.  For the byte case, convert the literal to its byte
- representation. For example, "255" becomes "-1.  For the character case, replace the
- comparison with "true"/"false" since it's not clear what was intended and that is
- semantically equivalent.
+<div class="block">Suggested fixes are as follows. For the byte case, convert the literal to its byte
+ representation. For example, "255" becomes "-1. For the character case, replace the comparison
+ with "true"/"false" since it's not clear what was intended and that is semantically equivalent.
 
- TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as
- (d = reader.read()) == -1.  Maybe add special case handling for assignments.</div>
+ <p>TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as (d =
+ reader.read()) == -1. Maybe add special case handling for assignments.</div>
 </li>
 </ul>
 </li>

@@ -1,6 +1,6 @@
 ---
 title: FutureReturnValueIgnored
-summary: Return value of methods returning Future must be checked.
+summary: Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.
 layout: bugpattern
 category: JDK
 severity: WARNING
@@ -148,10 +148,14 @@ import static com.google.common.util.concurrent.Futures.immediateFuture;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import io.netty.channel.ChannelFuture;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.Future;
+import java.util.concurrent.RecursiveAction;
 
 /** */
 public class FutureReturnValueIgnoredNegativeCases {
@@ -199,6 +203,26 @@ public class FutureReturnValueIgnoredNegativeCases {
 
   static void checkIgnore() {
     getFutureIgnore();
+  }
+
+  void ignoreForkJoinTaskFork(ForkJoinTask<?> t) {
+    t.fork();
+  }
+
+  void ignoreForkJoinTaskFork_subclass(RecursiveAction t) {
+    t.fork();
+  }
+
+  void ignoreExecutorCompletionServiceSubmit(ExecutorCompletionService s) {
+    s.submit(() -> null);
+  }
+
+  void ignoreChannelFutureAddListener(ChannelFuture cf) {
+    cf.addListener((ChannelFuture f) -> {});
+  }
+
+  void ignoreChannelFutureAddListeners(ChannelFuture cf) {
+    cf.addListeners((ChannelFuture f) -> {}, (ChannelFuture f) -> {});
   }
 }
 {% endhighlight %}

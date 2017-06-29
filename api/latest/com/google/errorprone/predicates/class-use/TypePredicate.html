@@ -121,14 +121,14 @@
 <td class="colLast"><span class="typeNameLabel">StreamToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/StreamToString.html#typePredicate--">typePredicate</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected <a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ArrayToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArrayToString.html#typePredicate--">typePredicate</a></span>()</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>protected abstract <a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><span class="typeNameLabel">AbstractToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AbstractToString.html#typePredicate--">typePredicate</a></span>()</code>
 <div class="block">The type to match on.</div>
 </td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
+<td class="colLast"><span class="typeNameLabel">ArrayToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArrayToString.html#typePredicate--">typePredicate</a></span>()</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -151,6 +151,12 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></td>
+<td class="colLast"><span class="typeNameLabel">MethodMatchers.StaticMethodMatcher.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html#onClass-com.google.errorprone.predicates.TypePredicate-">onClass</a></span>(<a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code>
+<div class="block">Match on types with satisfy the given predicate.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></td>
 <td class="colLast"><span class="typeNameLabel">MethodMatchers.AnyMethodMatcher.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.AnyMethodMatcher.html#onClass-com.google.errorprone.predicates.TypePredicate-">onClass</a></span>(<a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code>
 <div class="block">Match the given type exactly.</div>

@@ -11,6 +11,8 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: static-method_
+
 ## The problem
 Consider a method that doesn't override and is not overrideable. Note first that
 such a method should declare only the parameters it actually needs; this is
@@ -28,9 +30,9 @@ removing that unused parameter. This has several desirable effects:
     to figure out an instance to call it on.
 *   It makes it clear (and, indeed, guarantees) that the method's behavior
     relies only on its parameters and not on instance state.
-*   Unit testing the method is simpler: there is no need to create an instance
-    on which to call it (which might create the false impression that instances
-    in multiple states need to be tested).
+
+<!-- if we extend this to include package-visible members, then the ability to
+     unit-test normally is another advantage. -->
 
 Another effect of adding `static` is that it renders instance fields and methods
 inaccessible within the body of the method, so (for example) an auto-completion

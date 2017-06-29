@@ -1,9 +1,9 @@
 ---
 title: ProtocolBufferOrdinal
-summary: ordinal() value of Protocol Buffer Enum can change if enumeration order is changed
+summary: To get the tag number of a protocol buffer enum, use getNumber() instead.
 layout: bugpattern
 category: PROTOBUF
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
@@ -12,7 +12,23 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Shuffling of values in a Protocol Buffer enum can change the ordinal value of the enum member. Since changing tag number isn't advisable in protos, use #getNumber() instead which gives the tag number.
+The generated Java source files for Protocol Buffer enums have `getNumber()` as
+accessors for the tag number in the protobuf file.
+
+In addition, since it's a java enum, it also has the `ordinal()` method,
+returning its positional index within the generated java enum.
+
+The `ordinal()` order of the generated Java enums isn't guaranteed, and can
+change when a new enum value is inserted into a proto enum. The `getNumber()`
+value won't change for an enum value (since making that change is a
+backwards-incompatible change for the protocol buffer).
+
+You should very likely use `getNumber()` in preference to `ordinal()` in all
+circumstances since it's a more stable value.
+
+Note: If you're changing code that was already using ordinal(), it's likely that
+getNumber() will return a different real value. Tread carefully to avoid
+mismatches if the ordinal was persisted elsewhere.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("ProtocolBufferOrdinal")` annotation to the enclosing element.
@@ -47,8 +63,26 @@ import com.google.errorprone.bugpatterns.proto.TestEnum;
 public class ProtocolBufferOrdinalPositiveCases {
 
   public static void checkCallOnOrdinal() {
-    // BUG: Diagnostic contains: TestEnum.TEST_ENUM_VAL.getNumber()
+    // BUG: Diagnostic contains: ProtocolBufferOrdinal
     TestEnum.TEST_ENUM_VAL.ordinal();
+
+    // BUG: Diagnostic contains: ProtocolBufferOrdinal
+    ProtoLiteEnum.FOO.ordinal();
+  }
+
+  enum ProtoLiteEnum implements com.google.protobuf.Internal.EnumLite {
+    FOO(1),
+    BAR(2);
+    private final int number;
+
+    private ProtoLiteEnum(int number) {
+      this.number = number;
+    }
+
+    @Override
+    public int getNumber() {
+      return number;
+    }
   }
 }
 {% endhighlight %}

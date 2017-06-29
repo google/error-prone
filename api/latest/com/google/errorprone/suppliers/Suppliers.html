@@ -244,13 +244,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/suppliers/Suppliers.html#receiverInstance--">receiverInstance</a></span>()</code>
-<div class="block">Supplies the expression which gives the instance of an object that will receive the method call.</div>
+<div class="block">Supplies the expression which gives the instance of an object that will receive the method
+ call.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/suppliers/Suppliers.html#receiverType--">receiverType</a></span>()</code>
-<div class="block">Supplies the expression which gives the instance of an object that will receive the method call.</div>
+<div class="block">Supplies the expression which gives the instance of an object that will receive the method
+ call.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
@@ -429,8 +431,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static&nbsp;<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;genericTypeOf(<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionSupplier,
                                                                     int&nbsp;n)</pre>
 <div class="block">Supplies the n'th generic type of the given expression. For example, in <code>Map&lt;A,B&gt; c;</code> for
- the expression c and n=1, the result is the type of <code>B</code>. If there are an insufficient number of
- type arguments, this method will return the <code>java.lang.Object</code> type from symbol table.</div>
+ the expression c and n=1, the result is the type of <code>B</code>. If there are an insufficient
+ number of type arguments, this method will return the <code>java.lang.Object</code> type from symbol
+ table.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>expressionSupplier</code> - a supplier of the expression which has a generic type</dd>
@@ -447,8 +450,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static&nbsp;<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;genericTypeOfType(<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeSupplier,
                                                                         int&nbsp;n)</pre>
 <div class="block">Supplies the n'th generic type of the given expression. For example, in <code>Map&lt;A,B&gt; c;</code> for
- the type of c and n=1, the result is the type of <code>B</code>. If there are an insufficient number of
- type arguments, this method will return the <code>java.lang.Object</code> type from symbol table.</div>
+ the type of c and n=1, the result is the type of <code>B</code>. If there are an insufficient number
+ of type arguments, this method will return the <code>java.lang.Object</code> type from symbol table.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>typeSupplier</code> - a supplier of the expression which has a generic type</dd>
@@ -463,11 +466,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>receiverType</h4>
 <pre>public static&nbsp;<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;receiverType()</pre>
-<div class="block">Supplies the expression which gives the instance of an object that will receive the method call.
- For example, in
- <code>a.getB().getC()</code>
- if the visitor is currently visiting the <code>getC()</code> method invocation, then this supplier gives the
- expression <code>a.getB()</code>.</div>
+<div class="block">Supplies the expression which gives the instance of an object that will receive the method
+ call. For example, in <code>a.getB().getC()</code> if the visitor is currently visiting the <code>getC()</code> method invocation, then this supplier gives the expression <code>a.getB()</code>.</div>
 </li>
 </ul>
 <a name="receiverInstance--">
@@ -477,11 +477,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>receiverInstance</h4>
 <pre>public static&nbsp;<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;receiverInstance()</pre>
-<div class="block">Supplies the expression which gives the instance of an object that will receive the method call.
- For example, in
- <code>a.getB().getC()</code>
- if the visitor is currently visiting the <code>getC()</code> method invocation, then this supplier gives the
- expression <code>a.getB()</code>.</div>
+<div class="block">Supplies the expression which gives the instance of an object that will receive the method
+ call. For example, in <code>a.getB().getC()</code> if the visitor is currently visiting the <code>getC()</code> method invocation, then this supplier gives the expression <code>a.getB()</code>.</div>
 </li>
 </ul>
 <a name="typeFromString-java.lang.String-">

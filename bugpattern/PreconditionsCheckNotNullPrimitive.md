@@ -48,9 +48,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Preconditions;
 
 public class PreconditionsCheckNotNullPrimitivePositiveCases {
-  
-  private Tester field = new Tester(); 
-  
+
+  private Tester field = new Tester();
+
   public void test() {
     Object a = new Object();
     Object b = new Object();
@@ -63,9 +63,9 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     boolean boolean1 = false, boolean2 = false;
     char char1 = 0;
     Tester tester = new Tester();
-    
+
     // Do we detect all primitive types?
-    
+
     // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(byte1);
     // BUG: Diagnostic contains: remove this line
@@ -82,9 +82,9 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     Preconditions.checkNotNull(boolean1);
     // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(char1);
-    
-    // Do we give the right suggested fix? 
-    
+
+    // Do we give the right suggested fix?
+
     // BUG: Diagnostic contains: boolean1 = boolean2;
     boolean1 = Preconditions.checkNotNull(boolean2);
     // BUG: Diagnostic contains: boolean1 = int1 == int2;
@@ -95,9 +95,9 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     Preconditions.checkNotNull(tester.hasId(), "Must have ID!");
     // BUG: Diagnostic contains: checkState(tester.hasId(), "Must have %s!", "ID")
     Preconditions.checkNotNull(tester.hasId(), "Must have %s!", "ID");
-    
+
     // Do we handle arguments that evaluate to a primitive type?
-    
+
     // BUG: Diagnostic contains: Preconditions.checkNotNull(a)
     Preconditions.checkNotNull(a != null);
     // BUG: Diagnostic contains: Preconditions.checkNotNull(a)
@@ -108,19 +108,19 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
     Preconditions.checkNotNull(int1 > int2);
     // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(boolean1 ? int1 : int2);
-    
+
     // Do we handle static imports?
-    
+
     // BUG: Diagnostic contains: remove this line
     checkNotNull(byte1);
     // BUG: Diagnostic contains: 'checkState(tester.hasId())
     checkNotNull(tester.hasId());
   }
-  
+
   public void test2(Tester arg) {
     Tester local = new Tester();
     // Do we correctly distinguish checkArgument from checkState?
-    
+
     // BUG: Diagnostic contains: checkArgument(arg.hasId())
     checkNotNull(arg.hasId());
     // BUG: Diagnostic contains: checkState(field.hasId())
@@ -135,20 +135,20 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
 
     // BUG: Diagnostic contains: checkState(getTrue())
     checkNotNull(getTrue());
-    
+
     // BUG: Diagnostic contains: remove this line
     checkNotNull(arg.getId());
     // BUG: Diagnostic contains: id = arg.getId()
     int id = checkNotNull(arg.getId());
-    
+
     // BUG: Diagnostic contains: boolean b = arg.hasId();
     boolean b = checkNotNull(arg.hasId());
-    
-    // Do we handle long chains of method calls? 
-    
+
+    // Do we handle long chains of method calls?
+
     // BUG: Diagnostic contains: checkArgument(arg.getTester().getTester().hasId())
     checkNotNull(arg.getTester().getTester().hasId());
-    
+
     // BUG: Diagnostic contains: checkArgument(arg.tester.getTester().hasId())
     checkNotNull(arg.tester.getTester().hasId());
   }
@@ -156,18 +156,18 @@ public class PreconditionsCheckNotNullPrimitivePositiveCases {
   private boolean getTrue() {
     return true;
   }
-  
+
   private static class Tester {
     public Tester tester;
-    
+
     public boolean hasId() {
       return true;
     }
-    
+
     public int getId() {
       return 10;
     }
-    
+
     public Tester getTester() {
       return tester;
     }
@@ -204,7 +204,7 @@ import com.google.common.base.Preconditions;
 public class PreconditionsCheckNotNullPrimitiveNegativeCases {
   public void test() {
     Object obj1 = new Object();
-    
+
     Preconditions.checkNotNull(obj1);
     checkNotNull(obj1);
     Preconditions.checkNotNull(obj1, "obj1 should not be null");

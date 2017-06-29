@@ -95,7 +95,7 @@
 <br>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</a>
  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#CLASS" title="class or interface in java.lang.annotation">CLASS</a>)
- <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation">METHOD</a>)
+ <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>={<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation">METHOD</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/ElementType.html?is-external=true#CONSTRUCTOR" title="class or interface in java.lang.annotation">CONSTRUCTOR</a>})
 public @interface <span class="memberNameLabel">FormatMethod</span></pre>
 <div class="block">Annotation for a method that takes a printf-style format string as an argument followed by
  arguments for that format string.
@@ -113,11 +113,11 @@ public @interface <span class="memberNameLabel">FormatMethod</span></pre>
  passed to the method:
 
  <ol>
- <li>A format string is either:
-     <ul>
-     <li>A compile time constant value (see <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> for more info).
-         <p>The following example is valid:
-         <pre><code>
+   <li>A format string is either:
+       <ul>
+         <li>A compile time constant value (see <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> for more info).
+             <p>The following example is valid:
+             <pre><code>
  public class Foo {
    static final String staticFinalLogMessage = "foo";
    &amp;#064;FormatMethod void log(&amp;#064;FormatString String format, Object... args) {}
@@ -127,8 +127,8 @@ public @interface <span class="memberNameLabel">FormatMethod</span></pre>
    }
  }
  </code></pre>
-         <p>However the following would be invalid:
-         <pre><code>
+             <p>However the following would be invalid:
+             <pre><code>
  public class Foo{
    &amp;#064;FormatMethod void log(&amp;#064;FormatString String format, Object... args) {}
    void invalidLog(String notCompileTimeConstant) {
@@ -136,14 +136,14 @@ public @interface <span class="memberNameLabel">FormatMethod</span></pre>
    }
  }
  </code></pre>
-     <li> An effectively final variable that was assigned to a compile time constant value. This
-         is to permit the following common case:
-         <pre><code>
+         <li>An effectively final variable that was assigned to a compile time constant value.
+             This is to permit the following common case:
+             <pre><code>
  String format = "Some long format string: %s";
  log(format, arg);
  </code></pre>
-     <li>Another <a href="../../../../com/google/errorprone/annotations/FormatString.html" title="annotation in com.google.errorprone.annotations"><code>FormatString</code></a> annotated parameter. Ex:
-         <pre><code>
+         <li>Another <a href="../../../../com/google/errorprone/annotations/FormatString.html" title="annotation in com.google.errorprone.annotations"><code>FormatString</code></a> annotated parameter. Ex:
+             <pre><code>
  public class Foo {
    static final String staticFinalLogMessage = "foo";
    &amp;#064;FormatMethod void log(&amp;#064;FormatString String format, Object... args) {}
@@ -152,13 +152,12 @@ public @interface <span class="memberNameLabel">FormatMethod</span></pre>
    }
  }
  </code></pre>
-     </ul>
-
- <li>The format string will be valid for the input format arguments. In the case that the actual
-     format string parameter has a compile time constant value, this will compare the actual
-     format string value to the types of the passed in format arguments to ensure validity. In the
-     case that the actual format string parameter is a parameter that was annotated <a href="../../../../com/google/errorprone/annotations/FormatString.html" title="annotation in com.google.errorprone.annotations"><code>FormatString</code></a> itself, this will ensure that the types of the arguments passed to the callee
-     match the types of the arguments in the caller.
+       </ul>
+   <li>The format string will be valid for the input format arguments. In the case that the actual
+       format string parameter has a compile time constant value, this will compare the actual
+       format string value to the types of the passed in format arguments to ensure validity. In
+       the case that the actual format string parameter is a parameter that was annotated <a href="../../../../com/google/errorprone/annotations/FormatString.html" title="annotation in com.google.errorprone.annotations"><code>FormatString</code></a> itself, this will ensure that the types of the arguments passed to the callee
+       match the types of the arguments in the caller.
  </ol></div>
 </li>
 </ul>

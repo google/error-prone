@@ -83,35 +83,23 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 
 import javax.inject.Inject;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class JavaxInjectOnFinalFieldNegativeCases {
 
-  /**
-   * Class has no final fields or @Inject annotations.
-   */
-  public class TestClass1 {
-  }
+  /** Class has no final fields or @Inject annotations. */
+  public class TestClass1 {}
 
-  /**
-   * Class has a final field that is not injectable.
-   */
+  /** Class has a final field that is not injectable. */
   public class TestClass2 {
     public final int n = 0;
   }
 
-  /**
-   * Class has an injectable(javax.inject.Inject) field that is not final.
-   */
+  /** Class has an injectable(javax.inject.Inject) field that is not final. */
   public class TestClass3 {
-    @Inject
-    public int n;
+    @Inject public int n;
   }
 
-  /**
-   * Class has an injectable(javax.inject.Inject), final method.
-   */
+  /** Class has an injectable(javax.inject.Inject), final method. */
   public class TestClass4 {
     @Inject
     final void method() {}

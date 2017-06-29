@@ -105,7 +105,6 @@ __MissingFailPositiveCases.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
-
 import org.junit.Assert;
 import org.mockito.Mockito;
 
@@ -118,7 +117,8 @@ public class MissingFailPositiveCases extends TestCase {
     try {
       // BUG: Diagnostic contains: fail()
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void catchAssert() {
@@ -143,7 +143,8 @@ public class MissingFailPositiveCases extends TestCase {
     try {
       // BUG: Diagnostic contains: fail()
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
     throw new Exception();
   }
 
@@ -152,7 +153,8 @@ public class MissingFailPositiveCases extends TestCase {
       dummyMethod();
       // BUG: Diagnostic contains: fail()
       assertDummy();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
     throw new Exception();
   }
 
@@ -211,13 +213,16 @@ public class MissingFailPositiveCases extends TestCase {
       try {
         // BUG: Diagnostic contains: fail()
         dummyMethod();
-      } catch (Exception expected) {}
+      } catch (Exception expected) {
+      }
     }
   }
 
   private static class Dummy {
 
-    String dummy() { return ""; }
+    String dummy() {
+      return "";
+    }
   }
 
   private static class Logger {
@@ -257,7 +262,6 @@ __MissingFailPositiveCases2.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 // unused import to make sure we don't introduce an import conflict.
-import static junit.framework.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -272,14 +276,16 @@ public class MissingFailPositiveCases2 {
     try {
       // BUG: Diagnostic contains: fail()
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void expectedException_helperMethod() {
     try {
       // BUG: Diagnostic contains: fail()
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   private static void dummyMethod() {}
@@ -319,7 +325,8 @@ public class MissingFailPositiveCases3 {
       try {
         // BUG: Diagnostic contains: fail()
         dummyMethod();
-      } catch (Exception expected) {}
+      } catch (Exception expected) {
+      }
     }
 
     public void catchAssert() {
@@ -335,7 +342,6 @@ public class MissingFailPositiveCases3 {
   private static void dummyMethod() {}
 
   private static void assertDummy() {}
-
 }
 {% endhighlight %}
 
@@ -361,17 +367,15 @@ __MissingFailNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import java.util.HashMap;
+import java.util.Map;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.mockito.Mockito;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /** Test cases for missing fail */
 public class MissingFailNegativeCases extends TestCase {
@@ -386,7 +390,8 @@ public class MissingFailNegativeCases extends TestCase {
     try {
       dummyMethod();
       Assert.fail();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   @SuppressWarnings("deprecation") // Need to recognize a framework call but don't want a warning.
@@ -394,21 +399,24 @@ public class MissingFailNegativeCases extends TestCase {
     try {
       dummyMethod();
       junit.framework.Assert.fail();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void expectedException_withStaticFail() {
     try {
       dummyMethod();
       fail();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void expectedException_returnInTry() {
     try {
       dummyMethod();
       return;
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void expectedException_returnInCatch() {
@@ -422,7 +430,8 @@ public class MissingFailNegativeCases extends TestCase {
   public void expectedException_returnAfterCatch() {
     try {
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
     return;
   }
 
@@ -441,7 +450,8 @@ public class MissingFailNegativeCases extends TestCase {
         throw new Exception();
       }
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void expectedException_throwSynonymInCatch() throws Exception {
@@ -467,7 +477,8 @@ public class MissingFailNegativeCases extends TestCase {
         Assert.assertFalse(true);
       }
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void expectedException_assertTrueFalse() throws Exception {
@@ -530,7 +541,7 @@ public class MissingFailNegativeCases extends TestCase {
     try {
       dummyMethod();
     } catch (Exception expected) {
-      assert(false);
+      assert (false);
     }
   }
 
@@ -538,42 +549,48 @@ public class MissingFailNegativeCases extends TestCase {
   public void expectedException_beforeAnnotation() throws Exception {
     try {
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   @After
   public void expectedException_afterAnnotation() throws Exception {
     try {
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   // Don't match setUp methods.
   public void setUp() throws Exception {
     try {
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   // Don't match tearDown methods.
   public void tearDown() throws Exception {
     try {
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   // Don't match main methods.
   public static void main(String[] args) throws Exception {
     try {
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   // Don't match suite methods.
   public static Test suite() throws Exception {
     try {
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
     int x; // Don't return right after catch so as not to trigger that exclusion.
     return null;
   }
@@ -581,32 +598,37 @@ public class MissingFailNegativeCases extends TestCase {
   public void expectedException_interruptedException() throws Exception {
     try {
       dummyMethod();
-    } catch (InterruptedException expected) {}
+    } catch (InterruptedException expected) {
+    }
   }
 
   public void expectedException_assertionError() throws Exception {
     try {
       dummyMethod();
-    } catch (AssertionError expected) {}
+    } catch (AssertionError expected) {
+    }
   }
 
   public void expectedException_assertionFailedError() throws Exception {
     try {
       dummyMethod();
-    } catch (AssertionFailedError expected) {}
+    } catch (AssertionFailedError expected) {
+    }
   }
 
   public void expectedException_throwable() throws Exception {
     try {
       dummyMethod();
-    } catch (Throwable expected) {}
+    } catch (Throwable expected) {
+    }
   }
 
   public void testExpectedException_loopInTestMethod() throws Exception {
     for (int i = 0; i < 2; i++) {
       try {
         dummyMethod();
-      } catch (Exception expected) {}
+      } catch (Exception expected) {
+      }
     }
   }
 
@@ -614,7 +636,8 @@ public class MissingFailNegativeCases extends TestCase {
     for (int i = 0; i < 2; i++) {
       try {
         dummyMethod();
-      } catch (Exception expected) {}
+      } catch (Exception expected) {
+      }
     }
   }
 
@@ -635,7 +658,8 @@ public class MissingFailNegativeCases extends TestCase {
     for (int i = 0; i < 2; i++) {
       try {
         dummyMethod();
-      } catch (Exception expected) {}
+      } catch (Exception expected) {
+      }
     }
   }
 
@@ -644,7 +668,8 @@ public class MissingFailNegativeCases extends TestCase {
     for (int i = 0; i < 2; i++) {
       try {
         dummyMethod();
-      } catch (Exception expected) {}
+      } catch (Exception expected) {
+      }
     }
     return "";
   }
@@ -675,7 +700,8 @@ public class MissingFailNegativeCases extends TestCase {
     try {
       dummyMethod();
     } catch (Exception expected) {
-    } finally {}
+    } finally {
+    }
   }
 
   public void expectedException_logInCatch() {
@@ -767,14 +793,16 @@ public class MissingFailNegativeCases extends TestCase {
       while (true) {
         dummyMethod();
       }
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void expectedException_customFail() {
     try {
       dummyMethod();
       specialFail();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   private static void dummyMethod() throws InterruptedException {}
@@ -792,7 +820,9 @@ public class MissingFailNegativeCases extends TestCase {
 
   private static class Dummy {
 
-    String dummy() { return ""; }
+    String dummy() {
+      return "";
+    }
   }
 }
 {% endhighlight %}
@@ -824,7 +854,8 @@ public class MissingFailNegativeCases2 {
   public void expectedException_emptyCatch() {
     try {
       dummyMethod();
-    } catch (Exception expected) {}
+    } catch (Exception expected) {
+    }
   }
 
   public void catchAssert() {

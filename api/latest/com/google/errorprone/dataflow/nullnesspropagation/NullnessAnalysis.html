@@ -181,7 +181,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <li class="blockList">
 <h4>instance</h4>
 <pre>public static&nbsp;<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis</a>&nbsp;instance(com.sun.tools.javac.util.Context&nbsp;context)</pre>
-<div class="block">Retrieve an instance of <a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation"><code>NullnessAnalysis</code></a> from the <code>context</code>.  If there is no
+<div class="block">Retrieve an instance of <a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation"><code>NullnessAnalysis</code></a> from the <code>context</code>. If there is no
  <a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation"><code>NullnessAnalysis</code></a> currently in the <code>context</code>, create one, insert it, and return
  it.</div>
 </li>
@@ -196,9 +196,8 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
                             com.sun.tools.javac.util.Context&nbsp;context)</pre>
 <div class="block">Returns the <a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> of the leaf of <code>exprPath</code>.
 
- <p>If the leaf required the compiler to generate autoboxing or autounboxing calls,
- <code>getNullness</code> returns the <code>Nullness</code> <i>after</i> the boxing/unboxing. This implies
- that, in those cases, it will always return <code>NONNULL</code>.</div>
+ <p>If the leaf required the compiler to generate autoboxing or autounboxing calls, <code>getNullness</code> returns the <code>Nullness</code> <i>after</i> the boxing/unboxing. This implies that,
+ in those cases, it will always return <code>NONNULL</code>.</div>
 </li>
 </ul>
 </li>

@@ -101,34 +101,42 @@
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.collectionincompatibletype">com.google.errorprone.bugpatterns.collectionincompatibletype</a></td>
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.argumentselectiondefects">com.google.errorprone.bugpatterns.argumentselectiondefects</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.formatstring">com.google.errorprone.bugpatterns.formatstring</a></td>
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.collectionincompatibletype">com.google.errorprone.bugpatterns.collectionincompatibletype</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.formatstring">com.google.errorprone.bugpatterns.formatstring</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject</a></td>
 <td class="colLast">
 <div class="block">Bug patterns related to <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency
  injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns.inject.dagger">com.google.errorprone.bugpatterns.inject.dagger</a></td>
 <td class="colLast">
 <div class="block">Bug patterns related to <a href="http://google.github.io/dagger/">Dagger</a>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns.inject.guice">com.google.errorprone.bugpatterns.inject.guice</a></td>
 <td class="colLast">
 <div class="block">Bug patterns related to <a href="https://github.com/google/guice">Guice</a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns.nullness">com.google.errorprone.bugpatterns.nullness</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.overloading">com.google.errorprone.bugpatterns.overloading</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -290,14 +298,23 @@
 <td class="colOne"><a href="../../../com/google/errorprone/class-use/ErrorProneCompiler.Builder.html#com.google.errorprone">ErrorProneCompiler.Builder</a>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="../../../com/google/errorprone/class-use/ErrorProneFlags.html#com.google.errorprone">ErrorProneFlags</a>
+<div class="block">Represents an immutable map of Error Prone flags to their set values.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="../../../com/google/errorprone/class-use/ErrorProneFlags.Builder.html#com.google.errorprone">ErrorProneFlags.Builder</a>
+<div class="block">Builder for Error Prone command-line flags object.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colOne"><a href="../../../com/google/errorprone/class-use/ErrorProneOptions.html#com.google.errorprone">ErrorProneOptions</a>
 <div class="block">Processes command-line options specific to error-prone.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colOne"><a href="../../../com/google/errorprone/class-use/ErrorProneOptions.Severity.html#com.google.errorprone">ErrorProneOptions.Severity</a>
-<div class="block">Severity levels for an error-prone check that define how the check results should be
- presented.</div>
+<div class="block">Severity levels for an error-prone check that define how the check results should be presented.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -384,6 +401,26 @@
 </tr>
 <tr class="rowColor">
 <td class="colOne"><a href="../../../com/google/errorprone/class-use/VisitorState.html#com.google.errorprone.bugpatterns.android">VisitorState</a>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.argumentselectiondefects">
+<!--   -->
+</a>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> used by <a href="../../../com/google/errorprone/bugpatterns/argumentselectiondefects/package-summary.html">com.google.errorprone.bugpatterns.argumentselectiondefects</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="../../../com/google/errorprone/class-use/BugPattern.html#com.google.errorprone.bugpatterns.argumentselectiondefects">BugPattern</a>
+<div class="block">Describes a bug pattern detected by error-prone.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="../../../com/google/errorprone/class-use/VisitorState.html#com.google.errorprone.bugpatterns.argumentselectiondefects">VisitorState</a>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -508,6 +545,26 @@
 </tbody>
 </table>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.overloading">
+<!--   -->
+</a>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../com/google/errorprone/package-summary.html">com.google.errorprone</a> used by <a href="../../../com/google/errorprone/bugpatterns/overloading/package-summary.html">com.google.errorprone.bugpatterns.overloading</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="../../../com/google/errorprone/class-use/BugPattern.html#com.google.errorprone.bugpatterns.overloading">BugPattern</a>
+<div class="block">Describes a bug pattern detected by error-prone.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="../../../com/google/errorprone/class-use/VisitorState.html#com.google.errorprone.bugpatterns.overloading">VisitorState</a>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.threadsafety">
 <!--   -->
 </a>
@@ -523,6 +580,11 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="../../../com/google/errorprone/class-use/ErrorProneFlags.html#com.google.errorprone.bugpatterns.threadsafety">ErrorProneFlags</a>
+<div class="block">Represents an immutable map of Error Prone flags to their set values.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><a href="../../../com/google/errorprone/class-use/VisitorState.html#com.google.errorprone.bugpatterns.threadsafety">VisitorState</a>&nbsp;</td>
 </tr>
 </tbody>
@@ -660,14 +722,19 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colOne"><a href="../../../com/google/errorprone/class-use/ErrorProneFlags.html#com.google.errorprone.scanner">ErrorProneFlags</a>
+<div class="block">Represents an immutable map of Error Prone flags to their set values.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colOne"><a href="../../../com/google/errorprone/class-use/ErrorProneOptions.html#com.google.errorprone.scanner">ErrorProneOptions</a>
 <div class="block">Processes command-line options specific to error-prone.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="../../../com/google/errorprone/class-use/InvalidCommandLineOptionException.html#com.google.errorprone.scanner">InvalidCommandLineOptionException</a>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="../../../com/google/errorprone/class-use/VisitorState.html#com.google.errorprone.scanner">VisitorState</a>&nbsp;</td>
 </tr>
 </tbody>

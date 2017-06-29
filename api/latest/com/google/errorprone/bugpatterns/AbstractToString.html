@@ -125,8 +125,8 @@ var activeTableTab = "activeTableTab";
 <pre>public abstract class <span class="typeNameLabel">AbstractToString</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.IdentifierTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IdentifierTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MemberSelectTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberSelectTreeMatcher</a></pre>
-<div class="block">An abstract matcher for implicit and explicit calls to <code>Object.toString()</code>, for use
- on types that do not have a human-readable <code>toString()</code> implementation.
+<div class="block">An abstract matcher for implicit and explicit calls to <code>Object.toString()</code>, for use on
+ types that do not have a human-readable <code>toString()</code> implementation.
 
  <p>See examples in <a href="../../../../com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns"><code>StreamToString</code></a> and <a href="../../../../com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns"><code>ArrayToString</code></a>.</div>
 <dl>
@@ -290,8 +290,8 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <h4>implicitToStringFix</h4>
 <pre>protected abstract&nbsp;com.google.common.base.Optional&lt;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;implicitToStringFix(com.sun.source.tree.ExpressionTree&nbsp;tree,
                                                                             <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from
- passing an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
+<div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
+ an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tree</code> - the tree node for the expression being converted to a String</dd>
@@ -307,8 +307,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <pre>protected abstract&nbsp;com.google.common.base.Optional&lt;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;toStringFix(com.sun.source.tree.Tree&nbsp;parent,
                                                                     com.sun.source.tree.ExpressionTree&nbsp;expression,
                                                                     <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or
- <code>String.valueOf()</code>.</div>
+<div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or <code>String.valueOf()</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>parent</code> - the expression's parent (e.g. <code>String.valueOf(expression)</code>)</dd>

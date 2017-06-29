@@ -93,14 +93,18 @@
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.collectionincompatibletype">com.google.errorprone.bugpatterns.collectionincompatibletype</a></td>
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.argumentselectiondefects">com.google.errorprone.bugpatterns.argumentselectiondefects</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.formatstring">com.google.errorprone.bugpatterns.formatstring</a></td>
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.collectionincompatibletype">com.google.errorprone.bugpatterns.collectionincompatibletype</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><a href="#com.google.errorprone.bugpatterns.formatstring">com.google.errorprone.bugpatterns.formatstring</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.bugpatterns.inject.guice">com.google.errorprone.bugpatterns.inject.guice</a></td>
 <td class="colLast">
 <div class="block">Bug patterns related to <a href="https://github.com/google/guice">Guice</a>.</div>
@@ -131,21 +135,8 @@
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></span></code>
-<div class="block">An abstract matcher for implicit and explicit calls to <code>Object.toString()</code>, for use
- on types that do not have a human-readable <code>toString()</code> implementation.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArgumentParameterMismatch.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterMismatch</a></span></code>
-<div class="block">Checks the lexical similarity between method parameter names and the argument names at call
- sites.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ArgumentParameterSwap.html" title="class in com.google.errorprone.bugpatterns">ArgumentParameterSwap</a></span></code>
-<div class="block">This checks the similarity between the arguments and parameters.</div>
+<div class="block">An abstract matcher for implicit and explicit calls to <code>Object.toString()</code>, for use on
+ types that do not have a human-readable <code>toString()</code> implementation.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -315,61 +306,71 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NCopiesOfChar.html" title="class in com.google.errorprone.bugpatterns">NCopiesOfChar</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></span></code>
 <div class="block">Checks methods annotated with <code>@NoAllocation</code> to ensure they really do not allocate.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html" title="class in com.google.errorprone.bugpatterns">NonRuntimeAnnotation</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNull.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNull</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNullPrimitive.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNullPrimitive</a></span></code>
 <div class="block">Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html" title="class in com.google.errorprone.bugpatterns">PreconditionsInvalidPlaceholder</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PrimitiveArrayPassedToVarargsMethod.html" title="class in com.google.errorprone.bugpatterns">PrimitiveArrayPassedToVarargsMethod</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ProtocolBufferOrdinal.html" title="class in com.google.errorprone.bugpatterns">ProtocolBufferOrdinal</a></span></code>
 <div class="block">Points out if #ordinal() is called on a Protocol Buffer Enum.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ProtoFieldPreconditionsCheckNotNull.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldPreconditionsCheckNotNull</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/RestrictedApiChecker.html" title="class in com.google.errorprone.bugpatterns">RestrictedApiChecker</a></span></code>
 <div class="block">Check for non-whitelisted callers to RestrictedApiChecker.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">ReturnValueIgnored</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SelfComparison.html" title="class in com.google.errorprone.bugpatterns">SelfComparison</a></span></code>
 <div class="block">Points out if an object is compared to itself.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SelfEquals.html" title="class in com.google.errorprone.bugpatterns">SelfEquals</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html" title="class in com.google.errorprone.bugpatterns">ShouldHaveEvenArgs</a></span></code>
+<div class="block">Checks that variable argument methods have even number of arguments.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
@@ -426,6 +427,40 @@
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/android/RectIntersectReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns.android">RectIntersectReturnValueIgnored</a></span></code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.argumentselectiondefects">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a> in <a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/package-summary.html">com.google.errorprone.bugpatterns.argumentselectiondefects</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/package-summary.html">com.google.errorprone.bugpatterns.argumentselectiondefects</a> that implement <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/ArgumentSelectionDefectChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">ArgumentSelectionDefectChecker</a></span></code>
+<div class="block">Checks the lexical distance between method parameter names and the argument names at call sites.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/AssertEqualsArgumentOrderChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">AssertEqualsArgumentOrderChecker</a></span></code>
+<div class="block">Checker to make sure that assertEquals-like methods are called with the arguments expected and
+ actual the right way round.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/argumentselectiondefects/NamedParameterChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">NamedParameterChecker</a></span></code>
+<div class="block">A bug checker to catch cases where a developer has annotated an argument with a comment to
+ indicate the intended parameter and the parameter name is wrong.</div>
+</td>
 </tr>
 </tbody>
 </table>

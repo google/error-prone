@@ -126,9 +126,7 @@ __AssistedParametersNegativeCases.java__
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.assistedinject.Assisted;
-
 import java.util.List;
-
 import javax.inject.Inject;
 
 /**
@@ -155,7 +153,7 @@ public class AssistedParametersNegativeCases {
 
   /**
    * Class has constructor with one @Assisted parameter with no value specified and another
-   * parameter of the same tpye.
+   * parameter of the same type.
    */
   public class TestClass3 {
     @Inject
@@ -172,8 +170,8 @@ public class AssistedParametersNegativeCases {
   }
 
   /**
-   * Class has constructor with two @Assisted parameters with the same value and generic tpye
-   * and different type parameters.
+   * Class has constructor with two @Assisted parameters with the same value and generic type and
+   * different type parameters.
    */
   public class TestClass5 {
     @Inject

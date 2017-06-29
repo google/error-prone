@@ -43,9 +43,7 @@ __HardCodedSdCardPathPositiveCases.java__
 
 package com.google.errorprone.bugpatterns.android.testdata;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 public class HardCodedSdCardPathPositiveCases {
   // BUG: Diagnostic contains: Environment
   static final String PATH1 = "/sdcard";
@@ -108,9 +106,7 @@ __HardCodedSdCardPathNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.android.testdata;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/** @author avenet@google.com (Arnaud J. Venet) */
 public class HardCodedSdCardPathNegativeCases {
   static final String PATH1 = "/home/sdcard";
 

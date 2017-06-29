@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":6,"i2":10,"i3":9,"i4":9,"i5":9,"i6":9,"i7":6,"i8":6,"i9":10,"i10":6};
+var methods = {"i0":10,"i1":6,"i2":10,"i3":9,"i4":9,"i5":9,"i6":9,"i7":6,"i8":6,"i9":6,"i10":10,"i11":6};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -116,7 +116,8 @@ var activeTableTab = "activeTableTab";
 <pre>public abstract class <span class="typeNameLabel">ScannerSupplier</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
 implements com.google.common.base.Supplier&lt;<a href="../../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&gt;</pre>
-<div class="block">Supplies <a href="../../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a>s and provides access to the backing sets of all <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s and enabled <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s.</div>
+<div class="block">Supplies <a href="../../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a>s and provides access to the backing sets of all <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s and
+ enabled <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s.</div>
 </li>
 </ul>
 </div>
@@ -206,13 +207,16 @@ implements com.google.common.base.Supplier&lt;<a href="../../../../com/google/er
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#plus-com.google.errorprone.scanner.ScannerSupplier-">plus</a></span>(<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;other)</code>
-<div class="block">Composes this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code>
- <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
-</td>
+<td class="colFirst"><code>abstract <a href="../../../../com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#getFlags--">getFlags</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#plus-com.google.errorprone.scanner.ScannerSupplier-">plus</a></span>(<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;other)</code>
+<div class="block">Composes this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code> <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>abstract com.google.common.collect.ImmutableMap&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html#severities--">severities</a></span>()</code>&nbsp;</td>
 </tr>
@@ -301,8 +305,7 @@ public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSup
 <h4>fromScanner</h4>
 <pre>public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;fromScanner(<a href="../../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</pre>
 <div class="block">Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> that just returns the <a href="../../../../com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a> that was passed in.
- Used mostly for testing.  Does not implement any method other than
- <code>Supplier.get()</code>.</div>
+ Used mostly for testing. Does not implement any method other than <code>Supplier.get()</code>.</div>
 </li>
 </ul>
 <a name="getAllChecks--">
@@ -344,6 +347,15 @@ public static&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSup
 <pre>protected abstract&nbsp;com.google.common.collect.ImmutableSet&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;disabled()</pre>
 </li>
 </ul>
+<a name="getFlags--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getFlags</h4>
+<pre>public abstract&nbsp;<a href="../../../../com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;getFlags()</pre>
+</li>
+</ul>
 <a name="applyOverrides-com.google.errorprone.ErrorProneOptions-">
 <!--   -->
 </a>
@@ -356,19 +368,20 @@ public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.h
 <div class="block">Applies options to this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.
 
  <p>Command-line options to override check severities may do any of the following:
+
  <ul>
- <li>Enable a check that is currently off</li>
- <li>Disable a check that is currently on</li>
- <li>Change the severity of a check that is on, promoting a warning to an error or demoting
- an error to a warning</li>
+   <li>Enable a check that is currently off
+   <li>Disable a check that is currently on
+   <li>Change the severity of a check that is on, promoting a warning to an error or demoting an
+       error to a warning
  </ul></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>errorProneOptions</code> - an <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone"><code>ErrorProneOptions</code></a> object that encapsulates the overrides
- for this compilation</dd>
+     for this compilation</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/InvalidCommandLineOptionException.html" title="class in com.google.errorprone">InvalidCommandLineOptionException</a></code> - if the override map attempts to disable a check
- that may not be disabled</dd>
+<dd><code><a href="../../../../com/google/errorprone/InvalidCommandLineOptionException.html" title="class in com.google.errorprone">InvalidCommandLineOptionException</a></code> - if the override map attempts to disable a check that
+     may not be disabled</dd>
 </dl>
 </li>
 </ul>
@@ -380,9 +393,8 @@ public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.h
 <h4>plus</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation">@CheckReturnValue</a>
 public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;plus(<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;other)</pre>
-<div class="block">Composes this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code>
- <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>. The set of checks that are turned on is the
- intersection of the checks on in <code>this</code> and <code>other</code>.</div>
+<div class="block">Composes this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code> <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>. The set
+ of checks that are turned on is the intersection of the checks on in <code>this</code> and <code>other</code>.</div>
 </li>
 </ul>
 <a name="filter-com.google.common.base.Predicate-">
@@ -393,8 +405,7 @@ public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.h
 <h4>filter</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/CheckReturnValue.html?is-external=true" title="class or interface in javax.annotation">@CheckReturnValue</a>
 public&nbsp;<a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;filter(com.google.common.base.Predicate&lt;? super <a href="../../../../com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;predicate)</pre>
-<div class="block">Filters this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate. Returns a
- <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with only the checks enabled that satisfy the predicate.</div>
+<div class="block">Filters this <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate. Returns a <a href="../../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with only the checks enabled that satisfy the predicate.</div>
 </li>
 </ul>
 </li>

@@ -137,8 +137,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <tr class="altColor">
 <td class="colFirst"><code>static interface&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></span></code>
-<div class="block">A context containing the information necessary to resolve a
- <code>Symbol</code> from an AST node.</div>
+<div class="block">A context containing the information necessary to resolve a <code>Symbol</code> from an AST node.</div>
 </td>
 </tr>
 </table>
@@ -174,12 +173,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
+<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html#bindExpression-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.VisitorState-">bindExpression</a></span>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
               <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code>
-<div class="block">Creates a <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns
- <code>Optional.absent()</code> if the AST node doesn't correspond to a 'simple'
- lock expression.</div>
+<div class="block">Creates a <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock expression.</div>
 </td>
 </tr>
 </table>
@@ -227,11 +224,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockListLast">
 <li class="blockList">
 <h4>bindExpression</h4>
-<pre>public static&nbsp;com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;&nbsp;bindExpression(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
-                                                                                  <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</pre>
-<div class="block">Creates a <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns
- <code>Optional.absent()</code> if the AST node doesn't correspond to a 'simple'
- lock expression.</div>
+<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;&nbsp;bindExpression(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
+                                                           <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</pre>
+<div class="block">Creates a <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock expression.</div>
 </li>
 </ul>
 </li>

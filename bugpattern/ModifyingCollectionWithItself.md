@@ -49,11 +49,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/** @author scottjohnson@google.com (Scott Johnson) */
 public class ModifyingCollectionWithItselfPositiveCases {
-  
+
   List<Integer> a = new ArrayList<Integer>();
   List<Integer> c = new ArrayList<Integer>();
 
@@ -64,7 +62,7 @@ public class ModifyingCollectionWithItselfPositiveCases {
     // BUG: Diagnostic contains: a.addAll(1, b)
     a.addAll(1, a);
   }
-  
+
   public void containsAll(List<Integer> b) {
     // BUG: Diagnostic contains: this.a.containsAll(b)
     this.a.containsAll(this.a);
@@ -138,25 +136,23 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/** @author scottjohnson@google.com (Scott Johnson) */
 public class ModifyingCollectionWithItselfNegativeCases {
-  
+
   List<Integer> a = new ArrayList<Integer>();
-  
+
   public boolean addAll(List<Integer> b) {
     return a.addAll(b);
   }
-  
+
   public boolean removeAll(List<Integer> b) {
     return a.removeAll(b);
   }
-  
+
   public boolean retainAll(List<Integer> b) {
     return a.retainAll(b);
   }
-  
+
   public boolean containsAll(List<Integer> b) {
     return a.containsAll(b);
   }

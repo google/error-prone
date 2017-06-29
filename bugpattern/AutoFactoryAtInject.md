@@ -66,15 +66,6 @@ class AssistedInjectAndInjectOnSameConstructorPositiveCases {
     @AutoFactory
     HasAutoFactoryOnConstructor() {}
   }
-
-  static class HasAutoFactoryOnOtherConstructor {
-    // BUG: Diagnostic contains: remove
-    @Inject
-    HasAutoFactoryOnOtherConstructor() {}
-
-    @AutoFactory
-    HasAutoFactoryOnOtherConstructor(String string) {}
-  }
 }
 {% endhighlight %}
 
@@ -119,6 +110,14 @@ class AutoFactoryAtInjectNegativeCases {
 
     @AutoFactory
     static class InnerType {}
+  }
+
+  static class OnDifferentConstructors {
+    @Inject
+    OnDifferentConstructors(String string) {}
+
+    @AutoFactory
+    OnDifferentConstructors(Object object) {}
   }
 }
 {% endhighlight %}

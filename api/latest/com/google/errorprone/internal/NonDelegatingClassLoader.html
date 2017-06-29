@@ -130,15 +130,13 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">NonDelegatingClassLoader</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/net/URLClassLoader.html?is-external=true" title="class or interface in java.net">URLClassLoader</a></pre>
-<div class="block">A non-delegating <a href="http://docs.oracle.com/javase/7/docs/api/java/net/URLClassLoader.html?is-external=true" title="class or interface in java.net"><code>URLClassLoader</code></a> that searches its own
- resource path <i>before</i> the runtime classpath, reversing the usual
- classloader delegation model. This makes it possible to override runtime
- classes.
+<div class="block">A non-delegating <a href="http://docs.oracle.com/javase/7/docs/api/java/net/URLClassLoader.html?is-external=true" title="class or interface in java.net"><code>URLClassLoader</code></a> that searches its own resource path
+ <i>before</i> the runtime classpath, reversing the usual classloader delegation model. This makes
+ it possible to override runtime classes.
 
- <p>The classloader is also given the classloader from the environment it is
- created in, and a whitelist of classes that it should load from that
- environment. This list must include anything that crosses classloader
- boundaries (for example, the input or return types of the callback).</div>
+ <p>The classloader is also given the classloader from the environment it is created in, and a
+ whitelist of classes that it should load from that environment. This list must include anything
+ that crosses classloader boundaries (for example, the input or return types of the callback).</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>cushon@google.com</dd>

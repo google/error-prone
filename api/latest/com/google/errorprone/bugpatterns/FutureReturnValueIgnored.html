@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -181,21 +181,6 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnVal
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describe</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Fixes the error by assigning the result of the call to the receiver reference, or deleting the
- method call.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#describeUnused-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describeUnused</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
-<div class="block">Fixes the error by assigning the result of the call to a new local variable.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.MethodInvocationTree&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#specializedMatcher--">specializedMatcher</a></span>()</code>
 <div class="block">Match whatever additional conditions concrete subclasses want to match (a list of known
@@ -208,7 +193,7 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnVal
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></h3>
-<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code></li>
+<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describe</a>, <a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">
@@ -265,7 +250,7 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnVal
 <a name="specializedMatcher--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>specializedMatcher</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.MethodInvocationTree&gt;&nbsp;specializedMatcher()</pre>
@@ -276,34 +261,6 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnVal
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#specializedMatcher--">specializedMatcher</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></code></dd>
 </dl>
-</li>
-</ul>
-<a name="describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>describe</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;describe(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">AbstractReturnValueIgnored</a></code></span></div>
-<div class="block">Fixes the error by assigning the result of the call to the receiver reference, or deleting the
- method call.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describe</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></code></dd>
-</dl>
-</li>
-</ul>
-<a name="describeUnused-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>describeUnused</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;describeUnused(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                                  <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block">Fixes the error by assigning the result of the call to a new local variable.</div>
 </li>
 </ul>
 </li>
