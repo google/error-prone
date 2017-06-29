@@ -19,8 +19,9 @@ package com.google.errorprone.names;
 /**
  * A utility class for finding the Levenshtein edit distance between strings. The edit distance
  * between two strings is the number of deletions, insertions, and substitutions required to
- * transform the source to the target. See {@link
- * https://en.wikipedia.org/wiki/Levenshtein_distance}.
+ * transform the source to the target. See <a
+ * href="https://en.wikipedia.org/wiki/Levenshtein_distance">
+ * https://en.wikipedia.org/wiki/Levenshtein_distance</a>.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */

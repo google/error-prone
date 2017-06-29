@@ -37,10 +37,10 @@ public final class NeedlemanWunschEditDistance {
    * Returns the edit distance between two strings. Levenshtein charges the same cost for each
    * insertion or deletion. This algorithm is slightly more general in that it charges a sequence of
    * adjacent insertions/deletions an up-front cost plus an incremental cost per insert/delete
-   * operation. The idea is that Christopher -> Chris should be less than 6 times as expensive as
-   * Christopher -> Christophe. The algorithm used to calculate this distance takes time and space
-   * proportional to the product of { @code source.length() } and { @code target.length() } to build
-   * the 3 arrays.
+   * operation. The idea is that Christopher -&gt; Chris should be less than 6 times as expensive as
+   * Christopher -&gt; Christophe. The algorithm used to calculate this distance takes time and
+   * space proportional to the product of {@code source.length()} and {@code target.length()} to
+   * build the 3 arrays.
    *
    * @param source source string.
    * @param target target string
