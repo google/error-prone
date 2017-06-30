@@ -1,4 +1,4 @@
-/* Copyright 2016 Google Inc. All Rights Reserved.
+/* Copyright 2017 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,9 @@ import java.util.List;
   summary = "Class should not implement both `Comparable` and `Comparator`",
   explanation =
       "A `Comparator` is a *state-ful* instance that provides a "
-          + "compare function between any object. One implements `Comparable` to make  ",
+          + "compare function between other objects, whereas an "
+          + "instance that implements `Comparable` must be "
+          + "compared to another object type.",
   category = JDK,
   severity = WARNING
 )
