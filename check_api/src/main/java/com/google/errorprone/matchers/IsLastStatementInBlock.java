@@ -28,6 +28,6 @@ public class IsLastStatementInBlock<T extends StatementTree> implements Matcher<
   public boolean matches(T statement, VisitorState state) {
     BlockTree block = state.findEnclosing(BlockTree.class);
 
-    return Iterables.getLast(block.getStatements()).equals(statement);
+    return block != null && Iterables.getLast(block.getStatements()).equals(statement);
   }
 }
