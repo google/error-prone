@@ -12,7 +12,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-A `Comparator` is a *state-ful* instance that provides a compare function between any object. One implements `Comparable` to make
+A `Comparator` is a *state-ful* instance that provides a compare function between other objects, whereas an instance that implements `Comparable` must be compared to another object type.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("ComparableAndComparator")` annotation to the enclosing element.

@@ -54,6 +54,9 @@ import java.util.Locale;
 public class ReturnValueIgnoredPositiveCases {
   String a = "thing";
 
+  // BUG: Diagnostic contains: Return value of this method must be used
+  private Runnable r = () -> String.valueOf("");
+
   { // String methods
     // BUG: Diagnostic contains: remove this line
     String.format("%d", 10);
