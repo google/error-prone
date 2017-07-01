@@ -17,7 +17,6 @@
 package com.google.errorprone.apply;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.Replacement;
@@ -25,6 +24,8 @@ import com.google.errorprone.fixes.Replacements;
 import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import java.net.URI;
+import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -62,7 +63,8 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
       boolean ignoreOverlappingFixes,
       ImportOrganizer importOrganizer) {
     this.compilationUnit = checkNotNull(compilationUnit);
-    this.sourcePath = compilationUnit.getSourceFile().toUri().getPath();
+    URI sourceFileUri = compilationUnit.getSourceFile().toUri();
+    this.sourcePath = sourceFileUri.isAbsolute() ? Paths.get(sourceFileUri).toAbsolutePath().toString() : sourceFileUri.getPath();
     this.ignoreOverlappingFixes = ignoreOverlappingFixes;
     this.importsToAdd = new LinkedHashSet<>();
     this.importsToRemove = new LinkedHashSet<>();
