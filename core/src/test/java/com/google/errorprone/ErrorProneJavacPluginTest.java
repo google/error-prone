@@ -129,7 +129,7 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(fileA, fileB));
     assertThat(task.call())
-        .named(Joiner.on('\n').join(diagnosticCollector.getDiagnostics()))
+        .named(Joiner.on(System.lineSeparator()).join(diagnosticCollector.getDiagnostics()))
         .isTrue();
     assertThat(Files.readAllLines(fileA, UTF_8))
         .containsExactly(
@@ -187,7 +187,7 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(fileA, fileB));
     assertThat(task.call())
-        .named(Joiner.on('\n').join(diagnosticCollector.getDiagnostics()))
+        .named(Joiner.on(System.lineSeparator()).join(diagnosticCollector.getDiagnostics()))
         .isTrue();
     assertThat(
             Files.readAllLines(patchFile, UTF_8)
