@@ -212,7 +212,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
 
   private String createReplacementMethodModifiers(VisitorState state, JCModifiers modifiers) {
     ImmutableList.Builder<String> modifierStringsBuilder =
-        new ImmutableList.Builder<String>().add("@Multibinds");
+        ImmutableList.<String>builder().add("@Multibinds");
 
     for (JCAnnotation annotation : modifiers.annotations) {
       Name annotationQualifiedName = ASTHelpers.getSymbol(annotation).getQualifiedName();
@@ -237,7 +237,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
 
   private String createReplacementClassModifiers(
       VisitorState state, JCModifiers enclosingClassModifiers) {
-    ImmutableList.Builder<String> classModifierStringsBuilder = new ImmutableList.Builder<>();
+    ImmutableList.Builder<String> classModifierStringsBuilder = ImmutableList.builder();
 
     for (JCAnnotation annotation : enclosingClassModifiers.annotations) {
       classModifierStringsBuilder.add(state.getSourceForNode(annotation));
