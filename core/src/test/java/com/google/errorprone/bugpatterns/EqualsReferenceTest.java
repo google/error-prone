@@ -39,6 +39,6 @@ public class EqualsReferenceTest {
 
   @Test
   public void testNegativeCases() {
-    // compilationTestHelper.addSourceFile("EqualsReferenceNegativeCases.java").doTest();
+    compilationTestHelper.addSourceFile("EqualsReferenceNegativeCases.java").doTest();
   }
 }
