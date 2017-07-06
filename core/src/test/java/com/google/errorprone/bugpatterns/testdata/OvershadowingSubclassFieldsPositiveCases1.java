@@ -55,10 +55,21 @@ public class OvershadowingSubclassFieldsPositiveCases1 {
     String randTwo;
   }
 
-  /** ClassF has same variable name as grandparent */
-  public static class ClassF extends ClassC {
+  /** ClassE has same variable name as grandparent */
+  public static class ClassE extends ClassC {
     // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
     // This variable is overshadowing a variable in superclass:  ClassC
     public String varTwo;
+  }
+
+  public static class ClassF extends ClassA {
+    @SuppressWarnings("OvershadowingSubclassFields") // no warning because it's suppressed
+    public String varThree;
+  }
+
+  public static class ClassG extends ClassF {
+    // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
+    // This variable is overshadowing a variable in superclass:  ClassF
+    String varThree;
   }
 }
