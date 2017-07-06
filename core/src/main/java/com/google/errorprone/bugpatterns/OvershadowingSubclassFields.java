@@ -66,7 +66,11 @@ public class OvershadowingSubclassFields extends BugChecker implements ClassTree
             .stream()
             .filter(mem -> mem instanceof VariableTree)
             .map(mem -> (VariableTree) mem)
-            .filter(mem -> !isIgnoredType(mem) && !isStatic(mem))
+            .filter(
+                mem ->
+                    !isSuppressed(ASTHelpers.getSymbol(mem))
+                        && !isIgnoredType(mem)
+                        && !isStatic(mem))
             .collect(toCollection(ArrayList::new));
 
     ClassSymbol classSymbol = ASTHelpers.getSymbol(classTree);
