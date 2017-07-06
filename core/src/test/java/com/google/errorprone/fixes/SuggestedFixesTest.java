@@ -19,9 +19,11 @@ package com.google.errorprone.fixes;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.common.base.Verify;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
@@ -39,6 +41,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
@@ -514,6 +517,92 @@ public class SuggestedFixesTest {
             "  void f() {",
             "    int y = 1;",
             "    System.err.println(y);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  /** A test bugchecker that deletes an exception from throws. */
+  @BugPattern(name = "RemovesExceptionChecker", category = JDK, summary = "", severity = ERROR)
+  public static class RemovesExceptionsChecker extends BugChecker implements MethodTreeMatcher {
+
+    private final int index;
+
+    RemovesExceptionsChecker(int index) {
+      this.index = index;
+    }
+
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      if (tree.getThrows().isEmpty() || tree.getThrows().size() <= index) {
+        return NO_MATCH;
+      }
+      ExpressionTree expressionTreeToRemove = tree.getThrows().get(index);
+      return describeMatch(
+          expressionTreeToRemove,
+          SuggestedFixes.deleteExceptions(tree, state, ImmutableList.of(expressionTreeToRemove)));
+    }
+  }
+
+  @Test
+  public void deleteExceptionsRemoveFirstCheckerTest() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new RemovesExceptionsChecker(0), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.IOException;",
+            "class Test {",
+            "  void e() {",
+            "  }",
+            "  void f() throws Exception {",
+            "  }",
+            "  void g() throws RuntimeException, Exception {",
+            "  }",
+            "  void h() throws RuntimeException, Exception, IOException {",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.io.IOException;",
+            "class Test {",
+            "  void e() {",
+            "  }",
+            "  void f() {",
+            "  }",
+            "  void g() throws Exception {",
+            "  }",
+            "  void h() throws Exception, IOException {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void deleteExceptionsRemoveSecondCheckerTest() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new RemovesExceptionsChecker(1), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.IOException;",
+            "class Test {",
+            "  void e() {",
+            "  }",
+            "  void f() throws Exception {",
+            "  }",
+            "  void g() throws RuntimeException, Exception {",
+            "  }",
+            "  void h() throws RuntimeException, Exception, IOException {",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.io.IOException;",
+            "class Test {",
+            "  void e() {",
+            "  }",
+            "  void f() throws Exception {",
+            "  }",
+            "  void g() throws RuntimeException {",
+            "  }",
+            "  void h() throws RuntimeException, IOException {",
             "  }",
             "}")
         .doTest();
