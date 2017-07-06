@@ -32,6 +32,7 @@ import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
+import com.google.errorprone.bugpatterns.BooleanConstantChecker;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
@@ -300,6 +301,7 @@ public class BuiltInCheckerSuppliers {
           AsyncCallableReturnsNull.class,
           AsyncFunctionReturnsNull.class,
           BadShiftAmount.class,
+          BooleanConstantChecker.class,
           BundleDeserializationCast.class,
           ChainingConstructorIgnoresParameter.class,
           CheckReturnValue.class,
