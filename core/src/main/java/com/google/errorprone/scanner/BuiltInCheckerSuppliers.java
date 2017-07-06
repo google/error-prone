@@ -41,6 +41,7 @@ import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ClassNewInstance;
+import com.google.errorprone.bugpatterns.CollectionToArraySafeParameter;
 import com.google.errorprone.bugpatterns.ComparableAndComparator;
 import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
@@ -399,6 +400,7 @@ public class BuiltInCheckerSuppliers {
           CannotMockFinalClass.class,
           ClassCanBeStatic.class,
           ClassNewInstance.class,
+          CollectionToArraySafeParameter.class,
           ComparableAndComparator.class,
           DefaultCharset.class,
           DoubleCheckedLocking.class,
