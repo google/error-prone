@@ -87,7 +87,7 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
               @Override
               public Choice<UnifierWithRemainingMembers> apply(Integer i) {
                 ImmutableList<UMethodDecl> remainingMembers =
-                    new ImmutableList.Builder<UMethodDecl>()
+                    ImmutableList.<UMethodDecl>builder()
                         .addAll(currentMembers.subList(0, i))
                         .addAll(currentMembers.subList(i + 1, currentMembers.size()))
                         .build();

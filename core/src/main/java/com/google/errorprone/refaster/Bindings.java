@@ -98,7 +98,7 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
   }
 
   private Bindings() {
-    this(new HashMap<Key<?>, Object>());
+    this(new HashMap<>());
   }
 
   Bindings(Bindings bindings) {

@@ -153,7 +153,7 @@ public final class FindIdentifiers {
           com.sun.tools.javac.util.List<Type> superTypes = state.getTypes().closure(classType).tail;
           for (Type type : superTypes) {
             Scope scope = type.tsym.members();
-            ImmutableList.Builder<VarSymbol> varsList = new ImmutableList.Builder<VarSymbol>();
+            ImmutableList.Builder<VarSymbol> varsList = ImmutableList.builder();
             for (Symbol var : scope.getSymbols(VarSymbol.class::isInstance)) {
               varsList.add((VarSymbol) var);
             }

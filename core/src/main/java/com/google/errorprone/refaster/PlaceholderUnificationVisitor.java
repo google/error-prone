@@ -127,7 +127,7 @@ abstract class PlaceholderUnificationVisitor
   abstract static class State<R> {
     static <R> State<R> create(
         List<UVariableDecl> seenParameters, Unifier unifier, @Nullable R result) {
-      return new AutoValue_PlaceholderUnificationVisitor_State<R>(seenParameters, unifier, result);
+      return new AutoValue_PlaceholderUnificationVisitor_State<>(seenParameters, unifier, result);
     }
 
     public abstract List<UVariableDecl> seenParameters();

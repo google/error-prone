@@ -80,7 +80,7 @@ public final class LocalStore<V extends AbstractValue<V>>
   }
 
   public Builder<V> toBuilder() {
-    return new Builder<V>(this);
+    return new Builder<>(this);
   }
 
   /**
@@ -108,7 +108,7 @@ public final class LocalStore<V extends AbstractValue<V>>
     }
 
     public LocalStore<V> build() {
-      return new LocalStore<V>(contents);
+      return new LocalStore<>(contents);
     }
   }
 

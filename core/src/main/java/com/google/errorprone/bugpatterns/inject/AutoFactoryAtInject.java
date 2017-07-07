@@ -72,7 +72,7 @@ public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMat
 
     ClassTree classTree = findEnclosingNode(state.getPath(), ClassTree.class);
     ImmutableList<Tree> potentiallyAnnotatedTrees =
-        new ImmutableList.Builder<Tree>().add(classTree).addAll(getConstructors(classTree)).build();
+        ImmutableList.<Tree>builder().add(classTree).addAll(getConstructors(classTree)).build();
     for (Tree potentiallyAnnotatedTree : potentiallyAnnotatedTrees) {
       if (HAS_AUTO_FACTORY_ANNOTATION.matches(potentiallyAnnotatedTree, state)
           && (potentiallyAnnotatedTree.getKind().equals(CLASS)

@@ -161,7 +161,7 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
 
     JCModifiers modifiers = ((JCMethodDecl) method).getModifiers();
     ImmutableList.Builder<String> modifierStringsBuilder =
-        new ImmutableList.Builder<String>().add("@Binds");
+        ImmutableList.<String>builder().add("@Binds");
 
     for (JCAnnotation annotation : modifiers.annotations) {
       Name annotationQualifiedName = getSymbol(annotation).getQualifiedName();

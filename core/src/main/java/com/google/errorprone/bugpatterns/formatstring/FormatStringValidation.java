@@ -76,7 +76,7 @@ public class FormatStringValidation {
   public static ValidationResult validate(
       Collection<? extends ExpressionTree> arguments, final VisitorState state) {
 
-    Deque<ExpressionTree> args = new ArrayDeque<ExpressionTree>(arguments);
+    Deque<ExpressionTree> args = new ArrayDeque<>(arguments);
 
     String formatString = ASTHelpers.constValue(args.removeFirst(), String.class);
     if (formatString == null) {

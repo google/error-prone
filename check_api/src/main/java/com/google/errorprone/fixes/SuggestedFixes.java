@@ -583,7 +583,7 @@ public class SuggestedFixes {
 
   private static String newArgument(String existingParameters, Collection<String> initializers) {
     return newArgument(
-        new ImmutableList.Builder<String>().add(existingParameters).addAll(initializers).build());
+        ImmutableList.<String>builder().add(existingParameters).addAll(initializers).build());
   }
 
   private static String newArgument(Collection<String> initializers) {
