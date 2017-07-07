@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -224,5 +225,21 @@ public class NamedParameterCheckerTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void namedParametersChecker_nonreg_issue633() {
+      compilationHelper
+      .addSourceLines(
+          "Test.java",
+          "abstract class Test {",
+          "  abstract void target(String san);",
+          "  void test() {",
+          "    target(",
+          "        // https://connect.microsoft.com/IE/feedback/details/814744/the-ie-doesnt-trust-a-san-certificate-when-connecting-to-ip-address",
+          "        \"dns:localhost,ip:127.0.0.1,dns:127.0.0.1,ip:::1,uri:https://127.0.0.1:8112,uri:https://::1:8112\");",
+          "  }",
+          "}")
+      .doTest();
   }
 }
