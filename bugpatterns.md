@@ -80,6 +80,9 @@ This method should not be called.
 __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 == NaN always returns false; use the isNaN methods instead
 
+__[EqualsReference](bugpattern/EqualsReference)__<br>
+== must be used in equals method to check equality to itself or an infinite loop will occur.
+
 __[FallThrough](bugpattern/FallThrough)__<br>
 Switch case may fall through
 
