@@ -19,7 +19,6 @@ package com.google.errorprone.refaster;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -148,13 +147,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     ImmutableMap<String, UType> expressionVarTypes =
         ImmutableMap.copyOf(
             Maps.transformValues(
-                freeExpressionVars,
-                new Function<VarSymbol, UType>() {
-                  @Override
-                  public UType apply(VarSymbol sym) {
-                    return templater.template(sym.type);
-                  }
-                }));
+                freeExpressionVars, (VarSymbol sym) -> templater.template(sym.type)));
 
     UType genericType = templater.template(declSym.type);
     List<UTypeVar> typeParameters;

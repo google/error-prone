@@ -107,12 +107,8 @@ abstract class PlaceholderMethod implements Serializable {
   Set<UVariableDecl> requiredParameters() {
     return Maps.filterValues(
             annotatedParameters(),
-            new Predicate<ImmutableClassToInstanceMap<Annotation>>() {
-              @Override
-              public boolean apply(ImmutableClassToInstanceMap<Annotation> annotations) {
-                return !annotations.containsKey(MayOptionallyUse.class);
-              }
-            })
+            (ImmutableClassToInstanceMap<Annotation> annotations) ->
+                !annotations.containsKey(MayOptionallyUse.class))
         .keySet();
   }
 

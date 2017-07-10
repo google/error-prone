@@ -19,7 +19,6 @@ package com.google.errorprone.refaster;
 import static com.google.common.base.MoreObjects.firstNonNull;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Function;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.ImmutableList;
@@ -100,15 +99,12 @@ abstract class UBlank implements UStatement {
         ContiguousSet.create(Range.closed(0, goodIndex), DiscreteDomain.integers());
     return Choice.from(breakPoints)
         .transform(
-            new Function<Integer, UnifierWithUnconsumedStatements>() {
-              @Override
-              public UnifierWithUnconsumedStatements apply(Integer k) {
-                Unifier unifier = state.unifier().fork();
-                unifier.putBinding(key(), state.unconsumedStatements().subList(0, k));
-                List<? extends StatementTree> remaining =
-                    state.unconsumedStatements().subList(k, state.unconsumedStatements().size());
-                return UnifierWithUnconsumedStatements.create(unifier, remaining);
-              }
+            (Integer k) -> {
+              Unifier unifier = state.unifier().fork();
+              unifier.putBinding(key(), state.unconsumedStatements().subList(0, k));
+              List<? extends StatementTree> remaining =
+                  state.unconsumedStatements().subList(k, state.unconsumedStatements().size());
+              return UnifierWithUnconsumedStatements.create(unifier, remaining);
             });
   }
 

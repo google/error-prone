@@ -226,14 +226,7 @@ public abstract class Choice<T> {
           throw new RuntimeException(new InterruptedException());
         }
         return Iterators.concat(
-            Iterators.transform(
-                thisChoice.iterator(),
-                new Function<T, Iterator<R>>() {
-                  @Override
-                  public Iterator<R> apply(T t) {
-                    return function.apply(t).iterator();
-                  }
-                }));
+            Iterators.transform(thisChoice.iterator(), (T t) -> function.apply(t).iterator()));
       }
     };
   }

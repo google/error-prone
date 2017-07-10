@@ -35,12 +35,7 @@ abstract class USimpleStatement extends UTree<JCStatement> implements UStatement
 
   private static Function<Unifier, UnifierWithUnconsumedStatements> withUnconsumed(
       final java.util.List<? extends StatementTree> statements) {
-    return new Function<Unifier, UnifierWithUnconsumedStatements>() {
-      @Override
-      public UnifierWithUnconsumedStatements apply(Unifier unifier) {
-        return UnifierWithUnconsumedStatements.create(unifier, statements);
-      }
-    };
+    return (Unifier unifier) -> UnifierWithUnconsumedStatements.create(unifier, statements);
   }
 
   @Override

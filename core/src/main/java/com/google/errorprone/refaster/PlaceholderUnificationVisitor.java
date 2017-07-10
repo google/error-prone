@@ -165,14 +165,8 @@ abstract class PlaceholderUnificationVisitor
       final ExpressionTree node, final State<?> state) {
     return Choice.from(arguments().entrySet())
         .thenChoose(
-            new Function<
-                Map.Entry<UVariableDecl, UExpression>, Choice<State<PlaceholderParamIdent>>>() {
-              @Override
-              public Choice<State<PlaceholderParamIdent>> apply(
-                  final Map.Entry<UVariableDecl, UExpression> entry) {
-                return unifyParam(entry.getKey(), entry.getValue(), node, state.fork());
-              }
-            });
+            (final Map.Entry<UVariableDecl, UExpression> entry) ->
+                unifyParam(entry.getKey(), entry.getValue(), node, state.fork()));
   }
 
   private Choice<State<PlaceholderParamIdent>> unifyParam(
@@ -183,15 +177,11 @@ abstract class PlaceholderUnificationVisitor
     return placeholderArg
         .unify(toUnify, state.unifier())
         .transform(
-            new Function<Unifier, State<PlaceholderParamIdent>>() {
-              @Override
-              public State<PlaceholderParamIdent> apply(Unifier unifier) {
-                return State.create(
+            (Unifier unifier) ->
+                State.create(
                     state.seenParameters().prepend(placeholderParam),
                     unifier,
-                    new PlaceholderParamIdent(placeholderParam, unifier.getContext()));
-              }
-            });
+                    new PlaceholderParamIdent(placeholderParam, unifier.getContext())));
   }
 
   public Choice<? extends State<? extends JCTree>> unify(@Nullable Tree node, State<?> state) {
@@ -218,14 +208,8 @@ abstract class PlaceholderUnificationVisitor
                 public Choice<State<List<JCTree>>> apply(final State<List<JCTree>> state) {
                   return unify(node, state)
                       .transform(
-                          new Function<State<? extends JCTree>, State<List<JCTree>>>() {
-
-                            @Override
-                            public State<List<JCTree>> apply(State<? extends JCTree> treeState) {
-                              return treeState.withResult(
-                                  state.result().prepend(treeState.result()));
-                            }
-                          });
+                          (State<? extends JCTree> treeState) ->
+                              treeState.withResult(state.result().prepend(treeState.result())));
                 }
               });
     }
@@ -351,22 +335,12 @@ abstract class PlaceholderUnificationVisitor
   public Choice<State<JCArrayAccess>> visitArrayAccess(final ArrayAccessTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCArrayAccess>>>() {
-              @Override
-              public Choice<State<JCArrayAccess>> apply(
-                  final State<? extends JCExpression> expressionState) {
-                return unifyExpression(node.getIndex(), expressionState)
+            (final State<? extends JCExpression> expressionState) ->
+                unifyExpression(node.getIndex(), expressionState)
                     .transform(
-                        new Function<State<? extends JCExpression>, State<JCArrayAccess>>() {
-                          @Override
-                          public State<JCArrayAccess> apply(
-                              State<? extends JCExpression> indexState) {
-                            return indexState.withResult(
-                                maker().Indexed(expressionState.result(), indexState.result()));
-                          }
-                        });
-              }
-            });
+                        (State<? extends JCExpression> indexState) ->
+                            indexState.withResult(
+                                maker().Indexed(expressionState.result(), indexState.result()))));
   }
 
   @Override
@@ -374,20 +348,12 @@ abstract class PlaceholderUnificationVisitor
     final Tag tag = ((JCBinary) node).getTag();
     return unifyExpression(node.getLeftOperand(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCBinary>>>() {
-              @Override
-              public Choice<State<JCBinary>> apply(final State<? extends JCExpression> leftState) {
-                return unifyExpression(node.getRightOperand(), leftState)
+            (final State<? extends JCExpression> leftState) ->
+                unifyExpression(node.getRightOperand(), leftState)
                     .transform(
-                        new Function<State<? extends JCExpression>, State<JCBinary>>() {
-                          @Override
-                          public State<JCBinary> apply(State<? extends JCExpression> rightState) {
-                            return rightState.withResult(
-                                maker().Binary(tag, leftState.result(), rightState.result()));
-                          }
-                        });
-              }
-            });
+                        (State<? extends JCExpression> rightState) ->
+                            rightState.withResult(
+                                maker().Binary(tag, leftState.result(), rightState.result()))));
   }
 
   @Override
@@ -395,22 +361,12 @@ abstract class PlaceholderUnificationVisitor
       final MethodInvocationTree node, State<?> state) {
     return unifyExpression(node.getMethodSelect(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCMethodInvocation>>>() {
-              @Override
-              public Choice<State<JCMethodInvocation>> apply(
-                  final State<? extends JCExpression> selectState) {
-                return unifyExpressions(node.getArguments(), selectState)
+            (final State<? extends JCExpression> selectState) ->
+                unifyExpressions(node.getArguments(), selectState)
                     .transform(
-                        new Function<State<List<JCExpression>>, State<JCMethodInvocation>>() {
-                          @Override
-                          public State<JCMethodInvocation> apply(
-                              State<List<JCExpression>> argsState) {
-                            return argsState.withResult(
-                                maker().Apply(null, selectState.result(), argsState.result()));
-                          }
-                        });
-              }
-            });
+                        (State<List<JCExpression>> argsState) ->
+                            argsState.withResult(
+                                maker().Apply(null, selectState.result(), argsState.result()))));
   }
 
   @Override
@@ -418,25 +374,17 @@ abstract class PlaceholderUnificationVisitor
       final MemberSelectTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .transform(
-            new Function<State<? extends JCExpression>, State<JCFieldAccess>>() {
-              @Override
-              public State<JCFieldAccess> apply(State<? extends JCExpression> exprState) {
-                return exprState.withResult(
-                    maker().Select(exprState.result(), (Name) node.getIdentifier()));
-              }
-            });
+            (State<? extends JCExpression> exprState) ->
+                exprState.withResult(
+                    maker().Select(exprState.result(), (Name) node.getIdentifier())));
   }
 
   @Override
   public Choice<State<JCParens>> visitParenthesized(ParenthesizedTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .transform(
-            new Function<State<? extends JCExpression>, State<JCParens>>() {
-              @Override
-              public State<JCParens> apply(State<? extends JCExpression> expressionState) {
-                return expressionState.withResult(maker().Parens(expressionState.result()));
-              }
-            });
+            (State<? extends JCExpression> expressionState) ->
+                expressionState.withResult(maker().Parens(expressionState.result())));
   }
 
   private static final Set<Tag> MUTATING_UNARY_TAGS =
@@ -447,16 +395,13 @@ abstract class PlaceholderUnificationVisitor
     final Tag tag = ((JCUnary) node).getTag();
     return unifyExpression(node.getExpression(), state)
         .thenOption(
-            new Function<State<? extends JCExpression>, Optional<State<JCUnary>>>() {
-              @Override
-              public Optional<State<JCUnary>> apply(State<? extends JCExpression> expressionState) {
-                if (MUTATING_UNARY_TAGS.contains(tag)
-                    && expressionState.result() instanceof PlaceholderParamIdent) {
-                  return Optional.absent();
-                }
-                return Optional.of(
-                    expressionState.withResult(maker().Unary(tag, expressionState.result())));
+            (State<? extends JCExpression> expressionState) -> {
+              if (MUTATING_UNARY_TAGS.contains(tag)
+                  && expressionState.result() instanceof PlaceholderParamIdent) {
+                return Optional.absent();
               }
+              return Optional.of(
+                  expressionState.withResult(maker().Unary(tag, expressionState.result())));
             });
   }
 
@@ -464,26 +409,18 @@ abstract class PlaceholderUnificationVisitor
   public Choice<State<JCTypeCast>> visitTypeCast(final TypeCastTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .transform(
-            new Function<State<? extends JCExpression>, State<JCTypeCast>>() {
-              @Override
-              public State<JCTypeCast> apply(State<? extends JCExpression> expressionState) {
-                return expressionState.withResult(
-                    maker().TypeCast((JCTree) node.getType(), expressionState.result()));
-              }
-            });
+            (State<? extends JCExpression> expressionState) ->
+                expressionState.withResult(
+                    maker().TypeCast((JCTree) node.getType(), expressionState.result())));
   }
 
   @Override
   public Choice<State<JCInstanceOf>> visitInstanceOf(final InstanceOfTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .transform(
-            new Function<State<? extends JCExpression>, State<JCInstanceOf>>() {
-              @Override
-              public State<JCInstanceOf> apply(State<? extends JCExpression> expressionState) {
-                return expressionState.withResult(
-                    maker().TypeTest(expressionState.result(), (JCTree) node.getType()));
-              }
-            });
+            (State<? extends JCExpression> expressionState) ->
+                expressionState.withResult(
+                    maker().TypeTest(expressionState.result(), (JCTree) node.getType())));
   }
 
   @Override
@@ -495,51 +432,34 @@ abstract class PlaceholderUnificationVisitor
     }
     return unifyExpression(node.getIdentifier(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCNewClass>>>() {
-              @Override
-              public Choice<State<JCNewClass>> apply(
-                  final State<? extends JCExpression> identifierState) {
-                return unifyExpressions(node.getArguments(), identifierState)
+            (final State<? extends JCExpression> identifierState) ->
+                unifyExpressions(node.getArguments(), identifierState)
                     .transform(
-                        new Function<State<List<JCExpression>>, State<JCNewClass>>() {
-                          @Override
-                          public State<JCNewClass> apply(State<List<JCExpression>> argsState) {
-                            return argsState.withResult(
+                        (State<List<JCExpression>> argsState) ->
+                            argsState.withResult(
                                 maker()
                                     .NewClass(
                                         null,
                                         null,
                                         identifierState.result(),
                                         argsState.result(),
-                                        null));
-                          }
-                        });
-              }
-            });
+                                        null))));
   }
 
   @Override
   public Choice<State<JCNewArray>> visitNewArray(final NewArrayTree node, State<?> state) {
     return unifyExpressions(node.getDimensions(), state)
         .thenChoose(
-            new Function<State<List<JCExpression>>, Choice<State<JCNewArray>>>() {
-              @Override
-              public Choice<State<JCNewArray>> apply(final State<List<JCExpression>> dimsState) {
-                return unifyExpressions(node.getInitializers(), dimsState)
+            (final State<List<JCExpression>> dimsState) ->
+                unifyExpressions(node.getInitializers(), dimsState)
                     .transform(
-                        new Function<State<List<JCExpression>>, State<JCNewArray>>() {
-                          @Override
-                          public State<JCNewArray> apply(State<List<JCExpression>> initsState) {
-                            return initsState.withResult(
+                        (State<List<JCExpression>> initsState) ->
+                            initsState.withResult(
                                 maker()
                                     .NewArray(
                                         (JCExpression) node.getType(),
                                         dimsState.result(),
-                                        initsState.result()));
-                          }
-                        });
-              }
-            });
+                                        initsState.result()))));
   }
 
   @Override
@@ -547,61 +467,35 @@ abstract class PlaceholderUnificationVisitor
       final ConditionalExpressionTree node, State<?> state) {
     return unifyExpression(node.getCondition(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCConditional>>>() {
-
-              @Override
-              public Choice<State<JCConditional>> apply(
-                  final State<? extends JCExpression> condState) {
-                return unifyExpression(node.getTrueExpression(), condState)
+            (final State<? extends JCExpression> condState) ->
+                unifyExpression(node.getTrueExpression(), condState)
                     .thenChoose(
-                        new Function<
-                            State<? extends JCExpression>, Choice<State<JCConditional>>>() {
-                          @Override
-                          public Choice<State<JCConditional>> apply(
-                              final State<? extends JCExpression> trueState) {
-                            return unifyExpression(node.getFalseExpression(), trueState)
+                        (final State<? extends JCExpression> trueState) ->
+                            unifyExpression(node.getFalseExpression(), trueState)
                                 .transform(
-                                    new Function<
-                                        State<? extends JCExpression>, State<JCConditional>>() {
-                                      @Override
-                                      public State<JCConditional> apply(
-                                          State<? extends JCExpression> falseState) {
-                                        return falseState.withResult(
+                                    (State<? extends JCExpression> falseState) ->
+                                        falseState.withResult(
                                             maker()
                                                 .Conditional(
                                                     condState.result(),
                                                     trueState.result(),
-                                                    falseState.result()));
-                                      }
-                                    });
-                          }
-                        });
-              }
-            });
+                                                    falseState.result())))));
   }
 
   @Override
   public Choice<State<JCAssign>> visitAssignment(final AssignmentTree node, State<?> state) {
     return unifyExpression(node.getVariable(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCAssign>>>() {
-
-              @Override
-              public Choice<State<JCAssign>> apply(final State<? extends JCExpression> varState) {
-                if (varState.result() instanceof PlaceholderParamIdent) {
-                  // forbid assignment to placeholder variables
-                  return Choice.none();
-                }
-                return unifyExpression(node.getExpression(), varState)
-                    .transform(
-                        new Function<State<? extends JCExpression>, State<JCAssign>>() {
-                          @Override
-                          public State<JCAssign> apply(State<? extends JCExpression> exprState) {
-                            return exprState.withResult(
-                                maker().Assign(varState.result(), exprState.result()));
-                          }
-                        });
+            (final State<? extends JCExpression> varState) -> {
+              if (varState.result() instanceof PlaceholderParamIdent) {
+                // forbid assignment to placeholder variables
+                return Choice.none();
               }
+              return unifyExpression(node.getExpression(), varState)
+                  .transform(
+                      (State<? extends JCExpression> exprState) ->
+                          exprState.withResult(
+                              maker().Assign(varState.result(), exprState.result())));
             });
   }
 
@@ -610,27 +504,20 @@ abstract class PlaceholderUnificationVisitor
       final CompoundAssignmentTree node, State<?> state) {
     return unifyExpression(node.getVariable(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCAssignOp>>>() {
-              @Override
-              public Choice<State<JCAssignOp>> apply(final State<? extends JCExpression> varState) {
-                if (varState.result() instanceof PlaceholderParamIdent) {
-                  // forbid assignment to placeholder variables
-                  return Choice.none();
-                }
-                return unifyExpression(node.getExpression(), varState)
-                    .transform(
-                        new Function<State<? extends JCExpression>, State<JCAssignOp>>() {
-                          @Override
-                          public State<JCAssignOp> apply(State<? extends JCExpression> exprState) {
-                            return exprState.withResult(
-                                maker()
-                                    .Assignop(
-                                        ((JCAssignOp) node).getTag(),
-                                        varState.result(),
-                                        exprState.result()));
-                          }
-                        });
+            (final State<? extends JCExpression> varState) -> {
+              if (varState.result() instanceof PlaceholderParamIdent) {
+                // forbid assignment to placeholder variables
+                return Choice.none();
               }
+              return unifyExpression(node.getExpression(), varState)
+                  .transform(
+                      (State<? extends JCExpression> exprState) ->
+                          exprState.withResult(
+                              maker()
+                                  .Assignop(
+                                      ((JCAssignOp) node).getTag(),
+                                      varState.result(),
+                                      exprState.result())));
             });
   }
 
@@ -639,12 +526,8 @@ abstract class PlaceholderUnificationVisitor
       ExpressionStatementTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .transform(
-            new Function<State<? extends JCExpression>, State<JCExpressionStatement>>() {
-              @Override
-              public State<JCExpressionStatement> apply(State<? extends JCExpression> exprState) {
-                return exprState.withResult(maker().Exec(exprState.result()));
-              }
-            });
+            (State<? extends JCExpression> exprState) ->
+                exprState.withResult(maker().Exec(exprState.result())));
   }
 
   @Override
@@ -664,13 +547,8 @@ abstract class PlaceholderUnificationVisitor
   public Choice<State<JCThrow>> visitThrow(ThrowTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .transform(
-            new Function<State<? extends JCExpression>, State<JCThrow>>() {
-
-              @Override
-              public State<JCThrow> apply(State<? extends JCExpression> exprState) {
-                return exprState.withResult(maker().Throw(exprState.result()));
-              }
-            });
+            (State<? extends JCExpression> exprState) ->
+                exprState.withResult(maker().Throw(exprState.result())));
   }
 
   @Override
@@ -678,120 +556,64 @@ abstract class PlaceholderUnificationVisitor
       final EnhancedForLoopTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCEnhancedForLoop>>>() {
-
-              @Override
-              public Choice<State<JCEnhancedForLoop>> apply(
-                  final State<? extends JCExpression> exprState) {
-                return unifyStatement(node.getStatement(), exprState)
+            (final State<? extends JCExpression> exprState) ->
+                unifyStatement(node.getStatement(), exprState)
                     .transform(
-                        new Function<State<? extends JCStatement>, State<JCEnhancedForLoop>>() {
-
-                          @Override
-                          public State<JCEnhancedForLoop> apply(
-                              State<? extends JCStatement> stmtState) {
-                            return stmtState.withResult(
+                        (State<? extends JCStatement> stmtState) ->
+                            stmtState.withResult(
                                 maker()
                                     .ForeachLoop(
                                         (JCVariableDecl) node.getVariable(),
                                         exprState.result(),
-                                        stmtState.result()));
-                          }
-                        });
-              }
-            });
+                                        stmtState.result()))));
   }
 
   @Override
   public Choice<State<JCIf>> visitIf(final IfTree node, State<?> state) {
     return unifyExpression(node.getCondition(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCIf>>>() {
-              @Override
-              public Choice<State<JCIf>> apply(final State<? extends JCExpression> condState) {
-                return unifyStatement(node.getThenStatement(), condState)
+            (final State<? extends JCExpression> condState) ->
+                unifyStatement(node.getThenStatement(), condState)
                     .thenChoose(
-                        new Function<State<? extends JCStatement>, Choice<State<JCIf>>>() {
-                          @Override
-                          public Choice<State<JCIf>> apply(
-                              final State<? extends JCStatement> thenState) {
-                            return unifyStatement(node.getElseStatement(), thenState)
+                        (final State<? extends JCStatement> thenState) ->
+                            unifyStatement(node.getElseStatement(), thenState)
                                 .transform(
-                                    new Function<State<? extends JCStatement>, State<JCIf>>() {
-                                      @Override
-                                      public State<JCIf> apply(
-                                          State<? extends JCStatement> elseState) {
-                                        return elseState.withResult(
+                                    (State<? extends JCStatement> elseState) ->
+                                        elseState.withResult(
                                             maker()
                                                 .If(
                                                     condState.result(),
                                                     thenState.result(),
-                                                    elseState.result()));
-                                      }
-                                    });
-                          }
-                        });
-              }
-            });
+                                                    elseState.result())))));
   }
 
   @Override
   public Choice<State<JCDoWhileLoop>> visitDoWhileLoop(final DoWhileLoopTree node, State<?> state) {
     return unifyStatement(node.getStatement(), state)
         .thenChoose(
-            new Function<State<? extends JCStatement>, Choice<State<JCDoWhileLoop>>>() {
-
-              @Override
-              public Choice<State<JCDoWhileLoop>> apply(
-                  final State<? extends JCStatement> stmtState) {
-                return unifyExpression(node.getCondition(), stmtState)
+            (final State<? extends JCStatement> stmtState) ->
+                unifyExpression(node.getCondition(), stmtState)
                     .transform(
-                        new Function<State<? extends JCExpression>, State<JCDoWhileLoop>>() {
-
-                          @Override
-                          public State<JCDoWhileLoop> apply(
-                              State<? extends JCExpression> condState) {
-                            return condState.withResult(
-                                maker().DoLoop(stmtState.result(), condState.result()));
-                          }
-                        });
-              }
-            });
+                        (State<? extends JCExpression> condState) ->
+                            condState.withResult(
+                                maker().DoLoop(stmtState.result(), condState.result()))));
   }
 
   @Override
   public Choice<State<JCForLoop>> visitForLoop(final ForLoopTree node, State<?> state) {
     return unifyStatements(node.getInitializer(), state)
         .thenChoose(
-            new Function<State<List<JCStatement>>, Choice<State<JCForLoop>>>() {
-
-              @Override
-              public Choice<State<JCForLoop>> apply(final State<List<JCStatement>> initsState) {
-                return unifyExpression(node.getCondition(), initsState)
+            (final State<List<JCStatement>> initsState) ->
+                unifyExpression(node.getCondition(), initsState)
                     .thenChoose(
-                        new Function<State<? extends JCExpression>, Choice<State<JCForLoop>>>() {
-
-                          @Override
-                          public Choice<State<JCForLoop>> apply(
-                              final State<? extends JCExpression> condState) {
-                            return unifyStatements(node.getUpdate(), condState)
+                        (final State<? extends JCExpression> condState) ->
+                            unifyStatements(node.getUpdate(), condState)
                                 .thenChoose(
-                                    new Function<
-                                        State<List<JCStatement>>, Choice<State<JCForLoop>>>() {
-
-                                      @Override
-                                      public Choice<State<JCForLoop>> apply(
-                                          final State<List<JCStatement>> updateState) {
-                                        return unifyStatement(node.getStatement(), updateState)
+                                    (final State<List<JCStatement>> updateState) ->
+                                        unifyStatement(node.getStatement(), updateState)
                                             .transform(
-                                                new Function<
-                                                    State<? extends JCStatement>,
-                                                    State<JCForLoop>>() {
-
-                                                  @Override
-                                                  public State<JCForLoop> apply(
-                                                      State<? extends JCStatement> stmtState) {
-                                                    return stmtState.withResult(
+                                                (State<? extends JCStatement> stmtState) ->
+                                                    stmtState.withResult(
                                                         maker()
                                                             .ForLoop(
                                                                 initsState.result(),
@@ -799,15 +621,7 @@ abstract class PlaceholderUnificationVisitor
                                                                 List.convert(
                                                                     JCExpressionStatement.class,
                                                                     updateState.result()),
-                                                                stmtState.result()));
-                                                  }
-                                                });
-                                      }
-                                    });
-                          }
-                        });
-              }
-            });
+                                                                stmtState.result()))))));
   }
 
   @Override
@@ -815,53 +629,34 @@ abstract class PlaceholderUnificationVisitor
       final LabeledStatementTree node, State<?> state) {
     return unifyStatement(node.getStatement(), state)
         .transform(
-            new Function<State<? extends JCStatement>, State<JCLabeledStatement>>() {
-              @Override
-              public State<JCLabeledStatement> apply(State<? extends JCStatement> stmtState) {
-                return stmtState.withResult(
-                    maker().Labelled((Name) node.getLabel(), stmtState.result()));
-              }
-            });
+            (State<? extends JCStatement> stmtState) ->
+                stmtState.withResult(maker().Labelled((Name) node.getLabel(), stmtState.result())));
   }
 
   @Override
   public Choice<State<JCVariableDecl>> visitVariable(final VariableTree node, State<?> state) {
     return unifyExpression(node.getInitializer(), state)
         .transform(
-            new Function<State<? extends JCExpression>, State<JCVariableDecl>>() {
-
-              @Override
-              public State<JCVariableDecl> apply(State<? extends JCExpression> initState) {
-                return initState.withResult(
+            (State<? extends JCExpression> initState) ->
+                initState.withResult(
                     maker()
                         .VarDef(
                             (JCModifiers) node.getModifiers(),
                             (Name) node.getName(),
                             (JCExpression) node.getType(),
-                            initState.result()));
-              }
-            });
+                            initState.result())));
   }
 
   @Override
   public Choice<State<JCWhileLoop>> visitWhileLoop(final WhileLoopTree node, State<?> state) {
     return unifyExpression(node.getCondition(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCWhileLoop>>>() {
-              @Override
-              public Choice<State<JCWhileLoop>> apply(
-                  final State<? extends JCExpression> condState) {
-                return unifyStatement(node.getStatement(), condState)
+            (final State<? extends JCExpression> condState) ->
+                unifyStatement(node.getStatement(), condState)
                     .transform(
-                        new Function<State<? extends JCStatement>, State<JCWhileLoop>>() {
-                          @Override
-                          public State<JCWhileLoop> apply(State<? extends JCStatement> stmtState) {
-                            return stmtState.withResult(
-                                maker().WhileLoop(condState.result(), stmtState.result()));
-                          }
-                        });
-              }
-            });
+                        (State<? extends JCStatement> stmtState) ->
+                            stmtState.withResult(
+                                maker().WhileLoop(condState.result(), stmtState.result()))));
   }
 
   @Override
@@ -869,67 +664,39 @@ abstract class PlaceholderUnificationVisitor
       final SynchronizedTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCSynchronized>>>() {
-
-              @Override
-              public Choice<State<JCSynchronized>> apply(
-                  final State<? extends JCExpression> exprState) {
-                return unifyStatement(node.getBlock(), exprState)
+            (final State<? extends JCExpression> exprState) ->
+                unifyStatement(node.getBlock(), exprState)
                     .transform(
-                        new Function<State<? extends JCStatement>, State<JCSynchronized>>() {
-
-                          @Override
-                          public State<JCSynchronized> apply(
-                              State<? extends JCStatement> blockState) {
-                            return blockState.withResult(
+                        (State<? extends JCStatement> blockState) ->
+                            blockState.withResult(
                                 maker()
                                     .Synchronized(
-                                        exprState.result(), (JCBlock) blockState.result()));
-                          }
-                        });
-              }
-            });
+                                        exprState.result(), (JCBlock) blockState.result()))));
   }
 
   @Override
   public Choice<State<JCReturn>> visitReturn(ReturnTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .transform(
-            new Function<State<? extends JCExpression>, State<JCReturn>>() {
-              @Override
-              public State<JCReturn> apply(State<? extends JCExpression> exprState) {
-                return exprState.withResult(maker().Return(exprState.result()));
-              }
-            });
+            (State<? extends JCExpression> exprState) ->
+                exprState.withResult(maker().Return(exprState.result())));
   }
 
   @Override
   public Choice<State<JCTry>> visitTry(final TryTree node, State<?> state) {
     return unify(node.getResources(), state)
         .thenChoose(
-            new Function<State<List<JCTree>>, Choice<State<JCTry>>>() {
-              @Override
-              public Choice<State<JCTry>> apply(final State<List<JCTree>> resourcesState) {
-                return unifyStatement(node.getBlock(), resourcesState)
+            (final State<List<JCTree>> resourcesState) ->
+                unifyStatement(node.getBlock(), resourcesState)
                     .thenChoose(
-                        new Function<State<? extends JCStatement>, Choice<State<JCTry>>>() {
-                          @Override
-                          public Choice<State<JCTry>> apply(
-                              final State<? extends JCStatement> blockState) {
-                            return unify(node.getCatches(), blockState)
+                        (final State<? extends JCStatement> blockState) ->
+                            unify(node.getCatches(), blockState)
                                 .thenChoose(
-                                    new Function<State<List<JCTree>>, Choice<State<JCTry>>>() {
-                                      @Override
-                                      public Choice<State<JCTry>> apply(
-                                          final State<List<JCTree>> catchesState) {
-                                        return unifyStatement(node.getFinallyBlock(), catchesState)
+                                    (final State<List<JCTree>> catchesState) ->
+                                        unifyStatement(node.getFinallyBlock(), catchesState)
                                             .transform(
-                                                new Function<
-                                                    State<? extends JCStatement>, State<JCTry>>() {
-                                                  @Override
-                                                  public State<JCTry> apply(
-                                                      State<? extends JCStatement> finallyState) {
-                                                    return finallyState.withResult(
+                                                (State<? extends JCStatement> finallyState) ->
+                                                    finallyState.withResult(
                                                         maker()
                                                             .Try(
                                                                 resourcesState.result(),
@@ -937,66 +704,43 @@ abstract class PlaceholderUnificationVisitor
                                                                 List.convert(
                                                                     JCCatch.class,
                                                                     catchesState.result()),
-                                                                (JCBlock) finallyState.result()));
-                                                  }
-                                                });
-                                      }
-                                    });
-                          }
-                        });
-              }
-            });
+                                                                (JCBlock)
+                                                                    finallyState.result()))))));
   }
 
   @Override
   public Choice<State<JCCatch>> visitCatch(final CatchTree node, State<?> state) {
     return unifyStatement(node.getBlock(), state)
         .transform(
-            new Function<State<? extends JCStatement>, State<JCCatch>>() {
-              @Override
-              public State<JCCatch> apply(State<? extends JCStatement> blockState) {
-                return blockState.withResult(
+            (State<? extends JCStatement> blockState) ->
+                blockState.withResult(
                     maker()
                         .Catch(
-                            (JCVariableDecl) node.getParameter(), (JCBlock) blockState.result()));
-              }
-            });
+                            (JCVariableDecl) node.getParameter(), (JCBlock) blockState.result())));
   }
 
   @Override
   public Choice<State<JCSwitch>> visitSwitch(final SwitchTree node, State<?> state) {
     return unifyExpression(node.getExpression(), state)
         .thenChoose(
-            new Function<State<? extends JCExpression>, Choice<State<JCSwitch>>>() {
-              @Override
-              public Choice<State<JCSwitch>> apply(final State<? extends JCExpression> exprState) {
-                return unify(node.getCases(), exprState)
+            (final State<? extends JCExpression> exprState) ->
+                unify(node.getCases(), exprState)
                     .transform(
-                        new Function<State<List<JCTree>>, State<JCSwitch>>() {
-                          @Override
-                          public State<JCSwitch> apply(State<List<JCTree>> casesState) {
-                            return casesState.withResult(
+                        (State<List<JCTree>> casesState) ->
+                            casesState.withResult(
                                 maker()
                                     .Switch(
                                         exprState.result(),
-                                        List.convert(JCCase.class, casesState.result())));
-                          }
-                        });
-              }
-            });
+                                        List.convert(JCCase.class, casesState.result())))));
   }
 
   @Override
   public Choice<State<JCCase>> visitCase(final CaseTree node, State<?> state) {
     return unifyStatements(node.getStatements(), state)
         .transform(
-            new Function<State<List<JCStatement>>, State<JCCase>>() {
-              @Override
-              public State<JCCase> apply(State<List<JCStatement>> stmtsState) {
-                return stmtsState.withResult(
-                    maker().Case((JCExpression) node.getExpression(), stmtsState.result()));
-              }
-            });
+            (State<List<JCStatement>> stmtsState) ->
+                stmtsState.withResult(
+                    maker().Case((JCExpression) node.getExpression(), stmtsState.result())));
   }
 
   @Override
@@ -1004,18 +748,14 @@ abstract class PlaceholderUnificationVisitor
       final LambdaExpressionTree node, State<?> state) {
     return unify(node.getBody(), state)
         .transform(
-            new Function<State<? extends JCTree>, State<JCLambda>>() {
-              @Override
-              public State<JCLambda> apply(State<? extends JCTree> bodyState) {
-                return bodyState.withResult(
+            (State<? extends JCTree> bodyState) ->
+                bodyState.withResult(
                     maker()
                         .Lambda(
                             List.convert(
                                 JCVariableDecl.class,
                                 (List<? extends VariableTree>) node.getParameters()),
-                            bodyState.result()));
-              }
-            });
+                            bodyState.result())));
   }
 
   @Override
@@ -1023,10 +763,8 @@ abstract class PlaceholderUnificationVisitor
       final MemberReferenceTree node, State<?> state) {
     return unifyExpression(node.getQualifierExpression(), state)
         .transform(
-            new Function<State<? extends JCExpression>, State<JCMemberReference>>() {
-              @Override
-              public State<JCMemberReference> apply(State<? extends JCExpression> exprState) {
-                return exprState.withResult(
+            (State<? extends JCExpression> exprState) ->
+                exprState.withResult(
                     maker()
                         .Reference(
                             node.getMode(),
@@ -1034,8 +772,6 @@ abstract class PlaceholderUnificationVisitor
                             exprState.result(),
                             List.convert(
                                 JCExpression.class,
-                                (List<? extends ExpressionTree>) node.getTypeArguments())));
-              }
-            });
+                                (List<? extends ExpressionTree>) node.getTypeArguments()))));
   }
 }

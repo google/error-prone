@@ -62,25 +62,18 @@ abstract class UIf implements UStatement, IfTree {
 
   private static Function<Unifier, Choice<Unifier>> unifyUStatementWithSingleStatement(
       @Nullable final UStatement toUnify, @Nullable final StatementTree target) {
-    return new Function<Unifier, Choice<Unifier>>() {
-      @Override
-      public Choice<Unifier> apply(Unifier unifier) {
-        if (toUnify == null) {
-          return (target == null) ? Choice.of(unifier) : Choice.<Unifier>none();
-        }
-        List<StatementTree> list = (target == null) ? List.<StatementTree>nil() : List.of(target);
-        return toUnify
-            .apply(UnifierWithUnconsumedStatements.create(unifier, list))
-            .thenOption(
-                new Function<UnifierWithUnconsumedStatements, Optional<Unifier>>() {
-                  @Override
-                  public Optional<Unifier> apply(UnifierWithUnconsumedStatements state) {
-                    return state.unconsumedStatements().isEmpty()
-                        ? Optional.of(state.unifier())
-                        : Optional.<Unifier>absent();
-                  }
-                });
+    return (Unifier unifier) -> {
+      if (toUnify == null) {
+        return (target == null) ? Choice.of(unifier) : Choice.<Unifier>none();
       }
+      List<StatementTree> list = (target == null) ? List.<StatementTree>nil() : List.of(target);
+      return toUnify
+          .apply(UnifierWithUnconsumedStatements.create(unifier, list))
+          .thenOption(
+              (UnifierWithUnconsumedStatements state) ->
+                  state.unconsumedStatements().isEmpty()
+                      ? Optional.of(state.unifier())
+                      : Optional.<Unifier>absent());
     };
   }
 
@@ -159,15 +152,10 @@ abstract class UIf implements UStatement, IfTree {
                             UnifierWithUnconsumedStatements.create(
                                 unifier, List.of(ifTree.getThenStatement())))
                         .thenOption(
-                            new Function<UnifierWithUnconsumedStatements, Optional<Unifier>>() {
-                              @Override
-                              public Optional<Unifier> apply(
-                                  UnifierWithUnconsumedStatements state) {
-                                return state.unconsumedStatements().isEmpty()
+                            (UnifierWithUnconsumedStatements state) ->
+                                state.unconsumedStatements().isEmpty()
                                     ? Optional.of(state.unifier())
-                                    : Optional.<Unifier>absent();
-                              }
-                            });
+                                    : Optional.<Unifier>absent());
                   }
                 })
             .thenChoose(

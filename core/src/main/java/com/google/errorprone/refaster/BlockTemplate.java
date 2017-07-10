@@ -121,53 +121,45 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
       choice = choice.thenChoose(templateStatement);
     }
     return choice.thenChoose(
-        new Function<UnifierWithUnconsumedStatements, Choice<List<BlockTemplateMatch>>>() {
-          @Override
-          public Choice<List<BlockTemplateMatch>> apply(UnifierWithUnconsumedStatements state) {
-            Unifier unifier = state.unifier();
-            Inliner inliner = unifier.createInliner();
-            try {
-              Optional<Unifier> checkedUnifier =
-                  typecheck(
-                      unifier,
-                      inliner,
-                      new Warner(firstStatement),
-                      expectedTypes(inliner),
-                      actualTypes(inliner));
-              if (checkedUnifier.isPresent()) {
-                int consumedStatements = statements.size() - state.unconsumedStatements().size();
-                BlockTemplateMatch match =
-                    new BlockTemplateMatch(
-                        block, checkedUnifier.get(), offset, offset + consumedStatements);
-                boolean verified =
-                    ExpressionTemplate.trueOrNull(
-                        ExpressionTemplate.PLACEHOLDER_VERIFIER.scan(
-                            templateStatements(), checkedUnifier.get()));
-                if (!verified) {
-                  return Choice.none();
-                }
-                return matchesStartingAnywhere(
-                        block,
-                        offset + consumedStatements,
-                        statements.subList(consumedStatements, statements.size()),
-                        context)
-                    .transform(prepend(match));
+        (UnifierWithUnconsumedStatements state) -> {
+          Unifier unifier = state.unifier();
+          Inliner inliner = unifier.createInliner();
+          try {
+            Optional<Unifier> checkedUnifier =
+                typecheck(
+                    unifier,
+                    inliner,
+                    new Warner(firstStatement),
+                    expectedTypes(inliner),
+                    actualTypes(inliner));
+            if (checkedUnifier.isPresent()) {
+              int consumedStatements = statements.size() - state.unconsumedStatements().size();
+              BlockTemplateMatch match =
+                  new BlockTemplateMatch(
+                      block, checkedUnifier.get(), offset, offset + consumedStatements);
+              boolean verified =
+                  ExpressionTemplate.trueOrNull(
+                      ExpressionTemplate.PLACEHOLDER_VERIFIER.scan(
+                          templateStatements(), checkedUnifier.get()));
+              if (!verified) {
+                return Choice.none();
               }
-            } catch (CouldNotResolveImportException e) {
-              // fall through
+              return matchesStartingAnywhere(
+                      block,
+                      offset + consumedStatements,
+                      statements.subList(consumedStatements, statements.size()),
+                      context)
+                  .transform(prepend(match));
             }
-            return Choice.none();
+          } catch (CouldNotResolveImportException e) {
+            // fall through
           }
+          return Choice.none();
         });
   }
 
   private static <T> Function<List<T>, List<T>> prepend(final T t) {
-    return new Function<List<T>, List<T>>() {
-      @Override
-      public List<T> apply(List<T> list) {
-        return list.prepend(t);
-      }
-    };
+    return (List<T> list) -> list.prepend(t);
   }
 
   private Choice<List<BlockTemplateMatch>> matchesStartingAnywhere(

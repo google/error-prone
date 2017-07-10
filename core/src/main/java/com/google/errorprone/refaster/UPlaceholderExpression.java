@@ -17,7 +17,6 @@ package com.google.errorprone.refaster;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -175,32 +174,27 @@ public abstract class UPlaceholderExpression extends UExpression {
                 PlaceholderUnificationVisitor.State.create(
                     List.<UVariableDecl>nil(), unifier, null));
     return states.thenOption(
-        new Function<
-            PlaceholderUnificationVisitor.State<? extends JCExpression>, Optional<Unifier>>() {
-          @Override
-          public Optional<Unifier> apply(
-              PlaceholderUnificationVisitor.State<? extends JCExpression> state) {
-            if (ImmutableSet.copyOf(state.seenParameters())
-                .containsAll(placeholder().requiredParameters())) {
-              Unifier resultUnifier = state.unifier();
-              JCExpression prevBinding = resultUnifier.getBinding(placeholder().exprKey());
-              if (prevBinding != null) {
-                return prevBinding.toString().equals(state.result().toString())
-                    ? Optional.of(resultUnifier)
-                    : Optional.<Unifier>absent();
-              }
-              JCExpression result = state.result();
-              if (!placeholder()
-                  .matcher()
-                  .matches(result, UMatches.makeVisitorState(expr, resultUnifier))) {
-                return Optional.absent();
-              }
-              result.type = expr.type;
-              resultUnifier.putBinding(placeholder().exprKey(), result);
-              return Optional.of(resultUnifier);
-            } else {
+        (PlaceholderUnificationVisitor.State<? extends JCExpression> state) -> {
+          if (ImmutableSet.copyOf(state.seenParameters())
+              .containsAll(placeholder().requiredParameters())) {
+            Unifier resultUnifier = state.unifier();
+            JCExpression prevBinding = resultUnifier.getBinding(placeholder().exprKey());
+            if (prevBinding != null) {
+              return prevBinding.toString().equals(state.result().toString())
+                  ? Optional.of(resultUnifier)
+                  : Optional.<Unifier>absent();
+            }
+            JCExpression result = state.result();
+            if (!placeholder()
+                .matcher()
+                .matches(result, UMatches.makeVisitorState(expr, resultUnifier))) {
               return Optional.absent();
             }
+            result.type = expr.type;
+            resultUnifier.putBinding(placeholder().exprKey(), result);
+            return Optional.of(resultUnifier);
+          } else {
+            return Optional.absent();
           }
         });
   }

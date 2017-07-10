@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.BlockTree;
@@ -56,14 +55,10 @@ abstract class UBlock extends USimpleStatement implements BlockTree {
       choice = choice.thenChoose(statement);
     }
     return choice.thenOption(
-        new Function<UnifierWithUnconsumedStatements, Optional<Unifier>>() {
-          @Override
-          public Optional<Unifier> apply(UnifierWithUnconsumedStatements state) {
-            return state.unconsumedStatements().isEmpty()
+        (UnifierWithUnconsumedStatements state) ->
+            state.unconsumedStatements().isEmpty()
                 ? Optional.of(state.unifier())
-                : Optional.<Unifier>absent();
-          }
-        });
+                : Optional.<Unifier>absent());
   }
 
   static com.sun.tools.javac.util.List<JCStatement> inlineStatementList(

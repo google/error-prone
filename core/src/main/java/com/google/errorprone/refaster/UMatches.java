@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Predicate;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
@@ -57,13 +56,7 @@ abstract class UMatches extends UExpression {
     final Tree exprTarget = UParens.skipParens(target);
     return expression()
         .unify(exprTarget, unifier)
-        .condition(
-            new Predicate<Unifier>() {
-              @Override
-              public boolean apply(Unifier success) {
-                return matches(exprTarget, success) == positive();
-              }
-            });
+        .condition((Unifier success) -> matches(exprTarget, success) == positive());
   }
 
   @Override

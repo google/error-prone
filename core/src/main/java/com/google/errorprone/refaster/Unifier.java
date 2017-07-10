@@ -106,12 +106,7 @@ public final class Unifier {
 
   public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
       @Nullable final U unifiable, @Nullable final T target) {
-    return new Function<Unifier, Choice<Unifier>>() {
-      @Override
-      public Choice<Unifier> apply(Unifier unifier) {
-        return unifyNullable(unifier, unifiable, target);
-      }
-    };
+    return (Unifier unifier) -> unifyNullable(unifier, unifiable, target);
   }
 
   public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyNullable(
@@ -134,12 +129,7 @@ public final class Unifier {
       @Nullable final List<U> toUnify,
       @Nullable final List<? extends T> targets,
       final boolean allowVarargs) {
-    return new Function<Unifier, Choice<Unifier>>() {
-      @Override
-      public Choice<Unifier> apply(Unifier unifier) {
-        return unifyList(unifier, toUnify, targets, allowVarargs);
-      }
-    };
+    return (Unifier unifier) -> unifyList(unifier, toUnify, targets, allowVarargs);
   }
 
   /**

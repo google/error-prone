@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -127,58 +126,43 @@ abstract class UPlaceholderStatement implements UStatement {
       // Consume another statement, or if that fails, fall back to the previous choices...
       choiceToHere =
           choiceToHere.thenChoose(
-              new Function<State<ConsumptionState>, Choice<State<ConsumptionState>>>() {
-                @Override
-                public Choice<State<ConsumptionState>> apply(
-                    final State<ConsumptionState> consumptionState) {
-                  return visitor
+              (final State<ConsumptionState> consumptionState) ->
+                  visitor
                       .unifyStatement(targetStatement, consumptionState)
                       .transform(
-                          new Function<State<? extends JCStatement>, State<ConsumptionState>>() {
-                            @Override
-                            public State<ConsumptionState> apply(
-                                State<? extends JCStatement> stmtState) {
-                              return stmtState.withResult(
-                                  consumptionState.result().consume(stmtState.result()));
-                            }
-                          });
-                }
-              });
+                          (State<? extends JCStatement> stmtState) ->
+                              stmtState.withResult(
+                                  consumptionState.result().consume(stmtState.result()))));
       if (verification.allRequiredMatched()) {
         realOptions = choiceToHere.or(realOptions);
       }
     }
     return realOptions.thenOption(
-        new Function<State<ConsumptionState>, Optional<UnifierWithUnconsumedStatements>>() {
-          @Override
-          public Optional<UnifierWithUnconsumedStatements> apply(
-              State<ConsumptionState> consumptionState) {
-            if (ImmutableSet.copyOf(consumptionState.seenParameters())
-                .containsAll(placeholder().requiredParameters())) {
-              Unifier resultUnifier = consumptionState.unifier().fork();
-              int nConsumedStatements = consumptionState.result().consumedStatements();
-              java.util.List<? extends StatementTree> remainingStatements =
-                  initState
-                      .unconsumedStatements()
-                      .subList(nConsumedStatements, initState.unconsumedStatements().size());
-              UnifierWithUnconsumedStatements result =
-                  UnifierWithUnconsumedStatements.create(resultUnifier, remainingStatements);
-              List<JCStatement> impl =
-                  consumptionState.result().placeholderImplInReverseOrder().reverse();
-              ControlFlowVisitor.Result implFlow =
-                  ControlFlowVisitor.INSTANCE.visitStatements(impl);
-              if (implFlow == implementationFlow()) {
-                List<JCStatement> prevBinding = resultUnifier.getBinding(placeholder().blockKey());
-                if (prevBinding != null && prevBinding.toString().equals(impl.toString())) {
-                  return Optional.of(result);
-                } else if (prevBinding == null) {
-                  resultUnifier.putBinding(placeholder().blockKey(), impl);
-                  return Optional.of(result);
-                }
+        (State<ConsumptionState> consumptionState) -> {
+          if (ImmutableSet.copyOf(consumptionState.seenParameters())
+              .containsAll(placeholder().requiredParameters())) {
+            Unifier resultUnifier = consumptionState.unifier().fork();
+            int nConsumedStatements = consumptionState.result().consumedStatements();
+            java.util.List<? extends StatementTree> remainingStatements =
+                initState
+                    .unconsumedStatements()
+                    .subList(nConsumedStatements, initState.unconsumedStatements().size());
+            UnifierWithUnconsumedStatements result =
+                UnifierWithUnconsumedStatements.create(resultUnifier, remainingStatements);
+            List<JCStatement> impl =
+                consumptionState.result().placeholderImplInReverseOrder().reverse();
+            ControlFlowVisitor.Result implFlow = ControlFlowVisitor.INSTANCE.visitStatements(impl);
+            if (implFlow == implementationFlow()) {
+              List<JCStatement> prevBinding = resultUnifier.getBinding(placeholder().blockKey());
+              if (prevBinding != null && prevBinding.toString().equals(impl.toString())) {
+                return Optional.of(result);
+              } else if (prevBinding == null) {
+                resultUnifier.putBinding(placeholder().blockKey(), impl);
+                return Optional.of(result);
               }
             }
-            return Optional.absent();
           }
+          return Optional.absent();
         });
   }
 
@@ -194,17 +178,14 @@ abstract class UPlaceholderStatement implements UStatement {
       binding =
           binding.or(
               exprBinding.transform(
-                  new Function<JCExpression, List<JCStatement>>() {
-                    @Override
-                    public List<JCStatement> apply(JCExpression expr) {
-                      switch (implementationFlow()) {
-                        case NEVER_EXITS:
-                          return List.of((JCStatement) inliner.maker().Exec(expr));
-                        case ALWAYS_RETURNS:
-                          return List.of((JCStatement) inliner.maker().Return(expr));
-                        default:
-                          throw new AssertionError();
-                      }
+                  (JCExpression expr) -> {
+                    switch (implementationFlow()) {
+                      case NEVER_EXITS:
+                        return List.of((JCStatement) inliner.maker().Exec(expr));
+                      case ALWAYS_RETURNS:
+                        return List.of((JCStatement) inliner.maker().Return(expr));
+                      default:
+                        throw new AssertionError();
                     }
                   }));
       return UPlaceholderExpression.copier(arguments(), inliner).copy(binding.get(), inliner);
