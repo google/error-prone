@@ -16,6 +16,7 @@
 
 package com.google.errorprone.refaster;
 
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -45,10 +46,10 @@ public class UUnaryTest extends AbstractUTreeTest {
         .thenReturn(inliner.maker().Ident(inliner.asName("foo")));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void rejectsNonUnaryOperations() {
     ULiteral sevenLit = ULiteral.intLit(7);
-    UUnary.create(Kind.PLUS, sevenLit);
+    assertThrows(IllegalArgumentException.class, () -> UUnary.create(Kind.PLUS, sevenLit));
   }
 
   @Test

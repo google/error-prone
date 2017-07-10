@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import static org.junit.Assert.assertThrows;
+
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.LinkType;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -63,7 +65,7 @@ public class BugPatternValidatorTest {
     BugPatternValidator.validate(annotation);
   }
 
-  @Test(expected = ValidationException.class)
+  @Test
   public void linkTypeNoneButIncludesLink() throws Exception {
     @BugPattern(
       name = "LinkTypeNoneButIncludesLink",
@@ -77,7 +79,7 @@ public class BugPatternValidatorTest {
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
-    BugPatternValidator.validate(annotation);
+    assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
   }
 
   @Test
@@ -97,7 +99,7 @@ public class BugPatternValidatorTest {
     BugPatternValidator.validate(annotation);
   }
 
-  @Test(expected = ValidationException.class)
+  @Test
   public void linkTypeCustomButNoLink() throws Exception {
     @BugPattern(
       name = "LinkTypeCustomButNoLink",
@@ -110,10 +112,10 @@ public class BugPatternValidatorTest {
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
-    BugPatternValidator.validate(annotation);
+    assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
   }
 
-  @Test(expected = ValidationException.class)
+  @Test
   public void suppressWarningsButIncludesCustomAnnotation() throws Exception {
     @BugPattern(
       name = "SuppressWarningsButIncludesCustomAnnotation",
@@ -127,7 +129,7 @@ public class BugPatternValidatorTest {
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
-    BugPatternValidator.validate(annotation);
+    assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
   }
 
   @Test
@@ -146,7 +148,7 @@ public class BugPatternValidatorTest {
     BugPatternValidator.validate(annotation);
   }
 
-  @Test(expected = ValidationException.class)
+  @Test
   public void unsuppressibleButIncludesCustomAnnotation() throws Exception {
     @BugPattern(
       name = "unsuppressibleButIncludesCustomAnnotation",
@@ -160,7 +162,7 @@ public class BugPatternValidatorTest {
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
-    BugPatternValidator.validate(annotation);
+    assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
   }
 
   @Test
@@ -200,7 +202,7 @@ public class BugPatternValidatorTest {
     BugPatternValidator.validate(annotation);
   }
 
-  @Test(expected = ValidationException.class)
+  @Test
   public void customSuppressionAnnotationButSuppressWarnings() throws Exception {
     @BugPattern(
       name = "customSuppressionAnnotationButSuppressWarnings",
@@ -214,10 +216,10 @@ public class BugPatternValidatorTest {
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
-    BugPatternValidator.validate(annotation);
+    assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
   }
 
-  @Test(expected = ValidationException.class)
+  @Test
   public void customSuppressionAnnotationsIncludesSuppressWarnings() throws Exception {
     @BugPattern(
       name = "customSuppressionAnnotationButSuppressWarnings",
@@ -231,10 +233,10 @@ public class BugPatternValidatorTest {
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
-    BugPatternValidator.validate(annotation);
+    assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
   }
 
-  @Test(expected = ValidationException.class)
+  @Test
   public void customSuppressionAnnotationButNoneSpecified() throws Exception {
     @BugPattern(
       name = "customSuppressionAnnotationButNoneSpecified",
@@ -247,6 +249,6 @@ public class BugPatternValidatorTest {
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
-    BugPatternValidator.validate(annotation);
+    assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
   }
 }

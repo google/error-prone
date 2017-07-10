@@ -36,6 +36,7 @@
     <truth.version>0.31</truth.version>
     <javac.version>9-dev-r4023-2</javac.version>
     <autovalue.version>1.3</autovalue.version>
+    <junit.version>4.13-SNAPSHOT</junit.version>
   </properties>
 
   <modules>
