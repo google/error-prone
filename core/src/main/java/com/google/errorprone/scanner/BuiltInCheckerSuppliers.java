@@ -71,6 +71,7 @@ import com.google.errorprone.bugpatterns.FunctionalInterfaceClash;
 import com.google.errorprone.bugpatterns.FunctionalInterfaceMethodChanged;
 import com.google.errorprone.bugpatterns.FutureReturnValueIgnored;
 import com.google.errorprone.bugpatterns.FuturesGetCheckedIllegalExceptionType;
+import com.google.errorprone.bugpatterns.FuzzyEqualsShouldNotBeUsedInEqualsMethod;
 import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
 import com.google.errorprone.bugpatterns.GetClassOnEnum;
@@ -476,6 +477,7 @@ public class BuiltInCheckerSuppliers {
           EmptyTopLevelDeclaration.class,
           ExpectedExceptionChecker.class,
           FieldMissingNullable.class,
+          FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
           HardCodedSdCardPath.class,
           InconsistentOverloads.class,
           InjectedConstructorAnnotations.class,
