@@ -98,10 +98,14 @@ public class ErrorProneExternalCompilerAdapter extends DefaultCompilerAdapter {
       }
 
       cmd.createArgument().setValue(ErrorProneCompiler.class.getName());
+      // This is the first argument that may be spilled to a file.
+      // The ant API describes it as the first argument which is a
+      // file, but in fact only uses it for spilling.  Putting the
+      // break here allows long classpath arguments to be handled.
+      int firstSpillableArgument = cmd.size();
       setupModernJavacCommandlineSwitches(cmd);
-      int firstFile = cmd.size();
       logAndAddFilesToCompile(cmd);
-      return executeExternalCompile(cmd.getCommandline(), firstFile, true) == 0;
+      return executeExternalCompile(cmd.getCommandline(), firstSpillableArgument, true) == 0;
     } else {
       attributes.log(
           "You must set fork=\"yes\" to use the external Error Prone compiler", Project.MSG_ERR);
