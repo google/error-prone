@@ -26,6 +26,7 @@ import com.google.errorprone.bugpatterns.ArrayHashCode;
 import com.google.errorprone.bugpatterns.ArrayToString;
 import com.google.errorprone.bugpatterns.ArraysAsListPrimitiveArray;
 import com.google.errorprone.bugpatterns.AssertFalse;
+import com.google.errorprone.bugpatterns.AssumeInJUnit3;
 import com.google.errorprone.bugpatterns.AsyncCallableReturnsNull;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
@@ -398,6 +399,7 @@ public class BuiltInCheckerSuppliers {
           AmbiguousMethodReference.class,
           ArgumentSelectionDefectChecker.class,
           AssertEqualsArgumentOrderChecker.class,
+          AssumeInJUnit3.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BoxedPrimitiveConstructor.class,
