@@ -25,7 +25,7 @@ The author's intent isn't clear. There are three possibilities:
 3.  The code has a bug, and the missing cases should have been handled.
 
 To avoid this ambiguity, the Google Java Style Guide [requires][style] each
-switch statement to include a `default` statement group, even if it contains no
-code.
+switch statement on an enum type to either handle all values of the enum, or
+have a default statement group.
 
 [style]: https://google.github.io/styleguide/javaguide.html#s4.8.4.3-switch-default
