@@ -182,12 +182,7 @@ public abstract class Choice<T> {
 
   @VisibleForTesting
   Iterable<T> asIterable() {
-    return new Iterable<T>() {
-      @Override
-      public Iterator<T> iterator() {
-        return Choice.this.iterator();
-      }
-    };
+    return this::iterator;
   }
 
   // Currently, this is implemented with an Iterator, but that may change in future!

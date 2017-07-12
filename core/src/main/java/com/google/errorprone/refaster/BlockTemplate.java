@@ -19,7 +19,6 @@ import static java.util.logging.Level.SEVERE;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
@@ -149,17 +148,13 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
                       offset + consumedStatements,
                       statements.subList(consumedStatements, statements.size()),
                       context)
-                  .transform(prepend(match));
+                  .transform(list -> list.prepend(match));
             }
           } catch (CouldNotResolveImportException e) {
             // fall through
           }
           return Choice.none();
         });
-  }
-
-  private static <T> Function<List<T>, List<T>> prepend(final T t) {
-    return (List<T> list) -> list.prepend(t);
   }
 
   private Choice<List<BlockTemplateMatch>> matchesStartingAnywhere(

@@ -18,7 +18,6 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.ImmutableList;
@@ -119,14 +118,8 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
         path = path.thenChoose(match(targetMember));
       }
     }
-    return path.thenOption(
-        (UnifierWithRemainingMembers state) -> {
-          if (state.remainingMembers().isEmpty()) {
-            return Optional.of(state.unifier());
-          } else {
-            return Optional.absent();
-          }
-        });
+    return path.condition(s -> s.remainingMembers().isEmpty())
+        .transform(UnifierWithRemainingMembers::unifier);
   }
 
   @Override

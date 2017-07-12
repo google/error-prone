@@ -18,7 +18,6 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.PlaceholderUnificationVisitor.State;
@@ -105,6 +104,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 
 /**
@@ -203,23 +203,13 @@ abstract class PlaceholderUnificationVisitor
     for (final Tree node : nodes) {
       choice =
           choice.thenChoose(
-              new Function<State<List<JCTree>>, Choice<State<List<JCTree>>>>() {
-                @Override
-                public Choice<State<List<JCTree>>> apply(final State<List<JCTree>> state) {
-                  return unify(node, state)
+              (State<List<JCTree>> s) ->
+                  unify(node, s)
                       .transform(
-                          (State<? extends JCTree> treeState) ->
-                              treeState.withResult(state.result().prepend(treeState.result())));
-                }
-              });
+                          treeState ->
+                              treeState.withResult(s.result().prepend(treeState.result()))));
     }
-    return choice.transform(
-        new Function<State<List<JCTree>>, State<List<JCTree>>>() {
-          @Override
-          public State<List<JCTree>> apply(State<List<JCTree>> state) {
-            return state.withResult(state.result().reverse());
-          }
-        });
+    return choice.transform(s -> s.withResult(s.result().reverse()));
   }
 
   static boolean equivalentExprs(Unifier unifier, JCExpression expr1, JCExpression expr2) {
@@ -289,13 +279,7 @@ abstract class PlaceholderUnificationVisitor
   public Choice<State<List<JCExpression>>> unifyExpressions(
       @Nullable Iterable<? extends ExpressionTree> nodes, State<?> state) {
     return unify(nodes, state)
-        .transform(
-            new Function<State<List<JCTree>>, State<List<JCExpression>>>() {
-              @Override
-              public State<List<JCExpression>> apply(State<List<JCTree>> state) {
-                return state.withResult(List.convert(JCExpression.class, state.result()));
-              }
-            });
+        .transform(s -> s.withResult(List.convert(JCExpression.class, s.result())));
   }
 
   @SuppressWarnings("unchecked")
@@ -306,14 +290,8 @@ abstract class PlaceholderUnificationVisitor
 
   public Choice<State<List<JCStatement>>> unifyStatements(
       @Nullable Iterable<? extends StatementTree> nodes, State<?> state) {
-    return unify(nodes, state)
-        .transform(
-            new Function<State<List<JCTree>>, State<List<JCStatement>>>() {
-              @Override
-              public State<List<JCStatement>> apply(State<List<JCTree>> state) {
-                return state.withResult(List.convert(JCStatement.class, state.result()));
-              }
-            });
+    return chooseSubtrees(
+        state, s -> unify(nodes, s), stmts -> List.convert(JCStatement.class, stmts));
   }
 
   @Override
@@ -321,70 +299,141 @@ abstract class PlaceholderUnificationVisitor
     return Choice.of(state.withResult((JCTree) node));
   }
 
-  /*
-   * All the visit methods look more or less like this one: we recursively visit the first
-   * subnode of the provided tree, and for each unification state of that subnode, we
-   * continue recursively through the next subnode, and when we have recursed through all
-   * subnodes, we rebuild the same type of tree node with each subtree replaced by its copied or
-   * replaced version.
+  /**
+   * This method, and its overloads, take
    *
-   * This looks much less ugly with lambdas and streams, but we can't use those yet.
+   * <ol>
+   *   <li>an initial state
+   *   <li>functions that, given one state, return a branch choosing a subtree
+   *   <li>a function that takes pieces of a tree type and recomposes them
+   * </ol>
    */
+  private static <T, R> Choice<State<R>> chooseSubtrees(
+      State<?> state,
+      Function<State<?>, Choice<? extends State<? extends T>>> choice1,
+      Function<T, R> finalizer) {
+    return choice1.apply(state).transform(s -> s.withResult(finalizer.apply(s.result())));
+  }
+
+  private static <T1, T2, R> Choice<State<R>> chooseSubtrees(
+      State<?> state,
+      Function<State<?>, Choice<? extends State<? extends T1>>> choice1,
+      Function<State<?>, Choice<? extends State<? extends T2>>> choice2,
+      BiFunction<T1, T2, R> finalizer) {
+    return choice1
+        .apply(state)
+        .thenChoose(
+            s1 ->
+                choice2
+                    .apply(s1)
+                    .transform(s2 -> s2.withResult(finalizer.apply(s1.result(), s2.result()))));
+  }
+
+  @FunctionalInterface
+  private interface TriFunction<T1, T2, T3, R> {
+    R apply(T1 t1, T2 t2, T3 t3);
+  }
+
+  private static <T1, T2, T3, R> Choice<State<R>> chooseSubtrees(
+      State<?> state,
+      Function<State<?>, Choice<? extends State<? extends T1>>> choice1,
+      Function<State<?>, Choice<? extends State<? extends T2>>> choice2,
+      Function<State<?>, Choice<? extends State<? extends T3>>> choice3,
+      TriFunction<T1, T2, T3, R> finalizer) {
+    return choice1
+        .apply(state)
+        .thenChoose(
+            s1 ->
+                choice2
+                    .apply(s1)
+                    .thenChoose(
+                        s2 ->
+                            choice3
+                                .apply(s2)
+                                .transform(
+                                    s3 ->
+                                        s3.withResult(
+                                            finalizer.apply(
+                                                s1.result(), s2.result(), s3.result())))));
+  }
+
+  @FunctionalInterface
+  private interface QuadFunction<T1, T2, T3, T4, R> {
+    R apply(T1 t1, T2 t2, T3 t3, T4 t4);
+  }
+
+  private static <T1, T2, T3, T4, R> Choice<State<R>> chooseSubtrees(
+      State<?> state,
+      Function<State<?>, Choice<? extends State<? extends T1>>> choice1,
+      Function<State<?>, Choice<? extends State<? extends T2>>> choice2,
+      Function<State<?>, Choice<? extends State<? extends T3>>> choice3,
+      Function<State<?>, Choice<? extends State<? extends T4>>> choice4,
+      QuadFunction<T1, T2, T3, T4, R> finalizer) {
+    return choice1
+        .apply(state)
+        .thenChoose(
+            s1 ->
+                choice2
+                    .apply(s1)
+                    .thenChoose(
+                        s2 ->
+                            choice3
+                                .apply(s2)
+                                .thenChoose(
+                                    s3 ->
+                                        choice4
+                                            .apply(s3)
+                                            .transform(
+                                                s4 ->
+                                                    s4.withResult(
+                                                        finalizer.apply(
+                                                            s1.result(),
+                                                            s2.result(),
+                                                            s3.result(),
+                                                            s4.result()))))));
+  }
 
   @Override
   public Choice<State<JCArrayAccess>> visitArrayAccess(final ArrayAccessTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> expressionState) ->
-                unifyExpression(node.getIndex(), expressionState)
-                    .transform(
-                        (State<? extends JCExpression> indexState) ->
-                            indexState.withResult(
-                                maker().Indexed(expressionState.result(), indexState.result()))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getExpression(), s),
+        s -> unifyExpression(node.getIndex(), s),
+        maker()::Indexed);
   }
 
   @Override
   public Choice<State<JCBinary>> visitBinary(final BinaryTree node, State<?> state) {
     final Tag tag = ((JCBinary) node).getTag();
-    return unifyExpression(node.getLeftOperand(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> leftState) ->
-                unifyExpression(node.getRightOperand(), leftState)
-                    .transform(
-                        (State<? extends JCExpression> rightState) ->
-                            rightState.withResult(
-                                maker().Binary(tag, leftState.result(), rightState.result()))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getLeftOperand(), s),
+        s -> unifyExpression(node.getRightOperand(), s),
+        (l, r) -> maker().Binary(tag, l, r));
   }
 
   @Override
   public Choice<State<JCMethodInvocation>> visitMethodInvocation(
       final MethodInvocationTree node, State<?> state) {
-    return unifyExpression(node.getMethodSelect(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> selectState) ->
-                unifyExpressions(node.getArguments(), selectState)
-                    .transform(
-                        (State<List<JCExpression>> argsState) ->
-                            argsState.withResult(
-                                maker().Apply(null, selectState.result(), argsState.result()))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getMethodSelect(), s),
+        s -> unifyExpressions(node.getArguments(), s),
+        (select, args) -> maker().Apply(null, select, args));
   }
 
   @Override
   public Choice<State<JCFieldAccess>> visitMemberSelect(
       final MemberSelectTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .transform(
-            (State<? extends JCExpression> exprState) ->
-                exprState.withResult(
-                    maker().Select(exprState.result(), (Name) node.getIdentifier())));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getExpression(), s),
+        expr -> maker().Select(expr, (Name) node.getIdentifier()));
   }
 
   @Override
   public Choice<State<JCParens>> visitParenthesized(ParenthesizedTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .transform(
-            (State<? extends JCExpression> expressionState) ->
-                expressionState.withResult(maker().Parens(expressionState.result())));
+    return chooseSubtrees(state, s -> unifyExpression(node.getExpression(), s), maker()::Parens);
   }
 
   private static final Set<Tag> MUTATING_UNARY_TAGS =
@@ -393,34 +442,28 @@ abstract class PlaceholderUnificationVisitor
   @Override
   public Choice<State<JCUnary>> visitUnary(UnaryTree node, State<?> state) {
     final Tag tag = ((JCUnary) node).getTag();
-    return unifyExpression(node.getExpression(), state)
-        .thenOption(
-            (State<? extends JCExpression> expressionState) -> {
-              if (MUTATING_UNARY_TAGS.contains(tag)
-                  && expressionState.result() instanceof PlaceholderParamIdent) {
-                return Optional.absent();
-              }
-              return Optional.of(
-                  expressionState.withResult(maker().Unary(tag, expressionState.result())));
-            });
+    return chooseSubtrees(
+            state, s -> unifyExpression(node.getExpression(), s), expr -> maker().Unary(tag, expr))
+        .condition(
+            s ->
+                !MUTATING_UNARY_TAGS.contains(tag)
+                    || !(s.result().getExpression() instanceof PlaceholderParamIdent));
   }
 
   @Override
   public Choice<State<JCTypeCast>> visitTypeCast(final TypeCastTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .transform(
-            (State<? extends JCExpression> expressionState) ->
-                expressionState.withResult(
-                    maker().TypeCast((JCTree) node.getType(), expressionState.result())));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getExpression(), s),
+        expr -> maker().TypeCast((JCTree) node.getType(), expr));
   }
 
   @Override
   public Choice<State<JCInstanceOf>> visitInstanceOf(final InstanceOfTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .transform(
-            (State<? extends JCExpression> expressionState) ->
-                expressionState.withResult(
-                    maker().TypeTest(expressionState.result(), (JCTree) node.getType())));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getExpression(), s),
+        expr -> maker().TypeTest(expr, (JCTree) node.getType()));
   }
 
   @Override
@@ -430,348 +473,229 @@ abstract class PlaceholderUnificationVisitor
         || node.getClassBody() != null) {
       return Choice.none();
     }
-    return unifyExpression(node.getIdentifier(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> identifierState) ->
-                unifyExpressions(node.getArguments(), identifierState)
-                    .transform(
-                        (State<List<JCExpression>> argsState) ->
-                            argsState.withResult(
-                                maker()
-                                    .NewClass(
-                                        null,
-                                        null,
-                                        identifierState.result(),
-                                        argsState.result(),
-                                        null))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getIdentifier(), s),
+        s -> unifyExpressions(node.getArguments(), s),
+        (ident, args) -> maker().NewClass(null, null, ident, args, null));
   }
 
   @Override
   public Choice<State<JCNewArray>> visitNewArray(final NewArrayTree node, State<?> state) {
-    return unifyExpressions(node.getDimensions(), state)
-        .thenChoose(
-            (final State<List<JCExpression>> dimsState) ->
-                unifyExpressions(node.getInitializers(), dimsState)
-                    .transform(
-                        (State<List<JCExpression>> initsState) ->
-                            initsState.withResult(
-                                maker()
-                                    .NewArray(
-                                        (JCExpression) node.getType(),
-                                        dimsState.result(),
-                                        initsState.result()))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpressions(node.getDimensions(), s),
+        s -> unifyExpressions(node.getInitializers(), s),
+        (dims, inits) -> maker().NewArray((JCExpression) node.getType(), dims, inits));
   }
 
   @Override
   public Choice<State<JCConditional>> visitConditionalExpression(
       final ConditionalExpressionTree node, State<?> state) {
-    return unifyExpression(node.getCondition(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> condState) ->
-                unifyExpression(node.getTrueExpression(), condState)
-                    .thenChoose(
-                        (final State<? extends JCExpression> trueState) ->
-                            unifyExpression(node.getFalseExpression(), trueState)
-                                .transform(
-                                    (State<? extends JCExpression> falseState) ->
-                                        falseState.withResult(
-                                            maker()
-                                                .Conditional(
-                                                    condState.result(),
-                                                    trueState.result(),
-                                                    falseState.result())))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getCondition(), s),
+        s -> unifyExpression(node.getTrueExpression(), s),
+        s -> unifyExpression(node.getFalseExpression(), s),
+        maker()::Conditional);
   }
 
   @Override
   public Choice<State<JCAssign>> visitAssignment(final AssignmentTree node, State<?> state) {
-    return unifyExpression(node.getVariable(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> varState) -> {
-              if (varState.result() instanceof PlaceholderParamIdent) {
-                // forbid assignment to placeholder variables
-                return Choice.none();
-              }
-              return unifyExpression(node.getExpression(), varState)
-                  .transform(
-                      (State<? extends JCExpression> exprState) ->
-                          exprState.withResult(
-                              maker().Assign(varState.result(), exprState.result())));
-            });
+    return chooseSubtrees(
+            state,
+            s -> unifyExpression(node.getVariable(), s),
+            s -> unifyExpression(node.getExpression(), s),
+            maker()::Assign)
+        .condition(s -> !(s.result().getVariable() instanceof PlaceholderParamIdent));
   }
 
   @Override
   public Choice<State<JCAssignOp>> visitCompoundAssignment(
       final CompoundAssignmentTree node, State<?> state) {
-    return unifyExpression(node.getVariable(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> varState) -> {
-              if (varState.result() instanceof PlaceholderParamIdent) {
-                // forbid assignment to placeholder variables
-                return Choice.none();
-              }
-              return unifyExpression(node.getExpression(), varState)
-                  .transform(
-                      (State<? extends JCExpression> exprState) ->
-                          exprState.withResult(
-                              maker()
-                                  .Assignop(
-                                      ((JCAssignOp) node).getTag(),
-                                      varState.result(),
-                                      exprState.result())));
-            });
+    return chooseSubtrees(
+            state,
+            s -> unifyExpression(node.getVariable(), s),
+            s -> unifyExpression(node.getExpression(), s),
+            (var, expr) -> maker().Assignop(((JCAssignOp) node).getTag(), var, expr))
+        .condition(assignOp -> !(assignOp.result().getVariable() instanceof PlaceholderParamIdent));
   }
 
   @Override
   public Choice<State<JCExpressionStatement>> visitExpressionStatement(
       ExpressionStatementTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .transform(
-            (State<? extends JCExpression> exprState) ->
-                exprState.withResult(maker().Exec(exprState.result())));
+    return chooseSubtrees(state, s -> unifyExpression(node.getExpression(), s), maker()::Exec);
   }
 
   @Override
   public Choice<State<JCBlock>> visitBlock(BlockTree node, State<?> state) {
-    return unifyStatements(node.getStatements(), state)
-        .transform(
-            new Function<State<List<JCStatement>>, State<JCBlock>>() {
-
-              @Override
-              public State<JCBlock> apply(State<List<JCStatement>> state) {
-                return state.withResult(maker().Block(0, state.result()));
-              }
-            });
+    return chooseSubtrees(
+        state, s -> unifyStatements(node.getStatements(), s), stmts -> maker().Block(0, stmts));
   }
 
   @Override
   public Choice<State<JCThrow>> visitThrow(ThrowTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .transform(
-            (State<? extends JCExpression> exprState) ->
-                exprState.withResult(maker().Throw(exprState.result())));
+    return chooseSubtrees(state, s -> unifyExpression(node.getExpression(), s), maker()::Throw);
   }
 
   @Override
   public Choice<State<JCEnhancedForLoop>> visitEnhancedForLoop(
       final EnhancedForLoopTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> exprState) ->
-                unifyStatement(node.getStatement(), exprState)
-                    .transform(
-                        (State<? extends JCStatement> stmtState) ->
-                            stmtState.withResult(
-                                maker()
-                                    .ForeachLoop(
-                                        (JCVariableDecl) node.getVariable(),
-                                        exprState.result(),
-                                        stmtState.result()))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getExpression(), s),
+        s -> unifyStatement(node.getStatement(), s),
+        (expr, stmt) -> maker().ForeachLoop((JCVariableDecl) node.getVariable(), expr, stmt));
   }
 
   @Override
   public Choice<State<JCIf>> visitIf(final IfTree node, State<?> state) {
-    return unifyExpression(node.getCondition(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> condState) ->
-                unifyStatement(node.getThenStatement(), condState)
-                    .thenChoose(
-                        (final State<? extends JCStatement> thenState) ->
-                            unifyStatement(node.getElseStatement(), thenState)
-                                .transform(
-                                    (State<? extends JCStatement> elseState) ->
-                                        elseState.withResult(
-                                            maker()
-                                                .If(
-                                                    condState.result(),
-                                                    thenState.result(),
-                                                    elseState.result())))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getCondition(), s),
+        s -> unifyStatement(node.getThenStatement(), s),
+        s -> unifyStatement(node.getElseStatement(), s),
+        maker()::If);
   }
 
   @Override
   public Choice<State<JCDoWhileLoop>> visitDoWhileLoop(final DoWhileLoopTree node, State<?> state) {
-    return unifyStatement(node.getStatement(), state)
-        .thenChoose(
-            (final State<? extends JCStatement> stmtState) ->
-                unifyExpression(node.getCondition(), stmtState)
-                    .transform(
-                        (State<? extends JCExpression> condState) ->
-                            condState.withResult(
-                                maker().DoLoop(stmtState.result(), condState.result()))));
+    return chooseSubtrees(
+        state,
+        s -> unifyStatement(node.getStatement(), s),
+        s -> unifyExpression(node.getCondition(), s),
+        maker()::DoLoop);
   }
 
   @Override
   public Choice<State<JCForLoop>> visitForLoop(final ForLoopTree node, State<?> state) {
-    return unifyStatements(node.getInitializer(), state)
-        .thenChoose(
-            (final State<List<JCStatement>> initsState) ->
-                unifyExpression(node.getCondition(), initsState)
-                    .thenChoose(
-                        (final State<? extends JCExpression> condState) ->
-                            unifyStatements(node.getUpdate(), condState)
-                                .thenChoose(
-                                    (final State<List<JCStatement>> updateState) ->
-                                        unifyStatement(node.getStatement(), updateState)
-                                            .transform(
-                                                (State<? extends JCStatement> stmtState) ->
-                                                    stmtState.withResult(
-                                                        maker()
-                                                            .ForLoop(
-                                                                initsState.result(),
-                                                                condState.result(),
-                                                                List.convert(
-                                                                    JCExpressionStatement.class,
-                                                                    updateState.result()),
-                                                                stmtState.result()))))));
+    return chooseSubtrees(
+        state,
+        s -> unifyStatements(node.getInitializer(), s),
+        s -> unifyExpression(node.getCondition(), s),
+        s -> unifyStatements(node.getUpdate(), s),
+        s -> unifyStatement(node.getStatement(), s),
+        (inits, cond, update, stmt) ->
+            maker().ForLoop(inits, cond, List.convert(JCExpressionStatement.class, update), stmt));
   }
 
   @Override
   public Choice<State<JCLabeledStatement>> visitLabeledStatement(
       final LabeledStatementTree node, State<?> state) {
-    return unifyStatement(node.getStatement(), state)
-        .transform(
-            (State<? extends JCStatement> stmtState) ->
-                stmtState.withResult(maker().Labelled((Name) node.getLabel(), stmtState.result())));
+    return chooseSubtrees(
+        state,
+        s -> unifyStatement(node.getStatement(), s),
+        stmt -> maker().Labelled((Name) node.getLabel(), stmt));
   }
 
   @Override
   public Choice<State<JCVariableDecl>> visitVariable(final VariableTree node, State<?> state) {
-    return unifyExpression(node.getInitializer(), state)
-        .transform(
-            (State<? extends JCExpression> initState) ->
-                initState.withResult(
-                    maker()
-                        .VarDef(
-                            (JCModifiers) node.getModifiers(),
-                            (Name) node.getName(),
-                            (JCExpression) node.getType(),
-                            initState.result())));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getInitializer(), s),
+        init ->
+            maker()
+                .VarDef(
+                    (JCModifiers) node.getModifiers(),
+                    (Name) node.getName(),
+                    (JCExpression) node.getType(),
+                    init));
   }
 
   @Override
   public Choice<State<JCWhileLoop>> visitWhileLoop(final WhileLoopTree node, State<?> state) {
-    return unifyExpression(node.getCondition(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> condState) ->
-                unifyStatement(node.getStatement(), condState)
-                    .transform(
-                        (State<? extends JCStatement> stmtState) ->
-                            stmtState.withResult(
-                                maker().WhileLoop(condState.result(), stmtState.result()))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getCondition(), s),
+        s -> unifyStatement(node.getStatement(), s),
+        maker()::WhileLoop);
   }
 
   @Override
   public Choice<State<JCSynchronized>> visitSynchronized(
       final SynchronizedTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> exprState) ->
-                unifyStatement(node.getBlock(), exprState)
-                    .transform(
-                        (State<? extends JCStatement> blockState) ->
-                            blockState.withResult(
-                                maker()
-                                    .Synchronized(
-                                        exprState.result(), (JCBlock) blockState.result()))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getExpression(), s),
+        s -> unifyStatement(node.getBlock(), s),
+        (expr, block) -> maker().Synchronized(expr, (JCBlock) block));
   }
 
   @Override
   public Choice<State<JCReturn>> visitReturn(ReturnTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .transform(
-            (State<? extends JCExpression> exprState) ->
-                exprState.withResult(maker().Return(exprState.result())));
+    return chooseSubtrees(state, s -> unifyExpression(node.getExpression(), s), maker()::Return);
   }
 
   @Override
   public Choice<State<JCTry>> visitTry(final TryTree node, State<?> state) {
-    return unify(node.getResources(), state)
-        .thenChoose(
-            (final State<List<JCTree>> resourcesState) ->
-                unifyStatement(node.getBlock(), resourcesState)
-                    .thenChoose(
-                        (final State<? extends JCStatement> blockState) ->
-                            unify(node.getCatches(), blockState)
-                                .thenChoose(
-                                    (final State<List<JCTree>> catchesState) ->
-                                        unifyStatement(node.getFinallyBlock(), catchesState)
-                                            .transform(
-                                                (State<? extends JCStatement> finallyState) ->
-                                                    finallyState.withResult(
-                                                        maker()
-                                                            .Try(
-                                                                resourcesState.result(),
-                                                                (JCBlock) blockState.result(),
-                                                                List.convert(
-                                                                    JCCatch.class,
-                                                                    catchesState.result()),
-                                                                (JCBlock)
-                                                                    finallyState.result()))))));
+    return chooseSubtrees(
+        state,
+        s -> unify(node.getResources(), s),
+        s -> unifyStatement(node.getBlock(), s),
+        s -> unify(node.getCatches(), s),
+        s -> unifyStatement(node.getFinallyBlock(), s),
+        (resources, block, catches, finallyBlock) ->
+            maker()
+                .Try(
+                    resources,
+                    (JCBlock) block,
+                    List.convert(JCCatch.class, catches),
+                    (JCBlock) finallyBlock));
   }
 
   @Override
   public Choice<State<JCCatch>> visitCatch(final CatchTree node, State<?> state) {
-    return unifyStatement(node.getBlock(), state)
-        .transform(
-            (State<? extends JCStatement> blockState) ->
-                blockState.withResult(
-                    maker()
-                        .Catch(
-                            (JCVariableDecl) node.getParameter(), (JCBlock) blockState.result())));
+    return chooseSubtrees(
+        state,
+        s -> unifyStatement(node.getBlock(), s),
+        block -> maker().Catch((JCVariableDecl) node.getParameter(), (JCBlock) block));
   }
 
   @Override
   public Choice<State<JCSwitch>> visitSwitch(final SwitchTree node, State<?> state) {
-    return unifyExpression(node.getExpression(), state)
-        .thenChoose(
-            (final State<? extends JCExpression> exprState) ->
-                unify(node.getCases(), exprState)
-                    .transform(
-                        (State<List<JCTree>> casesState) ->
-                            casesState.withResult(
-                                maker()
-                                    .Switch(
-                                        exprState.result(),
-                                        List.convert(JCCase.class, casesState.result())))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getExpression(), s),
+        s -> unify(node.getCases(), s),
+        (expr, cases) -> maker().Switch(expr, List.convert(JCCase.class, cases)));
   }
 
   @Override
   public Choice<State<JCCase>> visitCase(final CaseTree node, State<?> state) {
-    return unifyStatements(node.getStatements(), state)
-        .transform(
-            (State<List<JCStatement>> stmtsState) ->
-                stmtsState.withResult(
-                    maker().Case((JCExpression) node.getExpression(), stmtsState.result())));
+    return chooseSubtrees(
+        state,
+        s -> unifyStatements(node.getStatements(), s),
+        stmts -> maker().Case((JCExpression) node.getExpression(), stmts));
   }
 
   @Override
   public Choice<State<JCLambda>> visitLambdaExpression(
       final LambdaExpressionTree node, State<?> state) {
-    return unify(node.getBody(), state)
-        .transform(
-            (State<? extends JCTree> bodyState) ->
-                bodyState.withResult(
-                    maker()
-                        .Lambda(
-                            List.convert(
-                                JCVariableDecl.class,
-                                (List<? extends VariableTree>) node.getParameters()),
-                            bodyState.result())));
+    return chooseSubtrees(
+        state,
+        s -> unify(node.getBody(), s),
+        body ->
+            maker()
+                .Lambda(
+                    List.convert(
+                        JCVariableDecl.class, (List<? extends VariableTree>) node.getParameters()),
+                    body));
   }
 
   @Override
   public Choice<State<JCMemberReference>> visitMemberReference(
       final MemberReferenceTree node, State<?> state) {
-    return unifyExpression(node.getQualifierExpression(), state)
-        .transform(
-            (State<? extends JCExpression> exprState) ->
-                exprState.withResult(
-                    maker()
-                        .Reference(
-                            node.getMode(),
-                            (Name) node.getName(),
-                            exprState.result(),
-                            List.convert(
-                                JCExpression.class,
-                                (List<? extends ExpressionTree>) node.getTypeArguments()))));
+    return chooseSubtrees(
+        state,
+        s -> unifyExpression(node.getQualifierExpression(), s),
+        expr ->
+            maker()
+                .Reference(
+                    node.getMode(),
+                    (Name) node.getName(),
+                    expr,
+                    List.convert(
+                        JCExpression.class,
+                        (List<? extends ExpressionTree>) node.getTypeArguments())));
   }
 }
