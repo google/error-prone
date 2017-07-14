@@ -162,6 +162,43 @@ For now, Eclipse users should use the Findbugs eclipse plugin instead, as it cat
 
 # Command Line
 
+## Java 9
+
+Error Prone supports the
+[`com.sun.source.util.Plugin`](https://docs.oracle.com/javase/8/docs/jdk/api/javac/tree/com/sun/source/util/Plugin.html)
+API, and can be used with JDK 9 by adding Error Prone to the `-processorpath`
+and setting the `-Xplugin` flag.
+
+Example:
+
+```bash
+JAVA9_HOME=... # path to a JDK 9 installation
+ERROR_PRONE_JAR=... @ path to error_prone_ant-2.0.21.jar
+$JAVA9_HOME/bin/javac \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
+  -J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
+  -processorpath $ERROR_PRONE_JAR \
+  '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
+  ShortSet.java 
+```
+
+```
+ShortSet.java:8: error: [CollectionIncompatibleType] Argument 'i - 1' should not be passed to this method; its type int is not compatible with its collection's type argument Short
+      s.remove(i - 1);
+              ^
+    (see http://errorprone.info/bugpattern/CollectionIncompatibleType)
+1 error
+```
+
+## Java 8
+
 To use Error Prone from the command line as a javac replacement:
 
 ```
