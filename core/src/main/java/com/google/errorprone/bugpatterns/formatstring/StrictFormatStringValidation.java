@@ -16,12 +16,15 @@
 
 package com.google.errorprone.bugpatterns.formatstring;
 
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.annotations.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringValidation.ValidationResult;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
@@ -45,9 +48,18 @@ import javax.lang.model.element.ElementKind;
  */
 public class StrictFormatStringValidation {
 
+  private static final Matcher<ExpressionTree> MOCKITO_ARGUMENT_MATCHER =
+      staticMethod().onClass("org.mockito.Matchers");
+
   @Nullable
   public static ValidationResult validate(
       ExpressionTree formatStringTree, List<? extends ExpressionTree> args, VisitorState state) {
+    if (MOCKITO_ARGUMENT_MATCHER.matches(formatStringTree, state)) {
+      // Mockito matchers do not pass standard @FormatString requirements, but we allow them so
+      // that people can verify @FormatMethod methods.
+      return null;
+    }
+
     String formatStringValue = ASTHelpers.constValue(formatStringTree, String.class);
 
     // If formatString has a constant value, then it couldn't have been an @FormatString parameter,

@@ -279,4 +279,24 @@ public class FormatStringAnnotationCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testMatches_succeedsForMockitoMatchers() {
+    compilationHelper
+        .addSourceLines(
+            "test/FormatStringTestCase.java",
+            "package test;",
+            "import static org.mockito.Matchers.any;",
+            "import static org.mockito.Matchers.eq;",
+            "import static org.mockito.Mockito.verify;",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "import com.google.errorprone.annotations.FormatString;",
+            "public class FormatStringTestCase {",
+            "  @FormatMethod public void log(@FormatString String s, Object... args) {}",
+            "  public void callLog(String s, Object... args) {",
+            "    verify(this).log(any(String.class), eq(args));",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
