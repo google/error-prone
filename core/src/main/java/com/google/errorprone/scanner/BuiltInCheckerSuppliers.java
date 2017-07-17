@@ -26,7 +26,6 @@ import com.google.errorprone.bugpatterns.ArrayHashCode;
 import com.google.errorprone.bugpatterns.ArrayToString;
 import com.google.errorprone.bugpatterns.ArraysAsListPrimitiveArray;
 import com.google.errorprone.bugpatterns.AssertFalse;
-import com.google.errorprone.bugpatterns.AssumeInJUnit3;
 import com.google.errorprone.bugpatterns.AsyncCallableReturnsNull;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
@@ -93,6 +92,7 @@ import com.google.errorprone.bugpatterns.IterablePathParameter;
 import com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation;
 import com.google.errorprone.bugpatterns.JUnit3FloatingPointComparisonWithoutDelta;
 import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
+import com.google.errorprone.bugpatterns.JUnit4ClassUsedInJUnit3;
 import com.google.errorprone.bugpatterns.JUnit4SetUpNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TearDownNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
@@ -399,7 +399,6 @@ public class BuiltInCheckerSuppliers {
           AmbiguousMethodReference.class,
           ArgumentSelectionDefectChecker.class,
           AssertEqualsArgumentOrderChecker.class,
-          AssumeInJUnit3.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BoxedPrimitiveConstructor.class,
@@ -428,6 +427,7 @@ public class BuiltInCheckerSuppliers {
           IterableAndIterator.class,
           JavaLangClash.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
+          JUnit4ClassUsedInJUnit3.class,
           JUnitAmbiguousTestClass.class,
           LogicalAssignment.class,
           MissingFail.class,
