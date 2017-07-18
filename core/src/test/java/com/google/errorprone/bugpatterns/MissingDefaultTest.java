@@ -206,4 +206,38 @@ public class MissingDefaultTest {
             "}")
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void multipleStatementsInGroup() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  boolean f(int i) {",
+            "    // BUG: Diagnostic contains:",
+            "    switch (i) {",
+            "      case 42:",
+            "        System.err.println();",
+            "        return true;",
+            "    }",
+            "    return false;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  boolean f(int i) {",
+            "    // BUG: Diagnostic contains:",
+            "    switch (i) {",
+            "      case 42:",
+            "        System.err.println();",
+            "        return true;",
+            "default: // fall out",
+            "",
+            "    }",
+            "    return false;",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
 }

@@ -68,8 +68,7 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
         CaseTree lastCase = getLast(tree.getCases());
         String replacement;
         if (lastCase.getStatements().isEmpty()
-            || Reachability.canCompleteNormally(
-                Iterables.getOnlyElement(lastCase.getStatements()))) {
+            || Reachability.canCompleteNormally(Iterables.getLast(lastCase.getStatements()))) {
           replacement = "\nbreak;\ndefault: // fall out\n";
         } else {
           replacement = "\ndefault: // fall out\n";
