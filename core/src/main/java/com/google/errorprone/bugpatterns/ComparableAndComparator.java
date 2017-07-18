@@ -40,10 +40,9 @@ import java.util.List;
   name = "ComparableAndComparator",
   summary = "Class should not implement both `Comparable` and `Comparator`",
   explanation =
-      "A `Comparator` is a *state-ful* instance that provides a "
-          + "compare function between other objects, whereas an "
-          + "instance that implements `Comparable` must be "
-          + "compared to another object type.",
+      "A `Comparator` is an object that knows how to compare other objects, whereas an object"
+          + "implementing `Comparable` knows how to compare itself to other objects of the same "
+          + "type.",
   category = JDK,
   severity = WARNING
 )
