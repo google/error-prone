@@ -116,6 +116,7 @@ import com.google.errorprone.bugpatterns.MockitoCast;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
 import com.google.errorprone.bugpatterns.MultiVariableDeclaration;
+import com.google.errorprone.bugpatterns.MultipleParallelOrSequentialCalls;
 import com.google.errorprone.bugpatterns.MultipleTopLevelClasses;
 import com.google.errorprone.bugpatterns.MustBeClosedChecker;
 import com.google.errorprone.bugpatterns.MutableConstantField;
@@ -435,6 +436,7 @@ public class BuiltInCheckerSuppliers {
           LogicalAssignment.class,
           MissingFail.class,
           MissingOverride.class,
+          MultipleParallelOrSequentialCalls.class,
           MutableConstantField.class,
           NarrowingCompoundAssignment.class,
           NestedInstanceOfConditions.class,
