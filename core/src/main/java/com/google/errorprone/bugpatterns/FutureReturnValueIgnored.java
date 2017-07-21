@@ -69,7 +69,10 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
           // future execution should be dealt by the listener(s).
           instanceMethod()
               .onDescendantOf("io.netty.channel.ChannelFuture")
-              .withNameMatching(Pattern.compile("addListeners?")));
+              .withNameMatching(Pattern.compile("addListeners?")),
+          instanceMethod()
+              .onExactClass("java.util.concurrent.CompletableFuture")
+              .withNameMatching(Pattern.compile("completeAsync|orTimeout|completeOnTimeout")));
 
   private static final Matcher<MethodInvocationTree> MATCHER =
       new Matcher<MethodInvocationTree>() {

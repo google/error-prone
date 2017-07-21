@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -55,6 +56,25 @@ public class FutureReturnValueIgnoredTest {
             "  public static java.util.concurrent.Future<?> f() { return null; }",
             "}")
         .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
+        .doTest();
+  }
+
+  @Ignore("requires JDK 9")
+  @Test
+  public void testCompletableFutureReturnValue() {
+    compilationHelper
+        .addSourceLines(
+            "test.java",
+            "import java.util.concurrent.CompletableFuture;",
+            "import static java.util.concurrent.TimeUnit.MILLISECONDS;",
+            "class Test {",
+            "  void f(CompletableFuture<?> cf) {",
+            "    cf.completeAsync(() -> null);",
+            "    cf.completeAsync(() -> null, null);",
+            "    cf.orTimeout(0, MILLISECONDS);",
+            "    cf.completeOnTimeout(null, 0, MILLISECONDS);",
+            "  }",
+            "}")
         .doTest();
   }
 }
