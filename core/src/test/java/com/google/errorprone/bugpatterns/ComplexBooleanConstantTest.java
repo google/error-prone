@@ -23,17 +23,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Unit tests for {@link BooleanConstantChecker}.
+ * Unit tests for {@link ComplexBooleanConstantTest}.
  *
  * @author Sumit Bhagwani (bhagwani@google.com)
  */
 @RunWith(JUnit4.class)
-public class BooleanConstantCheckerTest {
-  private BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new BooleanConstantChecker(), getClass());
+public class ComplexBooleanConstantTest {
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new ComplexBooleanConstant(), getClass());
 
   @Test
-  public void unusedTypeVariableRefactoringWhitespace() throws IOException {
+  public void refactorTest() throws IOException {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",

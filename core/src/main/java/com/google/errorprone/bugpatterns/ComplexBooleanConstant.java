@@ -28,12 +28,12 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /** @author Sumit Bhagwani (bhagwani@google.com) */
 @BugPattern(
-  name = "BooleanConstantChecker",
-  summary = "Non-trivial compile time constant boolean expressions shouldn't be used",
+  name = "ComplexBooleanConstant",
+  summary = "Non-trivial compile time constant boolean expressions shouldn't be used.",
   category = Category.JDK,
   severity = SeverityLevel.ERROR
 )
-public class BooleanConstantChecker extends BugChecker implements BinaryTreeMatcher {
+public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatcher {
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {

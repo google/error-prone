@@ -32,7 +32,6 @@ import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
-import com.google.errorprone.bugpatterns.BooleanConstantChecker;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
@@ -46,6 +45,7 @@ import com.google.errorprone.bugpatterns.ComparableAndComparator;
 import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
+import com.google.errorprone.bugpatterns.ComplexBooleanConstant;
 import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.ConstantOverflow;
 import com.google.errorprone.bugpatterns.ConstructorInvokesOverridable;
@@ -307,7 +307,6 @@ public class BuiltInCheckerSuppliers {
           AsyncCallableReturnsNull.class,
           AsyncFunctionReturnsNull.class,
           BadShiftAmount.class,
-          BooleanConstantChecker.class,
           BundleDeserializationCast.class,
           ChainingConstructorIgnoresParameter.class,
           CheckReturnValue.class,
@@ -315,6 +314,7 @@ public class BuiltInCheckerSuppliers {
           CompatibleWithMisuse.class,
           ComparisonOutOfRange.class,
           CompileTimeConstantChecker.class,
+          ComplexBooleanConstant.class,
           ConstantOverflow.class,
           DeadException.class,
           DoNotCallChecker.class,
