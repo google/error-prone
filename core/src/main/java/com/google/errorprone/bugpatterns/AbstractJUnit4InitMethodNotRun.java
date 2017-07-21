@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
@@ -26,7 +27,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
@@ -47,11 +47,6 @@ import javax.lang.model.element.Modifier;
  */
 abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements MethodTreeMatcher {
   private static final String JUNIT_TEST = "org.junit.Test";
-  protected final JUnitMatchers.JUnit4TestClassMatcher isJUnit4TestClass;
-
-  protected AbstractJUnit4InitMethodNotRun() {
-    this.isJUnit4TestClass = new JUnitMatchers.JUnit4TestClassMatcher();
-  }
 
   /**
    * Returns a matcher that selects which methods this matcher applies to (e.g. public void setUp()

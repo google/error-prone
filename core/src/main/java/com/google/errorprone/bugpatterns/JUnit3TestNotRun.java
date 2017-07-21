@@ -91,7 +91,7 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
   /**
    * Matches if: 1) Method's name begins with misspelled variation of "test". 2) Method is public,
    * returns void, and has no parameters. 3) Enclosing class is JUnit3 test (extends TestCase, has
-   * no RunWith annotation, and is not abstract).
+   * no {@code @RunWith} annotation, no {@code @Test}-annotated methods, and is not abstract).
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {

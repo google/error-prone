@@ -87,7 +87,7 @@ public class JUnit3TestNotRunTest {
             "public class PositiveCases extends TestCase {",
             "  public void tesBasic() {}",
             "  public    void    tesMoreSpaces(  )    {}",
-            "  @Test public void",
+            "  public void",
             "      tesMultiline() {}",
             "}")
         .addOutputLines(
@@ -97,7 +97,7 @@ public class JUnit3TestNotRunTest {
             "public class PositiveCases extends TestCase {",
             "  public void testBasic() {}",
             "  public void testMoreSpaces() {}",
-            "  @Test public void testMultiline() {}",
+            "  public void testMultiline() {}",
             "}")
         .doTest();
   }
@@ -136,14 +136,14 @@ public class JUnit3TestNotRunTest {
             "import junit.framework.TestCase;",
             "import org.junit.Test;",
             "public class DoesStuffTest extends TestCase {",
-            "  @Test private static void tsetDoesStuff() throws Exception {}",
+            "  private static void tsetDoesStuff() throws Exception {}",
             "}")
         .addOutputLines(
             "out/DoesStuffTest.java",
             "import junit.framework.TestCase;",
             "import org.junit.Test;",
             "public class DoesStuffTest extends TestCase {",
-            "  @Test public void testDoesStuff() throws Exception {}",
+            "  public void testDoesStuff() throws Exception {}",
             "}")
         .doTest();
   }

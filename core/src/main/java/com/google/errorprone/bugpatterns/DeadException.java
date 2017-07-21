@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
-import static com.google.errorprone.matchers.Matchers.enclosingMethod;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
@@ -63,10 +62,11 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
       allOf(
           parentNode(kindIs(EXPRESSION_STATEMENT)),
           isSubtypeOf(EXCEPTION_TYPE),
-          not(enclosingMethod(JUnitMatchers.wouldRunInJUnit4)),
-          anyOf(
-              not(enclosingMethod(JUnitMatchers.isJunit3TestCase)),
-              not(enclosingClass(JUnitMatchers.isJUnit3TestClass))));
+          not(
+              anyOf(
+                  enclosingClass(JUnitMatchers.isJUnit3TestClass),
+                  enclosingClass(JUnitMatchers.isAmbiguousJUnitVersion),
+                  enclosingClass(JUnitMatchers.isJUnit4TestClass))));
 
   @Override
   public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {

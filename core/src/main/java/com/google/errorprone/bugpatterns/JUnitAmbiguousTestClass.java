@@ -19,15 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestCases;
-import static com.google.errorprone.matchers.JUnitMatchers.isTestCaseDescendant;
-import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.JUnitMatchers.isAmbiguousJUnitVersion;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ClassTree;
 
 /** @author mwacker@google.com (Mike Wacker) */
@@ -39,10 +36,8 @@ import com.sun.source.tree.ClassTree;
 )
 public class JUnitAmbiguousTestClass extends BugChecker implements ClassTreeMatcher {
 
-  private static final Matcher<ClassTree> MATCHER = allOf(isTestCaseDescendant, hasJUnit4TestCases);
-
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    return MATCHER.matches(classTree, state) ? describeMatch(classTree) : NO_MATCH;
+    return isAmbiguousJUnitVersion.matches(classTree, state) ? describeMatch(classTree) : NO_MATCH;
   }
 }

@@ -40,9 +40,4 @@ public class JUnit3TestNotRunPositiveCases extends TestCase {
   // tentative - can cause false positives
   // BUG: Diagnostic contains: JUnit3TestNotRun
   public void textName() {}
-
-  // test with @Test annotation not run by JUnit3
-  @Test
-  // BUG: Diagnostic contains: JUnit3TestNotRun
-  public void name() {}
 }

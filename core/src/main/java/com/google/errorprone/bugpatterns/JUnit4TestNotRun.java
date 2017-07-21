@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.containsTestMethod;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnitAnnotation;
+import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
 import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
@@ -30,7 +31,6 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
@@ -40,7 +40,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.JUnitMatchers.JUnit4TestClassMatcher;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -73,12 +72,11 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
   private static final String IGNORE_CLASS = "org.junit.Ignore";
   private static final String TEST_ANNOTATION = "@Test ";
   private static final String IGNORE_ANNOTATION = "@Ignore ";
-  private static final JUnit4TestClassMatcher isJUnit4TestClass = new JUnit4TestClassMatcher();
 
 
   /**
    * Looks for methods that are structured like tests but aren't run. Matches public, void, no-param
-   * methods in JUnit4 test classes that aren't annotated with any JUnit4 annotations *
+   * methods in JUnit4 test classes that aren't annotated with any JUnit4 annotations.
    */
   private static final Matcher<MethodTree> POSSIBLE_TEST_METHOD =
       allOf(
@@ -86,21 +84,25 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
           methodReturns(VOID_TYPE),
           methodHasParameters(),
           not(hasJUnitAnnotation),
-          enclosingClass(isJUnit4TestClass),
-          not(enclosingClass(hasModifier(ABSTRACT))));
+          enclosingClass(isJUnit4TestClass));
 
   /**
    * Matches if:
    *
    * <ol>
-   *   <li>The method is public, void, and has no parameters,
-   *   <li>The method is not annotated with {@code @Test}, {@code @Before}, {@code @After},
-   *       {@code @BeforeClass}, or {@code @AfterClass},
-   *   <li>The enclosing class has an {@code @RunWith} annotation and does not extend TestCase. This
-   *       marks that the test is intended to run with JUnit 4, and
-   *   <li>Either:
+   *   <li>The method is public, void, and has no parameters;
+   *   <li>the method is not already annotated with {@code @Test}, {@code @Before}, {@code @After},
+   *       {@code @BeforeClass}, or {@code @AfterClass};
+   *   <li>the enclosing class appears to be intended to run in JUnit4, that is:
    *       <ol type="a">
-   *         <li>The method body contains a method call with a name that contains "assert",
+   *         <li>it is non-abstract,
+   *         <li>it does not extend JUnit3 {@code TestCase},
+   *         <li>it has an {@code @RunWith} annotation or at least one other method annotated
+   *             {@code @Test};
+   *       </ol>
+   *   <li>and, the method appears to be a test method, that is:
+   *       <ol type="a">
+   *         <li>or, the method body contains a method call with a name that contains "assert",
    *             "verify", "check", "fail", or "expect".
    *       </ol>
    * </ol>

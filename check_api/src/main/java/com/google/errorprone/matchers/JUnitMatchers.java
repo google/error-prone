@@ -21,10 +21,12 @@ import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAS
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasAnnotationOnAnyOverriddenMethod;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.hasMethod;
+import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
@@ -38,6 +40,7 @@ import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -111,11 +114,12 @@ public class JUnitMatchers {
   /**
    * Match a class which appears to be a JUnit 3 test class.
    *
-   * <p>Matches if: 1) The class does inherit from TestCase. 2) The class does not have a JUnit
-   * 4 @RunWith annotation. 3) The class is concrete. 4) This class is a top-level class.
+   * <p>Matches if: 1) The class does inherit from TestCase. 2) The class does not have a JUnit 4
+   * {@code @RunWith} annotation nor any methods annotated {@code @Test}. 3) The class is concrete.
+   * 4) This class is a top-level class.
    */
   public static final Matcher<ClassTree> isJUnit3TestClass =
-      allOf(isTestCaseDescendant, isConcreteClassWithoutRunWith);
+      allOf(isTestCaseDescendant, isConcreteClassWithoutRunWith, not(hasJUnit4TestCases));
 
   /**
    * Match a method which appears to be a JUnit 3 test case.
@@ -170,61 +174,76 @@ public class JUnitMatchers {
           hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
           not(hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION)));
 
-  public static class JUnit4TestClassMatcher implements Matcher<ClassTree> {
+  /**
+   * A list of test runners that this matcher should look for in the @RunWith annotation. Subclasses
+   * of the test runners are also matched.
+   */
+  private static final Collection<String> TEST_RUNNERS =
+      Arrays.asList(
+          "org.mockito.runners.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
 
-    /**
-     * A list of test runners that this matcher should look for in the @RunWith annotation.
-     * Subclasses of the test runners are also matched.
-     */
-    private static final Collection<String> TEST_RUNNERS =
-        Arrays.asList(
-            "org.mockito.runners.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
-
-    /**
-     * Matches an argument of type Class<T>, where T is a subtype of one of the test runners listed
-     * in the TEST_RUNNERS field.
-     *
-     * <p>TODO(eaftan): Support checking for an annotation that tells us whether this test runner
-     * expects tests to be annotated with @Test.
-     */
-    private static final Matcher<ExpressionTree> isJUnit4TestRunner =
-        new Matcher<ExpressionTree>() {
-          @Override
-          public boolean matches(ExpressionTree t, VisitorState state) {
-            Type type = ((JCTree) t).type;
-            // Expect a class type.
-            if (!(type instanceof ClassType)) {
-              return false;
-            }
-            // Expect one type argument, the type of the JUnit class runner to use.
-            com.sun.tools.javac.util.List<Type> typeArgs = ((ClassType) type).getTypeArguments();
-            if (typeArgs.size() != 1) {
-              return false;
-            }
-            Type runnerType = typeArgs.get(0);
-            for (String testRunner : TEST_RUNNERS) {
-              Symbol parent = state.getSymbolFromString(testRunner);
-              if (parent == null) {
-                continue;
-              }
-              if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
-                return true;
-              }
-            }
+  /**
+   * Matches an argument of type Class<T>, where T is a subtype of one of the test runners listed in
+   * the TEST_RUNNERS field.
+   *
+   * <p>TODO(eaftan): Support checking for an annotation that tells us whether this test runner
+   * expects tests to be annotated with @Test.
+   */
+  private static final Matcher<ExpressionTree> isJUnit4TestRunner =
+      new Matcher<ExpressionTree>() {
+        @Override
+        public boolean matches(ExpressionTree t, VisitorState state) {
+          Type type = ((JCTree) t).type;
+          // Expect a class type.
+          if (!(type instanceof ClassType)) {
             return false;
           }
-        };
+          // Expect one type argument, the type of the JUnit class runner to use.
+          com.sun.tools.javac.util.List<Type> typeArgs = ((ClassType) type).getTypeArguments();
+          if (typeArgs.size() != 1) {
+            return false;
+          }
+          Type runnerType = typeArgs.get(0);
+          for (String testRunner : TEST_RUNNERS) {
+            Symbol parent = state.getSymbolFromString(testRunner);
+            if (parent == null) {
+              continue;
+            }
+            if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
+              return true;
+            }
+          }
+          return false;
+        }
+      };
 
-    private static final Matcher<ClassTree> isJUnit4TestClass =
-        allOf(
-            not(isTestCaseDescendant),
-            annotations(AT_LEAST_ONE, hasArgumentWithValue("value", isJUnit4TestRunner)));
+  public static final MultiMatcher<ClassTree, AnnotationTree> hasJUnit4TestRunner =
+      annotations(AT_LEAST_ONE, hasArgumentWithValue("value", isJUnit4TestRunner));
 
-    @Override
-    public boolean matches(ClassTree classTree, VisitorState state) {
-      return isJUnit4TestClass.matches(classTree, state);
-    }
-  }
+  /**
+   * Matches classes which have attributes of only JUnit4 test classes.
+   *
+   * <p>Matches if 1) the class is non-abstract, 2) the class does not inherit from JUnit3 {@code
+   * TestCase}, and 3) the class is annotated with {@code @RunWith} or any method therein is
+   * annotated with {@code @Test}.
+   */
+  public static final Matcher<ClassTree> isJUnit4TestClass =
+      allOf(
+          not(isTestCaseDescendant),
+          not(enclosingClass(hasModifier(Modifier.ABSTRACT))),
+          anyOf(hasJUnit4TestRunner, hasJUnit4TestCases));
+
+  /**
+   * Matches classes which have attributes of both JUnit 3 and 4 classes.
+   *
+   * <p>Matches if the class 1) inherits from JUnit 3 {@code TestCase}, and 2) a) has a JUnit4 test
+   * runner annotation, or b) has any methods annotated {@code @Test}.
+   *
+   * <p>As currently implemented, classes with ambiguous version will match neither {@code
+   * isJUnit4TestClass} nor {@code isJUnit3TestClass}.
+   */
+  public static final Matcher<ClassTree> isAmbiguousJUnitVersion =
+      allOf(isTestCaseDescendant, anyOf(hasJUnit4TestRunner, hasJUnit4TestCases));
 
   /** Returns true if the tree contains a method invocation that looks like a test assertion. */
   public static boolean containsTestMethod(Tree tree) {

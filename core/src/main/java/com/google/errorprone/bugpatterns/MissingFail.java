@@ -20,6 +20,9 @@ import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestCases;
+import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestRunner;
+import static com.google.errorprone.matchers.JUnitMatchers.isTestCaseDescendant;
 import static com.google.errorprone.matchers.Matchers.assertStatement;
 import static com.google.errorprone.matchers.Matchers.assignment;
 import static com.google.errorprone.matchers.Matchers.booleanConstant;
@@ -29,7 +32,6 @@ import static com.google.errorprone.matchers.Matchers.continueStatement;
 import static com.google.errorprone.matchers.Matchers.ignoreParens;
 import static com.google.errorprone.matchers.Matchers.isInstanceField;
 import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.isVariable;
 import static com.google.errorprone.matchers.Matchers.methodInvocation;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
@@ -217,10 +219,8 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       contains(toType(ExpressionTree.class, BOOLEAN_ASSERT_VAR));
 
   // Subtly different from JUnitMatchers: We want to match test base classes too.
-  private static final Matcher<ClassTree> JUNIT3_TEST_CLASS =
-      isSubtypeOf("junit.framework.TestCase");
   private static final Matcher<ClassTree> TEST_CLASS =
-      Matchers.anyOf(JUNIT3_TEST_CLASS, new JUnitMatchers.JUnit4TestClassMatcher());
+      Matchers.anyOf(isTestCaseDescendant, hasJUnit4TestRunner, hasJUnit4TestCases);
 
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {
