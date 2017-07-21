@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  */
 @BugPattern(
   name = "NamedParameters",
-  summary = "Parameter name in argument comment is missing or incorrect",
+  summary = "Parameter name in argument comment is incorrect",
   category = JDK,
   severity = WARNING
 )
@@ -89,9 +89,9 @@ public class NamedParameterChecker extends BugChecker
         LabelledArgument.createFromParametersList(parameters, arguments);
 
     // Build fix
-    // In general: if a comment is missing and it should be there then we suggest adding it
-    // If a comment is wrong but matches the parameter name of a different argument then we suggest
-    // swapping the arguments. If a comment is wrong and matches nothing then we suggest changing it
+    // In general: If a comment is wrong but matches the parameter name of a different argument then
+    // we suggest swapping the arguments. If a comment is wrong and matches nothing then we suggest
+    // changing it
 
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     ImmutableList.Builder<String> incorrectParameterDescriptions = ImmutableList.builder();
