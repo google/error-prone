@@ -118,6 +118,7 @@ import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
 import com.google.errorprone.bugpatterns.MultiVariableDeclaration;
 import com.google.errorprone.bugpatterns.MultipleParallelOrSequentialCalls;
 import com.google.errorprone.bugpatterns.MultipleTopLevelClasses;
+import com.google.errorprone.bugpatterns.MultipleUnaryOperatorsInMethodCall;
 import com.google.errorprone.bugpatterns.MustBeClosedChecker;
 import com.google.errorprone.bugpatterns.MutableConstantField;
 import com.google.errorprone.bugpatterns.MutableMethodReturnType;
@@ -503,6 +504,7 @@ public class BuiltInCheckerSuppliers {
           MutableMethodReturnType.class,
           MultiVariableDeclaration.class,
           MultipleTopLevelClasses.class,
+          MultipleUnaryOperatorsInMethodCall.class,
           NamedParameterChecker.class,
           NoAllocationChecker.class,
           NonCanonicalStaticMemberImport.class,
