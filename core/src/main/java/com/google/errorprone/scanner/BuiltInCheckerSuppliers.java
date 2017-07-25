@@ -79,6 +79,7 @@ import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.ImmutableModification;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
+import com.google.errorprone.bugpatterns.IncrementInForLoopAndHeader;
 import com.google.errorprone.bugpatterns.IndexOfChar;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
@@ -425,6 +426,7 @@ public class BuiltInCheckerSuppliers {
           ImmutableAnnotationChecker.class,
           ImmutableEnumChecker.class,
           IncompatibleModifiersChecker.class,
+          IncrementInForLoopAndHeader.class,
           InjectOnConstructorOfAbstractClass.class,
           InputStreamSlowMultibyteRead.class,
           InstanceOfAndCastMatchWrongType.class,
