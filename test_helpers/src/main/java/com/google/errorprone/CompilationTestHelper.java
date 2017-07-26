@@ -255,6 +255,16 @@ public class CompilationTestHelper {
                   diagnostics.size(), diagnostics))
           .that(diagnostics.size())
           .isEqualTo(0);
+      assertWithMessage(
+              String.format(
+                  "Expected compilation result to be "
+                      + expectedResult.or(Result.OK)
+                      + ", but was %s. No diagnostics were emitted."
+                      + " OutputStream from Compiler follows.\n\n%s",
+                  result,
+                  outputStream.toString()))
+          .that(result)
+          .isEqualTo(expectedResult.or(Result.OK));
     } else {
       for (JavaFileObject source : sources) {
         try {

@@ -329,6 +329,25 @@ public class CompilationTestHelperTest {
   }
 
   @Test
+  public void failureWithErrorAndNoDiagnosticFails() {
+    try {
+      compilationHelper
+          .expectNoDiagnostics()
+          .addSourceLines("Test.java", "public class Test {}")
+          .setArgs(ImmutableList.of("-Xep:ReturnTreeChecker:Squirrels")) // Bad flag crashes.
+          .ignoreJavacErrors()
+          .doTest();
+      fail();
+    } catch (AssertionError expected) {
+      assertThat(expected.getMessage())
+          .contains(
+              "Expected compilation result to be OK, but was CMDERR. No diagnostics were"
+                  + " emitted.");
+      assertThat(expected.getMessage()).contains("InvalidCommandLineOptionException");
+    }
+  }
+
+  @Test
   public void commandLineArgToDisableCheckWorks() {
     compilationHelper
         .setArgs(ImmutableList.of("-Xep:ReturnTreeChecker:OFF"))
