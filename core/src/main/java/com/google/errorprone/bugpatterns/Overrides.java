@@ -43,9 +43,6 @@ import java.util.Set;
   name = "Overrides",
   altNames = "overrides",
   summary = "Varargs doesn't agree for overridden method",
-  explanation =
-      "A varargs method is overridden by a method with an array parameter, or vice "
-          + "versa.  Please match the signature of the method being overridden.",
   category = JDK,
   severity = ERROR
 )
