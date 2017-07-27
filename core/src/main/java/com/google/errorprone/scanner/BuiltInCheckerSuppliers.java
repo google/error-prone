@@ -174,6 +174,7 @@ import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
+import com.google.errorprone.bugpatterns.ThreadJoinLoop;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
 import com.google.errorprone.bugpatterns.ThrowNull;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
@@ -461,6 +462,7 @@ public class BuiltInCheckerSuppliers {
           SimpleDateFormatConstant.class,
           StaticGuardedByInstance.class,
           SynchronizeOnNonFinalField.class,
+          ThreadJoinLoop.class,
           TruthConstantAsserts.class,
           TypeParameterShadowing.class,
           TypeParameterUnusedInFormals.class,
