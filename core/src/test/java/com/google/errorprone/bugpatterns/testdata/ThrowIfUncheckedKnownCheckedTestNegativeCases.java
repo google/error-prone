@@ -61,7 +61,7 @@ public class ThrowIfUncheckedKnownCheckedTestNegativeCases {
     throwIfUnchecked(e);
   }
 
-  <E extends T, T extends Exception> void genericHellhole(E e) {
+  <E extends T, T extends Exception> void genericUpperBoundDifferentFromErasure(E e) {
     throwIfUnchecked(e);
   }
 
