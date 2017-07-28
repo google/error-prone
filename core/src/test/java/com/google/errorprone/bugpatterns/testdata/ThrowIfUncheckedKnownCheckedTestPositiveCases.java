@@ -15,6 +15,7 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Throwables.propagateIfPossible;
+import static com.google.common.base.Throwables.throwIfUnchecked;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -22,6 +23,8 @@ import java.util.concurrent.ExecutionException;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ThrowIfUncheckedKnownCheckedTestPositiveCases {
   void simple(IOException e) {
+    // BUG: Diagnostic contains: no-op
+    throwIfUnchecked(e);
 
     // BUG: Diagnostic contains: no-op
     propagateIfPossible(e);
@@ -31,10 +34,17 @@ public class ThrowIfUncheckedKnownCheckedTestPositiveCases {
     try {
       foo();
     } catch (IOException | ExecutionException e) {
+      // BUG: Diagnostic contains: no-op
+      throwIfUnchecked(e);
 
       // BUG: Diagnostic contains: no-op
       propagateIfPossible(e);
     }
+  }
+
+  <E extends IOException> void checkedGeneric(E e) {
+    // BUG: Diagnostic contains: no-op
+    throwIfUnchecked(e);
   }
 
   void foo() throws IOException, ExecutionException {}

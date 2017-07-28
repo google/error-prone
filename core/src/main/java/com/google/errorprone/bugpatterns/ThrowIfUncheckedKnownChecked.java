@@ -80,6 +80,8 @@ public class ThrowIfUncheckedKnownChecked extends BugChecker
         boolean isKnownCheckedException(VisitorState state, Type type) {
           Types types = state.getTypes();
           Symtab symtab = state.getSymtab();
+          // Check erasure for generics.
+          type = types.erasure(type);
           return
           // Has to be some Exception: A variable of type Throwable might be an Error.
           types.isSubtype(type, symtab.exceptionType)

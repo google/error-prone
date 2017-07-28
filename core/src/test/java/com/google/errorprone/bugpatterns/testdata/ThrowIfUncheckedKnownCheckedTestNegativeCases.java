@@ -15,6 +15,7 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Throwables.propagateIfPossible;
+import static com.google.common.base.Throwables.throwIfUnchecked;
 
 import java.io.IOException;
 import java.util.concurrent.CancellationException;
@@ -23,17 +24,21 @@ import java.util.concurrent.ExecutionException;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ThrowIfUncheckedKnownCheckedTestNegativeCases {
   void exception(Exception e) {
+    throwIfUnchecked(e);
   }
 
   void throwable(Throwable e) {
+    throwIfUnchecked(e);
   }
 
   void runtime(RuntimeException e) {
     // Better written as "throw e," but comes up too rarely to justify a compile error.
+    throwIfUnchecked(e);
   }
 
   void error(Error e) {
     // Better written as "throw e," but comes up too rarely to justify a compile error.
+    throwIfUnchecked(e);
   }
 
   void multiarg(IOException e) throws IOException {
@@ -44,7 +49,20 @@ public class ThrowIfUncheckedKnownCheckedTestNegativeCases {
     try {
       foo();
     } catch (IOException | ExecutionException | CancellationException e) {
+      throwIfUnchecked(e);
     }
+  }
+
+  <E extends RuntimeException> void genericUnchecked(E e) {
+    throwIfUnchecked(e);
+  }
+
+  <E extends Exception> void genericMaybeUnchecked(E e) {
+    throwIfUnchecked(e);
+  }
+
+  <E extends T, T extends Exception> void genericHellhole(E e) {
+    throwIfUnchecked(e);
   }
 
   void foo() throws IOException, ExecutionException {}
@@ -54,6 +72,7 @@ public class ThrowIfUncheckedKnownCheckedTestNegativeCases {
    * to make sure that we don't blow up when running against the tests of Throwables.
    */
   void nullException() {
+    throwIfUnchecked(null); // throws NPE
     propagateIfPossible(null); // no-op
   }
 }
