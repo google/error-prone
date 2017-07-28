@@ -144,6 +144,7 @@ import com.google.errorprone.bugpatterns.Overrides;
 import com.google.errorprone.bugpatterns.OvershadowingSubclassFields;
 import com.google.errorprone.bugpatterns.PackageInfo;
 import com.google.errorprone.bugpatterns.PackageLocation;
+import com.google.errorprone.bugpatterns.ParameterComment;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
@@ -517,6 +518,7 @@ public class BuiltInCheckerSuppliers {
           NumericEquality.class,
           PackageLocation.class,
           ParameterNotNullable.class,
+          ParameterComment.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           PrivateConstructorForUtilityClass.class,
           PrivateConstructorForNoninstantiableModule.class,
