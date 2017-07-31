@@ -18,8 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.contains;
-import static com.google.errorprone.matchers.Matchers.enclosingMethod;
 import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.Matchers.isLastStatementInBlock;
@@ -29,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
+import static com.google.errorprone.matchers.Matchers.previousStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
@@ -75,8 +74,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                     Matchers.<ExpressionTree>allOf(
                         kindIs(Kind.IDENTIFIER), identifierHasName("super")))),
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)),
-            not(AbstractReturnValueIgnored::expectedExceptionTest),
-            specializedMatcher())
+            specializedMatcher(),
+            not(AbstractReturnValueIgnored::expectedExceptionTest))
         .matches(methodInvocationTree, state)) {
       return describe(methodInvocationTree, state);
     }
@@ -187,13 +186,11 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           // expectedException.expect(Foo.class); me();
           allOf(
               isLastStatementInBlock(),
-              enclosingMethod(
-                  contains(
-                      ExpressionTree.class,
-                      methodInvocation(
-                          instanceMethod()
-                              .onDescendantOf("org.junit.rules.TestRule")
-                              .withNameMatching(Pattern.compile("expect(Message|Cause)?")))))),
+              previousStatement(
+                  expressionStatement(
+                      instanceMethod()
+                          .onDescendantOf("org.junit.rules.TestRule")
+                          .withNameMatching(Pattern.compile("expect(Message|Cause)?"))))),
           // try { me(); fail(); } catch (Throwable t) {}
           allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD))),
           // assertThrows(Throwable.class, () => { me(); })

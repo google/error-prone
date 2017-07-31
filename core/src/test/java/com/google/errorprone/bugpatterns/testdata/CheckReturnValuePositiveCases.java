@@ -74,9 +74,6 @@ public class CheckReturnValuePositiveCases {
     // BUG: Diagnostic contains: remove this line
     new IntValue(1).increment();
     ExpectedException.none().expect(IllegalStateException.class);
-    // BUG: Diagnostic contains: remove this line
-    new IntValue(1).increment();
-
     new IntValue(1).increment(); // No error here, last statement in block
   }
 

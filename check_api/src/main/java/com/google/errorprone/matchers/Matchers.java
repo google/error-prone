@@ -555,6 +555,28 @@ public class Matchers {
     return new NextStatement<>(matcher);
   }
 
+  /**
+   * Matches a statement AST node if the previous statement in the enclosing block matches the given
+   * matcher.
+   */
+  public static <T extends StatementTree> Matcher<T> previousStatement(
+      Matcher<StatementTree> matcher) {
+    return (T statement, VisitorState state) -> {
+      BlockTree block = state.findEnclosing(BlockTree.class);
+      if (block == null) {
+        return false;
+      }
+      List<? extends StatementTree> statements = block.getStatements();
+      int idx = statements.indexOf(statement);
+      if (idx <= 0) {
+        // The block wrapping us doesn't contain this statement, or doesn't contain a previous
+        // statement.
+        return false;
+      }
+      return matcher.matches(statements.get(idx - 1), state);
+    };
+  }
+
   /** Matches a statement AST node if the statement is the last statement in the block. */
   public static Matcher<StatementTree> isLastStatementInBlock() {
     return new IsLastStatementInBlock<>();
