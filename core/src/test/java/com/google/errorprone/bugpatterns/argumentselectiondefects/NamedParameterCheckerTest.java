@@ -108,14 +108,13 @@ public class NamedParameterCheckerTest {
   }
 
   @Test
-  public void namedParametersChecker_reformatsComment_withNoEquals() {
+  public void namedParametersChecker_tolerateComment_withNoEquals() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "abstract class Test {",
             "  abstract void target(Object param);",
             "  void test(Object arg) {",
-            "    // BUG: Diagnostic contains: target(/* param= */arg)",
             "    target(/*param*/arg);",
             "  }",
             "}")
@@ -123,14 +122,13 @@ public class NamedParameterCheckerTest {
   }
 
   @Test
-  public void namedParametersChecker_reformatsComment_blockAfter() {
+  public void namedParametersChecker_toleratesMatchingComment_blockAfter() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "abstract class Test {",
             "  abstract void target(Object param);",
             "  void test(Object arg) {",
-            "    // BUG: Diagnostic contains: target(/* param= */arg)",
             "    target(arg/*param*/);",
             "  }",
             "}")
@@ -138,14 +136,30 @@ public class NamedParameterCheckerTest {
   }
 
   @Test
-  public void namedParametersChecker_reformatsMatchingComment_lineAfter() {
+  public void namedParametersChecker_refactorsComment_blockAfter() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "abstract class Test {",
             "  abstract void target(Object param);",
             "  void test(Object arg) {",
-            "    // BUG: Diagnostic contains: target(/* param= */arg)",
+            "    // BUG: Diagnostic contains:",
+            "    // target(/* param= */arg)",
+            "    // `/*imprecise match for param*/` should be `/* param= */ <arg>`",
+            "    target(arg/*imprecise match for param*/);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void namedParametersChecker_toleratesMatchingComment_lineAfter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object param);",
+            "  void test(Object arg) {",
             "    target(arg); //param",
             "  }",
             "}")
@@ -219,7 +233,9 @@ public class NamedParameterCheckerTest {
             "abstract class Test {",
             "  abstract void target(Object param1, Object param2);",
             "  void test(Object arg1, Object arg2) {",
-            "    // BUG: Diagnostic contains: target(/* param1= */arg1, arg2)",
+            "    // BUG: Diagnostic contains:",
+            "    // target(/* param1= */arg1, arg2)",
+            "    // `/* notMatching= */` does not match formal parameter name `param1`",
             "    target(/* notMatching= */arg1, arg2);",
             "  }",
             "}")

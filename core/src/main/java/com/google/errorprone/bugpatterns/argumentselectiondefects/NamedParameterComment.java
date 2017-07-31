@@ -147,7 +147,16 @@ final class NamedParameterComment {
             .findFirst();
 
     if (approximateMatchComment.isPresent()) {
-      return MatchedComment.create(approximateMatchComment.get(), MatchType.APPROXIMATE_MATCH);
+      // Report EXACT_MATCH for comments that don't use the recommended style (e.g. `/*foo*/`
+      // instead of `/* foo= */`), but which match the formal parameter name exactly, since it's
+      // a style nit rather than a possible correctness issue.
+      // TODO(cushon): revisit this if we standardize on the recommended comment style.
+      String text =
+          CharMatcher.anyOf("=:")
+              .trimTrailingFrom(Comments.getTextFromComment(approximateMatchComment.get()).trim());
+      return MatchedComment.create(
+          approximateMatchComment.get(),
+          text.equals(formal) ? MatchType.EXACT_MATCH : MatchType.APPROXIMATE_MATCH);
     }
 
     return MatchedComment.notAnnotated();

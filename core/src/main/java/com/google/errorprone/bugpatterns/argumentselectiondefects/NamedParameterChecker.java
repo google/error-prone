@@ -105,8 +105,9 @@ public class NamedParameterChecker extends BugChecker
           addComment(labelledArgument, fixBuilder);
           incorrectParameterDescriptions.add(
               String.format(
-                  "%s (comment does not conform to required style)",
-                  labelledArgument.parameterName()));
+                  "`%s` should be `%s <arg>`",
+                  labelledArgument.matchedComment().comment().getText(),
+                  NamedParameterComment.toCommentText(labelledArgument.parameterName())));
           break;
         case BAD_MATCH:
           Comment badLabel = labelledArgument.matchedComment().comment();
@@ -137,8 +138,8 @@ public class NamedParameterChecker extends BugChecker
           }
           incorrectParameterDescriptions.add(
               String.format(
-                  "%s (comment does not match formal parameter name)",
-                  labelledArgument.parameterName()));
+                  "`%s` does not match formal parameter name `%s`",
+                  badLabel.getText(), labelledArgument.parameterName()));
           break;
       }
     }
