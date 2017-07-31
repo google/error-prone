@@ -439,7 +439,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void ignoreInAssertThrowsBodies() throws Exception {
+  public void ignoreInThrowingRunnables() throws Exception {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -470,7 +470,9 @@ public class CheckReturnValueTest {
             "     foo.f(); ",
             "     foo.f(); ",
             "   });",
+            "   bar(() -> foo.f());",
             "  }",
+            "  void bar(org.junit.function.ThrowingRunnable r) {}",
             "}")
         .doTest();
   }

@@ -22,15 +22,16 @@ import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.Matchers.isLastStatementInBlock;
 import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.methodInvocation;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.Matchers.previousStatement;
+import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -68,11 +69,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
             parentNode(
                 anyOf(
                     AbstractReturnValueIgnored::isVoidReturningLambdaExpression,
-                    Matchers.<Tree>kindIs(Kind.EXPRESSION_STATEMENT))),
-            not(
-                methodSelect(
-                    Matchers.<ExpressionTree>allOf(
-                        kindIs(Kind.IDENTIFIER), identifierHasName("super")))),
+                    Matchers.kindIs(Kind.EXPRESSION_STATEMENT))),
+            not(methodSelect(toType(IdentifierTree.class, identifierHasName("super")))),
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)),
             specializedMatcher(),
             not(AbstractReturnValueIgnored::expectedExceptionTest))
@@ -91,19 +89,56 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         state.getTypes().findDescriptorType(((JCLambda) tree).type).getReturnType(), state);
   }
 
+  private static boolean methodCallInDeclarationOfExceptionType(VisitorState state) {
+    // Find the nearest definitional context for this method invocation
+    // (i.e.: the nearest surrounding class or lambda)
+    Tree tree = null;
+    out:
+    for (Tree t : state.getPath()) {
+      switch (t.getKind()) {
+        case LAMBDA_EXPRESSION:
+        case CLASS:
+          tree = t;
+          break out;
+        default: // fall out, to loop again
+      }
+    }
+
+    if (tree == null) {
+      // Huh. Shouldn't happen.
+      return false;
+    }
+    Type clazzType = ASTHelpers.getType(tree);
+
+    return CLASSES_CONSIDERED_THROWING
+        .stream()
+        .anyMatch(t -> ASTHelpers.isSubtype(clazzType, state.getTypeFromString(t), state));
+  }
+
+  /**
+   * {@code @FunctionalInterface}'s that are generally used as a lambda expression for 'a block of
+   * code that's going to fail', e.g.:
+   *
+   * <p>{@code assertThrows(FooException.class, () -> myCodeThatThrowsAnException());
+   * errorCollector.checkThrows(FooException.class, () -> myCodeThatThrowsAnException()); }
+   *
+   * <p>// TODO(glorioso): Consider a meta-annotation like @LikelyToThrow instead/in addition?
+   */
+  private static final ImmutableSet<String> CLASSES_CONSIDERED_THROWING =
+      ImmutableSet.of(
+          "org.junit.function.ThrowingRunnable",
+          "org.junit.jupiter.api.function.Executable",
+          "com.google.truth.ExpectFailure.AssertionCallback",
+          "com.google.truth.ExpectFailure.DelegatedAssertionCallback");
+
   /**
    * Match whatever additional conditions concrete subclasses want to match (a list of known
    * side-effect-free methods, has a @CheckReturnValue annotation, etc.).
    */
   public abstract Matcher<? super MethodInvocationTree> specializedMatcher();
 
-  private static Matcher<ExpressionTree> identifierHasName(final String name) {
-    return new Matcher<ExpressionTree>() {
-      @Override
-      public boolean matches(ExpressionTree item, VisitorState state) {
-        return ((IdentifierTree) item).getName().contentEquals(name);
-      }
-    };
+  private static Matcher<IdentifierTree> identifierHasName(final String name) {
+    return (item, state) -> item.getName().contentEquals(name);
   }
 
   /**
@@ -172,15 +207,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           staticMethod().onClass("junit.framework.Assert").named("fail"),
           staticMethod().onClass("junit.framework.TestCase").named("fail"));
 
-  private static final Matcher<ExpressionTree> EXPECT_THROWS =
-      anyOf(
-          // JUnit 4
-          staticMethod().onClass("org.junit.Assert").named("assertThrows"),
-          staticMethod().onClass("org.junit.Assert").named("expectThrows"),
-          // JUnit 5
-          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("assertThrows"),
-          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("expectThrows"));
-
   private static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
       anyOf(
           // expectedException.expect(Foo.class); me();
@@ -195,13 +221,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD))),
           // assertThrows(Throwable.class, () => { me(); })
           allOf(
-              anyOf(
-                  isLastStatementInBlock(),
-                  parentNode(AbstractReturnValueIgnored::isVoidReturningLambdaExpression)),
-              enclosingNode(
-                  // Extra kindIs is needed as methodInvocation will cast each parent node to
-                  // ExpressionTree.
-                  allOf(kindIs(Kind.METHOD_INVOCATION), methodInvocation(EXPECT_THROWS)))));
+              anyOf(isLastStatementInBlock(), parentNode(kindIs(Kind.LAMBDA_EXPRESSION))),
+              // Within the context of a ThrowingRunnable/Executable:
+              (t, s) -> methodCallInDeclarationOfExceptionType(s)));
 
   private static final Matcher<ExpressionTree> MOCKITO_MATCHER =
       anyOf(
