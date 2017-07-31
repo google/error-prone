@@ -95,8 +95,8 @@ public class RestrictedApiChecker extends BugChecker
     }
     if (!restriction.allowedOnPath().isEmpty()) {
       JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
-      if (Pattern.matches(
-          restriction.allowedOnPath(), compilationUnit.getSourceFile().toUri().getRawPath())) {
+      String path = ASTHelpers.getFileNameFromUri(compilationUnit.getSourceFile().toUri());
+      if (Pattern.matches(restriction.allowedOnPath(), path)) {
         return Description.NO_MATCH;
       }
     }
