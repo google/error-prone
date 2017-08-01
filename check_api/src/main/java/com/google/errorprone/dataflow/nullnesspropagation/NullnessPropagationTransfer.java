@@ -56,6 +56,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -601,6 +602,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
     if (tree instanceof JCFieldAccess) {
       return ((JCFieldAccess) tree).sym;
+    }
+    if (tree instanceof JCVariableDecl) {
+      return ((JCVariableDecl) tree).sym;
     }
     return null;
   }

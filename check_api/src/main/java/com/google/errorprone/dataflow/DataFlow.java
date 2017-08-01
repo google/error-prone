@@ -22,11 +22,14 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
@@ -95,9 +98,12 @@ public final class DataFlow {
                   final UnderlyingAST ast;
                   if (methodPath.getLeaf() instanceof LambdaExpressionTree) {
                     ast = new UnderlyingAST.CFGLambda((LambdaExpressionTree) methodPath.getLeaf());
-                  } else { // must be a method per findEnclosingMethodOrLambda
+                  } else if (methodPath.getLeaf() instanceof MethodTree) {
                     MethodTree method = (MethodTree) methodPath.getLeaf();
                     ast = new UnderlyingAST.CFGMethod(method, /*classTree*/ null);
+                  } else {
+                    // must be an initializer per findEnclosingMethodOrLambdaOrInitializer
+                    ast = new UnderlyingAST.CFGStatement(methodPath.getLeaf());
                   }
                   final ProcessingEnvironment env = key.environment();
 
@@ -109,12 +115,24 @@ public final class DataFlow {
               });
 
   // TODO(user), remove once we merge jdk8 specific's with core
-  private static <T> TreePath findEnclosingMethodOrLambda(TreePath path) {
+  private static <T> TreePath findEnclosingMethodOrLambdaOrInitializer(TreePath path) {
     while (path != null) {
       if (path.getLeaf() instanceof MethodTree || path.getLeaf() instanceof LambdaExpressionTree) {
         return path;
       }
-      path = path.getParentPath();
+      TreePath parent = path.getParentPath();
+      if (parent != null && parent.getLeaf() instanceof ClassTree) {
+        if (path.getLeaf() instanceof BlockTree) {
+          // this is a class or instance initializer block
+          return path;
+        }
+        if (path.getLeaf() instanceof VariableTree
+            && ((VariableTree) path.getLeaf()).getInitializer() != null) {
+          // this is a field with an inline initializer
+          return path;
+        }
+      }
+      path = parent;
     }
     return null;
   }
@@ -156,11 +174,18 @@ public final class DataFlow {
   }
 
   /**
-   * Run the {@code transfer} dataflow analysis to compute the abstract value of the expression
+   * Runs the {@code transfer} dataflow analysis to compute the abstract value of the expression
    * which is the leaf of {@code exprPath}.
    *
+   * <p>The expression must be part of a method, lambda, or initializer (inline field initializer or
+   * initializer block). Example of an expression outside of such constructs is the identifier in an
+   * import statement.
+   *
+   * <p>Note that for intializers, each inline field initializer or initializer block is treated
+   * separately. I.e., we don't merge all initializers into one virtual block for dataflow.
+   *
    * @return dataflow result for the given expression or {@code null} if the expression is not part
-   *     of a method or lambda
+   *     of a method, lambda or initializer
    */
   @Nullable
   public static <A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>>
@@ -172,10 +197,9 @@ public final class DataFlow {
         leaf.getClass().getName());
 
     final ExpressionTree expr = (ExpressionTree) leaf;
-    final TreePath enclosingMethodPath = findEnclosingMethodOrLambda(exprPath);
+    final TreePath enclosingMethodPath = findEnclosingMethodOrLambdaOrInitializer(exprPath);
     if (enclosingMethodPath == null) {
-      // TODO(user) this can happen in field initialization.
-      // Currently not supported because it only happens in ~2% of cases.
+      // expression is not part of a method, lambda, or initializer
       return null;
     }
 
