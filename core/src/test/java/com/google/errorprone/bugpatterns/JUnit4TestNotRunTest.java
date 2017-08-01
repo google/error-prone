@@ -19,8 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -46,7 +44,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsVerifyAsIdentifier() {
+  public void containsVerifyAsIdentifier_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -64,7 +62,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsQualifiedVerify() {
+  public void containsQualifiedVerify_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -82,7 +80,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsAssertAsIdentifier() {
+  public void containsAssertAsIdentifier_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -106,7 +104,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsQualifiedAssert() {
+  public void containsQualifiedAssert_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -124,7 +122,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsCheckAsIdentifier() {
+  public void containsCheckAsIdentifier_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -142,7 +140,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsQualifiedCheck() {
+  public void containsQualifiedCheck_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -160,7 +158,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsFailAsIdentifier() {
+  public void containsFailAsIdentifier_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -178,7 +176,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsQualifiedFail() {
+  public void containsQualifiedFail_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -196,7 +194,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsExpectAsIdentifier() {
+  public void containsExpectAsIdentifier_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -214,7 +212,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testContainsQualifiedExpect() {
+  public void containsQualifiedExpect_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -232,7 +230,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void noTestKeyword() {
+  public void noTestKeyword_notATest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -249,7 +247,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void staticMethodWithTestKeyword() {
+  public void staticMethodWithTestKeyword_notATest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -268,7 +266,7 @@ public class JUnit4TestNotRunTest {
 
 
   @Test
-  public void hasOtherAnnotation() {
+  public void hasOtherAnnotation_notATest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -286,7 +284,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void hasOtherAnnotationAndNamedTest() {
+  public void hasOtherAnnotationAndNamedTest_shouldBeTest() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -320,7 +318,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testTestFix() throws Exception {
+  public void testFix() throws Exception {
     refactoringHelper
         .addInputLines(
             "in/TestStuff.java",
@@ -345,7 +343,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testIgnoreFix() throws Exception {
+  public void ignoreFix() throws Exception {
     refactoringHelper
         .addInputLines(
             "in/TestStuff.java",
@@ -370,7 +368,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testPrivateFix() throws Exception {
+  public void makePrivateFix() throws Exception {
     refactoringHelper
         .addInputLines(
             "in/TestStuff.java",
@@ -393,7 +391,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void ignoreFixComesFirstWhenTestEnabled() throws Exception {
+  public void ignoreFixComesFirstWhenTestNamedDisabled() throws Exception {
     refactoringHelper
         .addInputLines(
             "in/TestStuff.java",
@@ -470,6 +468,21 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
+  public void runWithNotRequired() {
+    compilationHelper
+        .addSourceLines(
+            "TestStuff.java",
+            "import org.junit.Test;",
+            "public class TestStuff {",
+            "  // BUG: Diagnostic contains: @Test",
+            "  public void testDoesSomething() {}",
+            "  @Test",
+            "  public void foo() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase1.java").doTest();
   }
@@ -495,10 +508,5 @@ public class JUnit4TestNotRunTest {
         .addSourceFile("JUnit4TestNotRunBaseClass.java")
         .addSourceFile("JUnit4TestNotRunNegativeCase5.java")
         .doTest();
-  }
-
-  @Test
-  public void testSerialization() throws Exception {
-    new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new JUnit4TestNotRun());
   }
 }

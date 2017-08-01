@@ -78,13 +78,18 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
    * Looks for methods that are structured like tests but aren't run. Matches public, void, no-param
    * methods in JUnit4 test classes that aren't annotated with any JUnit4 annotations.
    */
-  private static final Matcher<MethodTree> POSSIBLE_TEST_METHOD =
-      allOf(
-          hasModifier(PUBLIC),
-          methodReturns(VOID_TYPE),
-          methodHasParameters(),
-          not(hasJUnitAnnotation),
-          enclosingClass(isJUnit4TestClass));
+  private final Matcher<MethodTree> possibleTestMethod;
+
+
+  public JUnit4TestNotRun() {
+    possibleTestMethod =
+        allOf(
+            hasModifier(PUBLIC),
+            methodReturns(VOID_TYPE),
+            methodHasParameters(),
+            not(hasJUnitAnnotation),
+            enclosingClass(isJUnit4TestClass));
+  }
 
   /**
    * Matches if:
@@ -109,7 +114,7 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    if (!POSSIBLE_TEST_METHOD.matches(methodTree, state)) {
+    if (!possibleTestMethod.matches(methodTree, state)) {
       return NO_MATCH;
     }
 
