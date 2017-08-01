@@ -21,7 +21,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 
 /** Common utility functions for immutable collections. */
-final class ImmutableCollections {
+public final class ImmutableCollections {
 
   private ImmutableCollections() {}
 
@@ -72,7 +72,7 @@ final class ImmutableCollections {
               java.util.Set.class.getName(), com.google.common.collect.ImmutableSet.class.getName())
           .build();
 
-  static boolean isImmutableType(Type type) {
+  public static boolean isImmutableType(Type type) {
     return MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.containsValue(getTypeQualifiedName(type));
   }
 
