@@ -20,6 +20,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskEvent.Kind;
 import com.sun.source.util.TaskListener;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Context;
@@ -27,7 +28,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TaskListener that receives compilation of a Refaster rule class and outputs a serialized analyzer
@@ -54,8 +56,17 @@ public class RefasterRuleCompilerAnalyzer implements TaskListener {
     if (tree == null) {
       return;
     }
-    Collection<? extends CodeTransformer> rules =
-        RefasterRuleBuilderScanner.extractRules(tree, context);
+    final List<CodeTransformer> rules = new ArrayList<>();
+    new TreeScanner<Void, Context>() {
+      @Override
+      public Void visitClass(ClassTree node, Context context) {
+        rules.addAll(RefasterRuleBuilderScanner.extractRules(node, context));
+        return super.visitClass(node, context);
+      }
+    }.scan(tree, context);
+    if (rules.isEmpty()) {
+      throw new IllegalArgumentException("Did not find any Refaster templates");
+    }
     try (ObjectOutputStream output =
         new ObjectOutputStream(Files.newOutputStream(destinationPath))) {
       output.writeObject(CompositeCodeTransformer.compose(rules));
