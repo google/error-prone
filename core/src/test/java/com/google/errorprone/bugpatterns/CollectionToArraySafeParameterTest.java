@@ -21,24 +21,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author mariasam on 6/22/17. */
+/** @author mariasam@google.com (Maria Sam) on 6/27/17. */
 @RunWith(JUnit4.class)
-public class EqualsReferenceTest {
-
-  private CompilationTestHelper compilationTestHelper;
+public class CollectionToArraySafeParameterTest {
+  private CompilationTestHelper compilationHelper;
 
   @Before
-  public void setup() {
-    compilationTestHelper = CompilationTestHelper.newInstance(EqualsReference.class, getClass());
+  public void setUp() {
+    compilationHelper =
+        CompilationTestHelper.newInstance(CollectionToArraySafeParameter.class, getClass());
   }
 
   @Test
-  public void testPositiveCases() {
-    compilationTestHelper.addSourceFile("EqualsReferencePositiveCases.java").doTest();
+  public void testPositiveCases() throws Exception {
+    compilationHelper.addSourceFile("CollectionToArraySafeParameterPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
-    compilationTestHelper.addSourceFile("EqualsReferenceNegativeCases.java").doTest();
+  public void testNegativeCases() throws Exception {
+    compilationHelper.addSourceFile("CollectionToArraySafeParameterNegativeCases.java").doTest();
   }
 }

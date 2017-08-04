@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
-import org.junit.Ignore; // NOLINT
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -47,13 +46,13 @@ public class ShouldHaveEvenArgsTest {
     compilationHelper.addSourceFile("ShouldHaveEvenArgsNegativeCases.java").doTest();
   }
 
-  @Ignore("Public truth doesn't contain this method")
+  @org.junit.Ignore("Public truth doesn't contain this method")
   @Test
   public void testPositiveCase_multimap() throws Exception {
     compilationHelper.addSourceFile("ShouldHaveEvenArgsMultimapPositiveCases.java").doTest();
   }
 
-  @Ignore("Public truth doesn't contain this method")
+  @org.junit.Ignore("Public truth doesn't contain this method")
   @Test
   public void testNegativeCase_multimap() throws Exception {
     compilationHelper.addSourceFile("ShouldHaveEvenArgsMultimapNegativeCases.java").doTest();

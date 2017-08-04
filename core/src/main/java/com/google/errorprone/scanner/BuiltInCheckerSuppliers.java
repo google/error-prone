@@ -32,6 +32,7 @@ import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
+import com.google.errorprone.bugpatterns.BooleanConstantChecker;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
@@ -40,6 +41,7 @@ import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ClassNewInstance;
+import com.google.errorprone.bugpatterns.CollectionToArraySafeParameter;
 import com.google.errorprone.bugpatterns.ComparableAndComparator;
 import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
@@ -297,6 +299,7 @@ public class BuiltInCheckerSuppliers {
           AsyncCallableReturnsNull.class,
           AsyncFunctionReturnsNull.class,
           BadShiftAmount.class,
+          BooleanConstantChecker.class,
           BundleDeserializationCast.class,
           ChainingConstructorIgnoresParameter.class,
           CheckReturnValue.class,
@@ -397,6 +400,7 @@ public class BuiltInCheckerSuppliers {
           CannotMockFinalClass.class,
           ClassCanBeStatic.class,
           ClassNewInstance.class,
+          CollectionToArraySafeParameter.class,
           ComparableAndComparator.class,
           DefaultCharset.class,
           DoubleCheckedLocking.class,
