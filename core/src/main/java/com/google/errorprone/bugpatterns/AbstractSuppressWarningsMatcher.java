@@ -16,9 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
-
 import com.google.common.base.Joiner;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.AnnotationTree;
