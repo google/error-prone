@@ -230,6 +230,9 @@ import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
+import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
+import com.google.errorprone.bugpatterns.nullness.ParameterNotNullable;
+import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
@@ -468,6 +471,7 @@ public class BuiltInCheckerSuppliers {
           EmptySetMultibindingContributions.class,
           EmptyTopLevelDeclaration.class,
           ExpectedExceptionChecker.class,
+          FieldMissingNullable.class,
           HardCodedSdCardPath.class,
           InconsistentOverloads.class,
           InjectedConstructorAnnotations.class,
@@ -490,6 +494,7 @@ public class BuiltInCheckerSuppliers {
           NonCanonicalStaticMemberImport.class,
           NumericEquality.class,
           PackageLocation.class,
+          ParameterNotNullable.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           PrivateConstructorForUtilityClass.class,
           PrivateConstructorForNoninstantiableModule.class,
@@ -498,6 +503,7 @@ public class BuiltInCheckerSuppliers {
           QualifierWithTypeUse.class,
           RedundantThrows.class,
           RemoveUnusedImports.class,
+          ReturnMissingNullable.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOrQualifierAnnotationRetention.class,
           StaticQualifiedUsingExpression.class,
