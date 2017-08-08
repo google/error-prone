@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.errorprone.dataflow.DataFlow;
 import com.google.errorprone.dataflow.LocalStore;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -99,8 +100,9 @@ public final class TrustingNullnessAnalysis implements Serializable {
       return ((JCVariableDecl) decl).type.isPrimitive() ? Nullness.NONNULL : Nullness.NULL;
     }
     TreePath initializerPath = TreePath.getPath(fieldDeclPath, initializer);
+    ClassTree classTree = (ClassTree) fieldDeclPath.getParentPath().getLeaf();
     JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(context);
-    UnderlyingAST ast = new UnderlyingAST.CFGStatement(decl);
+    UnderlyingAST ast = new UnderlyingAST.CFGStatement(decl, classTree);
     ControlFlowGraph cfg =
         CFGBuilder.build(
             initializerPath,

@@ -32,6 +32,7 @@ import javax.lang.model.element.Element;
 import org.checkerframework.dataflow.analysis.AbstractValue;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.Store;
+import org.checkerframework.dataflow.cfg.CFGVisualizer;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 
 /**
@@ -128,6 +129,12 @@ public final class LocalStore<V extends AbstractValue<V>>
   }
 
   @Override
+  public LocalStore<V> widenedUpperBound(LocalStore<V> vLocalStore) {
+    // No support for widening yet.
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof LocalStore)) {
       return false;
@@ -152,13 +159,8 @@ public final class LocalStore<V extends AbstractValue<V>>
   }
 
   @Override
-  public boolean hasDOToutput() {
-    return false;
-  }
-
-  @Override
-  public String toDOToutput() {
-    throw new UnsupportedOperationException("DOT output not supported");
+  public void visualize(CFGVisualizer<?, LocalStore<V>, ?> cfgVisualizer) {
+    // No support for visualization yet.
   }
 
   private static void checkElementType(Element element) {
