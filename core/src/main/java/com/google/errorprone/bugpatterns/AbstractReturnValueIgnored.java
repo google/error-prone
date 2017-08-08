@@ -52,7 +52,6 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-import java.util.regex.Pattern;
 
 /**
  * An abstract base class to match method invocations in which the return value is not used.
@@ -214,9 +213,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
               isLastStatementInBlock(),
               previousStatement(
                   expressionStatement(
-                      instanceMethod()
-                          .onDescendantOf("org.junit.rules.TestRule")
-                          .withNameMatching(Pattern.compile("expect(Message|Cause)?"))))),
+                      anyOf(
+                          instanceMethod().onExactClass("org.junit.rules.ExpectedException")
+                          )))),
           // try { me(); fail(); } catch (Throwable t) {}
           allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD))),
           // assertThrows(Throwable.class, () => { me(); })
