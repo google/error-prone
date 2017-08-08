@@ -38,6 +38,7 @@ import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 import com.google.errorprone.dataflow.LocalStore;
 import com.google.errorprone.dataflow.LocalVariableValues;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -674,11 +675,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         return null;
       }
 
+      ClassTree classTree = (ClassTree) fieldDeclPath.getParentPath().getLeaf();
+
       // Run flow analysis on field initializer.  This is inefficient compared to just walking
       // the initializer expression tree but it avoids duplicating the logic from this transfer
       // function into a method that operates on Javac Nodes.
       TreePath initializerPath = TreePath.getPath(fieldDeclPath, initializer);
-      UnderlyingAST ast = new UnderlyingAST.CFGStatement(initializerPath.getLeaf());
+      UnderlyingAST ast = new UnderlyingAST.CFGStatement(initializerPath.getLeaf(), classTree);
       ControlFlowGraph cfg =
           CFGBuilder.build(
               initializerPath,

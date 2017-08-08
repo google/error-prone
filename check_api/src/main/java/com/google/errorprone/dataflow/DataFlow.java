@@ -96,14 +96,21 @@ public final class DataFlow {
                 public ControlFlowGraph load(CfgParams key) {
                   final TreePath methodPath = key.methodPath();
                   final UnderlyingAST ast;
+                  ClassTree classTree = null;
+                  for (Tree parent : methodPath) {
+                    if (parent instanceof ClassTree) {
+                      classTree = (ClassTree) parent;
+                      break;
+                    }
+                  }
                   if (methodPath.getLeaf() instanceof LambdaExpressionTree) {
                     ast = new UnderlyingAST.CFGLambda((LambdaExpressionTree) methodPath.getLeaf());
                   } else if (methodPath.getLeaf() instanceof MethodTree) {
                     MethodTree method = (MethodTree) methodPath.getLeaf();
-                    ast = new UnderlyingAST.CFGMethod(method, /*classTree*/ null);
+                    ast = new UnderlyingAST.CFGMethod(method, classTree);
                   } else {
                     // must be an initializer per findEnclosingMethodOrLambdaOrInitializer
-                    ast = new UnderlyingAST.CFGStatement(methodPath.getLeaf());
+                    ast = new UnderlyingAST.CFGStatement(methodPath.getLeaf(), classTree);
                   }
                   final ProcessingEnvironment env = key.environment();
 
