@@ -341,4 +341,26 @@ public class ClassCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void innerClassMethodReference() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "T.java", //
+            "import java.util.function.Supplier;",
+            "public class T {",
+            "  class A {",
+            "    {",
+            "      System.err.println(T.this);",
+            "    }",
+            "  }",
+            "  class B {",
+            "    {",
+            "      Supplier<A> s = A::new; // capture enclosing instance",
+            "      System.err.println(s.get());",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

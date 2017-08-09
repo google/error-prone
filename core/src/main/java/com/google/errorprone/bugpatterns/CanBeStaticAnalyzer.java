@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -26,6 +27,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
+import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Names;
 
@@ -143,6 +145,17 @@ public class CanBeStaticAnalyzer extends TreeScanner {
       return;
     }
     if (memberOfEnclosing(owner, state, type.tsym)) {
+      referencesOuter = true;
+    }
+  }
+
+  @Override
+  public void visitReference(JCMemberReference tree) {
+    super.visitReference(tree);
+    if (tree.getMode() != ReferenceMode.NEW) {
+      return;
+    }
+    if (memberOfEnclosing(owner, state, tree.expr.type.tsym)) {
       referencesOuter = true;
     }
   }
