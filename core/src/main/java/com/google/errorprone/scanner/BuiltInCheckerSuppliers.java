@@ -142,6 +142,7 @@ import com.google.errorprone.bugpatterns.NullableVoid;
 import com.google.errorprone.bugpatterns.NumericEquality;
 import com.google.errorprone.bugpatterns.OperatorPrecedence;
 import com.google.errorprone.bugpatterns.OptionalEquality;
+import com.google.errorprone.bugpatterns.OptionalNotPresent;
 import com.google.errorprone.bugpatterns.OverrideThrowableToString;
 import com.google.errorprone.bugpatterns.Overrides;
 import com.google.errorprone.bugpatterns.OvershadowingSubclassFields;
@@ -457,6 +458,7 @@ public class BuiltInCheckerSuppliers {
           NullablePrimitive.class,
           NullableVoid.class,
           OperatorPrecedence.class,
+          OptionalNotPresent.class,
           Overrides.class,
           OverridesGuiceInjectableMethod.class,
           OverrideThrowableToString.class,
