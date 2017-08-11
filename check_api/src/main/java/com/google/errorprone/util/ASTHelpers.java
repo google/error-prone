@@ -234,6 +234,12 @@ public class ASTHelpers {
     return (MethodSymbol) sym;
   }
 
+  /** Gets the symbol for a member reference. */
+  public static MethodSymbol getSymbol(MemberReferenceTree tree) {
+    Symbol sym = ((JCMemberReference) tree).sym;
+    return sym instanceof MethodSymbol ? (MethodSymbol) sym : null;
+  }
+
   /** Given an ExpressionTree, removes any enclosing parentheses. */
   public static ExpressionTree stripParentheses(ExpressionTree tree) {
     while (tree instanceof ParenthesizedTree) {

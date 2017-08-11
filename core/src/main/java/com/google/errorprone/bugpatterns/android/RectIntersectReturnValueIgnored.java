@@ -25,6 +25,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.AbstractReturnValueIgnored;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
@@ -44,7 +45,7 @@ import com.sun.source.tree.MethodInvocationTree;
 )
 public final class RectIntersectReturnValueIgnored extends AbstractReturnValueIgnored {
   @Override
-  public Matcher<? super MethodInvocationTree> specializedMatcher() {
+  public Matcher<? super ExpressionTree> specializedMatcher() {
     return instanceMethod().onExactClass("android.graphics.Rect").named("intersect");
   }
 

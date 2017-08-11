@@ -33,7 +33,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -79,11 +79,15 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return shouldCheckReturnValue(enclosingPackage(method), state);
   }
 
-  private static final Matcher<MethodInvocationTree> MATCHER =
-      new Matcher<MethodInvocationTree>() {
+  private static final Matcher<ExpressionTree> MATCHER =
+      new Matcher<ExpressionTree>() {
         @Override
-        public boolean matches(MethodInvocationTree tree, VisitorState state) {
-          MethodSymbol method = ASTHelpers.getSymbol(tree);
+        public boolean matches(ExpressionTree tree, VisitorState state) {
+          Symbol sym = ASTHelpers.getSymbol(tree);
+          if (!(sym instanceof MethodSymbol)) {
+            return false;
+          }
+          MethodSymbol method = (MethodSymbol) sym;
           Optional<Boolean> result = shouldCheckReturnValue(method, state);
           if (result.isPresent()) {
             return result.get();
@@ -108,7 +112,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
    * {@code @CheckReturnValue} annotation.
    */
   @Override
-  public Matcher<MethodInvocationTree> specializedMatcher() {
+  public Matcher<ExpressionTree> specializedMatcher() {
     return MATCHER;
   }
 

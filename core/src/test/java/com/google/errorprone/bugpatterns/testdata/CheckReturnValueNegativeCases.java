@@ -36,6 +36,17 @@ public class CheckReturnValueNegativeCases {
     return 5;
   }
 
+  private void callRunnable(Runnable runnable) {
+    runnable.run();
+  }
+
+  private void testNonCheckedCallsWithMethodReferences() {
+    Object obj = new String();
+    callRunnable(String::new);
+    callRunnable(this::test2);
+    callRunnable(obj::toString);
+  }
+
   private void callSupplier(Supplier<Integer> supplier) {
     supplier.get();
   }

@@ -29,7 +29,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Objects;
@@ -74,13 +74,17 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
               .onExactClass("java.util.concurrent.CompletableFuture")
               .withNameMatching(Pattern.compile("completeAsync|orTimeout|completeOnTimeout")));
 
-  private static final Matcher<MethodInvocationTree> MATCHER =
-      new Matcher<MethodInvocationTree>() {
+  private static final Matcher<ExpressionTree> MATCHER =
+      new Matcher<ExpressionTree>() {
         @Override
-        public boolean matches(MethodInvocationTree tree, VisitorState state) {
+        public boolean matches(ExpressionTree tree, VisitorState state) {
           Type futureType =
               Objects.requireNonNull(state.getTypeFromString("java.util.concurrent.Future"));
-          MethodSymbol sym = ASTHelpers.getSymbol(tree);
+          Symbol untypedSymbol = ASTHelpers.getSymbol(tree);
+          if (!(untypedSymbol instanceof MethodSymbol)) {
+            return false;
+          }
+          MethodSymbol sym = (MethodSymbol) untypedSymbol;
           if (hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
             return false;
           }
@@ -106,7 +110,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
       };
 
   @Override
-  public Matcher<? super MethodInvocationTree> specializedMatcher() {
+  public Matcher<? super ExpressionTree> specializedMatcher() {
     return MATCHER;
   }
 }

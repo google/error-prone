@@ -33,6 +33,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -43,6 +44,8 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -51,7 +54,9 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
+import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import javax.lang.model.type.TypeKind;
 
 /**
  * An abstract base class to match method invocations in which the return value is not used.
@@ -59,7 +64,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public abstract class AbstractReturnValueIgnored extends BugChecker
-    implements MethodInvocationTreeMatcher {
+    implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
 
   @Override
   public Description matchMethodInvocation(
@@ -79,13 +84,46 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return Description.NO_MATCH;
   }
 
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    if (allOf(
+            (t, s) -> t.getMode() == ReferenceMode.INVOKE,
+            AbstractReturnValueIgnored::isVoidReturningMethodReferenceExpression,
+            // Skip cases where the method we're referencing really does return void. We're only
+            // looking for cases where the referenced method does not return void, but it's being
+            // used on a void-returning functional interface.
+            not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getSymbol(tree).getReturnType(), s)),
+            not((t, s) -> isThrowingFunctionalInterface(s, ((JCMemberReference) t).type)),
+            specializedMatcher())
+        .matches(tree, state)) {
+      return describeMatch(tree);
+    }
+
+    return Description.NO_MATCH;
+  }
+
+  private static boolean isVoidReturningMethodReferenceExpression(
+      MemberReferenceTree tree, VisitorState state) {
+    return functionalInterfaceReturnsExactlyVoid(((JCMemberReference) tree).type, state);
+  }
+
   private static boolean isVoidReturningLambdaExpression(Tree tree, VisitorState state) {
     if (!(tree instanceof LambdaExpressionTree)) {
       return false;
     }
 
-    return ASTHelpers.isVoidType(
-        state.getTypes().findDescriptorType(((JCLambda) tree).type).getReturnType(), state);
+    return functionalInterfaceReturnsExactlyVoid(((JCLambda) tree).type, state);
+  }
+
+  /**
+   * Checks that the return value of a functional interface is void. Note, we do not use
+   * ASTHelpers.isVoidType here, return values of Void are actually type-checked. Only
+   * void-returning functions silently ignore return values of any type.
+   */
+  private static boolean functionalInterfaceReturnsExactlyVoid(
+      Type interfaceType, VisitorState state) {
+    return state.getTypes().findDescriptorType(interfaceType).getReturnType().getKind()
+        == TypeKind.VOID;
   }
 
   private static boolean methodCallInDeclarationOfExceptionType(VisitorState state) {
@@ -107,8 +145,10 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       // Huh. Shouldn't happen.
       return false;
     }
-    Type clazzType = ASTHelpers.getType(tree);
+    return isThrowingFunctionalInterface(state, ASTHelpers.getType(tree));
+  }
 
+  private static boolean isThrowingFunctionalInterface(VisitorState state, Type clazzType) {
     return CLASSES_CONSIDERED_THROWING
         .stream()
         .anyMatch(t -> ASTHelpers.isSubtype(clazzType, state.getTypeFromString(t), state));
@@ -134,7 +174,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    * Match whatever additional conditions concrete subclasses want to match (a list of known
    * side-effect-free methods, has a @CheckReturnValue annotation, etc.).
    */
-  public abstract Matcher<? super MethodInvocationTree> specializedMatcher();
+  public abstract Matcher<? super ExpressionTree> specializedMatcher();
 
   private static Matcher<IdentifierTree> identifierHasName(final String name) {
     return (item, state) -> item.getName().contentEquals(name);

@@ -28,8 +28,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -76,11 +76,15 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   /**
    * Methods in {@link java.util.function} are pure, and their returnvalues should not be discarded.
    */
-  private static final Matcher<MethodInvocationTree> FUNCTIONAL_METHOD =
+  private static final Matcher<ExpressionTree> FUNCTIONAL_METHOD =
       (tree, state) -> {
-        Symbol.MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-        return symbol != null
-            && symbol.owner.packge().getQualifiedName().contentEquals("java.util.function");
+        Symbol symbol = ASTHelpers.getSymbol(tree);
+        return symbol instanceof MethodSymbol
+            && ((MethodSymbol) symbol)
+                .owner
+                .packge()
+                .getQualifiedName()
+                .contentEquals("java.util.function");
       };
 
   /**
@@ -91,7 +95,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       instanceMethod().onDescendantOf("java.util.stream.BaseStream");
 
   @Override
-  public Matcher<? super MethodInvocationTree> specializedMatcher() {
+  public Matcher<? super ExpressionTree> specializedMatcher() {
     return anyOf(RETURNS_SAME_TYPE, FUNCTIONAL_METHOD, STREAM_METHOD);
   }
 

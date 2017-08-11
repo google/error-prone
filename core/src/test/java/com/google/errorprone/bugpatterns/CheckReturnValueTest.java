@@ -461,6 +461,7 @@ public class CheckReturnValueTest {
             "       }",
             "     });",
             "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> foo.f());",
+            "   org.junit.Assert.assertThrows(IllegalStateException.class, foo::f);",
             "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> {",
             "      int bah = foo.f();",
             "      foo.f(); ",
