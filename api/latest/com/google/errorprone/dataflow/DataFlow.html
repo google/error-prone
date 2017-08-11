@@ -177,7 +177,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/DataFlow.html#expressionDataflow-com.sun.source.util.TreePath-com.sun.tools.javac.util.Context-T-">expressionDataflow</a></span>(com.sun.source.util.TreePath&nbsp;exprPath,
                   com.sun.tools.javac.util.Context&nbsp;context,
                   T&nbsp;transfer)</code>
-<div class="block">Run the <code>transfer</code> dataflow analysis to compute the abstract value of the expression
+<div class="block">Runs the <code>transfer</code> dataflow analysis to compute the abstract value of the expression
  which is the leaf of <code>exprPath</code>.</div>
 </td>
 </tr>
@@ -232,12 +232,19 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 public static&nbsp;&lt;A extends org.checkerframework.dataflow.analysis.AbstractValue&lt;A&gt;,S extends org.checkerframework.dataflow.analysis.Store&lt;S&gt;,T extends org.checkerframework.dataflow.analysis.TransferFunction&lt;A,S&gt;&gt;&nbsp;A&nbsp;expressionDataflow(com.sun.source.util.TreePath&nbsp;exprPath,
                                                                                                                                                                                                                                                   com.sun.tools.javac.util.Context&nbsp;context,
                                                                                                                                                                                                                                                   T&nbsp;transfer)</pre>
-<div class="block">Run the <code>transfer</code> dataflow analysis to compute the abstract value of the expression
- which is the leaf of <code>exprPath</code>.</div>
+<div class="block">Runs the <code>transfer</code> dataflow analysis to compute the abstract value of the expression
+ which is the leaf of <code>exprPath</code>.
+
+ <p>The expression must be part of a method, lambda, or initializer (inline field initializer or
+ initializer block). Example of an expression outside of such constructs is the identifier in an
+ import statement.
+
+ <p>Note that for intializers, each inline field initializer or initializer block is treated
+ separately. I.e., we don't merge all initializers into one virtual block for dataflow.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>dataflow result for the given expression or <code>null</code> if the expression is not part
-     of a method or lambda</dd>
+     of a method, lambda or initializer</dd>
 </dl>
 </li>
 </ul>

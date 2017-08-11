@@ -184,10 +184,20 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <div class="block">Matches if:
 
  
-   The method is public, void, and has no parameters,
-   The method is not annotated with <code>@Test</code>, <code>@Before</code>, <code>@After</code>,
-       <code>@BeforeClass</code>, or <code>@AfterClass</code>,
-   The enclosing class has an <code>@RunWith</code> annotation and does not extend TestCase.</div>
+   The method is public, void, and has no parameters;
+   the method is not already annotated with <code>@Test</code>, <code>@Before</code>, <code>@After</code>,
+       <code>@BeforeClass</code>, or <code>@AfterClass</code>;
+   the enclosing class appears to be intended to run in JUnit4, that is:
+       <ol type="a">
+         it is non-abstract,
+         it does not extend JUnit3 <code>TestCase</code>,
+         it has an <code>@RunWith</code> annotation or at least one other method annotated
+             <code>@Test</code>;
+       
+   and, the method appears to be a test method, that is:
+       <ol type="a">
+         or, the method body contains a method call with a name that contains "assert",
+             "verify", "check", "fail", or "expect".</div>
 </td>
 </tr>
 </table>
@@ -254,14 +264,19 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <div class="block">Matches if:
 
  <ol>
-   <li>The method is public, void, and has no parameters,
-   <li>The method is not annotated with <code>@Test</code>, <code>@Before</code>, <code>@After</code>,
-       <code>@BeforeClass</code>, or <code>@AfterClass</code>,
-   <li>The enclosing class has an <code>@RunWith</code> annotation and does not extend TestCase. This
-       marks that the test is intended to run with JUnit 4, and
-   <li>Either:
+   <li>The method is public, void, and has no parameters;
+   <li>the method is not already annotated with <code>@Test</code>, <code>@Before</code>, <code>@After</code>,
+       <code>@BeforeClass</code>, or <code>@AfterClass</code>;
+   <li>the enclosing class appears to be intended to run in JUnit4, that is:
        <ol type="a">
-         <li>The method body contains a method call with a name that contains "assert",
+         <li>it is non-abstract,
+         <li>it does not extend JUnit3 <code>TestCase</code>,
+         <li>it has an <code>@RunWith</code> annotation or at least one other method annotated
+             <code>@Test</code>;
+       </ol>
+   <li>and, the method appears to be a test method, that is:
+       <ol type="a">
+         <li>or, the method body contains a method call with a name that contains "assert",
              "verify", "check", "fail", or "expect".
        </ol>
  </ol></div>

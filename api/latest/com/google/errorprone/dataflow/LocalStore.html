@@ -190,35 +190,35 @@ implements org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#equals-java.lang.Object-">equals</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;o)</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#hasDOToutput--">hasDOToutput</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i5" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#hashCode--">hashCode</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#leastUpperBound-com.google.errorprone.dataflow.LocalStore-">leastUpperBound</a></span>(<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&nbsp;other)</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="class in com.google.errorprone.dataflow">LocalStore.Builder</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#toBuilder--">toBuilder</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#toDOToutput--">toDOToutput</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i9" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#valueOfLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-V-">valueOfLocalVariable</a></span>(org.checkerframework.dataflow.cfg.node.LocalVariableNode&nbsp;node,
                     <a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&nbsp;defaultValue)</code>
 <div class="block">Provides the nullness values of local variables (as far as they can be determined).</div>
 </td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#visualize-org.checkerframework.dataflow.cfg.CFGVisualizer-">visualize</a></span>(org.checkerframework.dataflow.cfg.CFGVisualizer&lt;?,<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;,?&gt;&nbsp;cfgVisualizer)</code>&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html#widenedUpperBound-com.google.errorprone.dataflow.LocalStore-">widenedUpperBound</a></span>(<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&nbsp;vLocalStore)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -307,6 +307,19 @@ implements org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../
 </dl>
 </li>
 </ul>
+<a name="widenedUpperBound-com.google.errorprone.dataflow.LocalStore-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>widenedUpperBound</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&nbsp;widenedUpperBound(<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&nbsp;vLocalStore)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>widenedUpperBound</code>&nbsp;in interface&nbsp;<code>org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a> extends org.checkerframework.dataflow.analysis.AbstractValue&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&gt;&gt;</code></dd>
+</dl>
+</li>
+</ul>
 <a name="equals-java.lang.Object-">
 <!--   -->
 </a>
@@ -360,29 +373,16 @@ implements org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../
 </dl>
 </li>
 </ul>
-<a name="hasDOToutput--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>hasDOToutput</h4>
-<pre>public&nbsp;boolean&nbsp;hasDOToutput()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>hasDOToutput</code>&nbsp;in interface&nbsp;<code>org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a> extends org.checkerframework.dataflow.analysis.AbstractValue&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&gt;&gt;</code></dd>
-</dl>
-</li>
-</ul>
-<a name="toDOToutput--">
+<a name="visualize-org.checkerframework.dataflow.cfg.CFGVisualizer-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>toDOToutput</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;toDOToutput()</pre>
+<h4>visualize</h4>
+<pre>public&nbsp;void&nbsp;visualize(org.checkerframework.dataflow.cfg.CFGVisualizer&lt;?,<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;,?&gt;&nbsp;cfgVisualizer)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>toDOToutput</code>&nbsp;in interface&nbsp;<code>org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a> extends org.checkerframework.dataflow.analysis.AbstractValue&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&gt;&gt;</code></dd>
+<dd><code>visualize</code>&nbsp;in interface&nbsp;<code>org.checkerframework.dataflow.analysis.Store&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a> extends org.checkerframework.dataflow.analysis.AbstractValue&lt;<a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="type parameter in LocalStore">V</a>&gt;&gt;&gt;</code></dd>
 </dl>
 </li>
 </ul>

@@ -65,6 +65,9 @@ __[CompatibleWithAnnotationMisuse](bugpattern/CompatibleWithAnnotationMisuse)__<
 __[CompileTimeConstant](bugpattern/CompileTimeConstant)__<br>
 Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation.
 
+__[ComplexBooleanConstant](bugpattern/ComplexBooleanConstant)__<br>
+Non-trivial compile time constant boolean expressions shouldn&#39;t be used.
+
 __[ConstantOverflow](bugpattern/ConstantOverflow)__<br>
 Compile-time constant expression overflows
 
@@ -218,14 +221,14 @@ __[NonFinalCompileTimeConstant](bugpattern/NonFinalCompileTimeConstant)__<br>
 __[NonRuntimeAnnotation](bugpattern/NonRuntimeAnnotation)__<br>
 Calling getAnnotation on an annotation that is not retained at runtime.
 
+__[NullTernary](bugpattern/NullTernary)__<br>
+This conditional expression may evaluate to null, which will result in an NPE when the result is unboxed.
+
 __[OptionalEquality](bugpattern/OptionalEquality)__<br>
 Comparison using reference equality instead of value equality
 
 __[OverlappingQualifierAndScopeAnnotation](bugpattern/OverlappingQualifierAndScopeAnnotation)__<br>
 Annotations cannot be both Scope annotations and Qualifier annotations: this causes confusion when trying to use them.
-
-__[Overrides](bugpattern/Overrides)__<br>
-Varargs doesn&#39;t agree for overridden method
 
 __[OverridesJavaxInjectableMethod](bugpattern/OverridesJavaxInjectableMethod)__<br>
 This method is not annotated with @Inject, but it overrides a method that is  annotated with @javax.inject.Inject. The method will not be Injected.
@@ -322,6 +325,9 @@ Arguments are in the wrong order or could be commented for clarity.
 __[AssertEqualsArgumentOrderChecker](bugpattern/AssertEqualsArgumentOrderChecker)__<br>
 Arguments are swapped in assertEquals-like call
 
+__[AssertionFailureIgnored](bugpattern/AssertionFailureIgnored)__<br>
+This assertion throws an AssertionError if it fails, which will be caught by an enclosing try block.
+
 __[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
 Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
 
@@ -339,6 +345,12 @@ Inner class is non-static but does not reference enclosing class
 
 __[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
 Class.newInstance() bypasses exception checking; prefer getDeclaredConstructor().newInstance()
+
+__[CollectionToArraySafeParameter](bugpattern/CollectionToArraySafeParameter)__<br>
+The type of the array parameter of Collection.toArray needs to be compatible with the array type
+
+__[CollectorShouldNotUseState](bugpattern/CollectorShouldNotUseState)__<br>
+Collector.of() should not use state
 
 __[ComparableAndComparator](bugpattern/ComparableAndComparator)__<br>
 Class should not implement both `Comparable` and `Comparator`
@@ -385,6 +397,9 @@ Enums should always be immutable
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
 
+__[IncrementInForLoopAndHeader](bugpattern/IncrementInForLoopAndHeader)__<br>
+This for loop increments the same variable in the header and in the body
+
 __[InjectOnConstructorOfAbstractClass](bugpattern/InjectOnConstructorOfAbstractClass)__<br>
 Constructors on abstract classes are never directly @Injected, only the constructors of their subclasses can be @Inject&#39;ed.
 
@@ -394,11 +409,17 @@ Please also override int read(byte[], int, int), otherwise multi-byte reads from
 __[InstanceOfAndCastMatchWrongType](bugpattern/InstanceOfAndCastMatchWrongType)__<br>
 Casting inside an if block should be plausibly consistent with the instanceof type
 
+__[IntLongMath](bugpattern/IntLongMath)__<br>
+Expression of type int may overflow before being assigned to a long
+
 __[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
 Class should not implement both `Iterable` and `Iterator`
 
 __[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
 Floating-point comparison without error tolerance
+
+__[JUnit4ClassUsedInJUnit3](bugpattern/JUnit4ClassUsedInJUnit3)__<br>
+Some JUnit4 construct cannot be used in a JUnit3 context. Convert your class to JUnit4 style to use them.
 
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
@@ -414,6 +435,9 @@ Not calling fail() when expecting an exception masks bugs
 
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
+
+__[MultipleParallelOrSequentialCalls](bugpattern/MultipleParallelOrSequentialCalls)__<br>
+Multiple calls to either parallel or sequential are unnecessary and cause confusion.
 
 __[MutableConstantField](bugpattern/MutableConstantField)__<br>
 Constant field declarations should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
@@ -441,6 +465,12 @@ void-returning methods should not be annotated with @Nullable, since they cannot
 
 __[OperatorPrecedence](bugpattern/OperatorPrecedence)__<br>
 Use grouping parenthesis to make the operator precedence explicit
+
+__[OverrideThrowableToString](bugpattern/OverrideThrowableToString)__<br>
+To return a custom message with a Throwable class, one should override getMessage() instead of toString() for Throwable.
+
+__[Overrides](bugpattern/Overrides)__<br>
+Varargs doesn&#39;t agree for overridden method
 
 __[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__<br>
 This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
@@ -471,6 +501,9 @@ Writes to static fields should not be guarded by instance locks
 
 __[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
 Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
+
+__[ThreadJoinLoop](bugpattern/ThreadJoinLoop)__<br>
+Thread.join needs to be surrounded by a loop until it succeeds, as in Uninterruptibles.joinUninterruptibly.
 
 __[TruthConstantAsserts](bugpattern/TruthConstantAsserts)__<br>
 Truth Library assert is called on a constant.
@@ -512,6 +545,9 @@ Division by integer literal zero
 
 __[EmptyIf](bugpattern/EmptyIf)__<br>
 Empty statement after if
+
+__[FuzzyEqualsShouldNotBeUsedInEqualsMethod](bugpattern/FuzzyEqualsShouldNotBeUsedInEqualsMethod)__<br>
+DoubleMath.fuzzyEquals should never be used in an Object.equals() method
 
 __[InjectInvalidTargetingOnScopingAnnotation](bugpattern/InjectInvalidTargetingOnScopingAnnotation)__<br>
 A scoping annotation&#39;s Target should include TYPE and METHOD.
@@ -602,8 +638,11 @@ The ordering of parameters in overloaded methods should be as consistent as poss
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
 
+__[MutableMethodReturnType](bugpattern/MutableMethodReturnType)__<br>
+Method return type should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
+
 __[NamedParameters](bugpattern/NamedParameters)__<br>
-Parameter name in argument comment is missing or incorrect
+Parameter name in argument comment is incorrect
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
@@ -658,8 +697,14 @@ Variable declarations should declare only one variable
 __[MultipleTopLevelClasses](bugpattern/MultipleTopLevelClasses)__<br>
 Source files should not contain multiple top-level class declarations
 
+__[MultipleUnaryOperatorsInMethodCall](bugpattern/MultipleUnaryOperatorsInMethodCall)__<br>
+Avoid having multiple unary operators acting on the same variable in a method call
+
 __[PackageLocation](bugpattern/PackageLocation)__<br>
 Package names should match the directory they are declared in
+
+__[ParameterComment](bugpattern/ParameterComment)__<br>
+Non-standard parameter comment; prefer `/*paramName=*/ arg`
 
 __[ParameterNotNullable](bugpattern/ParameterNotNullable)__<br>
 Method parameters that aren&#39;t checked for null shouldn&#39;t be annotated @Nullable

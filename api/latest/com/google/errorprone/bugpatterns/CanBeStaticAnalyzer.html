@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -162,6 +162,10 @@ extends com.sun.tools.javac.tree.TreeScanner</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitReference-com.sun.tools.javac.tree.JCTree.JCMemberReference-">visitReference</a></span>(com.sun.tools.javac.tree.JCTree.JCMemberReference&nbsp;tree)</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitSelect-com.sun.tools.javac.tree.JCTree.JCFieldAccess-">visitSelect</a></span>(com.sun.tools.javac.tree.JCTree.JCFieldAccess&nbsp;tree)</code>&nbsp;</td>
 </tr>
 </table>
@@ -170,7 +174,7 @@ extends com.sun.tools.javac.tree.TreeScanner</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.sun.tools.javac.tree.TreeScanner</h3>
-<code>scan, scan, visitAnnotatedType, visitApply, visitAssert, visitAssign, visitAssignop, visitBinary, visitBlock, visitBreak, visitCase, visitCatch, visitClassDef, visitConditional, visitContinue, visitDoLoop, visitErroneous, visitExec, visitExports, visitForeachLoop, visitForLoop, visitIf, visitImport, visitIndexed, visitLabelled, visitLambda, visitLetExpr, visitLiteral, visitMethodDef, visitModifiers, visitModuleDef, visitNewArray, visitOpens, visitPackageDef, visitParens, visitProvides, visitReference, visitRequires, visitReturn, visitSkip, visitSwitch, visitSynchronized, visitThrow, visitTopLevel, visitTree, visitTry, visitTypeApply, visitTypeArray, visitTypeBoundKind, visitTypeCast, visitTypeIdent, visitTypeIntersection, visitTypeParameter, visitTypeTest, visitTypeUnion, visitUnary, visitUses, visitVarDef, visitWhileLoop, visitWildcard</code></li>
+<code>scan, scan, visitAnnotatedType, visitApply, visitAssert, visitAssign, visitAssignop, visitBinary, visitBlock, visitBreak, visitCase, visitCatch, visitClassDef, visitConditional, visitContinue, visitDoLoop, visitErroneous, visitExec, visitExports, visitForeachLoop, visitForLoop, visitIf, visitImport, visitIndexed, visitLabelled, visitLambda, visitLetExpr, visitLiteral, visitMethodDef, visitModifiers, visitModuleDef, visitNewArray, visitOpens, visitPackageDef, visitParens, visitProvides, visitRequires, visitReturn, visitSkip, visitSwitch, visitSynchronized, visitThrow, visitTopLevel, visitTree, visitTry, visitTypeApply, visitTypeArray, visitTypeBoundKind, visitTypeCast, visitTypeIdent, visitTypeIntersection, visitTypeParameter, visitTypeTest, visitTypeUnion, visitUnary, visitUses, visitVarDef, visitWhileLoop, visitWildcard</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -241,6 +245,19 @@ extends com.sun.tools.javac.tree.TreeScanner</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code>visitNewClass</code>&nbsp;in class&nbsp;<code>com.sun.tools.javac.tree.TreeScanner</code></dd>
+</dl>
+</li>
+</ul>
+<a name="visitReference-com.sun.tools.javac.tree.JCTree.JCMemberReference-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitReference</h4>
+<pre>public&nbsp;void&nbsp;visitReference(com.sun.tools.javac.tree.JCTree.JCMemberReference&nbsp;tree)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>visitReference</code>&nbsp;in class&nbsp;<code>com.sun.tools.javac.tree.TreeScanner</code></dd>
 </dl>
 </li>
 </ul>

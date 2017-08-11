@@ -1,6 +1,6 @@
 ---
 title: NamedParameters
-summary: Parameter name in argument comment is missing or incorrect
+summary: Parameter name in argument comment is incorrect
 layout: bugpattern
 category: JDK
 severity: WARNING

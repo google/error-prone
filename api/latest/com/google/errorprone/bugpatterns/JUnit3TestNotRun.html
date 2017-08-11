@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/bugpatterns/JUnit3FloatingPointComparisonWithoutDelta.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/JUnit4ClassUsedInJUnit3.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/bugpatterns/JUnit3TestNotRun.html" target="_top">Frames</a></li>
@@ -247,7 +247,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
                                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Matches if: 1) Method's name begins with misspelled variation of "test". 2) Method is public,
  returns void, and has no parameters. 3) Enclosing class is JUnit3 test (extends TestCase, has
- no RunWith annotation, and is not abstract).</div>
+ no <code>@RunWith</code> annotation, no <code>@Test</code>-annotated methods, and is not abstract).</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>
@@ -283,7 +283,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/bugpatterns/JUnit3FloatingPointComparisonWithoutDelta.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/JUnit4ClassUsedInJUnit3.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/bugpatterns/JUnit3TestNotRun.html" target="_top">Frames</a></li>

@@ -82,11 +82,22 @@ public class OvershadowingSubclassFieldsPositiveCases1 {
     String randTwo;
   }
 
-  /** ClassF has same variable name as grandparent */
-  public static class ClassF extends ClassC {
+  /** ClassE has same variable name as grandparent */
+  public static class ClassE extends ClassC {
     // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
     // This variable is overshadowing a variable in superclass:  ClassC
     public String varTwo;
+  }
+
+  public static class ClassF extends ClassA {
+    @SuppressWarnings("OvershadowingSubclassFields") // no warning because it's suppressed
+    public String varThree;
+  }
+
+  public static class ClassG extends ClassF {
+    // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
+    // This variable is overshadowing a variable in superclass:  ClassF
+    String varThree;
   }
 }
 {% endhighlight %}
@@ -167,7 +178,7 @@ package com.google.errorprone.bugpatterns.testdata;
 public class OvershadowingSubclassFieldsNegativeCases {
   // base class
   static class ClassA {
-    private int varOne;
+    public int varOne;
   }
 
   // subclass with member variables of different names
@@ -175,11 +186,20 @@ public class OvershadowingSubclassFieldsNegativeCases {
     private String varTwo;
     private int varThree;
     public static int varFour;
+    public int varFive;
   }
 
   // subclass with initialized member variable of different name
   static class ClassC extends ClassB {
     private String varFour = "Test";
+
+    // warning suppressed when overshadowing variable in parent
+    @SuppressWarnings("OvershadowingSubclassFields")
+    public int varFive;
+
+    // warning suppressed when overshadowing variable in grandparent
+    @SuppressWarnings("OvershadowingSubclassFields")
+    public int varOne;
   }
 
   // subclass with member *methods* with the same name as superclass member variable -- this is ok
