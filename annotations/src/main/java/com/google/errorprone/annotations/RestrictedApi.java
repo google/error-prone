@@ -20,7 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-//TODO(bangert): Allow restricting entire classes.
+// TODO(bangert): Allow restricting entire classes.
 /**
  * Restrict this method to callsites with a whitelist annotation.
  *
@@ -30,12 +30,12 @@ import java.lang.annotation.Target;
  *
  * <p>The following example shows a hypothetical, potentially unsafe {@code Foo.bar} method. It is
  * marked with the {@code @RestrictedApi} annotations such that callers annotated with
- * {@code @LegacyFooBar} raise a warning, whereas the {@code @ReviewedFooBar} annotation silently
- * allows the call.
+ * {@code @LegacyUnsafeFooBar} raise a warning, whereas the {@code @ReviewedFooBar} annotation
+ * silently allows the call.
  *
- * <p>The {@code @LegacyFooBar} annotation can be used to allow existing call sites until they are
- * refactored, while prohibiting new call-sites. Call-sites determined to be acceptable, for example
- * through code review, could be marked {@code @ReviewedFooBar}.
+ * <p>The {@code @LegacyUnsafeFooBar} annotation can be used to allow existing call sites until they
+ * are refactored, while prohibiting new call-sites. Call-sites determined to be acceptable, for
+ * example through code review, could be marked {@code @ReviewedFooBar}.
  *
  * <pre>{@code
  * public {@literal @}interface LegacyUnsafeFooBar{}
@@ -51,7 +51,7 @@ import java.lang.annotation.Target;
  *      link="http://edsger.dijkstra/foo_bar_consider_harmful.html",
  *      allowedOnPath="testsuite/.*", // Unsafe behavior in tests is ok.
  *      whitelistAnnotations = {ReviewedFooBar.class},
- *      whitelistWithWarningAnnotations = {LegacyFooBar.class})
+ *      whitelistWithWarningAnnotations = {LegacyUnsafeFooBar.class})
  *   public void bar() {
  *      if (complicatedCondition) {
  *          shoot_your_foot();
