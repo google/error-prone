@@ -224,24 +224,31 @@ public class BoxedPrimitiveConstructorTest {
             "Test.java",
             "public abstract class Test {",
             "  abstract int g(Integer x);",
-            "  void f(int x, Integer y) {",
+            "  int f(int x, Integer y, long z, double d, Double dd) {",
             "    // BUG: Diagnostic contains: int h = Integer.hashCode(x);",
             "    int h = new Integer(x).hashCode();",
+            "    // BUG: Diagnostic contains: h = Float.hashCode((float) d);",
+            "    h = new Float(d).hashCode();",
+            "    // BUG: Diagnostic contains: h = Float.hashCode(dd.floatValue());",
+            "    h = new Float(dd).hashCode();",
+            "    // BUG: Diagnostic contains: return Long.hashCode(z);",
+            "    return new Long(z).hashCode();",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void longHashCode() {
+  public void hashCodeInJava7() {
     compilationHelper
+        .setArgs(Arrays.asList("-source", "7", "-target", "7"))
         .addSourceLines(
             "Test.java",
             "public abstract class Test {",
             "  abstract int g(Integer x);",
-            "  int f(long x) {",
-            "    // BUG: Diagnostic contains: return Longs.hashCode(x);",
-            "    return new Long(x).hashCode();",
+            "  int f(long z) {",
+            "    // BUG: Diagnostic contains: return Longs.hashCode(z);",
+            "    return new Long(z).hashCode();",
             "  }",
             "}")
         .doTest();

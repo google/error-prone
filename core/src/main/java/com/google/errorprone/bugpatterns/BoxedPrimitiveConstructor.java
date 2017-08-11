@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
-import com.google.common.primitives.Longs;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -45,12 +44,14 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import com.sun.tools.javac.util.Context;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -132,23 +133,42 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     }
 
     String typeName = state.getSourceForNode(tree.getIdentifier());
+    DoubleAndFloatStatus doubleAndFloatStatus = doubleAndFloatStatus(state, type, argType);
     if (HASH_CODE.matches(parent, state)) {
       // e.g. new Integer($A).hashCode() -> Integer.hashCode($A)
       SuggestedFix.Builder fix = SuggestedFix.builder();
       String replacement;
-      if (types.isSameType(type, state.getSymtab().longType)) {
-        // TODO(b/29979605): Long.hashCode was added in JDK8
-        fix.addImport(Longs.class.getName());
-        replacement = "Longs.hashCode(";
+
+      String optionalCast = "";
+      String optionalSuffix = "";
+      switch (doubleAndFloatStatus) {
+        case PRIMITIVE_DOUBLE_INTO_FLOAT:
+          // new Float(double).compareTo($foo) => Float.compare((float) double, foo)
+          optionalCast = "(float) ";
+          break;
+        case BOXED_DOUBLE_INTO_FLOAT:
+          // new Float(Double).compareTo($foo) => Float.compare(Double.floatValue(), foo)
+          optionalSuffix = ".floatValue()";
+          break;
+        default:
+          break;
+      }
+
+      // In JDK8, there are primitive static methods on each type (Long.hashCode($long)). However,
+      // in Java 7, those don't exist, so we suggest Guava
+      if (shouldUseGuavaHashCode(state.context)) {
+        fix.addImport("com.google.common.primitives." + typeName + "s");
+        replacement = String.format("%ss.hashCode(", typeName);
       } else {
         replacement = String.format("%s.hashCode(", typeName);
       }
-      return fix.replace(parent.getStartPosition(), arg.getStartPosition(), replacement)
-          .replace(state.getEndPosition(arg), state.getEndPosition(parent), ")")
+      return fix.replace(
+              parent.getStartPosition(), arg.getStartPosition(), replacement + optionalCast)
+          .replace(state.getEndPosition(arg), state.getEndPosition(parent), optionalSuffix + ")")
           .build();
     }
 
-    DoubleAndFloatStatus doubleAndFloatStatus = doubleAndFloatStatus(state, type, argType);
+
 
     if (COMPARE_TO.matches(parent, state)
         && ASTHelpers.getReceiver((ExpressionTree) parent).equals(tree)) {
@@ -177,8 +197,8 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
               arg.getStartPosition(),
               String.format("%s.compare(%s", typeName, optionalCast))
           .replace(
-              state.getEndPosition(arg),
-              rhs.getStartPosition(),
+              /* startPos= */ state.getEndPosition(arg),
+              /* endPos= */ rhs.getStartPosition(),
               String.format("%s, ", optionalSuffix))
           .replace(state.getEndPosition(rhs), state.getEndPosition(compareTo), ")")
           .build();
@@ -207,6 +227,10 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
         .replace(((JCTree) tree).getStartPosition(), arg.getStartPosition(), prefixToArg)
         .postfixWith(arg, suffix)
         .build();
+  }
+
+  private static boolean shouldUseGuavaHashCode(Context context) {
+    return Source.instance(context).compareTo(Source.JDK1_7) <= 0; // 7 or below
   }
 
   private String maybeCast(VisitorState state, Type type, Type argType) {
