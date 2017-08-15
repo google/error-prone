@@ -4,8 +4,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 <div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>JDK</td></tr>
 <tr><td>Severity</td><td>ERROR</td></tr>
+<tr><td>Tags</td><td>LikelyError</td></tr>
 </table></div>
 
 # DeadException

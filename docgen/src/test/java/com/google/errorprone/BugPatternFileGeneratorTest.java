@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.io.CharStreams;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.gson.Gson;
@@ -66,7 +65,7 @@ public class BugPatternFileGeneratorTest {
     instance.explanation =
         "The exception is created with new, but is not thrown, and the reference is lost.";
     instance.altNames = new String[] {"ThrowableInstanceNeverThrown"};
-    instance.category = Category.JDK.toString();
+    instance.tags = new String[] {"LikelyError"};
     instance.severity = SeverityLevel.ERROR;
     instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
     instance.customSuppressionAnnotations =
@@ -152,7 +151,7 @@ public class BugPatternFileGeneratorTest {
     instance.summary = "Don't do this; do List<Foo> instead";
     instance.explanation = "This is a bad idea, you want `List<Foo>` instead";
     instance.altNames = new String[0];
-    instance.category = Category.ONE_OFF.toString();
+    instance.tags = new String[] {"LikelyError"};
     instance.severity = SeverityLevel.ERROR;
     instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
     instance.customSuppressionAnnotations =

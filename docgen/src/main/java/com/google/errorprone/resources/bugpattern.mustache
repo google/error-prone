@@ -8,8 +8,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 {{^frontmatter}}
 
 <div style="float:right;"><table id="metadata">
-<tr><td>Category</td><td>{{category}}</td></tr>
 <tr><td>Severity</td><td>{{severity}}</td></tr>
+{{#tags}}
+<tr><td>Tags</td><td>{{tags}}</td></tr>
+{{/tags}}
 </table></div>
 
 # {{name}}

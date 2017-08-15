@@ -2,7 +2,7 @@
 title: DeadException
 summary: Exception created but not thrown
 layout: bugpattern
-category: JDK
+tags: LikelyError
 severity: ERROR
 ---
 

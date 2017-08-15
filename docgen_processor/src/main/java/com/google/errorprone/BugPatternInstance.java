@@ -16,11 +16,7 @@
 
 package com.google.errorprone;
 
-import static com.google.common.base.Verify.verifyNotNull;
-
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.FluentIterable;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import java.util.LinkedHashMap;
@@ -34,20 +30,13 @@ import javax.lang.model.element.ExecutableElement;
 /** A serialization-friendly POJO of the information in a {@link BugPattern}. */
 public final class BugPatternInstance {
 
-  private static final Function<AnnotationValue, String> TO_STRING =
-      new Function<AnnotationValue, String>() {
-        @Override
-        public String apply(AnnotationValue input) {
-          return input.toString();
-        }
-      };
-
   public String className;
   public String name;
   public String summary;
   public String explanation;
   public String[] altNames;
   public String category;
+  public String[] tags;
   public SeverityLevel severity;
   public Suppressibility suppressibility;
   public String[] customSuppressionAnnotations;
@@ -61,6 +50,7 @@ public final class BugPatternInstance {
     BugPattern annotation = element.getAnnotation(BugPattern.class);
     instance.name = annotation.name();
     instance.altNames = annotation.altNames();
+    instance.tags = annotation.tags();
     instance.severity = annotation.severity();
     instance.suppressibility = annotation.suppressibility();
     instance.summary = annotation.summary();
@@ -68,7 +58,6 @@ public final class BugPatternInstance {
     instance.documentSuppression = annotation.documentSuppression();
 
     Map<String, Object> keyValues = getAnnotation(element, BugPattern.class.getName());
-    instance.category = verifyNotNull(keyValues.get("category")).toString();
     Object result = keyValues.get("customSuppressionAnnotations");
     if (result == null) {
       instance.customSuppressionAnnotations = new String[0];
@@ -79,7 +68,7 @@ public final class BugPatternInstance {
       @SuppressWarnings("unchecked")
       List<? extends AnnotationValue> resultList = (List<? extends AnnotationValue>) result;
       instance.customSuppressionAnnotations =
-          FluentIterable.from(resultList).transform(TO_STRING).toArray(String.class);
+          resultList.stream().map(AnnotationValue::toString).toArray(String[]::new);
     }
     instance.generateExamplesFromTestCases =
         !keyValues.containsKey("generateExamplesFromTestCases")
