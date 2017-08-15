@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 
 /** A collection of types with with known mutability. */
-final class WellKnownMutability {
+public final class WellKnownMutability {
 
 
   private WellKnownMutability(List<String> knownImmutable, List<String> knownUnsafe) {
@@ -309,7 +309,7 @@ final class WellKnownMutability {
   /**
    * Compile-time equivalent of {@code com.google.io.protocol.ProtocolSupport#isProto2MessageClass}.
    */
-  static boolean isProto2MessageClass(VisitorState state, Type type) {
+  public static boolean isProto2MessageClass(VisitorState state, Type type) {
     checkNotNull(type);
     return isAssignableTo(type, MESSAGE_TYPE, state)
         && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
@@ -319,14 +319,14 @@ final class WellKnownMutability {
    * Compile-time equivalent of {@code
    * com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass}.
    */
-  static boolean isProto2MutableMessageClass(VisitorState state, Type type) {
+  public static boolean isProto2MutableMessageClass(VisitorState state, Type type) {
     checkNotNull(type);
     return isAssignableTo(type, MUTABLE_MESSAGE_TYPE, state)
         && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
   }
 
   /** Returns true if the type is an annotation. */
-  static boolean isAnnotation(VisitorState state, Type type) {
+  public static boolean isAnnotation(VisitorState state, Type type) {
     return isAssignableTo(type, Suppliers.ANNOTATION_TYPE, state);
   }
 }
