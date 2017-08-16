@@ -103,12 +103,12 @@ public @interface <span class="memberNameLabel">RestrictedApi</span></pre>
 
  <p>The following example shows a hypothetical, potentially unsafe <code>Foo.bar</code> method. It is
  marked with the <code>@RestrictedApi</code> annotations such that callers annotated with
- <code>@LegacyFooBar</code> raise a warning, whereas the <code>@ReviewedFooBar</code> annotation silently
- allows the call.
+ <code>@LegacyUnsafeFooBar</code> raise a warning, whereas the <code>@ReviewedFooBar</code> annotation
+ silently allows the call.
 
- <p>The <code>@LegacyFooBar</code> annotation can be used to allow existing call sites until they are
- refactored, while prohibiting new call-sites. Call-sites determined to be acceptable, for example
- through code review, could be marked <code>@ReviewedFooBar</code>.
+ <p>The <code>@LegacyUnsafeFooBar</code> annotation can be used to allow existing call sites until they
+ are refactored, while prohibiting new call-sites. Call-sites determined to be acceptable, for
+ example through code review, could be marked <code>@ReviewedFooBar</code>.
 
  <pre><code>
  public {@literal @}interface LegacyUnsafeFooBar{}
@@ -124,7 +124,7 @@ public @interface <span class="memberNameLabel">RestrictedApi</span></pre>
       link="http://edsger.dijkstra/foo_bar_consider_harmful.html",
       allowedOnPath="testsuite/.*", // Unsafe behavior in tests is ok.
       whitelistAnnotations = {ReviewedFooBar.class},
-      whitelistWithWarningAnnotations = {LegacyFooBar.class})
+      whitelistWithWarningAnnotations = {LegacyUnsafeFooBar.class})
    public void bar() {
       if (complicatedCondition) {
           shoot_your_foot();

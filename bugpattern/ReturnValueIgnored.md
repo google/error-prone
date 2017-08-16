@@ -188,6 +188,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 public class ReturnValueIgnoredNegativeCases {
@@ -212,6 +213,15 @@ public class ReturnValueIgnoredNegativeCases {
 
   public void methodDoesntMatch2() {
     final String b = a.toString().trim();
+  }
+
+  public void acceptFunctionOfVoid(Function<Integer, Void> arg) {
+    arg.apply(5);
+  }
+
+  public void passReturnValueCheckedMethodReferenceToFunctionVoid() {
+    Function<Integer, Void> fn = (i -> null);
+    acceptFunctionOfVoid(fn::apply);
   }
 }
 {% endhighlight %}

@@ -131,8 +131,7 @@ public class CheckReturnValuePositiveCases {
   }
 
   public void testResolvedToVoidMethodReference() {
-    // TODO(b/62960293): This should be an error too, but it's tricky to adapt existing code to
-    // catch it.
+    // BUG: Diagnostic contains: Ignored return value
     callRunnable(this.intValue::increment);
   }
 
@@ -272,6 +271,17 @@ public class CheckReturnValueNegativeCases {
   @CheckReturnValue
   private int mustCheck() {
     return 5;
+  }
+
+  private void callRunnable(Runnable runnable) {
+    runnable.run();
+  }
+
+  private void testNonCheckedCallsWithMethodReferences() {
+    Object obj = new String();
+    callRunnable(String::new);
+    callRunnable(this::test2);
+    callRunnable(obj::toString);
   }
 
   private void callSupplier(Supplier<Integer> supplier) {

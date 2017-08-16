@@ -442,6 +442,9 @@ Multiple calls to either parallel or sequential are unnecessary and cause confus
 __[MutableConstantField](bugpattern/MutableConstantField)__<br>
 Constant field declarations should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
 
+__[NamedParameters](bugpattern/NamedParameters)__<br>
+Parameter name in argument comment is incorrect
+
 __[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
 Compound assignments may hide dangerous casts
 
@@ -465,6 +468,9 @@ void-returning methods should not be annotated with @Nullable, since they cannot
 
 __[OperatorPrecedence](bugpattern/OperatorPrecedence)__<br>
 Use grouping parenthesis to make the operator precedence explicit
+
+__[OptionalNotPresent](bugpattern/OptionalNotPresent)__<br>
+One should not call optional.get() inside an if statement that checks !optional.isPresent
 
 __[OverrideThrowableToString](bugpattern/OverrideThrowableToString)__<br>
 To return a custom message with a Throwable class, one should override getMessage() instead of toString() for Throwable.
@@ -640,9 +646,6 @@ The Google Java Style Guide requires that each switch statement includes a defau
 
 __[MutableMethodReturnType](bugpattern/MutableMethodReturnType)__<br>
 Method return type should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
-
-__[NamedParameters](bugpattern/NamedParameters)__<br>
-Parameter name in argument comment is incorrect
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
