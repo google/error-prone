@@ -3,7 +3,7 @@ title: StaticOrDefaultInterfaceMethod
 summary: 'Static and default interface methods are not natively supported on older
   Android devices. '
 layout: bugpattern
-category: ANDROID
+tags: ''
 severity: ERROR
 ---
 

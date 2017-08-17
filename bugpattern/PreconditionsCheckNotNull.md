@@ -2,7 +2,7 @@
 title: PreconditionsCheckNotNull
 summary: Literal passed as first argument to Preconditions.checkNotNull() can never be null
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

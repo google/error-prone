@@ -2,7 +2,7 @@
 title: MethodCanBeStatic
 summary: A private method that does not reference the enclosing instance can be static
 layout: bugpattern
-category: JDK
+tags: ''
 severity: SUGGESTION
 ---
 

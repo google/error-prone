@@ -2,7 +2,7 @@
 title: ComparableAndComparator
 summary: Class should not implement both `Comparable` and `Comparator`
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

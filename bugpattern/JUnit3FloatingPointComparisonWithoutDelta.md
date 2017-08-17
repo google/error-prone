@@ -2,7 +2,7 @@
 title: JUnit3FloatingPointComparisonWithoutDelta
 summary: Floating-point comparison without error tolerance
 layout: bugpattern
-category: JUNIT
+tags: ''
 severity: WARNING
 ---
 

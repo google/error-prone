@@ -2,7 +2,7 @@
 title: IncrementInForLoopAndHeader
 summary: This for loop increments the same variable in the header and in the body
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

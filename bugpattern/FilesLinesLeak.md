@@ -2,7 +2,7 @@
 title: FilesLinesLeak
 summary: The stream returned by Files.lines should be closed using try-with-resources
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

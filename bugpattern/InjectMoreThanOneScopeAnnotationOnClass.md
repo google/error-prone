@@ -2,7 +2,7 @@
 title: InjectMoreThanOneScopeAnnotationOnClass
 summary: A class can be annotated with at most one scope annotation.
 layout: bugpattern
-category: INJECT
+tags: ''
 severity: ERROR
 ---
 

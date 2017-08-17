@@ -2,7 +2,7 @@
 title: FormatString
 summary: Invalid printf-style format string
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

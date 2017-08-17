@@ -2,7 +2,7 @@
 title: IsLoggableTagLength
 summary: Log tag too long, cannot exceed 23 characters.
 layout: bugpattern
-category: ANDROID
+tags: ''
 severity: ERROR
 ---
 

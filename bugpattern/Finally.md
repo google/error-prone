@@ -2,7 +2,7 @@
 title: Finally
 summary: If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

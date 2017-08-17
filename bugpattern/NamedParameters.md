@@ -2,7 +2,7 @@
 title: NamedParameters
 summary: Parameter name in argument comment is incorrect
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

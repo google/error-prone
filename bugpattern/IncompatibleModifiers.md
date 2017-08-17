@@ -2,7 +2,7 @@
 title: IncompatibleModifiers
 summary: This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
 layout: bugpattern
-category: JDK
+tags: LikelyError
 severity: WARNING
 ---
 

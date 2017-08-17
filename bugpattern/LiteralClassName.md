@@ -2,7 +2,7 @@
 title: LiteralClassName
 summary: Using Class.forName is unnecessary if the class is available at compile-time.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: SUGGESTION
 ---
 

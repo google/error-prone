@@ -2,7 +2,7 @@
 title: AssertEqualsArgumentOrderChecker
 summary: Arguments are swapped in assertEquals-like call
 layout: bugpattern
-category: JUNIT
+tags: ''
 severity: WARNING
 ---
 

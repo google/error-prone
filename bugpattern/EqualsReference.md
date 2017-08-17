@@ -2,7 +2,7 @@
 title: EqualsReference
 summary: == must be used in equals method to check equality to itself or an infinite loop will occur.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

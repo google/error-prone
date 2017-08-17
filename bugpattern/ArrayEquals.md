@@ -2,7 +2,7 @@
 title: ArrayEquals
 summary: Reference equality used to compare arrays
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

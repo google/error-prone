@@ -2,7 +2,7 @@
 title: LockMethodChecker
 summary: This method does not acquire the locks specified by its @LockMethod annotation
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: BigDecimalLiteralDouble
 summary: BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, prefer BigDecimal(String) or BigDecimal(long)
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

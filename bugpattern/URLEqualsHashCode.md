@@ -2,7 +2,7 @@
 title: URLEqualsHashCode
 summary: Creation of a Set/HashSet/HashMap of java.net.URL. equals() and hashCode() of java.net.URL class make blocking internet connections.
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

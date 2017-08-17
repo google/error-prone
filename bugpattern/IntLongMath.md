@@ -2,7 +2,7 @@
 title: IntLongMath
 summary: Expression of type int may overflow before being assigned to a long
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

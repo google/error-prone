@@ -2,7 +2,7 @@
 title: ComplexBooleanConstant
 summary: Non-trivial compile time constant boolean expressions shouldn't be used.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

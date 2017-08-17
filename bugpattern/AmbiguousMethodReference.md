@@ -2,7 +2,7 @@
 title: AmbiguousMethodReference
 summary: Method reference is ambiguous
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

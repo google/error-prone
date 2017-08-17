@@ -2,7 +2,7 @@
 title: DepAnn
 summary: Deprecated item is not annotated with @Deprecated
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

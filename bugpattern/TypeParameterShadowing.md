@@ -2,7 +2,7 @@
 title: TypeParameterShadowing
 summary: Type parameter declaration overrides another type parameter already declared
 layout: bugpattern
-category: JDK
+tags: Style
 severity: WARNING
 ---
 

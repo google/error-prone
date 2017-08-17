@@ -2,7 +2,7 @@
 title: BadComparable
 summary: Possible sign flip from narrowing conversion
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

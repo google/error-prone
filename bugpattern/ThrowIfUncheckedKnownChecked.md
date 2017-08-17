@@ -2,7 +2,7 @@
 title: ThrowIfUncheckedKnownChecked
 summary: throwIfUnchecked(knownCheckedException) is a no-op.
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

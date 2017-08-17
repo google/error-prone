@@ -2,7 +2,7 @@
 title: NonCanonicalStaticMemberImport
 summary: Static import of member uses non-canonical name
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

@@ -2,7 +2,7 @@
 title: CannotMockFinalClass
 summary: Mockito cannot mock final classes
 layout: bugpattern
-category: MOCKITO
+tags: ''
 severity: WARNING
 ---
 

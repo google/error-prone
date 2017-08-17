@@ -3,7 +3,7 @@ title: EmptySetMultibindingContributions
 summary: '@Multibinds is a more efficient and declarative mechanism for ensuring that
   a set multibinding is present in the graph.'
 layout: bugpattern
-category: DAGGER
+tags: ''
 severity: SUGGESTION
 ---
 

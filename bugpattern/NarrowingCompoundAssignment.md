@@ -2,7 +2,7 @@
 title: NarrowingCompoundAssignment
 summary: Compound assignments may hide dangerous casts
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

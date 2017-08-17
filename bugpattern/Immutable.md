@@ -2,7 +2,7 @@
 title: Immutable
 summary: Type declaration annotated with @Immutable is not immutable
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

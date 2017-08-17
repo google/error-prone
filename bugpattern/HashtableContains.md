@@ -2,7 +2,7 @@
 title: HashtableContains
 summary: contains() is a legacy method that is equivalent to containsValue()
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

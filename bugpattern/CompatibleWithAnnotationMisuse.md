@@ -2,7 +2,7 @@
 title: CompatibleWithAnnotationMisuse
 summary: '@CompatibleWith''s value is not a type argument.'
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

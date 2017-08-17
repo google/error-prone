@@ -2,7 +2,7 @@
 title: AutoValueConstructorOrderChecker
 summary: Arguments to AutoValue constructor are in the wrong order
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

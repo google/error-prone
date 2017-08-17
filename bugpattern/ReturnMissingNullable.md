@@ -2,7 +2,7 @@
 title: ReturnMissingNullable
 summary: Methods that can return null should be annotated @Nullable
 layout: bugpattern
-category: JDK
+tags: ''
 severity: SUGGESTION
 ---
 

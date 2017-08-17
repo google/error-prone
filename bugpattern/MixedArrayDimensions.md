@@ -2,7 +2,7 @@
 title: MixedArrayDimensions
 summary: C-style array declarations should not be used
 layout: bugpattern
-category: JDK
+tags: Style
 severity: SUGGESTION
 ---
 

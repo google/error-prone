@@ -2,7 +2,7 @@
 title: CollectionToArraySafeParameter
 summary: The type of the array parameter of Collection.toArray needs to be compatible with the array type
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

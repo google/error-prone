@@ -2,7 +2,7 @@
 title: ThrowsUncheckedException
 summary: Unchecked exceptions do not need to be declared in the method signature.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: SUGGESTION
 ---
 

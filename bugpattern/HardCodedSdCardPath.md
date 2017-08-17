@@ -2,7 +2,7 @@
 title: HardCodedSdCardPath
 summary: Hardcoded reference to /sdcard
 layout: bugpattern
-category: ANDROID
+tags: ''
 severity: WARNING
 ---
 

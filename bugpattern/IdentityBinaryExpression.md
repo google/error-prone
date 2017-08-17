@@ -2,7 +2,7 @@
 title: IdentityBinaryExpression
 summary: A binary expression where both operands are the same is usually incorrect.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

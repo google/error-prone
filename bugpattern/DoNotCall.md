@@ -2,7 +2,7 @@
 title: DoNotCall
 summary: This method should not be called.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

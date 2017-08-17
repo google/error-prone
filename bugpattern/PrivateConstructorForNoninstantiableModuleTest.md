@@ -2,7 +2,7 @@
 title: PrivateConstructorForNoninstantiableModuleTest
 summary: Add a private constructor to modules that will not be instantiated by Dagger.
 layout: bugpattern
-category: DAGGER
+tags: ''
 severity: SUGGESTION
 ---
 

@@ -3,7 +3,7 @@ title: OverlappingQualifierAndScopeAnnotation
 summary: 'Annotations cannot be both Scope annotations and Qualifier annotations:
   this causes confusion when trying to use them.'
 layout: bugpattern
-category: INJECT
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: UnsynchronizedOverridesSynchronized
 summary: Unsynchronized method overrides a synchronized method.
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

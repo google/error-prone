@@ -2,7 +2,7 @@
 title: JUnit4TearDownNotRun
 summary: tearDown() method will not be run; Please add an @After annotation
 layout: bugpattern
-category: JUNIT
+tags: ''
 severity: ERROR
 ---
 

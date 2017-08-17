@@ -2,7 +2,7 @@
 title: ProtocolBufferOrdinal
 summary: To get the tag number of a protocol buffer enum, use getNumber() instead.
 layout: bugpattern
-category: PROTOBUF
+tags: ''
 severity: ERROR
 ---
 

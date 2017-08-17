@@ -2,7 +2,7 @@
 title: InconsistentOverloads
 summary: The ordering of parameters in overloaded methods should be as consistent as possible (when viewed from left to right)
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

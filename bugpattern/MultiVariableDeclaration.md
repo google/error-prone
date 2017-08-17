@@ -2,7 +2,7 @@
 title: MultiVariableDeclaration
 summary: Variable declarations should declare only one variable
 layout: bugpattern
-category: JDK
+tags: Style
 severity: SUGGESTION
 ---
 

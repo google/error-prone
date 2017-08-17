@@ -2,7 +2,7 @@
 title: InvalidPatternSyntax
 summary: Invalid syntax used for a regular expression
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

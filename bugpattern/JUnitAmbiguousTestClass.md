@@ -2,7 +2,7 @@
 title: JUnitAmbiguousTestClass
 summary: Test class inherits from JUnit 3's TestCase but has JUnit 4 @Test annotations.
 layout: bugpattern
-category: JUNIT
+tags: ''
 severity: WARNING
 ---
 

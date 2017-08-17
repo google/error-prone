@@ -2,7 +2,7 @@
 title: TypeParameterQualifier
 summary: Type parameter used as type qualifier
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

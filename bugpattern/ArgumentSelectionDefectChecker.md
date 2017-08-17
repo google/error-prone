@@ -2,7 +2,7 @@
 title: ArgumentSelectionDefectChecker
 summary: Arguments are in the wrong order or could be commented for clarity.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

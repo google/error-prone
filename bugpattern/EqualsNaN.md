@@ -2,7 +2,7 @@
 title: EqualsNaN
 summary: == NaN always returns false; use the isNaN methods instead
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

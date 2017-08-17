@@ -2,7 +2,7 @@
 title: EmptyTopLevelDeclaration
 summary: Empty top-level type declaration
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

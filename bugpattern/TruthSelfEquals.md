@@ -2,7 +2,7 @@
 title: TruthSelfEquals
 summary: isEqualTo should not be used to test an object for equality with itself; the assertion will never fail.
 layout: bugpattern
-category: TRUTH
+tags: ''
 severity: ERROR
 ---
 

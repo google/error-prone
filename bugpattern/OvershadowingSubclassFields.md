@@ -2,7 +2,7 @@
 title: OvershadowingSubclassFields
 summary: Overshadowing variables of superclass causes confusion and errors
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

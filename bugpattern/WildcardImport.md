@@ -2,7 +2,7 @@
 title: WildcardImport
 summary: Wildcard imports, static or otherwise, should not be used
 layout: bugpattern
-category: JDK
+tags: Style
 severity: SUGGESTION
 ---
 

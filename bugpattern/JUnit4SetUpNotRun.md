@@ -2,7 +2,7 @@
 title: JUnit4SetUpNotRun
 summary: setUp() method will not be run; Please add a @Before annotation
 layout: bugpattern
-category: JUNIT
+tags: ''
 severity: ERROR
 ---
 

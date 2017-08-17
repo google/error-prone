@@ -2,7 +2,7 @@
 title: RectIntersectReturnValueIgnored
 summary: Return value of android.graphics.Rect.intersect() must be checked
 layout: bugpattern
-category: ANDROID
+tags: ''
 severity: ERROR
 ---
 

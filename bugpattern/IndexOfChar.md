@@ -2,7 +2,7 @@
 title: IndexOfChar
 summary: The first argument to indexOf is a Unicode code point, and the second is the index to start the search from
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

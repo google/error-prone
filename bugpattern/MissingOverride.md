@@ -2,7 +2,7 @@
 title: MissingOverride
 summary: method overrides method in supertype; expected @Override
 layout: bugpattern
-category: JDK
+tags: Style
 severity: WARNING
 ---
 

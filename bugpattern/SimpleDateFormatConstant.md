@@ -2,7 +2,7 @@
 title: SimpleDateFormatConstant
 summary: SimpleDateFormat is not thread-safe, and should not be used as a constant field.
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

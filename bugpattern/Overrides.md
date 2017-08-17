@@ -2,7 +2,7 @@
 title: Overrides
 summary: Varargs doesn't agree for overridden method
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

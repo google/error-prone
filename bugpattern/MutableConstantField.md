@@ -2,7 +2,7 @@
 title: MutableConstantField
 summary: Constant field declarations should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

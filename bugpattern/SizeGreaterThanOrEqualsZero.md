@@ -2,7 +2,7 @@
 title: SizeGreaterThanOrEqualsZero
 summary: Comparison of a size >= 0 is always true, did you intend to check for non-emptiness?
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

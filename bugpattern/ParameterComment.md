@@ -2,7 +2,7 @@
 title: ParameterComment
 summary: Non-standard parameter comment; prefer `/*paramName=*/ arg`
 layout: bugpattern
-category: JDK
+tags: Style
 severity: SUGGESTION
 ---
 

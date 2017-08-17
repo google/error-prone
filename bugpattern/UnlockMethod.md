@@ -2,7 +2,7 @@
 title: UnlockMethod
 summary: This method does not acquire the locks specified by its @UnlockMethod annotation
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

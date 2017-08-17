@@ -2463,6 +2463,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPatternInstance.html#fromElement-javax.lang.model.element.Element-">fromElement(Element)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BugPatternInstance.html" title="class in com.google.errorprone">BugPatternInstance</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#fromFlags-com.google.errorprone.ErrorProneFlags-">fromFlags(ErrorProneFlags)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownMutability</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneFlags.html#fromMap-java.util.Map-">fromMap(Map&lt;String, String&gt;)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Choice.html#fromOptional-com.google.common.base.Optional-">fromOptional(Optional&lt;T&gt;)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
@@ -2743,6 +2745,10 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UReturn.html#getKind--">getKind()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UReturn.html" title="class in com.google.errorprone.refaster">UReturn</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UVariableDecl.html#getKind--">getKind()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#getKnownImmutableClasses--">getKnownImmutableClasses()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownMutability</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#getKnownUnsafeClasses--">getKnownUnsafeClasses()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownMutability</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ErrorProneTokens.html#getLineMap--">getLineMap()</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneTokens.html" title="class in com.google.errorprone.util">ErrorProneTokens</a></dt>
 <dd>&nbsp;</dd>
@@ -3614,6 +3620,10 @@
 <dd>
 <div class="block">Returns true if the compilation is targeting Android.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#isAnnotation-com.google.errorprone.VisitorState-com.sun.tools.javac.code.Type-">isAnnotation(VisitorState, Type)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownMutability</a></dt>
+<dd>
+<div class="block">Returns true if the type is an annotation.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/predicates/TypePredicates.html#isArray--">isArray()</a></span> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
 <dd>
 <div class="block">Match arrays.</div>
@@ -3779,6 +3789,14 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isPrimitiveType--">isPrimitiveType()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node if its type is a primitive type.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#isProto2MessageClass-com.google.errorprone.VisitorState-com.sun.tools.javac.code.Type-">isProto2MessageClass(VisitorState, Type)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownMutability</a></dt>
+<dd>
+<div class="block">Compile-time equivalent of <code>com.google.io.protocol.ProtocolSupport#isProto2MessageClass</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#isProto2MutableMessageClass-com.google.errorprone.VisitorState-com.sun.tools.javac.code.Type-">isProto2MutableMessageClass(VisitorState, Type)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownMutability</a></dt>
+<dd>
+<div class="block">Compile-time equivalent of <code>com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/AppliedFix.html#isRemoveLine--">isRemoveLine()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
 <dd>&nbsp;</dd>
@@ -6570,6 +6588,8 @@
 </a>
 <h2 class="title">T</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/BugPatternInstance.html#tags">tags</a></span> - Variable in class com.google.errorprone.<a href="com/google/errorprone/BugPatternInstance.html" title="class in com.google.errorprone">BugPatternInstance</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/DocGenTool.TargetEnumConverter.html#TargetEnumConverter--">TargetEnumConverter()</a></span> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/DocGenTool.TargetEnumConverter.html" title="class in com.google.errorprone">DocGenTool.TargetEnumConverter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster"><span class="typeNameLink">Template</span></a>&lt;<a href="com/google/errorprone/refaster/Template.html" title="type parameter in Template">M</a> extends <a href="com/google/errorprone/refaster/TemplateMatch.html" title="class in com.google.errorprone.refaster">TemplateMatch</a>&gt; - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
@@ -7524,6 +7544,10 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WaitNotInLoop.html#WaitNotInLoop--">WaitNotInLoop()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WaitNotInLoop.html" title="class in com.google.errorprone.bugpatterns">WaitNotInLoop</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">WellKnownMutability</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
+<dd>
+<div class="block">A collection of types with with known mutability.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#widenedUpperBound-com.google.errorprone.dataflow.LocalStore-">widenedUpperBound(LocalStore&lt;V&gt;)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/WildcardImport.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">WildcardImport</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>

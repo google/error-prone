@@ -2,7 +2,7 @@
 title: NonFinalCompileTimeConstant
 summary: '@CompileTimeConstant parameters should be final or effectively final'
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

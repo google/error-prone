@@ -2,7 +2,7 @@
 title: MissingCasesInEnumSwitch
 summary: Switches on enum types should either handle all values, or have a default case.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

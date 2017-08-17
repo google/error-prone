@@ -2,7 +2,7 @@
 title: UngroupedOverloads
 summary: Constructors and methods with the same name should appear sequentially with no other code in between
 layout: bugpattern
-category: JDK
+tags: ''
 severity: SUGGESTION
 ---
 

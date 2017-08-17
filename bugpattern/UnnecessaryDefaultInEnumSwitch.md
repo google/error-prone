@@ -2,7 +2,7 @@
 title: UnnecessaryDefaultInEnumSwitch
 summary: Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

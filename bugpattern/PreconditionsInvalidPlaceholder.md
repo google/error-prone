@@ -2,7 +2,7 @@
 title: PreconditionsInvalidPlaceholder
 summary: Preconditions only accepts the %s placeholder in error message strings
 layout: bugpattern
-category: GUAVA
+tags: LikelyError
 severity: WARNING
 ---
 

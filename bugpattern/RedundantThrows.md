@@ -2,7 +2,7 @@
 title: RedundantThrows
 summary: Thrown exception is a subtype of another
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

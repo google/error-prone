@@ -2,7 +2,7 @@
 title: JavaxInjectOnAbstractMethod
 summary: Abstract and default methods are not injectable with javax.inject.Inject
 layout: bugpattern
-category: INJECT
+tags: ''
 severity: ERROR
 ---
 

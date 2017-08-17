@@ -2,7 +2,7 @@
 title: NullableConstructor
 summary: Constructors should not be annotated with @Nullable since they cannot return null
 layout: bugpattern
-category: JDK
+tags: Style
 severity: WARNING
 ---
 

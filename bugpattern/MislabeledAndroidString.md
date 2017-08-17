@@ -2,7 +2,7 @@
 title: MislabeledAndroidString
 summary: Certain resources in `android.R.string` have names that do not match their content
 layout: bugpattern
-category: ANDROID
+tags: ''
 severity: ERROR
 ---
 

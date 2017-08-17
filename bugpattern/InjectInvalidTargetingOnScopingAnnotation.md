@@ -2,7 +2,7 @@
 title: InjectInvalidTargetingOnScopingAnnotation
 summary: A scoping annotation's Target should include TYPE and METHOD.
 layout: bugpattern
-category: INJECT
+tags: ''
 severity: ERROR
 ---
 

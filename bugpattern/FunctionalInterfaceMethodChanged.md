@@ -2,7 +2,7 @@
 title: FunctionalInterfaceMethodChanged
 summary: Casting a lambda to this @FunctionalInterface can cause a behavior change from casting to a functional superinterface, which is surprising to users.  Prefer decorator methods to this surprising behavior.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

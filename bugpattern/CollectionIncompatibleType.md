@@ -2,7 +2,7 @@
 title: CollectionIncompatibleType
 summary: Incompatible type as argument to Object-accepting Java collections method
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

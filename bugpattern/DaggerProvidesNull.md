@@ -2,7 +2,7 @@
 title: DaggerProvidesNull
 summary: Dagger @Provides methods may not return null unless annotated with @Nullable
 layout: bugpattern
-category: DAGGER
+tags: ''
 severity: ERROR
 ---
 

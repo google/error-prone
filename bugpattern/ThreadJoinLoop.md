@@ -2,7 +2,7 @@
 title: ThreadJoinLoop
 summary: Thread.join needs to be surrounded by a loop until it succeeds, as in Uninterruptibles.joinUninterruptibly.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

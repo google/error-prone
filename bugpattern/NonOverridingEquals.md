@@ -2,7 +2,7 @@
 title: NonOverridingEquals
 summary: equals method doesn't override Object.equals
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

@@ -2,7 +2,7 @@
 title: UnusedAnonymousClass
 summary: Instance created but never used
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

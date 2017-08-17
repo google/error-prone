@@ -2,7 +2,7 @@
 title: RestrictedApiChecker
 summary: ' Check for non-whitelisted callers to RestrictedApiChecker.'
 layout: bugpattern
-category: ONE_OFF
+tags: ''
 severity: ERROR
 ---
 

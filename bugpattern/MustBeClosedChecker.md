@@ -2,7 +2,7 @@
 title: MustBeClosedChecker
 summary: The result of this method must be closed.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

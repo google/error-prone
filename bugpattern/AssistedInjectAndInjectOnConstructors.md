@@ -3,7 +3,7 @@ title: AssistedInjectAndInjectOnConstructors
 summary: '@AssistedInject and @Inject should not be used on different constructors
   in the same class.'
 layout: bugpattern
-category: INJECT
+tags: ''
 severity: WARNING
 ---
 

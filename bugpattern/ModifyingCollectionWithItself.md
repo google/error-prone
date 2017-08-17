@@ -2,7 +2,7 @@
 title: ModifyingCollectionWithItself
 summary: Using a collection function with itself as the argument.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

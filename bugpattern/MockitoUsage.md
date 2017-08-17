@@ -2,7 +2,7 @@
 title: MockitoUsage
 summary: Missing method call for verify(mock) here
 layout: bugpattern
-category: MOCKITO
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: JUnit4TestNotRun
 summary: This looks like a test method but is not run; please add @Test or @Ignore, or, if this is a helper method, reduce its visibility.
 layout: bugpattern
-category: JUNIT
+tags: ''
 severity: ERROR
 ---
 

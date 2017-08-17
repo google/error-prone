@@ -2,7 +2,7 @@
 title: DivZero
 summary: Division by integer literal zero
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

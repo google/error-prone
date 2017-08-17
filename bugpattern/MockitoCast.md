@@ -2,7 +2,7 @@
 title: MockitoCast
 summary: A bug in Mockito will cause this test to fail at runtime with a ClassCastException
 layout: bugpattern
-category: MOCKITO
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: StaticQualifiedUsingExpression
 summary: A static variable or method should be qualified with a class name, not expression
 layout: bugpattern
-category: JDK
+tags: Style
 severity: WARNING
 ---
 

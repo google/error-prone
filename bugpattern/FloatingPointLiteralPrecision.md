@@ -2,7 +2,7 @@
 title: FloatingPointLiteralPrecision
 summary: Floating point literal loses precision
 layout: bugpattern
-category: JDK
+tags: Style
 severity: WARNING
 ---
 

@@ -2,7 +2,7 @@
 title: EqualsIncompatibleType
 summary: An equality test between objects with incompatible types always returns false
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

@@ -2,7 +2,7 @@
 title: NumericEquality
 summary: Numeric comparison using reference equality instead of value equality
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

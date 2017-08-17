@@ -2,7 +2,7 @@
 title: ComparisonContractViolated
 summary: This comparison method violates the contract
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

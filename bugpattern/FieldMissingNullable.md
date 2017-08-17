@@ -2,7 +2,7 @@
 title: FieldMissingNullable
 summary: Fields that can be null should be annotated @Nullable
 layout: bugpattern
-category: JDK
+tags: ''
 severity: SUGGESTION
 ---
 

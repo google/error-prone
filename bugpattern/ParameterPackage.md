@@ -2,7 +2,7 @@
 title: ParameterPackage
 summary: Method parameter has wrong package
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

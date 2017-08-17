@@ -2,7 +2,7 @@
 title: NCopiesOfChar
 summary: The first argument to nCopies is the number of copies, and the second is the item to copy
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

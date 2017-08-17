@@ -2,7 +2,7 @@
 title: PackageLocation
 summary: Package names should match the directory they are declared in
 layout: bugpattern
-category: JDK
+tags: Style
 severity: SUGGESTION
 ---
 

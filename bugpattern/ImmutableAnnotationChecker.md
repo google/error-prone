@@ -2,7 +2,7 @@
 title: ImmutableAnnotationChecker
 summary: Annotations should always be immutable
 layout: bugpattern
-category: JDK
+tags: LikelyError
 severity: WARNING
 ---
 

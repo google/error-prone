@@ -2,7 +2,7 @@
 title: MultipleUnaryOperatorsInMethodCall
 summary: Avoid having multiple unary operators acting on the same variable in a method call
 layout: bugpattern
-category: JDK
+tags: ''
 severity: SUGGESTION
 ---
 

@@ -2,7 +2,7 @@
 title: MissingDefault
 summary: The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
 layout: bugpattern
-category: JDK
+tags: Style
 severity: WARNING
 ---
 

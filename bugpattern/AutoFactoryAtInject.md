@@ -2,7 +2,7 @@
 title: AutoFactoryAtInject
 summary: '@AutoFactory and @Inject should not be used in the same type.'
 layout: bugpattern
-category: INJECT
+tags: ''
 severity: ERROR
 ---
 

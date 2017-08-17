@@ -2,7 +2,7 @@
 title: BoxedPrimitiveConstructor
 summary: valueOf or autoboxing provides better time and space performance
 layout: bugpattern
-category: JDK
+tags: Performance
 severity: WARNING
 ---
 

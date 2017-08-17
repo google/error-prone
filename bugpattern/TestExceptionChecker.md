@@ -2,7 +2,7 @@
 title: TestExceptionChecker
 summary: Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
 layout: bugpattern
-category: JUNIT
+tags: FragileCode
 severity: WARNING
 ---
 

@@ -2,7 +2,7 @@
 title: QualifierWithTypeUse
 summary: Injection frameworks currently don't understand Qualifiers in TYPE_PARAMETER or TYPE_USE contexts.
 layout: bugpattern
-category: INJECT
+tags: FragileCode
 severity: WARNING
 ---
 

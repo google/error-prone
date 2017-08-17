@@ -2,7 +2,7 @@
 title: LoopConditionChecker
 summary: Loop condition is never modified in loop body.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

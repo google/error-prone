@@ -2,7 +2,7 @@
 title: ReferenceEquality
 summary: Comparison using reference equality instead of value equality
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

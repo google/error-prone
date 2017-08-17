@@ -2,7 +2,7 @@
 title: IsInstanceOfClass
 summary: The argument to Class#isInstance(Object) should not be a Class
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

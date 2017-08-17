@@ -2,7 +2,7 @@
 title: ShouldHaveEvenArgs
 summary: This method must be called with an even number of arguments.
 layout: bugpattern
-category: TRUTH
+tags: ''
 severity: ERROR
 ---
 

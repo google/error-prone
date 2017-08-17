@@ -2,7 +2,7 @@
 title: FuzzyEqualsShouldNotBeUsedInEqualsMethod
 summary: DoubleMath.fuzzyEquals should never be used in an Object.equals() method
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

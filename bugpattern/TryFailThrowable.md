@@ -2,7 +2,7 @@
 title: TryFailThrowable
 summary: Catching Throwable/Error masks failures from fail() or assert*() in the try block
 layout: bugpattern
-category: JUNIT
+tags: ''
 severity: ERROR
 ---
 

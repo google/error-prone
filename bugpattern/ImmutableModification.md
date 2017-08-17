@@ -2,7 +2,7 @@
 title: ImmutableModification
 summary: Modifying an immutable collection is guaranteed to throw an exception and leave the collection unmodified
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

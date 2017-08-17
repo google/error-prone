@@ -2,7 +2,7 @@
 title: NullablePrimitive
 summary: '@Nullable should not be used for primitive types since they cannot be null'
 layout: bugpattern
-category: JDK
+tags: Style
 severity: WARNING
 ---
 

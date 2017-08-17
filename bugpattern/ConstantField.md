@@ -2,7 +2,7 @@
 title: ConstantField
 summary: Field name is CONSTANT_CASE, but field is not static and final
 layout: bugpattern
-category: JDK
+tags: ''
 severity: SUGGESTION
 ---
 

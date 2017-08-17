@@ -2,7 +2,7 @@
 title: ProvidesMethodOutsideOfModule
 summary: '@Provides methods need to be declared in a Module to have any effect.'
 layout: bugpattern
-category: GUICE
+tags: ''
 severity: ERROR
 ---
 

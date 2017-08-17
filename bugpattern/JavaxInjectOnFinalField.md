@@ -2,7 +2,7 @@
 title: JavaxInjectOnFinalField
 summary: '@javax.inject.Inject cannot be put on a final field.'
 layout: bugpattern
-category: INJECT
+tags: ''
 severity: ERROR
 ---
 

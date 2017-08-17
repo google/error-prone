@@ -2,7 +2,7 @@
 title: ConstructorInvokesOverridable
 summary: Constructors should not invoke overridable methods.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

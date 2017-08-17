@@ -2,7 +2,7 @@
 title: PackageInfo
 summary: Declaring types inside package-info.java files is very bad form
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

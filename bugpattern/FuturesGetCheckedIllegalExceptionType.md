@@ -2,7 +2,7 @@
 title: FuturesGetCheckedIllegalExceptionType
 summary: Futures.getChecked requires a checked exception type with a standard constructor.
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

@@ -3,7 +3,7 @@ title: NoAllocation
 summary: '@NoAllocation was specified on this method, but something was found that
   would trigger an allocation'
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

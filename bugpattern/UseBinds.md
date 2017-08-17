@@ -2,7 +2,7 @@
 title: UseBinds
 summary: '@Binds is a more efficient and declarative mechanism for delegating a binding.'
 layout: bugpattern
-category: DAGGER
+tags: ''
 severity: SUGGESTION
 ---
 

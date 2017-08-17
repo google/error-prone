@@ -2,7 +2,7 @@
 title: RemoveUnusedImports
 summary: Unused imports
 layout: bugpattern
-category: JDK
+tags: Style
 severity: SUGGESTION
 ---
 

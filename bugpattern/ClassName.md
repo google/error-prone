@@ -2,7 +2,7 @@
 title: ClassName
 summary: The source file name should match the name of the top-level class it contains
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

@@ -3,7 +3,7 @@ title: FragmentNotInstantiable
 summary: 'Subclasses of Fragment must be instantiable via Class#newInstance(): the
   class must be public, static and have a public nullary constructor'
 layout: bugpattern
-category: ANDROID
+tags: LikelyError
 severity: WARNING
 ---
 

@@ -2,7 +2,7 @@
 title: ThrowNull
 summary: Throwing 'null' always results in a NullPointerException being thrown.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

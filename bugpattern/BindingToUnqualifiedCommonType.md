@@ -2,7 +2,7 @@
 title: BindingToUnqualifiedCommonType
 summary: This code declares a binding for a common value type without a Qualifier annotation.
 layout: bugpattern
-category: GUICE
+tags: ''
 severity: WARNING
 ---
 

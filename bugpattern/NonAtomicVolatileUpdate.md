@@ -2,7 +2,7 @@
 title: NonAtomicVolatileUpdate
 summary: This update of a volatile variable is non-atomic
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

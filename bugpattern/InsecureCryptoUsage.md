@@ -2,7 +2,7 @@
 title: InsecureCryptoUsage
 summary: A standard cryptographic operation is used in a mode that is prone to vulnerabilities
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

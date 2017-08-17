@@ -2,7 +2,7 @@
 title: FallThrough
 summary: Switch case may fall through
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

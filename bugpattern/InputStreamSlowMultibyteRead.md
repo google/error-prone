@@ -2,7 +2,7 @@
 title: InputStreamSlowMultibyteRead
 summary: Please also override int read(byte[], int, int), otherwise multi-byte reads from this input stream are likely to be slow.
 layout: bugpattern
-category: JDK
+tags: Performance
 severity: WARNING
 ---
 

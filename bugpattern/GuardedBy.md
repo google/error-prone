@@ -2,7 +2,7 @@
 title: GuardedBy
 summary: Checks for unguarded accesses to fields and methods with @GuardedBy annotations
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

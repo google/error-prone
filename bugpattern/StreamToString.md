@@ -2,7 +2,7 @@
 title: StreamToString
 summary: Calling toString on a Stream does not provide useful information
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

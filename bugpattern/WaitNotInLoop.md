@@ -2,7 +2,7 @@
 title: WaitNotInLoop
 summary: Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

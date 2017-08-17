@@ -2,7 +2,7 @@
 title: LongLiteralLowerCaseSuffix
 summary: Prefer 'L' to 'l' for the suffix to long literals
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: PrivateConstructorForUtilityClass
 summary: Utility classes (only static members) are not designed to be instantiated and should be made noninstantiable with a default constructor.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: SUGGESTION
 ---
 

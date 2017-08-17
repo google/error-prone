@@ -2,7 +2,7 @@
 title: FunctionalInterfaceClash
 summary: Overloads will be ambiguous when passing lambda arguments
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

@@ -2,7 +2,7 @@
 title: GetClassOnEnum
 summary: Calling getClass() on an enum may return a subclass of the enum type
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

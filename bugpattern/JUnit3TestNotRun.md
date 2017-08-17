@@ -2,7 +2,7 @@
 title: JUnit3TestNotRun
 summary: Test method will not be run; please correct method signature (Should be public, non-static, and method name should begin with "test").
 layout: bugpattern
-category: JUNIT
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: IterableAndIterator
 summary: Class should not implement both `Iterable` and `Iterator`
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

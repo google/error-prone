@@ -2,7 +2,7 @@
 title: ImmutableEnumChecker
 summary: Enums should always be immutable
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

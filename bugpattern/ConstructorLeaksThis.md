@@ -2,7 +2,7 @@
 title: ConstructorLeaksThis
 summary: Constructors should not pass the 'this' reference out in method invocations, since the object may not be fully constructed.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

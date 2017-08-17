@@ -2,7 +2,7 @@
 title: ProtoFieldPreconditionsCheckNotNull
 summary: Protobuf fields cannot be null, so this check is redundant
 layout: bugpattern
-category: GUAVA
+tags: LikelyError
 severity: WARNING
 ---
 

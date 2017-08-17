@@ -2,7 +2,7 @@
 title: OptionalEquality
 summary: Comparison using reference equality instead of value equality
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

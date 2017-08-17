@@ -2,7 +2,7 @@
 title: ArraysAsListPrimitiveArray
 summary: Arrays.asList does not autobox primitive arrays, as one might expect.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: ClassNewInstance
 summary: Class.newInstance() bypasses exception checking; prefer getDeclaredConstructor().newInstance()
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

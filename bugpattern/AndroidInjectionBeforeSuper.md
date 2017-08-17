@@ -2,7 +2,7 @@
 title: AndroidInjectionBeforeSuper
 summary: AndroidInjection.inject() should always be invoked before calling super.lifecycleMethod()
 layout: bugpattern
-category: DAGGER
+tags: ''
 severity: ERROR
 ---
 

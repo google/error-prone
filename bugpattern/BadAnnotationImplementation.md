@@ -2,7 +2,7 @@
 title: BadAnnotationImplementation
 summary: Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
 layout: bugpattern
-category: JDK
+tags: LikelyError
 severity: WARNING
 ---
 

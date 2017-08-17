@@ -2,7 +2,7 @@
 title: JMockTestWithoutRunWithOrRuleAnnotation
 summary: jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation
 layout: bugpattern
-category: JMOCK
+tags: ''
 severity: ERROR
 ---
 

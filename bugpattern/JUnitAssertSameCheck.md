@@ -2,7 +2,7 @@
 title: JUnitAssertSameCheck
 summary: An object is tested for reference equality to itself using JUnit library.
 layout: bugpattern
-category: JUNIT
+tags: ''
 severity: ERROR
 ---
 

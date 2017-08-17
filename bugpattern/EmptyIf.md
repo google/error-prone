@@ -2,7 +2,7 @@
 title: EmptyIf
 summary: Empty statement after if
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

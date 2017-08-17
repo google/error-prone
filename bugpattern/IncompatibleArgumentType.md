@@ -2,7 +2,7 @@
 title: IncompatibleArgumentType
 summary: Passing argument to a generic method with an incompatible type.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

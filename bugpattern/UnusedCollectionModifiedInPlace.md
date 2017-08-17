@@ -2,7 +2,7 @@
 title: UnusedCollectionModifiedInPlace
 summary: Collection is modified in place, but the result is not used
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

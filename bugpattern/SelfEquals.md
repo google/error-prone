@@ -2,7 +2,7 @@
 title: SelfEquals
 summary: Testing an object for equality with itself will always be true.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

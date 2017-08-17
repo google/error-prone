@@ -2,7 +2,7 @@
 title: InstanceOfAndCastMatchWrongType
 summary: Casting inside an if block should be plausibly consistent with the instanceof type
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

@@ -2,7 +2,7 @@
 title: StringBuilderInitWithChar
 summary: StringBuilder does not have a char constructor; this invokes the int constructor.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

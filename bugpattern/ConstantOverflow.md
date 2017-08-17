@@ -2,7 +2,7 @@
 title: ConstantOverflow
 summary: Compile-time constant expression overflows
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

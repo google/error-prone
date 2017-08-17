@@ -2,7 +2,7 @@
 title: Var
 summary: Non-constant variable missing @Var annotation
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

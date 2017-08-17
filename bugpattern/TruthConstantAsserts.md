@@ -2,7 +2,7 @@
 title: TruthConstantAsserts
 summary: Truth Library assert is called on a constant.
 layout: bugpattern
-category: TRUTH
+tags: FragileCode
 severity: WARNING
 ---
 

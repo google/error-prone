@@ -2,7 +2,7 @@
 title: CollectorShouldNotUseState
 summary: Collector.of() should not use state
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

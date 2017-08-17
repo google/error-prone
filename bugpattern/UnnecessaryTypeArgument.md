@@ -2,7 +2,7 @@
 title: UnnecessaryTypeArgument
 summary: Non-generic methods should not be invoked with type arguments
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

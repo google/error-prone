@@ -2,7 +2,7 @@
 title: IterablePathParameter
 summary: Path implements Iterable<Path>; prefer Collection<Path> for clarity
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: BundleDeserializationCast
 summary: Object serialized in Bundle may have been flattened to base type.
 layout: bugpattern
-category: ANDROID
+tags: ''
 severity: ERROR
 ---
 

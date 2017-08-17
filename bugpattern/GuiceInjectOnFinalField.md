@@ -2,7 +2,7 @@
 title: GuiceInjectOnFinalField
 summary: Although Guice allows injecting final fields, doing so is disallowed because the injected value may not be visible to other threads.
 layout: bugpattern
-category: GUICE
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: DefaultCharset
 summary: Implicit use of the platform default charset, which can result in e.g. non-ASCII characters being silently replaced with '?' in many environments
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

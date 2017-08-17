@@ -2,7 +2,7 @@
 title: AsyncCallableReturnsNull
 summary: AsyncCallable should not return a null Future, only a Future whose result is null.
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

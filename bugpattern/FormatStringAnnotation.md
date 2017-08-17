@@ -2,7 +2,7 @@
 title: FormatStringAnnotation
 summary: Invalid format string passed to formatting method.
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

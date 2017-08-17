@@ -2,7 +2,7 @@
 title: GetClassOnAnnotation
 summary: Calling getClass() on an annotation may return a proxy class
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

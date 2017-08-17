@@ -2,7 +2,7 @@
 title: OptionalNotPresent
 summary: One should not call optional.get() inside an if statement that checks !optional.isPresent
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 

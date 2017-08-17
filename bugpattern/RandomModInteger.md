@@ -2,7 +2,7 @@
 title: RandomModInteger
 summary: Use Random.nextInt(int).  Random.nextInt() % n can have negative results
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

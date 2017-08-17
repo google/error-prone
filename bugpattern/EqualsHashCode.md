@@ -2,7 +2,7 @@
 title: EqualsHashCode
 summary: Classes that override equals should also override hashCode.
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

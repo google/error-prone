@@ -2,7 +2,7 @@
 title: FragmentInjection
 summary: Classes extending PreferenceActivity must implement isValidFragment such that it does not unconditionally return true to prevent vulnerability to fragment injection attacks.
 layout: bugpattern
-category: ANDROID
+tags: LikelyError
 severity: WARNING
 ---
 

@@ -2,7 +2,7 @@
 title: LogicalAssignment
 summary: Assignment where a boolean expression was expected; use == if this assignment wasn't expected or add parentheses for clarity.
 layout: bugpattern
-category: JDK
+tags: LikelyError
 severity: WARNING
 ---
 

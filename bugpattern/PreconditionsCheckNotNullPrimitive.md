@@ -2,7 +2,7 @@
 title: PreconditionsCheckNotNullPrimitive
 summary: First argument to `Preconditions.checkNotNull()` is a primitive rather than an object reference
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

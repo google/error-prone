@@ -2,7 +2,7 @@
 title: ExpectedExceptionChecker
 summary: Calls to ExpectedException#expect should always be followed by exactly one statement.
 layout: bugpattern
-category: JUNIT
+tags: FragileCode
 severity: WARNING
 ---
 

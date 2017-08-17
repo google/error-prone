@@ -2,7 +2,7 @@
 title: JavaLangClash
 summary: Never reuse class names from java.lang
 layout: bugpattern
-category: JDK
+tags: Style
 severity: WARNING
 ---
 

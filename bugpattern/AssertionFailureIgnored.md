@@ -2,7 +2,7 @@
 title: AssertionFailureIgnored
 summary: This assertion throws an AssertionError if it fails, which will be caught by an enclosing try block.
 layout: bugpattern
-category: JDK
+tags: LikelyError
 severity: WARNING
 ---
 

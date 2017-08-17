@@ -2,7 +2,7 @@
 title: CompileTimeConstant
 summary: Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation.
 layout: bugpattern
-category: GUAVA
+tags: ''
 severity: ERROR
 ---
 

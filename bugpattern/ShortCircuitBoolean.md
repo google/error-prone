@@ -2,7 +2,7 @@
 title: ShortCircuitBoolean
 summary: Prefer the short-circuiting boolean operators && and || to & and |.
 layout: bugpattern
-category: JDK
+tags: FragileCode
 severity: WARNING
 ---
 

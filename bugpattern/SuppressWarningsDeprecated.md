@@ -2,7 +2,7 @@
 title: SuppressWarningsDeprecated
 summary: Suppressing "deprecated" is probably a typo for "deprecation"
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: OperatorPrecedence
 summary: Use grouping parenthesis to make the operator precedence explicit
 layout: bugpattern
-category: JDK
+tags: Style
 severity: WARNING
 ---
 

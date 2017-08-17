@@ -2,7 +2,7 @@
 title: ComparisonOutOfRange
 summary: Comparison to value that is out of range for the compared type
 layout: bugpattern
-category: JDK
+tags: ''
 severity: ERROR
 ---
 

@@ -2,7 +2,7 @@
 title: NestedInstanceOfConditions
 summary: Nested instanceOf conditions of disjoint types create blocks of code that never execute
 layout: bugpattern
-category: JDK
+tags: ''
 severity: WARNING
 ---
 
