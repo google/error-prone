@@ -114,12 +114,21 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
 
     // If the lhs is possibly-null, provide both options.
     if (nullness != NONNULL) {
-      builder.addFix(
-          SuggestedFix.builder()
-              .replace(
-                  tree, String.format("%sObjects.equals(%s, %s)", prefix, lhsSource, rhsSource))
-              .addImport("java.util.Objects")
-              .build());
+      if (state.isAndroidCompatible()) {
+        builder.addFix(
+            SuggestedFix.builder()
+                .replace(
+                    tree, String.format("%sObjects.equal(%s, %s)", prefix, lhsSource, rhsSource))
+                .addImport("com.google.common.base.Objects")
+                .build());
+      } else {
+        builder.addFix(
+            SuggestedFix.builder()
+                .replace(
+                    tree, String.format("%sObjects.equals(%s, %s)", prefix, lhsSource, rhsSource))
+                .addImport("java.util.Objects")
+                .build());
+      }
     }
     if (nullness != NULL) {
       builder.addFix(
