@@ -97,4 +97,19 @@ public class ParameterCommentTest {
             "}")
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void noParams() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "class Test {",
+            "  void f() {}",
+            "  {",
+            "    f();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

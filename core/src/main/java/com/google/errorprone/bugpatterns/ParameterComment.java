@@ -53,6 +53,9 @@ public class ParameterComment extends BugChecker implements MethodInvocationTree
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+    if (symbol.getParameters().isEmpty()) {
+      return NO_MATCH;
+    }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     forEachPair(
         Comments.findCommentsForArguments(tree, state).stream(),
