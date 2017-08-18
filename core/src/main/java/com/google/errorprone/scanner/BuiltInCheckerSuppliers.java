@@ -171,6 +171,7 @@ import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
 import com.google.errorprone.bugpatterns.ProvidesFixChecker;
+import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReachabilityFenceUsage;
 import com.google.errorprone.bugpatterns.RedundantThrows;
@@ -409,6 +410,7 @@ public class BuiltInCheckerSuppliers {
           ProvidesMethodOutsideOfModule.class,
           ProvidesNull.class,
           RandomModInteger.class,
+          RandomCast.class,
           RectIntersectReturnValueIgnored.class,
           RestrictedApiChecker.class,
           ReturnValueIgnored.class,
