@@ -109,7 +109,7 @@ public class BaseErrorProneCompiler {
         javacOpts.toArray(new String[0]),
         fileManager,
         ImmutableList.copyOf(fileManager.getJavaFileObjectsFromStrings(sources)),
-        null /*processors*/);
+        /* processors= */ null);
   }
 
   public Result run(String[] argv, List<JavaFileObject> javaFileObjects) {

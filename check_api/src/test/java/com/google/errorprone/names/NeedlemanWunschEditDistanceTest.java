@@ -32,7 +32,7 @@ public class NeedlemanWunschEditDistanceTest {
 
     double distance =
         NeedlemanWunschEditDistance.getEditDistance(
-            identifier, identifier, false /* caseSensitive */, 1, 1, 10);
+            identifier, identifier, /* caseSensitive= */ false, 1, 1, 10);
 
     assertThat(distance).isEqualTo(0.0);
   }
@@ -45,7 +45,7 @@ public class NeedlemanWunschEditDistanceTest {
     double levenschtein = LevenshteinEditDistance.getEditDistance(identifier, otherIdentifier);
     double needlemanWunsch =
         NeedlemanWunschEditDistance.getEditDistance(
-            identifier, otherIdentifier, false /* caseSensitive */, 1, 1000, 1000);
+            identifier, otherIdentifier, /* caseSensitive= */ false, 1, 1000, 1000);
 
     assertThat(needlemanWunsch).isEqualTo(levenschtein);
   }
