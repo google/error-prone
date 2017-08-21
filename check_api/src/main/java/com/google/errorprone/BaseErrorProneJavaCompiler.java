@@ -207,8 +207,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
                   ScannerSupplier toUse = ErrorPronePlugins.loadPlugins(scannerSupplier, context);
                   Set<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
                   if (!namedCheckers.isEmpty()) {
-                    toUse =
-                        toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
+                    toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
                   }
                   return ErrorProneScannerTransformer.create(toUse.applyOverrides(epOptions).get());
                 })
