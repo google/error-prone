@@ -101,13 +101,8 @@ public class NamedParameterChecker extends BugChecker
         case EXACT_MATCH:
           break;
         case APPROXIMATE_MATCH:
-          removeComment(labelledArgument.matchedComment().comment(), fixBuilder);
-          addComment(labelledArgument, fixBuilder);
-          incorrectParameterDescriptions.add(
-              String.format(
-                  "`%s` should be `%s <arg>`",
-                  labelledArgument.matchedComment().comment().getText(),
-                  NamedParameterComment.toCommentText(labelledArgument.parameterName())));
+          // For now, don't be prescriptive about:
+          // f(foo /* this comment contains the parameter name */);
           break;
         case BAD_MATCH:
           Comment badLabel = labelledArgument.matchedComment().comment();

@@ -93,14 +93,13 @@ public class NamedParameterCheckerTest {
   }
 
   @Test
-  public void namedParametersChecker_reformatsComment_onRequiredNamesMethod() {
+  public void namedParametersChecker_toleratesApproximateComment_onRequiredNamesMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "abstract class Test {",
             "  abstract void target(Object param);",
             "  void test(Object arg) {",
-            "    // BUG: Diagnostic contains: target(/* param= */arg)",
             "    target(/*note param = */arg);",
             "  }",
             "}")
@@ -136,16 +135,13 @@ public class NamedParameterCheckerTest {
   }
 
   @Test
-  public void namedParametersChecker_refactorsComment_blockAfter() {
+  public void namedParametersChecker_toleratesApproximateComment_blockAfter() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "abstract class Test {",
             "  abstract void target(Object param);",
             "  void test(Object arg) {",
-            "    // BUG: Diagnostic contains:",
-            "    // target(/* param= */arg)",
-            "    // `/*imprecise match for param*/` should be `/* param= */ <arg>`",
             "    target(arg/*imprecise match for param*/);",
             "  }",
             "}")
