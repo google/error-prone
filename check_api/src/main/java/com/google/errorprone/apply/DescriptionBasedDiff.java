@@ -17,6 +17,7 @@
 package com.google.errorprone.apply;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.Replacement;
@@ -64,7 +65,10 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
       ImportOrganizer importOrganizer) {
     this.compilationUnit = checkNotNull(compilationUnit);
     URI sourceFileUri = compilationUnit.getSourceFile().toUri();
-    this.sourcePath = sourceFileUri.isAbsolute() ? Paths.get(sourceFileUri).toAbsolutePath().toString() : sourceFileUri.getPath();
+    this.sourcePath =
+        sourceFileUri.isAbsolute()
+            ? Paths.get(sourceFileUri).toAbsolutePath().toString()
+            : sourceFileUri.getPath();
     this.ignoreOverlappingFixes = ignoreOverlappingFixes;
     this.importsToAdd = new LinkedHashSet<>();
     this.importsToRemove = new LinkedHashSet<>();
