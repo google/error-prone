@@ -17,5 +17,5 @@ repositories {
   mavenCentral()
 }
 configurations.errorprone {
-  resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.0.21'
+  resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.1.0'
 }
