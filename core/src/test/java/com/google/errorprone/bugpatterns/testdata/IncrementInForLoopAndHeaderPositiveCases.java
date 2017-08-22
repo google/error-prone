@@ -88,4 +88,9 @@ public class IncrementInForLoopAndHeaderPositiveCases {
       }
     }
   }
+
+  public void expressionStatement() {
+    // BUG: Diagnostic contains: increment
+    for (int i = 0; i < 10; i++) i++;
+  }
 }

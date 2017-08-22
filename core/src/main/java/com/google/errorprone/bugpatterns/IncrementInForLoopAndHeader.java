@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -53,7 +54,6 @@ public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTr
 
   @Override
   public Description matchForLoop(ForLoopTree forLoopTree, VisitorState visitorState) {
-    BlockTree blockTree = (BlockTree) forLoopTree.getStatement();
     List<? extends ExpressionStatementTree> updates = forLoopTree.getUpdate();
 
     // keep track of all the symbols that are updated in the for loop header
@@ -68,7 +68,9 @@ public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTr
             .collect(Collectors.toCollection(HashSet::new));
 
     // track if they are updated in the body without a conditional surrounding them
-    List<? extends StatementTree> statementTrees = blockTree.getStatements();
+    StatementTree body = forLoopTree.getStatement();
+    List<? extends StatementTree> statementTrees =
+        body instanceof BlockTree ? ((BlockTree) body).getStatements() : ImmutableList.of(body);
     for (StatementTree s : statementTrees) {
       if (!CONDITIONALS.contains(s.getKind())) {
         Optional<Symbol> opSymbol = returnUnarySym(s);
