@@ -177,7 +177,9 @@ public class NamedParameterChecker extends BugChecker
     return parameters
         .stream()
         .map(p -> p.getSimpleName().toString())
-        .anyMatch(p -> p.matches("arg[0-9]"));
+        // Include enclosing instance parameters, as javac doesn't account for parameters when
+        // associating names (see b/64954766).
+        .anyMatch(p -> p.matches("(arg|this\\$)[0-9]"));
   }
 
   /**
