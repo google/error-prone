@@ -65,22 +65,22 @@ In the above example, `@AlsoNegation` is used to signal that the rule can also m
 
 ## Running the Refaster refactoring
 
-TIP: These instructions are valid as of the most recent snapshot at HEAD, and are subject to change
+TIP: These instructions are valid as of Error Prone 2.1.0, and are subject to change.
 
-Use the error prone javac jar and the error_prone_refaster jar to compile the refaster template:
+Use the Error Prone javac JAR and the Error Prone Refaster JAR to compile the Refaster template:
 
 ```shell
-wget http://repo1.maven.org/maven2/com/google/errorprone/javac/9-dev-r3297-4/javac-9-dev-r3297-4.jar
-wget http://repo1.maven.org/maven2/com/google/errorprone/error_prone_refaster/2.0.18/error_prone_refaster-2.0.18.jar
+wget http://repo1.maven.org/maven2/com/google/errorprone/javac/9-dev-r4023-3/javac-9-dev-r4023-3.jar
+wget http://repo1.maven.org/maven2/com/google/errorprone/error_prone_refaster/2.1.0/error_prone_refaster-2.1.0.jar
 
-java -cp javac-9-dev-r3297-4.jar:error_prone_refaster-2.0.18.jar \
+java -Xbootclasspath/p:error_prone_refaster-2.1.0.jar:javac-9-dev-r4023-3.jar \
   com.google.errorprone.refaster.RefasterRuleCompiler \
   StringIsEmpty.java --out `pwd`/myrule.refaster
- ```
+```
 
- You should see a file named `myrule.refaster` in your current directory. To use this to refactor your code, add the following flags to the Error Prone compiler (this is similar to [patching]):
+You should see a file named `myrule.refaster` in your current directory. To use this to refactor your code, add the following flags to the Error Prone compiler (this is similar to [patching]):
 
- ```
+```
 -XepPatchChecks:refaster:/full/path/to/myrule.refaster
 -XepPatchLocation:/full/path/to/your/source/root
 ```
