@@ -28,6 +28,7 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -66,7 +67,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
     this.compilationUnit = checkNotNull(compilationUnit);
     URI sourceFileUri = compilationUnit.getSourceFile().toUri();
     this.sourcePath =
-        sourceFileUri.isAbsolute()
+        (sourceFileUri.isAbsolute() && Objects.equals(sourceFileUri.getScheme(), "file"))
             ? Paths.get(sourceFileUri).toAbsolutePath().toString()
             : sourceFileUri.getPath();
     this.ignoreOverlappingFixes = ignoreOverlappingFixes;
