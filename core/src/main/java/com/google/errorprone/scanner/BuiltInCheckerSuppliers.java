@@ -209,6 +209,7 @@ import com.google.errorprone.bugpatterns.android.IsLoggableTagLength;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
+import com.google.errorprone.bugpatterns.android.WakelockReleasedDangerously;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
@@ -478,7 +479,8 @@ public class BuiltInCheckerSuppliers {
           TypeParameterUnusedInFormals.class,
           UnsynchronizedOverridesSynchronized.class,
           URLEqualsHashCode.class,
-          WaitNotInLoop.class);
+          WaitNotInLoop.class,
+          WakelockReleasedDangerously.class);
 
   /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
