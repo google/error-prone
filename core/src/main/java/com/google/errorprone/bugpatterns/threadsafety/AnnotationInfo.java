@@ -18,24 +18,30 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
+import java.util.Set;
 
 /**
- * A copy of the information in {@link com.google.errorprone.annotations.Immutable}.
+ * Specifies information about a type which may be a container specified by generic type arguments,
+ * e.g. {@link com.google.errorprone.annotations.Immutable}.
  *
  * <p>Useful for providing information for immutable classes we can't easily annotate, e.g. those in
  * the JDK.
  */
 @AutoValue
-public abstract class ImmutableAnnotationInfo {
+public abstract class AnnotationInfo {
   public abstract String typeName();
 
-  public abstract ImmutableSet<String> containerOf();
-
-  public static ImmutableAnnotationInfo create(String typeName, Iterable<String> containerOf) {
-    return new AutoValue_ImmutableAnnotationInfo(typeName, ImmutableSet.copyOf(containerOf));
+  public Set<String> containerOf() {
+    return internalContainerOf();
   }
 
-  public static ImmutableAnnotationInfo create(String typeName) {
+  abstract ImmutableSet<String> internalContainerOf();
+
+  public static AnnotationInfo create(String typeName, Iterable<String> containerOf) {
+    return new AutoValue_AnnotationInfo(typeName, ImmutableSet.copyOf(containerOf));
+  }
+
+  public static AnnotationInfo create(String typeName) {
     return create(typeName, ImmutableSet.<String>of());
   }
 }

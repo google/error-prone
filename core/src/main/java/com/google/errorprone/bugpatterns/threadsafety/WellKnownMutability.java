@@ -32,6 +32,7 @@ import com.sun.tools.javac.code.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /** A collection of types with with known mutability. */
@@ -51,19 +52,19 @@ public final class WellKnownMutability {
     return new WellKnownMutability(immutable, unsafe);
   }
 
-  public ImmutableMap<String, ImmutableAnnotationInfo> getKnownImmutableClasses() {
+  public Map<String, AnnotationInfo> getKnownImmutableClasses() {
     return knownImmutableClasses;
   }
 
-  public ImmutableSet<String> getKnownUnsafeClasses() {
+  public Set<String> getKnownUnsafeClasses() {
     return knownUnsafeClasses;
   }
 
   /** Types that are known to be immutable. */
-  private final ImmutableMap<String, ImmutableAnnotationInfo> knownImmutableClasses;
+  private final ImmutableMap<String, AnnotationInfo> knownImmutableClasses;
 
   static class Builder {
-    final ImmutableMap.Builder<String, ImmutableAnnotationInfo> mapBuilder = ImmutableMap.builder();
+    final ImmutableMap.Builder<String, AnnotationInfo> mapBuilder = ImmutableMap.builder();
 
     public Builder addClasses(Set<Class<?>> clazzs) {
       for (Class<?> clazz : clazzs) {
@@ -94,24 +95,24 @@ public final class WellKnownMutability {
       }
       mapBuilder.put(
           clazz.getName(),
-          ImmutableAnnotationInfo.create(clazz.getName(), ImmutableList.copyOf(containerOf)));
+          AnnotationInfo.create(clazz.getName(), ImmutableList.copyOf(containerOf)));
       return this;
     }
 
     public Builder add(String className, String... containerOf) {
       mapBuilder.put(
-          className, ImmutableAnnotationInfo.create(className, ImmutableList.copyOf(containerOf)));
+          className, AnnotationInfo.create(className, ImmutableList.copyOf(containerOf)));
       return this;
     }
 
-    public ImmutableMap<String, ImmutableAnnotationInfo> build() {
+    public ImmutableMap<String, AnnotationInfo> build() {
       return mapBuilder.build();
     }
   }
 
   // TODO(b/35724557): share this list with other code analyzing types for immutability
   // TODO(cushon): generate this at build-time to get type-safety without added compile-time deps
-  private static ImmutableMap<String, ImmutableAnnotationInfo> buildImmutableClasses(
+  private static ImmutableMap<String, AnnotationInfo> buildImmutableClasses(
       List<String> extraKnownImmutables) {
     return new Builder()
         .addStrings(extraKnownImmutables)

@@ -78,7 +78,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
       return handleAnonymousClass(tree, state, analysis);
     }
 
-    ImmutableAnnotationInfo annotation = analysis.getImmutableAnnotation(tree, state);
+    AnnotationInfo annotation = analysis.getImmutableAnnotation(tree, state);
     if (annotation == null) {
       // If the type isn't annotated we don't check for immutability, but we do
       // report an error if it extends/implements any @Immutable-annotated types.
@@ -241,7 +241,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
         default:
           break;
       }
-      ImmutableAnnotationInfo annotation = analysis.getImmutableAnnotation(s, state);
+      AnnotationInfo annotation = analysis.getImmutableAnnotation(s, state);
       if (annotation == null) {
         continue;
       }

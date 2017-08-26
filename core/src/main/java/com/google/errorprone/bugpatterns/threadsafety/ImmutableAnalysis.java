@@ -145,8 +145,7 @@ public class ImmutableAnalysis {
     }
 
     for (Type interfaceType : state.getTypes().interfaces(type)) {
-      ImmutableAnnotationInfo interfaceAnnotation =
-          getImmutableAnnotation(interfaceType.tsym, state);
+      AnnotationInfo interfaceAnnotation = getImmutableAnnotation(interfaceType.tsym, state);
       if (interfaceAnnotation == null) {
         continue;
       }
@@ -200,7 +199,7 @@ public class ImmutableAnalysis {
       return Violation.absent();
     }
 
-    ImmutableAnnotationInfo superannotation = getImmutableAnnotation(superType.tsym, state);
+    AnnotationInfo superannotation = getImmutableAnnotation(superType.tsym, state);
     if (superannotation != null) {
       // If the superclass does happen to be immutable, we don't need to recursively
       // inspect it. We just have to check that it's instantiated correctly:
@@ -325,7 +324,7 @@ public class ImmutableAnalysis {
    * @param type the type to check
    */
   Violation immutableInstantiation(
-      ImmutableSet<String> immutableTyParams, ImmutableAnnotationInfo annotation, Type type) {
+      ImmutableSet<String> immutableTyParams, AnnotationInfo annotation, Type type) {
     if (!annotation.containerOf().isEmpty()
         && type.tsym.getTypeParameters().size() != type.getTypeArguments().size()) {
       return Violation.of(
@@ -413,7 +412,7 @@ public class ImmutableAnalysis {
         // TODO(b/25630189): add enforcement
         return Violation.absent();
       }
-      ImmutableAnnotationInfo annotation = getImmutableAnnotation(type.tsym, state);
+      AnnotationInfo annotation = getImmutableAnnotation(type.tsym, state);
       if (annotation != null) {
         return immutableInstantiation(immutableTyParams, annotation, type);
       }
@@ -437,9 +436,9 @@ public class ImmutableAnalysis {
    * Gets the {@link Symbol}'s {@code @Immutable} annotation info, either from an annotation on the
    * symbol or from the list of well-known immutable types.
    */
-  ImmutableAnnotationInfo getImmutableAnnotation(Symbol sym, VisitorState state) {
+  AnnotationInfo getImmutableAnnotation(Symbol sym, VisitorState state) {
     String nameStr = sym.flatName().toString();
-    ImmutableAnnotationInfo known = wellKnownMutability.getKnownImmutableClasses().get(nameStr);
+    AnnotationInfo known = wellKnownMutability.getKnownImmutableClasses().get(nameStr);
     if (known != null) {
       return known;
     }
@@ -450,18 +449,17 @@ public class ImmutableAnalysis {
    * Gets the possibly inherited {@code @Immutable} annotation on the given symbol, and
    * reverse-propagates containerOf spec's from super-classes.
    */
-  static ImmutableAnnotationInfo getInheritedAnnotation(Symbol sym, VisitorState state) {
+  static AnnotationInfo getInheritedAnnotation(Symbol sym, VisitorState state) {
     if (!(sym instanceof ClassSymbol)) {
       return null;
     }
     Compound attr = sym.attribute(state.getSymbolFromString(Immutable.class.getName()));
     if (attr != null) {
-      return ImmutableAnnotationInfo.create(
-          sym.getQualifiedName().toString(), containerOf(state, attr));
+      return AnnotationInfo.create(sym.getQualifiedName().toString(), containerOf(state, attr));
     }
     // @Immutable is inherited from supertypes
     Type superClass = ((ClassSymbol) sym).getSuperclass();
-    ImmutableAnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
+    AnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
     if (superAnnotation == null) {
       return null;
     }
@@ -483,7 +481,7 @@ public class ImmutableAnalysis {
         containerOf.add(argSym.getSimpleName().toString());
       }
     }
-    return ImmutableAnnotationInfo.create(sym.getQualifiedName().toString(), containerOf.build());
+    return AnnotationInfo.create(sym.getQualifiedName().toString(), containerOf.build());
   }
 
   private static ImmutableList<String> containerOf(VisitorState state, Compound attr) {
@@ -516,7 +514,7 @@ public class ImmutableAnalysis {
    * Gets the {@link Tree}'s {@code @Immutable} annotation info, either from an annotation on the
    * symbol or from the list of well-known immutable types.
    */
-  ImmutableAnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
+  AnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     return sym == null ? null : getImmutableAnnotation(sym, state);
   }
