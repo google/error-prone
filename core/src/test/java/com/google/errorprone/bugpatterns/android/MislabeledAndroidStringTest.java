@@ -104,6 +104,7 @@ public class MislabeledAndroidStringTest {
   }
 
   private CompilationTestHelper createCompilationTestHelper() {
-    return CompilationTestHelper.newInstance(MislabeledAndroidString.class, getClass());
+    return CompilationTestHelper.newInstance(MislabeledAndroidString.class, getClass())
+        .addSourceFile("testdata/stubs/android/R.java");
   }
 }

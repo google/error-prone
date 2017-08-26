@@ -78,6 +78,8 @@ public class FragmentNotInstantiableTest {
 
   private CompilationTestHelper createCompilationTestHelper(
       Class<? extends FragmentNotInstantiable> bugCheckerClass) {
-    return CompilationTestHelper.newInstance(bugCheckerClass, getClass());
+    return CompilationTestHelper.newInstance(bugCheckerClass, getClass())
+        .addSourceFile("testdata/stubs/android/app/Fragment.java")
+        .addSourceFile("testdata/stubs/android/support/v4/app/Fragment.java");
   }
 }

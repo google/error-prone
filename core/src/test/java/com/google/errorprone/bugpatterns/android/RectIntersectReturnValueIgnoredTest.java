@@ -30,7 +30,8 @@ public class RectIntersectReturnValueIgnoredTest {
   @Before
   public void setUp() {
     compilationHelper =
-        CompilationTestHelper.newInstance(RectIntersectReturnValueIgnored.class, getClass());
+        CompilationTestHelper.newInstance(RectIntersectReturnValueIgnored.class, getClass())
+            .addSourceFile("testdata/stubs/android/graphics/Rect.java");
   }
 
   @Test

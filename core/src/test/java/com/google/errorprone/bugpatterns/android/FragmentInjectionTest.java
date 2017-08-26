@@ -26,7 +26,8 @@ import org.junit.runners.JUnit4;
 public final class FragmentInjectionTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(FragmentInjection.class, getClass());
+      CompilationTestHelper.newInstance(FragmentInjection.class, getClass())
+          .addSourceFile("testdata/stubs/android/preference/PreferenceActivity.java");
 
   @Test
   public void isValidFragmentNotImplementedOnPreferenceActivity() {

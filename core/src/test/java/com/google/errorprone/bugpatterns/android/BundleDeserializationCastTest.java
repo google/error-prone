@@ -26,7 +26,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class BundleDeserializationCastTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(BundleDeserializationCast.class, getClass());
+      CompilationTestHelper.newInstance(BundleDeserializationCast.class, getClass())
+          .addSourceFile("testdata/stubs/android/os/Bundle.java")
+          .addSourceFile("testdata/stubs/android/os/Parcel.java")
+          .addSourceFile("testdata/stubs/android/os/Parcelable.java");
 
   @Test
   public void testPositiveCaseGetCustomList() {

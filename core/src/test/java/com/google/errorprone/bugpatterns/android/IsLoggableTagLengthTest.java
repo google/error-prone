@@ -26,7 +26,8 @@ import org.junit.runners.JUnit4;
 public final class IsLoggableTagLengthTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(IsLoggableTagLength.class, getClass());
+      CompilationTestHelper.newInstance(IsLoggableTagLength.class, getClass())
+          .addSourceFile("testdata/stubs/android/util/Log.java");
 
   @Test
   public void testNegativeCaseLiteral() throws Exception {

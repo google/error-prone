@@ -28,9 +28,12 @@ import org.junit.runners.JUnit4;
 public class WakelockReleasedDangerouslyTest {
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new WakelockReleasedDangerously(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(new WakelockReleasedDangerously(), getClass())
+          .addInput("testdata/stubs/android/os/PowerManager.java")
+          .expectUnchanged();
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(WakelockReleasedDangerously.class, getClass());
+      CompilationTestHelper.newInstance(WakelockReleasedDangerously.class, getClass())
+          .addSourceFile("testdata/stubs/android/os/PowerManager.java");
 
   @Test
   public void dangerousWakelockRelease_refactoring() throws IOException {

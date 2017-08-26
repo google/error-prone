@@ -255,20 +255,6 @@
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
-      <groupId>com.google.android</groupId>
-      <artifactId>android</artifactId>
-      <version>4.1.1.4</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <!-- Apache 2.0 -->
-      <groupId>com.google.android</groupId>
-      <artifactId>support-v4</artifactId>
-      <version>r6</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <!-- Apache 2.0 -->
       <groupId>com.google.auto.service</groupId>
       <artifactId>auto-service</artifactId>
       <version>1.0-rc2</version>
