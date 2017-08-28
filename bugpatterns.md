@@ -529,6 +529,9 @@ Unsynchronized method overrides a synchronized method.
 __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
 
+__[WakelockReleasedDangerously](bugpattern/WakelockReleasedDangerously)__<br>
+A wakelock acquired with a timeout may be released by the system before calling `release`, even after checking `isHeld()`. If so, it will throw a RuntimeException. Please wrap in a try/catch block.
+
 ## Experimental : ERROR
 
 __[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>

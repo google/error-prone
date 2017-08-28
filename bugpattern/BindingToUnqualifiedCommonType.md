@@ -33,6 +33,10 @@ bindConstant().annotatedWith(HttpPort.class).to(80);
 @Inject MyWebServer(@HttpPort Integer httpPort) {}
 ```
 
+NOTE: Make sure that your annotation has the [`@Qualifier`] meta-annotation on
+it, otherwise injection systems can't see them. Guice users can optionally use
+[`@BindingAnnotation`], but Guice also understands `@Qualifier`.
+
 This works great, but if your integer binding *doesn't* include a Qualifier, it
 just means that you can ask Guice for "the Integer", and it will give you a
 value back:
@@ -45,6 +49,9 @@ bind(Integer.class).toInstance(80);
 
 To avoid confusion in these circumstances, please use a Qualifier annotation
 when binding simple value types.
+
+[`@Qualifier`]: http://docs.oracle.com/javaee/6/api/javax/inject/Qualifier.html
+[`@BindingAnnotation`]: https://github.com/google/guice/wiki/BindingAnnotations
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("BindingToUnqualifiedCommonType")` annotation to the enclosing element.

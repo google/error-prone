@@ -322,6 +322,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html#AnnotationHasArgumentWithValue-java.lang.String-com.google.errorprone.matchers.Matcher-">AnnotationHasArgumentWithValue(String, Matcher&lt;ExpressionTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html" title="class in com.google.errorprone.matchers">AnnotationHasArgumentWithValue</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">AnnotationInfo</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
+<dd>
+<div class="block">Specifies information about a type which may be a container specified by generic type arguments,
+ e.g.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html#AnnotationInfo--">AnnotationInfo()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#annotationMap-com.sun.tools.javac.code.Symbol-">annotationMap(Symbol)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/AnnotationMatcher.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">AnnotationMatcher</span></a>&lt;<a href="com/google/errorprone/matchers/AnnotationMatcher.html" title="type parameter in AnnotationMatcher">T</a> extends com.sun.source.tree.Tree&gt; - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
@@ -1380,7 +1387,7 @@
 <dd>
 <div class="block">Returns the compile-time constant value of a tree if it is of type clazz, or <code>null</code>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html#containerOf--">containerOf()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnnotationInfo</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html#containerOf--">containerOf()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Contains.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Contains</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
@@ -1446,6 +1453,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html#create-java.lang.Exception-java.lang.String-">create(Exception, String)</a></span> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html#create-java.lang.String-java.lang.Iterable-">create(String, Iterable&lt;String&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html#create-java.lang.String-">create(String)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.ClassLiteral.html#create-com.sun.tools.javac.code.Symbol-">create(Symbol)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.ClassLiteral.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.ClassLiteral</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.LocalVariable.html#create-com.sun.tools.javac.code.Symbol-">create(Symbol)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.LocalVariable.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.LocalVariable</a></dt>
@@ -1453,10 +1464,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Select.html#create-com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression-com.sun.tools.javac.code.Symbol-com.sun.tools.javac.code.Type-">create(GuardedByExpression, Symbol, Type)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Select.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Select</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.TypeLiteral.html#create-com.sun.tools.javac.code.Symbol-">create(Symbol)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.TypeLiteral.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.TypeLiteral</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html#create-java.lang.String-java.lang.Iterable-">create(String, Iterable&lt;String&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnnotationInfo</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html#create-java.lang.String-">create(String)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnnotationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ExampleInfo.html#create-com.google.errorprone.ExampleInfo.ExampleKind-java.lang.String-java.lang.String-java.lang.String-">create(ExampleInfo.ExampleKind, String, String, String)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ExampleInfo.html" title="class in com.google.errorprone">ExampleInfo</a></dt>
 <dd>&nbsp;</dd>
@@ -3326,12 +3333,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationChecker.html#ImmutableAnnotationChecker-com.google.errorprone.ErrorProneFlags-">ImmutableAnnotationChecker(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnnotationChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">ImmutableAnnotationInfo</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
-<dd>
-<div class="block">A copy of the information in <a href="com/google/errorprone/annotations/Immutable.html" title="annotation in com.google.errorprone.annotations"><code>Immutable</code></a>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html#ImmutableAnnotationInfo--">ImmutableAnnotationInfo()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnnotationInfo</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">ImmutableChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html#ImmutableChecker--">ImmutableChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableChecker</a></dt>
@@ -4690,6 +4691,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/IsLoggableTagLength.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/IsLoggableTagLength.html" title="class in com.google.errorprone.bugpatterns.android">IsLoggableTagLength</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/WakelockReleasedDangerously.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/WakelockReleasedDangerously.html" title="class in com.google.errorprone.bugpatterns.android">WakelockReleasedDangerously</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/argumentselectiondefects/ArgumentSelectionDefectChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.argumentselectiondefects.<a href="com/google/errorprone/bugpatterns/argumentselectiondefects/ArgumentSelectionDefectChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">ArgumentSelectionDefectChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -6801,7 +6804,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.TypeLiteral.html#TypeLiteral--">TypeLiteral()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.TypeLiteral.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.TypeLiteral</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html#typeName--">typeName()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnnotationInfo</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html#typeName--">typeName()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TypeParameterQualifier.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">TypeParameterQualifier</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
@@ -7543,6 +7546,10 @@ the order they are declared.</div>
 <dt><a href="com/google/errorprone/bugpatterns/WaitNotInLoop.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">WaitNotInLoop</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WaitNotInLoop.html#WaitNotInLoop--">WaitNotInLoop()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WaitNotInLoop.html" title="class in com.google.errorprone.bugpatterns">WaitNotInLoop</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/android/WakelockReleasedDangerously.html" title="class in com.google.errorprone.bugpatterns.android"><span class="typeNameLink">WakelockReleasedDangerously</span></a> - Class in <a href="com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/WakelockReleasedDangerously.html#WakelockReleasedDangerously--">WakelockReleasedDangerously()</a></span> - Constructor for class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/WakelockReleasedDangerously.html" title="class in com.google.errorprone.bugpatterns.android">WakelockReleasedDangerously</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">WellKnownMutability</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
