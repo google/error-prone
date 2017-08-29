@@ -85,6 +85,12 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.google.googlejavaformat</groupId>
+      <artifactId>google-java-format</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
       <!-- Eclipse Public License 1.0 -->
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

@@ -32,6 +32,8 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
@@ -64,8 +66,16 @@ public class BugCheckerRefactoringTestHelper {
       @Override
       void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource)
           throws IOException {
-        assertThat(refactoredSource.getCharContent(false).toString())
-            .isEqualTo(expectedSource.getCharContent(false).toString());
+        assertThat(maybeFormat(refactoredSource.getCharContent(false).toString()))
+            .isEqualTo(maybeFormat(expectedSource.getCharContent(false).toString()));
+      }
+
+      private String maybeFormat(String input) {
+        try {
+          return new Formatter().formatSource(input);
+        } catch (FormatterException e) {
+          return input;
+        }
       }
     },
     AST_MATCH {

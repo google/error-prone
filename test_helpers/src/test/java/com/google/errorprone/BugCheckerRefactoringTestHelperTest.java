@@ -124,6 +124,25 @@ public class BugCheckerRefactoringTestHelperTest {
         .doTest(TestMode.TEXT_MATCH);
   }
 
+  @Test
+  public void testIgnoreWhitespace() throws IOException {
+    helper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  public Object foo() { Integer i = 2 + 1; return i; }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  public Object foo() {",
+            "    Integer i = 2 + 1;",
+            "  return null;",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
   @Test(expected = AssertionError.class)
   public void testReplaceTextMatchFail() throws IOException {
     helper
@@ -139,7 +158,7 @@ public class BugCheckerRefactoringTestHelperTest {
             "out/Test.java",
             "public class Test {",
             "  public Object foo() {",
-            "    Integer i = 1 + 2;",
+            "    Integer i = 2 + 1;",
             "  return null;",
             "  }",
             "}")
