@@ -68,6 +68,8 @@ public class NamedParameterChecker extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    // TODO(b/65065109): look for the super class constructor for anonymous classes, as the
+    // anonymous class constructor has synthetic parameter names.
     return matchNewClassOrMethodInvocation(
         ASTHelpers.getSymbol(tree), Comments.findCommentsForArguments(tree, state), tree);
   }
@@ -80,13 +82,12 @@ public class NamedParameterChecker extends BugChecker
     }
 
     // if we don't have parameter names available then give up
-    List<VarSymbol> parameters = symbol.getParameters();
-    if (containsSyntheticParameterName(parameters)) {
+    if (NamedParameterComment.containsSyntheticParameterName(symbol)) {
       return Description.NO_MATCH;
     }
 
     ImmutableList<LabelledArgument> labelledArguments =
-        LabelledArgument.createFromParametersList(parameters, arguments);
+        LabelledArgument.createFromParametersList(symbol.getParameters(), arguments);
 
     // Build fix
     // In general: If a comment is wrong but matches the parameter name of a different argument then
@@ -171,15 +172,6 @@ public class NamedParameterChecker extends BugChecker
 
   private static void removeComment(Comment comment, SuggestedFix.Builder fixBuilder) {
     replaceComment(comment, "", fixBuilder);
-  }
-
-  private static boolean containsSyntheticParameterName(List<VarSymbol> parameters) {
-    return parameters
-        .stream()
-        .map(p -> p.getSimpleName().toString())
-        // Include enclosing instance parameters, as javac doesn't account for parameters when
-        // associating names (see b/64954766).
-        .anyMatch(p -> p.matches("(arg|this\\$)[0-9]"));
   }
 
   /**

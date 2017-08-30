@@ -281,4 +281,41 @@ public class NamedParameterCheckerTest {
             "}")
         .doTest();
   }
+
+  /** A test for anonymous class constructors across compilation boundaries. */
+  public static class Foo {
+    public Foo(int foo, int bar) {}
+  }
+
+  @Test
+  public void anonymousClassConstructorNegative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + Foo.class.getCanonicalName() + ";",
+            "class Test {",
+            "  {",
+            "    new Foo(/* foo= */ 1, /* bar= */ 2) {",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore // see b/65065109
+  @Test
+  public void anonymousClassConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + Foo.class.getCanonicalName() + ";",
+            "class Test {",
+            "  {",
+            "    // BUG: Diagnostic contains:",
+            "    new Foo(/* bar= */ 1, /* foo= */ 2) {",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

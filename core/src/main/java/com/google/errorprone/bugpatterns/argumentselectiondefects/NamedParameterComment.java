@@ -22,6 +22,7 @@ import com.google.common.collect.Streams;
 import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.Comments;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import java.util.Arrays;
@@ -168,6 +169,22 @@ final class NamedParameterComment {
    */
   static String toCommentText(String formal) {
     return String.format("/* %s%s */", formal, PARAMETER_COMMENT_MARKER);
+  }
+
+  // Include:
+  // * enclosing instance parameters, as javac doesn't account for parameters when associating
+  //   names (see b/64954766).
+  // * synthetic constructor parameters, e.g. in anonymous classes (see b/65065109)
+  private static final Pattern SYNTHETIC_PARAMETER_NAME = Pattern.compile("(arg|this\\$|x)[0-9]+");
+
+  /**
+   * Returns true if the method has synthetic parameter names, indicating the real names are not
+   * available.
+   */
+  public static boolean containsSyntheticParameterName(MethodSymbol sym) {
+    return sym.getParameters()
+        .stream()
+        .anyMatch(p -> SYNTHETIC_PARAMETER_NAME.matcher(p.getSimpleName()).matches());
   }
 
   private NamedParameterComment() {}
