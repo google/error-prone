@@ -123,6 +123,16 @@ public @interface BugPattern {
    */
   String[] tags() default {};
 
+  /** Whether and what type of fix this check provides. */
+  ProvidesFix providesFix() default ProvidesFix.NO_FIX;
+
+  /** Types of fixes BugCheckers can provide. */
+  public enum ProvidesFix {
+    NO_FIX,
+    REQUIRES_HUMAN_ATTENTION
+    // TODO(epmjohnston): Introduce new values for other kinds of fixes e.g. "no behavioral changes"
+  }
+
   /**
    * The class of bug this bug checker detects.
    *
