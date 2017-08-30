@@ -41,4 +41,19 @@ public class CollectionToArraySafeParameterTest {
   public void testNegativeCases() throws Exception {
     compilationHelper.addSourceFile("CollectionToArraySafeParameterNegativeCases.java").doTest();
   }
+
+  // regression test for https://github.com/google/error-prone/issues/733
+  @Test
+  public void issue733() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Map;",
+            "class Test {",
+            "  void f(Map<Integer, Integer> map) {",
+            "    map.keySet().toArray(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

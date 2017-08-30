@@ -15,9 +15,12 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -28,7 +31,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
@@ -51,24 +53,28 @@ public class CollectionToArraySafeParameter extends BugChecker
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
-
-    if (TO_ARRAY_MATCHER.matches(methodInvocationTree, visitorState)) {
-      ArrayType firstArgType =
-          (ArrayType) ASTHelpers.getType(methodInvocationTree.getArguments().get(0));
-      Type variableType = firstArgType.getComponentType();
-
-      ClassType classTypeSub = (ClassType) ASTHelpers.getReceiverType(methodInvocationTree);
-
-      Types types = visitorState.getTypes();
-      Type classType =
-          types.asSuper(classTypeSub, visitorState.getSymbolFromString("java.util.Collection"));
-      List<Type> typeArguments = classType.getTypeArguments();
-
-      if (!typeArguments.isEmpty()
-          && !types.isCastable(types.erasure(variableType), types.erasure(typeArguments.get(0)))) {
-        return describeMatch(methodInvocationTree);
-      }
+    if (!TO_ARRAY_MATCHER.matches(methodInvocationTree, visitorState)) {
+      return NO_MATCH;
     }
-    return Description.NO_MATCH;
+    Type variableType =
+        visitorState
+            .getTypes()
+            .elemtype(getType(getOnlyElement(methodInvocationTree.getArguments())));
+    if (variableType == null) {
+      return NO_MATCH;
+    }
+
+    ClassType classTypeSub = (ClassType) ASTHelpers.getReceiverType(methodInvocationTree);
+
+    Types types = visitorState.getTypes();
+    Type classType =
+        types.asSuper(classTypeSub, visitorState.getSymbolFromString("java.util.Collection"));
+    List<Type> typeArguments = classType.getTypeArguments();
+
+    if (!typeArguments.isEmpty()
+        && !types.isCastable(types.erasure(variableType), types.erasure(typeArguments.get(0)))) {
+      return describeMatch(methodInvocationTree);
+    }
+    return NO_MATCH;
   }
 }
