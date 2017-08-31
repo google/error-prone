@@ -459,4 +459,42 @@ public class WakelockReleasedDangerouslyTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void innerClass() {
+    compilationHelper
+        .addSourceLines(
+            "OuterClass.java",
+            "import android.os.PowerManager.WakeLock;",
+            "public class OuterClass {",
+            "  WakeLock wakelock;",
+            "  OuterClass(WakeLock wl) {",
+            "    this.wakelock = wl;",
+            "    this.wakelock.setReferenceCounted(false);",
+            "  }",
+            "  public class InnerClass {",
+            "    void foo() {",
+            "      wakelock.acquire(100);",
+            "      wakelock.release();",
+            "    }",
+            "  }",
+            "}")
+        .addSourceLines(
+            "OuterClass.java",
+            "import android.os.PowerManager.WakeLock;",
+            "public class OuterClass {",
+            "  WakeLock wakelock;",
+            "  OuterClass(WakeLock wl) {",
+            "    wakelock = wl;",
+            "    wakelock.acquire(100);",
+            "  }",
+            "  public class InnerClass {",
+            "    void foo() {",
+            "      // BUG: Diagnostic contains: Wakelock",
+            "      wakelock.release();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
