@@ -204,12 +204,18 @@ public @interface <span class="memberNameLabel">BugPattern</span></pre>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.ProvidesFix.html" title="enum in com.google.errorprone">BugPattern.ProvidesFix</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#providesFix--">providesFix</a></span></code>
+<div class="block">Whether and what type of fix this check provides.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#suppressibility--">suppressibility</a></span></code>
 <div class="block">Whether this checker should be suppressible, and if so, by what means.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/BugPattern.html#tags--">tags</a></span></code>
 <div class="block">A list of Stringly-typed tags to apply to this check.</div>
@@ -342,6 +348,23 @@ public @interface <span class="memberNameLabel">BugPattern</span></pre>
 <dl>
 <dt>Default:</dt>
 <dd>{}</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="providesFix--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>providesFix</h4>
+<pre>public abstract&nbsp;<a href="../../../com/google/errorprone/BugPattern.ProvidesFix.html" title="enum in com.google.errorprone">BugPattern.ProvidesFix</a>&nbsp;providesFix</pre>
+<div class="block">Whether and what type of fix this check provides.</div>
+<dl>
+<dt>Default:</dt>
+<dd>com.google.errorprone.BugPattern.ProvidesFix.NO_FIX</dd>
 </dl>
 </li>
 </ul>
