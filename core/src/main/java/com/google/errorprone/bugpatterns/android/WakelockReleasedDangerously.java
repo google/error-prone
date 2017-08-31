@@ -172,7 +172,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
    * is reference counted.
    */
   private boolean wakelockMayThrow(Symbol wakelockSymbol, VisitorState state) {
-    ClassTree enclosingClass = state.findEnclosing(ClassTree.class);
+    ClassTree enclosingClass = getTopLevelClass(state);
     ImmutableMultimap<String, MethodInvocationTree> map =
         methodCallsForSymbol(wakelockSymbol, enclosingClass);
     // Was acquired with timeout.
@@ -182,6 +182,14 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
             .stream()
             .noneMatch(
                 m -> Boolean.FALSE.equals(constValue(m.getArguments().get(0), Boolean.class)));
+  }
+
+  private ClassTree getTopLevelClass(VisitorState state) {
+    return (ClassTree)
+        Streams.findLast(
+                Streams.stream(state.getPath().iterator())
+                    .filter((Tree t) -> t.getKind() == Kind.CLASS))
+            .orElseThrow(() -> new IllegalArgumentException("No enclosing class found"));
   }
 
   /**
