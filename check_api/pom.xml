@@ -37,6 +37,13 @@
   <name>error-prone check api</name>
   <artifactId>error_prone_check_api</artifactId>
 
+  <licenses>
+    <license>
+      <name>Apache 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
   <dependencies>
     <!-- If you add a dependency, please also add a comment with the license
          as the existing examples do. -->
