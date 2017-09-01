@@ -149,6 +149,7 @@ import com.google.errorprone.bugpatterns.OvershadowingSubclassFields;
 import com.google.errorprone.bugpatterns.PackageInfo;
 import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.ParameterComment;
+import com.google.errorprone.bugpatterns.ParameterName;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
@@ -465,6 +466,7 @@ public class BuiltInCheckerSuppliers {
           OverridesGuiceInjectableMethod.class,
           OverrideThrowableToString.class,
           OvershadowingSubclassFields.class,
+          ParameterName.class,
           PreconditionsInvalidPlaceholder.class,
           ProtoFieldPreconditionsCheckNotNull.class,
           ReferenceEquality.class,

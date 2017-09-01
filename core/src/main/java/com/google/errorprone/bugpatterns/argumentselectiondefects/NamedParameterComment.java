@@ -38,9 +38,9 @@ import java.util.stream.Stream;
  * <p>We look for a <i>NamedParameterComment</i>: this is the last block comment before the argument
  * which ends with an equals sign.
  */
-final class NamedParameterComment {
+public final class NamedParameterComment {
 
-  private static final Pattern PARAMETER_COMMENT_PATTERN =
+  public static final Pattern PARAMETER_COMMENT_PATTERN =
       Pattern.compile("\\s*([\\w\\d_]+)\\s*=\\s*");
 
   private static final String PARAMETER_COMMENT_MARKER = "=";
