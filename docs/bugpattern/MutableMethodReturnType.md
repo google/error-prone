@@ -11,7 +11,7 @@ interfaces in every important sense of the word.
 
 That is, prefer this:
 
-```java
+```java {.good}
 ImmutableList<String> getCoutries() {
   return ImmutableList.of("Denmark", "Norway", "Sweden");
 }
@@ -19,7 +19,7 @@ ImmutableList<String> getCoutries() {
 
 to this:
 
-```java
+```java {.bad}
 List<String> getCoutries() {
   return ImmutableList.of("Denmark", "Norway", "Sweden");
 }
