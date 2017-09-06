@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
 import com.google.errorprone.bugpatterns.ArrayEquals;
+import com.google.errorprone.bugpatterns.ArrayFillIncompatibleType;
 import com.google.errorprone.bugpatterns.ArrayHashCode;
 import com.google.errorprone.bugpatterns.ArrayToString;
 import com.google.errorprone.bugpatterns.ArraysAsListPrimitiveArray;
@@ -310,6 +311,7 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           AndroidInjectionBeforeSuper.class,
           ArrayEquals.class,
+          ArrayFillIncompatibleType.class,
           ArrayHashCode.class,
           ArrayToString.class,
           ArraysAsListPrimitiveArray.class,
