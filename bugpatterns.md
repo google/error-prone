@@ -484,6 +484,9 @@ This method is not annotated with @Inject, but it overrides a method that is ann
 __[OvershadowingSubclassFields](bugpattern/OvershadowingSubclassFields)__<br>
 Overshadowing variables of superclass causes confusion and errors
 
+__[ParameterName](bugpattern/ParameterName)__<br>
+Detects `/* name= */`-style comments on actual parameters where the name doesn&#39;t match the formal parameter
+
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
 
@@ -655,6 +658,9 @@ Static import of member uses non-canonical name
 
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
+
+__[ProvidesFix](bugpattern/ProvidesFix)__<br>
+BugChecker has incorrect ProvidesFix tag, please update
 
 __[QualifierWithTypeUse](bugpattern/QualifierWithTypeUse)__<br>
 Injection frameworks currently don&#39;t understand Qualifiers in TYPE_PARAMETER or TYPE_USE contexts.
