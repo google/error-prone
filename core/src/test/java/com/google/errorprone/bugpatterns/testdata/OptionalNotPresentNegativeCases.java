@@ -16,9 +16,13 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /** Created by mariasam on 8/3/17. */
 public class OptionalNotPresentNegativeCases {
+
+  // Test this doesn't trigger NullPointerException
+  private final Predicate<Optional<?>> asField = o -> !o.isPresent();
 
   public void testBasic(Optional<String> optional) {
     if (optional.get() != null) {
