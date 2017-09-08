@@ -88,7 +88,7 @@ public class OptionalNotPresent extends BugChecker implements MethodInvocationTr
   }
 
   private static IfTree possibleIf(IfTree ifTree, Tree upTree, Iterator<Tree> iter) {
-    while (upTree != null) {
+    while (iter.hasNext()) {
       // if it's in the body of an if statement, and not the condition, then it does not apply,
       // so return null
       if (upTree instanceof BlockTree) {
