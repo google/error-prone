@@ -109,4 +109,15 @@ public class AppliedFixTest {
     AppliedFix.fromSource("public class Foo {}", endPositions)
         .apply(SuggestedFix.replace(0, -1, ""));
   }
+
+  @Test
+  public void shouldSuggestToRemoveLastLineIfAsked() {
+    when(node.getStartPosition()).thenReturn(21);
+    when(node.getEndPosition(same(endPositions))).thenReturn(42);
+
+    AppliedFix fix =
+        AppliedFix.fromSource("package com.example;\n" + "import java.util.Map;\n", endPositions)
+            .apply(SuggestedFix.delete(node));
+    assertThat(fix.getNewCodeSnippet().toString(), equalTo("to remove this line"));
+  }
 }

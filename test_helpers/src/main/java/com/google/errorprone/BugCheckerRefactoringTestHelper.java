@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.io.CharStreams;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
@@ -45,6 +46,7 @@ import com.sun.tools.javac.util.Context;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.tools.Diagnostic;
@@ -253,13 +255,19 @@ public class BugCheckerRefactoringTestHelper {
     diff.applyDifferences(sourceFile);
 
     JavaFileObject transformed =
-        JavaFileObjects.forSourceString(
-            Iterables.getOnlyElement(Iterables.filter(tree.getTypeDecls(), JCClassDecl.class))
-                .sym
-                .getQualifiedName()
-                .toString(),
-            sourceFile.getSourceText());
+        JavaFileObjects.forSourceString(getFullyQualifiedName(tree), sourceFile.getSourceText());
     return transformed;
+  }
+
+  private static String getFullyQualifiedName(JCCompilationUnit tree) {
+    Iterator<JCClassDecl> types =
+        Iterables.filter(tree.getTypeDecls(), JCClassDecl.class).iterator();
+    if (types.hasNext()) {
+      return Iterators.getOnlyElement(types).sym.getQualifiedName().toString();
+    }
+
+    // Fallback: if no class is declared, then assume we're looking at a `package-info.java`.
+    return tree.getPackage().packge.package_info.toString();
   }
 
   private ErrorProneScannerTransformer transformer(BugChecker bugChecker) {
