@@ -34,6 +34,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -63,7 +64,8 @@ import java.util.Set;
           + " If an annotation's use is restricted by `@Target` and it doesn't include those two"
           + " element types, the annotation can't be used where it should be able to be used.",
   category = INJECT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class InvalidTargetingOnScopingAnnotation extends BugChecker implements ClassTreeMatcher {
 

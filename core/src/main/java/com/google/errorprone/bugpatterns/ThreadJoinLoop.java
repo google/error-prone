@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -52,7 +53,8 @@ import java.util.Objects;
           + "InterruptedException. Most users should be looping "
           + "until the join() actually succeeds.",
   category = JDK,
-  severity = SeverityLevel.WARNING
+  severity = SeverityLevel.WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ThreadJoinLoop extends BugChecker implements MethodInvocationTreeMatcher {
 

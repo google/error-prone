@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -62,7 +63,8 @@ import javax.annotation.Nullable;
   category = JDK,
   severity = SUGGESTION,
   documentSuppression = false,
-  tags = StandardTags.STYLE
+  tags = StandardTags.STYLE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public final class RemoveUnusedImports extends BugChecker implements CompilationUnitTreeMatcher {
   @Override

@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -62,7 +63,8 @@ import javax.lang.model.element.Modifier;
   summary = "Double-checked locking on non-volatile fields is unsafe",
   category = JDK,
   severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
+  tags = StandardTags.FRAGILE_CODE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   @Override

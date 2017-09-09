@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -40,7 +41,8 @@ import com.sun.source.tree.AnnotationTree;
           + " bindings. However, this is only helpful inside of a module. Methods outside of these"
           + " modules are not used for binding declaration.",
   category = GUICE,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ProvidesMethodOutsideOfModule extends BugChecker implements AnnotationTreeMatcher {
 

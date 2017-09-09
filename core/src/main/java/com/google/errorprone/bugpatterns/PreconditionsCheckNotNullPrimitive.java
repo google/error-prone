@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -76,7 +77,8 @@ import java.util.Set;
           + "that should be non-null), please use `Preconditions.checkState()` or "
           + "`Preconditions.checkArgument()` instead.",
   category = GUAVA,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class PreconditionsCheckNotNullPrimitive extends BugChecker
     implements MethodInvocationTreeMatcher {

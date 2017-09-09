@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -42,7 +43,8 @@ import javax.lang.model.element.ElementKind;
   name = "IterablePathParameter",
   category = JDK,
   summary = "Path implements Iterable<Path>; prefer Collection<Path> for clarity",
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class IterablePathParameter extends BugChecker implements VariableTreeMatcher {
   @Override

@@ -27,6 +27,7 @@ import static com.google.errorprone.predicates.TypePredicates.isArray;
 
 import com.google.common.base.Preconditions;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -47,7 +48,8 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
   summary = "hashcode method on array does not hash array contents",
   category = JDK,
   severity = ERROR,
-  generateExamplesFromTestCases = false
+  generateExamplesFromTestCases = false,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMatcher {
 

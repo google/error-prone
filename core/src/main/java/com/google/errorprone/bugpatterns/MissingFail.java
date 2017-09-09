@@ -42,6 +42,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.anyMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -83,7 +84,8 @@ import javax.lang.model.element.Name;
   altNames = "missing-fail",
   summary = "Not calling fail() when expecting an exception masks bugs",
   category = JUNIT,
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class MissingFail extends BugChecker implements TryTreeMatcher {
 

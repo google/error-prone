@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.predicates.TypePredicates.isArray;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -51,7 +52,8 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
           + "If reference equality is needed, == should be used instead for clarity. Otherwise, "
           + "use java.util.Arrays#equals() to compare the contents of the arrays.",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
   /** Matches when the equals instance method is used to compare two arrays. */

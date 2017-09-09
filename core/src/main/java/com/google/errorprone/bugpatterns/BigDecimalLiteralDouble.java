@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import com.google.common.base.Optional;
 import com.google.common.primitives.Ints;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -45,7 +46,8 @@ import java.math.BigInteger;
       "BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, "
           + "prefer BigDecimal(String) or BigDecimal(long)",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class BigDecimalLiteralDouble extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {

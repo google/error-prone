@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -51,7 +52,8 @@ import javax.lang.model.type.TypeKind;
           + "list containing the primitive array, use Collections.singletonList to "
           + "make your intent clearer.",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvocationTreeMatcher {
 

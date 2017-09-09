@@ -29,6 +29,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -51,7 +52,8 @@ import com.sun.source.util.TreePath;
           + " instances, the class should include a private constructor.  See Effective Java,"
           + " Second Edition - Item 4.",
   category = JDK,
-  severity = SUGGESTION
+  severity = SUGGESTION,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public final class PrivateConstructorForUtilityClass extends BugChecker
     implements ClassTreeMatcher {

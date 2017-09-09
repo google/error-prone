@@ -31,6 +31,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -61,7 +62,8 @@ import com.sun.source.tree.MethodTree;
           + "See [https://code.google.com/p/google-guice/issues/detail?id=742 this bug report] for "
           + "details.",
   category = GUICE,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class AssistedInjectScoping extends BugChecker implements ClassTreeMatcher {
 

@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -43,7 +44,8 @@ import java.util.List;
       "Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in"
           + " the test method throws the expected exception",
   severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
+  tags = StandardTags.FRAGILE_CODE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class TestExceptionChecker extends AbstractTestExceptionChecker {
 

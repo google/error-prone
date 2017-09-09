@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -47,7 +48,8 @@ import com.sun.source.tree.MethodTree;
           + "with @Inject and a binding annotation. This will cause a Guice runtime error.\n\n"
           + "See [https://code.google.com/p/google-guice/wiki/InjectionPoints] for details.",
   category = INJECT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class InjectedConstructorAnnotations extends BugChecker implements MethodTreeMatcher {
 

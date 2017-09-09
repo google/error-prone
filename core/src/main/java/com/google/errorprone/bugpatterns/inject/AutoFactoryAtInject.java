@@ -28,6 +28,7 @@ import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -51,7 +52,8 @@ import com.sun.source.tree.Tree;
           + "graph. Generated @AutoFactory classes are automatically marked @Inject - prefer to "
           + "inject that instead.",
   category = INJECT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMatcher {
 

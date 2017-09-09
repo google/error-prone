@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -44,7 +45,8 @@ import com.sun.tools.javac.code.Flags;
   summary = "Scope annotation on an interface or abstact class is not allowed",
   explanation = "Scoping annotations are not allowed on abstract types.",
   category = INJECT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     implements AnnotationTreeMatcher {

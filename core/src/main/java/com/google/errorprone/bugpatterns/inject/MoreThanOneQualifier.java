@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNO
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -40,7 +41,8 @@ import java.util.List;
   summary = "Using more than one qualifier annotation on the same element is not allowed.",
   explanation = "An element can be qualified by at most one qualifier.",
   category = INJECT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class MoreThanOneQualifier extends BugChecker implements AnnotationTreeMatcher {
 

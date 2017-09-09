@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
@@ -47,7 +48,8 @@ import com.sun.source.tree.Tree.Kind;
   summary = "Division by integer literal zero",
   explanation = "This code will cause a runtime arithmetic exception if it is executed.",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class DivZero extends BugChecker
     implements BinaryTreeMatcher, CompoundAssignmentTreeMatcher {

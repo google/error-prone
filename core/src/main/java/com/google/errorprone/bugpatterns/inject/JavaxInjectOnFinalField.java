@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_JA
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -38,7 +39,8 @@ import com.sun.source.tree.AnnotationTree;
       "According to the JSR-330 spec, the @javax.inject.Inject annotation "
           + "cannot go on final fields.",
   category = INJECT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class JavaxInjectOnFinalField extends BugChecker implements AnnotationTreeMatcher {
 
