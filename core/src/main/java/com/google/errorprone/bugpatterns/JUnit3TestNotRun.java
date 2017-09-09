@@ -34,6 +34,7 @@ import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -54,7 +55,8 @@ import javax.lang.model.element.Modifier;
       "Test method will not be run; please correct method signature "
           + "(Should be public, non-static, and method name should begin with \"test\").",
   category = JUNIT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
 

@@ -34,6 +34,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -68,7 +69,8 @@ import javax.lang.model.element.ElementKind;
           + "* `collection.removeAll(collection)` is the same as `collection.clear()`.\n"
           + "* `collection.containsAll(collection)` is always true.",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ModifyingCollectionWithItself extends BugChecker
     implements MethodInvocationTreeMatcher {

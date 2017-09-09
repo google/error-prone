@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -55,7 +56,8 @@ import javax.lang.model.element.Modifier;
   summary =
       "Method return type should use the immutable type (such as ImmutableList) instead of"
           + " the general collection interface type (such as List)",
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public final class MutableMethodReturnType extends BugChecker implements MethodTreeMatcher {
 

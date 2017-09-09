@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -44,7 +45,8 @@ import java.util.List;
           + "and not\n"
           + "`@SuppressWarnings(\"deprecated\")`",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher {
 

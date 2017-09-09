@@ -25,6 +25,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Verify;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -62,7 +63,8 @@ import javax.annotation.Nullable;
   name = "CollectionIncompatibleType",
   summary = "Incompatible type as argument to Object-accepting Java collections method",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 

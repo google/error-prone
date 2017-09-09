@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
 import com.google.common.base.Predicate;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -54,7 +55,8 @@ import javax.annotation.Nullable;
           + "`bytes`. In those cases you will need to wrap your field in "
           + "`google.protobuf.StringValue` or `google.protobuf.BytesValue`, respectively.",
   category = PROTOBUF,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMatcher {
 

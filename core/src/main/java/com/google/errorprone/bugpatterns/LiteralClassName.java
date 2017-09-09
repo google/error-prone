@@ -27,6 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -46,7 +47,8 @@ import com.sun.tools.javac.comp.Resolve;
   name = "LiteralClassName",
   category = JDK,
   summary = "Using Class.forName is unnecessary if the class is available at compile-time.",
-  severity = SUGGESTION
+  severity = SUGGESTION,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class LiteralClassName extends BugChecker implements MethodInvocationTreeMatcher {
 

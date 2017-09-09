@@ -31,6 +31,7 @@ import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -55,7 +56,8 @@ import com.sun.source.tree.MethodTree;
           + " concrete subclasses, not directly by injection frameworks, so the `@Inject`"
           + " annotation has no effect.",
   category = INJECT,
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class InjectOnConstructorOfAbstractClass extends BugChecker implements MethodTreeMatcher {
 

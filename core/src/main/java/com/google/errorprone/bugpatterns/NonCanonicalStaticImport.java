@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
@@ -37,7 +38,8 @@ import com.sun.source.tree.ImportTree;
   summary = "Static import of type uses non-canonical name",
   category = JDK,
   severity = ERROR,
-  documentSuppression = false
+  documentSuppression = false,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class NonCanonicalStaticImport extends BugChecker implements ImportTreeMatcher {
 

@@ -36,6 +36,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -76,7 +77,8 @@ import javax.lang.model.element.Modifier;
           + "the implementation. @Binds should always be preferred over @Provides or @Produces for "
           + "delegation.",
   category = DAGGER,
-  severity = SUGGESTION
+  severity = SUGGESTION,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class UseBinds extends BugChecker implements MethodTreeMatcher {
   private static final Matcher<MethodTree> SIMPLE_METHOD =

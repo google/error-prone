@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
@@ -47,7 +48,8 @@ import javax.lang.model.element.ElementKind;
           + " group, even if it contains no code. (This requirement is lifted for any switch"
           + " statement that covers all values of an enum.)",
   severity = WARNING,
-  tags = StandardTags.STYLE
+  tags = StandardTags.STYLE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
   @Override

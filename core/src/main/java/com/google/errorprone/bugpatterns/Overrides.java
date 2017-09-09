@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -44,7 +45,8 @@ import java.util.Set;
   altNames = "overrides",
   summary = "Varargs doesn't agree for overridden method",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class Overrides extends BugChecker implements MethodTreeMatcher {
 

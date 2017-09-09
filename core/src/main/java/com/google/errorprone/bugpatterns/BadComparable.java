@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
@@ -58,7 +59,8 @@ import com.sun.tools.javac.tree.TreeInfo;
           + " incorrect and unstable sort orders.",
   category = JDK,
   severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
+  tags = StandardTags.FRAGILE_CODE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
   /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */

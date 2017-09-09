@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.isField;
 import static javax.lang.model.element.Modifier.FINAL;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -40,7 +41,8 @@ import com.sun.source.tree.VariableTree;
           + "value may not be visible to other threads.",
   explanation = "See https://github.com/google/guice/wiki/InjectionPoints#how-guice-injects",
   category = GUICE,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class InjectOnFinalField extends BugChecker implements VariableTreeMatcher {
 

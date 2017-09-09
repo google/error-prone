@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -54,7 +55,8 @@ import javax.lang.model.type.TypeKind;
           + "This call to assertEquals() will either fail or not compile in JUnit 4. "
           + "Use assertEquals(expected, actual, 0.0) if the delta must be 0.",
   category = JUNIT,
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     implements MethodInvocationTreeMatcher {

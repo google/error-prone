@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -40,7 +41,8 @@ import com.sun.tools.javac.tree.JCTree;
   name = "FilesLinesLeak",
   category = JDK,
   summary = "The stream returned by Files.lines should be closed using try-with-resources",
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class FilesLinesLeak extends AbstractMustBeClosedChecker
     implements MethodInvocationTreeMatcher {

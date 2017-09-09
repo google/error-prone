@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -39,7 +40,8 @@ import javax.lang.model.element.Modifier;
   altNames = "static-method",
   summary = "A private method that does not reference the enclosing instance can be static",
   category = JDK,
-  severity = SUGGESTION
+  severity = SUGGESTION,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class MethodCanBeStatic extends BugChecker implements MethodTreeMatcher {
 

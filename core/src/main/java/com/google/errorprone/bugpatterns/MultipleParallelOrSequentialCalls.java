@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -36,7 +37,8 @@ import com.sun.source.util.TreePath;
   name = "MultipleParallelOrSequentialCalls",
   summary = "Multiple calls to either parallel or sequential are unnecessary and cause confusion.",
   category = JDK,
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class MultipleParallelOrSequentialCalls extends BugChecker
     implements MethodInvocationTreeMatcher {

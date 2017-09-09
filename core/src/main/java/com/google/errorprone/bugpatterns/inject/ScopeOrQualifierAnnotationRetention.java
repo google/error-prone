@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -48,7 +49,8 @@ import javax.annotation.Nullable;
   name = "InjectScopeOrQualifierAnnotationRetention",
   summary = "Scoping and qualifier annotations must have runtime retention.",
   category = INJECT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ScopeOrQualifierAnnotationRetention extends BugChecker implements ClassTreeMatcher {
 

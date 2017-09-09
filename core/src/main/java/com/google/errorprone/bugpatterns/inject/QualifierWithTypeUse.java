@@ -29,6 +29,7 @@ import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -58,7 +59,8 @@ import java.util.Set;
           + " TYPE_USE contexts.",
   category = INJECT,
   severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
+  tags = StandardTags.FRAGILE_CODE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher {
 

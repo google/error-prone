@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -50,7 +51,8 @@ import com.sun.tools.javac.tree.JCTree;
       "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
           + "You probably meant to use \"yyyy\" (year) instead.",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class MisusedWeekYear extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {

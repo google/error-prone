@@ -29,6 +29,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -50,7 +51,8 @@ import com.sun.source.tree.Tree;
           + " component.  Adding a private constructor clearly conveys that the module will not be"
           + " used as an instance.",
   category = DAGGER,
-  severity = SUGGESTION
+  severity = SUGGESTION,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class PrivateConstructorForNoninstantiableModule extends BugChecker
     implements ClassTreeMatcher {

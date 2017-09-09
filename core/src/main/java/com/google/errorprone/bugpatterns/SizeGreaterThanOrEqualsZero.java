@@ -32,6 +32,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Table.Cell;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -67,7 +68,8 @@ import java.util.List;
           + "test if the size of that collection is greater than 0. However, one may accidentally "
           + "check if the size is greater than or equal to 0, which is always true.",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTreeMatcher {
 

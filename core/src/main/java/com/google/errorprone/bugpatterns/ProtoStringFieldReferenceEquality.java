@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -42,7 +43,8 @@ import com.sun.source.tree.Tree.Kind;
   explanation =
       "Comparing strings with == is almost always an error, but it is an error 100% "
           + "of the time when one of the strings is a protobuf field.  Additionally, protobuf "
-          + "fields cannot be null, so Object.equals(Object) is always more correct."
+          + "fields cannot be null, so Object.equals(Object) is always more correct.",
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ProtoStringFieldReferenceEquality extends BugChecker implements BinaryTreeMatcher {
 

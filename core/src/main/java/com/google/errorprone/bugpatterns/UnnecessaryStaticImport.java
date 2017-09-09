@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
@@ -38,7 +39,8 @@ import com.sun.source.tree.ImportTree;
   category = JDK,
   severity = SUGGESTION,
   documentSuppression = false,
-  tags = StandardTags.STYLE
+  tags = StandardTags.STYLE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class UnnecessaryStaticImport extends BugChecker implements ImportTreeMatcher {
 

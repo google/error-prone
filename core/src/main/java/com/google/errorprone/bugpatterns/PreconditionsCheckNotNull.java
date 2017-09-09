@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -46,7 +47,8 @@ import java.util.List;
           + "never actually checked for nullity. This check ensures that the first argument to "
           + "Preconditions.checkNotNull() is not a literal.",
   category = GUAVA,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class PreconditionsCheckNotNull extends BugChecker implements MethodInvocationTreeMatcher {
 

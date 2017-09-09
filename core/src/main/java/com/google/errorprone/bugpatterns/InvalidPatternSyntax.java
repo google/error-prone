@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -46,7 +47,8 @@ import java.util.regex.PatternSyntaxException;
           + "We deliberately do not check java.util.regex.Pattern#compile as many of its users "
           + "are deliberately testing the regex compiler or using a vacuously true regex.",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class InvalidPatternSyntax extends BugChecker implements MethodInvocationTreeMatcher {
 

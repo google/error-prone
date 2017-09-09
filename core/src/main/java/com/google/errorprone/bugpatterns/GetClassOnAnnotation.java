@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -35,7 +36,8 @@ import java.lang.annotation.Annotation;
   name = "GetClassOnAnnotation",
   category = JDK,
   summary = "Calling getClass() on an annotation may return a proxy class",
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class GetClassOnAnnotation extends BugChecker
     implements BugChecker.MethodInvocationTreeMatcher {

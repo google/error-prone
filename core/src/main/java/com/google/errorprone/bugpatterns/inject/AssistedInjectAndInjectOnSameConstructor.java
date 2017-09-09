@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.isType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -45,7 +46,8 @@ import com.sun.source.tree.Tree;
   explanation =
       "Using @AssistedInject and @Inject on the same constructor is a runtime" + "error in Guice.",
   category = INJECT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class AssistedInjectAndInjectOnSameConstructor extends BugChecker
     implements AnnotationTreeMatcher {

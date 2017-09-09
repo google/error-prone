@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ThrowTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -33,7 +34,8 @@ import com.sun.source.tree.ThrowTree;
   name = "ThrowNull",
   category = JDK,
   summary = "Throwing 'null' always results in a NullPointerException being thrown.",
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ThrowNull extends BugChecker implements ThrowTreeMatcher {
   @Override

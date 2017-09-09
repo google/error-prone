@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -39,7 +40,8 @@ import java.util.EnumSet;
   category = JDK,
   summary = "Use grouping parenthesis to make the operator precedence explicit",
   severity = WARNING,
-  tags = StandardTags.STYLE
+  tags = StandardTags.STYLE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class OperatorPrecedence extends BugChecker implements BinaryTreeMatcher {
 

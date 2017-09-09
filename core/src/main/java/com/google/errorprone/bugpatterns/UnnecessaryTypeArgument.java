@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -41,7 +42,8 @@ import java.util.List;
   name = "UnnecessaryTypeArgument",
   summary = "Non-generic methods should not be invoked with type arguments",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class UnnecessaryTypeArgument extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {

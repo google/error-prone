@@ -29,6 +29,7 @@ import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.DEFAULT;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -44,7 +45,8 @@ import com.sun.source.tree.MethodTree;
   name = "JavaxInjectOnAbstractMethod",
   summary = "Abstract and default methods are not injectable with javax.inject.Inject",
   category = INJECT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class JavaxInjectOnAbstractMethod extends BugChecker implements MethodTreeMatcher {
   private static final MultiMatcher<MethodTree, AnnotationTree> INJECT_FINDER =

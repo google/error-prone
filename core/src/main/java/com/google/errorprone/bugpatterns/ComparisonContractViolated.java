@@ -27,6 +27,7 @@ import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -72,7 +73,8 @@ import java.util.Set;
           + " arbitrarily."
   ,
   severity = SeverityLevel.ERROR,
-  category = Category.JDK
+  category = Category.JDK,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ComparisonContractViolated extends BugChecker implements MethodTreeMatcher {
   /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */

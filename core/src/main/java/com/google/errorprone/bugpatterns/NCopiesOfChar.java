@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -40,7 +41,8 @@ import java.util.List;
   category = JDK,
   summary =
       "The first argument to nCopies is the number of copies, and the second is the item to copy",
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class NCopiesOfChar extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =

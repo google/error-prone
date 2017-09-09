@@ -37,6 +37,7 @@ import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -109,7 +110,8 @@ import java.util.List;
           + "logic in your catch block to ensure that the AssertionError that was caught is not "
           + "the same one thrown by the call to `fail()` or `assert*()`.",
   category = JUNIT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
 
