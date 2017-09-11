@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.inject.dagger.testdata;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -55,10 +56,19 @@ final class AndroidInjectionBeforeSuperPositiveCases {
     }
   }
 
-  public class WrongOrderFragment extends Fragment {
+  public class WrongOrderFragmentPreApi23 extends Fragment {
     @Override
     public void onAttach(Activity activity) {
       super.onAttach(activity);
+      // BUG: Diagnostic contains: AndroidInjectionBeforeSuper
+      AndroidInjection.inject(this);
+    }
+  }
+
+  public class WrongOrderFragment extends Fragment {
+    @Override
+    public void onAttach(Context context) {
+      super.onAttach(context);
       // BUG: Diagnostic contains: AndroidInjectionBeforeSuper
       AndroidInjection.inject(this);
     }

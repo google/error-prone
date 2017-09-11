@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package android.app;
 
-public class Fragment {
-  public void onAttach(android.app.Activity activity) {}
+package android.content;
 
-  public void onAttach(android.content.Context context) {}
-}
+public class Context {}
