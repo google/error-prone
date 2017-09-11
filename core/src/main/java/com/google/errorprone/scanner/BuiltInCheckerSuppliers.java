@@ -200,6 +200,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
 import com.google.errorprone.bugpatterns.UnsynchronizedOverridesSynchronized;
 import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
 import com.google.errorprone.bugpatterns.UnusedCollectionModifiedInPlace;
+import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
@@ -556,6 +557,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryDefaultInEnumSwitch.class,
           UnnecessaryStaticImport.class,
           UseBinds.class,
+          UseCorrectAssertInTests.class,
           VarChecker.class,
           WildcardImport.class,
           WrongParameterPackage.class);
