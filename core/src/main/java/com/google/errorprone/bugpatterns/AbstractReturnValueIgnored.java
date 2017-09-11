@@ -168,7 +168,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           "org.junit.function.ThrowingRunnable",
           "org.junit.jupiter.api.function.Executable",
           "com.google.truth.ExpectFailure.AssertionCallback",
-          "com.google.truth.ExpectFailure.DelegatedAssertionCallback");
+          "com.google.truth.ExpectFailure.DelegatedAssertionCallback",
+          "com.google.truth.ExpectFailure.StandardSubjectBuilderCallback",
+          "com.google.truth.ExpectFailure.SimpleSubjectBuilderCallback");
 
   /**
    * Match whatever additional conditions concrete subclasses want to match (a list of known
