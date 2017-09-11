@@ -18,6 +18,7 @@ package com.google.errorprone.matchers;
 
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -922,10 +923,25 @@ public class Matchers {
   @SafeVarargs
   public static Matcher<MethodTree> methodHasParameters(
       final Matcher<VariableTree>... variableMatcher) {
+    return methodHasParameters(ImmutableList.copyOf(variableMatcher));
+  }
+
+  /**
+   * Matches an AST node that represents a method declaration, based on the list of
+   * variableMatchers. Applies the variableMatcher at index n to the parameter at index n and
+   * returns true iff they all match. Returns false if the number of variableMatchers provided does
+   * not match the number of parameters.
+   *
+   * <p>If you pass no variableMatchers, this will match methods with no parameters.
+   *
+   * @param variableMatcher a list of matchers to apply to the parameters of the method
+   */
+  public static Matcher<MethodTree> methodHasParameters(
+      final List<Matcher<VariableTree>> variableMatcher) {
     return new Matcher<MethodTree>() {
       @Override
       public boolean matches(MethodTree methodTree, VisitorState state) {
-        if (methodTree.getParameters().size() != variableMatcher.length) {
+        if (methodTree.getParameters().size() != variableMatcher.size()) {
           return false;
         }
         int paramIndex = 0;

@@ -65,6 +65,13 @@ final class AndroidInjectionBeforeSuperNegativeCases {
     }
   }
 
+  public abstract class ActivityWithAbstractOnCreate extends Activity {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {}
+
+    public abstract void onCreate(Bundle savedInstanceState, boolean bar);
+  }
+
   public class CorrectOrderFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {

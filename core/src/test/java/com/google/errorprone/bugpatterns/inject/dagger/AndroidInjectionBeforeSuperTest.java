@@ -35,6 +35,7 @@ public final class AndroidInjectionBeforeSuperTest {
             .addSourceFile("testdata/stubs/android/app/Activity.java")
             .addSourceFile("testdata/stubs/android/app/Fragment.java")
             .addSourceFile("testdata/stubs/android/app/Service.java")
+            .addSourceFile("testdata/stubs/android/content/Context.java")
             .addSourceFile("testdata/stubs/android/content/Intent.java")
             .addSourceFile("testdata/stubs/android/os/Bundle.java")
             .addSourceFile("testdata/stubs/android/os/IBinder.java");
