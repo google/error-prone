@@ -31,9 +31,6 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.WriterKind;
-
-import org.checkerframework.javacutil.AnnotationUtils;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -51,6 +48,7 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
+import org.checkerframework.javacutil.AnnotationUtils;
 
 /** An Error Prone compiler that implements {@link javax.tools.JavaCompiler}. */
 public class BaseErrorProneJavaCompiler implements JavaCompiler {
