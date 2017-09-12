@@ -26,6 +26,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
@@ -50,7 +51,8 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
     if (tree.getTypeDecls().isEmpty() || tree.getPackageName() == null) {
       return Description.NO_MATCH;
     }
-    String filename = Files.getNameWithoutExtension(tree.getSourceFile().getName());
+    String filename =
+        Files.getNameWithoutExtension(ASTHelpers.getFileNameFromUri(tree.getSourceFile().toUri()));
     List<String> names = new ArrayList<>();
     for (Tree member : tree.getTypeDecls()) {
       if (member instanceof ClassTree) {
