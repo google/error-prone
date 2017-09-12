@@ -31,6 +31,9 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.WriterKind;
+
+import org.checkerframework.javacutil.AnnotationUtils;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -89,6 +92,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     if (refactoringCollection[0] != null) {
       task.addTaskListener(new RefactoringTask(task.getContext(), refactoringCollection[0]));
     }
+    task.addTaskListener(new CFCacheClearingListener());
     return task;
   }
 
@@ -248,6 +252,23 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
         PrintWriter out = Log.instance(context).getWriter(WriterKind.NOTICE);
         out.println(refactoringResult.message());
         out.flush();
+      }
+    }
+  }
+
+  /**
+   * A listener that clears out a global Checker Framework cache
+   * at the end of compilation.  This prevents a memory leak in cases
+   * where the compiler is being run in memory as part of a daemon process.
+   *
+   * See https://github.com/typetools/checker-framework/issues/1482
+   */
+  private static class CFCacheClearingListener implements TaskListener {
+
+    @Override
+    public void finished(TaskEvent e) {
+      if (e.getKind() == Kind.COMPILATION) {
+        AnnotationUtils.clear();
       }
     }
   }
