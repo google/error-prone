@@ -244,6 +244,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   private static final Matcher<ExpressionTree> FAIL_METHOD =
       anyOf(
           instanceMethod().onDescendantOf("com.google.common.truth.AbstractVerb").named("fail"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
+              .named("fail"),
           staticMethod().onClass("org.junit.Assert").named("fail"),
           staticMethod().onClass("junit.framework.Assert").named("fail"),
           staticMethod().onClass("junit.framework.TestCase").named("fail"));

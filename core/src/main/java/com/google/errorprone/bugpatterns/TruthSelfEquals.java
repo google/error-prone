@@ -93,7 +93,10 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
   private static final Matcher<ExpressionTree> ASSERT_THAT =
       anyOf(
           staticMethod().onClass("com.google.common.truth.Truth").named("assertThat"),
-          instanceMethod().onDescendantOf("com.google.common.truth.TestVerb").named("that"));
+          instanceMethod().onDescendantOf("com.google.common.truth.TestVerb").named("that"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
+              .named("that"));
 
   @Override
   public Description matchMethodInvocation(
