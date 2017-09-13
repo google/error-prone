@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.Immutable;
 import java.util.Objects;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** Negative test cases for the ConstructorLeaksThis checker. */
 @Immutable
@@ -71,6 +73,12 @@ public class ConstructorLeaksThisNegativeCases {
   // Safe because local variable is not a field
   private void localVariable() {
     int i = java.util.Objects.hashCode(this);
+  }
+
+  @RunWith(JUnit4.class)
+  public static class JUnitTest {
+    // Safe because we skip the check in JUnit tests.
+    final int hash = Objects.hash(this);
   }
 
   public static class ThisIsAnonymous {

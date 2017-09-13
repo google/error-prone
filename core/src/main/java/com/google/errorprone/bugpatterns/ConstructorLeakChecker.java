@@ -17,10 +17,15 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestCases;
+import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestRunner;
+import static com.google.errorprone.matchers.JUnitMatchers.isTestCaseDescendant;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
@@ -30,6 +35,8 @@ import com.sun.source.tree.VariableTree;
 
 /** Base of checks for explicit and implicit leaks of the 'this' reference. */
 abstract class ConstructorLeakChecker extends BugChecker implements ClassTreeMatcher {
+  private static final Matcher<ClassTree> TEST_CLASS =
+      anyOf(isTestCaseDescendant, hasJUnit4TestRunner, hasJUnit4TestCases);
 
   /**
    * For each class, visits constructors, instance variables, and instance initializers. Delegates
@@ -38,6 +45,9 @@ abstract class ConstructorLeakChecker extends BugChecker implements ClassTreeMat
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     // TODO(b/36395371): filter here to exclude some classes (e.g. not immutable)
+    if (TEST_CLASS.matches(tree, state)) {
+      return NO_MATCH;
+    }
 
     for (Tree member : tree.getMembers()) {
       if ((member instanceof MethodTree

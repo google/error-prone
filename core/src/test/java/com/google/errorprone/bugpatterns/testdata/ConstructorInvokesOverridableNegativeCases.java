@@ -16,6 +16,8 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.Immutable;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** Negative test cases for {@link ConstructorInvokesOverridable}. */
 @Immutable
@@ -53,6 +55,16 @@ public class ConstructorInvokesOverridableNegativeCases {
   public void localVariable() {
     // Safe because this variable is not a field
     int i = unsafe();
+  }
+
+  @RunWith(JUnit4.class)
+  public static class JUnitTest {
+    // Safe because we skip the check in unit tests.
+    final int i = unsafe();
+
+    protected int unsafe() {
+      return 3;
+    }
   }
 
   /** Not overridable because final */
