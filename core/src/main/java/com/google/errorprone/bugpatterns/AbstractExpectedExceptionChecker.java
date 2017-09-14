@@ -66,7 +66,7 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
 
   static final Matcher<ExpressionTree> IS_A =
       staticMethod()
-          .onClassAny("org.hamcrest.Matchers", "org.hamcrest.CoreMatchers")
+          .onClassAny("org.hamcrest.Matchers", "org.hamcrest.CoreMatchers", "org.hamcrest.core.Is")
           .withSignature("<T>isA(java.lang.Class<T>)");
 
   @Override
