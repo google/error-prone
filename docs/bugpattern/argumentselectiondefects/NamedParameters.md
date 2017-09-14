@@ -10,8 +10,8 @@ The style accepted for comments that name parameters is to use a block comment,
 before the argument, including an equals sign.
 
 ```java
-test(/* param1= */arg1,
-     /* param2= */arg2);
+test(/* param1= */ arg1,
+     /* param2= */ arg2);
 ```
 
 The use of spaces (or not) around the parameter name and the equals sign is
