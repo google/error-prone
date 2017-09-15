@@ -23,6 +23,9 @@ AndroidInjection.inject() should always be invoked before calling super.lifecycl
 __[ArrayEquals](bugpattern/ArrayEquals)__<br>
 Reference equality used to compare arrays
 
+__[ArrayFillIncompatibleType](bugpattern/ArrayFillIncompatibleType)__<br>
+Arrays.fill(Object[], Object) called with incompatible types.
+
 __[ArrayHashCode](bugpattern/ArrayHashCode)__<br>
 hashcode method on array does not hash array contents
 

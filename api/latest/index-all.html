@@ -481,6 +481,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayEquals.html#ArrayEquals--">ArrayEquals()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayEquals.html" title="class in com.google.errorprone.bugpatterns">ArrayEquals</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ArrayFillIncompatibleType.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ArrayFillIncompatibleType</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Checks when Arrays.fill(Object[], Object) is called with object types that are guaranteed to
+ result in an ArrayStoreException.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayFillIncompatibleType.html#ArrayFillIncompatibleType--">ArrayFillIncompatibleType()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayFillIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">ArrayFillIncompatibleType</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ArrayHashCode.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ArrayHashCode</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayHashCode.html#ArrayHashCode--">ArrayHashCode()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayHashCode.html" title="class in com.google.errorprone.bugpatterns">ArrayHashCode</a></dt>
@@ -4715,6 +4722,8 @@
 <dd>
 <div class="block">Suggests replacing with Arrays.equals(a, b).</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayFillIncompatibleType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayFillIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">ArrayFillIncompatibleType</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayHashCode.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayHashCode.html" title="class in com.google.errorprone.bugpatterns">ArrayHashCode</a></dt>
 <dd>
 <div class="block">Wraps identity hashcode computations in calls to <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Arrays.html?is-external=true#hashCode-long:A-" title="class or interface in java.util"><code>Arrays.hashCode(long[])</code></a> if the array
