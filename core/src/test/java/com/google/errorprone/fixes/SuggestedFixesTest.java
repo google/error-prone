@@ -473,6 +473,10 @@ public class SuggestedFixesTest {
             "  @SuppressWarnings(\"one\")",
             "  public void doIt() {",
             "    System.out.println(\"\" + 42);",
+            "    new Runnable() {",
+            "      {System.out.println(\"\" + 42);}",
+            "      @Override public void run() {}",
+            "    };",
             "  }",
             "}")
         .addOutputLines(
@@ -483,6 +487,10 @@ public class SuggestedFixesTest {
             "  @SuppressWarnings({\"one\", \"SuppressMe\"})",
             "  public void doIt() {",
             "    System.out.println(\"\" + 42);",
+            "    new Runnable() {",
+            "      {System.out.println(\"\" + 42);}",
+            "      @Override public void run() {}",
+            "    };",
             "  }",
             "}")
         .doTest();

@@ -531,7 +531,8 @@ public class SuggestedFixes {
         .filter(
             tree ->
                 tree instanceof MethodTree
-                    || tree instanceof ClassTree
+                    || (tree instanceof ClassTree
+                        && ((ClassTree) tree).getSimpleName().length() != 0)
                     || tree instanceof VariableTree)
         .findFirst()
         .orElse(null);
