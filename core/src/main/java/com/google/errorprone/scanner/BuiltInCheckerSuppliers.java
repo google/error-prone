@@ -54,6 +54,7 @@ import com.google.errorprone.bugpatterns.ConstantOverflow;
 import com.google.errorprone.bugpatterns.ConstructorInvokesOverridable;
 import com.google.errorprone.bugpatterns.ConstructorLeaksThis;
 import com.google.errorprone.bugpatterns.DeadException;
+import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
@@ -332,6 +333,7 @@ public class BuiltInCheckerSuppliers {
           ComplexBooleanConstant.class,
           ConstantOverflow.class,
           DeadException.class,
+          DeadThread.class,
           DoNotCallChecker.class,
           EqualsNaN.class,
           EqualsReference.class,
