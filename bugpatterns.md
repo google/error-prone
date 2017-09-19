@@ -80,6 +80,9 @@ Dagger @Provides methods may not return null unless annotated with @Nullable
 __[DeadException](bugpattern/DeadException)__<br>
 Exception created but not thrown
 
+__[DeadThread](bugpattern/DeadThread)__<br>
+Thread created but not started
+
 __[DoNotCall](bugpattern/DoNotCall)__<br>
 This method should not be called.
 
@@ -683,6 +686,9 @@ Using @Test(expected=...) is discouraged, since the test will pass if *any* stat
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
 
+__[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
+Java assert is used in test. For testing purposes Assert.* matchers should be used.
+
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
 
@@ -741,6 +747,9 @@ Unchecked exceptions do not need to be declared in the method signature.
 
 __[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
 Constructors and methods with the same name should appear sequentially with no other code in between
+
+__[UnnecessarySetDefault](bugpattern/UnnecessarySetDefault)__<br>
+Unnecessary call to NullPointerTester#setDefault
 
 __[UnnecessaryStaticImport](bugpattern/UnnecessaryStaticImport)__<br>
 Using static imports for types is unnecessary
