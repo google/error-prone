@@ -55,6 +55,7 @@ public class ErrorProneOptions {
   private static final String IGNORE_UNKNOWN_CHECKS_FLAG = "-XepIgnoreUnknownCheckNames";
   private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
       "-XepDisableWarningsInGeneratedCode";
+  private static final String COMPILING_TEST_ONLY_CODE = "-XepCompilingTestOnlyCode";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
   public static int isSupportedOption(String option) {
@@ -67,7 +68,8 @@ public class ErrorProneOptions {
             || option.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG)
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
             || option.equals(ENABLE_ALL_CHECKS)
-            || option.equals(DISABLE_ALL_CHECKS);
+            || option.equals(DISABLE_ALL_CHECKS)
+            || option.equals(COMPILING_TEST_ONLY_CODE);
     return isSupported ? 0 : -1;
   }
 
@@ -151,6 +153,7 @@ public class ErrorProneOptions {
   private final boolean dropErrorsToWarnings;
   private final boolean enableAllChecksAsWarnings;
   private final boolean disableAllChecks;
+  private final boolean isTestOnlyTarget;
   private final ErrorProneFlags flags;
   private final PatchingOptions patchingOptions;
 
@@ -162,6 +165,7 @@ public class ErrorProneOptions {
       boolean dropErrorsToWarnings,
       boolean enableAllChecksAsWarnings,
       boolean disableAllChecks,
+      boolean isTestOnlyTarget,
       ErrorProneFlags flags,
       PatchingOptions patchingOptions) {
     this.severityMap = severityMap;
@@ -171,6 +175,7 @@ public class ErrorProneOptions {
     this.dropErrorsToWarnings = dropErrorsToWarnings;
     this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     this.disableAllChecks = disableAllChecks;
+    this.isTestOnlyTarget = isTestOnlyTarget;
     this.flags = flags;
     this.patchingOptions = patchingOptions;
   }
@@ -195,6 +200,10 @@ public class ErrorProneOptions {
     return dropErrorsToWarnings;
   }
 
+  public boolean isTestOnlyTarget() {
+    return isTestOnlyTarget;
+  }
+
   public ErrorProneFlags getFlags() {
     return flags;
   }
@@ -209,6 +218,7 @@ public class ErrorProneOptions {
     private boolean dropErrorsToWarnings = false;
     private boolean enableAllChecksAsWarnings = false;
     private boolean disableAllChecks = false;
+    private boolean isTestOnlyTarget = false;
     private Map<String, Severity> severityMap = new HashMap<>();
     private final ErrorProneFlags.Builder flagsBuilder = ErrorProneFlags.builder();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
@@ -272,19 +282,24 @@ public class ErrorProneOptions {
       this.disableAllChecks = disableAllChecks;
     }
 
+    public void setTestOnlyTarget(boolean isTestOnlyTarget) {
+      this.isTestOnlyTarget = isTestOnlyTarget;
+    }
+
     public PatchingOptions.Builder patchingOptionsBuilder() {
       return patchingOptionsBuilder;
     }
 
-    public ErrorProneOptions build(ImmutableList<String> outputArgs) {
+    public ErrorProneOptions build(ImmutableList<String> remainingArgs) {
       return new ErrorProneOptions(
           ImmutableMap.copyOf(severityMap),
-          outputArgs,
+          remainingArgs,
           ignoreUnknownChecks,
           disableWarningsInGeneratedCode,
           dropErrorsToWarnings,
           enableAllChecksAsWarnings,
           disableAllChecks,
+          isTestOnlyTarget,
           flagsBuilder.build(),
           patchingOptionsBuilder.build());
     }
@@ -306,7 +321,7 @@ public class ErrorProneOptions {
    */
   public static ErrorProneOptions processArgs(Iterable<String> args) {
     Preconditions.checkNotNull(args);
-    ImmutableList.Builder<String> outputArgs = ImmutableList.builder();
+    ImmutableList.Builder<String> remainingArgs = ImmutableList.builder();
 
     /* By default, we throw an error when an unknown option is passed in, if for example you
      * try to disable a check that doesn't match any of the known checks.  This catches typos from
@@ -332,6 +347,9 @@ public class ErrorProneOptions {
           break;
         case DISABLE_ALL_CHECKS:
           builder.setDisableAllChecks(true);
+          break;
+        case COMPILING_TEST_ONLY_CODE:
+          builder.setTestOnlyTarget(true);
           break;
         default:
           if (arg.startsWith(SEVERITY_PREFIX)) {
@@ -374,12 +392,12 @@ public class ErrorProneOptions {
             ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(remaining);
             builder.patchingOptionsBuilder().importOrganizer(importOrganizer);
           } else {
-            outputArgs.add(arg);
+            remainingArgs.add(arg);
           }
       }
     }
 
-    return builder.build(outputArgs.build());
+    return builder.build(remainingArgs.build());
   }
 
   /**

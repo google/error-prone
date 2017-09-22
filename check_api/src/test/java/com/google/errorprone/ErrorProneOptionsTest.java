@@ -157,6 +157,13 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesCompilingTestOnlyCode() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepCompilingTestOnlyCode"});
+    assertThat(options.isTestOnlyTarget()).isTrue();
+  }
+
+  @Test
   public void recognizesPatch() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(
