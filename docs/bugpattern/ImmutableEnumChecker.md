@@ -87,3 +87,46 @@ enum E {
 }
 ```
 
+TIP: Instead of creating an enum with functional interface fields (`Predicate`,
+`Function`, etc.), declare abstract methods that are overridden by each
+constant. For example, do this:
+
+```java {.good}
+enum Types {
+  STRING {
+    @Override public boolean hasCompatibleType(Object o) {
+      return o instanceof String;
+    }
+  },
+  NUMBER {
+    @Override public boolean hasCompatibleType(Object o) {
+      return o instanceof Number;
+    }
+  },
+  // ...
+
+  public abstract boolean hasCompatibleType(Object o);
+}
+```
+
+... not this:
+
+```java {.bad}
+enum Types {
+  STRING(o -> o instanceof String),
+  NUMBER(o -> o instanceof Number),
+  // ...
+
+  final Predicate<Object> hasCompatibleType;
+
+  Types(Predicate<Object> hasCompatibleType) {
+    this.hasCompatibleType = hasCompatibleType;
+  }
+}
+```
+
+This has several advantages on top of sidestepping this checker, e.g. not tying
+you to a particular functional interface type -- your callers should e.g. use
+`STRING::hasCompatibleType` instead of `STRING.hasCompatibleType` which only
+works for one interface type.
+
