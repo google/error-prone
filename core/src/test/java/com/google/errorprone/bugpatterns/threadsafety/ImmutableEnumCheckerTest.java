@@ -149,4 +149,18 @@ public class ImmutableEnumCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suppressOnEnumField() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "enum Test {",
+            "  ONE;",
+            "  @SuppressWarnings(\"Immutable\")",
+            "  final int[] xs = {1};",
+            "}")
+        .doTest();
+  }
 }
