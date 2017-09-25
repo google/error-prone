@@ -39,3 +39,21 @@ For more information about immutability, see:
 
 *   Java Concurrency in Practice §3.4
 *   Effective Java §15
+
+## Suppression
+
+Suppress false positives by adding an `@SuppressWarnings("Immutable")`
+annotation to the enclosing element.
+
+To suppress warnings in AutoValue classes, add `@AutoValue.CopyAnnotations` to
+ensure the suppression is also applied to the generated sub-class:
+
+```java
+@AutoValue
+@AutoValue.CopyAnnotations
+@Immutable
+@SuppressWarnings("Immutable")
+class MyAutoValue {
+  ...
+}
+```

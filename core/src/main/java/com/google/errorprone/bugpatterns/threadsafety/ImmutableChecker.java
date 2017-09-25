@@ -48,7 +48,8 @@ import java.util.Set;
   name = "Immutable",
   summary = "Type declaration annotated with @Immutable is not immutable",
   category = JDK,
-  severity = ERROR
+  severity = ERROR,
+  documentSuppression = false
 )
 public class ImmutableChecker extends BugChecker implements BugChecker.ClassTreeMatcher {
 
