@@ -488,6 +488,7 @@ public class BuiltInCheckerSuppliers {
           TypeParameterUnusedInFormals.class,
           UnsynchronizedOverridesSynchronized.class,
           URLEqualsHashCode.class,
+          UseCorrectAssertInTests.class,
           WaitNotInLoop.class,
           WakelockReleasedDangerously.class);
 
@@ -561,7 +562,6 @@ public class BuiltInCheckerSuppliers {
           UnnecessarySetDefault.class,
           UnnecessaryStaticImport.class,
           UseBinds.class,
-          UseCorrectAssertInTests.class,
           VarChecker.class,
           WildcardImport.class,
           WrongParameterPackage.class);
