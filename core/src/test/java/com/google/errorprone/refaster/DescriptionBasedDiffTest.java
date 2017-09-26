@@ -40,6 +40,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
 
   private static final String[] lines = {
     "package foo.bar;",
+    "import org.bar.Baz;",
     "import com.foo.Bar;",
     "",
     "class Foo {",
@@ -71,11 +72,12 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
         new Description(
-            null, "message", SuggestedFix.replace(117, 120, "bar"), SeverityLevel.SUGGESTION));
+            null, "message", SuggestedFix.replace(137, 140, "bar"), SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
+            "import org.bar.Baz;",
             "import com.foo.Bar;",
             "",
             "class Foo {",
@@ -91,11 +93,12 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
         new Description(
-            null, "message", SuggestedFix.replace(120, 120, "bar"), SeverityLevel.SUGGESTION));
+            null, "message", SuggestedFix.replace(140, 140, "bar"), SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
+            "import org.bar.Baz;",
             "import com.foo.Bar;",
             "",
             "class Foo {",
@@ -113,12 +116,13 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
         new Description(
             null,
             "message",
-            SuggestedFix.builder().replace(104, 107, "longer").replace(117, 120, "bar").build(),
+            SuggestedFix.builder().replace(124, 127, "longer").replace(137, 140, "bar").build(),
             SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
+            "import org.bar.Baz;",
             "import com.foo.Bar;",
             "",
             "class Foo {",
@@ -140,8 +144,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
                     null,
                     "message",
                     SuggestedFix.builder()
-                        .replace(117, 120, "baz")
-                        .replace(117, 120, "bar")
+                        .replace(137, 140, "baz")
+                        .replace(137, 140, "bar")
                         .build(),
                     SeverityLevel.SUGGESTION)));
 
@@ -150,7 +154,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
         new Description(
             null,
             "bah",
-            SuggestedFix.builder().replace(117, 120, "baz").build(),
+            SuggestedFix.builder().replace(137, 140, "baz").build(),
             SeverityLevel.SUGGESTION));
 
     assertThrows(
@@ -160,7 +164,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
                 new Description(
                     null,
                     "message",
-                    SuggestedFix.builder().replace(117, 120, "bar").build(),
+                    SuggestedFix.builder().replace(137, 140, "bar").build(),
                     SeverityLevel.SUGGESTION)));
 
     DescriptionBasedDiff diff3 =
@@ -170,20 +174,21 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
         new Description(
             null,
             "bah",
-            SuggestedFix.builder().replace(117, 120, "baz").build(),
+            SuggestedFix.builder().replace(137, 140, "baz").build(),
             SeverityLevel.SUGGESTION));
     // No throw, since it's lenient. Refactors to the first "baz" replacement and ignores this.
     diff3.onDescribed(
         new Description(
             null,
             "message",
-            SuggestedFix.builder().replace(117, 120, "bar").build(),
+            SuggestedFix.builder().replace(137, 140, "bar").build(),
             SeverityLevel.SUGGESTION));
     diff3.applyDifferences(sourceFile);
 
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
+            "import org.bar.Baz;",
             "import com.foo.Bar;",
             "",
             "class Foo {",
@@ -195,7 +200,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   }
 
   @Test
-  public void addImport() {
+  public void applyDifferences_addsImportAndSorts_whenAddingNewImport() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
         new Description(
@@ -209,6 +214,31 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
             "package foo.bar;",
             "import com.foo.Bar;",
             "import com.google.foo.Bar;",
+            "import org.bar.Baz;",
+            "",
+            "class Foo {",
+            "  public static void main(String[] args) {",
+            "    System.out.println(\"foo\");",
+            "  }",
+            "}")
+        .inOrder();
+  }
+
+  @Test
+  public void applyDifferences_preservesImportOrder_whenAddingExistingImport() {
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
+    diff.onDescribed(
+        new Description(
+            null,
+            "message",
+            SuggestedFix.builder().addImport("com.foo.Bar").build(),
+            SeverityLevel.SUGGESTION));
+    diff.applyDifferences(sourceFile);
+    assertThat(sourceFile.getLines())
+        .containsExactly(
+            "package foo.bar;",
+            "import org.bar.Baz;",
+            "import com.foo.Bar;",
             "",
             "class Foo {",
             "  public static void main(String[] args) {",
@@ -225,13 +255,37 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
         new Description(
             null,
             "message",
-            SuggestedFix.builder().removeImport("com.foo.Bar").build(),
+            SuggestedFix.builder().removeImport("com.foo.Bar").removeImport("org.bar.Baz").build(),
             SeverityLevel.SUGGESTION));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
             "package foo.bar;",
             "",
+            "",
+            "class Foo {",
+            "  public static void main(String[] args) {",
+            "    System.out.println(\"foo\");",
+            "  }",
+            "}")
+        .inOrder();
+  }
+
+  @Test
+  public void applyDifferences_preservesOrder_whenRemovingNonExistentImport() {
+    DescriptionBasedDiff diff = createDescriptionBasedDiff();
+    diff.onDescribed(
+        new Description(
+            null,
+            "message",
+            SuggestedFix.builder().removeImport("com.google.foo.Bar").build(),
+            SeverityLevel.SUGGESTION));
+    diff.applyDifferences(sourceFile);
+    assertThat(sourceFile.getLines())
+        .containsExactly(
+            "package foo.bar;",
+            "import org.bar.Baz;",
+            "import com.foo.Bar;",
             "",
             "class Foo {",
             "  public static void main(String[] args) {",
@@ -249,8 +303,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
             null,
             "message",
             SuggestedFix.builder()
-                .replace(104, 107, "longer")
-                .replace(117, 120, "bar")
+                .replace(124, 127, "longer")
+                .replace(137, 140, "bar")
                 .addImport("com.google.foo.Bar")
                 .build(),
             SeverityLevel.SUGGESTION));
@@ -260,6 +314,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
             "package foo.bar;",
             "import com.foo.Bar;",
             "import com.google.foo.Bar;",
+            "import org.bar.Baz;",
             "",
             "class Foo {",
             "  public static void main(String[] args) {",

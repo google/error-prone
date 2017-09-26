@@ -114,11 +114,13 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
       ImportStatements importStatements = ImportStatements.create(compilationUnit, importOrganizer);
       importStatements.addAll(importsToAdd);
       importStatements.removeAll(importsToRemove);
-      replacements.add(
-          Replacement.create(
-              importStatements.getStartPos(),
-              importStatements.getEndPos(),
-              importStatements.toString()));
+      if (importStatements.importsHaveChanged()) {
+        replacements.add(
+            Replacement.create(
+                importStatements.getStartPos(),
+                importStatements.getEndPos(),
+                importStatements.toString()));
+      }
     }
     for (Replacement replacement : replacements.descending()) {
       sourceFile.replaceChars(

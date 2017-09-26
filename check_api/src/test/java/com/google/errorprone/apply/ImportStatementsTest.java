@@ -64,25 +64,96 @@ public class ImportStatementsTest {
 
   /** An unsorted list of JCImport stubs to use for testing. */
   private final List<JCImport> baseImportList =
-      ImmutableList.of(
-          stubImport("com.google.common.base.Preconditions.checkNotNull", true, 82, 145),
-          stubImport("com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED", true, 147, 213),
-          stubImport("com.google.common.collect.ImmutableMap", false, 215, 260),
-          stubImport("com.google.common.collect.ImmutableList", false, 262, 308),
-          stubImport("org.joda.time.Interval", false, 310, 339),
-          stubImport("org.joda.time.DateTime", false, 341, 370),
-          stubImport("org.joda.time.DateTimeZone", false, 372, 405),
-          stubImport("com.sun.tools.javac.tree.JCTree", false, 407, 445),
-          stubImport("com.sun.source.tree.ImportTree", false, 447, 484),
-          stubImport("com.sun.tools.javac.tree.JCTree.JCExpression", false, 486, 537),
-          stubImport("com.sun.source.tree.CompilationUnitTree", false, 539, 585),
-          stubImport("java.io.File", false, 587, 606),
-          stubImport("java.util.Iterator", false, 608, 633),
-          stubImport("java.io.IOException", false, 635, 661),
-          stubImport("javax.tools.StandardJavaFileManager", false, 663, 705),
-          stubImport("javax.tools.JavaFileObject", false, 707, 740),
-          stubImport("javax.tools.JavaCompiler", false, 742, 773),
-          stubImport("javax.tools.ToolProvider", false, 775, 806));
+      new StubImportBuilder(82)
+          .addStaticImport("com.google.common.base.Preconditions.checkNotNull")
+          .addStaticImport("com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED")
+          .addImport("com.google.common.collect.ImmutableMap")
+          .addImport("com.google.common.collect.ImmutableList")
+          .addImport("org.joda.time.Interval")
+          .addImport("org.joda.time.DateTime")
+          .addImport("org.joda.time.DateTimeZone")
+          .addImport("com.sun.tools.javac.tree.JCTree")
+          .addImport("com.sun.source.tree.ImportTree")
+          .addImport("com.sun.tools.javac.tree.JCTree.JCExpression")
+          .addImport("com.sun.source.tree.CompilationUnitTree")
+          .addImport("java.io.File")
+          .addImport("java.util.Iterator")
+          .addImport("java.io.IOException")
+          .addImport("javax.tools.StandardJavaFileManager")
+          .addImport("javax.tools.JavaFileObject")
+          .addImport("javax.tools.JavaCompiler")
+          .addImport("javax.tools.ToolProvider")
+          .build();
+
+  /** Makes it easy to build a consecutive list of JCImport mocks. */
+  private static class StubImportBuilder {
+    private int startPos;
+    private final ImmutableList.Builder<JCImport> imports = ImmutableList.builder();
+
+    StubImportBuilder(int startPos) {
+      this.startPos = startPos;
+    }
+
+    /**
+     * A helper method to create a JCImport stub.
+     *
+     * @param typeName the fully-qualified name of the type being imported
+     * @return a new JCImport stub
+     */
+    StubImportBuilder addImport(String typeName) {
+      return addImport(typeName, false);
+    }
+
+    /**
+     * A helper method to create a JCImport stub.
+     *
+     * @param typeName the fully-qualified name of the type being imported
+     * @return a new JCImport stub
+     */
+    StubImportBuilder addStaticImport(String typeName) {
+      return addImport(typeName, true);
+    }
+
+    /**
+     * A helper method to create a JCImport stub.
+     *
+     * @param typeName the fully-qualified name of the type being imported
+     * @param isStatic whether the import is static
+     * @return a new JCImport stub
+     */
+    private StubImportBuilder addImport(String typeName, boolean isStatic) {
+      // craft import string
+      StringBuilder returnSB = new StringBuilder("import ");
+      if (isStatic) {
+        returnSB.append("static ");
+      }
+      returnSB.append(typeName);
+      returnSB.append(";\n");
+      String stringRepresentation = returnSB.toString();
+
+      // Calculate the end position of the input line.
+      int endPos = startPos + stringRepresentation.length();
+
+      JCImport result = mock(JCImport.class);
+      when(result.isStatic()).thenReturn(isStatic);
+      when(result.getStartPosition()).thenReturn(startPos);
+      // Ignore the ; and \n as they are not part of the import.
+      when(result.getEndPosition(any(EndPosTable.class))).thenReturn(endPos - 2);
+
+      when(result.toString()).thenReturn(stringRepresentation);
+
+      imports.add(result);
+
+      // Move the start position of the next import to the end of the previous one.
+      startPos = endPos;
+
+      return this;
+    }
+
+    List<JCImport> build() {
+      return imports.build();
+    }
+  }
 
   /**
    * A helper method to create a stubbed package JCExpression.
@@ -93,32 +164,6 @@ public class ImportStatementsTest {
   private static JCExpression stubPackage(int endPos) {
     JCExpression result = mock(JCExpression.class);
     when(result.getEndPosition(any(EndPosTable.class))).thenReturn(endPos);
-    return result;
-  }
-
-  /**
-   * A helper method to create a JCImport stub.
-   *
-   * @param typeName the fully-qualified name of the type being imported
-   * @param isStatic whether the import is static
-   * @param startPos the start position of the import statement
-   * @param endPos the end position of the import statement
-   * @return a new JCImport stub
-   */
-  private static JCImport stubImport(String typeName, boolean isStatic, int startPos, int endPos) {
-    JCImport result = mock(JCImport.class);
-    when(result.isStatic()).thenReturn(isStatic);
-    when(result.getStartPosition()).thenReturn(startPos);
-    when(result.getEndPosition(any(EndPosTable.class))).thenReturn(endPos);
-
-    // craft import string
-    StringBuilder returnSB = new StringBuilder("import ");
-    if (isStatic) {
-      returnSB.append("static ");
-    }
-    returnSB.append(typeName);
-    returnSB.append(";\n");
-    when(result.toString()).thenReturn(returnSB.toString());
     return result;
   }
 
@@ -439,3 +484,4 @@ public class ImportStatementsTest {
         "Expected 1 import(s) in the organized imports but it contained 0", exception.getMessage());
   }
 }
+
