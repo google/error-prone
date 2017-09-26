@@ -18,10 +18,12 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -38,11 +40,6 @@ import com.sun.tools.javac.tree.TreeInfo;
   summary =
       "Synchronizing on non-final fields is not safe: if the field is ever updated,"
           + " different threads may end up locking on different objects.",
-  explanation =
-      "Possible fixes:\n"
-          + "* If the field is already effectively final, add the missing 'final' modifier.\n"
-          + "* If the field needs to be mutable, create a separate lock by adding a private"
-          + "  final field and synchronizing on it to guard all accesses.",
   category = JDK,
   severity = WARNING,
   tags = StandardTags.FRAGILE_CODE
@@ -54,14 +51,17 @@ public class SynchronizeOnNonFinalField extends BugChecker
   public Description matchSynchronized(SynchronizedTree tree, VisitorState state) {
     Symbol symbol = ASTHelpers.getSymbol(TreeInfo.skipParens((JCExpression) tree.getExpression()));
     if (!(symbol instanceof VarSymbol)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     // TODO(cushon): check that the receiver doesn't contain mutable state.
     // Currently 'this.locks[i].mu' is accepted if 'mu' is final but 'locks' is non-final.
     VarSymbol varSymbol = (VarSymbol) symbol;
     if (varSymbol.isLocal() || varSymbol.isStatic() || (varSymbol.flags() & Flags.FINAL) != 0) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
+    }
+    if (ASTHelpers.hasAnnotation(varSymbol, LazyInit.class, state)) {
+      return NO_MATCH;
     }
 
     return describeMatch(tree.getExpression());
