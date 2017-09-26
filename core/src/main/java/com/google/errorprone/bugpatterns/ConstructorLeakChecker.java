@@ -50,6 +50,9 @@ abstract class ConstructorLeakChecker extends BugChecker implements ClassTreeMat
     }
 
     for (Tree member : tree.getMembers()) {
+      if (isSuppressed(member)) {
+        continue;
+      }
       if ((member instanceof MethodTree
               && Matchers.methodIsConstructor().matches((MethodTree) member, state))
           || (member instanceof BlockTree && !((BlockTree) member).isStatic())
