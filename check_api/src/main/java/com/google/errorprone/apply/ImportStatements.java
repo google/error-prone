@@ -19,6 +19,7 @@ package com.google.errorprone.apply;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -45,6 +46,9 @@ public class ImportStatements {
   private final Set<String> importStrings;
   private boolean hasExistingImports;
 
+  /** A copy of the original imports, used to check for any actual changes to the imports. */
+  private final ImmutableSet<String> originalImports;
+
   public static ImportStatements create(
       JCCompilationUnit compilationUnit, ImportOrganizer importOrganizer) {
     return new ImportStatements(
@@ -54,6 +58,8 @@ public class ImportStatements {
         importOrganizer);
   }
 
+  /** @deprecated Use {@link ImportStatements#create(JCCompilationUnit, ImportOrganizer)} instead */
+  @Deprecated
   public ImportStatements(
       JCExpression packageTree, List<JCImport> importTrees, EndPosTable endPositions) {
     this(packageTree, importTrees, endPositions, ImportOrganizer.STATIC_FIRST_ORGANIZER);
@@ -105,6 +111,8 @@ public class ImportStatements {
                     .trimTrailingFrom(importExpr);
               }
             }));
+
+    originalImports = ImmutableSet.copyOf(importStrings);
   }
 
   /** Return the start position of the import statements. */
@@ -159,6 +167,10 @@ public class ImportStatements {
    */
   public boolean removeAll(Collection<String> importsToRemove) {
     return importStrings.removeAll(importsToRemove);
+  }
+
+  public boolean importsHaveChanged() {
+    return !importStrings.equals(originalImports);
   }
 
   /** Returns a string representation of the imports as Java code in correct order. */
