@@ -96,4 +96,20 @@ public class SynchronizeOnNonFinalFieldTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negative_lazyInit() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety.Test;",
+            "import com.google.errorprone.annotations.concurrent.LazyInit;",
+            "class Test {",
+            "  @LazyInit transient Object lock = new Object();",
+            "  void m() {",
+            "    synchronized (lock) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
