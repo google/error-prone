@@ -56,4 +56,19 @@ public class CollectionToArraySafeParameterTest {
             "}")
         .doTest();
   }
+
+  // regression test for b/67022899
+  @Test
+  public void b67022899() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collection;",
+            "class Test {",
+            "  <C extends Collection<Integer>> void f(C cx) {",
+            "    cx.toArray(new Integer[0]);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
