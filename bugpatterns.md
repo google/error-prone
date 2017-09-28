@@ -535,6 +535,9 @@ Creation of a Set/HashSet/HashMap of java.net.URL. equals() and hashCode() of ja
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
 
+__[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
+Java assert is used in test. For testing purposes Assert.* matchers should be used.
+
 __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
 
@@ -685,9 +688,6 @@ Using @Test(expected=...) is discouraged, since the test will pass if *any* stat
 
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
-
-__[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
-Java assert is used in test. For testing purposes Assert.* matchers should be used.
 
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation

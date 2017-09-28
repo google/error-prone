@@ -237,6 +237,11 @@ public class ConstructorLeaksThisNegativeCases {
       }.start();
     }
   }
+
+  static class Inner {
+    @SuppressWarnings("ConstructorLeaksThis")
+    final FixtureController that = new FixtureController(this);
+  }
 }
 {% endhighlight %}
 
