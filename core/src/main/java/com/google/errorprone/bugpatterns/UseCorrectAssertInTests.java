@@ -162,7 +162,7 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
   private static void suggestFixForSameReference(
       SuggestedFix.Builder fix, AssertTree foundAssert, VisitorState state, boolean isEqual) {
 
-    BinaryTree equalityTree = (BinaryTree) (foundAssert.getCondition());
+    BinaryTree equalityTree = (BinaryTree) TreeInfo.skipParens((JCTree) foundAssert.getCondition());
     ExpressionTree expr1 = equalityTree.getLeftOperand();
     ExpressionTree expr2 = equalityTree.getRightOperand();
 

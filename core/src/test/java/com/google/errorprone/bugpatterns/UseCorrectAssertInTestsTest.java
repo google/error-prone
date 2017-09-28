@@ -205,6 +205,17 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
+  public void wrongAssertReferenceWithParensCase() throws Exception {
+    helper
+        .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert (a == 1);"))
+        .addOutputLines(
+            OUTPUT,
+            inputWithExpressionsAndImport(
+                "Integer a = 1;", "assertThat(a).isSameAs(1);", ASSERT_THAT_IMPORT))
+        .doTest();
+  }
+
+  @Test
   public void wrongAssertReferenceNotSameCase() throws Exception {
     helper
         .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert a != 1;"))
