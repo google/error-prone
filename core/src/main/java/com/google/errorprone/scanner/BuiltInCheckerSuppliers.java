@@ -214,6 +214,7 @@ import com.google.errorprone.bugpatterns.android.HardCodedSdCardPath;
 import com.google.errorprone.bugpatterns.android.IsLoggableTagLength;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
+import com.google.errorprone.bugpatterns.android.RestrictToEnforcer;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.android.WakelockReleasedDangerously;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
@@ -396,6 +397,7 @@ public class BuiltInCheckerSuppliers {
           RandomModInteger.class,
           RectIntersectReturnValueIgnored.class,
           RestrictedApiChecker.class,
+          RestrictToEnforcer.class,
           ReturnValueIgnored.class,
           SelfAssignment.class,
           SelfComparison.class,
