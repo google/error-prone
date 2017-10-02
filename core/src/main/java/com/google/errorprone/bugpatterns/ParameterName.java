@@ -86,8 +86,8 @@ public class ParameterName extends BugChecker
     int start = ((JCTree) tree).getStartPosition();
     int end = state.getEndPosition(getLast(arguments));
     String source = state.getSourceCode().subSequence(start, end).toString();
-    if (!NamedParameterComment.PARAMETER_COMMENT_PATTERN.matcher(source).find()) {
-      // fast path if the arguments don't contain anything that looks like a parameter comment
+    if (!source.contains("/*")) {
+      // fast path if the arguments don't contain anything that looks like a comment
       return;
     }
     Deque<ErrorProneToken> tokens =
