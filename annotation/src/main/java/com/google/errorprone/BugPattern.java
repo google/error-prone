@@ -128,9 +128,18 @@ public @interface BugPattern {
 
   /** Types of fixes BugCheckers can provide. */
   public enum ProvidesFix {
-    NO_FIX,
-    REQUIRES_HUMAN_ATTENTION
-    // TODO(epmjohnston): Introduce new values for other kinds of fixes e.g. "no behavioral changes"
+    NO_FIX("No"),
+    REQUIRES_HUMAN_ATTENTION("Yes, requires human attention");
+
+    private final String displayInfo;
+
+    ProvidesFix(String displayInfo) {
+      this.displayInfo = displayInfo;
+    }
+
+    public String displayInfo() {
+      return this.displayInfo;
+    }
   }
 
   /**

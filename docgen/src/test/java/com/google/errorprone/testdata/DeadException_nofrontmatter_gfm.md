@@ -6,6 +6,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 <div style="float:right;"><table id="metadata">
 <tr><td>Severity</td><td>ERROR</td></tr>
 <tr><td>Tags</td><td>LikelyError</td></tr>
+<tr><td>Provides Fix?</td><td>No</td></tr>
 </table></div>
 
 # DeadException

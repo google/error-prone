@@ -20,6 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.io.CharStreams;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.gson.Gson;
@@ -70,6 +71,7 @@ public class BugPatternFileGeneratorTest {
     instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
     instance.customSuppressionAnnotations =
         new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};
+    instance.providesFix = ProvidesFix.NO_FIX;
     return instance;
   }
 
@@ -156,6 +158,7 @@ public class BugPatternFileGeneratorTest {
     instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
     instance.customSuppressionAnnotations =
         new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};
+    instance.providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 
     // Write markdown file
     BugPatternFileGenerator generator =
