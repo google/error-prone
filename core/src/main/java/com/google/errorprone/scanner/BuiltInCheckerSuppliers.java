@@ -37,6 +37,7 @@ import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
+import com.google.errorprone.bugpatterns.CanonicalDuration;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
@@ -427,6 +428,7 @@ public class BuiltInCheckerSuppliers {
           BadComparable.class,
           BoxedPrimitiveConstructor.class,
           CannotMockFinalClass.class,
+          CanonicalDuration.class,
           ClassCanBeStatic.class,
           ClassNewInstance.class,
           CollectionToArraySafeParameter.class,
