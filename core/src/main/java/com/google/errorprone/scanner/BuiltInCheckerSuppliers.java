@@ -107,7 +107,6 @@ import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
 import com.google.errorprone.bugpatterns.JavaLangClash;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
-import com.google.errorprone.bugpatterns.LiteralClassName;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
@@ -526,7 +525,6 @@ public class BuiltInCheckerSuppliers {
           IterablePathParameter.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JavaxInjectOnFinalField.class,
-          LiteralClassName.class,
           LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
           MethodCanBeStatic.class,
