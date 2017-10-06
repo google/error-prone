@@ -24,9 +24,8 @@ import static org.junit.Assert.expectThrows;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.truth.FailureStrategy;
+import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
-import com.google.common.truth.SubjectFactory;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneJavaCompilerTest;
@@ -456,8 +455,8 @@ public class ScannerSupplierTest {
 
   private static class ScannerSupplierSubject
       extends Subject<ScannerSupplierSubject, ScannerSupplier> {
-    ScannerSupplierSubject(FailureStrategy failureStrategy, ScannerSupplier scannerSupplier) {
-      super(failureStrategy, scannerSupplier);
+    ScannerSupplierSubject(FailureMetadata failureMetadata, ScannerSupplier scannerSupplier) {
+      super(failureMetadata, scannerSupplier);
     }
 
     final void hasSeverities(Map<String, SeverityLevel> severities) {
@@ -476,12 +475,6 @@ public class ScannerSupplierTest {
     return assertAbout(SCANNER_SUBJECT_FACTORY).that(scannerSupplier);
   }
 
-  private static final SubjectFactory<ScannerSupplierSubject, ScannerSupplier>
-      SCANNER_SUBJECT_FACTORY =
-          new SubjectFactory<ScannerSupplierSubject, ScannerSupplier>() {
-            @Override
-            public ScannerSupplierSubject getSubject(FailureStrategy fs, ScannerSupplier t) {
-              return new ScannerSupplierSubject(fs, t);
-            }
-          };
+  private static final Subject.Factory<ScannerSupplierSubject, ScannerSupplier>
+      SCANNER_SUBJECT_FACTORY = ScannerSupplierSubject::new;
 }
