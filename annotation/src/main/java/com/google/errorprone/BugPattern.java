@@ -86,6 +86,9 @@ public @interface BugPattern {
      * faster alternative.
      */
     public static final String SIMPLIFICATION = "Simplification";
+
+    /** This check performs a refactoring, for example migrating to a new version of an API. */
+    public static final String REFACTORING = "Refactoring";
   }
 
   /**
