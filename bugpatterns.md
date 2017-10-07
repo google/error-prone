@@ -266,6 +266,9 @@ Use Random.nextInt(int).  Random.nextInt() % n can have negative results
 __[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
 Return value of android.graphics.Rect.intersect() must be checked
 
+__[RestrictTo](bugpattern/RestrictTo)__<br>
+Use of method or class annotated with @RestrictTo
+
 __[RestrictedApiChecker](bugpattern/RestrictedApiChecker)__<br>
  Check for non-whitelisted callers to RestrictedApiChecker.
 
