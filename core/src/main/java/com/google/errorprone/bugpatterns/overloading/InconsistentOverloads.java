@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.overloading;
 
 import static com.google.common.collect.ImmutableList.sortedCopyOf;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.groupingBy;
 
@@ -31,9 +32,11 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.Collection;
 import java.util.Comparator;
@@ -92,9 +95,12 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
   private void processGroupMethods(List<MethodTree> groupMethodTrees, VisitorState state) {
     Preconditions.checkArgument(!groupMethodTrees.isEmpty());
     for (ParameterOrderingViolation violation : getViolations(groupMethodTrees)) {
-      Description.Builder description = buildDescription(violation.methodTree());
-      description.setMessage(violation.getDescription());
-      state.reportMatch(description.build());
+      MethodSymbol methodSymbol = getSymbol(violation.methodTree());
+      if (ASTHelpers.findSuperMethods(methodSymbol, state.getTypes()).isEmpty()) {
+        Description.Builder description = buildDescription(violation.methodTree());
+        description.setMessage(violation.getDescription());
+        state.reportMatch(description.build());
+      }
     }
   }
 

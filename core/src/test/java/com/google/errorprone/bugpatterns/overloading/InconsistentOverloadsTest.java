@@ -73,4 +73,9 @@ public final class InconsistentOverloadsTest {
   public void inconsistentOverloadsPositiveCasesVarargs() {
     compilationHelper.addSourceFile("InconsistentOverloadsPositiveCasesVarargs.java").doTest();
   }
+
+  @Test
+  public void inconsistentOverloadsOverrides() {
+    compilationHelper.addSourceFile("InconsistentOverloadsPositiveCasesOverrides.java").doTest();
+  }
 }
