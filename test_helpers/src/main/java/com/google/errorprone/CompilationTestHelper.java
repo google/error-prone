@@ -21,6 +21,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -282,7 +283,11 @@ public class CompilationTestHelper {
     if (expectedResult.isPresent()) {
       assertWithMessage(
               String.format(
-                  "Expected compilation result %s, but was %s", expectedResult.get(), result))
+                  "Expected compilation result %s, but was %s\n%s\n%s",
+                  expectedResult.get(),
+                  result,
+                  Joiner.on('\n').join(diagnosticHelper.getDiagnostics()),
+                  outputStream.toString()))
           .that(result)
           .isEqualTo(expectedResult.get());
     }
