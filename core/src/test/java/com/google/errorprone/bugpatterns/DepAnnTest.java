@@ -28,6 +28,8 @@ public class DepAnnTest {
 
   private CompilationTestHelper compilationHelper;
 
+  public static final ImmutableList<String> JAVACOPTS = ImmutableList.of("-Xlint:-dep-ann");
+
   @Before
   public void setUp() {
     compilationHelper = CompilationTestHelper.newInstance(DepAnn.class, getClass());
@@ -35,23 +37,23 @@ public class DepAnnTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("DepAnnPositiveCases.java").doTest();
+    compilationHelper.setArgs(JAVACOPTS).addSourceFile("DepAnnPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
-    compilationHelper.addSourceFile("DepAnnNegativeCase1.java").doTest();
+    compilationHelper.setArgs(JAVACOPTS).addSourceFile("DepAnnNegativeCase1.java").doTest();
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
-    compilationHelper.addSourceFile("DepAnnNegativeCase2.java").doTest();
+    compilationHelper.setArgs(JAVACOPTS).addSourceFile("DepAnnNegativeCase2.java").doTest();
   }
 
   @Test
   public void testDisableable() throws Exception {
     compilationHelper
-        .setArgs(ImmutableList.of("-Xep:DepAnn:OFF"))
+        .setArgs(ImmutableList.of("-Xlint:-dep-ann", "-Xep:DepAnn:OFF"))
         .expectNoDiagnostics()
         .addSourceFile("DepAnnPositiveCases.java")
         .doTest();
