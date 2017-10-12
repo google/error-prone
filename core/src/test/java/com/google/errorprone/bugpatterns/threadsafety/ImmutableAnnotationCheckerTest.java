@@ -41,6 +41,12 @@ public class ImmutableAnnotationCheckerTest {
             "  private Test(int x) {",
             "    this.x = x;",
             "  }",
+            "  public boolean forRemoval() {",
+            "    return false;",
+            "  }",
+            "  public String since() {",
+            "    return \"\";",
+            "  }",
             "}")
         .doTest();
   }
@@ -57,6 +63,12 @@ public class ImmutableAnnotationCheckerTest {
             "  final Annotation annotation;",
             "  private Test(Annotation annotation) {",
             "    this.annotation = annotation;",
+            "  }",
+            "  public boolean forRemoval() {",
+            "    return false;",
+            "  }",
+            "  public String since() {",
+            "    return \"\";",
             "  }",
             "}")
         .doTest();
@@ -78,6 +90,12 @@ public class ImmutableAnnotationCheckerTest {
             "  private Test(Integer... xs) {",
             "    this.xs = new HashSet<>(Arrays.asList(xs));",
             "  }",
+            "  public boolean forRemoval() {",
+            "    return false;",
+            "  }",
+            "  public String since() {",
+            "    return \"\";",
+            "  }",
             "}")
         .doTest();
   }
@@ -93,6 +111,12 @@ public class ImmutableAnnotationCheckerTest {
             "@Immutable",
             "class Test implements Deprecated {",
             "  public Class<? extends Annotation> annotationType() { return Deprecated.class; }",
+            "  public boolean forRemoval() {",
+            "    return false;",
+            "  }",
+            "  public String since() {",
+            "    return \"\";",
+            "  }",
             "}")
         .doTest();
   }
@@ -115,6 +139,12 @@ public class ImmutableAnnotationCheckerTest {
             "  private Test(Foo f) {",
             "    this.f = f;",
             "  }",
+            "  public boolean forRemoval() {",
+            "    return false;",
+            "  }",
+            "  public String since() {",
+            "    return \"\";",
+            "  }",
             "}")
         .doTest();
   }
@@ -129,6 +159,12 @@ public class ImmutableAnnotationCheckerTest {
             "class Test {{",
             "  new Deprecated() {",
             "    public Class<? extends Annotation> annotationType() { return Deprecated.class; }",
+            "    public boolean forRemoval() {",
+            "      return false;",
+            "    }",
+            "    public String since() {",
+            "      return \"\";",
+            "    }",
             "  };",
             "}}")
         .doTest();
@@ -149,6 +185,12 @@ public class ImmutableAnnotationCheckerTest {
             "      Objects.requireNonNull(Test.this);",
             "    }",
             "    public Class<? extends Annotation> annotationType() { return Deprecated.class; }",
+            "    public boolean forRemoval() {",
+            "      return false;",
+            "    }",
+            "    public String since() {",
+            "      return \"\";",
+            "    }",
             "  };",
             "}}")
         .doTest();
@@ -171,6 +213,12 @@ public class ImmutableAnnotationCheckerTest {
             "      }",
             "      public Class<? extends Annotation> annotationType() {",
             "        return Deprecated.class;",
+            "      }",
+            "      public boolean forRemoval() {",
+            "        return false;",
+            "      }",
+            "      public String since() {",
+            "        return \"\";",
             "      }",
             "    };",
             "  }",
@@ -195,6 +243,12 @@ public class ImmutableAnnotationCheckerTest {
             "      }",
             "      public Class<? extends Annotation> annotationType() {",
             "        return Deprecated.class;",
+            "      }",
+            "      public boolean forRemoval() {",
+            "        return false;",
+            "      }",
+            "      public String since() {",
+            "        return \"\";",
             "      }",
             "    };",
             "  }",
