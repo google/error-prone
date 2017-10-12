@@ -17,12 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Streams.forEachPair;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.BLOCK;
 
 import com.google.common.collect.Range;
-import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -46,10 +46,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.regex.Matcher;
-import java.util.stream.Stream;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -150,15 +147,5 @@ public class ParameterName extends BugChecker
                       String.format("/* %s= */", formal.getSimpleName())))
               .build());
     }
-  }
-
-  // TODO(cushon): use Streams.forEach when guava 22 is available
-  static <A, B> void forEachPair(Stream<A> xs, Stream<B> bx, BiConsumer<A, B> c) {
-    BiFunction<A, B, Void> f =
-        (a, b) -> {
-          c.accept(a, b);
-          return null;
-        };
-    long unused = Streams.zip(xs, bx, f).count();
   }
 }

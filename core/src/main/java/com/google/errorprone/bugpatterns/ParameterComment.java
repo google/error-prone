@@ -17,11 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Streams.forEachPair;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
-import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -37,8 +37,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.parser.Tokens.Comment;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -86,15 +84,5 @@ public class ParameterComment extends BugChecker implements MethodInvocationTree
       SuggestedFix.Builder fix, Commented<ExpressionTree> commented, VarSymbol param, Comment c) {
     fix.prefixWith(commented.tree(), String.format("/* %s= */ ", param.getSimpleName()))
         .replace(c.getSourcePos(0), c.getSourcePos(0) + c.getText().length(), "");
-  }
-
-  // TODO(cushon): use Streams.forEach when guava 22 is available
-  static <A, B> void forEachPair(Stream<A> xs, Stream<B> bx, BiConsumer<A, B> c) {
-    BiFunction<A, B, Void> f =
-        (a, b) -> {
-          c.accept(a, b);
-          return null;
-        };
-    long unused = Streams.zip(xs, bx, f).count();
   }
 }
