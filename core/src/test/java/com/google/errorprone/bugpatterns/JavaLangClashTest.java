@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,10 @@ public class JavaLangClashTest {
 
   private final CompilationTestHelper testHelper =
       CompilationTestHelper.newInstance(JavaLangClash.class, getClass());
+
+  // TODO(b/67718586): javac 9 doesn't want to compile sources in java.lang
+  private static final ImmutableList<String> JAVA8_JAVACOPTS =
+      ImmutableList.of("-source", "8", "-target", "8");
 
   @Test
   public void positive() {
@@ -47,6 +52,7 @@ public class JavaLangClashTest {
             "package java.lang;",
             "// BUG: Diagnostic contains:",
             "public class Foo<String> {}")
+        .setArgs(JAVA8_JAVACOPTS)
         .doTest();
   }
 
@@ -57,6 +63,7 @@ public class JavaLangClashTest {
             "java/lang/String.java", //
             "package java.lang;",
             "public class String {}")
+        .setArgs(JAVA8_JAVACOPTS)
         .doTest();
   }
 
