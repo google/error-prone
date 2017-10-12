@@ -18,15 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.exceptions.base.MockitoException;
 
 /**
  * Tests for {@code CannotMockFinalClass}.
@@ -35,31 +29,11 @@ import org.mockito.exceptions.base.MockitoException;
  */
 @RunWith(JUnit4.class)
 public class CannotMockFinalClassTest {
-  @Rule public final ExpectedException exception = ExpectedException.none();
-
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
     compilationHelper = CompilationTestHelper.newInstance(CannotMockFinalClass.class, getClass());
-  }
-
-  static final class FinalClass {}
-
-  static class MocksFinalClassWithAnnotation {
-    @Mock FinalClass impossible;
-  }
-
-  @Test
-  public void mockingFinalClassWithAnnotationFails() {
-    exception.expect(MockitoException.class);
-    MockitoAnnotations.initMocks(new MocksFinalClassWithAnnotation());
-  }
-
-  @Test
-  public void mockingFinalClassWithMockMethodFails() {
-    exception.expect(MockitoException.class);
-    Mockito.mock(FinalClass.class);
   }
 
   @Test
