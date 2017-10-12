@@ -19,11 +19,9 @@ package com.google.errorprone.apply;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.expectThrows;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
+import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -133,14 +131,26 @@ public class ImportStatementsTest {
 
       // Calculate the end position of the input line.
       int endPos = startPos + stringRepresentation.length();
+      int curStartPos = startPos;
 
-      JCImport result = mock(JCImport.class);
-      when(result.isStatic()).thenReturn(isStatic);
-      when(result.getStartPosition()).thenReturn(startPos);
-      // Ignore the ; and \n as they are not part of the import.
-      when(result.getEndPosition(any(EndPosTable.class))).thenReturn(endPos - 2);
+      // TODO(b/67738557): consolidate helpers for creating fake trees
+      JCImport result =
+          new JCImport(/* qualid= */ null, /* static= */ isStatic) {
+            @Override
+            public int getStartPosition() {
+              return curStartPos;
+            }
 
-      when(result.toString()).thenReturn(stringRepresentation);
+            @Override
+            public int getEndPosition(EndPosTable endPosTable) {
+              return endPos - 2;
+            }
+
+            @Override
+            public String toString() {
+              return stringRepresentation;
+            }
+          };
 
       imports.add(result);
 
@@ -162,9 +172,38 @@ public class ImportStatementsTest {
    * @return a new package JCExpression stub
    */
   private static JCExpression stubPackage(int endPos) {
-    JCExpression result = mock(JCExpression.class);
-    when(result.getEndPosition(any(EndPosTable.class))).thenReturn(endPos);
-    return result;
+    // TODO(b/67738557): consolidate helpers for creating fake trees
+    return new JCExpression() {
+      @Override
+      public Tag getTag() {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public void accept(Visitor visitor) {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public Kind getKind() {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public <R, D> R accept(TreeVisitor<R, D> treeVisitor, D d) {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public int getStartPosition() {
+        return endPos;
+      }
+
+      @Override
+      public int getEndPosition(EndPosTable endPosTable) {
+        return endPos;
+      }
+    };
   }
 
   private static ImportStatements createImportStatements(

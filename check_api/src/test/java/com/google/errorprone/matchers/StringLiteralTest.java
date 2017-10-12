@@ -18,11 +18,11 @@ package com.google.errorprone.matchers;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.TreeVisitor;
+import javax.lang.model.element.Name;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,22 +32,88 @@ import org.junit.runners.JUnit4;
 public class StringLiteralTest {
   @Test
   public void matches() {
-    LiteralTree tree = mock(LiteralTree.class);
-    when(tree.getValue()).thenReturn("a string literal");
+    // TODO(b/67738557): consolidate helpers for creating fake trees
+    LiteralTree tree =
+        new LiteralTree() {
+
+          @Override
+          public Kind getKind() {
+            throw new UnsupportedOperationException();
+          }
+
+          @Override
+          public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
+            throw new UnsupportedOperationException();
+          }
+
+          @Override
+          public Object getValue() {
+            return "a string literal";
+          }
+        };
     assertTrue(new StringLiteral("a string literal").matches(tree, null));
   }
 
   @Test
   public void notMatches() {
-    LiteralTree tree = mock(LiteralTree.class);
-    when(tree.getValue()).thenReturn("a string literal");
+    // TODO(b/67738557): consolidate helpers for creating fake trees
+    LiteralTree tree =
+        new LiteralTree() {
+
+          @Override
+          public Kind getKind() {
+            throw new UnsupportedOperationException();
+          }
+
+          @Override
+          public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
+            throw new UnsupportedOperationException();
+          }
+
+          @Override
+          public Object getValue() {
+            return "a string literal";
+          }
+        };
     assertFalse(new StringLiteral("different string").matches(tree, null));
 
-    IdentifierTree idTree = mock(IdentifierTree.class);
+    IdentifierTree idTree =
+        new IdentifierTree() {
+          @Override
+          public Name getName() {
+            return null;
+          }
+
+          @Override
+          public Kind getKind() {
+            throw new UnsupportedOperationException();
+          }
+
+          @Override
+          public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
+            throw new UnsupportedOperationException();
+          }
+        };
     assertFalse(new StringLiteral("test").matches(idTree, null));
 
-    LiteralTree intTree = mock(LiteralTree.class);
-    when(intTree.getValue()).thenReturn(5);
+    // TODO(b/67738557): consolidate helpers for creating fake trees
+    LiteralTree intTree =
+        new LiteralTree() {
+          @Override
+          public Object getValue() {
+            return 5;
+          }
+
+          @Override
+          public Kind getKind() {
+            throw new UnsupportedOperationException();
+          }
+
+          @Override
+          public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
+            throw new UnsupportedOperationException();
+          }
+        };
     assertFalse(new StringLiteral("test").matches(intTree, null));
   }
 }

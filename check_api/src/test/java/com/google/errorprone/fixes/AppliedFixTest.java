@@ -16,12 +16,12 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.when;
 
+import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Position;
@@ -29,13 +29,12 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.runners.JUnit4;
 
 /** @author alexeagle@google.com (Alex Eagle) */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnit4.class)
 public class AppliedFixTest {
-  @Mock JCTree node;
+
   final EndPosTable endPositions =
       new EndPosTable() {
 
@@ -66,10 +65,44 @@ public class AppliedFixTest {
         }
       };
 
+  // TODO(b/67738557): consolidate helpers for creating fake trees
+  JCTree node(int startPos, int endPos) {
+    return new JCTree() {
+      @Override
+      public Tag getTag() {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public void accept(Visitor v) {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public <R, D> R accept(TreeVisitor<R, D> v, D d) {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public Kind getKind() {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public int getStartPosition() {
+        return startPos;
+      }
+
+      @Override
+      public int getEndPosition(EndPosTable endPosTable) {
+        return endPos;
+      }
+    };
+  }
+
   @Test
   public void shouldApplySingleFixOnALine() {
-    when(node.getStartPosition()).thenReturn(11);
-    when(node.getEndPosition(same(endPositions))).thenReturn(14);
+    JCTree node = node(11, 14);
 
     AppliedFix fix =
         AppliedFix.fromSource("import org.me.B;", endPositions).apply(SuggestedFix.delete(node));
@@ -78,14 +111,13 @@ public class AppliedFixTest {
 
   @Test
   public void shouldReportOnlyTheChangedLineInNewSnippet() {
-    when(node.getStartPosition()).thenReturn(25);
-    when(node.getEndPosition(same(endPositions))).thenReturn(26);
+    JCTree node = node(25, 26);
 
     AppliedFix fix =
         AppliedFix.fromSource("public class Foo {\n" + "  int 3;\n" + "}", endPositions)
             .apply(
                 SuggestedFix.builder().prefixWith(node, "three").postfixWith(node, "tres").build());
-    assertThat(fix.getNewCodeSnippet().toString(), equalTo("int three3tres;"));
+    assertThat(fix.getNewCodeSnippet().toString()).isEqualTo("int three3tres;");
   }
 
   @Test
@@ -112,8 +144,7 @@ public class AppliedFixTest {
 
   @Test
   public void shouldSuggestToRemoveLastLineIfAsked() {
-    when(node.getStartPosition()).thenReturn(21);
-    when(node.getEndPosition(same(endPositions))).thenReturn(42);
+    JCTree node = node(21, 42);
 
     AppliedFix fix =
         AppliedFix.fromSource("package com.example;\n" + "import java.util.Map;\n", endPositions)
