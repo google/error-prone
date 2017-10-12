@@ -48,6 +48,13 @@
             <artifactId>javac</artifactId>
             <version>${javac.version}</version>
         </dependency>
+        <dependency>
+            <!-- Apache 2.0 -->
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service</artifactId>
+            <version>1.0-rc2</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

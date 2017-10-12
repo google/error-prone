@@ -16,87 +16,40 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.collect.Iterables;
-import com.google.errorprone.InvalidCommandLineOptionException;
-import com.google.errorprone.MaskedClassLoader;
-import com.sun.tools.javac.api.MultiTaskListener;
-import com.sun.tools.javac.main.Main;
-import com.sun.tools.javac.main.Main.Result;
-import com.sun.tools.javac.util.Context;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
+import com.google.auto.service.AutoService;
+import com.sun.source.util.JavacTask;
+import com.sun.source.util.Plugin;
+import com.sun.tools.javac.api.BasicJavacTask;
 import java.nio.file.FileSystems;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
-import javax.tools.DiagnosticCollector;
-import javax.tools.DiagnosticListener;
-import javax.tools.JavaFileObject;
 
 /**
- * A compiler for Refaster rules that outputs a {@code .analyzer} file containing a compiled
- * Refaster rule.
+ * A javac plugin that compiles Refaster rules to a {@code .analyzer} file.
  *
  * @author lowasser@google.com
  */
-public class RefasterRuleCompiler {
-
-  /**
-   * Entry point for compiling a Refaster rule to an analyzer.
-   *
-   * @param args the same args which could be passed to javac on the command line
-   */
-  public static void main(String[] args) {
-    new RefasterRuleCompiler().run(args, new Context());
+@AutoService(Plugin.class)
+public class RefasterRuleCompiler implements Plugin {
+  @Override
+  public String getName() {
+    return "RefasterRuleCompiler";
   }
 
-  private Result run(String[] argv, Context context) {
-    try {
-      argv = prepareCompilation(argv, context);
-    } catch (InvalidCommandLineOptionException e) {
-      System.err.println(e.getMessage());
-      System.err.flush();
-      return Result.CMDERR;
-    }
-
-    try {
-      Result compileResult =
-          new Main(
-                  "RefasterRuleCompiler",
-                  new PrintWriter(new OutputStreamWriter(System.err, StandardCharsets.UTF_8)))
-              .compile(argv, context);
-      System.err.flush();
-      return compileResult;
-    } catch (InvalidCommandLineOptionException e) {
-      System.err.println(e.getMessage());
-      System.err.flush();
-      return Result.CMDERR;
-    }
-  }
-
-  private String[] prepareCompilation(String[] argv, Context context)
-      throws InvalidCommandLineOptionException {
-    context.put(DiagnosticListener.class, new DiagnosticCollector<JavaFileObject>());
-    List<String> newArgs = new ArrayList<>(Arrays.asList(argv));
-    Iterator<String> itr = newArgs.iterator();
+  @Override
+  public void init(JavacTask javacTask, String... args) {
+    Iterator<String> itr = Arrays.asList(args).iterator();
     String path = null;
     while (itr.hasNext()) {
       if (itr.next().equals("--out")) {
-        itr.remove();
         path = itr.next();
-        itr.remove();
         break;
       }
     }
     checkArgument(path != null, "No --out specified");
 
-    MaskedClassLoader.preRegisterFileManager(context);
-
-    MultiTaskListener.instance(context)
-        .add(new RefasterRuleCompilerAnalyzer(context, FileSystems.getDefault().getPath(path)));
-
-    return Iterables.toArray(newArgs, String.class);
+    javacTask.addTaskListener(
+        new RefasterRuleCompilerAnalyzer(
+            ((BasicJavacTask) javacTask).getContext(), FileSystems.getDefault().getPath(path)));
   }
 }
