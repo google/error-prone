@@ -16,9 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.StandardSystemProperty.JAVA_VERSION;
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,14 +36,6 @@ public class ArrayHashCodeTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.addSourceFile("ArrayHashCodePositiveCases.java").doTest();
-  }
-
-  /** Tests java.util.Objects hashCode methods, which are only in JDK 7 and above. */
-  @Test
-  public void testJava7PositiveCase() throws Exception {
-    String[] javaVersion = JAVA_VERSION.value().split("\\.");
-    assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
-    compilationHelper.addSourceFile("ArrayHashCodePositiveCases2.java").doTest();
   }
 
   @Test

@@ -16,9 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.StandardSystemProperty.JAVA_VERSION;
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,8 +40,6 @@ public class ArrayEqualsTest {
 
   @Test
   public void testJava7PositiveCase() throws Exception {
-    String[] javaVersion = JAVA_VERSION.value().split("\\.");
-    assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
     compilationHelper.addSourceFile("ArrayEqualsPositiveCases2.java").doTest();
   }
 
@@ -55,8 +50,6 @@ public class ArrayEqualsTest {
 
   @Test
   public void testJava7NegativeCase() throws Exception {
-    String[] javaVersion = JAVA_VERSION.value().split("\\.");
-    assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
     compilationHelper.addSourceFile("ArrayEqualsNegativeCases2.java").doTest();
   }
 }

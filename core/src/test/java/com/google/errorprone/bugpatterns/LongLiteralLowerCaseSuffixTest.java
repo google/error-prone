@@ -16,9 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.StandardSystemProperty.JAVA_VERSION;
-import static org.junit.Assume.assumeTrue;
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
@@ -50,8 +47,6 @@ public class LongLiteralLowerCaseSuffixTest {
   /** Test for Java 7 integer literals that include underscores. */
   @Test
   public void testJava7PositiveCase() throws Exception {
-    String[] javaVersion = JAVA_VERSION.value().split("\\.");
-    assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
     compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixPositiveCase2.java").doTest();
   }
 
