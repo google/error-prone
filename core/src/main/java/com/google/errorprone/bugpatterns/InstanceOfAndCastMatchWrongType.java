@@ -36,7 +36,6 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LiteralTree;
-import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
@@ -99,11 +98,10 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
 
         IfTree ifTree = (IfTree) pathToTop.getLeaf();
 
-        ParenthesizedTree parenTree = (ParenthesizedTree) ifTree.getCondition();
+        ExpressionTree expressionTree = ASTHelpers.stripParentheses(ifTree.getCondition());
         TreeScannerInstanceOfWrongType treeScannerInstanceOfWrongType =
             new TreeScannerInstanceOfWrongType(state);
-        treeScannerInstanceOfWrongType.scan(
-            parenTree.getExpression(), ((TypeCastTree) tree).getExpression());
+        treeScannerInstanceOfWrongType.scan(expressionTree, ((TypeCastTree) tree).getExpression());
 
         Tree treeInstance = treeScannerInstanceOfWrongType.getRelevantTree();
 

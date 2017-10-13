@@ -21,10 +21,10 @@ import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableBiMap;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.UnaryTree;
 import com.sun.tools.javac.tree.JCTree;
@@ -69,7 +69,8 @@ abstract class UUnary extends UExpression implements UnaryTree {
   @Nullable
   public Choice<Unifier> visitUnary(UnaryTree unary, @Nullable Unifier unifier) {
     return Choice.condition(getKind().equals(unary.getKind()), unifier)
-        .thenChoose(unifications(getExpression(), UParens.skipParens(unary.getExpression())));
+        .thenChoose(
+            unifications(getExpression(), ASTHelpers.stripParentheses(unary.getExpression())));
   }
 
   @Override

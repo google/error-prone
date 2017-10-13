@@ -16,11 +16,12 @@
 
 package com.google.errorprone.refaster;
 
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+
 import com.google.auto.value.AutoValue;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
-import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCParens;
 
 /**
@@ -37,26 +38,9 @@ abstract class UParens extends UExpression implements ParenthesizedTree {
   @Override
   public abstract UExpression getExpression();
 
-  private static final TreeVisitor<Tree, Void> SKIP_PARENS =
-      new SimpleTreeVisitor<Tree, Void>() {
-        @Override
-        protected Tree defaultAction(Tree node, Void v) {
-          return node;
-        }
-
-        @Override
-        public Tree visitParenthesized(ParenthesizedTree node, Void v) {
-          return node.getExpression().accept(this, null);
-        }
-      };
-
-  static Tree skipParens(Tree tree) {
-    return tree.accept(SKIP_PARENS, null);
-  }
-
   @Override
   protected Choice<Unifier> defaultAction(Tree tree, Unifier unifier) {
-    return getExpression().unify(skipParens(tree), unifier);
+    return getExpression().unify(stripParentheses(tree), unifier);
   }
 
   @Override

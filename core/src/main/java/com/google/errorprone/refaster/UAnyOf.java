@@ -18,6 +18,7 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -52,7 +53,8 @@ public abstract class UAnyOf extends UExpression {
   protected Choice<Unifier> defaultAction(final Tree tree, final Unifier unifier) {
     return Choice.from(expressions())
         .thenChoose(
-            (UExpression expression) -> expression.unify(UParens.skipParens(tree), unifier.fork()));
+            (UExpression expression) ->
+                expression.unify(ASTHelpers.stripParentheses(tree), unifier.fork()));
   }
 
   @Override

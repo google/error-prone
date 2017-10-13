@@ -45,8 +45,6 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.TreeInfo;
 
 /** @author irogers@google.com (Ian Rogers) */
 @BugPattern(
@@ -111,7 +109,7 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
     }
 
     // The expression should be a subtract but remove parentheses.
-    ExpressionTree expression = TreeInfo.skipParens((JCExpression) tree.getExpression());
+    ExpressionTree expression = ASTHelpers.stripParentheses(tree.getExpression());
     if (expression.getKind() != Kind.MINUS) {
       return false;
     }
@@ -146,7 +144,7 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
     }
 
     // Get the unparenthesized expression.
-    BinaryTree subtract = (BinaryTree) TreeInfo.skipParens((JCExpression) tree.getExpression());
+    BinaryTree subtract = (BinaryTree) ASTHelpers.stripParentheses(tree.getExpression());
     ExpressionTree lhs = subtract.getLeftOperand();
     ExpressionTree rhs = subtract.getRightOperand();
     Fix fix;

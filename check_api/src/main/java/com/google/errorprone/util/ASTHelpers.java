@@ -74,7 +74,6 @@ import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
@@ -238,6 +237,14 @@ public class ASTHelpers {
   public static MethodSymbol getSymbol(MemberReferenceTree tree) {
     Symbol sym = ((JCMemberReference) tree).sym;
     return sym instanceof MethodSymbol ? (MethodSymbol) sym : null;
+  }
+
+  /** Removes any enclosing parentheses from the tree. */
+  public static Tree stripParentheses(Tree tree) {
+    while (tree instanceof ParenthesizedTree) {
+      tree = ((ParenthesizedTree) tree).getExpression();
+    }
+    return tree;
   }
 
   /** Given an ExpressionTree, removes any enclosing parentheses. */
@@ -706,7 +713,7 @@ public class ASTHelpers {
     if (tree == null) {
       return null;
     }
-    tree = TreeInfo.skipParens((JCTree) tree);
+    tree = stripParentheses(tree);
     Type type = ASTHelpers.getType(tree);
     Object value;
     if (tree instanceof JCLiteral) {

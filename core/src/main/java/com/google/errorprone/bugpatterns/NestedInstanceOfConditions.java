@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.contains;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -30,7 +31,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
-import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Types;
 
@@ -50,10 +50,10 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
   @Override
   public Description matchIf(IfTree ifTree, VisitorState visitorState) {
 
-    ParenthesizedTree parenTree = (ParenthesizedTree) ifTree.getCondition();
+    ExpressionTree expressionTree = stripParentheses(ifTree.getCondition());
 
-    if (parenTree.getExpression() instanceof InstanceOfTree) {
-      InstanceOfTree instanceOfTree = (InstanceOfTree) parenTree.getExpression();
+    if (expressionTree instanceof InstanceOfTree) {
+      InstanceOfTree instanceOfTree = (InstanceOfTree) expressionTree;
 
       if (!(instanceOfTree.getExpression() instanceof IdentifierTree)) {
         return Description.NO_MATCH;
@@ -117,23 +117,20 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
     @Override
     public boolean matches(Tree tree, VisitorState state) {
       if (tree instanceof IfTree) {
-        ParenthesizedTree parenTree = (ParenthesizedTree) ((IfTree) tree).getCondition();
+        ExpressionTree conditionTree = ASTHelpers.stripParentheses(((IfTree) tree).getCondition());
 
-        if (parenTree.getExpression() instanceof InstanceOfTree) {
-          InstanceOfTree instanceTree = (InstanceOfTree) parenTree.getExpression();
+        if (conditionTree instanceof InstanceOfTree) {
+          InstanceOfTree instanceOfTree = (InstanceOfTree) conditionTree;
 
           Types types = state.getTypes();
 
           boolean isCastable =
               types.isCastable(
-                  types.erasure(ASTHelpers.getType(instanceTree.getType())),
+                  types.erasure(ASTHelpers.getType(instanceOfTree.getType())),
                   types.erasure(ASTHelpers.getType(typeTree)));
 
           boolean isSameExpression =
-              ((InstanceOfTree) parenTree.getExpression())
-                  .getExpression()
-                  .toString()
-                  .equals(expressionTree.toString());
+              instanceOfTree.getExpression().toString().equals(expressionTree.toString());
 
           return isSameExpression && !isCastable;
         }

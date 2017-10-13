@@ -16,11 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
-import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
@@ -36,8 +37,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeInfo;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -52,8 +51,7 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
     if (tree.getBody() == null || tree.getBody().getStatements().size() != 1) {
       return NO_MATCH;
     }
-    Tree statement =
-        TreeInfo.skipParens((JCTree) Iterables.getOnlyElement(tree.getBody().getStatements()));
+    Tree statement = stripParentheses(getOnlyElement(tree.getBody().getStatements()));
     ExpressionTree expr =
         statement.accept(
             new SimpleTreeVisitor<ExpressionTree, Void>() {

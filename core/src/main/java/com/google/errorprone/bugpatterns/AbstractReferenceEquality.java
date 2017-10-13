@@ -33,11 +33,8 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.TreeVisitor;
-import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import java.util.List;
 import java.util.Optional;
@@ -164,7 +161,7 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
 
     // If the other half of this or statement is foo.equals(bar) or Objects.equals(foo, bar)
     // replace the or statement with the other half as already written.
-    ExpressionTree otherExpression = skipParens(p.getRightOperand());
+    ExpressionTree otherExpression = ASTHelpers.stripParentheses(p.getRightOperand());
     if (!(otherExpression instanceof MethodInvocationTree)) {
       return Optional.empty();
     }
@@ -196,22 +193,5 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
       ExpressionTree lhs1, ExpressionTree rhs1, ExpressionTree lhs2, ExpressionTree rhs2) {
     return (ASTHelpers.sameVariable(lhs1, lhs2) && ASTHelpers.sameVariable(rhs1, rhs2))
         || (ASTHelpers.sameVariable(lhs1, rhs2) && ASTHelpers.sameVariable(rhs1, lhs2));
-  }
-
-  private static final TreeVisitor<ExpressionTree, Void> SKIP_PARENS =
-      new SimpleTreeVisitor<ExpressionTree, Void>() {
-        @Override
-        protected ExpressionTree defaultAction(Tree node, Void v) {
-          return node instanceof ExpressionTree ? (ExpressionTree) node : null;
-        }
-
-        @Override
-        public ExpressionTree visitParenthesized(ParenthesizedTree node, Void v) {
-          return node.getExpression().accept(this, null);
-        }
-      };
-
-  private static ExpressionTree skipParens(ExpressionTree tree) {
-    return tree.accept(SKIP_PARENS, null);
   }
 }

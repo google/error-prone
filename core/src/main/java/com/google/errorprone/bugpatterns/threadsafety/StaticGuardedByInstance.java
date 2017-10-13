@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.errorprone.BugPattern;
@@ -37,8 +39,6 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeInfo;
 import java.util.Map.Entry;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -56,7 +56,7 @@ public class StaticGuardedByInstance extends BugChecker implements SynchronizedT
 
   @Override
   public Description matchSynchronized(SynchronizedTree tree, VisitorState state) {
-    Symbol lock = ASTHelpers.getSymbol(TreeInfo.skipParens((JCTree) tree.getExpression()));
+    Symbol lock = ASTHelpers.getSymbol(stripParentheses(tree.getExpression()));
     if (!(lock instanceof VarSymbol)) {
       return Description.NO_MATCH;
     }

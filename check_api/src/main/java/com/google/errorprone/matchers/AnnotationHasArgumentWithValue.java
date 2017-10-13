@@ -17,10 +17,10 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
-import com.sun.source.tree.ParenthesizedTree;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -43,9 +43,7 @@ public class AnnotationHasArgumentWithValue implements Matcher<AnnotationTree> {
       return false;
     }
 
-    while (expressionTree instanceof ParenthesizedTree) {
-      expressionTree = ((ParenthesizedTree) expressionTree).getExpression();
-    }
+    expressionTree = ASTHelpers.stripParentheses(expressionTree);
 
     if (expressionTree instanceof NewArrayTree) {
       NewArrayTree arrayTree = (NewArrayTree) expressionTree;

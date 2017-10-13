@@ -43,7 +43,6 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -208,9 +207,7 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
           ConditionalExpressionTree condTree =
               (ConditionalExpressionTree) returnTree.getExpression();
           ExpressionTree conditionExpr = condTree.getCondition();
-          while (conditionExpr instanceof ParenthesizedTree) {
-            conditionExpr = ((ParenthesizedTree) conditionExpr).getExpression();
-          }
+          conditionExpr = ASTHelpers.stripParentheses(conditionExpr);
           if (!(conditionExpr instanceof BinaryTree)) {
             return describeMatch(tree);
           }

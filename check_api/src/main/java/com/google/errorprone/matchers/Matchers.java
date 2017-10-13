@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
@@ -63,7 +64,6 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
-import com.sun.tools.javac.tree.TreeInfo;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -667,8 +667,7 @@ public class Matchers {
     return new Matcher<ExpressionTree>() {
       @Override
       public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-        return innerMatcher.matches(
-            (ExpressionTree) TreeInfo.skipParens((JCTree) expressionTree), state);
+        return innerMatcher.matches((ExpressionTree) stripParentheses(expressionTree), state);
       }
     };
   }

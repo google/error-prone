@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -47,9 +48,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
-import com.sun.tools.javac.tree.TreeInfo;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nullable;
@@ -258,7 +257,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    * Matches comparisons to null (e.g. {@code foo == null}) and returns the expression being tested.
    */
   private static ExpressionTree getNullCheckedExpression(ExpressionTree condition) {
-    condition = TreeInfo.skipParens((JCExpression) condition);
+    condition = stripParentheses(condition);
     if (!(condition instanceof BinaryTree)) {
       return null;
     }

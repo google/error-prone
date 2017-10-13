@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -31,8 +32,6 @@ import com.sun.source.tree.SynchronizedTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.TreeInfo;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -49,7 +48,7 @@ public class SynchronizeOnNonFinalField extends BugChecker
 
   @Override
   public Description matchSynchronized(SynchronizedTree tree, VisitorState state) {
-    Symbol symbol = ASTHelpers.getSymbol(TreeInfo.skipParens((JCExpression) tree.getExpression()));
+    Symbol symbol = ASTHelpers.getSymbol(stripParentheses(tree.getExpression()));
     if (!(symbol instanceof VarSymbol)) {
       return NO_MATCH;
     }

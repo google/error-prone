@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
-import static com.sun.source.tree.Tree.Kind.PARENTHESIZED;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
 
 import com.google.common.base.Function;
@@ -57,7 +56,6 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.NewArrayTree;
-import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
@@ -605,11 +603,7 @@ public class SuggestedFixes {
       if (argument.getKind().equals(ASSIGNMENT)) {
         AssignmentTree assignment = (AssignmentTree) argument;
         if (assignment.getVariable().toString().equals(parameter)) {
-          ExpressionTree expression = assignment.getExpression();
-          while (expression.getKind().equals(PARENTHESIZED)) {
-            expression = ((ParenthesizedTree) expression).getExpression();
-          }
-          return Optional.of(expression);
+          return Optional.of(ASTHelpers.stripParentheses(assignment.getExpression()));
         }
       }
     }

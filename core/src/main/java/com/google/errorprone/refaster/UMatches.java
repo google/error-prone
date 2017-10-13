@@ -19,6 +19,7 @@ package com.google.errorprone.refaster;
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
@@ -53,7 +54,7 @@ abstract class UMatches extends UExpression {
   @Override
   @Nullable
   protected Choice<Unifier> defaultAction(Tree target, @Nullable Unifier unifier) {
-    final Tree exprTarget = UParens.skipParens(target);
+    final Tree exprTarget = ASTHelpers.stripParentheses(target);
     return expression()
         .unify(exprTarget, unifier)
         .condition((Unifier success) -> matches(exprTarget, success) == positive());
