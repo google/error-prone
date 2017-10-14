@@ -2833,6 +2833,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/LocalVarBinding.html#getName--">getName()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/LocalVarBinding.html" title="class in com.google.errorprone.refaster">LocalVarBinding</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/RefasterRuleCompiler.html#getName--">getName()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRuleCompiler.html" title="class in com.google.errorprone.refaster">RefasterRuleCompiler</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UFreeIdent.html#getName--">getName()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UFreeIdent.html" title="class in com.google.errorprone.refaster">UFreeIdent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UStaticIdent.html#getName--">getName()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UStaticIdent.html" title="class in com.google.errorprone.refaster">UStaticIdent</a></dt>
@@ -3483,6 +3485,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/DocGenProcessor.html#init-javax.annotation.processing.ProcessingEnvironment-">init(ProcessingEnvironment)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/DocGenProcessor.html" title="class in com.google.errorprone">DocGenProcessor</a></dt>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneJavacPlugin.html#init-com.sun.source.util.JavacTask-java.lang.String...-">init(JavacTask, String...)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneJavacPlugin.html" title="class in com.google.errorprone">ErrorProneJavacPlugin</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/RefasterRuleCompiler.html#init-com.sun.source.util.JavacTask-java.lang.String...-">init(JavacTask, String...)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRuleCompiler.html" title="class in com.google.errorprone.refaster">RefasterRuleCompiler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/InjectedConstructorAnnotations.html" title="class in com.google.errorprone.bugpatterns.inject"><span class="typeNameLink">InjectedConstructorAnnotations</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
 <dd>
@@ -4187,10 +4191,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone">ErrorProneCompiler</a></dt>
 <dd>
 <div class="block">Entry point for compiling Java code with error-prone enabled.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/RefasterRuleCompiler.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRuleCompiler.html" title="class in com.google.errorprone.refaster">RefasterRuleCompiler</a></dt>
-<dd>
-<div class="block">Entry point for compiling a Refaster rule to an analyzer.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#maker--">maker()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
@@ -6037,8 +6037,7 @@
 </dd>
 <dt><a href="com/google/errorprone/refaster/RefasterRuleCompiler.html" title="class in com.google.errorprone.refaster"><span class="typeNameLink">RefasterRuleCompiler</span></a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
-<div class="block">A compiler for Refaster rules that outputs a <code>.analyzer</code> file containing a compiled
- Refaster rule.</div>
+<div class="block">A javac plugin that compiles Refaster rules to a <code>.analyzer</code> file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/RefasterRuleCompiler.html#RefasterRuleCompiler--">RefasterRuleCompiler()</a></span> - Constructor for class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRuleCompiler.html" title="class in com.google.errorprone.refaster">RefasterRuleCompiler</a></dt>
 <dd>&nbsp;</dd>
@@ -6566,6 +6565,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ErrorProneToken.html#stringVal--">stringVal()</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#stripParentheses-com.sun.source.tree.Tree-">stripParentheses(Tree)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Removes any enclosing parentheses from the tree.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#stripParentheses-com.sun.source.tree.ExpressionTree-">stripParentheses(ExpressionTree)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Given an ExpressionTree, removes any enclosing parentheses.</div>

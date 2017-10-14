@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":41,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9,"i44":9,"i45":9,"i46":9,"i47":9,"i48":9,"i49":9,"i50":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":41,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9,"i44":9,"i45":9,"i46":9,"i47":9,"i48":9,"i49":9,"i50":9,"i51":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -491,6 +491,12 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Given an ExpressionTree, removes any enclosing parentheses.</div>
 </td>
 </tr>
+<tr id="i51" class="rowColor">
+<td class="colFirst"><code>static com.sun.source.tree.Tree</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#stripParentheses-com.sun.source.tree.Tree-">stripParentheses</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
+<div class="block">Removes any enclosing parentheses from the tree.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -634,6 +640,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>getSymbol</h4>
 <pre>public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;getSymbol(com.sun.source.tree.MemberReferenceTree&nbsp;tree)</pre>
 <div class="block">Gets the symbol for a member reference.</div>
+</li>
+</ul>
+<a name="stripParentheses-com.sun.source.tree.Tree-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>stripParentheses</h4>
+<pre>public static&nbsp;com.sun.source.tree.Tree&nbsp;stripParentheses(com.sun.source.tree.Tree&nbsp;tree)</pre>
+<div class="block">Removes any enclosing parentheses from the tree.</div>
 </li>
 </ul>
 <a name="stripParentheses-com.sun.source.tree.ExpressionTree-">
