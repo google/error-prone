@@ -4,6 +4,7 @@ summary: SimpleDateFormat is not thread-safe, and should not be used as a consta
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

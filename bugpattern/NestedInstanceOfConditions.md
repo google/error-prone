@@ -4,6 +4,7 @@ summary: Nested instanceOf conditions of disjoint types create blocks of code th
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

@@ -349,6 +349,9 @@ valueOf or autoboxing provides better time and space performance
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
 
+__[CanonicalDuration](bugpattern/CanonicalDuration)__<br>
+Duration can be expressed more clearly with different units
+
 __[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
 Inner class is non-static but does not reference enclosing class
 
@@ -705,9 +708,6 @@ __[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributio
 
 __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
-
-__[LiteralClassName](bugpattern/LiteralClassName)__<br>
-Using Class.forName is unnecessary if the class is available at compile-time.
 
 __[MethodCanBeStatic](bugpattern/MethodCanBeStatic)__<br>
 A private method that does not reference the enclosing instance can be static

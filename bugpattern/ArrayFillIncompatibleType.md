@@ -4,6 +4,7 @@ summary: Arrays.fill(Object[], Object) called with incompatible types.
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

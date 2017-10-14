@@ -4,6 +4,7 @@ summary: This method is not annotated with @Inject, but it overrides a method th
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

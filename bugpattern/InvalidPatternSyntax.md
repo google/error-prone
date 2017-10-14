@@ -4,6 +4,7 @@ summary: Invalid syntax used for a regular expression
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

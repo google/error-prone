@@ -4,6 +4,7 @@ summary: The stream returned by Files.lines should be closed using try-with-reso
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Constructors should not pass the 'this' reference out in method invocat
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

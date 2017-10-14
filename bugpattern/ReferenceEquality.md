@@ -4,6 +4,7 @@ summary: Comparison using reference equality instead of value equality
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

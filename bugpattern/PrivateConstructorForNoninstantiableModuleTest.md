@@ -4,6 +4,7 @@ summary: Add a private constructor to modules that will not be instantiated by D
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

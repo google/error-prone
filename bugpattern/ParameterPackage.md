@@ -4,6 +4,7 @@ summary: Method parameter has wrong package
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

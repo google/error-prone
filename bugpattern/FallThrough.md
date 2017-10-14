@@ -4,6 +4,7 @@ summary: Switch case may fall through
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

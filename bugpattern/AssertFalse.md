@@ -4,6 +4,7 @@ summary: Assertions may be disabled at runtime and do not guarantee that executi
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

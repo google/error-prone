@@ -4,6 +4,7 @@ summary: A standard cryptographic operation is used in a mode that is prone to v
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

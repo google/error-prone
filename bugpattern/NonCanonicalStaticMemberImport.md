@@ -4,6 +4,7 @@ summary: Static import of member uses non-canonical name
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Non-generic methods should not be invoked with type arguments
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

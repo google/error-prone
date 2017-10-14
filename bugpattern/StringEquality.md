@@ -4,6 +4,7 @@ summary: String comparison using reference equality instead of value equality
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

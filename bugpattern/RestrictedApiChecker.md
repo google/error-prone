@@ -4,6 +4,7 @@ summary: ' Check for non-whitelisted callers to RestrictedApiChecker.'
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

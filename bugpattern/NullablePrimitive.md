@@ -4,6 +4,7 @@ summary: '@Nullable should not be used for primitive types since they cannot be 
 layout: bugpattern
 tags: Style
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

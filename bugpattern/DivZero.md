@@ -4,6 +4,7 @@ summary: Division by integer literal zero
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

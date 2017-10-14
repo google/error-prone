@@ -4,6 +4,7 @@ summary: Unsynchronized method overrides a synchronized method.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

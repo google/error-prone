@@ -4,6 +4,7 @@ summary: Catching Throwable/Error masks failures from fail() or assert*() in the
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

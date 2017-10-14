@@ -4,6 +4,7 @@ summary: Return value of android.graphics.Rect.intersect() must be checked
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Dagger @Provides methods may not return null unless annotated with @Nul
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

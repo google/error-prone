@@ -4,6 +4,7 @@ summary: Method parameters that aren't checked for null shouldn't be annotated @
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
+providesFix: NO_FIX
 ---
 
 <!--

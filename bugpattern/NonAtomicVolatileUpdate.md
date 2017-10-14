@@ -4,6 +4,7 @@ summary: This update of a volatile variable is non-atomic
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

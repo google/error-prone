@@ -4,6 +4,7 @@ summary: '@AssistedInject and @Inject cannot be used on the same constructor.'
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

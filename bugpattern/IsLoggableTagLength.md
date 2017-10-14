@@ -4,6 +4,7 @@ summary: Log tag too long, cannot exceed 23 characters.
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

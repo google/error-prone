@@ -4,6 +4,7 @@ summary: Creation of a Set/HashSet/HashMap of java.net.URL. equals() and hashCod
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

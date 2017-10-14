@@ -4,6 +4,7 @@ summary: Some JUnit4 construct cannot be used in a JUnit3 context. Convert your 
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

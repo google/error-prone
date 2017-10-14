@@ -4,6 +4,7 @@ summary: Protobuf fields cannot be null
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

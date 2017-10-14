@@ -4,6 +4,7 @@ summary: Variable declarations should declare only one variable
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
+providesFix: NO_FIX
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: A private method that does not reference the enclosing instance can be 
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

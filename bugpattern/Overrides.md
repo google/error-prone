@@ -4,6 +4,7 @@ summary: Varargs doesn't agree for overridden method
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

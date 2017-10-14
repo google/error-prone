@@ -4,6 +4,7 @@ summary: Thread.join needs to be surrounded by a loop until it succeeds, as in U
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

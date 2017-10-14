@@ -4,6 +4,7 @@ summary: Using ::equals as an incompatible Predicate; the predicate will always 
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

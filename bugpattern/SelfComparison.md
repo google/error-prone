@@ -4,6 +4,7 @@ summary: An object is compared to itself
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

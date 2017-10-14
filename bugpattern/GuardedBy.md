@@ -4,6 +4,7 @@ summary: Checks for unguarded accesses to fields and methods with @GuardedBy ann
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

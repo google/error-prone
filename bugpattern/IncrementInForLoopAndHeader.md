@@ -4,6 +4,7 @@ summary: This for loop increments the same variable in the header and in the bod
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

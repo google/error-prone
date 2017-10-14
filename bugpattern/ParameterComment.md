@@ -4,6 +4,7 @@ summary: Non-standard parameter comment; prefer `/*paramName=*/ arg`
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

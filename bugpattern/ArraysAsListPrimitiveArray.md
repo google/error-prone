@@ -4,6 +4,7 @@ summary: Arrays.asList does not autobox primitive arrays, as one might expect.
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: This method must be called with an even number of arguments.
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

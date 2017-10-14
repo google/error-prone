@@ -4,6 +4,7 @@ summary: Comparing protobuf fields of type String using reference equality
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

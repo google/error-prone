@@ -4,6 +4,7 @@ summary: BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, p
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

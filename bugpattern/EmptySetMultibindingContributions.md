@@ -5,6 +5,7 @@ summary: '@Multibinds is a more efficient and declarative mechanism for ensuring
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

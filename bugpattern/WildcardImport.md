@@ -4,6 +4,7 @@ summary: Wildcard imports, static or otherwise, should not be used
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
+providesFix: NO_FIX
 ---
 
 <!--

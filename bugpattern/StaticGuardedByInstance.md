@@ -4,6 +4,7 @@ summary: Writes to static fields should not be guarded by instance locks
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

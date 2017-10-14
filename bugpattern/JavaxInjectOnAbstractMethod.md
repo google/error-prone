@@ -4,6 +4,7 @@ summary: Abstract and default methods are not injectable with javax.inject.Injec
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

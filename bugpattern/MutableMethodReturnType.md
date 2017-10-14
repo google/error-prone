@@ -4,6 +4,7 @@ summary: Method return type should use the immutable type (such as ImmutableList
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

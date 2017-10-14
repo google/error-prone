@@ -4,6 +4,7 @@ summary: Never reuse class names from java.lang
 layout: bugpattern
 tags: Style
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

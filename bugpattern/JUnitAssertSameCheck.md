@@ -4,6 +4,7 @@ summary: An object is tested for reference equality to itself using JUnit librar
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

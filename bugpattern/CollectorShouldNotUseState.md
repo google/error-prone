@@ -4,6 +4,7 @@ summary: Collector.of() should not use state
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Class should not implement both `Comparable` and `Comparator`
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Testing an object for equality with itself will always be true.
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

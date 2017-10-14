@@ -4,6 +4,7 @@ summary: This method does not acquire the locks specified by its @LockMethod ann
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

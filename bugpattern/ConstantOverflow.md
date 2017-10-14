@@ -4,6 +4,7 @@ summary: Compile-time constant expression overflows
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

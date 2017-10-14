@@ -4,6 +4,7 @@ summary: The result of this method must be closed.
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Protobuf fields cannot be null, so this check is redundant
 layout: bugpattern
 tags: LikelyError
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

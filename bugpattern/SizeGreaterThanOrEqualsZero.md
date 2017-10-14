@@ -4,6 +4,7 @@ summary: Comparison of a size >= 0 is always true, did you intend to check for n
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

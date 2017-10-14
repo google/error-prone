@@ -4,6 +4,7 @@ summary: C-style array declarations should not be used
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
+providesFix: NO_FIX
 ---
 
 <!--

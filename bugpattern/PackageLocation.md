@@ -4,6 +4,7 @@ summary: Package names should match the directory they are declared in
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
+providesFix: NO_FIX
 ---
 
 <!--

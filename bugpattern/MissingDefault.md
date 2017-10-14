@@ -4,6 +4,7 @@ summary: The Google Java Style Guide requires that each switch statement include
 layout: bugpattern
 tags: Style
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

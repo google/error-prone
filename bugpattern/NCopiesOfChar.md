@@ -4,6 +4,7 @@ summary: The first argument to nCopies is the number of copies, and the second i
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

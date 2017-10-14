@@ -4,6 +4,7 @@ summary: Constant field declarations should use the immutable type (such as Immu
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

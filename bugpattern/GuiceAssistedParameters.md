@@ -4,6 +4,7 @@ summary: A constructor cannot have two @Assisted parameters of the same type unl
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

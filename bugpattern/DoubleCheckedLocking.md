@@ -4,6 +4,7 @@ summary: Double-checked locking on non-volatile fields is unsafe
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

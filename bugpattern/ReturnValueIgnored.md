@@ -4,6 +4,7 @@ summary: Return value of this method must be used
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

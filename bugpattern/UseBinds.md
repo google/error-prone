@@ -4,6 +4,7 @@ summary: '@Binds is a more efficient and declarative mechanism for delegating a 
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

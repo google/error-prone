@@ -5,6 +5,7 @@ summary: 'Annotations cannot be both Scope annotations and Qualifier annotations
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

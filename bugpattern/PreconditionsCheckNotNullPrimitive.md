@@ -4,6 +4,7 @@ summary: First argument to `Preconditions.checkNotNull()` is a primitive rather 
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

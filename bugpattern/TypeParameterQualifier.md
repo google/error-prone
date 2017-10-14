@@ -4,6 +4,7 @@ summary: Type parameter used as type qualifier
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

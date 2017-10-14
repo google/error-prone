@@ -4,6 +4,7 @@ summary: Inner class is non-static but does not reference enclosing class
 layout: bugpattern
 tags: Style, Performance
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

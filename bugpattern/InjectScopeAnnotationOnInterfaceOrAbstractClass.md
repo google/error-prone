@@ -4,6 +4,7 @@ summary: Scope annotation on an interface or abstact class is not allowed
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

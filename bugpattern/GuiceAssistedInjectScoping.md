@@ -4,6 +4,7 @@ summary: Scope annotation on implementation class of AssistedInject factory is n
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

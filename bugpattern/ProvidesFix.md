@@ -4,6 +4,7 @@ summary: BugChecker has incorrect ProvidesFix tag, please update
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

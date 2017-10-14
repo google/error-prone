@@ -4,6 +4,7 @@ summary: Literal passed as first argument to Preconditions.checkNotNull() can ne
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

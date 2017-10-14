@@ -4,6 +4,7 @@ summary: void-returning methods should not be annotated with @Nullable, since th
 layout: bugpattern
 tags: Style
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Prefer 'L' to 'l' for the suffix to long literals
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

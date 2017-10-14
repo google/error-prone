@@ -4,6 +4,7 @@ summary: The type of the array parameter of Collection.toArray needs to be compa
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

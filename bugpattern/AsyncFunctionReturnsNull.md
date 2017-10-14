@@ -4,6 +4,7 @@ summary: AsyncFunction should not return a null Future, only a Future whose resu
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

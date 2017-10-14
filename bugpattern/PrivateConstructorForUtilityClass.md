@@ -4,6 +4,7 @@ summary: Utility classes (only static members) are not designed to be instantiat
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

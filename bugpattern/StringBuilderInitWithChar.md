@@ -4,6 +4,7 @@ summary: StringBuilder does not have a char constructor; this invokes the int co
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

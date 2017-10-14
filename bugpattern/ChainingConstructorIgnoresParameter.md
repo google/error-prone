@@ -4,6 +4,7 @@ summary: The called constructor accepts a parameter with the same name and type 
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

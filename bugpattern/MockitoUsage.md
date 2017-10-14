@@ -4,6 +4,7 @@ summary: Missing method call for verify(mock) here
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

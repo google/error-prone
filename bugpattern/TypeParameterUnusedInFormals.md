@@ -6,6 +6,7 @@ summary: 'Declaring a type parameter that is only used in the return type is a m
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

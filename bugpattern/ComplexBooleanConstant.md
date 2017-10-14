@@ -4,6 +4,7 @@ summary: Non-trivial compile time constant boolean expressions shouldn't be used
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

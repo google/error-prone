@@ -4,6 +4,7 @@ summary: Reference equality used to compare arrays
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

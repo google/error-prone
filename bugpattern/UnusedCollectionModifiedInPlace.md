@@ -4,6 +4,7 @@ summary: Collection is modified in place, but the result is not used
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

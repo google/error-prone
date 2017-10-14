@@ -4,6 +4,7 @@ summary: Shift by an amount that is out of range
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

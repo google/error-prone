@@ -4,6 +4,7 @@ summary: The source file name should match the name of the top-level class it co
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

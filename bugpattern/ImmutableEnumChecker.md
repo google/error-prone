@@ -4,6 +4,7 @@ summary: Enums should always be immutable
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

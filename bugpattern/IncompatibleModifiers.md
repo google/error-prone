@@ -4,6 +4,7 @@ summary: This annotation has incompatible modifiers as specified by its @Incompa
 layout: bugpattern
 tags: LikelyError
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

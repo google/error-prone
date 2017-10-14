@@ -4,6 +4,7 @@ summary: Use grouping parenthesis to make the operator precedence explicit
 layout: bugpattern
 tags: Style
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

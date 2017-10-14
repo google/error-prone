@@ -4,6 +4,7 @@ summary: Classes extending PreferenceActivity must implement isValidFragment suc
 layout: bugpattern
 tags: LikelyError
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

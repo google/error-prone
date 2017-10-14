@@ -4,6 +4,7 @@ summary: Using more than one qualifier annotation on the same element is not all
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

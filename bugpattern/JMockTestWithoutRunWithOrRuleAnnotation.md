@@ -4,6 +4,7 @@ summary: jMock tests must have a @RunWith(JMock.class) annotation, or the Mocker
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

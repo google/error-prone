@@ -4,6 +4,7 @@ summary: Using @Test(expected=...) is discouraged, since the test will pass if *
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

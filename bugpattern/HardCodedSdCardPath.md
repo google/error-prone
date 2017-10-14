@@ -4,6 +4,7 @@ summary: Hardcoded reference to /sdcard
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

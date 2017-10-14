@@ -5,6 +5,7 @@ summary: 'Synchronizing on non-final fields is not safe: if the field is ever up
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

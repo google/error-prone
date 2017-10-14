@@ -4,6 +4,7 @@ summary: Classes that implement Annotation must override equals and hashCode. Co
 layout: bugpattern
 tags: LikelyError
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Invalid printf-style format string
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

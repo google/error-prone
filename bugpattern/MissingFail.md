@@ -4,6 +4,7 @@ summary: Not calling fail() when expecting an exception masks bugs
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

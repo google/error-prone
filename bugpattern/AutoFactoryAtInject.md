@@ -4,6 +4,7 @@ summary: '@AutoFactory and @Inject should not be used in the same type.'
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

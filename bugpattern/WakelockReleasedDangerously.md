@@ -4,6 +4,7 @@ summary: A wakelock acquired with a timeout may be released by the system before
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

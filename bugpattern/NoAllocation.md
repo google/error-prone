@@ -5,6 +5,7 @@ summary: '@NoAllocation was specified on this method, but something was found th
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

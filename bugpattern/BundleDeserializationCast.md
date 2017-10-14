@@ -4,6 +4,7 @@ summary: Object serialized in Bundle may have been flattened to base type.
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

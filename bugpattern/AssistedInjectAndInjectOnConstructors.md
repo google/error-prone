@@ -5,6 +5,7 @@ summary: '@AssistedInject and @Inject should not be used on different constructo
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

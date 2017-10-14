@@ -4,6 +4,7 @@ summary: Comparison to value that is out of range for the compared type
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

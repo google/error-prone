@@ -4,6 +4,7 @@ summary: Type declaration annotated with @Immutable is not immutable
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

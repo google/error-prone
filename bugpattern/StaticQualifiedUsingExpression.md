@@ -4,6 +4,7 @@ summary: A static variable or method should be qualified with a class name, not 
 layout: bugpattern
 tags: Style
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

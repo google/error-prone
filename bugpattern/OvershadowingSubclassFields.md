@@ -4,6 +4,7 @@ summary: Overshadowing variables of superclass causes confusion and errors
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--

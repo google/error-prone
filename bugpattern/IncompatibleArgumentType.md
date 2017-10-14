@@ -4,6 +4,7 @@ summary: Passing argument to a generic method with an incompatible type.
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

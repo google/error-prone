@@ -4,6 +4,7 @@ summary: The argument to Class#isInstance(Object) should not be a Class
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

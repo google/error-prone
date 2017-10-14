@@ -4,6 +4,7 @@ summary: This method should not be called.
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

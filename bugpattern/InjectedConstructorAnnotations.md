@@ -4,6 +4,7 @@ summary: Injected constructors cannot be optional nor have binding annotations
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

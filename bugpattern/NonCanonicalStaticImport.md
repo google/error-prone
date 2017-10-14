@@ -4,6 +4,7 @@ summary: Static import of type uses non-canonical name
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Preconditions only accepts the %s placeholder in error message strings
 layout: bugpattern
 tags: LikelyError
 severity: WARNING
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

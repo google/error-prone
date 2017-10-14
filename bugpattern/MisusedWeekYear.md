@@ -4,6 +4,7 @@ summary: Use of "YYYY" (week year) in a date pattern without "ww" (week in year)
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

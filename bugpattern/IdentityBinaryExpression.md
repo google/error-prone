@@ -4,6 +4,7 @@ summary: A binary expression where both operands are the same is usually incorre
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

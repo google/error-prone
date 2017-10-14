@@ -4,6 +4,7 @@ summary: setUp() method will not be run; Please add a @Before annotation
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

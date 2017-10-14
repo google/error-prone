@@ -4,6 +4,7 @@ summary: Qualifiers/Scope annotations on @Inject methods don't have any effect. 
 layout: bugpattern
 tags: ''
 severity: ERROR
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,6 +4,7 @@ summary: Passing a primitive array to a varargs method is usually wrong
 layout: bugpattern
 tags: ''
 severity: WARNING
+providesFix: NO_FIX
 ---
 
 <!--
