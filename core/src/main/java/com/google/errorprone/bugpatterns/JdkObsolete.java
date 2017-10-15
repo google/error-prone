@@ -30,11 +30,11 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "JDKObsolete",
+  name = "JdkObsolete",
   summary = "Suggests alternatives to obsolete JDK classes.",
   severity = WARNING
 )
-public class JDKObsolete extends BugChecker implements NewClassTreeMatcher {
+public class JdkObsolete extends BugChecker implements NewClassTreeMatcher {
 
   static final ImmutableMap<String, String> MATCHER =
       ImmutableMap.<String, String>builder()
