@@ -96,7 +96,6 @@ import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
 import com.google.errorprone.bugpatterns.IterableAndIterator;
 import com.google.errorprone.bugpatterns.IterablePathParameter;
-import com.google.errorprone.bugpatterns.JDKObsolete;
 import com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation;
 import com.google.errorprone.bugpatterns.JUnit3FloatingPointComparisonWithoutDelta;
 import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
@@ -107,6 +106,7 @@ import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
 import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
 import com.google.errorprone.bugpatterns.JavaLangClash;
+import com.google.errorprone.bugpatterns.JdkObsolete;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
@@ -455,7 +455,7 @@ public class BuiltInCheckerSuppliers {
           IntLongMath.class,
           IterableAndIterator.class,
           JavaLangClash.class,
-          JDKObsolete.class,
+          JdkObsolete.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnit4ClassUsedInJUnit3.class,
           JUnitAmbiguousTestClass.class,

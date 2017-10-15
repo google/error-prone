@@ -21,11 +21,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link JDKObsolete}Test */
+/** {@link JdkObsolete}Test */
 @RunWith(JUnit4.class)
-public class JDKObsoleteTest {
+public class JdkObsoleteTest {
   private final CompilationTestHelper testHelper =
-      CompilationTestHelper.newInstance(JDKObsolete.class, getClass());
+      CompilationTestHelper.newInstance(JdkObsolete.class, getClass());
 
   @Test
   public void positive() {
