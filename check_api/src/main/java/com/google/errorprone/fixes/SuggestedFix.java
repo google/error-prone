@@ -19,7 +19,6 @@ package com.google.errorprone.fixes;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableList;
-import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -32,7 +31,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
-import javax.lang.model.element.Modifier;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 public class SuggestedFix implements Fix {
@@ -374,17 +372,5 @@ public class SuggestedFix implements Fix {
       return Replacement.create(
           original.getStartPosition(), original.getEndPosition(endPositions), replacement);
     }
-  }
-
-  /** @deprecated prefer {@link SuggestedFixes#addModifiers} */
-  @Deprecated
-  public static Fix addModifier(Tree tree, Modifier modifier, VisitorState state) {
-    return SuggestedFixes.addModifiers(tree, state, modifier);
-  }
-
-  /** @deprecated prefer {@link SuggestedFixes#removeModifiers} */
-  @Deprecated
-  public static Fix removeModifier(Tree tree, Modifier modifier, VisitorState state) {
-    return SuggestedFixes.removeModifiers(tree, state, modifier);
   }
 }
