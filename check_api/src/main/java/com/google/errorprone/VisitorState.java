@@ -30,6 +30,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
+import com.sun.tools.javac.code.Symbol.ModuleSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
@@ -41,6 +42,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
@@ -181,6 +183,17 @@ public class VisitorState {
     }
   }
 
+  /** Infers a module symbol for the given flat class name. */
+  // TODO(cushon): decide how to provide actual -source 9 module support
+  public ModuleSymbol inferModule(Name flatName) {
+    Symtab symtab = getSymtab();
+    ModuleSymbol result = symtab.inferModule(Convert.packagePart(flatName));
+    if (result != null) {
+      return result;
+    }
+    return symtab.java_base == symtab.noModule ? symtab.noModule : symtab.unnamedModule;
+  }
+
   private Type getTypeFromStringInternal(String typeStr) {
     validateTypeStr(typeStr);
     if (isPrimitiveType(typeStr)) {
@@ -191,10 +204,10 @@ public class VisitorState {
     }
     Name typeName = getName(typeStr);
     try {
-      ClassSymbol typeSymbol = getSymtab().getClass(getSymtab().java_base, typeName);
+      ClassSymbol typeSymbol = getSymtab().getClass(inferModule(typeName), typeName);
       if (typeSymbol == null) {
         JavaCompiler compiler = JavaCompiler.instance(context);
-        Symbol sym = compiler.resolveIdent(getSymtab().java_base, typeStr);
+        Symbol sym = compiler.resolveIdent(inferModule(typeName), typeStr);
         if (!(sym instanceof ClassSymbol)) {
           return null;
         }
@@ -220,15 +233,16 @@ public class VisitorState {
   public Symbol getSymbolFromString(String symStr) {
     try {
       Name symName = getName(symStr);
-      Symbol result = getSymtab().getClass(getSymtab().java_base, symName);
+      Symbol result = getSymtab().getClass(inferModule(symName), symName);
       if (result != null) {
         // Force a completion failure if the type is not available.
         result.complete();
+        return result;
       }
-      return result;
     } catch (CompletionFailure failure) {
-      return null;
+      // ignored
     }
+    return null;
   }
 
   /** Build an instance of a Type. */
