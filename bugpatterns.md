@@ -439,6 +439,9 @@ Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotation
 __[JavaLangClash](bugpattern/JavaLangClash)__<br>
 Never reuse class names from java.lang
 
+__[JdkObsolete](bugpattern/JdkObsolete)__<br>
+Suggests alternatives to obsolete JDK classes.
+
 __[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
 Assignment where a boolean expression was expected; use == if this assignment wasn&#39;t expected or add parentheses for clarity.
 
