@@ -533,7 +533,8 @@ public class ASTHelpers {
     Name annotationName = state.getName(annotationClass);
     Symbol annotationSym;
     synchronized (state.context) {
-      annotationSym = state.getSymtab().enterClass(state.getSymtab().java_base, annotationName);
+      annotationSym =
+          state.getSymtab().enterClass(state.inferModule(annotationName), annotationName);
     }
     try {
       annotationSym.complete();
