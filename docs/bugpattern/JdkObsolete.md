@@ -18,7 +18,7 @@ a data structure from `java.util.concurrent`.
 
 ## `Hashtable`
 
-This is a nonstandard class that predate the Java Collections Framework; prefer
+This is a nonstandard class that predates the Java Collections Framework; prefer
 `LinkedHashMap`.
 
 If synchronization is necessary, `java.util.concurrent.ConcurrentHashMap` is
