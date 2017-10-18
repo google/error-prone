@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -268,16 +268,22 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTypes--">getTypes</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i17" class="rowColor">
+<td class="colFirst"><code>com.sun.tools.javac.code.Symbol.ModuleSymbol</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#inferModule-com.sun.tools.javac.util.Name-">inferModule</a></span>(com.sun.tools.javac.util.Name&nbsp;flatName)</code>
+<div class="block">Infers a module symbol for the given flat class name.</div>
+</td>
+</tr>
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#isAndroidCompatible--">isAndroidCompatible</a></span>()</code>
 <div class="block">Returns true if the compilation is targeting Android.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#reportMatch-com.google.errorprone.matchers.Description-">reportMatch</a></span>(<a href="../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code>&nbsp;</td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#withPath-com.sun.source.util.TreePath-">withPath</a></span>(com.sun.source.util.TreePath&nbsp;path)</code>&nbsp;</td>
 </tr>
@@ -459,6 +465,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the <code>Type</code>, or null if it cannot be found</dd>
 </dl>
+</li>
+</ul>
+<a name="inferModule-com.sun.tools.javac.util.Name-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>inferModule</h4>
+<pre>public&nbsp;com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;inferModule(com.sun.tools.javac.util.Name&nbsp;flatName)</pre>
+<div class="block">Infers a module symbol for the given flat class name.</div>
 </li>
 </ul>
 <a name="getSymbolFromString-java.lang.String-">
