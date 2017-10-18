@@ -45,6 +45,8 @@ public class JdkObsoleteTest {
             "    new java.util.Hashtable<>();",
             "    // BUG: Diagnostic contains:",
             "    new StringBuffer();",
+            "    // BUG: Diagnostic contains:",
+            "    new java.util.Hashtable<Object, Object>() {};",
             "  }",
             "}")
         .doTest();
@@ -76,6 +78,25 @@ public class JdkObsoleteTest {
             "    StringBuffer sb = new StringBuffer();",
             "    m.appendTail(sb);",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveExtends() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.nio.file.Path;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  abstract class A implements java.util.Enumeration<Object> {}",
+            "  // BUG: Diagnostic contains:",
+            "  abstract class B implements java.util.SortedSet<Object> {}",
+            "  // BUG: Diagnostic contains:",
+            "  abstract class C implements java.util.SortedMap<Object, Object> {}",
+            "  // BUG: Diagnostic contains:",
+            "  abstract class D extends java.util.Dictionary<Object, Object> {}",
             "}")
         .doTest();
   }

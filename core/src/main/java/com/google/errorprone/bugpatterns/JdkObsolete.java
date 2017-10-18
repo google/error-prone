@@ -21,18 +21,25 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -40,7 +47,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
   summary = "Suggests alternatives to obsolete JDK classes.",
   severity = WARNING
 )
-public class JdkObsolete extends BugChecker implements NewClassTreeMatcher {
+public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, ClassTreeMatcher {
 
   static final ImmutableMap<String, String> MATCHER =
       ImmutableMap.<String, String>builder()
@@ -63,6 +70,13 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher {
               "java.lang.StringBuffer",
               "StringBuffer performs synchronization that is usually unnecessary;"
                   + " prefer StringBuilder.")
+          .put("java.util.SortedSet", "SortedSet was replaced by NavigableSet in Java 6.")
+          .put("java.util.SortedMap", "SortedMap was replaced by NavigableMap in Java 6.")
+          .put(
+              "java.util.Dictionary",
+              "Dictionary is a nonstandard class that predate the Java Collections Framework;"
+                  + " use LinkedHashMap.")
+          .put("java.util.Enumeration", "Enumeration is an ancient precursor to Iterator.")
           .build();
 
   // a pre-JDK-8039124 concession
@@ -81,11 +95,17 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher {
     if (constructor == null) {
       return NO_MATCH;
     }
-    String message = MATCHER.get(constructor.owner.getQualifiedName().toString());
-    if (message == null) {
+    Symbol owner = constructor.owner;
+    Description description =
+        describeIfObsolete(
+            tree,
+            owner.name.isEmpty()
+                ? state.getTypes().directSupertypes(owner.asType())
+                : ImmutableList.of(owner.asType()));
+    if (description == NO_MATCH) {
       return NO_MATCH;
     }
-    if (constructor.owner.getQualifiedName().contentEquals("java.lang.StringBuffer")) {
+    if (owner.getQualifiedName().contentEquals("java.lang.StringBuffer")) {
       boolean[] found = {false};
       new TreeScanner<Void, Void>() {
         @Override
@@ -100,6 +120,25 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher {
         return NO_MATCH;
       }
     }
-    return buildDescription(tree).setMessage(message).build();
+    return description;
+  }
+
+  @Override
+  public Description matchClass(ClassTree tree, VisitorState state) {
+    ClassSymbol symbol = ASTHelpers.getSymbol(tree);
+    if (symbol == null) {
+      return NO_MATCH;
+    }
+    return describeIfObsolete(tree, state.getTypes().directSupertypes(symbol.asType()));
+  }
+
+  private Description describeIfObsolete(Tree tree, Iterable<Type> types) {
+    for (Type type : types) {
+      String message = MATCHER.get(type.asElement().getQualifiedName().toString());
+      if (message != null) {
+        return buildDescription(tree).setMessage(message).build();
+      }
+    }
+    return NO_MATCH;
   }
 }
