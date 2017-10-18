@@ -18,14 +18,20 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -59,6 +65,16 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher {
                   + " prefer StringBuilder.")
           .build();
 
+  // a pre-JDK-8039124 concession
+  static final Matcher<ExpressionTree> MATCHER_STRINGBUFFER =
+      anyOf(
+          instanceMethod()
+              .onExactClass("java.util.regex.Matcher")
+              .withSignature("appendTail(java.lang.StringBuffer)"),
+          instanceMethod()
+              .onExactClass("java.util.regex.Matcher")
+              .withSignature("appendReplacement(java.lang.StringBuffer,java.lang.String)"));
+
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol constructor = ASTHelpers.getSymbol(tree);
@@ -68,6 +84,21 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher {
     String message = MATCHER.get(constructor.owner.getQualifiedName().toString());
     if (message == null) {
       return NO_MATCH;
+    }
+    if (constructor.owner.getQualifiedName().contentEquals("java.lang.StringBuffer")) {
+      boolean[] found = {false};
+      new TreeScanner<Void, Void>() {
+        @Override
+        public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+          if (MATCHER_STRINGBUFFER.matches(tree, state)) {
+            found[0] = true;
+          }
+          return null;
+        }
+      }.scan(state.getPath().getCompilationUnit(), null);
+      if (found[0]) {
+        return NO_MATCH;
+      }
     }
     return buildDescription(tree).setMessage(message).build();
   }

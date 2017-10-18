@@ -49,4 +49,34 @@ public class JdkObsoleteTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void stringBuffer_appendReplacement() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.regex.Matcher;",
+            "class Test {",
+            "  void f(Matcher m) {",
+            "    StringBuffer sb = new StringBuffer();",
+            "    m.appendReplacement(sb, null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void stringBuffer_appendTail() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.regex.Matcher;",
+            "class Test {",
+            "  void f(Matcher m) {",
+            "    StringBuffer sb = new StringBuffer();",
+            "    m.appendTail(sb);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
