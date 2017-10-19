@@ -31,10 +31,10 @@ a data structure from `java.util.concurrent`.
 If a synchronized collection is necessary, use `Collections.synchronizedList` or
 a data structure from `java.util.concurrent`.
 
-## `Hashtable`
+## `Hashtable` and `Dictionary`
 
 This is a nonstandard class that predates the Java Collections Framework; prefer
-`LinkedHashMap`.
+`LinkedHashMap` or `HashMap`.
 
 If synchronization is necessary, `java.util.concurrent.ConcurrentHashMap` is
 usually a good choice.
@@ -52,6 +52,14 @@ synchronization.
 
 If synchronization is necessary, consider creating an explicit lock object and
 using `synchronized` blocks.
+
+## `Enumeration`
+
+An ancient precursor to `Iterator`.
+
+## `SortedSet` and `SortedMap`
+
+Replaced by `NavigableSet` and `NavigableMap` in Java 6.
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("JdkObsolete")` annotation to the enclosing element.
