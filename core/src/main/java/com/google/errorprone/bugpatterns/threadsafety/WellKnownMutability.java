@@ -157,6 +157,7 @@ public final class WellKnownMutability {
         .add(com.google.common.hash.HashCode.class)
         .add(com.google.common.io.BaseEncoding.class)
         .add(com.google.common.net.MediaType.class)
+        .add(com.google.common.primitives.UnsignedInteger.class)
         .add(com.google.common.primitives.UnsignedLong.class)
         .add(java.lang.Class.class)
         .add(java.lang.String.class)
