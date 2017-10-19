@@ -318,4 +318,77 @@ public class NamedParameterCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void internalAnnotatedParameterNegative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public static class AnnotatedParametersTestClass {",
+            "    public @interface Annotated {}",
+            "    public static void target(@Annotated int foo) {}",
+            "  }",
+            "  void test() {",
+            "    AnnotatedParametersTestClass.target(/* foo= */ 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void internalAnnotatedParameterPositive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public static class AnnotatedParametersTestClass {",
+            "    public @interface Annotated {}",
+            "    public static void target(@Annotated int foo) {}",
+            "  }",
+            "  void test() {",
+            "    // BUG: Diagnostic contains: target(/* foo= */ 1)",
+            "    AnnotatedParametersTestClass.target(/* bar= */ 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  /** A test for annotated parameters across compilation boundaries. */
+  public static class AnnotatedParametersTestClass {
+    /** An annotation to apply to method parameters. */
+    public @interface Annotated {}
+
+    public static void target(@Annotated int foo) {}
+  }
+
+  @Test
+  public void externalAnnotatedParameterNegative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + AnnotatedParametersTestClass.class.getCanonicalName() + ";",
+            "class Test {",
+            "  void test() {",
+            "    AnnotatedParametersTestClass.target(/* foo= */ 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore // TODO(b/67993065): remove @Ignore after the issue is fixed.
+  @Test
+  public void externalAnnotatedParameterPositive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + AnnotatedParametersTestClass.class.getCanonicalName() + ";",
+            "class Test {",
+            "  void test() {",
+            "    // BUG: Diagnostic contains: target(/* foo= */ 1)",
+            "    AnnotatedParametersTestClass.target(/* bar= */ 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
