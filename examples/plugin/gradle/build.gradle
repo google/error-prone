@@ -25,6 +25,6 @@ subprojects {
   apply plugin: 'net.ltgt.apt'
 
   configurations.errorprone {
-    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.1.2-SNAPSHOT'
+    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.1.3-SNAPSHOT'
   }
 }
