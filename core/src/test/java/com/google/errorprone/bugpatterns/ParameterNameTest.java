@@ -67,4 +67,39 @@ public class ParameterNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void issue781() {
+    testHelper
+        .addSourceLines(
+            "a/Baz.java",
+            "package a.b;",
+            "import a.AbstractFoo;",
+            "class Baz extends AbstractFoo {",
+            "  @Override",
+            "  protected String getFoo() {",
+            "    return \"foo\";",
+            "  }",
+            "}")
+        .addSourceLines(
+            "a/AbstractFoo.java",
+            "package a;",
+            "import java.util.function.Function;",
+            "class Bar {",
+            "  private final Function<String, String> args;",
+            "  public Bar(Function<String, String> args) {",
+            "    this.args = args;",
+            "  }",
+            "}",
+            "public abstract class AbstractFoo {",
+            "  protected abstract String getFoo();",
+            "  private String getCommandArguments(String parameters) {",
+            "    return null;",
+            "  }",
+            "  public AbstractFoo() {",
+            "    new Bar(this::getCommandArguments);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
