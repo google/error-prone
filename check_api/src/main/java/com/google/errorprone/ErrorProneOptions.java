@@ -70,7 +70,7 @@ public class ErrorProneOptions {
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
             || option.equals(ENABLE_ALL_CHECKS)
             || option.equals(DISABLE_ALL_CHECKS)
-            || option.equals(COMPILING_TEST_ONLY_CODE);
+            || option.equals(COMPILING_TEST_ONLY_CODE)
             || option.equals(DISABLE_ALL_WARNINGS);
     return isSupported ? 0 : -1;
   }
