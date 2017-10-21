@@ -163,6 +163,14 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
           .forEach(c -> severities.put(c.canonicalName(), SeverityLevel.WARNING));
     }
 
+    if (errorProneOptions.isDisableAllWarnings()) {
+      getAllChecks()
+              .values()
+              .stream()
+              .filter(
+                      c -> c.defaultSeverity() == SeverityLevel.WARNING)
+              .forEach(c -> disabled.add(c.canonicalName()));
+    }
     if (errorProneOptions.isDisableAllChecks()) {
       getAllChecks()
           .values()

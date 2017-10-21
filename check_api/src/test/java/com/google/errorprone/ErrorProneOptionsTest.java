@@ -161,6 +161,12 @@ public class ErrorProneOptionsTest {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepCompilingTestOnlyCode"});
     assertThat(options.isTestOnlyTarget()).isTrue();
+
+  @Test
+  public void recognizesDisableAllWarnings() {
+    ErrorProneOptions options =
+            ErrorProneOptions.processArgs(new String[] {"-XepDisableAllWarnings"});
+    assertThat(options.isDisableAllWarnings()).isTrue();
   }
 
   @Test
