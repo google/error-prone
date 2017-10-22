@@ -135,7 +135,7 @@ public class ImportStatementsTest {
 
       // TODO(b/67738557): consolidate helpers for creating fake trees
       JCImport result =
-          new JCImport(/* qualid= */ null, /* static= */ isStatic) {
+          new JCImport(/* qualid= */ null, /* importStatic= */ isStatic) {
             @Override
             public int getStartPosition() {
               return curStartPos;
