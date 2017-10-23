@@ -31,6 +31,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
@@ -39,6 +40,7 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Collections;
 import java.util.Set;
@@ -83,35 +85,7 @@ public class FunctionalInterfaceMethodChanged extends BugChecker implements Meth
       // relatively crude: doesn't verify that the same args are passed in the same order
       // so it can get false positives for behavior-preservingness (false negatives for the check)
       TreeVisitor<Boolean, VisitorState> behaviorPreserving =
-          new SimpleTreeVisitor<Boolean, VisitorState>(false) {
-            @Override
-            public Boolean visitMethod(MethodTree node, VisitorState state) {
-              return node.getBody() != null && node.getBody().accept(this, state);
-            }
-
-            @Override
-            public Boolean visitBlock(BlockTree node, VisitorState state) {
-              return node.getStatements().size() == 1
-                  && Iterables.getOnlyElement(node.getStatements()).accept(this, state);
-            }
-
-            @Override
-            public Boolean visitExpressionStatement(
-                ExpressionStatementTree node, VisitorState state) {
-              return node.getExpression().accept(this, state);
-            }
-
-            @Override
-            public Boolean visitReturn(ReturnTree node, VisitorState state) {
-              return node.getExpression().accept(this, state);
-            }
-
-            @Override
-            public Boolean visitMethodInvocation(MethodInvocationTree node, VisitorState state) {
-              return ASTHelpers.getSymbol(node) == thisInterfaceSam;
-            }
-          };
-
+          new BehaviorPreservingChecker(thisInterfaceSam);
       if (!Collections.disjoint(
               ASTHelpers.findSuperMethods(ASTHelpers.getSymbol(tree), types),
               functionalSuperInterfaceSams)
@@ -121,4 +95,71 @@ public class FunctionalInterfaceMethodChanged extends BugChecker implements Meth
     }
     return Description.NO_MATCH;
   }
+
+  private static class BehaviorPreservingChecker extends SimpleTreeVisitor<Boolean, VisitorState> {
+
+    private boolean inBoxedVoidReturningMethod = false;
+    private final Symbol methodToCall;
+
+    public BehaviorPreservingChecker(Symbol methodToCall) {
+      super(false);
+      this.methodToCall = methodToCall;
+    }
+
+    @Override
+    public Boolean visitMethod(MethodTree node, VisitorState state) {
+      boolean prevInBoxedVoidReturningMethod = inBoxedVoidReturningMethod;
+      Type returnType = ASTHelpers.getType(node.getReturnType());
+      Type boxedVoidType = state.getTypeFromString("java.lang.Void");
+      if (ASTHelpers.isSameType(returnType, boxedVoidType, state)) {
+        inBoxedVoidReturningMethod = true;
+      }
+      boolean result = node.getBody() != null && node.getBody().accept(this, state);
+      inBoxedVoidReturningMethod = prevInBoxedVoidReturningMethod;
+      return result;
+    }
+
+    @Override
+    public Boolean visitBlock(BlockTree node, VisitorState state) {
+      if (inBoxedVoidReturningMethod) {
+        // Must have exactly 2 statements
+        if (node.getStatements().size() != 2) {
+          return false;
+        }
+
+        // Where the first one is a call to the methodToCall
+        if (!node.getStatements().get(0).accept(this, state)) {
+          return false;
+        }
+
+        // And the second one is "return null;"
+        if (node.getStatements().get(1) instanceof ReturnTree) {
+          ReturnTree returnTree = (ReturnTree) node.getStatements().get(1);
+          if (returnTree.getExpression() instanceof LiteralTree) {
+            Object returnValue = ((LiteralTree) returnTree.getExpression()).getValue();
+            return returnValue == null;
+          }
+        }
+        return false;
+      } else {
+        return node.getStatements().size() == 1
+            && Iterables.getOnlyElement(node.getStatements()).accept(this, state);
+      }
+    }
+
+    @Override
+    public Boolean visitExpressionStatement(ExpressionStatementTree node, VisitorState state) {
+      return node.getExpression().accept(this, state);
+    }
+
+    @Override
+    public Boolean visitReturn(ReturnTree node, VisitorState state) {
+      return node.getExpression().accept(this, state);
+    }
+
+    @Override
+    public Boolean visitMethodInvocation(MethodInvocationTree node, VisitorState state) {
+      return ASTHelpers.getSymbol(node) == methodToCall;
+    }
+  };
 }

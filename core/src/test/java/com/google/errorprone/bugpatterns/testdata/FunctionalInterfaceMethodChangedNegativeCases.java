@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import java.util.concurrent.Callable;
+
 public class FunctionalInterfaceMethodChangedNegativeCases {
   @FunctionalInterface
   interface SuperFI {
@@ -64,6 +66,19 @@ public class FunctionalInterfaceMethodChangedNegativeCases {
     @Override
     default String superSam() {
       return subSam();
+    }
+  }
+
+  // Regression test for b/68075767
+  @FunctionalInterface
+  public interface VoidCallable extends Callable<Void> {
+
+    void voidCall() throws Exception;
+
+    @Override
+    default Void call() throws Exception {
+      voidCall();
+      return null;
     }
   }
 }
