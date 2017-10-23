@@ -16,7 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
@@ -29,6 +29,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.fixes.Fix;
 import com.sun.source.tree.Tree;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
@@ -178,10 +179,23 @@ public class Description {
      * @throws IllegalArgumentException if {@code fix} is {@code null}
      */
     public Builder addFix(Fix fix) {
-      checkArgument(fix != null, "fix must not be null");
+      checkNotNull(fix, "fix must not be null");
       if (!fix.isEmpty()) {
         fixListBuilder.add(fix);
       }
+      return this;
+    }
+
+    /**
+     * Adds a suggested fix for this {@code Description} if {@code fix} is present. Fixes should be
+     * added in order of decreasing preference. Adding an empty fix is a no-op.
+     *
+     * @param fix a suggested fix for this problem
+     * @throws IllegalArgumentException if {@code fix} is {@code null}
+     */
+    public Builder addFix(Optional<? extends Fix> fix) {
+      checkNotNull(fix, "fix must not be null");
+      fix.ifPresent(this::addFix);
       return this;
     }
 
@@ -192,7 +206,7 @@ public class Description {
      * @throws IllegalArgumentException if {@code fixes} or any of its elements are {@code null}
      */
     public Builder addAllFixes(List<? extends Fix> fixes) {
-      checkArgument(fixes != null, "fixes must not be null");
+      checkNotNull(fixes, "fixes must not be null");
       for (Fix fix : fixes) {
         addFix(fix);
       }

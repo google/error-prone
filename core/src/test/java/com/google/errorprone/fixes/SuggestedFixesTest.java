@@ -29,6 +29,7 @@ import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -55,6 +56,7 @@ import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.lang.annotation.Retention;
+import java.util.Optional;
 import javax.lang.model.element.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -111,7 +113,7 @@ public class SuggestedFixesTest {
               ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class), EditModifiers.class);
       Modifier mod = MODIFIERS_BY_NAME.get(editModifiers.value());
       Verify.verifyNotNull(mod, editModifiers.value());
-      Fix fix;
+      Optional<SuggestedFix> fix;
       switch (editModifiers.kind()) {
         case ADD:
           fix = SuggestedFixes.addModifiers(tree, state, mod);
@@ -234,7 +236,8 @@ public class SuggestedFixesTest {
     category = Category.ONE_OFF,
     name = "CastReturn",
     severity = SeverityLevel.ERROR,
-    summary = "Adds casts to returned expressions"
+    summary = "Adds casts to returned expressions",
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
   )
   public static class CastReturn extends BugChecker implements ReturnTreeMatcher {
 
@@ -257,7 +260,8 @@ public class SuggestedFixesTest {
     category = Category.ONE_OFF,
     name = "CastReturn",
     severity = SeverityLevel.ERROR,
-    summary = "Adds casts to returned expressions"
+    summary = "Adds casts to returned expressions",
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
   )
   public static class CastReturnFullType extends BugChecker implements ReturnTreeMatcher {
 
@@ -395,7 +399,8 @@ public class SuggestedFixesTest {
     name = "JavadocQualifier",
     category = BugPattern.Category.JDK,
     summary = "all javadoc links should be qualified",
-    severity = ERROR
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
   )
   public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {
     @Override
@@ -445,7 +450,13 @@ public class SuggestedFixesTest {
         .doTest(TEXT_MATCH);
   }
 
-  @BugPattern(name = "SuppressMe", category = Category.ONE_OFF, summary = "", severity = ERROR)
+  @BugPattern(
+    name = "SuppressMe",
+    category = Category.ONE_OFF,
+    summary = "",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
+  )
   static final class SuppressMe extends BugChecker implements LiteralTreeMatcher {
     @Override
     public Description matchLiteral(LiteralTree tree, VisitorState state) {
@@ -497,7 +508,13 @@ public class SuggestedFixesTest {
   }
 
   /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
-  @BugPattern(name = "CompilesWithFixChecker", category = JDK, summary = "", severity = ERROR)
+  @BugPattern(
+    name = "CompilesWithFixChecker",
+    category = JDK,
+    summary = "",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
+  )
   public static class CompilesWithFixChecker extends BugChecker implements VariableTreeMatcher {
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -532,7 +549,13 @@ public class SuggestedFixesTest {
   }
 
   /** A test bugchecker that deletes an exception from throws. */
-  @BugPattern(name = "RemovesExceptionChecker", category = JDK, summary = "", severity = ERROR)
+  @BugPattern(
+    name = "RemovesExceptionChecker",
+    category = JDK,
+    summary = "",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
+  )
   public static class RemovesExceptionsChecker extends BugChecker implements MethodTreeMatcher {
 
     private final int index;

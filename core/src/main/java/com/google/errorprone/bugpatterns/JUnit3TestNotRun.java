@@ -119,12 +119,12 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
     }
 
     // Make method public (if not already public).
-    fixes.add(addModifiers(methodTree, state, Modifier.PUBLIC));
+    addModifiers(methodTree, state, Modifier.PUBLIC).ifPresent(fixes::add);
     // Remove any other visibility modifiers (if present).
-    fixes.add(removeModifiers(methodTree, state, Modifier.PRIVATE, Modifier.PROTECTED));
+    removeModifiers(methodTree, state, Modifier.PRIVATE, Modifier.PROTECTED).ifPresent(fixes::add);
     // Remove static modifier (if present).
     // N.B. must occur in separate step because removeModifiers only removes one modifier at a time.
-    fixes.add(removeModifiers(methodTree, state, Modifier.STATIC));
+    removeModifiers(methodTree, state, Modifier.STATIC).ifPresent(fixes::add);
 
     return describeMatch(methodTree, mergeFixes(fixes));
   }

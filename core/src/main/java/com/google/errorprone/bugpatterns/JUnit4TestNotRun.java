@@ -48,6 +48,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
+import java.util.Optional;
 import javax.lang.model.element.Modifier;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
@@ -178,10 +179,11 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
    * </ol>
    */
   private Description describeFixes(MethodTree methodTree, VisitorState state) {
-    SuggestedFix removeStatic = SuggestedFixes.removeModifiers(methodTree, state, Modifier.STATIC);
+    Optional<SuggestedFix> removeStatic =
+        SuggestedFixes.removeModifiers(methodTree, state, Modifier.STATIC);
     SuggestedFix testFix =
         SuggestedFix.builder()
-            .merge(removeStatic)
+            .merge(removeStatic.orElse(null))
             .addImport(TEST_CLASS)
             .prefixWith(methodTree, TEST_ANNOTATION)
             .build();
@@ -194,8 +196,8 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
     SuggestedFix visibilityFix =
         SuggestedFix.builder()
-            .merge(SuggestedFixes.removeModifiers(methodTree, state, Modifier.PUBLIC))
-            .merge(SuggestedFixes.addModifiers(methodTree, state, Modifier.PRIVATE))
+            .merge(SuggestedFixes.removeModifiers(methodTree, state, Modifier.PUBLIC).orElse(null))
+            .merge(SuggestedFixes.addModifiers(methodTree, state, Modifier.PRIVATE).orElse(null))
             .build();
 
     // Suggest @Ignore first if test method is named like a purposely disabled test.
