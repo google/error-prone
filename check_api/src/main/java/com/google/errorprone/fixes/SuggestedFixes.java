@@ -29,7 +29,6 @@ import static com.sun.tools.javac.code.TypeTag.CLASS;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -85,6 +84,7 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -139,12 +139,12 @@ public class SuggestedFixes {
     }
   }
 
-  /** Add modifiers to the given class, method, or field declaration. */
-  @Nullable
-  public static SuggestedFix addModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
+  /** Adds modifiers to the given class, method, or field declaration. */
+  public static Optional<SuggestedFix> addModifiers(
+      Tree tree, VisitorState state, Modifier... modifiers) {
     ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
-      return null;
+      return Optional.empty();
     }
     Set<Modifier> toAdd =
         Sets.difference(new TreeSet<>(Arrays.asList(modifiers)), originalModifiers.getFlags());
@@ -154,7 +154,7 @@ public class SuggestedFixes {
               ? state.getEndPosition(originalModifiers) + 1
               : ((JCTree) tree).getStartPosition();
       int base = ((JCTree) tree).getStartPosition();
-      java.util.Optional<Integer> insert =
+      Optional<Integer> insert =
           state
               .getTokensForNode(tree)
               .stream()
@@ -162,7 +162,8 @@ public class SuggestedFixes {
               .filter(thisPos -> thisPos >= pos)
               .findFirst();
       int insertPos = insert.orElse(pos); // shouldn't ever be able to get to the else
-      return SuggestedFix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
+      return Optional.of(
+          SuggestedFix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " "));
     }
     // a map from modifiers to modifier position (or -1 if the modifier is being added)
     // modifiers are sorted in Google Java Style order
@@ -194,16 +195,16 @@ public class SuggestedFixes {
     if (!modifiersToWrite.isEmpty()) {
       fix.postfixWith(originalModifiers, " " + Joiner.on(' ').join(modifiersToWrite));
     }
-    return fix.build();
+    return Optional.of(fix.build());
   }
 
   /** Remove modifiers from the given class, method, or field declaration. */
-  @Nullable
-  public static SuggestedFix removeModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
+  public static Optional<SuggestedFix> removeModifiers(
+      Tree tree, VisitorState state, Modifier... modifiers) {
     Set<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
     ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
-      return null;
+      return Optional.empty();
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     List<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
@@ -218,9 +219,9 @@ public class SuggestedFixes {
       }
     }
     if (empty) {
-      return null;
+      return Optional.empty();
     }
-    return fix.build();
+    return Optional.of(fix.build());
   }
 
   /**
@@ -607,7 +608,7 @@ public class SuggestedFixes {
         }
       }
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   /**

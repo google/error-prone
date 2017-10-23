@@ -38,6 +38,7 @@ import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Optional;
 import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -91,10 +92,10 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
       if (Source.instance(state.context).allowEffectivelyFinalInInnerClasses()) {
         // In Java 8, the final modifier is never necessary on locals/parameters because
         // effectively final variables can be used anywhere a final variable is required.
-        Fix fix = SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL);
-        // The fix may be null for TWR variables that were not explicitly final
-        if (fix != null) {
-          return buildDescription(tree).setMessage(UNNECESSARY_FINAL).addFix(fix).build();
+        Optional<SuggestedFix> fix = SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL);
+        // The fix may not be present for TWR variables that were not explicitly final
+        if (fix.isPresent()) {
+          return buildDescription(tree).setMessage(UNNECESSARY_FINAL).addFix(fix.get()).build();
         }
       }
       return Description.NO_MATCH;

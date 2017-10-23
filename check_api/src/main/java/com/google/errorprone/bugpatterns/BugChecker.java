@@ -86,6 +86,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckReturnValue;
 
@@ -115,6 +116,12 @@ public abstract class BugChecker implements Suppressible, Serializable {
   @CheckReturnValue
   protected Description describeMatch(Tree node) {
     return buildDescription(node).build();
+  }
+
+  /** Helper to create a Description for the common case where there is an {@link Optional} fix. */
+  @CheckReturnValue
+  protected Description describeMatch(Tree node, Optional<? extends Fix> fix) {
+    return buildDescription(node).addFix(fix).build();
   }
 
   /**
