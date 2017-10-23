@@ -18,6 +18,8 @@ package com.google.errorprone;
 
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.RefactoringCollection.RefactoringResult;
@@ -220,26 +222,32 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     }
     refactoringCollection[0] = RefactoringCollection.refactor(epOptions.patchingOptions(), context);
 
-    // Refaster refactorer or using builtin checks
-    CodeTransformer codeTransformer =
-        epOptions
-            .patchingOptions()
-            .customRefactorer()
-            .or(
-                () -> {
-                  ScannerSupplier toUse =
-                      ErrorPronePlugins.loadPlugins(scannerSupplier, context)
-                          .applyOverrides(epOptions);
-                  ImmutableSet<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
-                  if (!namedCheckers.isEmpty()) {
-                    toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
-                  }
-                  return ErrorProneScannerTransformer.create(toUse.get());
-                })
-            .get();
+    // Use Refaster refactorer if configured
+    Optional<Supplier<CodeTransformer>> customRefactorer =
+        epOptions.patchingOptions().customRefactorer();
+    CodeTransformer builtinTransformer =
+        createBuiltinRefactorer(scannerSupplier, epOptions, context, customRefactorer.isPresent());
+    CodeTransformer compoundTransformer =
+        customRefactorer
+            .transform(s -> CompositeCodeTransformer.compose(s.get(), builtinTransformer))
+            .or(builtinTransformer);
 
     return ErrorProneAnalyzer.createWithCustomDescriptionListener(
-        codeTransformer, epOptions, context, refactoringCollection[0]);
+        compoundTransformer, epOptions, context, refactoringCollection[0]);
+  }
+
+  private static CodeTransformer createBuiltinRefactorer(
+      ScannerSupplier scannerSupplier,
+      ErrorProneOptions epOptions,
+      Context context,
+      boolean forceFilter) {
+    ScannerSupplier toUse =
+        ErrorPronePlugins.loadPlugins(scannerSupplier, context).applyOverrides(epOptions);
+    Set<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
+    if (forceFilter || !namedCheckers.isEmpty()) {
+      toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
+    }
+    return ErrorProneScannerTransformer.create(toUse.get());
   }
 
   static class RefactoringTask implements TaskListener {
