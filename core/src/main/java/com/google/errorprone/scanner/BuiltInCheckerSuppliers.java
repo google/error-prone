@@ -86,6 +86,7 @@ import com.google.errorprone.bugpatterns.ImmutableModification;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.IncrementInForLoopAndHeader;
 import com.google.errorprone.bugpatterns.IndexOfChar;
+import com.google.errorprone.bugpatterns.InexactVarargsConditional;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
@@ -356,6 +357,7 @@ public class BuiltInCheckerSuppliers {
           ImmutableModification.class,
           IncompatibleArgumentType.class,
           IndexOfChar.class,
+          InexactVarargsConditional.class,
           InfiniteRecursion.class,
           InjectOnFinalField.class,
           InvalidPatternSyntax.class,
