@@ -30,6 +30,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
@@ -83,7 +84,12 @@ public class URLEqualsHashCode extends BugChecker implements NewClassTreeMatcher
         return false;
       }
       Type type = ASTHelpers.getType(tree);
-      if (!ASTHelpers.isSubtype(type, sym.type, state)) {
+      try {
+        if (!ASTHelpers.isSubtype(type, sym.type, state)) {
+          return false;
+        }
+      } catch (CompletionFailure e) {
+        // Some symbols necessary for the subtype check are not on the classpath; bail out
         return false;
       }
       Types types = state.getTypes();
