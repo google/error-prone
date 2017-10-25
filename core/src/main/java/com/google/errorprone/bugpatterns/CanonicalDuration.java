@@ -137,19 +137,22 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
       switch (api) {
         case JODA:
           ExpressionTree receiver = getReceiver(tree);
+          SuggestedFix fix;
           if (receiver == null) { // static import of the method
-            SuggestedFix fix =
+            fix =
                 SuggestedFix.builder()
                     .addImport(api.getDurationFullyQualifiedName())
                     .replace(tree, "Duration.ZERO")
                     .build();
-            return describeMatch(tree, fix);
           } else {
-            return describeMatch(
-                tree,
+            fix =
                 SuggestedFix.replace(
-                    state.getEndPosition(getReceiver(tree)), state.getEndPosition(tree), ".ZERO"));
+                    state.getEndPosition(getReceiver(tree)), state.getEndPosition(tree), ".ZERO");
           }
+          return buildDescription(tree)
+              .setMessage("Duration can be expressed more clearly without units, as Duration.ZERO")
+              .addFix(fix)
+              .build();
         case JAVA:
           // don't rewrite e.g. `ofMillis(0)` to `ofDays(0)`
           return NO_MATCH;
