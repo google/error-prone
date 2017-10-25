@@ -166,6 +166,10 @@
 <dd>
 <div class="block">Adds a suggested fix for this <code>Description</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Description.Builder.html#addFix-java.util.Optional-">addFix(Optional&lt;? extends Fix&gt;)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></dt>
+<dd>
+<div class="block">Adds a suggested fix for this <code>Description</code> if <code>fix</code> is present.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractReferenceEquality.html#addFixes-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">addFixes(Description.Builder, BinaryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">AbstractReferenceEquality</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/apply/ImportOrganizer.OrganizedImports.html#addGroups-java.util.Map-java.lang.Iterable-">addGroups(Map&lt;K, ? extends Collection&lt;ImportOrganizer.Import&gt;&gt;, Iterable&lt;K&gt;)</a></span> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportOrganizer.OrganizedImports.html" title="class in com.google.errorprone.apply">ImportOrganizer.OrganizedImports</a></dt>
@@ -190,7 +194,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#addModifiers-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-javax.lang.model.element.Modifier...-">addModifiers(Tree, VisitorState, Modifier...)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
-<div class="block">Add modifiers to the given class, method, or field declaration.</div>
+<div class="block">Adds modifiers to the given class, method, or field declaration.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#addOption-com.google.errorprone.fixes.SuggestedFix-">addOption(SuggestedFix)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -1730,6 +1734,10 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.html#describeMatch-com.sun.source.tree.Tree-">describeMatch(Tree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>
 <div class="block">Helper to create a Description for the common case where there is no fix.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.html#describeMatch-com.sun.source.tree.Tree-java.util.Optional-">describeMatch(Tree, Optional&lt;? extends Fix&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
+<dd>
+<div class="block">Helper to create a Description for the common case where there is an <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util"><code>Optional</code></a> fix.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Description</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
@@ -3469,6 +3477,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/IndexOfChar.html#IndexOfChar--">IndexOfChar()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IndexOfChar.html" title="class in com.google.errorprone.bugpatterns">IndexOfChar</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/InexactVarargsConditional.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">InexactVarargsConditional</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/InexactVarargsConditional.html#InexactVarargsConditional--">InexactVarargsConditional()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InexactVarargsConditional.html" title="class in com.google.errorprone.bugpatterns">InexactVarargsConditional</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#infer--">infer()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#inferModule-com.sun.tools.javac.util.Name-">inferModule(Name)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
@@ -4819,6 +4831,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ImmutableModification.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ImmutableModification.html" title="class in com.google.errorprone.bugpatterns">ImmutableModification</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/IndexOfChar.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IndexOfChar.html" title="class in com.google.errorprone.bugpatterns">IndexOfChar</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/InexactVarargsConditional.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InexactVarargsConditional.html" title="class in com.google.errorprone.bugpatterns">InexactVarargsConditional</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/guice/BindingToUnqualifiedCommonType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/BindingToUnqualifiedCommonType.html" title="class in com.google.errorprone.bugpatterns.inject.guice">BindingToUnqualifiedCommonType</a></dt>
 <dd>&nbsp;</dd>

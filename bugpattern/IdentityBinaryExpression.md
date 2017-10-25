@@ -28,7 +28,7 @@ _Alternate names: SelfEquality_
 :   always `1`
 
 `a % a` or `a - a`
-:   always `0
+:   always `0`
 
 ## Suppression
 Suppress false positives by adding an `@SuppressWarnings("IdentityBinaryExpression")` annotation to the enclosing element.

@@ -149,6 +149,9 @@ Passing argument to a generic method with an incompatible type.
 __[IndexOfChar](bugpattern/IndexOfChar)__<br>
 The first argument to indexOf is a Unicode code point, and the second is the index to start the search from
 
+__[InexactVarargsConditional](bugpattern/InexactVarargsConditional)__<br>
+Conditional expression in varargs call contains array and non-array arguments
+
 __[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
 This method always recurses, and will cause a StackOverflowError
 
