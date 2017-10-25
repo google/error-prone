@@ -57,11 +57,26 @@ import java.util.Map;
 )
 public class CanonicalDuration extends BugChecker implements MethodInvocationTreeMatcher {
 
+  enum Api {
+    JAVA("java.time.Duration"),
+    JODA("org.joda.time.Duration");
+
+    private final String durationFullyQualifiedName;
+
+    private Api(String durationFullyQualifiedName) {
+      this.durationFullyQualifiedName = durationFullyQualifiedName;
+    }
+
+    String getDurationFullyQualifiedName() {
+      return durationFullyQualifiedName;
+    }
+  }
+
   private static final Matcher<ExpressionTree> JAVA_TIME_MATCHER =
-      staticMethod().onClass("java.time.Duration");
+      staticMethod().onClass(Api.JAVA.getDurationFullyQualifiedName());
 
   private static final Matcher<ExpressionTree> JODA_MATCHER =
-      staticMethod().onClass("org.joda.time.Duration");
+      staticMethod().onClass(Api.JODA.getDurationFullyQualifiedName());
 
   private static final ImmutableTable<Api, ChronoUnit, String> FACTORIES =
       ImmutableTable.<Api, ChronoUnit, String>builder()
@@ -95,11 +110,6 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
           .put(ChronoUnit.NANOS, Converter.from(Duration::toNanos, Duration::ofNanos))
           .build();
 
-  enum Api {
-    JAVA,
-    JODA
-  }
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     Api api;
@@ -126,10 +136,20 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
     if (value.intValue() == 0) {
       switch (api) {
         case JODA:
-          return describeMatch(
-              tree,
-              SuggestedFix.replace(
-                  state.getEndPosition(getReceiver(tree)), state.getEndPosition(tree), ".ZERO"));
+          ExpressionTree receiver = getReceiver(tree);
+          if (receiver == null) { // static import of the method
+            SuggestedFix fix =
+                SuggestedFix.builder()
+                    .addImport(api.getDurationFullyQualifiedName())
+                    .replace(tree, "Duration.ZERO")
+                    .build();
+            return describeMatch(tree, fix);
+          } else {
+            return describeMatch(
+                tree,
+                SuggestedFix.replace(
+                    state.getEndPosition(getReceiver(tree)), state.getEndPosition(tree), ".ZERO"));
+          }
         case JAVA:
           // don't rewrite e.g. `ofMillis(0)` to `ofDays(0)`
           return NO_MATCH;
@@ -158,11 +178,21 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
         String name = FACTORIES.get(api, nextUnit);
         String replacement =
             String.format(
-                ".%s(%d%s)", name, nextValue, nextValue == nextValue.intValue() ? "" : "L");
-        return describeMatch(
-            tree,
-            SuggestedFix.replace(
-                state.getEndPosition(getReceiver(tree)), state.getEndPosition(tree), replacement));
+                "%s(%d%s)", name, nextValue, nextValue == nextValue.intValue() ? "" : "L");
+        ExpressionTree receiver = getReceiver(tree);
+        if (receiver == null) { // static import of the method
+          SuggestedFix fix =
+              SuggestedFix.builder()
+                  .addStaticImport(api.getDurationFullyQualifiedName() + "." + name)
+                  .replace(tree, replacement)
+                  .build();
+          return describeMatch(tree, fix);
+        } else {
+          return describeMatch(
+              tree,
+              SuggestedFix.replace(
+                  state.getEndPosition(receiver), state.getEndPosition(tree), "." + replacement));
+        }
       }
     }
     return NO_MATCH;
