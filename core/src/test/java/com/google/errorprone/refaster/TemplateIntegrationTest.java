@@ -340,7 +340,6 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
       int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
       return majorVersion <= 8;
     } catch (ReflectiveOperationException e) {
-      e.printStackTrace();
       return true;
     }
   }
