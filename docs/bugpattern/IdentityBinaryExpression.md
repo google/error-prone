@@ -11,4 +11,4 @@
 :   always `1`
 
 `a % a` or `a - a`
-:   always `0
+:   always `0`
