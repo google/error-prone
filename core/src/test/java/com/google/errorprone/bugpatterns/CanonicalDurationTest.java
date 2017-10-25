@@ -28,7 +28,7 @@ import org.junit.runners.JUnit4;
 public class CanonicalDurationTest {
 
   @Test
-  public void refactoring() throws Exception {
+  public void refactoringJavaTime() throws Exception {
     BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -90,6 +90,65 @@ public class CanonicalDurationTest {
             "    Duration.standardSeconds(CONST);",
             "    Duration zero = Duration.ZERO;",
             "    Duration.standardDays(1);",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void refactoringJavaTimeStaticImport() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+        .addInputLines(
+            "in/A.java", //
+            "package a;",
+            "import static java.time.Duration.ofSeconds;",
+            "import java.time.Duration;",
+            "public class A {",
+            "  {",
+            "    ofSeconds(86400);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java", //
+            "package a;",
+            "",
+            "import static java.time.Duration.ofDays;",
+            "import static java.time.Duration.ofSeconds;",
+            "",
+            "import java.time.Duration;",
+            "",
+            "public class A {",
+            "  {",
+            "    ofDays(1);",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void refactoringJodaStaticImport() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+        .addInputLines(
+            "in/A.java", //
+            "package a;",
+            "import static org.joda.time.Duration.standardSeconds;",
+            "public class A {",
+            "  {",
+            "    standardSeconds(86400);",
+            "    standardSeconds(0).getStandardSeconds();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java", //
+            "package a;",
+            "import static org.joda.time.Duration.standardDays;",
+            "import static org.joda.time.Duration.standardSeconds;",
+            "",
+            "import org.joda.time.Duration;",
+            "public class A {",
+            "  {",
+            "    standardDays(1);",
+            "    Duration.ZERO.getStandardSeconds();",
             "  }",
             "}")
         .doTest(TEXT_MATCH);
