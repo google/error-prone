@@ -102,4 +102,23 @@ public class ParameterNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void issue792() {
+    testHelper
+        .addSourceLines(
+            "a/Foo.java",
+            "package a;",
+            "class Bar {",
+            "}",
+            "public class Foo {",
+            "  public void setInteger(Integer i) {",
+            "  }",
+            "  public void callSetInteger() {",
+            "    setInteger(0);",
+            " }",
+            "}")
+        .addSourceLines("a/Baz.java", "package a;", "public class Baz extends Foo {", "}")
+        .doTest();
+  }
 }
