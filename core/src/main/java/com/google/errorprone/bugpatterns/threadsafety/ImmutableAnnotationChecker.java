@@ -51,7 +51,8 @@ import java.util.Optional;
 public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeMatcher {
 
   public static final String ANNOTATED_ANNOTATION_MESSAGE =
-      "annotations are immutable by default; annotating them with @Immutable is unnecessary";
+      "annotations are immutable by default; annotating them with"
+          + " @com.google.errorprone.annotations.Immutable is unnecessary";
 
   private final WellKnownMutability wellKnownMutability;
 

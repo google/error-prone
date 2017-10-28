@@ -134,7 +134,8 @@ public class ImmutableAnnotationCheckerTest {
             "class Test implements Deprecated {",
             "  public Class<? extends Annotation> annotationType() { return Deprecated.class; }",
             "  // BUG: Diagnostic contains:"
-                + " the declaration of type 'Foo' is not annotated @Immutable",
+                + " the declaration of type 'Foo' is not annotated"
+                + " @com.google.errorprone.annotations.Immutable",
             "  final Foo f;",
             "  private Test(Foo f) {",
             "    this.f = f;",
