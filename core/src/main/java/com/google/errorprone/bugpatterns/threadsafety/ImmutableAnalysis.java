@@ -428,7 +428,10 @@ public class ImmutableAnalysis {
         return Violation.absent();
       }
       return Violation.of(
-          String.format("the declaration of type '%s' is not annotated @Immutable", type));
+          String.format(
+              "the declaration of type '%s' is not annotated"
+                  + " @com.google.errorprone.annotations.Immutable",
+              type));
     }
   }
 

@@ -51,7 +51,8 @@ import java.util.stream.Stream;
 public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher {
 
   public static final String ANNOTATED_ENUM_MESSAGE =
-      "enums are immutable by default; annotating them with @Immutable is unnecessary";
+      "enums are immutable by default; annotating them with"
+          + " @com.google.errorprone.annotations.Immutable is unnecessary";
 
   private final WellKnownMutability wellKnownMutability;
 

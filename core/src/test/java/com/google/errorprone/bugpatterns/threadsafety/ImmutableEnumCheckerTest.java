@@ -141,7 +141,8 @@ public class ImmutableEnumCheckerTest {
             "enum Enum {",
             "  ONE(new Foo()), TWO(new Foo());",
             "  // BUG: Diagnostic contains:"
-                + " the declaration of type 'Foo' is not annotated @Immutable",
+                + " the declaration of type 'Foo' is not annotated"
+                + " @com.google.errorprone.annotations.Immutable",
             "  final Foo f;",
             "  private Enum(Foo f) {",
             "    this.f = f;",
