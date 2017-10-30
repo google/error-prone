@@ -73,6 +73,25 @@ public class SelfAssignmentPositiveCases2 {
     foo = checkNotNull(foo);
   }
 
+  class Test11 {
+    final Foo foo;
+
+    Foo fao;
+
+    Test11(Foo foo) {
+      if (true) {
+        // BUG: Diagnostic contains: this.fao = foo
+        foo = foo;
+      }
+      this.foo = foo;
+    }
+
+    public void test11a(Foo foo) {
+      // BUG: Diagnostic contains: this.fao = foo
+      foo = foo;
+    }
+  }
+
   private static class Foo {
     int a;
   }

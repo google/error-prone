@@ -232,7 +232,9 @@ public class SelfAssignment extends BugChecker
       for (JCTree member : klass.getMembers()) {
         if (member.getKind() == VARIABLE) {
           JCVariableDecl var = (JCVariableDecl) member;
-          if (!Flags.isStatic(var.sym) && Objects.equals(var.type, type)) {
+          if (!Flags.isStatic(var.sym)
+              && (var.sym.flags() & Flags.FINAL) == 0
+              && Objects.equals(var.type, type)) {
             int editDistance =
                 LevenshteinEditDistance.getEditDistance(lhsName, var.name.toString());
             if (editDistance < minEditDistance) {
