@@ -66,7 +66,7 @@ with both overloads.
 Any of the following disambiguate the overloads:
 
 ```
-doIt((String x) -> x.toString()); // explicitly typed
-doIt(x -> (x.toString())); // non-statement expression body
-doIt(x -> {x.toString();}); // statement body
+doIt((String x) -> x.toString()); // explicitly typed, calls f(Function)
+doIt(x -> (x.toString())); // non-statement expression body, calls f(Function)
+doIt(x -> {x.toString();}); // statement body, calls f(Consumer)
 ```
