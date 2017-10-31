@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -152,5 +153,25 @@ public class CanonicalDurationTest {
             "  }",
             "}")
         .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void blacklist() throws Exception {
+    CompilationTestHelper.newInstance(CanonicalDuration.class, getClass())
+        .addSourceLines(
+            "A.java",
+            "package a;",
+            "import java.time.Duration;",
+            "public class A {",
+            "  static final int S = 60;",
+            "  static final int M = 60;",
+            "  static final int H = 24;",
+            "  {",
+            "    Duration.ofSeconds(S);",
+            "    Duration.ofMinutes(H);",
+            "    Duration.ofHours(24);",
+            "  }",
+            "}")
+        .doTest();
   }
 }
