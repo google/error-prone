@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Tests for self assignment
@@ -29,12 +30,14 @@ public class SelfAssignmentNegativeCases {
   private static int b = StaticClass.b;
   private static final int C = SelfAssignmentNegativeCases.b;
   private static final int D = checkNotNull(SelfAssignmentNegativeCases.C);
-  private static final int E = StaticClass.getIntArr().length;
+  private static final int E = requireNonNull(SelfAssignmentNegativeCases.D);
+  private static final int F = StaticClass.getIntArr().length;
 
   public void test1(int a) {
     int b = SelfAssignmentNegativeCases.b;
     this.a = a;
     this.a = checkNotNull(a);
+    this.a = requireNonNull(a);
   }
 
   public void test2() {
@@ -61,6 +64,7 @@ public class SelfAssignmentNegativeCases {
     Bar bar = new Bar();
     foo.a = bar.a;
     foo.a = checkNotNull(bar.a);
+    foo.a = requireNonNull(bar.a);
   }
 
   public void test7() {
@@ -69,11 +73,13 @@ public class SelfAssignmentNegativeCases {
     f1.bar = new Bar();
     f1.foo.a = f1.bar.a;
     f1.foo.a = checkNotNull(f1.bar.a);
+    f1.foo.a = requireNonNull(f1.bar.a);
   }
 
   public void test8(SelfAssignmentNegativeCases that) {
     this.a = that.a;
     this.a = checkNotNull(that.a);
+    this.a = requireNonNull(that.a);
   }
 
   private static class Foo {
