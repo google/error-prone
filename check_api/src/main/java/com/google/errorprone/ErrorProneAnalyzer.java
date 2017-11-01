@@ -24,6 +24,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TaskEvent;
@@ -172,7 +173,7 @@ public class ErrorProneAnalyzer implements TaskListener {
    */
   private boolean isExcludedPath(URI uri) {
     Pattern excludedPattern = errorProneOptions.getExcludedPattern();
-    return (excludedPattern != null) && excludedPattern.matcher(uri.toString()).matches();
+    return (excludedPattern != null) && excludedPattern.matcher(ASTHelpers.getFileNameFromUri(uri)).matches();
   }
 
   /**
