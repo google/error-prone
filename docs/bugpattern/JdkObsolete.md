@@ -5,9 +5,6 @@ Some JDK APIs are obsolete and have preferred alternatives.
 It is very rare for `LinkedList` to out-perform `ArrayList` or `ArrayDeque`.
 Avoid it unless you're willing to invest a lot of time into benchmarking.
 
-If a synchronized collection is necessary, use `Collections.synchronizedList` or
-a data structure from `java.util.concurrent`.
-
 ## `Vector`
 
 `Vector` performs synchronization that is usually unnecessary; prefer
@@ -28,6 +25,9 @@ usually a good choice.
 
 `Stack` is a nonstandard class that predates the Java Collections Framework;
 prefer `ArrayDeque`.
+
+If a synchronized collection is necessary, use a data structure from
+`java.util.concurrent`.
 
 ## `StringBuffer`
 
