@@ -19,13 +19,17 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.anything;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.throwStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
 import com.google.errorprone.VisitorState;
@@ -50,9 +54,12 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 public abstract class AbstractExpectedExceptionChecker extends BugChecker
@@ -68,6 +75,10 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
       staticMethod()
           .onClassAny("org.hamcrest.Matchers", "org.hamcrest.CoreMatchers", "org.hamcrest.core.Is")
           .withSignature("<T>isA(java.lang.Class<T>)");
+
+  static final Matcher<StatementTree> FAIL_MATCHER =
+      anyOf(
+          throwStatement(anything()), expressionStatement(staticMethod().anyClass().named("fail")));
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -103,9 +114,13 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
     if (expectations.isEmpty()) {
       return NO_MATCH;
     }
-    List<StatementTree> suffix = new ArrayList<>();
+    Deque<StatementTree> suffix = new ArrayDeque<>();
+    StatementTree failure = null;
     Iterators.addAll(suffix, it);
-    return handleMatch(tree, state, expectations, suffix);
+    if (!suffix.isEmpty() && FAIL_MATCHER.matches(suffix.peekLast(), state)) {
+      failure = suffix.removeLast();
+    }
+    return handleMatch(tree, state, expectations, ImmutableList.copyOf(suffix), failure);
   }
 
   /**
@@ -118,9 +133,14 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
    * @param suffix the statements after the assertions, which are expected to throw
    */
   protected abstract Description handleMatch(
-      MethodTree tree, VisitorState state, List<Tree> expectations, List<StatementTree> suffix);
+      MethodTree tree,
+      VisitorState state,
+      List<Tree> expectations,
+      List<StatementTree> suffix,
+      @Nullable StatementTree failure);
 
-  protected BaseFix buildBaseFix(VisitorState state, List<Tree> expectations) {
+  protected BaseFix buildBaseFix(
+      VisitorState state, List<Tree> expectations, @Nullable StatementTree failure) {
     String exceptionClass = "Throwable";
     // additional assertions to perform on the captured exception (if any)
     List<String> newAsserts = new ArrayList<>();
@@ -197,6 +217,9 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
         ((JCTree) expectations.get(0)).getStartPosition(),
         state.getEndPosition(getLast(expectations)),
         "");
+    if (failure != null) {
+      fix.delete(failure);
+    }
     return new BaseFix(fix.build(), exceptionClass, newAsserts);
   }
 
