@@ -115,6 +115,7 @@ __SelfAssignmentPositiveCases2.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Tests for self assignment
@@ -137,6 +138,8 @@ public class SelfAssignmentPositiveCases2 {
     foo.a = foo.a;
     // BUG: Diagnostic contains: checkNotNull(foo.a)
     foo.a = checkNotNull(foo.a);
+    // BUG: Diagnostic contains: requireNonNull(foo.a)
+    foo.a = requireNonNull(foo.a);
   }
 
   public void test7() {
@@ -147,6 +150,8 @@ public class SelfAssignmentPositiveCases2 {
     f.foo.a = f.foo.a;
     // BUG: Diagnostic contains: checkNotNull(f.foo.a)
     f.foo.a = checkNotNull(f.foo.a);
+    // BUG: Diagnostic contains: requireNonNull(f.foo.a)
+    f.foo.a = requireNonNull(f.foo.a);
   }
 
   public void test8() {
@@ -155,6 +160,8 @@ public class SelfAssignmentPositiveCases2 {
     this.foo.a = foo.a;
     // BUG: Diagnostic contains: checkNotNull(foo.a)
     this.foo.a = checkNotNull(foo.a);
+    // BUG: Diagnostic contains: requireNonNull(foo.a)
+    this.foo.a = requireNonNull(foo.a);
   }
 
   public void test9(Foo fao, Foo bar) {
@@ -162,6 +169,8 @@ public class SelfAssignmentPositiveCases2 {
     this.foo = foo;
     // BUG: Diagnostic contains: this.foo = checkNotNull(fao)
     this.foo = checkNotNull(foo);
+    // BUG: Diagnostic contains: this.foo = requireNonNull(fao)
+    this.foo = requireNonNull(foo);
   }
 
   public void test10(Foo foo) {
@@ -169,6 +178,27 @@ public class SelfAssignmentPositiveCases2 {
     foo = foo;
     // BUG: Diagnostic contains: this.foo = checkNotNull(foo)
     foo = checkNotNull(foo);
+    // BUG: Diagnostic contains: this.foo = requireNonNull(foo)
+    foo = requireNonNull(foo);
+  }
+
+  class Test11 {
+    final Foo foo;
+
+    Foo fao;
+
+    Test11(Foo foo) {
+      if (true) {
+        // BUG: Diagnostic contains: this.fao = foo
+        foo = foo;
+      }
+      this.foo = foo;
+    }
+
+    public void test11a(Foo foo) {
+      // BUG: Diagnostic contains: this.fao = foo
+      foo = foo;
+    }
   }
 
   private static class Foo {
@@ -209,6 +239,7 @@ __SelfAssignmentNegativeCases.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Tests for self assignment
@@ -221,12 +252,14 @@ public class SelfAssignmentNegativeCases {
   private static int b = StaticClass.b;
   private static final int C = SelfAssignmentNegativeCases.b;
   private static final int D = checkNotNull(SelfAssignmentNegativeCases.C);
-  private static final int E = StaticClass.getIntArr().length;
+  private static final int E = requireNonNull(SelfAssignmentNegativeCases.D);
+  private static final int F = StaticClass.getIntArr().length;
 
   public void test1(int a) {
     int b = SelfAssignmentNegativeCases.b;
     this.a = a;
     this.a = checkNotNull(a);
+    this.a = requireNonNull(a);
   }
 
   public void test2() {
@@ -253,6 +286,7 @@ public class SelfAssignmentNegativeCases {
     Bar bar = new Bar();
     foo.a = bar.a;
     foo.a = checkNotNull(bar.a);
+    foo.a = requireNonNull(bar.a);
   }
 
   public void test7() {
@@ -261,11 +295,13 @@ public class SelfAssignmentNegativeCases {
     f1.bar = new Bar();
     f1.foo.a = f1.bar.a;
     f1.foo.a = checkNotNull(f1.bar.a);
+    f1.foo.a = requireNonNull(f1.bar.a);
   }
 
   public void test8(SelfAssignmentNegativeCases that) {
     this.a = that.a;
     this.a = checkNotNull(that.a);
+    this.a = requireNonNull(that.a);
   }
 
   private static class Foo {
