@@ -26,23 +26,22 @@ import org.junit.runners.JUnit4;
  * @author sulku@google.com (Marsela Sulku)
  */
 @RunWith(JUnit4.class)
-public class OvershadowingSubclassFieldsTest {
+public class HidingFieldTest {
   CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() throws Exception {
-    compilationHelper =
-        CompilationTestHelper.newInstance(OvershadowingSubclassFields.class, getClass());
+    compilationHelper = CompilationTestHelper.newInstance(HidingField.class, getClass());
   }
 
   @Test
-  public void testCollectionSizePositiveCases() throws Exception {
-    compilationHelper.addSourceFile("OvershadowingSubclassFieldsPositiveCases1.java").doTest();
-    compilationHelper.addSourceFile("OvershadowingSubclassFieldsPositiveCases2.java").doTest();
+  public void testHidingFieldPositiveCases() throws Exception {
+    compilationHelper.addSourceFile("HidingFieldPositiveCases1.java").doTest();
+    compilationHelper.addSourceFile("HidingFieldPositiveCases2.java").doTest();
   }
 
   @Test
-  public void testCollectionSizeNegativeCases() throws Exception {
-    compilationHelper.addSourceFile("OvershadowingSubclassFieldsNegativeCases.java").doTest();
+  public void testHidingFieldNegativeCases() throws Exception {
+    compilationHelper.addSourceFile("HidingFieldNegativeCases.java").doTest();
   }
 }

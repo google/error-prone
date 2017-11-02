@@ -19,15 +19,14 @@ package com.google.errorprone.bugpatterns.testdata;
  * @author sulku@google.com (Marsela Sulku)
  * @author mariasam@google.com (Maria Sam)
  */
-public class OvershadowingSubclassFieldsPositiveCases2 {
+public class HidingFieldPositiveCases2 {
 
   /**
    * ClassA extends a class from a different file and ClassA has a member with the same name as its
    * parent
    */
-  public class ClassA extends OvershadowingSubclassFieldsPositiveCases1.ClassB {
-    // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
-    // This variable is overshadowing a variable in superclass:  ClassA
+  public class ClassA extends HidingFieldPositiveCases1.ClassB {
+    // BUG: Diagnostic contains: superclass: ClassA
     private int varTwo;
   }
 
@@ -35,9 +34,8 @@ public class OvershadowingSubclassFieldsPositiveCases2 {
    * ClassB extends a class from a different file and ClassB has a member with the same name as its
    * grandparent
    */
-  public class ClassB extends OvershadowingSubclassFieldsPositiveCases1.ClassB {
-    // BUG: Diagnostic contains: Overshadowing variables of superclass causes confusion and errors.
-    // This variable is overshadowing a variable in superclass:  ClassA
+  public class ClassB extends HidingFieldPositiveCases1.ClassB {
+    // BUG: Diagnostic contains: superclass: ClassA
     public int varOne = 2;
   }
 }
