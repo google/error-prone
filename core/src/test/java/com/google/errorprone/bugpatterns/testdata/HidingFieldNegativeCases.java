@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.testdata;
  * @author sulku@google.com (Marsela Sulku)
  * @author mariasam@google.com (Maria Sam)
  */
-public class OvershadowingSubclassFieldsNegativeCases {
+public class HidingFieldNegativeCases {
   // base class
   static class ClassA {
     public int varOne;
@@ -38,11 +38,11 @@ public class OvershadowingSubclassFieldsNegativeCases {
     private String varFour = "Test";
 
     // warning suppressed when overshadowing variable in parent
-    @SuppressWarnings("OvershadowingSubclassFields")
+    @SuppressWarnings("HidingField")
     public int varFive;
 
     // warning suppressed when overshadowing variable in grandparent
-    @SuppressWarnings("OvershadowingSubclassFields")
+    @SuppressWarnings("HidingField")
     public int varOne;
   }
 
