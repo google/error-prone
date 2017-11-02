@@ -906,7 +906,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Description.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#buildBaseFix-com.google.errorprone.VisitorState-java.util.List-">buildBaseFix(VisitorState, List&lt;Tree&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#buildBaseFix-com.google.errorprone.VisitorState-java.util.List-com.sun.source.tree.StatementTree-">buildBaseFix(VisitorState, List&lt;Tree&gt;, StatementTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.html#buildDescription-com.sun.source.tree.Tree-">buildDescription(Tree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>
@@ -3181,11 +3181,11 @@
 <dd>
 <div class="block">Handles a guarded member access.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">handleMatch(MethodTree, VisitorState, List&lt;Tree&gt;, List&lt;StatementTree&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-com.sun.source.tree.StatementTree-">handleMatch(MethodTree, VisitorState, List&lt;Tree&gt;, List&lt;StatementTree&gt;, StatementTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></dt>
 <dd>
 <div class="block">Handle a method that contains a use of <code>ExpectedException</code>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">handleMatch(MethodTree, VisitorState, List&lt;Tree&gt;, List&lt;StatementTree&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionChecker</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-com.sun.source.tree.StatementTree-">handleMatch(MethodTree, VisitorState, List&lt;Tree&gt;, List&lt;StatementTree&gt;, StatementTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractTestExceptionChecker.html#handleStatements-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.fixes.SuggestedFix-">handleStatements(MethodTree, VisitorState, JCTree.JCExpression, SuggestedFix)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractTestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractTestExceptionChecker</a></dt>
 <dd>
@@ -3311,6 +3311,10 @@
 <dd>
 <div class="block">Listener interface for accesses to guarded members.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/HidingField.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">HidingField</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/HidingField.html#HidingField--">HidingField()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/HidingField.html" title="class in com.google.errorprone.bugpatterns">HidingField</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:I">
 <!--   -->
@@ -4019,6 +4023,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_TEST_ANNOTATION">JUNIT4_TEST_ANNOTATION</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/JUnit4ClassAnnotationNonStatic.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">JUnit4ClassAnnotationNonStatic</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block"><code>@BeforeClass</code> or <code>@AfterClass</code> should be applied to static methods.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JUnit4ClassAnnotationNonStatic.html#JUnit4ClassAnnotationNonStatic--">JUnit4ClassAnnotationNonStatic()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4ClassAnnotationNonStatic.html" title="class in com.google.errorprone.bugpatterns">JUnit4ClassAnnotationNonStatic</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/JUnit4ClassUsedInJUnit3.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">JUnit4ClassUsedInJUnit3</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JUnit4ClassUsedInJUnit3.html#JUnit4ClassUsedInJUnit3--">JUnit4ClassUsedInJUnit3()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4ClassUsedInJUnit3.html" title="class in com.google.errorprone.bugpatterns">JUnit4ClassUsedInJUnit3</a></dt>
@@ -4367,6 +4377,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceClash</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/HidingField.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/HidingField.html" title="class in com.google.errorprone.bugpatterns">HidingField</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnConstructors.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnConstructors.html" title="class in com.google.errorprone.bugpatterns.inject">AssistedInjectAndInjectOnConstructors</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/dagger/PrivateConstructorForNoninstantiableModule.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.dagger.<a href="com/google/errorprone/bugpatterns/inject/dagger/PrivateConstructorForNoninstantiableModule.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">PrivateConstructorForNoninstantiableModule</a></dt>
@@ -4398,8 +4410,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/overloading/InconsistentOverloads.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.overloading.<a href="com/google/errorprone/bugpatterns/overloading/InconsistentOverloads.html" title="class in com.google.errorprone.bugpatterns.overloading">InconsistentOverloads</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/OverrideThrowableToString.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OverrideThrowableToString.html" title="class in com.google.errorprone.bugpatterns">OverrideThrowableToString</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/OvershadowingSubclassFields.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OvershadowingSubclassFields.html" title="class in com.google.errorprone.bugpatterns">OvershadowingSubclassFields</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></dt>
 <dd>&nbsp;</dd>
@@ -4683,6 +4693,8 @@
 <dd>
 <div class="block">Matches if: 1) Method's name begins with misspelled variation of "test".</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JUnit4ClassAnnotationNonStatic.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4ClassAnnotationNonStatic.html" title="class in com.google.errorprone.bugpatterns">JUnit4ClassAnnotationNonStatic</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JUnit4TestNotRun.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TestNotRun</a></dt>
 <dd>
 <div class="block">Matches if:
@@ -5745,10 +5757,6 @@
 <div class="block">Warns against overriding toString() in a Throwable class and suggests getMessage()</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/OverrideThrowableToString.html#OverrideThrowableToString--">OverrideThrowableToString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OverrideThrowableToString.html" title="class in com.google.errorprone.bugpatterns">OverrideThrowableToString</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/OvershadowingSubclassFields.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">OvershadowingSubclassFields</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/OvershadowingSubclassFields.html#OvershadowingSubclassFields--">OvershadowingSubclassFields()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OvershadowingSubclassFields.html" title="class in com.google.errorprone.bugpatterns">OvershadowingSubclassFields</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a name="I:P">

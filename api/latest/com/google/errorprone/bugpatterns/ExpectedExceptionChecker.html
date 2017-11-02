@@ -190,10 +190,11 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedE
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">handleMatch</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-com.sun.source.tree.StatementTree-">handleMatch</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;expectations,
-           <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.StatementTree&gt;&nbsp;suffix)</code>
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.StatementTree&gt;&nbsp;suffix,
+           com.sun.source.tree.StatementTree&nbsp;failure)</code>
 <div class="block">Handle a method that contains a use of <code>ExpectedException</code>.</div>
 </td>
 </tr>
@@ -203,7 +204,7 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedE
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></h3>
-<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#buildBaseFix-com.google.errorprone.VisitorState-java.util.List-">buildBaseFix</a>, <a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></code></li>
+<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#buildBaseFix-com.google.errorprone.VisitorState-java.util.List-com.sun.source.tree.StatementTree-">buildBaseFix</a>, <a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">
@@ -257,7 +258,7 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedE
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">
+<a name="handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-com.sun.source.tree.StatementTree-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -266,12 +267,14 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedE
 <pre>protected&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;handleMatch(com.sun.source.tree.MethodTree&nbsp;tree,
                                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;expectations,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.StatementTree&gt;&nbsp;suffix)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">AbstractExpectedExceptionChecker</a></code></span></div>
+                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.StatementTree&gt;&nbsp;suffix,
+                                  <a href="http://docs.oracle.com/javase/7/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                  com.sun.source.tree.StatementTree&nbsp;failure)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-com.sun.source.tree.StatementTree-">AbstractExpectedExceptionChecker</a></code></span></div>
 <div class="block">Handle a method that contains a use of <code>ExpectedException</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-">handleMatch</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-com.sun.source.tree.StatementTree-">handleMatch</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tree</code> - the method</dd>
 <dd><code>state</code> - the visitor state</dd>

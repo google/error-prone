@@ -173,6 +173,9 @@ Log tag too long, cannot exceed 23 characters.
 __[JUnit3TestNotRun](bugpattern/JUnit3TestNotRun)__<br>
 Test method will not be run; please correct method signature (Should be public, non-static, and method name should begin with &quot;test&quot;).
 
+__[JUnit4ClassAnnotationNonStatic](bugpattern/JUnit4ClassAnnotationNonStatic)__<br>
+This method should be static
+
 __[JUnit4SetUpNotRun](bugpattern/JUnit4SetUpNotRun)__<br>
 setUp() method will not be run; Please add a @Before annotation
 
@@ -403,6 +406,9 @@ Return value of methods returning Future must be checked. Ignoring returned Futu
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
 
+__[HidingField](bugpattern/HidingField)__<br>
+Hiding fields of superclasses may cause confusion and errors
+
 __[ImmutableAnnotationChecker](bugpattern/ImmutableAnnotationChecker)__<br>
 Annotations should always be immutable
 
@@ -498,9 +504,6 @@ Varargs doesn&#39;t agree for overridden method
 
 __[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__<br>
 This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
-
-__[OvershadowingSubclassFields](bugpattern/OvershadowingSubclassFields)__<br>
-Overshadowing variables of superclass causes confusion and errors
 
 __[ParameterName](bugpattern/ParameterName)__<br>
 Detects `/* name= */`-style comments on actual parameters where the name doesn&#39;t match the formal parameter
