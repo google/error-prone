@@ -9,7 +9,7 @@ If evaluating both operands is necessary for side effects, consider refactoring
 to make that explicit. For example, prefer this:
 
 ```java
-int rhs = hasSideEffects();
+boolean rhs = hasSideEffects();
 if (lhs && rhs) {
   // ...
 }
