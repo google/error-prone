@@ -107,7 +107,7 @@ public class ProvidesFixChecker extends BugChecker implements ClassTreeMatcher {
       // If providesFix arg incorrectly states there is no fix, correct it.
       fixBuilder.replace(providesFixArgument, "ProvidesFix." + REQUIRES_HUMAN_ATTENTION.name());
     }
-    return describeMatch(tree, fixBuilder.build());
+    return describeMatch(bugPatternAnnotation, fixBuilder.build());
   }
 
   private static boolean providesFix(Tree tree, VisitorState state) {
@@ -115,12 +115,14 @@ public class ProvidesFixChecker extends BugChecker implements ClassTreeMatcher {
         new TreeScanner<Boolean, Void>() {
           @Override
           public Boolean visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
-            return DESCRIPTION_WITH_FIX.matches(callTree, state);
+            return super.visitMethodInvocation(callTree, unused)
+                || DESCRIPTION_WITH_FIX.matches(callTree, state);
           }
 
           @Override
           public Boolean visitNewClass(NewClassTree constructorTree, Void unused) {
-            return DESCRIPTION_CONSTRUCTOR.matches(constructorTree, state);
+            return super.visitNewClass(constructorTree, unused)
+                || DESCRIPTION_CONSTRUCTOR.matches(constructorTree, state);
           }
 
           @Override
