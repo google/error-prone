@@ -16,7 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -97,6 +101,50 @@ public class JdkObsoleteTest {
             "  abstract class C implements java.util.SortedMap<Object, Object> {}",
             "  // BUG: Diagnostic contains:",
             "  abstract class D extends java.util.Dictionary<Object, Object> {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoring() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new JdkObsolete(), getClass())
+        .addInputLines(
+            "in/Test.java", //
+            "import java.util.*;",
+            "class Test {",
+            "  Deque<Object> d = new LinkedList<>();",
+            "  List<Object> l = new LinkedList<>();",
+            "  LinkedList<Object> ll = new LinkedList<>();",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "import java.util.*;",
+            "class Test {",
+            "  Deque<Object> d = new ArrayDeque<>();",
+            "  List<Object> l = new ArrayList<>();",
+            "  LinkedList<Object> ll = new LinkedList<>();",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void stringBufferRefactoringTest() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new JdkObsolete(), getClass())
+        .addInputLines(
+            "in/Test.java", //
+            "class Test {",
+            "  String f() {",
+            "    StringBuffer sb = new StringBuffer();",
+            "    return sb.append(42).toString();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "class Test {",
+            "  String f() {",
+            "    StringBuilder sb = new StringBuilder();",
+            "    return sb.append(42).toString();",
+            "  }",
             "}")
         .doTest();
   }
