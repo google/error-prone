@@ -440,11 +440,7 @@ public class ErrorProneOptions {
     if (!excludeSubStrings.iterator().hasNext()) {
       return null;
     }
-    Set<String> escapedExcluded = new LinkedHashSet<>();
-    for (String str: excludeSubStrings) {
-      escapedExcluded.add(str.replace(".", "\\."));
-    }
-    String choiceRegexp = Joiner.on("|").join(escapedExcluded);
+    String choiceRegexp = Joiner.on("|").join(excludeSubStrings);
     return Pattern.compile("(?:.*)(?:" + choiceRegexp + ")(?:.*)");
   }
 }
