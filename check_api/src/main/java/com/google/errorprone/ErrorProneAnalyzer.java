@@ -138,17 +138,15 @@ public class ErrorProneAnalyzer implements TaskListener {
     DescriptionListener descriptionListener =
         descriptionListenerFactory.getDescriptionListener(log, compilation);
     try {
-      if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
-        // We only get TaskEvents for compilation units if they contain no package declarations
-        // (e.g. package-info.java files).  In this case it's safe to analyze the
-        // CompilationUnitTree immediately.
-        if (!isExcludedPath(compilation.getSourceFile().toUri())) {
+      if (!isExcludedPath(compilation.getSourceFile().toUri())) {
+        if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
+          // We only get TaskEvents for compilation units if they contain no package declarations
+          // (e.g. package-info.java files).  In this case it's safe to analyze the
+          // CompilationUnitTree immediately.
           transformer.get().apply(path, subContext, descriptionListener);
-        }
-      } else if (finishedCompilation(path.getCompilationUnit())) {
-        // Otherwise this TaskEvent is for a ClassTree, and we can scan the whole
-        // CompilationUnitTree once we've seen all the enclosed classes.
-        if (!isExcludedPath(compilation.getSourceFile().toUri())) {
+        } else if (finishedCompilation(path.getCompilationUnit())) {
+          // Otherwise this TaskEvent is for a ClassTree, and we can scan the whole
+          // CompilationUnitTree once we've seen all the enclosed classes.
           transformer.get().apply(new TreePath(compilation), subContext, descriptionListener);
         }
       }

@@ -411,9 +411,8 @@ public class ErrorProneOptions {
             ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(remaining);
             builder.patchingOptionsBuilder().importOrganizer(importOrganizer);
           } else if (arg.startsWith(EXCLUDED_PATHS_PREFIX)) {
-            String remaining = arg.substring(EXCLUDED_PATHS_PREFIX.length());
-            Iterable<String> paths = Splitter.on(',').trimResults().split(remaining);
-            builder.setExcludedPattern(getExcludedPattern(paths));
+            String pathRegex = arg.substring(EXCLUDED_PATHS_PREFIX.length());
+            builder.setExcludedPattern(Pattern.compile(pathRegex));
           } else {
             remainingArgs.add(arg);
           }
@@ -434,13 +433,5 @@ public class ErrorProneOptions {
   public static ErrorProneOptions processArgs(String[] args) {
     Preconditions.checkNotNull(args);
     return processArgs(Arrays.asList(args));
-  }
-
-  private static Pattern getExcludedPattern(Iterable<String> excludeSubStrings) {
-    if (!excludeSubStrings.iterator().hasNext()) {
-      return null;
-    }
-    String choiceRegexp = Joiner.on("|").join(excludeSubStrings);
-    return Pattern.compile("(?:.*)(?:" + choiceRegexp + ")(?:.*)");
   }
 }

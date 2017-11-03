@@ -169,13 +169,15 @@ public class ErrorProneOptionsTest {
   public void recognizesExcludedPaths() {
     ErrorProneOptions options =
             ErrorProneOptions.processArgs(
-                    new String[] {"-XepExcludedPaths:build/generated,other_output"});
+                    new String[] {"-XepExcludedPaths:(.*/)?(build/generated|other_output)/.*\\.java"});
     Pattern excludedPattern = options.getExcludedPattern();
     assertThat(excludedPattern).isNotNull();
     assertThat(excludedPattern.matcher("fizz/build/generated/Gen.java").matches()).isTrue();
     assertThat(excludedPattern.matcher("fizz/bazz/generated/Gen.java").matches()).isFalse();
+    assertThat(excludedPattern.matcher("fizz/abuild/generated/Gen.java").matches()).isFalse();
     assertThat(excludedPattern.matcher("other_output/Gen.java").matches()).isTrue();
     assertThat(excludedPattern.matcher("foo/other_output/subdir/Gen.java").matches()).isTrue();
+    assertThat(excludedPattern.matcher("foo/other_output/subdir/Gen.cpp").matches()).isFalse();
   }
 
 
