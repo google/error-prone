@@ -39,7 +39,6 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.PropagatedException;
-
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;

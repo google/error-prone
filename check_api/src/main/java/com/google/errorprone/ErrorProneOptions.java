@@ -26,7 +26,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.apply.ImportOrganizer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
