@@ -269,6 +269,9 @@ public final class WellKnownMutability {
         .add("org.joda.time.LocalDateTime")
         .add("org.joda.time.Period")
         .add("org.joda.time.format.DateTimeFormatter")
+        .add("org.openqa.selenium.Dimension")
+        .add("org.openqa.selenium.DeviceRotation")
+        .add("org.openqa.selenium.ImmutableCapabilities")
         .build();
   }
 
