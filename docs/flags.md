@@ -35,7 +35,7 @@ There are also a few blanket severity-changing flags:
 *   `-XepAllErrorsAsWarnings`
 *   `-XepAllDisabledChecksAsWarnings`
 *   `-XepDisableAllChecks`
-*   `-XepDisableWarningsInGeneratedCode`
+*   `-XepDisableWarningsInGeneratedCode` : Disables warnings in classes annotated with @javax.annotation.Generated
 
 If you pass a flag that refers to an unknown check name, by default Error Prone
 will throw an error. You can allow the use of unknown check names by passing the
