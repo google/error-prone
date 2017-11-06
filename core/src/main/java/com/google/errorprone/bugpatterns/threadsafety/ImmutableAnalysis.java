@@ -157,9 +157,12 @@ public class ImmutableAnalysis {
       }
     }
 
-    info = checkSuper(immutableTyParams, type);
-    if (info.isPresent()) {
-      return info;
+    if (!type.asElement().isEnum()) {
+      // don't check enum super types here to avoid double-reporting errors
+      info = checkSuper(immutableTyParams, type);
+      if (info.isPresent()) {
+        return info;
+      }
     }
     Type mutableEnclosing = mutableEnclosingInstance(tree, type);
     if (mutableEnclosing != null) {
