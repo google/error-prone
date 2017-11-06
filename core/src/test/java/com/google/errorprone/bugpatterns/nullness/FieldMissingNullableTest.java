@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -344,7 +343,6 @@ public class FieldMissingNullableTest {
 
   // regression test for https://github.com/google/error-prone/issues/708
   @Test
-  @Ignore
   public void i708() {
     createCompilationTestHelper()
         .addSourceLines(
