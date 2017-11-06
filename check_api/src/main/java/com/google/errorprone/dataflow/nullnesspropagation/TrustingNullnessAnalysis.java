@@ -110,10 +110,18 @@ public final class TrustingNullnessAnalysis implements Serializable {
             ast,
             /* assumeAssertionsEnabled */ false,
             /* assumeAssertionsDisabled */ false);
-    Analysis<Nullness, LocalStore<Nullness>, TrustingNullnessPropagation> analysis =
-        new Analysis<>(javacEnv, nullnessPropagation);
-    analysis.performAnalysis(cfg);
-    return analysis.getValue(initializer);
+    try {
+      nullnessPropagation
+          .setContext(context)
+          .setCompilationUnit(fieldDeclPath.getCompilationUnit());
+
+      Analysis<Nullness, LocalStore<Nullness>, TrustingNullnessPropagation> analysis =
+          new Analysis<>(javacEnv, nullnessPropagation);
+      analysis.performAnalysis(cfg);
+      return analysis.getValue(initializer);
+    } finally {
+      nullnessPropagation.setContext(null).setCompilationUnit(null);
+    }
   }
 
   public static boolean hasNullableAnnotation(Element element) {
