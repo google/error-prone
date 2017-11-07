@@ -44,6 +44,14 @@ try {
 }
 ```
 
+4.  code that is using `assertThrows`; e.g.:
+
+```java
+assertThrows(
+    NullPointerException.class,
+    () -> user.setName(null));
+```
+
 This is because such tests meant to check if a method is invoked and/or throws
 the correct exception type, rather than consuming the return value.
 

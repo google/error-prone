@@ -21,12 +21,14 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.Matchers.isLastStatementInBlock;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.Matchers.previousStatement;
+import static com.google.errorprone.matchers.Matchers.throwStatement;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -249,7 +251,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
               .named("fail"),
           staticMethod().onClass("org.junit.Assert").named("fail"),
           staticMethod().onClass("junit.framework.Assert").named("fail"),
-          staticMethod().onClass("junit.framework.TestCase").named("fail"));
+          staticMethod().onClass("junit.framework.TestCase").named("fail"),
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("fail"),
+          staticMethod().onClass("org.testng.Assert").named("fail"));
 
   private static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
       anyOf(
@@ -262,7 +266,12 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                           instanceMethod().onExactClass("org.junit.rules.ExpectedException")
                           )))),
           // try { me(); fail(); } catch (Throwable t) {}
-          allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD))),
+          allOf(
+              enclosingNode(kindIs(Kind.TRY)),
+              nextStatement(
+                  anyOf(
+                      expressionStatement(FAIL_METHOD),
+                      throwStatement(isSubtypeOf(AssertionError.class))))),
           // assertThrows(Throwable.class, () => { me(); })
           allOf(
               anyOf(isLastStatementInBlock(), parentNode(kindIs(Kind.LAMBDA_EXPRESSION))),

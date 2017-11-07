@@ -378,6 +378,10 @@ public class CheckReturnValueTest {
             "      foo.f();",
             "      junit.framework.TestCase.fail();",
             "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      throw new AssertionError();",
+            "    } catch (Exception expected) {}",
             "  }",
             "}")
         .doTest();
@@ -432,6 +436,10 @@ public class CheckReturnValueTest {
             "    try {",
             "      foo.f();",
             "      junit.framework.TestCase.fail(\"message\");",
+            "    } catch (Exception expected) {}",
+            "    try {",
+            "      foo.f();",
+            "      throw new AssertionError(\"message\");",
             "    } catch (Exception expected) {}",
             "  }",
             "}")
@@ -528,6 +536,9 @@ public class CheckReturnValueTest {
             "    // BUG: Diagnostic contains: Ignored return value",
             "    foo.f();",
             "    junit.framework.TestCase.fail();",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    foo.f();",
+            "    throw new AssertionError();",
             "  }",
             "}")
         .doTest();
