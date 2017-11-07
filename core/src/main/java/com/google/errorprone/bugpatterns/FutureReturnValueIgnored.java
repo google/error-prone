@@ -65,6 +65,12 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored {
           // CompletionService is intended to be used in a way where the Future returned
           // from submit is discarded, because the Futures are available later via e.g. take()
           instanceMethod().onDescendantOf(CompletionService.class.getName()).named("submit"),
+          // IntelliJ's executeOnPooledThread wraps the Callable/Runnable in one that catches
+          // Throwable, so it can't fail (unless logging the Throwable also throws, but there's
+          // nothing much to be done at that point).
+          instanceMethod()
+              .onDescendantOf("com.intellij.openapi.application.Application")
+              .named("executeOnPooledThread"),
           // ChannelFuture#addListern(s) returns itself for chaining. Any exception during the
           // future execution should be dealt by the listener(s).
           instanceMethod()
