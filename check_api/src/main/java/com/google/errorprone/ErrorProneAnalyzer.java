@@ -24,6 +24,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TaskEvent;
@@ -38,8 +39,10 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.PropagatedException;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /** A {@link TaskListener} that runs Error Prone over attributed compilation units. */
 @Trusted
@@ -134,15 +137,17 @@ public class ErrorProneAnalyzer implements TaskListener {
     DescriptionListener descriptionListener =
         descriptionListenerFactory.getDescriptionListener(log, compilation);
     try {
-      if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
-        // We only get TaskEvents for compilation units if they contain no package declarations
-        // (e.g. package-info.java files).  In this case it's safe to analyze the
-        // CompilationUnitTree immediately.
-        transformer.get().apply(path, subContext, descriptionListener);
-      } else if (finishedCompilation(path.getCompilationUnit())) {
-        // Otherwise this TaskEvent is for a ClassTree, and we can scan the whole
-        // CompilationUnitTree once we've seen all the enclosed classes.
-        transformer.get().apply(new TreePath(compilation), subContext, descriptionListener);
+      if (!isExcludedPath(compilation.getSourceFile().toUri())) {
+        if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
+          // We only get TaskEvents for compilation units if they contain no package declarations
+          // (e.g. package-info.java files).  In this case it's safe to analyze the
+          // CompilationUnitTree immediately.
+          transformer.get().apply(path, subContext, descriptionListener);
+        } else if (finishedCompilation(path.getCompilationUnit())) {
+          // Otherwise this TaskEvent is for a ClassTree, and we can scan the whole
+          // CompilationUnitTree once we've seen all the enclosed classes.
+          transformer.get().apply(new TreePath(compilation), subContext, descriptionListener);
+        }
       }
     } catch (ErrorProneError e) {
       e.logFatalError(log);
@@ -160,7 +165,17 @@ public class ErrorProneAnalyzer implements TaskListener {
     }
   }
 
-  /** Returns true if all declarations inside the given compilation unit have been visited. */
+  /**
+   * Returns true if all declarations inside the given compilation unit have been visited.
+   */
+  private boolean isExcludedPath(URI uri) {
+    Pattern excludedPattern = errorProneOptions.getExcludedPattern();
+    return (excludedPattern != null) && excludedPattern.matcher(ASTHelpers.getFileNameFromUri(uri)).matches();
+  }
+
+  /**
+   * Returns true if all declarations inside the given compilation unit have been visited.
+   */
   private boolean finishedCompilation(CompilationUnitTree tree) {
     OUTER:
     for (Tree decl : tree.getTypeDecls()) {
