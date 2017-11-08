@@ -398,6 +398,31 @@ public class ErrorProneJavaCompilerTest {
         .contains("AssertionError: Cannot edit synthetic AST nodes");
   }
 
+  @Test
+  public void testWithExcludedPaths() throws Exception {
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
+
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-XepExcludedPaths:.*/bugpatterns/.*"),
+            Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isTrue();
+
+    // ensure regexp must match the full path
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-XepExcludedPaths:bugpatterns"),
+            Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
+  }
+
   private static class CompilationResult {
     public final boolean succeeded;
     public final DiagnosticTestHelper diagnosticHelper;
