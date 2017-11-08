@@ -1,6 +1,6 @@
 maven_jar(
     name = "error_prone",
-    artifact = "com.google.errorprone:error_prone_ant:2.1.3-SNAPSHOT",
+    artifact = "com.google.errorprone:error_prone_ant:2.1.2-SNAPSHOT",
     repository = "https://oss.sonatype.org/content/repositories/snapshots",
 )
 
