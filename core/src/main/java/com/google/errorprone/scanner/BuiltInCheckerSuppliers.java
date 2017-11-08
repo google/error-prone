@@ -70,6 +70,7 @@ import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.FallThrough;
 import com.google.errorprone.bugpatterns.FilesLinesLeak;
 import com.google.errorprone.bugpatterns.Finally;
+import com.google.errorprone.bugpatterns.FloatCast;
 import com.google.errorprone.bugpatterns.FloatingPointLiteralPrecision;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
 import com.google.errorprone.bugpatterns.FunctionalInterfaceClash;
@@ -443,6 +444,7 @@ public class BuiltInCheckerSuppliers {
           EqualsHashCode.class,
           EqualsIncompatibleType.class,
           Finally.class,
+          FloatCast.class,
           FloatingPointLiteralPrecision.class,
           FragmentInjection.class,
           FragmentNotInstantiable.class,
