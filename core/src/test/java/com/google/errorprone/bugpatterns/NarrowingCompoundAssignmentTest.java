@@ -230,35 +230,35 @@ public class NarrowingCompoundAssignmentTest {
 
   @Test
   public void testPreservePrecedenceExhaustive() throws Exception {
-    testPrecedence("*", "*", true);
-    testPrecedence("*", "+", true);
-    testPrecedence("*", "<<", true);
-    testPrecedence("*", "&", true);
-    testPrecedence("*", "|", true);
+    testPrecedence("*", "*", /* parens= */ true);
+    testPrecedence("*", "+", /* parens= */ true);
+    testPrecedence("*", "<<", /* parens= */ true);
+    testPrecedence("*", "&", /* parens= */ true);
+    testPrecedence("*", "|", /* parens= */ true);
 
-    testPrecedence("+", "*", false);
-    testPrecedence("+", "+", true);
-    testPrecedence("+", "<<", true);
-    testPrecedence("+", "&", true);
-    testPrecedence("+", "|", true);
+    testPrecedence("+", "*", /* parens= */ false);
+    testPrecedence("+", "+", /* parens= */ true);
+    testPrecedence("+", "<<", /* parens= */ true);
+    testPrecedence("+", "&", /* parens= */ true);
+    testPrecedence("+", "|", /* parens= */ true);
 
-    testPrecedence("<<", "*", false);
-    testPrecedence("<<", "+", false);
-    testPrecedence("<<", "<<", true);
-    testPrecedence("<<", "&", true);
-    testPrecedence("<<", "|", true);
+    testPrecedence("<<", "*", /* parens= */ false);
+    testPrecedence("<<", "+", /* parens= */ false);
+    testPrecedence("<<", "<<", /* parens= */ true);
+    testPrecedence("<<", "&", /* parens= */ true);
+    testPrecedence("<<", "|", /* parens= */ true);
 
-    testPrecedence("&", "*", false);
-    testPrecedence("&", "+", false);
-    testPrecedence("&", "<<", false);
-    testPrecedence("&", "&", true);
-    testPrecedence("&", "|", true);
+    testPrecedence("&", "*", /* parens= */ false);
+    testPrecedence("&", "+", /* parens= */ false);
+    testPrecedence("&", "<<", /* parens= */ false);
+    testPrecedence("&", "&", /* parens= */ true);
+    testPrecedence("&", "|", /* parens= */ true);
 
-    testPrecedence("|", "*", false);
-    testPrecedence("|", "+", false);
-    testPrecedence("|", "<<", false);
-    testPrecedence("|", "&", false);
-    testPrecedence("|", "|", true);
+    testPrecedence("|", "*", /* parens= */ false);
+    testPrecedence("|", "+", /* parens= */ false);
+    testPrecedence("|", "<<", /* parens= */ false);
+    testPrecedence("|", "&", /* parens= */ false);
+    testPrecedence("|", "|", /* parens= */ true);
   }
 
   private void testPrecedence(String opA, String opB, boolean parens) throws Exception {

@@ -64,7 +64,7 @@ public class MaskedClassLoader extends ClassLoader {
   static class MaskedFileManager extends JavacFileManager {
 
     public MaskedFileManager(Context context) {
-      super(context, true, UTF_8);
+      super(context, /* register= */ true, UTF_8);
     }
 
     public MaskedFileManager() {

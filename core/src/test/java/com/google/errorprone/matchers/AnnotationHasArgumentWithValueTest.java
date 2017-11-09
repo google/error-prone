@@ -39,7 +39,9 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
   public void testMatches() {
     writeFile("A.java", "@Thing(stuff=\"y\")", "public class A {}");
     assertCompiles(
-        annotationMatches(true, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
+        annotationMatches(
+            /* shouldMatch= */ true,
+            new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
   }
 
   @Test
@@ -47,16 +49,22 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
     writeFile("Thing2.java", "public @interface Thing2 {", "  String value();", "}");
     writeFile("A.java", "@Thing2((\"y\"))", "public class A {}");
     assertCompiles(
-        annotationMatches(true, new AnnotationHasArgumentWithValue("value", stringLiteral("y"))));
+        annotationMatches(
+            /* shouldMatch= */ true,
+            new AnnotationHasArgumentWithValue("value", stringLiteral("y"))));
   }
 
   @Test
   public void notMatches() {
     writeFile("A.java", "@Thing(stuff=\"n\")", "public class A{}");
     assertCompiles(
-        annotationMatches(false, new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
+        annotationMatches(
+            /* shouldMatch= */ false,
+            new AnnotationHasArgumentWithValue("stuff", stringLiteral("y"))));
     assertCompiles(
-        annotationMatches(false, new AnnotationHasArgumentWithValue("other", stringLiteral("n"))));
+        annotationMatches(
+            /* shouldMatch= */ false,
+            new AnnotationHasArgumentWithValue("other", stringLiteral("n"))));
   }
 
   @Test
@@ -64,7 +72,8 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
     writeFile("A.java", "@SuppressWarnings({\"unchecked\",\"fallthrough\"})", "public class A{}");
     assertCompiles(
         annotationMatches(
-            true, new AnnotationHasArgumentWithValue("value", stringLiteral("unchecked"))));
+            /* shouldMatch= */ true,
+            new AnnotationHasArgumentWithValue("value", stringLiteral("unchecked"))));
   }
 
   private Scanner annotationMatches(

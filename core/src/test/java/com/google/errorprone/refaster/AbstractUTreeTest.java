@@ -85,7 +85,13 @@ public abstract class AbstractUTreeTest {
   }
 
   protected JCExpression parseExpression(String contents) {
-    Parser parser = ParserFactory.instance(context).newParser(contents, false, false, true);
+    Parser parser =
+        ParserFactory.instance(context)
+            .newParser(
+                contents,
+                /* keepDocComments= */ false,
+                /* keepEndPos= */ false,
+                /* keepLineMap= */ true);
     return parser.parseExpression();
   }
 

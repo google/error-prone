@@ -135,7 +135,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
         Template<?> template = UTemplater.createTemplate(context, tree);
         beforeTemplates.add(template);
         if (template instanceof BlockTemplate) {
-          context.put(UTemplater.REQUIRE_BLOCK_KEY, true);
+          context.put(UTemplater.REQUIRE_BLOCK_KEY, /* data= */ true);
         }
       } else if (ASTHelpers.hasAnnotation(tree, AfterTemplate.class, state)) {
         afterTemplates.add(UTemplater.createTemplate(context, tree));

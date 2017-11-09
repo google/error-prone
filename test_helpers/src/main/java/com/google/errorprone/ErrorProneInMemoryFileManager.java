@@ -63,7 +63,7 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
   }
 
   private ErrorProneInMemoryFileManager(Optional<Class<?>> clazz) {
-    super(new Context(), false, UTF_8);
+    super(new Context(), /* register= */ false, UTF_8);
     this.fileSystem = Jimfs.newFileSystem(Configuration.unix());
     this.clazz = clazz;
   }

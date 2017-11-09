@@ -199,7 +199,7 @@ public final class FindIdentifiers {
                       .getTypes()
                       .membersClosure(
                           ASTHelpers.getType(memberSelectTree.getExpression()),
-                          /*skipInterface*/ false);
+                          /* skipInterface= */ false);
               for (Symbol var :
                   scope.getSymbols(
                       sym ->

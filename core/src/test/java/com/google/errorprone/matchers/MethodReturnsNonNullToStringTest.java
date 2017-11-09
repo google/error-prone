@@ -40,7 +40,8 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
         "    return obj.toString();",
         "  }",
         "}");
-    assertCompiles(methodInvocationMatches(true, Matchers.methodReturnsNonNull()));
+    assertCompiles(
+        methodInvocationMatches(/* shouldMatch= */ true, Matchers.methodReturnsNonNull()));
   }
 
   @Test
@@ -60,7 +61,8 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
         "    return str.toString();",
         "  }",
         "}");
-    assertCompiles(methodInvocationMatches(true, Matchers.methodReturnsNonNull()));
+    assertCompiles(
+        methodInvocationMatches(/* shouldMatch= */ true, Matchers.methodReturnsNonNull()));
   }
 
   @Test
@@ -75,7 +77,8 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
         "    return toString();",
         "  }",
         "}");
-    assertCompiles(methodInvocationMatches(true, Matchers.methodReturnsNonNull()));
+    assertCompiles(
+        methodInvocationMatches(/* shouldMatch= */ true, Matchers.methodReturnsNonNull()));
   }
 
   @Test
@@ -90,7 +93,8 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
         "    return ToString();",
         "  }",
         "}");
-    assertCompiles(methodInvocationMatches(false, Matchers.methodReturnsNonNull()));
+    assertCompiles(
+        methodInvocationMatches(/* shouldMatch= */ false, Matchers.methodReturnsNonNull()));
   }
 
   @Test

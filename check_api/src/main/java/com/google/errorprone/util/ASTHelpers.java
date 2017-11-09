@@ -462,7 +462,8 @@ public class ASTHelpers {
           && !sym.isStatic()
           && ((sym.flags() & Flags.SYNTHETIC) == 0)
           && sym.name.contentEquals(methodSymbol.name)
-          && methodSymbol.overrides(sym, (TypeSymbol) methodSymbol.owner, types, true)) {
+          && methodSymbol.overrides(
+              sym, (TypeSymbol) methodSymbol.owner, types, /* checkResult= */ true)) {
         return (MethodSymbol) sym;
       }
     }
@@ -470,7 +471,7 @@ public class ASTHelpers {
   }
 
   public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
-    return findSuperMethods(methodSymbol, types, false)
+    return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ false)
         .collect(Collectors.toCollection(LinkedHashSet::new));
   }
 
@@ -479,7 +480,7 @@ public class ASTHelpers {
    * method}.
    */
   public static Optional<MethodSymbol> findSuperMethod(MethodSymbol methodSymbol, Types types) {
-    return findSuperMethods(methodSymbol, types, true).findFirst();
+    return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ true).findFirst();
   }
 
   private static Stream<MethodSymbol> findSuperMethods(

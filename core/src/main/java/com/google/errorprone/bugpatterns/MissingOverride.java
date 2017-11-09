@@ -94,7 +94,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
         if (msym.isStatic()) {
           continue;
         }
-        if (sym.overrides(msym, owner, types, /*checkReturn*/ false)) {
+        if (sym.overrides(msym, owner, types, /* checkResult= */ false)) {
           return msym;
         }
       }

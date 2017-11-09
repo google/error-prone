@@ -59,9 +59,12 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "package com.google;", "public class A {", "  private A() {}", "}");
     assertCompiles(
         classMatches(
-            true, new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
+            /* shouldMatch= */ true,
+            new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
     assertCompiles(
-        classMatches(true, new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
+        classMatches(
+            /* shouldMatch= */ true,
+            new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
   }
 
   @Test
@@ -69,9 +72,12 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "package com.google;", "public class A {", "}");
     assertCompiles(
         classMatches(
-            false, new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
+            /* shouldMatch= */ false,
+            new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
     assertCompiles(
-        classMatches(false, new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
+        classMatches(
+            /* shouldMatch= */ false,
+            new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
   }
 
   @Test
@@ -79,9 +85,12 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "package com.google;", "public class A {", "  public A() {}", "}");
     assertCompiles(
         classMatches(
-            false, new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
+            /* shouldMatch= */ false,
+            new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
     assertCompiles(
-        classMatches(false, new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
+        classMatches(
+            /* shouldMatch= */ false,
+            new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
   }
 
   @Test
@@ -95,9 +104,12 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
         "}");
     assertCompiles(
         classMatches(
-            true, new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
+            /* shouldMatch= */ true,
+            new ConstructorOfClass(AT_LEAST_ONE, methodHasVisibility(Visibility.PRIVATE))));
     assertCompiles(
-        classMatches(false, new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
+        classMatches(
+            /* shouldMatch= */ false,
+            new ConstructorOfClass(ALL, methodHasVisibility(Visibility.PRIVATE))));
   }
 
   private abstract class ScannerTest extends Scanner {
