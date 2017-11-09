@@ -50,8 +50,6 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.ImportTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.NewArrayTree;
@@ -246,28 +244,17 @@ public class SuggestedFixes {
         break;
       }
       if (curr.owner != null && curr.owner.getKind() == ElementKind.PACKAGE) {
-        if (importClash(state, curr)) {
+        // If the owner of curr is a package, we can't do anything except import or fully-qualify
+        // the type name.
+        if (found != null) {
           names.addFirst(curr.owner.getQualifiedName().toString());
-          break;
         } else {
           fix.addImport(curr.getQualifiedName().toString());
-          break;
         }
+        break;
       }
     }
     return Joiner.on('.').join(names);
-  }
-
-  private static boolean importClash(VisitorState state, Symbol sym) {
-    for (ImportTree importTree : state.getPath().getCompilationUnit().getImports()) {
-      if (((MemberSelectTree) importTree.getQualifiedIdentifier())
-              .getIdentifier()
-              .contentEquals(sym.getSimpleName())
-          && !sym.equals(ASTHelpers.getSymbol(importTree.getQualifiedIdentifier()))) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /** Returns a human-friendly name of the given type for use in fixes. */
