@@ -281,6 +281,20 @@
       <version>2.9.4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.google.common.html.types</groupId>
+      <artifactId>proto</artifactId>
+      <version>1.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.google.common.html.types</groupId>
+      <artifactId>types</artifactId>
+      <version>1.0.5</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
