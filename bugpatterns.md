@@ -388,6 +388,9 @@ An equality test between objects with incompatible types always returns false
 __[Finally](bugpattern/Finally)__<br>
 If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
 
+__[FloatCast](bugpattern/FloatCast)__<br>
+Use parenthesis to make the precedence explicit
+
 __[FloatingPointLiteralPrecision](bugpattern/FloatingPointLiteralPrecision)__<br>
 Floating point literal loses precision
 
