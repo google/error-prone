@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -355,7 +356,49 @@ public class FieldMissingNullableTest {
         .doTest();
   }
 
+  @Test
+  public void testSuggestNonJsr305Nullable() throws Exception {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "class T {",
+            "  @Nullable private final Object obj1 = null;",
+            "  private final Object obj2 = null;",
+            "  @interface Nullable {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class T {",
+            "  @Nullable private final Object obj1 = null;",
+            "  @Nullable private final Object obj2 = null;",
+            "  @interface Nullable {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNonAnnotationNullable() throws Exception {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "class T {",
+            "  private final Object obj2 = null;",
+            "  class Nullable {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class T {",
+            "  @javax.annotation.Nullable private final Object obj2 = null;",
+            "  class Nullable {}",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(FieldMissingNullable.class, getClass());
+  }
+
+  private BugCheckerRefactoringTestHelper createRefactoringTestHelper() {
+    return BugCheckerRefactoringTestHelper.newInstance(new FieldMissingNullable(), getClass());
   }
 }

@@ -20,16 +20,17 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.TrustingNullnessAnalysis;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
@@ -41,7 +42,8 @@ import javax.annotation.Nullable;
   name = "ReturnMissingNullable",
   summary = "Methods that can return null should be annotated @Nullable",
   category = JDK,
-  severity = SUGGESTION
+  severity = SUGGESTION,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatcher {
 
@@ -69,7 +71,7 @@ public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatch
 
     // Don't need dataflow to tell us that null is nullable
     if (returnExpression.getKind() == ExpressionTree.Kind.NULL_LITERAL) {
-      return makeFix(method, tree, "Returning null literal");
+      return makeFix(state, method, tree, "Returning null literal");
     }
 
     // OK let's see what dataflow says
@@ -81,9 +83,9 @@ public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatch
       case NONNULL:
         return Description.NO_MATCH;
       case NULL:
-        return makeFix(method, tree, "Definitely returning null");
+        return makeFix(state, method, tree, "Definitely returning null");
       case NULLABLE:
-        return makeFix(method, tree, "May return null");
+        return makeFix(state, method, tree, "May return null");
       default:
         throw new AssertionError("Impossible: " + nullness);
     }
@@ -98,14 +100,11 @@ public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatch
         || state.getTypes().isSameType(returnType, state.getTypeFromString("java.lang.Void"));
   }
 
-  private Description makeFix(JCMethodDecl method, ReturnTree tree, String message) {
-    return buildDescription(tree)
+  private Description makeFix(
+      VisitorState state, Tree declaration, Tree matchedTree, String message) {
+    return buildDescription(matchedTree)
         .setMessage(message)
-        .addFix(
-            SuggestedFix.builder()
-                .addImport("javax.annotation.Nullable")
-                .prefixWith(method, "@Nullable\n")
-                .build())
+        .addFix(NullnessFixes.makeFix(state, declaration))
         .build();
   }
 
