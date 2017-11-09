@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -40,7 +40,7 @@ import javax.lang.model.element.ElementKind;
   name = "MissingCasesInEnumSwitch",
   summary = "Switches on enum types should either handle all values, or have a default case.",
   category = JDK,
-  severity = ERROR
+  severity = WARNING
 )
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 
