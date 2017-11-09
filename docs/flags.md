@@ -37,6 +37,17 @@ There are also a few blanket severity-changing flags:
 *   `-XepDisableAllChecks`
 *   `-XepDisableWarningsInGeneratedCode`
 
+Additionally, you can completely exclude certain paths
+from any Error Prone checking via the `-XepExcludedPaths` flag.  The
+flag takes as an argument a regular expression that is matched against
+a source file's path to determine whether it should be excluded.
+So, to exclude files in any sub-directory of a path containing `build/generated`,
+use the option:
+
+```bash
+-XepExcludedPaths:.*/build/generated/.*
+```
+
 If you pass a flag that refers to an unknown check name, by default Error Prone
 will throw an error. You can allow the use of unknown check names by passing the
 `-XepIgnoreUnknownCheckNames` flag.
