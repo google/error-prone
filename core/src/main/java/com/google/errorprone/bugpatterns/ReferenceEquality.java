@@ -83,8 +83,8 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     }
     Symbol compareTo = getOnlyMember(state, state.getSymtab().comparableType, "compareTo");
     Symbol equals = getOnlyMember(state, state.getSymtab().objectType, "equals");
-    if (!sym.overrides(compareTo, classType.tsym, state.getTypes(), false)
-        && !sym.overrides(equals, classType.tsym, state.getTypes(), false)) {
+    if (!sym.overrides(compareTo, classType.tsym, state.getTypes(), /* checkResult= */ false)
+        && !sym.overrides(equals, classType.tsym, state.getTypes(), /* checkResult= */ false)) {
       return false;
     }
     if (!ASTHelpers.isSameType(type, classType, state)) {
@@ -113,7 +113,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
         continue;
       }
       for (Symbol sym : scope.getSymbolsByName(equalsName)) {
-        if (sym.overrides(objectEquals, type.tsym, state.getTypes(), false)) {
+        if (sym.overrides(objectEquals, type.tsym, state.getTypes(), /* checkResult= */ false)) {
           return true;
         }
       }

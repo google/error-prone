@@ -38,7 +38,7 @@ public class Contains implements Matcher<Tree> {
   @Override
   public boolean matches(Tree tree, VisitorState state) {
     FirstMatchingScanner scanner = new FirstMatchingScanner(state);
-    Boolean matchFound = tree.accept(scanner, false);
+    Boolean matchFound = tree.accept(scanner, /* data= */ false);
     return matchFound != null && matchFound;
   }
 

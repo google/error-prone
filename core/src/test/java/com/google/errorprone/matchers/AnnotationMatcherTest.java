@@ -71,11 +71,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "package com.google;", "public class A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            false,
+            /* shouldMatch= */ false,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            false, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ false,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -83,11 +84,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public class A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -96,11 +98,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "A.java", "package com.google.foo;", "@com.google.SampleAnnotation1", "public class A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -109,12 +112,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "A.java", "package com.google;", "@SampleNestedAnnotation.Annotation", "public class A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(
                 AT_LEAST_ONE, isType("com.google.SampleNestedAnnotation.Annotation"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(
                 ALL, isType("com.google.SampleNestedAnnotation.Annotation"))));
   }
@@ -124,11 +127,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public class A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            false,
+            /* shouldMatch= */ false,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.WrongAnnotation"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            false, new AnnotationMatcher<Tree>(ALL, isType("com.google.WrongAnnotation"))));
+            /* shouldMatch= */ false,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.WrongAnnotation"))));
   }
 
   @Test
@@ -137,11 +141,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "A.java", "package com.google.foo;", "@com.google.SampleAnnotation1", "public class A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            false,
+            /* shouldMatch= */ false,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.WrongAnnotation"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            false, new AnnotationMatcher<Tree>(ALL, isType("com.google.WrongAnnotation"))));
+            /* shouldMatch= */ false,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.WrongAnnotation"))));
   }
 
   @Test
@@ -153,11 +158,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "public class A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            false,
+            /* shouldMatch= */ false,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.WrongAnnotation"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            false, new AnnotationMatcher<Tree>(ALL, isType("com.google.WrongAnnotation"))));
+            /* shouldMatch= */ false,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.WrongAnnotation"))));
   }
 
   @Test
@@ -169,7 +175,7 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "public class A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(
                 AT_LEAST_ONE,
                 Matchers.<AnnotationTree>anyOf(
@@ -177,7 +183,7 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
                     isType("com.google.SampleAnnotation2")))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(
                 ALL,
                 Matchers.<AnnotationTree>anyOf(
@@ -194,11 +200,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "public class A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            false, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ false,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -206,11 +213,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public interface A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -218,11 +226,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public enum A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -236,11 +245,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -254,11 +264,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -271,11 +282,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -289,11 +301,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -309,11 +322,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
         "}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -321,11 +335,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public @interface A {}");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   @Test
@@ -333,11 +348,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
     writeFile("package-info.java", "@SampleAnnotation1", "package com.google;");
     assertCompiles(
         nodeWithAnnotationMatches(
-            true,
+            /* shouldMatch= */ true,
             new AnnotationMatcher<Tree>(AT_LEAST_ONE, isType("com.google.SampleAnnotation1"))));
     assertCompiles(
         nodeWithAnnotationMatches(
-            true, new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
+            /* shouldMatch= */ true,
+            new AnnotationMatcher<Tree>(ALL, isType("com.google.SampleAnnotation1"))));
   }
 
   private abstract class ScannerTest extends Scanner {

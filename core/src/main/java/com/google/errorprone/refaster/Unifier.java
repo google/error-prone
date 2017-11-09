@@ -122,7 +122,7 @@ public final class Unifier {
 
   public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
       @Nullable final List<U> toUnify, @Nullable final List<? extends T> targets) {
-    return unifications(toUnify, targets, false);
+    return unifications(toUnify, targets, /* allowVarargs= */ false);
   }
 
   public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
@@ -138,7 +138,7 @@ public final class Unifier {
    */
   public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(
       Unifier unifier, @Nullable List<U> toUnify, @Nullable final List<? extends T> targets) {
-    return unifyList(unifier, toUnify, targets, false);
+    return unifyList(unifier, toUnify, targets, /* allowVarargs= */ false);
   }
 
   /**

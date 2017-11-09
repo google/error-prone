@@ -35,7 +35,7 @@ public class InstanceMethod implements Matcher<ExpressionTree> {
   private final boolean isWildCard;
 
   public InstanceMethod(Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
-    this(receiverMatcher, methodName, false);
+    this(receiverMatcher, methodName, /* isWildCard= */ false);
   }
 
   private InstanceMethod(

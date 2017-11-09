@@ -40,7 +40,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     operators.add(Kind.IF);
     assertCompiles(
         compoundAssignmentMatches(
-            true,
+            /* shouldMatch= */ true,
             new CompoundAssignment(
                 operators,
                 Matchers.<ExpressionTree>anything(),
@@ -54,7 +54,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(
         compoundAssignmentMatches(
-            true,
+            /* shouldMatch= */ true,
             new CompoundAssignment(
                 operators,
                 Matchers.<ExpressionTree>anything(),
@@ -76,7 +76,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     operators.add(Kind.LEFT_SHIFT_ASSIGNMENT);
     assertCompiles(
         compoundAssignmentMatches(
-            true,
+            /* shouldMatch= */ true,
             new CompoundAssignment(
                 operators,
                 Matchers.<ExpressionTree>anything(),
@@ -97,7 +97,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(
         compoundAssignmentMatches(
-            false,
+            /* shouldMatch= */ false,
             new CompoundAssignment(
                 operators,
                 Matchers.<ExpressionTree>anything(),
@@ -118,7 +118,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(
         compoundAssignmentMatches(
-            false,
+            /* shouldMatch= */ false,
             new CompoundAssignment(
                 operators,
                 Matchers.<ExpressionTree>isArrayType(),
@@ -139,7 +139,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(
         compoundAssignmentMatches(
-            false,
+            /* shouldMatch= */ false,
             new CompoundAssignment(
                 operators,
                 Matchers.<ExpressionTree>anything(),

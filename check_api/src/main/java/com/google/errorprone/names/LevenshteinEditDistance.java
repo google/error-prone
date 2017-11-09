@@ -40,7 +40,7 @@ public class LevenshteinEditDistance {
    * @see #getEditDistance(String, String, boolean)
    */
   public static int getEditDistance(String source, String target) {
-    return getEditDistance(source, target, true);
+    return getEditDistance(source, target, /* caseSensitive= */ true);
   }
 
   /**

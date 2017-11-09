@@ -49,7 +49,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "public class A {", "  A() { this(0); }", "  A(int foo) {}", "}");
     assertCompiles(
         methodHasIdentifierMatching(
-            true,
+            /* shouldMatch= */ true,
             hasIdentifier(
                 new Matcher<IdentifierTree>() {
                   @Override
@@ -71,7 +71,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         "}");
     assertCompiles(
         methodHasIdentifierMatching(
-            true,
+            /* shouldMatch= */ true,
             hasIdentifier(
                 new Matcher<IdentifierTree>() {
                   @Override
@@ -86,7 +86,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "public class A {", "  A(int foo) {", "    int bar = foo;", "  }", "}");
     assertCompiles(
         methodHasIdentifierMatching(
-            true,
+            /* shouldMatch= */ true,
             hasIdentifier(
                 new Matcher<IdentifierTree>() {
                   @Override
@@ -101,7 +101,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "public class A {", "  A() {", "    int foo = 1;", "  }", "}");
     assertCompiles(
         methodHasIdentifierMatching(
-            false,
+            /* shouldMatch= */ false,
             hasIdentifier(
                 new Matcher<IdentifierTree>() {
                   @Override
@@ -120,7 +120,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     writeFile("A.java", "public class A {", "  A() {", "    int foo = 1;", "  }", "}");
     assertCompiles(
         literalHasIdentifierMatching(
-            false,
+            /* shouldMatch= */ false,
             hasIdentifier(
                 new Matcher<IdentifierTree>() {
                   @Override

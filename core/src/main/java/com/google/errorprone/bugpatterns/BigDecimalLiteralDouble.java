@@ -90,7 +90,7 @@ public class BigDecimalLiteralDouble extends BugChecker
 
     // Don't suggest an integral replacement in this case as it may change the scale of the
     // resulting BigDecimal.
-    return createDescription(tree, arg, state, false);
+    return createDescription(tree, arg, state, /* suggestIntegral= */ false);
   }
 
   @Override
@@ -104,7 +104,7 @@ public class BigDecimalLiteralDouble extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return createDescription(tree, arg, state, true);
+    return createDescription(tree, arg, state, /* suggestIntegral= */ true);
   }
 
   public Description createDescription(

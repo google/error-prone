@@ -74,15 +74,15 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     public abstract boolean matches();
 
     public static <T extends Tree> MatchResult<T> none() {
-      return create(ImmutableList.<T>of(), false);
+      return create(ImmutableList.<T>of(), /* matches= */ false);
     }
 
     public static <T extends Tree> MatchResult<T> match(T matchingNode) {
-      return create(ImmutableList.of(matchingNode), true);
+      return create(ImmutableList.of(matchingNode), /* matches= */ true);
     }
 
     public static <T extends Tree> MatchResult<T> match(ImmutableList<T> matchingNodes) {
-      return create(matchingNodes, true);
+      return create(matchingNodes, /* matches= */ true);
     }
 
     private static <T extends Tree> MatchResult<T> create(List<T> matchingNode, boolean matches) {

@@ -99,7 +99,7 @@ public class ImportStatementsTest {
      * @return a new JCImport stub
      */
     StubImportBuilder addImport(String typeName) {
-      return addImport(typeName, false);
+      return addImport(typeName, /* isStatic= */ false);
     }
 
     /**
@@ -109,7 +109,7 @@ public class ImportStatementsTest {
      * @return a new JCImport stub
      */
     StubImportBuilder addStaticImport(String typeName) {
-      return addImport(typeName, true);
+      return addImport(typeName, /* isStatic= */ true);
     }
 
     /**

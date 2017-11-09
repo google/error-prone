@@ -73,7 +73,7 @@ public class WrongParameterPackage extends BugChecker implements MethodTreeMatch
         MethodSymbol supermethod = (MethodSymbol) s;
 
         // if this method actually overrides the supermethod, then it's correct and not a match.
-        if (method.overrides(supermethod, superClass, state.getTypes(), true)) {
+        if (method.overrides(supermethod, superClass, state.getTypes(), /* checkResult= */ true)) {
           return Description.NO_MATCH;
         }
 

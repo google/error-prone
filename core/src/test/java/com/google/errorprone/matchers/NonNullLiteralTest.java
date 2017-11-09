@@ -60,7 +60,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "    return \"test string\";",
         "  }",
         "}");
-    assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
+    assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ true, Matchers.nonNullLiteral()));
   }
 
   @Test
@@ -73,7 +73,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "    Type klass = String.class;",
         "  }",
         "}");
-    assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
+    assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ true, Matchers.nonNullLiteral()));
   }
 
   @Test
@@ -86,7 +86,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "    }",
         "  }",
         "}");
-    assertCompiles(nonNullLiteralMatches(false, Matchers.nonNullLiteral()));
+    assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ false, Matchers.nonNullLiteral()));
   }
 
   @Test
@@ -110,7 +110,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "    foo.stringVar = new String();",
         "  }",
         "}");
-    assertCompiles(nonNullLiteralMatches(false, Matchers.nonNullLiteral()));
+    assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ false, Matchers.nonNullLiteral()));
   }
 
   private Scanner nonNullLiteralMatches(

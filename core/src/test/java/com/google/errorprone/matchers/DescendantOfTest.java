@@ -35,7 +35,8 @@ public class DescendantOfTest extends DescendantOfAbstractTest {
         "    return a.count();",
         "  }",
         "}");
-    assertCompiles(memberSelectMatches(true, new DescendantOf("com.google.A", "count()")));
+    assertCompiles(
+        memberSelectMatches(/* shouldMatch= */ true, new DescendantOf("com.google.A", "count()")));
   }
 
   @Test
@@ -49,7 +50,8 @@ public class DescendantOfTest extends DescendantOfAbstractTest {
         "    return b.count();",
         "  }",
         "}");
-    assertCompiles(memberSelectMatches(true, new DescendantOf("com.google.A", "count()")));
+    assertCompiles(
+        memberSelectMatches(/* shouldMatch= */ true, new DescendantOf("com.google.A", "count()")));
   }
 
   @Test
@@ -65,7 +67,8 @@ public class DescendantOfTest extends DescendantOfAbstractTest {
         "    return count();",
         "  }",
         "}");
-    assertCompiles(memberSelectMatches(true, new DescendantOf("com.google.A", "count()")));
+    assertCompiles(
+        memberSelectMatches(/* shouldMatch= */ true, new DescendantOf("com.google.A", "count()")));
   }
 
   @Test
@@ -80,7 +83,8 @@ public class DescendantOfTest extends DescendantOfAbstractTest {
         "  }",
         "}");
     assertCompiles(
-        memberSelectMatches(false, new DescendantOf("com.google.A", "count(java.lang.Object)")));
+        memberSelectMatches(
+            /* shouldMatch= */ false, new DescendantOf("com.google.A", "count(java.lang.Object)")));
   }
 
   @Test
@@ -93,6 +97,7 @@ public class DescendantOfTest extends DescendantOfAbstractTest {
         "    return A.staticCount();",
         "  }",
         "}");
-    assertCompiles(memberSelectMatches(false, new DescendantOf("com.google.A", "count()")));
+    assertCompiles(
+        memberSelectMatches(/* shouldMatch= */ false, new DescendantOf("com.google.A", "count()")));
   }
 }

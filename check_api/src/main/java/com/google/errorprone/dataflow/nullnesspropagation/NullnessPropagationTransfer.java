@@ -375,7 +375,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates) {
     handleEqualityComparison(
-        true, node.getLeftOperand(), node.getRightOperand(), inputs, thenUpdates, elseUpdates);
+        /* equalTo= */ true,
+        node.getLeftOperand(),
+        node.getRightOperand(),
+        inputs,
+        thenUpdates,
+        elseUpdates);
   }
 
   @Override
@@ -385,7 +390,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates) {
     handleEqualityComparison(
-        false, node.getLeftOperand(), node.getRightOperand(), inputs, thenUpdates, elseUpdates);
+        /* equalTo= */ false,
+        node.getLeftOperand(),
+        node.getRightOperand(),
+        inputs,
+        thenUpdates,
+        elseUpdates);
   }
 
   @Override
