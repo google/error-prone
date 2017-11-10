@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -112,17 +113,36 @@ public class ImmutableAnalysis {
   private final String nonFinalFieldMessage;
   private final String mutableFieldMessage;
 
+  private final ImmutableSet<String> immutableAnnotations;
+
+  public ImmutableAnalysis(
+      BugChecker bugChecker,
+      VisitorState state,
+      WellKnownMutability wellKnownMutability,
+      String nonFinalFieldMessage,
+      String mutableFieldMessage,
+      ImmutableSet<String> immutableAnnotations) {
+    this.bugChecker = bugChecker;
+    this.state = state;
+    this.wellKnownMutability = wellKnownMutability;
+    this.nonFinalFieldMessage = nonFinalFieldMessage;
+    this.mutableFieldMessage = mutableFieldMessage;
+    this.immutableAnnotations = immutableAnnotations;
+  }
+
   public ImmutableAnalysis(
       BugChecker bugChecker,
       VisitorState state,
       WellKnownMutability wellKnownMutability,
       String nonFinalFieldMessage,
       String mutableFieldMessage) {
-    this.bugChecker = bugChecker;
-    this.state = state;
-    this.wellKnownMutability = wellKnownMutability;
-    this.nonFinalFieldMessage = nonFinalFieldMessage;
-    this.mutableFieldMessage = mutableFieldMessage;
+    this(
+        bugChecker,
+        state,
+        wellKnownMutability,
+        nonFinalFieldMessage,
+        mutableFieldMessage,
+        ImmutableSet.of(Immutable.class.getName()));
   }
 
   /**
@@ -432,9 +452,9 @@ public class ImmutableAnalysis {
       }
       return Violation.of(
           String.format(
-              "the declaration of type '%s' is not annotated"
-                  + " @com.google.errorprone.annotations.Immutable",
-              type));
+              "the declaration of type '%s' is not annotated with %s",
+              type,
+              immutableAnnotations.stream().map(a -> "@" + a).collect(Collectors.joining(" or "))));
     }
   }
 
@@ -455,13 +475,15 @@ public class ImmutableAnalysis {
    * Gets the possibly inherited {@code @Immutable} annotation on the given symbol, and
    * reverse-propagates containerOf spec's from super-classes.
    */
-  static AnnotationInfo getInheritedAnnotation(Symbol sym, VisitorState state) {
+  AnnotationInfo getInheritedAnnotation(Symbol sym, VisitorState state) {
     if (!(sym instanceof ClassSymbol)) {
       return null;
     }
-    Compound attr = sym.attribute(state.getSymbolFromString(Immutable.class.getName()));
-    if (attr != null) {
-      return AnnotationInfo.create(sym.getQualifiedName().toString(), containerOf(state, attr));
+    for (String immutableType : immutableAnnotations) {
+      Compound attr = sym.attribute(state.getSymbolFromString(immutableType));
+      if (attr != null) {
+        return AnnotationInfo.create(sym.getQualifiedName().toString(), containerOf(state, attr));
+      }
     }
     // @Immutable is inherited from supertypes
     Type superClass = ((ClassSymbol) sym).getSuperclass();

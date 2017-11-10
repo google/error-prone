@@ -71,7 +71,7 @@ public class ImmutableCheckerTest {
             "import com.google.errorprone.annotations.Immutable;",
             "@Immutable class Test {",
             "  // BUG: Diagnostic contains:"
-                + " 'I' is not annotated @com.google.errorprone.annotations.Immutable",
+                + " 'I' is not annotated with @com.google.errorprone.annotations.Immutable",
             "  private final I i = new I() {};",
             "}")
         .doTest();
@@ -1240,7 +1240,7 @@ public class ImmutableCheckerTest {
             "import com.google.errorprone.annotations.Immutable;",
             "@Immutable class Test {",
             "  // BUG: Diagnostic contains:"
-                + " 'Foo' is not annotated @com.google.errorprone.annotations.Immutable",
+                + " 'Foo' is not annotated with @com.google.errorprone.annotations.Immutable",
             "  final Foo f = null;",
             "}")
         .setArgs(Arrays.asList("-cp", "NOSUCH"))
