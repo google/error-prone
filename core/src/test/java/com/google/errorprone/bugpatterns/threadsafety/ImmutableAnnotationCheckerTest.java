@@ -134,7 +134,7 @@ public class ImmutableAnnotationCheckerTest {
             "class Test implements Deprecated {",
             "  public Class<? extends Annotation> annotationType() { return Deprecated.class; }",
             "  // BUG: Diagnostic contains:"
-                + " the declaration of type 'Foo' is not annotated"
+                + " the declaration of type 'Foo' is not annotated with"
                 + " @com.google.errorprone.annotations.Immutable",
             "  final Foo f;",
             "  private Test(Foo f) {",
@@ -303,6 +303,27 @@ public class ImmutableAnnotationCheckerTest {
             "  {",
             "    new MyAnno() {",
             "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void jucImmutable() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java", //
+            "import javax.annotation.concurrent.Immutable;",
+            "@Immutable",
+            "class Lib {",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "import java.lang.annotation.Annotation;",
+            "class MyAnno implements Annotation {",
+            "  final Lib l = new Lib();",
+            "  public Class<? extends Annotation> annotationType() {",
+            "    return Deprecated.class;",
             "  }",
             "}")
         .doTest();

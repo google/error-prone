@@ -141,7 +141,7 @@ public class ImmutableEnumCheckerTest {
             "enum Enum {",
             "  ONE(new Foo()), TWO(new Foo());",
             "  // BUG: Diagnostic contains:"
-                + " the declaration of type 'Foo' is not annotated"
+                + " the declaration of type 'Foo' is not annotated with"
                 + " @com.google.errorprone.annotations.Immutable",
             "  final Foo f;",
             "  private Enum(Foo f) {",
@@ -197,6 +197,24 @@ public class ImmutableEnumCheckerTest {
             "    }",
             "  };",
             "  abstract int incr();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void jucImmutable() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java", //
+            "import javax.annotation.concurrent.Immutable;",
+            "@Immutable",
+            "class Lib {",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "enum Test {",
+            "  ONE;",
+            "  final Lib l = new Lib();",
             "}")
         .doTest();
   }
