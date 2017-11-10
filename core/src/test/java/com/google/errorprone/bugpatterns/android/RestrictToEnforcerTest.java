@@ -36,7 +36,6 @@ public final class RestrictToEnforcerTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper
-        .addSourceFile("stubs/android/support/annotation/RestrictTo.java")
         .addSourceFile("RestrictToEnforcerPositiveCases.java")
         .addSourceFile("RestrictToEnforcerPositiveCasesApi.java")
         .doTest();
