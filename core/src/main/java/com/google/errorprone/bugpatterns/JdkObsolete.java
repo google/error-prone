@@ -122,7 +122,7 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
                   "java.util.SortedMap", "SortedMap was replaced by NavigableMap in Java 6."),
               new Obsolete(
                   "java.util.Dictionary",
-                  "Dictionary is a nonstandard class that predate the Java Collections Framework;"
+                  "Dictionary is a nonstandard class that predates the Java Collections Framework;"
                       + " use LinkedHashMap."),
               new Obsolete(
                   "java.util.Enumeration", "Enumeration is an ancient precursor to Iterator."))
