@@ -34,6 +34,7 @@ import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
+import com.google.errorprone.bugpatterns.BooleanParameter;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
@@ -519,6 +520,7 @@ public class BuiltInCheckerSuppliers {
           ClassName.class,
           ComparisonContractViolated.class,
           ConstantField.class,
+          BooleanParameter.class,
           ConstructorInvokesOverridable.class,
           ConstructorLeaksThis.class,
           DepAnn.class,
