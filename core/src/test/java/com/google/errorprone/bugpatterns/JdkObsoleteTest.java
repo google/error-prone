@@ -18,10 +18,19 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -144,6 +153,44 @@ public class JdkObsoleteTest {
             "  String f() {",
             "    StringBuilder sb = new StringBuilder();",
             "    return sb.append(42).toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
+
+  /** A test input. */
+  public interface Lib {
+    Enumeration<Integer> foos();
+  }
+
+  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
+    String entryPath = clazz.getName().replace('.', '/') + ".class";
+    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+      jos.putNextEntry(new JarEntry(entryPath));
+      ByteStreams.copy(is, jos);
+    }
+  }
+
+  @Test
+  public void obsoleteOverride() throws IOException {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      addClassToJar(jos, Lib.class);
+    }
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + Lib.class.getCanonicalName() + ";",
+            "import java.util.Enumeration;",
+            "class Test implements Lib {",
+            "  public Enumeration<Integer> foos() {",
+            "    return new Enumeration<Integer>() {",
+            "      @Override public boolean hasMoreElements() { return false; }",
+            "      @Override public Integer nextElement() { return null; }",
+            "    };",
             "  }",
             "}")
         .doTest();

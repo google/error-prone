@@ -39,6 +39,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
@@ -175,6 +176,11 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    if (parent instanceof NewClassTree && tree.equals(((NewClassTree) parent).getClassBody())) {
+      // don't double-report anonymous implementations of obsolete interfaces
+      return NO_MATCH;
+    }
     ClassSymbol symbol = ASTHelpers.getSymbol(tree);
     if (symbol == null) {
       return NO_MATCH;
@@ -186,6 +192,9 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
     for (Type type : types) {
       Obsolete obsolete = OBSOLETE.get(type.asElement().getQualifiedName().toString());
       if (obsolete == null) {
+        continue;
+      }
+      if (implementingObsoleteMethod(state, type)) {
         continue;
       }
       Description.Builder description = buildDescription(tree).setMessage(obsolete.message());
@@ -289,5 +298,25 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
       path = path.getParentPath();
     }
     return null;
+  }
+
+  /** Allow creating obsolete types when overriding a method with an obsolete return type. */
+  private static boolean implementingObsoleteMethod(VisitorState state, Type type) {
+    TreePath path = findEnclosingMethod(state);
+    if (path == null) {
+      return false;
+    }
+    MethodSymbol method = ASTHelpers.getSymbol((MethodTree) path.getLeaf());
+    if (method == null) {
+      return false;
+    }
+    if (ASTHelpers.findSuperMethods(method, state.getTypes()).isEmpty()) {
+      // not an override
+      return false;
+    }
+    if (!ASTHelpers.isSameType(method.getReturnType(), type, state)) {
+      return false;
+    }
+    return true;
   }
 }
