@@ -18,13 +18,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- Added this because the JSR 305 dependency wouldn't download from the
-       default repository.  -->
   <repositories>
+    <!-- Added this because the JSR 305 dependency wouldn't download from the
+         default repository.  -->
     <repository>
       <id>alt-repo1</id>
       <name>repo1.maven.org</name>
       <url>http://repo1.maven.org</url>
+    </repository>
+    <!-- For the Android support library -->
+    <repository>
+      <id>google-android-support</id>
+      <name>maven.google.com</name>
+      <url>https://maven.google.com</url>
     </repository>
   </repositories>
 
@@ -293,6 +299,13 @@
       <groupId>com.google.common.html.types</groupId>
       <artifactId>types</artifactId>
       <version>1.0.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.android.support</groupId>
+      <artifactId>support-annotations</artifactId>
+      <version>27.0.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
