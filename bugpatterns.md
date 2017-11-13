@@ -92,9 +92,6 @@ __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 __[EqualsReference](bugpattern/EqualsReference)__<br>
 == must be used in equals method to check equality to itself or an infinite loop will occur.
 
-__[FallThrough](bugpattern/FallThrough)__<br>
-Switch case may fall through
-
 __[FilesLinesLeak](bugpattern/FilesLinesLeak)__<br>
 The stream returned by Files.lines should be closed using try-with-resources
 
@@ -200,9 +197,6 @@ Loop condition is never modified in loop body.
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in `android.R.string` have names that do not match their content
 
-__[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
-Switches on enum types should either handle all values, or have a default case.
-
 __[MisusedWeekYear](bugpattern/MisusedWeekYear)__<br>
 Use of &quot;YYYY&quot; (week year) in a date pattern without &quot;ww&quot; (week in year). You probably meant to use &quot;yyyy&quot; (year) instead.
 
@@ -256,6 +250,9 @@ First argument to `Preconditions.checkNotNull()` is a primitive rather than an o
 
 __[PredicateIncompatibleType](bugpattern/PredicateIncompatibleType)__<br>
 Using ::equals as an incompatible Predicate; the predicate will always return false
+
+__[PrivateSecurityContractProtoAccess](bugpattern/PrivateSecurityContractProtoAccess)__<br>
+Access to a private protocol buffer field is forbidden. This protocol buffer carries a security contract, and can only be created using an approved library. Direct access to the fields is forbidden.
 
 __[ProtoFieldNullComparison](bugpattern/ProtoFieldNullComparison)__<br>
 Protobuf fields cannot be null
@@ -385,6 +382,9 @@ Classes that override equals should also override hashCode.
 __[EqualsIncompatibleType](bugpattern/EqualsIncompatibleType)__<br>
 An equality test between objects with incompatible types always returns false
 
+__[FallThrough](bugpattern/FallThrough)__<br>
+Switch case may fall through
+
 __[Finally](bugpattern/Finally)__<br>
 If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
 
@@ -456,6 +456,9 @@ Suggests alternatives to obsolete JDK classes.
 
 __[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
 Assignment where a boolean expression was expected; use == if this assignment wasn&#39;t expected or add parentheses for clarity.
+
+__[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
+Switches on enum types should either handle all values, or have a default case.
 
 __[MissingFail](bugpattern/MissingFail)__<br>
 Not calling fail() when expecting an exception masks bugs

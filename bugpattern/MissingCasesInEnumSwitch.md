@@ -3,7 +3,7 @@ title: MissingCasesInEnumSwitch
 summary: Switches on enum types should either handle all values, or have a default case.
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 providesFix: NO_FIX
 ---
 

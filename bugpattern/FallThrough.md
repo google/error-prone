@@ -3,7 +3,7 @@ title: FallThrough
 summary: Switch case may fall through
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 providesFix: NO_FIX
 ---
 
