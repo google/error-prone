@@ -93,12 +93,12 @@ public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
         return NO_MATCH;
     }
     return buildDescription(tree)
-        .addFix(SuggestedFix.builder().prefixWith(tree, "(").postfixWith(tree, ")").build())
         .addFix(
             SuggestedFix.builder()
                 .prefixWith(tree.getExpression(), "(")
                 .postfixWith(parent, ")")
                 .build())
+        .addFix(SuggestedFix.builder().prefixWith(tree, "(").postfixWith(tree, ")").build())
         .build();
   }
 }
