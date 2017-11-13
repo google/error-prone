@@ -32,10 +32,10 @@ public class FloatCastTest {
             "class Test {",
             "  {",
             "    // BUG: Diagnostic contains:"
-                + "'int x = ((int) 0.9f) * 42;' or 'int x = (int) (0.9f * 42);'",
+                + "'int x = (int) (0.9f * 42);' or 'int x = ((int) 0.9f) * 42;'",
             "    int x = (int) 0.9f * 42;",
             "    // BUG: Diagnostic contains:"
-                + "'float y = ((int) 0.9f) * 0.9f;' or 'float y = (int) (0.9f * 0.9f);'",
+                + "'float y = (int) (0.9f * 0.9f);' or 'float y = ((int) 0.9f) * 0.9f;'",
             "    float y = (int) 0.9f * 0.9f;",
             "  }",
             "}")
