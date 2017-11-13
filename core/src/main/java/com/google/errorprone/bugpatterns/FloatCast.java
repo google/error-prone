@@ -31,6 +31,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import java.util.EnumSet;
@@ -92,11 +93,26 @@ public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
       default:
         return NO_MATCH;
     }
+    // Find the outermost enclosing binop, to suggest e.g. `(long) (f * a * b)` instead of
+    // `(long) (f * a) * b`.
+    Tree enclosing = binop;
+    TreePath path = state.getPath().getParentPath().getParentPath();
+    while (path != null) {
+      if (!(path.getLeaf() instanceof BinaryTree)) {
+        break;
+      }
+      BinaryTree enclosingBinop = (BinaryTree) path.getLeaf();
+      if (!enclosingBinop.getLeftOperand().equals(enclosing)) {
+        break;
+      }
+      enclosing = enclosingBinop;
+      path = path.getParentPath();
+    }
     return buildDescription(tree)
         .addFix(
             SuggestedFix.builder()
                 .prefixWith(tree.getExpression(), "(")
-                .postfixWith(parent, ")")
+                .postfixWith(enclosing, ")")
                 .build())
         .addFix(SuggestedFix.builder().prefixWith(tree, "(").postfixWith(tree, ")").build())
         .build();
