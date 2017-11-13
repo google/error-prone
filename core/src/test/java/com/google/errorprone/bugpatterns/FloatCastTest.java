@@ -37,6 +37,9 @@ public class FloatCastTest {
             "    // BUG: Diagnostic contains:"
                 + "'float y = (int) (0.9f * 0.9f);' or 'float y = ((int) 0.9f) * 0.9f;'",
             "    float y = (int) 0.9f * 0.9f;",
+            "    // BUG: Diagnostic contains:"
+                + "'int z = (int) (0.9f * 42 * 1 * 2);' or 'int z = ((int) 0.9f) * 42 * 1 * 2;'",
+            "    int z = (int) 0.9f * 42 * 1 * 2;",
             "  }",
             "}")
         .doTest();
