@@ -329,6 +329,21 @@ public class ReturnMissingNullableTest {
             "import javax.annotation.Nullable;",
             "public class MissingNullableReturnTest {",
             "  public static java.util.function.Function<String, String> identity() {",
+            "    return s -> s;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_returnParenthesizedLambda() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "public class MissingNullableReturnTest {",
+            "  public static java.util.function.Function<String, String> identity() {",
             "    return (s -> s);",
             "  }",
             "}")
