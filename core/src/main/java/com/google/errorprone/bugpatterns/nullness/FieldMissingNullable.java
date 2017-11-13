@@ -136,8 +136,8 @@ public class FieldMissingNullable extends BugChecker
         TrustingNullnessAnalysis.instance(state.context)
             .getNullness(new TreePath(state.getPath(), expression), state.context);
     if (nullness == null) {
-      // This can currently happen if the assignment is inside a lambda expression
-      // TODO(kmb): Make dataflow work for lambda expressions
+      // This can currently happen if the assignment is inside a finally block after a return.
+      // TODO(b/69154806): Make dataflow work for that case.
       return Description.NO_MATCH;
     }
     switch (nullness) {

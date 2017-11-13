@@ -250,6 +250,26 @@ public class FieldMissingNullableTest {
   }
 
   @Test
+  public void testNegativeCases_lambdaInitializer() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import java.util.function.Predicate;",
+            "import java.util.function.Function;",
+            "public class FieldMissingNullTest {",
+            "  private Runnable runnable = () -> {};",
+            "  private Predicate<?> predicate1 = p -> true;",
+            "  private Predicate<?> predicate2 = (p -> true);",
+            "  private Predicate<?> predicate3 = (String p) -> { return false; };",
+            "  private Function<?, ?> function1 = p -> null;",
+            "  private Function<?, ?> function2 = (p -> null);",
+            "  private Function<?, ?> function3 = (String p) -> { return null; };",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCases_nonNullMethod() throws Exception {
     createCompilationTestHelper()
         .addSourceLines(
