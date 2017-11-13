@@ -73,6 +73,30 @@ public class CheckReturnValueTest {
   }
 
   @Test
+  public void testCustomCanIgnoreReturnValueAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "foo/bar/CanIgnoreReturnValue.java",
+            "package foo.bar;",
+            "public @interface CanIgnoreReturnValue {}")
+        .addSourceLines(
+            "test/TestCustomCanIgnoreReturnValueAnnotation.java",
+            "package test;",
+            "import foo.bar.CanIgnoreReturnValue;",
+            "@javax.annotation.CheckReturnValue",
+            "public class TestCustomCanIgnoreReturnValueAnnotation {",
+            "  @CanIgnoreReturnValue",
+            "  public String ignored() {",
+            "    return null;",
+            "  }",
+            "  public void doIt() {",
+            "    ignored();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("CheckReturnValueNegativeCases.java").doTest();
   }
