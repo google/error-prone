@@ -120,8 +120,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       "@CheckReturnValue and @CanIgnoreReturnValue cannot both be applied to the same %s";
 
   /**
-   * Validate {@link javax.annotation.CheckReturnValue} and {@link CanIgnoreReturnValue} usage on
-   * methods.
+   * Validate {@code @CheckReturnValue} and {@link CanIgnoreReturnValue} usage on methods.
    *
    * <p>The annotations should not both be appled to the same method.
    *
