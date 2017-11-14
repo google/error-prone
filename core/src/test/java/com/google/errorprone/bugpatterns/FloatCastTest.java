@@ -62,4 +62,19 @@ public class FloatCastTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void pow() {
+    CompilationTestHelper.newInstance(FloatCast.class, getClass())
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  {",
+            "    // BUG: Diagnostic contains: 'int x = (int) (Math.pow(10, 0.5f) * 42);'",
+            "    int x = (int) Math.pow(10, 0.5f) * 42;",
+            "    int y = (int) Math.pow(10, 2) * 42;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
