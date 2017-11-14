@@ -58,6 +58,10 @@ public class FloatCastTest {
             "    y = (int) (0.9f * 0.9f);",
             "    String s = (int) 0.9f + \"\";",
             "    boolean b = (int) 0.9f > 1;",
+            "    long c = (long) Math.ceil(10.0d / 2) * 2;",
+            "    long f = (long) Math.floor(10.0d / 2) * 2;",
+            "    long g = (long) Math.signum(10.0d / 2) * 2;",
+            "    long r = (long) Math.rint(10.0d / 2) * 2;",
             "  }",
             "}")
         .doTest();
