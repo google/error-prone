@@ -52,9 +52,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
 
   private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
+  private static final String CAN_IGNORE_RETURN_VALUE = "CanIgnoreReturnValue";
 
   private static Optional<Boolean> shouldCheckReturnValue(Symbol sym, VisitorState state) {
-    if (hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
+    if (hasDirectAnnotationWithSimpleName(sym, CAN_IGNORE_RETURN_VALUE)) {
       return Optional.of(false);
     }
     if (hasDirectAnnotationWithSimpleName(sym, CHECK_RETURN_VALUE)) {
@@ -133,7 +134,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     MethodSymbol method = ASTHelpers.getSymbol(tree);
 
     boolean checkReturn = hasDirectAnnotationWithSimpleName(method, CHECK_RETURN_VALUE);
-    boolean canIgnore = hasAnnotation(method, CanIgnoreReturnValue.class, state);
+    boolean canIgnore = hasDirectAnnotationWithSimpleName(method, CAN_IGNORE_RETURN_VALUE);
 
     if (checkReturn && canIgnore) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "method")).build();
@@ -166,7 +167,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (hasDirectAnnotationWithSimpleName(ASTHelpers.getSymbol(tree), CHECK_RETURN_VALUE)
-        && hasAnnotation(tree, CanIgnoreReturnValue.class, state)) {
+        && hasDirectAnnotationWithSimpleName(ASTHelpers.getSymbol(tree), CAN_IGNORE_RETURN_VALUE)) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "class")).build();
     }
     return Description.NO_MATCH;
