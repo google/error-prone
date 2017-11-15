@@ -206,6 +206,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch;
 import com.google.errorprone.bugpatterns.UnnecessarySetDefault;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
+import com.google.errorprone.bugpatterns.UnsafeFinalization;
 import com.google.errorprone.bugpatterns.UnsynchronizedOverridesSynchronized;
 import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
 import com.google.errorprone.bugpatterns.UnusedCollectionModifiedInPlace;
@@ -502,6 +503,7 @@ public class BuiltInCheckerSuppliers {
           TruthConstantAsserts.class,
           TypeParameterShadowing.class,
           TypeParameterUnusedInFormals.class,
+          UnsafeFinalization.class,
           UnsynchronizedOverridesSynchronized.class,
           URLEqualsHashCode.class,
           UseCorrectAssertInTests.class,
