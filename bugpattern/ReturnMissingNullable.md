@@ -4,7 +4,7 @@ summary: Methods that can return null should be annotated @Nullable
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

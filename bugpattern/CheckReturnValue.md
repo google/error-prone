@@ -99,7 +99,7 @@ public class CheckReturnValuePositiveCases {
 
   IntValue intValue = new IntValue(0);
 
-  @CheckReturnValue
+  @javax.annotation.CheckReturnValue
   private int increment(int bar) {
     return bar + 1;
   }
@@ -193,7 +193,7 @@ public class CheckReturnValuePositiveCases {
       this.i = i;
     }
 
-    @CheckReturnValue
+    @javax.annotation.CheckReturnValue
     public IntValue increment() {
       return new IntValue(i + 1);
     }
@@ -210,7 +210,7 @@ public class CheckReturnValuePositiveCases {
   }
 
   private static class MyObject {
-    @CheckReturnValue
+    @javax.annotation.CheckReturnValue
     MyObject() {}
   }
 
@@ -218,7 +218,7 @@ public class CheckReturnValuePositiveCases {
 
   private static class LB2<A> extends LB1<A> {
 
-    @CheckReturnValue
+    @javax.annotation.CheckReturnValue
     public static <T> LB2<T> lb1() {
       return new LB2<T>();
     }
@@ -227,6 +227,18 @@ public class CheckReturnValuePositiveCases {
       // BUG: Diagnostic contains: remove this line
       lb1();
       return lb1();
+    }
+  }
+
+  private static class ErrorProneAnnotation {
+    @com.google.errorprone.annotations.CheckReturnValue
+    public static int check() {
+      return 1;
+    }
+
+    public static void ignoresCheck() {
+      // BUG: Diagnostic contains: remove this line
+      check();
     }
   }
 }

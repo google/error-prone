@@ -197,6 +197,9 @@ Loop condition is never modified in loop body.
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in `android.R.string` have names that do not match their content
 
+__[MissingSuperCall](bugpattern/MissingSuperCall)__<br>
+Overriding method is missing a call to overridden super method
+
 __[MisusedWeekYear](bugpattern/MisusedWeekYear)__<br>
 Use of &quot;YYYY&quot; (week year) in a date pattern without &quot;ww&quot; (week in year). You probably meant to use &quot;yyyy&quot; (year) instead.
 
@@ -714,6 +717,9 @@ __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
 
 ## Experimental : SUGGESTION
+
+__[BooleanParameter](bugpattern/BooleanParameter)__<br>
+Use parameter comments to document ambiguous literals
 
 __[ConstantField](bugpattern/ConstantField)__<br>
 Field name is CONSTANT_CASE, but field is not static and final
