@@ -158,8 +158,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       getAllChecks()
           .values()
           .stream()
-          .filter(
-              c -> c.defaultSeverity() == SeverityLevel.ERROR && c.suppressibility().disableable())
+          .filter(c -> c.defaultSeverity() == SeverityLevel.ERROR && c.disableable())
           .forEach(c -> severities.put(c.canonicalName(), SeverityLevel.WARNING));
     }
 
@@ -167,7 +166,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
       getAllChecks()
           .values()
           .stream()
-          .filter(c -> c.suppressibility().disableable())
+          .filter(c -> c.disableable())
           .forEach(c -> disabled.add(c.canonicalName()));
     }
 
@@ -184,7 +183,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
 
           switch (newSeverity) {
             case OFF:
-              if (!check.suppressibility().disableable()) {
+              if (!check.disableable()) {
                 throw new InvalidCommandLineOptionException(
                     check.canonicalName() + " may not be disabled");
               }
@@ -198,7 +197,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
             case WARN:
               // Demoting an enabled check from an error to a warning is a form of disabling
               if (!disabled().contains(check.canonicalName())
-                  && !check.suppressibility().disableable()
+                  && !check.disableable()
                   && check.defaultSeverity() == SeverityLevel.ERROR) {
                 throw new InvalidCommandLineOptionException(
                     check.canonicalName()
