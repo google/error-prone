@@ -89,6 +89,9 @@ public class BugCheckerInfo implements Serializable {
    */
   private final Set<Class<? extends Annotation>> customSuppressionAnnotations;
 
+  /** True if the check can be disabled using command-line flags. */
+  private final boolean disableable;
+
   public static BugCheckerInfo create(Class<? extends BugChecker> checker) {
     BugPattern pattern =
         checkNotNull(
@@ -119,7 +122,8 @@ public class BugCheckerInfo implements Serializable {
         pattern.suppressibility() == Suppressibility.CUSTOM_ANNOTATION
             ? new HashSet<>(Arrays.asList(pattern.customSuppressionAnnotations()))
             : Collections.emptySet(),
-        ImmutableSet.copyOf(pattern.tags()));
+        ImmutableSet.copyOf(pattern.tags()),
+        pattern.disableable());
   }
 
   private BugCheckerInfo(
@@ -131,7 +135,8 @@ public class BugCheckerInfo implements Serializable {
       String linkUrl,
       Suppressibility suppressibility,
       Set<Class<? extends Annotation>> customSuppressionAnnotations,
-      ImmutableSet<String> tags) {
+      ImmutableSet<String> tags,
+      boolean disableable) {
     this.checker = checker;
     this.canonicalName = canonicalName;
     this.allNames = allNames;
@@ -141,6 +146,7 @@ public class BugCheckerInfo implements Serializable {
     this.suppressibility = suppressibility;
     this.customSuppressionAnnotations = customSuppressionAnnotations;
     this.tags = tags;
+    this.disableable = disableable;
   }
 
   /**
@@ -161,7 +167,8 @@ public class BugCheckerInfo implements Serializable {
         linkUrl,
         suppressibility,
         customSuppressionAnnotations,
-        tags);
+        tags,
+        disableable);
   }
 
   private static final String URL_FORMAT = "http://errorprone.info/bugpattern/%s";
@@ -232,6 +239,10 @@ public class BugCheckerInfo implements Serializable {
 
   public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
     return customSuppressionAnnotations;
+  }
+
+  public boolean disableable() {
+    return suppressibility() != Suppressibility.UNSUPPRESSIBLE && disableable;
   }
 
   public ImmutableSet<String> getTags() {

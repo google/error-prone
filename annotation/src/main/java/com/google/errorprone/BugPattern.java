@@ -215,22 +215,15 @@ public @interface BugPattern {
      * Can be suppressed using the standard {@code SuppressWarnings("foo")} mechanism. This setting
      * should be used unless there is a good reason otherwise, e.g. security.
      */
-    SUPPRESS_WARNINGS(true),
+    SUPPRESS_WARNINGS,
     /** Can be suppressed with a custom annotation on a parent AST node. */
-    CUSTOM_ANNOTATION(false),
+    CUSTOM_ANNOTATION,
     /** Cannot be suppressed. */
-    UNSUPPRESSIBLE(false);
-
-    private final boolean disableable;
-
-    Suppressibility(boolean disableable) {
-      this.disableable = disableable;
-    }
-
-    public boolean disableable() {
-      return disableable;
-    }
+    UNSUPPRESSIBLE;
   }
+
+  /** True if the check can be disabled using command-line flags. */
+  boolean disableable() default true;
 
   /**
    * A set of custom suppression annotation types to use if suppressibility is
