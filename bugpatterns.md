@@ -556,6 +556,9 @@ Declaring a type parameter that is only used in the return type is a misuse of g
 __[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
 Creation of a Set/HashSet/HashMap of java.net.URL. equals() and hashCode() of java.net.URL class make blocking internet connections.
 
+__[UnsafeFinalization](bugpattern/UnsafeFinalization)__<br>
+Finalizer may run before native code finishes execution
+
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
 
