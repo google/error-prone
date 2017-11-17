@@ -35,7 +35,6 @@ import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 
@@ -83,14 +82,13 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
     if (!defaultCase.getStatements().isEmpty()) {
       return NO_MATCH;
     }
+    // If `default` case is empty, and last in switch, add `// fall out` comment
+    // TODO(epmjohnston): Maybe move comment logic to go/bugpattern/FallThrough
     int idx = tree.getCases().indexOf(defaultCase);
-    // The default case may appear before a non-default case, in which case the documentation
-    // should say "fall through" instead of "fall out".
-    boolean isLast = idx == tree.getCases().size() - 1;
-    int end =
-        isLast
-            ? state.getEndPosition(tree)
-            : ((JCTree) tree.getCases().get(idx + 1)).getStartPosition();
+    if (idx != tree.getCases().size() - 1) {
+      return NO_MATCH;
+    }
+    int end = state.getEndPosition(tree);
     if (ErrorProneTokens.getTokens(
             state.getSourceCode().subSequence(state.getEndPosition(defaultCase), end).toString(),
             state.context)
@@ -100,7 +98,7 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
     }
     return buildDescription(defaultCase)
         .setMessage("Default case should be documented with a comment")
-        .addFix(SuggestedFix.postfixWith(defaultCase, isLast ? " // fall out" : " // fall through"))
+        .addFix(SuggestedFix.postfixWith(defaultCase, " // fall out"))
         .build();
   }
 }
