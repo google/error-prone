@@ -131,10 +131,15 @@
 <div class="block">Whether this check may be suppressed. Corresponds to the <code>suppressibility</code> attribute from
  its <code>BugPattern</code>.</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>customSuppressionAnnotations</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">E</a>&gt; customSuppressionAnnotations</pre>
 <div class="block">A set of custom suppression annotations for this check. Computed from the <code>suppressibility</code> and <code>customSuppressionAnnotations</code> attributes from its <code>BugPattern</code>. May be empty if there are no custom suppression annotations for this check.</div>
+</li>
+<li class="blockListLast">
+<h4>disableable</h4>
+<pre>boolean disableable</pre>
+<div class="block">True if the check can be disabled using command-line flags.</div>
 </li>
 </ul>
 </li>
