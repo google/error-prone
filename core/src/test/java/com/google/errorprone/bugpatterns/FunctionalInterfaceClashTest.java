@@ -16,15 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -169,37 +161,6 @@ public class FunctionalInterfaceClashTest {
             "  static void foo(Consumer<String> x) {}",
             "  void foo(Function<String, String> c) {}",
             "}")
-        .doTest();
-  }
-
-  public static class Other {}
-
-  public static class Super {
-    public void f(Other o) {}
-  }
-
-  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
-    String entryPath = clazz.getName().replace('.', '/') + ".class";
-    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
-      jos.putNextEntry(new JarEntry(entryPath));
-      ByteStreams.copy(is, jos);
-    }
-  }
-
-  @Test
-  public void incompleteClasspath() throws Exception {
-    File libJar = tempFolder.newFile("lib.jar");
-    try (FileOutputStream fis = new FileOutputStream(libJar);
-        JarOutputStream jos = new JarOutputStream(fis)) {
-      addClassToJar(jos, getClass());
-      addClassToJar(jos, Super.class);
-    }
-    testHelper
-        .addSourceLines(
-            "Test.java",
-            "import " + Super.class.getCanonicalName() + ";",
-            "class Test extends Super {}")
-        .setArgs(Arrays.asList("-cp", libJar.toString()))
         .doTest();
   }
 

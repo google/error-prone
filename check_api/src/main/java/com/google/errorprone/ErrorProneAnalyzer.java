@@ -136,6 +136,7 @@ public class ErrorProneAnalyzer implements TaskListener {
     JCCompilationUnit compilation = (JCCompilationUnit) path.getCompilationUnit();
     DescriptionListener descriptionListener =
         descriptionListenerFactory.getDescriptionListener(log, compilation);
+    JavaFileObject originalSource = log.useSource(compilation.getSourceFile());
     try {
       if (shouldExcludeSourceFile(compilation.getSourceFile())) {
         return;
@@ -163,6 +164,8 @@ public class ErrorProneAnalyzer implements TaskListener {
       // then a normal compilation would have succeeded, and no diagnostics will have been
       // reported yet, but we don't want to crash javac.
       log.error("proc.cant.access", e.sym, e.getDetailValue(), Throwables.getStackTraceAsString(e));
+    } finally {
+      log.useSource(originalSource);
     }
   }
 

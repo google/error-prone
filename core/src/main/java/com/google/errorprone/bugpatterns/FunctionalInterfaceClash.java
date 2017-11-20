@@ -42,6 +42,8 @@ import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.comp.Check;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.List;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -72,7 +74,9 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         continue;
       }
       MethodSymbol msym = (MethodSymbol) sym;
-      if (msym.getParameters().stream().noneMatch(p -> maybeFunctionalInterface(p.type, types))) {
+      if (msym.getParameters()
+          .stream()
+          .noneMatch(p -> maybeFunctionalInterface(p.type, types, state))) {
         continue;
       }
       if (msym.isConstructor() && !msym.owner.equals(origin)) {
@@ -87,7 +91,9 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         continue;
       }
       MethodSymbol msym = getSymbol((MethodTree) member);
-      if (msym.getParameters().stream().noneMatch(p -> maybeFunctionalInterface(p.type, types))) {
+      if (msym.getParameters()
+          .stream()
+          .noneMatch(p -> maybeFunctionalInterface(p.type, types, state))) {
         continue;
       }
       Collection<MethodSymbol> clash =
@@ -141,7 +147,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
 
   private static String functionalInterfaceSignature(VisitorState state, Type type) {
     Types types = state.getTypes();
-    if (!maybeFunctionalInterface(type, types)) {
+    if (!maybeFunctionalInterface(type, types, state)) {
       return Signatures.descriptor(type, types);
     }
     Type descriptorType = types.findDescriptorType(type);
@@ -157,10 +163,13 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         fiparams.stream().map(t -> Signatures.descriptor(t, types)).collect(joining(",")), result);
   }
 
-  private static boolean maybeFunctionalInterface(Type type, Types types) {
+  private static boolean maybeFunctionalInterface(Type type, Types types, VisitorState state) {
     try {
       return types.isFunctionalInterface(type);
     } catch (CompletionFailure e) {
+      // Report completion errors to avoid e.g. https://github.com/bazelbuild/bazel/issues/4105
+      Check.instance(state.context)
+          .completionError((DiagnosticPosition) state.getPath().getLeaf(), e);
       return false;
     }
   }
