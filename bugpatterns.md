@@ -523,6 +523,9 @@ Preconditions only accepts the %s placeholder in error message strings
 __[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
 Protobuf fields cannot be null, so this check is redundant
 
+__[ReachabilityFenceUsage](bugpattern/ReachabilityFenceUsage)__<br>
+reachabilityFence should always be called inside a finally block
+
 __[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
 Comparison using reference equality instead of value equality
 
@@ -543,6 +546,9 @@ Synchronizing on non-final fields is not safe: if the field is ever updated, dif
 
 __[ThreadJoinLoop](bugpattern/ThreadJoinLoop)__<br>
 Thread.join needs to be surrounded by a loop until it succeeds, as in Uninterruptibles.joinUninterruptibly.
+
+__[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
+Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.
 
 __[TruthConstantAsserts](bugpattern/TruthConstantAsserts)__<br>
 Truth Library assert is called on a constant.
@@ -661,6 +667,9 @@ __[AssistedInjectAndInjectOnConstructors](bugpattern/AssistedInjectAndInjectOnCo
 
 __[BigDecimalLiteralDouble](bugpattern/BigDecimalLiteralDouble)__<br>
 BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, prefer BigDecimal(String) or BigDecimal(long)
+
+__[BinderIdentityRestoredDangerously](bugpattern/BinderIdentityRestoredDangerously)__<br>
+A call to Binder.clearCallingIdentity() should be followed by Binder.restoreCallingIdentity() in a finally block. Otherwise the wrong Binder identity may be used by subsequent code.
 
 __[BindingToUnqualifiedCommonType](bugpattern/BindingToUnqualifiedCommonType)__<br>
 This code declares a binding for a common value type without a Qualifier annotation.
