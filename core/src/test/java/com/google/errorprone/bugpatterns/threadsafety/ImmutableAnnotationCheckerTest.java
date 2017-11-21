@@ -85,7 +85,8 @@ public class ImmutableAnnotationCheckerTest {
             "import java.util.Set;",
             "class Test implements Deprecated {",
             "  public Class<? extends Annotation> annotationType() { return Deprecated.class; }",
-            "  // BUG: Diagnostic contains: annotations should be immutable, 'Set' is mutable",
+            "  // BUG: Diagnostic contains: annotations should be immutable: 'Test' has field 'xs'"
+                + " of type 'java.util.Set<java.lang.Integer>', 'Set' is mutable",
             "  final Set<Integer> xs;",
             "  private Test(Integer... xs) {",
             "    this.xs = new HashSet<>(Arrays.asList(xs));",

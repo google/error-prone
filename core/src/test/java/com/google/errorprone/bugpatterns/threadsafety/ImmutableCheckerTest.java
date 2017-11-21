@@ -900,7 +900,9 @@ public class ImmutableCheckerTest {
             "threadsafety/Test.java",
             "package threadsafety;",
             "class Test extends Super {",
-            "  // BUG: Diagnostic contains: non-final",
+            "  // BUG: Diagnostic contains:"
+                + " Class extends @Immutable type threadsafety.Super, but is not immutable: 'Test'"
+                + " has non-final field 'x'",
             "  public int x = 0;",
             "}")
         .doTest();

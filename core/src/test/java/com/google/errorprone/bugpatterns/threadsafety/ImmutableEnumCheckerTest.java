@@ -70,8 +70,8 @@ public class ImmutableEnumCheckerTest {
             "import java.util.Set;",
             "enum Enum {",
             "  ONE(1), TWO(2);",
-            "  // BUG: Diagnostic contains: "
-                + "enums should only have immutable fields, 'Set' is mutable",
+            "  // BUG: Diagnostic contains:  enums should be immutable: 'Enum' has field 'xs' of"
+                + " type 'java.util.Set<java.lang.Integer>', 'Set' is mutable",
             "  final Set<Integer> xs;",
             "  private Enum(Integer... xs) {",
             "    this.xs = new HashSet<>(Arrays.asList(xs));",

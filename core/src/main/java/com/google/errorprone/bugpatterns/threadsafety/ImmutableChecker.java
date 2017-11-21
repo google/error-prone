@@ -24,16 +24,20 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.Violation;
+import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.ViolationReporter;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Description.Builder;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -49,7 +53,8 @@ import java.util.Set;
   summary = "Type declaration annotated with @Immutable is not immutable",
   category = JDK,
   severity = ERROR,
-  documentSuppression = false
+  documentSuppression = false,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ImmutableChecker extends BugChecker implements BugChecker.ClassTreeMatcher {
 
@@ -66,13 +71,7 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    ImmutableAnalysis analysis =
-        new ImmutableAnalysis(
-            this,
-            state,
-            wellKnownMutability,
-            "@Immutable classes cannot have non-final fields",
-            "@Immutable class has mutable field");
+    ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
     if (tree.getSimpleName().length() == 0) {
       // anonymous classes have empty names
       // TODO(cushon): once Java 8 happens, require @Immutable on anonymous classes
@@ -111,19 +110,35 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // Check that the fields (including inherited fields) are immutable, and
     // validate the type hierarchy superclass.
 
+    ClassSymbol sym = ASTHelpers.getSymbol(tree);
+
     Violation info =
         analysis.checkForImmutability(
             Optional.of(tree),
             immutableTypeParametersInScope(ASTHelpers.getSymbol(tree), state, analysis),
-            ASTHelpers.getType(tree));
+            ASTHelpers.getType(tree),
+            (Tree matched, Violation violation) ->
+                describeClass(matched, sym, annotation, violation));
 
     if (!info.isPresent()) {
       return Description.NO_MATCH;
     }
 
-    String message =
-        "type annotated with @Immutable could not be proven immutable: " + info.message();
-    return buildDescription(tree).setMessage(message).build();
+    return describeClass(tree, sym, annotation, info).build();
+  }
+
+  private Description.Builder describeClass(
+      Tree tree, ClassSymbol sym, AnnotationInfo annotation, Violation info) {
+    String message;
+    if (sym.getQualifiedName().contentEquals(annotation.typeName())) {
+      message = "type annotated with @Immutable could not be proven immutable: " + info.message();
+    } else {
+      message =
+          String.format(
+              "Class extends @Immutable type %s, but is not immutable: %s",
+              annotation.typeName(), info.message());
+    }
+    return buildDescription(tree).setMessage(message);
   }
 
   // Anonymous classes
@@ -151,15 +166,28 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // }
     ImmutableSet<String> typarams = immutableTypeParametersInScope(sym, state, analysis);
     Violation info =
-        analysis.areFieldsImmutable(Optional.of(tree), typarams, ASTHelpers.getType(tree));
+        analysis.areFieldsImmutable(
+            Optional.of(tree),
+            typarams,
+            ASTHelpers.getType(tree),
+            new ViolationReporter() {
+              @Override
+              public Builder describe(Tree tree, Violation info) {
+                return describeAnonymous(tree, superType, info);
+              }
+            });
     if (!info.isPresent()) {
       return Description.NO_MATCH;
     }
-    String reason = Joiner.on(", ").join(info.path());
+    return describeAnonymous(tree, superType, info).build();
+  }
+
+  private Description.Builder describeAnonymous(Tree tree, Type superType, Violation info) {
     String message =
         String.format(
-            "Class extends @Immutable type %s, but is not immutable: %s", superType, reason);
-    return buildDescription(tree).setMessage(message).build();
+            "Class extends @Immutable type %s, but is not immutable: %s",
+            superType, info.message());
+    return buildDescription(tree).setMessage(message);
   }
 
   // Strong behavioural subtyping

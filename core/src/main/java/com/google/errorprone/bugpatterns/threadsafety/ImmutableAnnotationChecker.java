@@ -37,6 +37,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.Optional;
 
@@ -95,18 +96,20 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
                 this,
                 state,
                 wellKnownMutability,
-                "annotations should be immutable, and cannot have non-final fields",
-                "annotations should be immutable",
                 ImmutableSet.of(
                     Immutable.class.getName(),
                     javax.annotation.concurrent.Immutable.class.getName()))
-            .checkForImmutability(Optional.of(tree), ImmutableSet.of(), getType(tree));
+            .checkForImmutability(
+                Optional.of(tree), ImmutableSet.of(), getType(tree), this::describeClass);
 
     if (!info.isPresent()) {
       return NO_MATCH;
     }
+    return describeClass(tree, info).build();
+  }
 
+  Description.Builder describeClass(Tree tree, Violation info) {
     String message = "annotations should be immutable: " + info.message();
-    return buildDescription(tree).setMessage(message).build();
+    return buildDescription(tree).setMessage(message);
   }
 }

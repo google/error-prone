@@ -37,6 +37,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -94,19 +95,22 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
                 this,
                 state,
                 wellKnownMutability,
-                "enums should be immutable, and cannot have non-final fields",
-                "enums should only have immutable fields",
                 ImmutableSet.of(
                     Immutable.class.getName(),
                     javax.annotation.concurrent.Immutable.class.getName()))
-            .checkForImmutability(Optional.of(tree), ImmutableSet.of(), getType(tree));
+            .checkForImmutability(
+                Optional.of(tree), ImmutableSet.of(), getType(tree), this::describe);
 
     if (!info.isPresent()) {
       return NO_MATCH;
     }
 
+    return describe(tree, info).build();
+  }
+
+  private Description.Builder describe(Tree tree, Violation info) {
     String message = "enums should be immutable: " + info.message();
-    return buildDescription(tree).setMessage(message).build();
+    return buildDescription(tree).setMessage(message);
   }
 
   private static boolean implementsImmutableInterface(ClassSymbol symbol) {

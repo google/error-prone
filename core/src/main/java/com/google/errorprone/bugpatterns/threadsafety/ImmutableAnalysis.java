@@ -22,11 +22,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
@@ -110,39 +113,38 @@ public class ImmutableAnalysis {
   private final VisitorState state;
   private final WellKnownMutability wellKnownMutability;
 
-  private final String nonFinalFieldMessage;
-  private final String mutableFieldMessage;
-
   private final ImmutableSet<String> immutableAnnotations;
 
   public ImmutableAnalysis(
       BugChecker bugChecker,
       VisitorState state,
       WellKnownMutability wellKnownMutability,
-      String nonFinalFieldMessage,
-      String mutableFieldMessage,
       ImmutableSet<String> immutableAnnotations) {
     this.bugChecker = bugChecker;
     this.state = state;
     this.wellKnownMutability = wellKnownMutability;
-    this.nonFinalFieldMessage = nonFinalFieldMessage;
-    this.mutableFieldMessage = mutableFieldMessage;
     this.immutableAnnotations = immutableAnnotations;
   }
 
   public ImmutableAnalysis(
-      BugChecker bugChecker,
-      VisitorState state,
-      WellKnownMutability wellKnownMutability,
-      String nonFinalFieldMessage,
-      String mutableFieldMessage) {
+      BugChecker bugChecker, VisitorState state, WellKnownMutability wellKnownMutability) {
     this(
         bugChecker,
         state,
         wellKnownMutability,
-        nonFinalFieldMessage,
-        mutableFieldMessage,
         ImmutableSet.of(Immutable.class.getName()));
+  }
+
+  @FunctionalInterface
+  interface ViolationReporter {
+    Description.Builder describe(Tree tree, Violation info);
+
+    @CheckReturnValue
+    default Description report(Tree tree, Violation info, Optional<SuggestedFix> suggestedFix) {
+      Description.Builder description = describe(tree, info);
+      suggestedFix.ifPresent(description::addFix);
+      return description.build();
+    }
   }
 
   /**
@@ -158,8 +160,11 @@ public class ImmutableAnalysis {
    * requiring supertypes to be annotated immutable would be too restrictive.
    */
   Violation checkForImmutability(
-      Optional<ClassTree> tree, ImmutableSet<String> immutableTyParams, ClassType type) {
-    Violation info = areFieldsImmutable(tree, immutableTyParams, type);
+      Optional<ClassTree> tree,
+      ImmutableSet<String> immutableTyParams,
+      ClassType type,
+      ViolationReporter reporter) {
+    Violation info = areFieldsImmutable(tree, immutableTyParams, type, reporter);
     if (info.isPresent()) {
       return info;
     }
@@ -223,6 +228,8 @@ public class ImmutableAnalysis {
     }
 
     AnnotationInfo superannotation = getImmutableAnnotation(superType.tsym, state);
+    String message =
+        String.format("'%s' extends '%s'", getPrettyName(type.tsym), getPrettyName(superType.tsym));
     if (superannotation != null) {
       // If the superclass does happen to be immutable, we don't need to recursively
       // inspect it. We just have to check that it's instantiated correctly:
@@ -230,20 +237,26 @@ public class ImmutableAnalysis {
       if (!info.isPresent()) {
         return Violation.absent();
       }
-      return info.plus(
-          String.format(
-              "'%s' extends '%s'", getPrettyName(type.tsym), getPrettyName(superType.tsym)));
+      return info.plus(message);
     }
 
     // Recursive case: check if the supertype is 'effectively' immutable.
     Violation info =
-        checkForImmutability(Optional.<ClassTree>empty(), immutableTyParams, superType);
+        checkForImmutability(
+            Optional.<ClassTree>empty(),
+            immutableTyParams,
+            superType,
+            new ViolationReporter() {
+              @Override
+              public Description.Builder describe(Tree tree, Violation info) {
+                return BugChecker.buildDescriptionFromChecker(tree, bugChecker)
+                    .setMessage(info.plus(info.message()).message());
+              }
+            });
     if (!info.isPresent()) {
       return Violation.absent();
     }
-    return info.plus(
-        String.format(
-            "'%s' extends '%s'", getPrettyName(type.tsym), getPrettyName(superType.tsym)));
+    return info.plus(message);
   }
 
   /**
@@ -253,7 +266,10 @@ public class ImmutableAnalysis {
    * @param classType the type to check the fields of
    */
   Violation areFieldsImmutable(
-      Optional<ClassTree> tree, ImmutableSet<String> immutableTyParams, ClassType classType) {
+      Optional<ClassTree> tree,
+      ImmutableSet<String> immutableTyParams,
+      ClassType classType,
+      ViolationReporter reporter) {
     ClassSymbol classSym = (ClassSymbol) classType.tsym;
     if (classSym.members() == null) {
       return Violation.absent();
@@ -281,7 +297,8 @@ public class ImmutableAnalysis {
     for (Symbol member : members) {
       Optional<Tree> memberTree = Optional.ofNullable(declarations.get(member));
       Violation info =
-          isFieldImmutable(memberTree, immutableTyParams, classSym, classType, (VarSymbol) member);
+          isFieldImmutable(
+              memberTree, immutableTyParams, classSym, classType, (VarSymbol) member, reporter);
       if (info.isPresent()) {
         return info;
       }
@@ -295,7 +312,8 @@ public class ImmutableAnalysis {
       ImmutableSet<String> immutableTyParams,
       ClassSymbol classSym,
       ClassType classType,
-      VarSymbol var) {
+      VarSymbol var,
+      ViolationReporter reporter) {
     if (bugChecker.isSuppressed(var)) {
       return Violation.absent();
     }
@@ -303,36 +321,36 @@ public class ImmutableAnalysis {
       return Violation.absent();
     }
     if (!var.getModifiers().contains(Modifier.FINAL)) {
+
+      Violation info =
+          Violation.of(
+              String.format(
+                  "'%s' has non-final field '%s'", getPrettyName(classSym), var.getSimpleName()));
       if (tree.isPresent()) {
         // If we have a tree to attach diagnostics to, report the error immediately instead of
         // accumulating the path to the error from the top-level class being checked
         state.reportMatch(
-            BugChecker.buildDescriptionFromChecker(tree.get(), bugChecker)
-                .setMessage(nonFinalFieldMessage)
-                .addFix(SuggestedFixes.addModifiers(tree.get(), state, Modifier.FINAL))
-                .build());
+            reporter.report(
+                tree.get(), info, SuggestedFixes.addModifiers(tree.get(), state, Modifier.FINAL)));
         return Violation.absent();
       }
-      return Violation.of(
-          String.format(
-              "'%s' has non-final field '%s'", getPrettyName(classSym), var.getSimpleName()));
+      return info;
     }
     Type varType = state.getTypes().memberType(classType, var);
     Violation info = isImmutableType(immutableTyParams, varType);
     if (info.isPresent()) {
+      info =
+          info.plus(
+              String.format(
+                  "'%s' has field '%s' of type '%s'",
+                  getPrettyName(classSym), var.getSimpleName(), varType));
       if (tree.isPresent()) {
         // If we have a tree to attach diagnostics to, report the error immediately instead of
         // accumulating the path to the error from the top-level class being checked
-        state.reportMatch(
-            BugChecker.buildDescriptionFromChecker(tree.get(), bugChecker)
-                .setMessage(info.plus(mutableFieldMessage).message())
-                .build());
+        state.reportMatch(reporter.report(tree.get(), info, Optional.empty()));
         return Violation.absent();
       }
-      return info.plus(
-          String.format(
-              "'%s' has field '%s' of type '%s'",
-              getPrettyName(classSym), var.getSimpleName(), varType));
+      return info;
     }
     return Violation.absent();
   }
@@ -509,7 +527,7 @@ public class ImmutableAnalysis {
         containerOf.add(argSym.getSimpleName().toString());
       }
     }
-    return AnnotationInfo.create(sym.getQualifiedName().toString(), containerOf.build());
+    return AnnotationInfo.create(superAnnotation.typeName(), containerOf.build());
   }
 
   private static ImmutableList<String> containerOf(VisitorState state, Compound attr) {
