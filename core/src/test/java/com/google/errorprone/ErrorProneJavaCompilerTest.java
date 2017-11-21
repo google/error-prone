@@ -19,7 +19,6 @@ package com.google.errorprone;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.Matchers.containsString;
@@ -242,7 +241,7 @@ public class ErrorProneJavaCompilerTest {
     explanation = "",
     category = JDK,
     severity = ERROR,
-    suppressibility = UNSUPPRESSIBLE
+    disableable = false
   )
   public static class UnsuppressibleArrayEquals extends ArrayEquals {}
 
@@ -372,7 +371,7 @@ public class ErrorProneJavaCompilerTest {
     explanation = "",
     category = JDK,
     severity = ERROR,
-    suppressibility = UNSUPPRESSIBLE
+    disableable = false
   )
   public static class DeleteMethod extends BugChecker implements ClassTreeMatcher {
     @Override

@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
 import static org.junit.Assert.expectThrows;
 
@@ -474,7 +473,7 @@ public class ScannerSupplierTest {
     summary = "",
     category = JDK,
     severity = ERROR,
-    suppressibility = UNSUPPRESSIBLE,
+    suppressionAnnotations = {},
     disableable = true
   )
   public static class UnsuppressiblePackageLocation extends PackageLocation {}

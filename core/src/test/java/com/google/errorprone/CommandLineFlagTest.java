@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -65,7 +64,7 @@ public class CommandLineFlagTest {
     name = "NondisableableChecker",
     summary = "NondisableableChecker checker that flags all return statements as errors",
     explanation = "NondisableableChecker checker that flags all return statements as errors",
-    suppressibility = UNSUPPRESSIBLE,
+    disableable = false,
     category = ONE_OFF,
     severity = ERROR
   )
