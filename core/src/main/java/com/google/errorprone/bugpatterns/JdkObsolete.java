@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -34,14 +35,18 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -54,6 +59,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Optional;
+import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -61,7 +67,8 @@ import java.util.Optional;
   summary = "Suggests alternatives to obsolete JDK classes.",
   severity = WARNING
 )
-public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, ClassTreeMatcher {
+public class JdkObsolete extends BugChecker
+    implements NewClassTreeMatcher, ClassTreeMatcher, MemberReferenceTreeMatcher {
 
   static class Obsolete {
     final String qualifiedName;
@@ -80,7 +87,7 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
       return message;
     }
 
-    Optional<Fix> fix(VisitorState state) {
+    Optional<Fix> fix(Tree tree, VisitorState state) {
       return Optional.empty();
     }
   }
@@ -92,8 +99,8 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
                   "It is very rare for LinkedList to out-perform ArrayList or ArrayDeque. Avoid it"
                       + " unless you're willing to invest a lot of time into benchmarking.") {
                 @Override
-                Optional<Fix> fix(VisitorState state) {
-                  return linkedListFix(state);
+                Optional<Fix> fix(Tree tree, VisitorState state) {
+                  return linkedListFix(tree, state);
                 }
               },
               new Obsolete(
@@ -112,7 +119,7 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
                   "StringBuffer performs synchronization that is usually unnecessary;"
                       + " prefer StringBuilder.") {
                 @Override
-                Optional<Fix> fix(VisitorState state) {
+                Optional<Fix> fix(Tree tree, VisitorState state) {
                   return stringBufferFix(state);
                 }
               },
@@ -148,7 +155,8 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
     Symbol owner = constructor.owner;
     Description description =
         describeIfObsolete(
-            tree,
+            // don't refactor anonymous implementations of LinkedList
+            tree.getClassBody() == null ? tree.getIdentifier() : null,
             owner.name.isEmpty()
                 ? state.getTypes().directSupertypes(owner.asType())
                 : ImmutableList.of(owner.asType()),
@@ -185,10 +193,18 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
     if (symbol == null) {
       return NO_MATCH;
     }
-    return describeIfObsolete(tree, state.getTypes().directSupertypes(symbol.asType()), state);
+    return describeIfObsolete(null, state.getTypes().directSupertypes(symbol.asType()), state);
   }
 
-  private Description describeIfObsolete(Tree tree, Iterable<Type> types, VisitorState state) {
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+    return describeIfObsolete(
+        tree.getQualifierExpression(), ImmutableList.of(symbol.owner.asType()), state);
+  }
+
+  private Description describeIfObsolete(
+      @Nullable Tree tree, Iterable<Type> types, VisitorState state) {
     for (Type type : types) {
       Obsolete obsolete = OBSOLETE.get(type.asElement().getQualifiedName().toString());
       if (obsolete == null) {
@@ -197,35 +213,74 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
       if (implementingObsoleteMethod(state, type)) {
         continue;
       }
-      Description.Builder description = buildDescription(tree).setMessage(obsolete.message());
-      obsolete.fix(state).ifPresent(description::addFix);
+      Description.Builder description =
+          buildDescription(state.getPath().getLeaf()).setMessage(obsolete.message());
+      if (tree != null) {
+        obsolete.fix(tree, state).ifPresent(description::addFix);
+      }
       return description.build();
     }
     return NO_MATCH;
   }
 
-  // rewrite e.g. `List<Object> xs = new LinkedList<>()` -> `... = new ArrayList<>()`
-  private static Optional<Fix> linkedListFix(VisitorState state) {
+  private static Type getMethodOrLambdaReturnType(VisitorState state) {
+    for (Tree tree : state.getPath()) {
+      switch (tree.getKind()) {
+        case LAMBDA_EXPRESSION:
+          return state.getTypes().findDescriptorType(ASTHelpers.getType(tree)).getReturnType();
+        case METHOD:
+          return ASTHelpers.getType(tree).getReturnType();
+        case CLASS:
+          return null;
+        default: // fall out
+      }
+    }
+    return null;
+  }
+
+  static Type getTargetType(VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!(parent instanceof VariableTree)) {
+    Type type;
+    if (parent instanceof VariableTree || parent instanceof AssignmentTree) {
+      type = ASTHelpers.getType(parent);
+    } else if (parent instanceof ReturnTree || parent instanceof LambdaExpressionTree) {
+      type = getMethodOrLambdaReturnType(state);
+    } else if (parent instanceof MethodInvocationTree) {
+      MethodInvocationTree tree = (MethodInvocationTree) parent;
+      int idx = tree.getArguments().indexOf(state.getPath().getLeaf());
+      if (idx == -1) {
+        return null;
+      }
+      Type methodType = ASTHelpers.getType(tree.getMethodSelect());
+      if (idx >= methodType.getParameterTypes().size()) {
+        return null;
+      }
+      return methodType.getParameterTypes().get(idx);
+    } else {
+      return null;
+    }
+    Tree tree = state.getPath().getLeaf();
+    if (tree instanceof MemberReferenceTree) {
+      type = state.getTypes().findDescriptorType(ASTHelpers.getType(tree)).getReturnType();
+    }
+    return type;
+  }
+
+  // rewrite e.g. `List<Object> xs = new LinkedList<>()` -> `... = new ArrayList<>()`
+  private static Optional<Fix> linkedListFix(Tree tree, VisitorState state) {
+    Type type = getTargetType(state);
+    if (type == null) {
       return Optional.empty();
     }
-    VariableTree varTree = (VariableTree) parent;
-    if (!(varTree.getInitializer() instanceof NewClassTree)) {
-      return Optional.empty();
-    }
-    NewClassTree init = (NewClassTree) varTree.getInitializer();
-    Type varType = ASTHelpers.getType(parent);
     Types types = state.getTypes();
     for (String replacement : ImmutableList.of("java.util.ArrayList", "java.util.ArrayDeque")) {
       Symbol sym = state.getSymbolFromString(replacement);
-      if (types.isAssignable(types.erasure(sym.asType()), types.erasure(varType))) {
+      if (types.isAssignable(types.erasure(sym.asType()), types.erasure(type))) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
-        Tree typeTree = init.getIdentifier();
-        if (typeTree instanceof ParameterizedTypeTree) {
-          typeTree = ((ParameterizedTypeTree) typeTree).getType();
+        while (tree instanceof ParameterizedTypeTree) {
+          tree = ((ParameterizedTypeTree) tree).getType();
         }
-        fix.replace(typeTree, SuggestedFixes.qualifyType(state, fix, sym));
+        fix.replace(tree, SuggestedFixes.qualifyType(state, fix, sym));
         return Optional.of(fix.build());
       }
     }
@@ -320,3 +375,4 @@ public class JdkObsolete extends BugChecker implements NewClassTreeMatcher, Clas
     return true;
   }
 }
+

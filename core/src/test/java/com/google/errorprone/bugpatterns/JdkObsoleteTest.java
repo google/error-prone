@@ -123,7 +123,13 @@ public class JdkObsoleteTest {
             "class Test {",
             "  Deque<Object> d = new LinkedList<>();",
             "  List<Object> l = new LinkedList<>();",
+            "  {",
+            "    l = new LinkedList<>();",
+            "  }",
             "  LinkedList<Object> ll = new LinkedList<>();",
+            "  List<Object> lll = new LinkedList<Object>() {{",
+            "    add(null); // yikes",
+            "  }};",
             "}")
         .addOutputLines(
             "out/Test.java", //
@@ -131,7 +137,13 @@ public class JdkObsoleteTest {
             "class Test {",
             "  Deque<Object> d = new ArrayDeque<>();",
             "  List<Object> l = new ArrayList<>();",
+            "  {",
+            "    l = new ArrayList<>();",
+            "  }",
             "  LinkedList<Object> ll = new LinkedList<>();",
+            "  List<Object> lll = new LinkedList<Object>() {{",
+            "    add(null); // yikes",
+            "  }};",
             "}")
         .doTest(TEXT_MATCH);
   }
@@ -194,5 +206,59 @@ public class JdkObsoleteTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void additionalRefactorings() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new JdkObsolete(), getClass())
+        .addInputLines(
+            "in/Test.java", //
+            "import java.util.*;",
+            "import java.util.function.*;",
+            "class Test {",
+            "  Supplier<Deque<Object>> a = () -> new LinkedList<>();",
+            "  Supplier<Deque<Object>> b = () -> {",
+            "    return new LinkedList<>();",
+            "  };",
+            "  Supplier<Deque<Object>> c = LinkedList::new;",
+            "  Deque<Object> f() {",
+            "    return new LinkedList<>();",
+            "  }",
+            "  void g(Deque<Object> x) {}",
+            "  {",
+            "    g(new LinkedList<>());",
+            "  }",
+            "  {",
+            "    List<LinkedList<String>> xs = new ArrayList<>();",
+            "    List<List<String>> ys = new ArrayList<>();",
+            "    xs.add(new LinkedList<>());",
+            "    ys.add(new LinkedList<>());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "import java.util.*;",
+            "import java.util.function.*;",
+            "class Test {",
+            "  Supplier<Deque<Object>> a = () -> new ArrayDeque<>();",
+            "  Supplier<Deque<Object>> b = () -> {",
+            "    return new ArrayDeque<>();",
+            "  };",
+            "  Supplier<Deque<Object>> c = ArrayDeque::new;",
+            "  Deque<Object> f() {",
+            "    return new ArrayDeque<>();",
+            "  }",
+            "  void g(Deque<Object> x) {}",
+            "  {",
+            "    g(new ArrayDeque<>());",
+            "  }",
+            "  {",
+            "    List<LinkedList<String>> xs = new ArrayList<>();",
+            "    List<List<String>> ys = new ArrayList<>();",
+            "    xs.add(new LinkedList<>());",
+            "    ys.add(new ArrayList<>());",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 }
