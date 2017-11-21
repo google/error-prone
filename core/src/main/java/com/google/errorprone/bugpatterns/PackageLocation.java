@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.BugPattern.Suppressibility.CUSTOM_ANNOTATION;
 
 import com.google.common.base.CharMatcher;
 import com.google.errorprone.BugPattern;
@@ -36,9 +35,8 @@ import com.sun.source.tree.CompilationUnitTree;
   summary = "Package names should match the directory they are declared in",
   category = JDK,
   severity = SUGGESTION,
-  suppressibility = CUSTOM_ANNOTATION,
   documentSuppression = false,
-  customSuppressionAnnotations = SuppressPackageLocation.class,
+  suppressionAnnotations = SuppressPackageLocation.class,
   tags = StandardTags.STYLE
 )
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
