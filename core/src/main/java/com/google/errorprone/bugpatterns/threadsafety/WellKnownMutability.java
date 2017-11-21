@@ -263,6 +263,7 @@ public final class WellKnownMutability {
         .add("org.threeten.bp.zone.ZoneRulesProvider")
         .add("org.joda.time.DateTime")
         .add("org.joda.time.DateTimeZone")
+        .add("org.joda.time.Days")
         .add("org.joda.time.Duration")
         .add("org.joda.time.Instant")
         .add("org.joda.time.LocalDate")
