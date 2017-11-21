@@ -97,7 +97,8 @@ public class JdkObsolete extends BugChecker
               new Obsolete(
                   "java.util.LinkedList",
                   "It is very rare for LinkedList to out-perform ArrayList or ArrayDeque. Avoid it"
-                      + " unless you're willing to invest a lot of time into benchmarking.") {
+                      + " unless you're willing to invest a lot of time into benchmarking Caveat:"
+                      + " LinkedList supports null elements, but ArrayDeque does not.") {
                 @Override
                 Optional<Fix> fix(Tree tree, VisitorState state) {
                   return linkedListFix(tree, state);

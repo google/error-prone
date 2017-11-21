@@ -6,6 +6,12 @@ Some JDK APIs are obsolete and have preferred alternatives.
 If you are using `LinkedList` as a list, prefer `ArrayList`.  If you are using
 `LinkedList` as a stack or queue/deque, prefer `ArrayDeque`.
 
+Migration gotcha: `LinkedList` permits `null` elements; `ArrayDeque` rejects
+them. The documentation for `Deque` strongly discourages users from inserting
+`null`, even into implementations that permit it. So, if you are using a
+`LinkedList` for this purpose, you should likely stop, and you will _need_ to
+stop in order to migrate to `ArrayDeque`.
+
 ## `Vector`
 
 `Vector` performs synchronization that is usually unnecessary; prefer
