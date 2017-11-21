@@ -54,13 +54,17 @@ public final class BugPatternInstance {
     instance.altNames = annotation.altNames();
     instance.tags = annotation.tags();
     instance.severity = annotation.severity();
-    instance.suppressibility = annotation.suppressibility();
     instance.summary = annotation.summary();
     instance.explanation = annotation.explanation();
     instance.documentSuppression = annotation.documentSuppression();
     instance.providesFix = annotation.providesFix();
 
     Map<String, Object> keyValues = getAnnotation(element, BugPattern.class.getName());
+    try {
+      instance.suppressibility = annotation.suppressibility();
+    } catch (EnumConstantNotPresentException e) {
+      instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
+    }
     Object result = keyValues.get("customSuppressionAnnotations");
     if (result == null) {
       instance.customSuppressionAnnotations = new String[0];

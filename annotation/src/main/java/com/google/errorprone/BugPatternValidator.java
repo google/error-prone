@@ -76,6 +76,8 @@ public class BugPatternValidator {
                           customSuppressionAnnotations, Class::getCanonicalName))));
         }
         break;
+      case DEFAULT:
+        break;
     }
   }
 }

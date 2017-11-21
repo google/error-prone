@@ -207,9 +207,12 @@ public @interface BugPattern {
     SUGGESTION
   }
 
-  /** Whether this checker should be suppressible, and if so, by what means. */
-  Suppressibility suppressibility() default Suppressibility.SUPPRESS_WARNINGS;
+  /** @deprecated use {@link #suppressionAnnotations} instead. */
+  @Deprecated
+  Suppressibility suppressibility() default Suppressibility.DEFAULT;
 
+  /** @deprecated use {@link #suppressionAnnotations} instead. */
+  @Deprecated
   public enum Suppressibility {
     /**
      * Can be suppressed using the standard {@code SuppressWarnings("foo")} mechanism. This setting
@@ -219,17 +222,28 @@ public @interface BugPattern {
     /** Can be suppressed with a custom annotation on a parent AST node. */
     CUSTOM_ANNOTATION,
     /** Cannot be suppressed. */
-    UNSUPPRESSIBLE;
+    UNSUPPRESSIBLE,
+    /** The default - uses {@link #suppressionAnnotations} instead. */
+    DEFAULT;
   }
 
   /** True if the check can be disabled using command-line flags. */
   boolean disableable() default true;
 
-  /**
-   * A set of custom suppression annotation types to use if suppressibility is
-   * Suppressibility.CUSTOM_ANNOTATION.
-   */
+  /** @deprecated use {@link #suppressionAnnotations} instead. */
+  @Deprecated
   Class<? extends Annotation>[] customSuppressionAnnotations() default {};
+
+  /**
+   * A set of annotation types that can be used to suppress the check.
+   *
+   * <p>Includes only {@link SuppressWarnings} by default.
+   *
+   * <p>To make a check unsuppressible, set {@code suppressionAnnotations} to empty. Note that
+   * unsuppressible checks may still be disabled using command line flags (see {@link
+   * #disableable}).
+   */
+  Class<? extends Annotation>[] suppressionAnnotations() default SuppressWarnings.class;
 
   /**
    * Generate an explanation of how to suppress the check.

@@ -17,6 +17,7 @@ package com.google.errorprone;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -29,10 +30,9 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -118,12 +118,34 @@ public class BugCheckerInfo implements Serializable {
         pattern.summary(),
         pattern.severity(),
         createLinkUrl(pattern),
-        pattern.suppressibility(),
-        pattern.suppressibility() == Suppressibility.CUSTOM_ANNOTATION
-            ? new HashSet<>(Arrays.asList(pattern.customSuppressionAnnotations()))
-            : Collections.emptySet(),
+        suppressibility(pattern),
+        customSuppressionAnnotations(pattern),
         ImmutableSet.copyOf(pattern.tags()),
         pattern.disableable());
+  }
+
+  private static Suppressibility suppressibility(BugPattern pattern) {
+    if (pattern.suppressibility() == Suppressibility.DEFAULT) {
+      if (pattern.suppressionAnnotations().length == 0) {
+        return Suppressibility.UNSUPPRESSIBLE;
+      }
+      if (Arrays.asList(pattern.suppressionAnnotations()).contains(SuppressWarnings.class)) {
+        return Suppressibility.SUPPRESS_WARNINGS;
+      }
+      return Suppressibility.CUSTOM_ANNOTATION;
+    }
+    return pattern.suppressibility();
+  }
+
+  private static Set<Class<? extends Annotation>> customSuppressionAnnotations(BugPattern pattern) {
+    if (pattern.suppressibility() == Suppressibility.DEFAULT) {
+      return Stream.of(pattern.suppressionAnnotations())
+          .filter(a -> !a.equals(SuppressWarnings.class))
+          .collect(toImmutableSet());
+    }
+    return pattern.suppressibility() == Suppressibility.CUSTOM_ANNOTATION
+        ? ImmutableSet.copyOf(pattern.customSuppressionAnnotations())
+        : ImmutableSet.of();
   }
 
   private BugCheckerInfo(
