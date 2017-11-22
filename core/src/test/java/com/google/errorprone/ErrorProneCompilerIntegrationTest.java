@@ -29,8 +29,10 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteStreams;
@@ -420,6 +422,47 @@ public class ErrorProneCompilerIntegrationTest {
   public void suppressGeneratedWarning() throws Exception {
     String[] generatedFile = {
       "@javax.annotation.Generated(\"Foo\")",
+      "class Generated {",
+      "  public Generated() {",
+      "    if (true);",
+      "  }",
+      "}"
+    };
+
+    {
+      String[] args = {"-Xep:EmptyIf:WARN"};
+      Result exitCode =
+          compiler.compile(
+              args,
+              Arrays.asList(
+                  compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+      outputStream.flush();
+      assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
+      assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(Locale.ENGLISH))
+          .contains("[EmptyIf]");
+      assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    }
+
+    diagnosticHelper.clearDiagnostics();
+
+    {
+      String[] args = {"-Xep:EmptyIf:WARN", "-XepDisableWarningsInGeneratedCode"};
+      Result exitCode =
+          compiler.compile(
+              args,
+              Arrays.asList(
+                  compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+      outputStream.flush();
+      assertThat(diagnosticHelper.getDiagnostics()).hasSize(0);
+      assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    }
+  }
+
+  @Test
+  public void suppressGeneratedWarningJava9() throws Exception {
+    assumeTrue(StandardSystemProperty.JAVA_VERSION.value().startsWith("9"));
+    String[] generatedFile = {
+      "@javax.annotation.processing.Generated(\"Foo\")",
       "class Generated {",
       "  public Generated() {",
       "    if (true);",
