@@ -16,11 +16,8 @@
 
 package com.google.errorprone;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSet;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -29,8 +26,6 @@ import java.util.Set;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public class BugPatternValidator {
-
-  private static final Joiner COMMA_JOINER = Joiner.on(", ");
 
   public static void validate(BugPattern pattern) throws ValidationException {
     if (pattern == null) {
@@ -52,32 +47,13 @@ public class BugPatternValidator {
         break;
     }
 
-    // suppressibility must be consistent with customSuppressionAnnotations.
     Set<Class<? extends Annotation>> customSuppressionAnnotations =
-        new HashSet<>(Arrays.asList(pattern.customSuppressionAnnotations()));
-    switch (pattern.suppressibility()) {
-      case CUSTOM_ANNOTATION:
-        if (customSuppressionAnnotations.isEmpty()) {
-          throw new ValidationException(
-              "Expected a custom suppression annotation but none was provided");
-        } else if (customSuppressionAnnotations.contains(SuppressWarnings.class)) {
-          throw new ValidationException(
-              "Custom suppression annotation may not use @SuppressWarnings");
-        }
-        break;
-      case SUPPRESS_WARNINGS:
-      case UNSUPPRESSIBLE:
-        if (!customSuppressionAnnotations.isEmpty()) {
-          throw new ValidationException(
-              String.format(
-                  "Expected no custom suppression annotations but found these: %s",
-                  COMMA_JOINER.join(
-                      Collections2.transform(
-                          customSuppressionAnnotations, Class::getCanonicalName))));
-        }
-        break;
-      case DEFAULT:
-        break;
+        ImmutableSet.copyOf(pattern.suppressionAnnotations());
+    if (customSuppressionAnnotations.contains(SuppressWarnings.class)
+        && customSuppressionAnnotations.size() > 1) {
+      // TODO(cushon): there's not reason not to support using @SuppressWarnings together with
+      // custom annotations once the migration to suppressionAnnotations is done.
+      throw new ValidationException("Custom suppression annotation may not use @SuppressWarnings");
     }
   }
 }
