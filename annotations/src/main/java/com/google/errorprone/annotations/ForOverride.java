@@ -23,6 +23,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -37,6 +38,7 @@ import java.lang.annotation.Target;
  * static}, {@code final} or declared in a {@code final} class. Overriding methods must have either
  * protected or package-private visibility, although their effective visibility is actually "none".
  */
+@Documented
 @IncompatibleModifiers({PUBLIC, PRIVATE, STATIC, FINAL})
 @Retention(CLASS) // Parent source might not be available while compiling subclass
 @Target(METHOD)

@@ -20,6 +20,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.CLASS;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -30,6 +31,7 @@ import java.lang.annotation.Target;
  * classes or packages annotated with {@code @CheckReturnValue} to exempt specific methods from the
  * default.
  */
+@Documented
 @Target({METHOD, TYPE})
 @Retention(CLASS)
 public @interface CanIgnoreReturnValue {}

@@ -18,6 +18,7 @@ package com.google.errorprone.annotations;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -69,6 +70,7 @@ import java.lang.annotation.Target;
  *   <li>Effective Java §15
  * </ul>
  */
+@Documented
 @Target(TYPE)
 @Retention(RUNTIME)
 @Inherited
