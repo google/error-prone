@@ -137,14 +137,21 @@ public class JdkObsolete extends BugChecker
           .stream()
           .collect(toImmutableMap(Obsolete::qualifiedName, x -> x));
 
-  // a pre-JDK-8039124 concession
   static final Matcher<ExpressionTree> MATCHER_STRINGBUFFER =
       anyOf(
+          // a pre-JDK-8039124 concession
           instanceMethod()
               .onExactClass("java.util.regex.Matcher")
               .withSignature("appendTail(java.lang.StringBuffer)"),
           instanceMethod()
               .onExactClass("java.util.regex.Matcher")
+              .withSignature("appendReplacement(java.lang.StringBuffer,java.lang.String)"),
+          // TODO(cushon): back this out if https://github.com/google/re2j/pull/44 happens
+          instanceMethod()
+              .onExactClass("com.google.re2j.Matcher")
+              .withSignature("appendTail(java.lang.StringBuffer)"),
+          instanceMethod()
+              .onExactClass("com.google.re2j.Matcher")
               .withSignature("appendReplacement(java.lang.StringBuffer,java.lang.String)"));
 
   @Override
