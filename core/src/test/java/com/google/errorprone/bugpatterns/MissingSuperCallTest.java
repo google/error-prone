@@ -68,6 +68,26 @@ public class MissingSuperCallTest {
   }
 
   @Test
+  public void errorProne() {
+    compilationHelper
+        .addSourceLines(
+            "Super.java",
+            "import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;",
+            "public class Super {",
+            "  @OverridingMethodsMustInvokeSuper public void doIt() {}",
+            "}")
+        .addSourceLines(
+            "Sub.java",
+            "public class Sub extends Super {",
+            "  // BUG: Diagnostic contains:",
+            "  // This method overrides Super#doIt, which is annotated with",
+            "  // @OverridingMethodsMustInvokeSuper, but does not call the super method",
+            "  @Override public void doIt() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void findBugs() {
     compilationHelper
         .addSourceLines(
