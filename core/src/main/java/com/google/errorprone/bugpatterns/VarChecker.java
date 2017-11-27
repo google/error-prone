@@ -36,6 +36,8 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeInfo;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Optional;
@@ -60,6 +62,9 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
       return Description.NO_MATCH;
     }
     if (ASTHelpers.hasAnnotation(sym, Var.class, state)) {
+      return Description.NO_MATCH;
+    }
+    if (TreeInfo.isReceiverParam((JCTree) tree)) {
       return Description.NO_MATCH;
     }
     if (forLoopVariable(tree, state.getPath())) {

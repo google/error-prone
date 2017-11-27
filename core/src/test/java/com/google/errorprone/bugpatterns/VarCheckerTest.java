@@ -322,4 +322,18 @@ public class VarCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void receiverParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.io.InputStream;",
+            "class Test {",
+            "  public void f(Test this, int x) {",
+            "    this.toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
