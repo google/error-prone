@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 /** A collection of types with with known mutability. */
-public final class WellKnownMutability {
+public final class WellKnownMutability implements ThreadSafety.KnownTypes {
 
 
   private WellKnownMutability(List<String> knownImmutable, List<String> knownUnsafe) {
@@ -56,6 +56,12 @@ public final class WellKnownMutability {
     return knownImmutableClasses;
   }
 
+  @Override
+  public Map<String, AnnotationInfo> getKnownSafeClasses() {
+    return getKnownImmutableClasses();
+  }
+
+  @Override
   public Set<String> getKnownUnsafeClasses() {
     return knownUnsafeClasses;
   }
