@@ -95,6 +95,8 @@ public class MethodCanBeStatic extends BugChecker implements MethodTreeMatcher {
           }
           break;
         case "readObjectNoData":
+        case "readResolve":
+        case "writeReplace":
           if (sym.getParameters().size() == 0) {
             return NO_MATCH;
           }
