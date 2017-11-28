@@ -265,6 +265,8 @@ public class MethodCanBeStaticTest {
             "  private void writeObject(",
             "    ObjectOutputStream stream) throws IOException {}",
             "  private void readObjectNoData() throws ObjectStreamException {}",
+            "  private Object readResolve() { return null; }",
+            "  private Object writeReplace() { return null; }",
             "}")
         .doTest();
   }
