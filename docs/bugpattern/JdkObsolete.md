@@ -36,6 +36,10 @@ prefer `ArrayDeque`.
 If a synchronized collection is necessary, use a data structure from
 `java.util.concurrent`.
 
+When migrating from `Stack` to `Deque`, note that the `Stack` methods
+`push`/`pop`/`peek` correspond to the `Deque` methods
+`addFirst`/`removeFirst`/`peekFirst`.
+
 ## `StringBuffer`
 
 `StringBuffer` performs synchronization that is rarely necessary and has
