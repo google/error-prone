@@ -114,7 +114,7 @@ public class JdkObsolete extends BugChecker
               new Obsolete(
                   "java.util.Stack",
                   "Stack is a nonstandard class that predates the Java Collections Framework;"
-                      + " prefer ArrayDeque. Note that the Stack methods push/pop/peek correspond "
+                      + " prefer ArrayDeque. Note that the Stack methods push/pop/peek correspond"
                       + " to the Deque methods addFirst/removeFirst/peekFirst."),
               new Obsolete(
                   "java.lang.StringBuffer",
