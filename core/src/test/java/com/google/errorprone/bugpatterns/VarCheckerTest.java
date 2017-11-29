@@ -328,7 +328,6 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.InputStream;",
             "class Test {",
             "  public void f(Test this, int x) {",
             "    this.toString();",
