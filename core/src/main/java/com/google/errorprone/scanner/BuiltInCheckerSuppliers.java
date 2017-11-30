@@ -55,6 +55,7 @@ import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.ConstantOverflow;
 import com.google.errorprone.bugpatterns.ConstructorInvokesOverridable;
 import com.google.errorprone.bugpatterns.ConstructorLeaksThis;
+import com.google.errorprone.bugpatterns.DateFormatConstant;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DefaultCharset;
@@ -183,7 +184,6 @@ import com.google.errorprone.bugpatterns.SelfComparison;
 import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
-import com.google.errorprone.bugpatterns.SimpleDateFormatConstant;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StreamToString;
@@ -500,7 +500,7 @@ public class BuiltInCheckerSuppliers {
           ReferenceEquality.class,
           RequiredModifiersChecker.class,
           ShortCircuitBoolean.class,
-          SimpleDateFormatConstant.class,
+          DateFormatConstant.class,
           StaticGuardedByInstance.class,
           SynchronizeOnNonFinalField.class,
           ThreadJoinLoop.class,

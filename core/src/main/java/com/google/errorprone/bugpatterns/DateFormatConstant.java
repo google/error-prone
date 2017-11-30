@@ -21,10 +21,11 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariable;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.base.CaseFormat;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -43,13 +44,14 @@ import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "SimpleDateFormatConstant",
+  name = "DateFormatConstant",
   category = JDK,
-  summary = "SimpleDateFormat is not thread-safe, and should not be used as a constant field.",
+  summary = "DateFormat is not thread-safe, and should not be used as a constant field.",
   severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
+  tags = StandardTags.FRAGILE_CODE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
-public class SimpleDateFormatConstant extends BugChecker implements VariableTreeMatcher {
+public class DateFormatConstant extends BugChecker implements VariableTreeMatcher {
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -67,7 +69,7 @@ public class SimpleDateFormatConstant extends BugChecker implements VariableTree
     if (!name.equals(name.toUpperCase())) {
       return NO_MATCH;
     }
-    if (!isSameType(getType(tree), state.getTypeFromString("java.text.SimpleDateFormat"), state)) {
+    if (!isSubtype(getType(tree), state.getTypeFromString("java.text.DateFormat"), state)) {
       return NO_MATCH;
     }
     return buildDescription(tree)
