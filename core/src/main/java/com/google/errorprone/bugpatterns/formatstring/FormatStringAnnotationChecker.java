@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.annotations.FormatString;
@@ -45,9 +44,7 @@ import java.util.List;
   name = "FormatStringAnnotation",
   summary = "Invalid format string passed to formatting method.",
   category = JDK,
-  severity = ERROR,
-
-  suppressibility = Suppressibility.SUPPRESS_WARNINGS
+  severity = ERROR
 )
 public final class FormatStringAnnotationChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher, NewClassTreeMatcher {
