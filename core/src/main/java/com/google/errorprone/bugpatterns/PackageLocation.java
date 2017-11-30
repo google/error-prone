@@ -45,12 +45,6 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    // Android projects often put different configurations (e.g. dev vs. prod) of a class at paths
-    // with a {dev, prod} prefix.  Opt them out of this check.
-    if (state.isAndroidCompatible()) {
-      return Description.NO_MATCH;
-    }
-
     if (tree.getPackageName() == null) {
       return Description.NO_MATCH;
     }
