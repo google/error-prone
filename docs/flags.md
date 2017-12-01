@@ -37,10 +37,6 @@ There are also a few blanket severity-changing flags:
 *   `-XepDisableAllChecks`
 *   `-XepDisableWarningsInGeneratedCode` : Disables warnings in classes annotated with @javax.annotation.Generated
 
-<!--
-
-# TODO(cushon): uncomment after the next release
-
 Additionally, you can completely exclude certain paths
 from any Error Prone checking via the `-XepExcludedPaths` flag.  The
 flag takes as an argument a regular expression that is matched against
@@ -51,7 +47,6 @@ use the option:
 ```bash
 -XepExcludedPaths:.*/build/generated/.*
 ```
--->
 
 If you pass a flag that refers to an unknown check name, by default Error Prone
 will throw an error. You can allow the use of unknown check names by passing the
