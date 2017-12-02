@@ -340,4 +340,22 @@ public class ArgumentSelectionDefectCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void description() {
+    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second);",
+            "  void test(Object first, Object second) {",
+            "     // BUG: Diagnostic contains: The following arguments may have been swapped:"
+                + " 'second' for formal parameter 'first', 'first' for formal parameter 'second'."
+                + " Either add clarifying `/* paramName= */` comments, or swap the arguments if"
+                + " that is what was intended",
+            "     target(second, first);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
