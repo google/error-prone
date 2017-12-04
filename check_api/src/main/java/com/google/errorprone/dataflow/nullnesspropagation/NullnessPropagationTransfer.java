@@ -187,7 +187,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       // Any method explicitly annotated with @Nullable is assumed to be capable of returning
       // null.
       for (String annotation : methodInfo.annotations()) {
-        if (annotation.endsWith(".Nullable")) {
+        if (annotation.endsWith(".Nullable") || annotation.endsWith(".NullableDecl")) {
           return false;
         }
       }

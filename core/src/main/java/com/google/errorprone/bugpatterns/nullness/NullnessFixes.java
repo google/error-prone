@@ -40,6 +40,7 @@ class NullnessFixes {
   }
 
   private static String getQualifiedName(VisitorState state, SuggestedFix.Builder builder) {
+    // TODO(cpovirk): Suggest @NullableDecl if the code uses that.
     Symbol sym = FindIdentifiers.findIdent("Nullable", state, KindSelector.VAL_TYP);
     String defaultType =
         state.isAndroidCompatible()
