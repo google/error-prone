@@ -142,8 +142,8 @@ public class ASTHelpers {
   }
 
   /**
-   * Gets the symbol declared by a tree. Returns null if this tree does not declare a symbol, if
-   * {@code tree} is null.
+   * Gets the symbol declared by a tree. Returns null if {@code tree} does not declare a symbol or
+   * is null.
    */
   public static Symbol getDeclaredSymbol(Tree tree) {
     if (tree instanceof AnnotationTree) {
