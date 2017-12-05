@@ -286,4 +286,29 @@ public class RemoveUnusedImportsTest {
             "") // The package statement's trailing newline is retained
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void b69984547() throws IOException {
+    testHelper
+        .addInputLines(
+            "android/app/PendingIntent.java",
+            "package android.app;",
+            "public class PendingIntent {",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "android/app/AlarmManager.java",
+            "package android.app;",
+            "public class AlarmManager {",
+            "  public void set(int type, long triggerAtMillis, PendingIntent operation) {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Test.java",
+            "import android.app.PendingIntent;",
+            "/** {@link android.app.AlarmManager#containsAll(int, long, PendingIntent)}  */",
+            "public class Test {}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
