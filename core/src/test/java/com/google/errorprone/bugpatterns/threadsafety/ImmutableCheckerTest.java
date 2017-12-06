@@ -365,6 +365,25 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void extendsImmutableAnnotated_mutableBounds() {
+    compilationHelper
+        .addSourceLines(
+            "SuperMost.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf={\"A\"})",
+            "public class SuperMost<A>  {",
+            "  public final A x = null;",
+            "}")
+        .addSourceLines(
+            "SubClass.java",
+            "import java.util.List;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "  // BUG: Diagnostic contains: instantiated with mutable type for 'A'",
+            "@Immutable public class SubClass extends SuperMost<List<String>> {}")
+        .doTest();
+  }
+
+  @Test
   public void typeParameterWithImmutableBound() {
     compilationHelper
         .addSourceLines(
@@ -1409,6 +1428,35 @@ public class ImmutableCheckerTest {
             "@Immutable class Test {",
             "  // BUG: Diagnostic contains: 'SomeUnsafe' is mutable",
             "  public final SomeUnsafe s = new SomeUnsafe();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lazyInit() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.errorprone.annotations.concurrent.LazyInit;",
+            "@Immutable class Test {",
+            "  @LazyInit int a = 42;",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("Fix with b/70286208")
+  @Test
+  public void lazyInitMutable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.errorprone.annotations.concurrent.LazyInit;",
+            "import java.util.List;",
+            "@Immutable class Test {",
+            "  // BUG: Diagnostic contains: 'List' is mutable",
+            "  @LazyInit List<Integer> a = null;",
             "}")
         .doTest();
   }
