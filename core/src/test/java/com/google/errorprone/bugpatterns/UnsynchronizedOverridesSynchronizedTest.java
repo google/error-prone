@@ -43,9 +43,12 @@ public class UnsynchronizedOverridesSynchronizedTest {
             "test/Test.java",
             "package test;",
             "class Test extends Super {",
+            "  int counter;",
             "  // BUG: Diagnostic contains: f overrides synchronized method in Super",
             "  // synchronized void f()",
-            "  void f() {}",
+            "  void f() {",
+            "    counter++;",
+            "  }",
             "}")
         .doTest();
   }
@@ -54,12 +57,19 @@ public class UnsynchronizedOverridesSynchronizedTest {
   public void negative() throws Exception {
     compilationHelper
         .addSourceLines(
-            "test/Super.java", "package test;", "class Super {", "  synchronized void f() {}", "}")
+            "test/Super.java", //
+            "package test;",
+            "class Super {",
+            "  synchronized void f() {}",
+            "}")
         .addSourceLines(
             "test/Test.java",
             "package test;",
             "class Test extends Super {",
-            "  synchronized void f() {}",
+            "  int counter;",
+            "  synchronized void f() {",
+            "    counter++;",
+            "  }",
             "}")
         .doTest();
   }
@@ -77,6 +87,78 @@ public class UnsynchronizedOverridesSynchronizedTest {
             "    throw new IOException();",
             "  }",
             "  @Override public /*unsynchronized*/ void mark(int readlimit) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void callsSuperWithOtherStatements() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "class Test {",
+            "  class B extends Throwable {",
+            "    // BUG: Diagnostic contains:",
+            "    public Throwable getCause() {",
+            "      System.err.println();",
+            "      return super.getCause();",
+            "    }",
+            "  }",
+            "  class C extends Throwable {",
+            "    // BUG: Diagnostic contains:",
+            "    public Exception getCause() {",
+            "      System.err.println();",
+            "      return (Exception) super.getCause();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreDelegatesToSuper() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "class Test {",
+            "  class B extends Throwable {",
+            "    public Throwable getCause() {",
+            "      return super.getCause();",
+            "    }",
+            "  }",
+            "  class C extends Throwable {",
+            "    public Exception getCause() {",
+            "      return (Exception) super.getCause();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreEmptyOverride() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "test/Lib.java",
+            "package test;",
+            "class Lib {",
+            "  public synchronized void f() {}",
+            "}")
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "class Test {",
+            "  class B extends Lib {",
+            "    public void f() {",
+            "    }",
+            "  }",
+            "  class C extends Lib {",
+            "    public void f() {",
+            "      super.f();",
+            "    }",
+            "  }",
             "}")
         .doTest();
   }
