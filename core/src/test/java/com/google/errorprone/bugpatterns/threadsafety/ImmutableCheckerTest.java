@@ -1445,7 +1445,6 @@ public class ImmutableCheckerTest {
         .doTest();
   }
 
-  @Ignore("Fix with b/70286208")
   @Test
   public void lazyInitMutable() {
     compilationHelper
