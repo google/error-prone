@@ -246,10 +246,8 @@ public class ImmutableAnalysis {
     if (bugChecker.isSuppressed(var)) {
       return Violation.absent();
     }
-    if (ASTHelpers.hasAnnotation(var, LazyInit.class, state)) {
-      return Violation.absent();
-    }
-    if (!var.getModifiers().contains(Modifier.FINAL)) {
+    if (!var.getModifiers().contains(Modifier.FINAL)
+        && !ASTHelpers.hasAnnotation(var, LazyInit.class, state)) {
 
       Violation info =
           Violation.of(
