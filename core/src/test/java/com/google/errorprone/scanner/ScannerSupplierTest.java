@@ -474,7 +474,7 @@ public class ScannerSupplierTest {
     category = JDK,
     severity = ERROR,
     suppressionAnnotations = {},
-    disableable = false
+    disableable = true
   )
   public static class UnsuppressiblePackageLocation extends PackageLocation {}
 

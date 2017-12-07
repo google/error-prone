@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Attribute;
@@ -163,15 +164,21 @@ public class SuppressionHelper {
       SeverityLevel severityLevel,
       boolean inGeneratedCode,
       boolean disableWarningsInGeneratedCode) {
+    if (suppressible.suppressibility() == Suppressibility.UNSUPPRESSIBLE) {
+      return false;
+    }
     if (inGeneratedCode && disableWarningsInGeneratedCode && severityLevel != SeverityLevel.ERROR) {
       return true;
     }
-    if (suppressible.supportsSuppressWarnings()
-        && !Collections.disjoint(suppressible.allNames(), suppressionsOnCurrentPath)) {
-      return true;
+    switch (suppressible.suppressibility()) {
+      case CUSTOM_ANNOTATION:
+        return !Collections.disjoint(
+            suppressible.customSuppressionAnnotations(), customSuppressionsOnCurrentPath);
+      case SUPPRESS_WARNINGS:
+        return !Collections.disjoint(suppressible.allNames(), suppressionsOnCurrentPath);
+      default:
+        throw new IllegalStateException("No case for: " + suppressible.suppressibility());
     }
-    return !Collections.disjoint(
-        suppressible.customSuppressionAnnotations(), customSuppressionsOnCurrentPath);
   }
 
   private static boolean isGenerated(Symbol sym, VisitorState state) {
