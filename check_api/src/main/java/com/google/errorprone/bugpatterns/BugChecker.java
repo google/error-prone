@@ -21,6 +21,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import com.google.common.base.Preconditions;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
@@ -175,8 +176,8 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   @Override
-  public boolean supportsSuppressWarnings() {
-    return info.supportsSuppressWarnings();
+  public Suppressibility suppressibility() {
+    return info.suppressibility();
   }
 
   @Override
@@ -421,16 +422,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
     BugChecker that = (BugChecker) obj;
     return this.canonicalName().equals(that.canonicalName())
         && this.defaultSeverity().equals(that.defaultSeverity())
-        && this.supportsSuppressWarnings() == that.supportsSuppressWarnings()
-        && this.customSuppressionAnnotations().equals(that.customSuppressionAnnotations());
+        && this.suppressibility().equals(that.suppressibility());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        canonicalName(),
-        defaultSeverity(),
-        supportsSuppressWarnings(),
-        customSuppressionAnnotations());
+    return Objects.hash(canonicalName(), defaultSeverity(), suppressibility());
   }
 }

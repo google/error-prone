@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.ErrorProneError;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -250,7 +251,9 @@ public class ErrorProneScanner extends Scanner {
   private final List<WildcardTreeMatcher> wildcardMatchers = new ArrayList<>();
 
   private void registerNodeTypes(BugChecker checker) {
-    customSuppressionAnnotations.addAll(checker.customSuppressionAnnotations());
+    if (checker.suppressibility() == Suppressibility.CUSTOM_ANNOTATION) {
+      customSuppressionAnnotations.addAll(checker.customSuppressionAnnotations());
+    }
 
     if (checker instanceof AnnotationTreeMatcher) {
       annotationMatchers.add((AnnotationTreeMatcher) checker);
