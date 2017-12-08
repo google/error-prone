@@ -18,7 +18,7 @@ _Alternate names: SdCardPath_
 
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("HardCodedSdCardPath")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("HardCodedSdCardPath")` to the enclosing element.
 
 ----------
 

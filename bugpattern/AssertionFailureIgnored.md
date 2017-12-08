@@ -44,4 +44,4 @@ public void testFailsWithAssertionError() {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("AssertionFailureIgnored")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssertionFailureIgnored")` to the enclosing element.

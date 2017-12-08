@@ -166,7 +166,7 @@ if (set.contains(hi)) {
 [av]: https://github.com/google/auto/blob/master/value/userguide/index.md
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("EqualsIncompatibleType")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsIncompatibleType")` to the enclosing element.
 
 ----------
 

@@ -18,7 +18,7 @@ The constructor is annotated with @Inject(optional=true), or it is annotated wit
 See [https://code.google.com/p/google-guice/wiki/InjectionPoints] for details.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("InjectedConstructorAnnotations")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectedConstructorAnnotations")` to the enclosing element.
 
 ----------
 

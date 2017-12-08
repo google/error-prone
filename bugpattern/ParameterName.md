@@ -33,4 +33,4 @@ If the comment deliberately does not match the formal parameter name, using a
 regular block comment without the `=` is recommended: `/* enableFoo */`.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ParameterName")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ParameterName")` to the enclosing element.

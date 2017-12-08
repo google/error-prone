@@ -16,4 +16,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 AutoValue constructors are synthesized with their parameters in the same order as the abstract accessor methods. Calls to the constructor need to match this ordering.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("AutoValueConstructorOrderChecker")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("AutoValueConstructorOrderChecker")` to the enclosing element.

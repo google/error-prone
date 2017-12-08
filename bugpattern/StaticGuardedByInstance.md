@@ -58,4 +58,4 @@ To update a static counter from an instance method, consider using
 instead of incrementing a static `int` field.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("StaticGuardedByInstance")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("StaticGuardedByInstance")` to the enclosing element.

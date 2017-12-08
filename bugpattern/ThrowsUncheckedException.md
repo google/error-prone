@@ -20,4 +20,4 @@ Effective Java Item 62 says:
 > exceptions in the method declaration.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ThrowsUncheckedException")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThrowsUncheckedException")` to the enclosing element.

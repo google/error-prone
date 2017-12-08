@@ -18,7 +18,7 @@ This checker looks for comparisons of protocol buffer fields with null. If a pro
 If you need to distinguish between an unset optional value and a default value, you have two options.  In most cases, you can simply use the `hasField()` method. proto3 however does not generate `hasField()` methods for scalar fields of type `string` or `bytes`. In those cases you will need to wrap your field in `google.protobuf.StringValue` or `google.protobuf.BytesValue`, respectively.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ProtoFieldNullComparison")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoFieldNullComparison")` to the enclosing element.
 
 ----------
 

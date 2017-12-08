@@ -23,7 +23,7 @@ the name to something more descriptive, like "`disabledTestSomething()`". You
 don't need an `@Test` annotation, but if you want to keep it, add `@Ignore` too.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("JUnit3TestNotRun")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit3TestNotRun")` to the enclosing element.
 
 ----------
 

@@ -19,7 +19,7 @@ _Alternate names: ValidFragment_
 
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FragmentNotInstantiable")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FragmentNotInstantiable")` to the enclosing element.
 
 ----------
 

@@ -23,4 +23,4 @@ Exception: `@Override` may be omitted when the parent method is `@Deprecated`.
 [style]: https://google.github.io/styleguide/javaguide.html#s6.1-override-annotation
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MissingOverride")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingOverride")` to the enclosing element.

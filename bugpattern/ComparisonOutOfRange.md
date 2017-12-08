@@ -18,7 +18,7 @@ This checker looks for equality comparisons to values that are out of range for 
 This checker currently supports checking for bad byte and character comparisons.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ComparisonOutOfRange")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparisonOutOfRange")` to the enclosing element.
 
 ----------
 

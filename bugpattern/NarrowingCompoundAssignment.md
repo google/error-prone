@@ -64,4 +64,4 @@ See Puzzle #9 in 'Java Puzzlers: Traps, Pitfalls, and Corner Cases' for more
 information.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("NarrowingCompoundAssignment")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("NarrowingCompoundAssignment")` to the enclosing element.

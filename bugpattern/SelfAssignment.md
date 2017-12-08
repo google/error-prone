@@ -23,7 +23,7 @@ don't assign the result to the checked variable; just call
 Preconditions.checkNotNull() as a bare statement.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("SelfAssignment")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("SelfAssignment")` to the enclosing element.
 
 ----------
 

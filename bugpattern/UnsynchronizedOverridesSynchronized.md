@@ -4,7 +4,7 @@ summary: Unsynchronized method overrides a synchronized method.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--
@@ -60,4 +60,4 @@ class MyCounter extends Counter {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("UnsynchronizedOverridesSynchronized")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnsynchronizedOverridesSynchronized")` to the enclosing element.

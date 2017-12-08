@@ -41,4 +41,4 @@ printPaths(ImmutableList.of(Paths.get("/tmp/hello")));
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("IterablePathParameter")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("IterablePathParameter")` to the enclosing element.

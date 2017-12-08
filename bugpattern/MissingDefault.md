@@ -57,4 +57,4 @@ switch (state) {
 [MissingCasesInEnumSwitch]: http://errorprone.info/bugpattern/MissingCasesInEnumSwitch
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MissingDefault")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingDefault")` to the enclosing element.

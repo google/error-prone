@@ -65,7 +65,7 @@ This is because such tests meant to check if a method is invoked and/or throws
 the correct exception type, rather than consuming the return value.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("CheckReturnValue")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("CheckReturnValue")` to the enclosing element.
 
 ----------
 

@@ -16,4 +16,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 A semi-colon at the top level of a Java file is treated as an empty type declaration in the grammar, but it's confusing and unnecessary.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("EmptyTopLevelDeclaration")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("EmptyTopLevelDeclaration")` to the enclosing element.

@@ -18,7 +18,7 @@ This checker looks for comparisons of protocol buffer fields with null via the c
 If you meant to check whether an optional field has been set, you should use the hasField() method instead.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ProtoFieldPreconditionsCheckNotNull")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoFieldPreconditionsCheckNotNull")` to the enclosing element.
 
 ----------
 

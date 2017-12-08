@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Primitives can never be null.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("NullablePrimitive")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("NullablePrimitive")` to the enclosing element.
 
 ----------
 

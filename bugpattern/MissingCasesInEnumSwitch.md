@@ -46,4 +46,4 @@ have a default statement group.
 [style]: https://google.github.io/styleguide/javaguide.html#s4.8.4.3-switch-default
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MissingCasesInEnumSwitch")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingCasesInEnumSwitch")` to the enclosing element.

@@ -25,7 +25,7 @@ anything other than a week date, you should use the year specifier "yyyy"
 instead.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MisusedWeekYear")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MisusedWeekYear")` to the enclosing element.
 
 ----------
 

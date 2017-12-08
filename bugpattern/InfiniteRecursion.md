@@ -55,4 +55,4 @@ class Delegate implements Processor {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("InfiniteRecursion")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InfiniteRecursion")` to the enclosing element.

@@ -63,4 +63,4 @@ situation. To prevent it, always qualify static method calls using a class name,
 never an expression.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("StaticQualifiedUsingExpression")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("StaticQualifiedUsingExpression")` to the enclosing element.

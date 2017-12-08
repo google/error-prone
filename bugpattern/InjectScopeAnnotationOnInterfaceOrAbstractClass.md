@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Scoping annotations are not allowed on abstract types.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("InjectScopeAnnotationOnInterfaceOrAbstractClass")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectScopeAnnotationOnInterfaceOrAbstractClass")` to the enclosing element.
 
 ----------
 

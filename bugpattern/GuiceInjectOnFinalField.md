@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 See https://github.com/google/guice/wiki/InjectionPoints#how-guice-injects
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("GuiceInjectOnFinalField")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuiceInjectOnFinalField")` to the enclosing element.
 
 ----------
 

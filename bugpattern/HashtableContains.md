@@ -23,4 +23,4 @@ use `containsKey` instead.  If you really intended to check whether the
 given object is a value in the hash table, use `containsValue` for clarity.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("HashtableContains")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("HashtableContains")` to the enclosing element.

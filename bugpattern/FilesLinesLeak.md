@@ -33,4 +33,4 @@ try (Stream<String> stream = Files.lines(path)) {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FilesLinesLeak")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FilesLinesLeak")` to the enclosing element.

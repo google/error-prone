@@ -51,4 +51,4 @@ prevent accidental attempts to modify the collection at compile-time (see
 [javadoc]: https://google.github.io/guava/releases/21.0/api/docs/com/google/common/collect/ImmutableCollection.html
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MutableMethodReturnType")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MutableMethodReturnType")` to the enclosing element.

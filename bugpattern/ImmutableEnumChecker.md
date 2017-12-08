@@ -148,4 +148,4 @@ you to a particular functional interface type -- your callers should e.g. use
 works for one interface type.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ImmutableEnumChecker")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ImmutableEnumChecker")` to the enclosing element.

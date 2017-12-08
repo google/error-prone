@@ -53,4 +53,4 @@ class ImmutableList<E> implements List<E> {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("DoNotCall")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("DoNotCall")` to the enclosing element.

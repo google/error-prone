@@ -88,4 +88,4 @@ object instead.
     Model."](https://docs.oracle.com/javase/specs/jls/se9/html/jls-12.html#jls-12.6.2)
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("UnsafeFinalization")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnsafeFinalization")` to the enclosing element.

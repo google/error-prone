@@ -31,4 +31,4 @@ _Alternate names: SelfEquality_
 :   always `0`
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("IdentityBinaryExpression")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("IdentityBinaryExpression")` to the enclosing element.

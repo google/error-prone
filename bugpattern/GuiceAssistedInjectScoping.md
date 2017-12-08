@@ -18,7 +18,7 @@ Classes that AssistedInject factories create may not be annotated with scope ann
 See [https://code.google.com/p/google-guice/issues/detail?id=742 this bug report] for details.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("GuiceAssistedInjectScoping")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuiceAssistedInjectScoping")` to the enclosing element.
 
 ----------
 

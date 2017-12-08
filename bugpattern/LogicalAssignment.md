@@ -31,4 +31,4 @@ void f(boolean x) {
 Prefer `while ((x = checkSomething())) {` or `while (x == checkSomething()) {`.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("LogicalAssignment")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("LogicalAssignment")` to the enclosing element.

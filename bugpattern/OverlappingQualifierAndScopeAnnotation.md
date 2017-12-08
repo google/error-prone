@@ -56,7 +56,7 @@ right thing: the un-annotated `Announce` binding would be scoped to DayScope,
 implemented by a single `DailyAllowance` instance per day.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("OverlappingQualifierAndScopeAnnotation")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("OverlappingQualifierAndScopeAnnotation")` to the enclosing element.
 
 ----------
 

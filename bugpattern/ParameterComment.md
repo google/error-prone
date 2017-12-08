@@ -26,4 +26,4 @@ TIP: When you feel the need to add a parameter comment, consider whether the API
 could be changed to be more self-documenting.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ParameterComment")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ParameterComment")` to the enclosing element.

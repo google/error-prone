@@ -18,7 +18,7 @@ The comparison contract states that `sgn(compare(x, y)) == -sgn(compare(y, x))`.
 The results of violating this contract can include `TreeSet.contains` never returning true or `Collections.sort` failing with an IllegalArgumentException arbitrarily.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ComparisonContractViolated")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparisonContractViolated")` to the enclosing element.
 
 ----------
 

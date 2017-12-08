@@ -25,4 +25,4 @@ Predicate<Integer> p = "hello"::equals;
 See also [EqualsIncompatibleType](EqualsIncompatibleType.md).
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("PredicateIncompatibleType")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("PredicateIncompatibleType")` to the enclosing element.

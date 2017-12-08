@@ -16,4 +16,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Constructors never return null.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("NullableConstructor")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("NullableConstructor")` to the enclosing element.

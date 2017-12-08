@@ -182,7 +182,7 @@ and the "Implementation Considerations" section in [the Javadoc for `Condition`]
 (https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/Condition.html).
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("WaitNotInLoop")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("WaitNotInLoop")` to the enclosing element.
 
 ----------
 

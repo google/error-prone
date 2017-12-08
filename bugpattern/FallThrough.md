@@ -41,7 +41,7 @@ switch (input) {
 [style]: https://google.github.io/styleguide/javaguide.html#s4.8.4-switch
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FallThrough")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FallThrough")` to the enclosing element.
 
 ----------
 

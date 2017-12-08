@@ -46,4 +46,4 @@ compute the identity hash code, consider using
 `java.lang.System#identityHashCode()` instead for clarity.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ArrayHashCode")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArrayHashCode")` to the enclosing element.

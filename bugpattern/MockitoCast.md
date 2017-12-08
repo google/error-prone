@@ -85,4 +85,4 @@ type of `getFirst(Iterable<Boolean>)` is `Boolean`. If the answer strategy
 returns `Object` the checkcast fails.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MockitoCast")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MockitoCast")` to the enclosing element.

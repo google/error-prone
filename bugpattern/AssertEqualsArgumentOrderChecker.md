@@ -16,4 +16,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 JUnit's assertEquals (and similar) are defined to take the expected value first and the actual value second. Getting these the wrong way round will cause a confusing error message if the assertion fails.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("AssertEqualsArgumentOrderChecker")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssertEqualsArgumentOrderChecker")` to the enclosing element.

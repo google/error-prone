@@ -18,7 +18,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 If the intent was to ensure that the primitive met some criterion (e.g., a boolean that should be non-null), please use `Preconditions.checkState()` or `Preconditions.checkArgument()` instead.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("PreconditionsCheckNotNullPrimitive")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("PreconditionsCheckNotNullPrimitive")` to the enclosing element.
 
 ----------
 

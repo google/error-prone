@@ -16,4 +16,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 void-returning methods cannot return null.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("NullableVoid")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("NullableVoid")` to the enclosing element.

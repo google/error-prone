@@ -18,7 +18,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 If you don’t check the return value of these methods, you may end up drawing the wrong rectangle.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("RectIntersectReturnValueIgnored")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("RectIntersectReturnValueIgnored")` to the enclosing element.
 
 ----------
 

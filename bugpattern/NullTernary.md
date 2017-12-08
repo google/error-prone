@@ -26,4 +26,4 @@ If `flag` is false, `null` will be auto-unboxed from an `Integer` to `int`,
 resulting in a NullPointerException.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("NullTernary")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("NullTernary")` to the enclosing element.

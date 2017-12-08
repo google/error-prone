@@ -41,4 +41,4 @@ Certain 3-letter time zone IDs are not flagged by this check, specifically if
 the ID appears in `ZoneId.getAvailableZoneIds()`, e.g. "UTC", "GMT", "PRC".
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ThreeLetterTimeZoneID")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThreeLetterTimeZoneID")` to the enclosing element.

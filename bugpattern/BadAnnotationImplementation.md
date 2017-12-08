@@ -23,4 +23,4 @@ It is very difficult to write these methods correctly, so consider using
 to generate the correct code automatically.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("BadAnnotationImplementation")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("BadAnnotationImplementation")` to the enclosing element.

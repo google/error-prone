@@ -136,7 +136,7 @@ Such practice should never be treated as acceptable, so it makes no practical
 difference to our arguments above.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("CollectionIncompatibleType")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("CollectionIncompatibleType")` to the enclosing element.
 
 ----------
 

@@ -50,4 +50,4 @@ This invocation will be ambiguous:
     assertThat(42, getThing());
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("TypeParameterUnusedInFormals")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeParameterUnusedInFormals")` to the enclosing element.

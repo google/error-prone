@@ -45,7 +45,7 @@ retention for both [`Qualifier`] and [`Scope`].
 [`Scope`]: http://docs.oracle.com/javaee/6/api/javax/inject/Scope.html
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("InjectScopeOrQualifierAnnotationRetention")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectScopeOrQualifierAnnotationRetention")` to the enclosing element.
 
 ----------
 

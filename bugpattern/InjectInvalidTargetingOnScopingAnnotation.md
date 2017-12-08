@@ -18,7 +18,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
  If an annotation's use is restricted by `@Target` and it doesn't include those two element types, the annotation can't be used where it should be able to be used.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("InjectInvalidTargetingOnScopingAnnotation")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectInvalidTargetingOnScopingAnnotation")` to the enclosing element.
 
 ----------
 

@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 A long literal can have a suffix of 'L' or 'l', but the former is less likely to be confused with a '1' in most fonts.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("LongLiteralLowerCaseSuffix")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("LongLiteralLowerCaseSuffix")` to the enclosing element.
 
 ----------
 

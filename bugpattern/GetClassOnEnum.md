@@ -60,4 +60,4 @@ class Binop
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("GetClassOnEnum")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("GetClassOnEnum")` to the enclosing element.

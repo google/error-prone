@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 A standard means of checking non-emptiness of an array or collection is to test if the size of that collection is greater than 0. However, one may accidentally check if the size is greater than or equal to 0, which is always true.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("SizeGreaterThanOrEqualsZero")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("SizeGreaterThanOrEqualsZero")` to the enclosing element.
 
 ----------
 

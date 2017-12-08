@@ -21,7 +21,7 @@ Invoking a collection method with the same collection as the argument is likely 
 * `collection.containsAll(collection)` is always true.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ModifyingCollectionWithItself")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifyingCollectionWithItself")` to the enclosing element.
 
 ----------
 

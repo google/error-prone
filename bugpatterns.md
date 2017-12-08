@@ -266,14 +266,14 @@ To get the tag number of a protocol buffer enum, use getNumber() instead.
 __[ProvidesMethodOutsideOfModule](bugpattern/ProvidesMethodOutsideOfModule)__<br>
 @Provides methods need to be declared in a Module to have any effect.
 
+__[RandomCast](bugpattern/RandomCast)__<br>
+Casting a random number in the range [0.0, 1.0) to an integer or long always results in 0.
+
 __[RandomModInteger](bugpattern/RandomModInteger)__<br>
 Use Random.nextInt(int).  Random.nextInt() % n can have negative results
 
 __[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
 Return value of android.graphics.Rect.intersect() must be checked
-
-__[RestrictTo](bugpattern/RestrictTo)__<br>
-Use of method or class annotated with @RestrictTo
 
 __[RestrictedApiChecker](bugpattern/RestrictedApiChecker)__<br>
  Check for non-whitelisted callers to RestrictedApiChecker.
@@ -372,6 +372,9 @@ Collector.of() should not use state
 
 __[ComparableAndComparator](bugpattern/ComparableAndComparator)__<br>
 Class should not implement both `Comparable` and `Comparator`
+
+__[DateFormatConstant](bugpattern/DateFormatConstant)__<br>
+DateFormat is not thread-safe, and should not be used as a constant field.
 
 __[DefaultCharset](bugpattern/DefaultCharset)__<br>
 Implicit use of the platform default charset, which can result in e.g. non-ASCII characters being silently replaced with &#39;?&#39; in many environments
@@ -535,9 +538,6 @@ This annotation is missing required modifiers as specified by its @RequiredModif
 __[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
 Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 
-__[SimpleDateFormatConstant](bugpattern/SimpleDateFormatConstant)__<br>
-SimpleDateFormat is not thread-safe, and should not be used as a constant field.
-
 __[StaticGuardedByInstance](bugpattern/StaticGuardedByInstance)__<br>
 Writes to static fields should not be guarded by instance locks
 
@@ -650,6 +650,9 @@ Comparing protobuf fields of type String using reference equality
 
 __[QualifierOrScopeOnInjectMethod](bugpattern/QualifierOrScopeOnInjectMethod)__<br>
 Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move the qualifier annotation to the binding location.
+
+__[RestrictTo](bugpattern/RestrictTo)__<br>
+Use of method or class annotated with @RestrictTo
 
 __[StaticOrDefaultInterfaceMethod](bugpattern/StaticOrDefaultInterfaceMethod)__<br>
 Static and default interface methods are not natively supported on older Android devices. 
@@ -777,6 +780,9 @@ Unused imports
 
 __[ReturnMissingNullable](bugpattern/ReturnMissingNullable)__<br>
 Methods that can return null should be annotated @Nullable
+
+__[SwitchDefault](bugpattern/SwitchDefault)__<br>
+The default case of a switch should appear at the end of the last statement group
 
 __[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
 Unchecked exceptions do not need to be declared in the method signature.

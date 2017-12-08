@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Strings are compared for reference equality/inequality using == or !=instead of for value equality using .equals()
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("StringEquality")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("StringEquality")` to the enclosing element.
 
 ----------
 

@@ -16,4 +16,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MixedArrayDimensions")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MixedArrayDimensions")` to the enclosing element.

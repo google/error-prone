@@ -18,7 +18,7 @@ This error is triggered by calls to regex-accepting methods with invalid string 
 We deliberately do not check java.util.regex.Pattern#compile as many of its users are deliberately testing the regex compiler or using a vacuously true regex.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("InvalidPatternSyntax")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InvalidPatternSyntax")` to the enclosing element.
 
 ----------
 

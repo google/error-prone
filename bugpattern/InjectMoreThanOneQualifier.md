@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 An element can be qualified by at most one qualifier.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("InjectMoreThanOneQualifier")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectMoreThanOneQualifier")` to the enclosing element.
 
 ----------
 

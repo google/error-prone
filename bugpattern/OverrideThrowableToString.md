@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Many logging tools build a string representation out of getMessage() and ignores toString() completely.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("OverrideThrowableToString")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("OverrideThrowableToString")` to the enclosing element.
 
 ----------
 

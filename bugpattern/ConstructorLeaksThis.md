@@ -37,7 +37,7 @@ constructor. The factory method can instantiate the new object and then perform
 the registration safely.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ConstructorLeaksThis")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstructorLeaksThis")` to the enclosing element.
 
 ----------
 

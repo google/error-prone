@@ -43,4 +43,4 @@ instead:
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("IsInstanceOfClass")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("IsInstanceOfClass")` to the enclosing element.

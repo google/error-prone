@@ -257,4 +257,4 @@ In the example, the guarded field 'names' can be accessed via a copy even if the
 required lock is not held.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("GuardedBy")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuardedBy")` to the enclosing element.

@@ -32,7 +32,7 @@ throw statement. But if the throw statement contains a nested class with methods
 annotated with @NoAllocation, those methods will be disallowed from allocating.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("NoAllocation")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("NoAllocation")` to the enclosing element.
 
 ----------
 

@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 .equals() to the same object will result in infinite recursion
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("EqualsReference")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsReference")` to the enclosing element.
 
 ----------
 

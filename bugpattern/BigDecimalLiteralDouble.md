@@ -25,7 +25,7 @@ For example `0.1` cannot be exactly represented a double. Thus
 and not `new BigDecimal(".1").
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("BigDecimalLiteralDouble")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("BigDecimalLiteralDouble")` to the enclosing element.
 
 ----------
 

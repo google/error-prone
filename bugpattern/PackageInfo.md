@@ -25,4 +25,4 @@ Classes should not be declared inside `package-info.java` files.
 [JLS 7.4]: https://docs.oracle.com/javase/specs/jls/se8/html/jls-7.html#jls-7.4
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("PackageInfo")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("PackageInfo")` to the enclosing element.

@@ -30,7 +30,7 @@ please rename the abstract method or add @After to the superclass's definition
 of tearDown().
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("JUnit4TearDownNotRun")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit4TearDownNotRun")` to the enclosing element.
 
 ----------
 

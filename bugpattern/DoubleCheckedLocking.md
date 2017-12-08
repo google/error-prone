@@ -103,4 +103,4 @@ all of the object's final fields have been written to before a reference to that
 object is published.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("DoubleCheckedLocking")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("DoubleCheckedLocking")` to the enclosing element.

@@ -18,7 +18,7 @@ _Alternate names: MoreThanOneScopeAnnotationOnClass_
 Annotating a class with more than one scope annotation is invalid according to the JSR-330 specification.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("InjectMoreThanOneScopeAnnotationOnClass")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectMoreThanOneScopeAnnotationOnClass")` to the enclosing element.
 
 ----------
 

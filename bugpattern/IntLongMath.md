@@ -31,4 +31,4 @@ long nanosPerDay = 24L * 60 * 60 * 1000 * 1000 * 1000;
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("IntLongMath")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("IntLongMath")` to the enclosing element.

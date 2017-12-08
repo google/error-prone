@@ -29,4 +29,4 @@ read(byte[], int, int)` and will thus be subject to the costs associated with
 the default behavior of the multibyte read method.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("InputStreamSlowMultibyteRead")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InputStreamSlowMultibyteRead")` to the enclosing element.

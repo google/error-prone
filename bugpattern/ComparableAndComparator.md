@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 A `Comparator` is an object that knows how to compare other objects, whereas an objectimplementing `Comparable` knows how to compare itself to other objects of the same type.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ComparableAndComparator")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparableAndComparator")` to the enclosing element.
 
 ----------
 

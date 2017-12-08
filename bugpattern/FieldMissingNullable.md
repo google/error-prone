@@ -37,4 +37,4 @@ public class Foo {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FieldMissingNullable")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FieldMissingNullable")` to the enclosing element.

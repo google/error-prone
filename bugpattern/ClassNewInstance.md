@@ -37,4 +37,4 @@ exceptions: [`IllegalArgumentException`][iae] and [`InvocationTargetException`]
 [ite]: https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/InvocationTargetException.html
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ClassNewInstance")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ClassNewInstance")` to the enclosing element.

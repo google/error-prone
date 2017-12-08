@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 According to the JSR-330 spec, the @javax.inject.Inject annotation cannot go on final fields.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("JavaxInjectOnFinalField")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaxInjectOnFinalField")` to the enclosing element.
 
 ----------
 

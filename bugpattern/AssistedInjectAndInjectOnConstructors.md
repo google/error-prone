@@ -17,7 +17,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Mixing @Inject and @AssistedInject leads to confusing code and the documentation specifies not to do it. See https://google.github.io/guice/api-docs/latest/javadoc/com/google/inject/assistedinject/AssistedInject.html
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("AssistedInjectAndInjectOnConstructors")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssistedInjectAndInjectOnConstructors")` to the enclosing element.
 
 ----------
 

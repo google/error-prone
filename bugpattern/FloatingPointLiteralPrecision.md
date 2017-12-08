@@ -24,4 +24,4 @@ System.err.println(d); // prints 2.0
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FloatingPointLiteralPrecision")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FloatingPointLiteralPrecision")` to the enclosing element.

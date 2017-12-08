@@ -16,4 +16,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FragmentInjection")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FragmentInjection")` to the enclosing element.

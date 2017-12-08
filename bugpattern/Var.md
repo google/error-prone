@@ -35,4 +35,4 @@ The annotation can also be applied to fields to indicate that the field is
 deliberately non-final, but the use of @Var on fields is not required.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("Var")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("Var")` to the enclosing element.

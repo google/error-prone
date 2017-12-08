@@ -39,4 +39,4 @@ if (lhs & hasSideEffects()) {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ShortCircuitBoolean")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ShortCircuitBoolean")` to the enclosing element.

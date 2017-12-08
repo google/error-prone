@@ -22,4 +22,4 @@ See Effective Java §3.9 for more information and a discussion of how to
 correctly implement `hashCode()`.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("EqualsHashCode")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsHashCode")` to the enclosing element.

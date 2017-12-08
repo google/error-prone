@@ -66,4 +66,4 @@ try {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("Finally")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("Finally")` to the enclosing element.

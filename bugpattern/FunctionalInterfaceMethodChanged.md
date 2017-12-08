@@ -52,4 +52,4 @@ static Runnable crashTerminating(Runnable r) {
 [`@FunctionalInterface`]: https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FunctionalInterfaceMethodChanged")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FunctionalInterfaceMethodChanged")` to the enclosing element.

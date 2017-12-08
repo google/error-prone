@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 A constructor parameter might not be being used as expected
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ChainingConstructorIgnoresParameter")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ChainingConstructorIgnoresParameter")` to the enclosing element.
 
 ----------
 

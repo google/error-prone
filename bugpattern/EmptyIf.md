@@ -18,7 +18,7 @@ _Alternate names: empty_
 An if statement contains an empty statement as the then clause. A semicolon may have been inserted by accident.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("EmptyIf")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("EmptyIf")` to the enclosing element.
 
 ----------
 

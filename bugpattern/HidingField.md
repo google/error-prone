@@ -45,7 +45,7 @@ class Main {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("HidingField")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("HidingField")` to the enclosing element.
 
 ----------
 

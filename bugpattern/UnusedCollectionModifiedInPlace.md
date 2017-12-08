@@ -40,4 +40,4 @@ public Collection<String> sort(Collection<String> foos) {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("UnusedCollectionModifiedInPlace")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnusedCollectionModifiedInPlace")` to the enclosing element.

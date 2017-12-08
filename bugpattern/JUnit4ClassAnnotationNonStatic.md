@@ -26,4 +26,4 @@ to run any `@BeforeClass` or `@AfterClass` method that isn't also `static`.
 [afterclass]: http://junit.sourceforge.net/javadoc/org/junit/AfterClass.html
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("JUnit4ClassAnnotationNonStatic")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit4ClassAnnotationNonStatic")` to the enclosing element.

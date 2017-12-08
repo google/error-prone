@@ -46,4 +46,4 @@ foo.add(42); // Compile time error: Integer is not assignable to String
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ArrayFillIncompatibleType")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArrayFillIncompatibleType")` to the enclosing element.

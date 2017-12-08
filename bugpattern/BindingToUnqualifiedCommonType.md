@@ -55,7 +55,7 @@ when binding simple value types.
 [`@BindingAnnotation`]: https://github.com/google/guice/wiki/BindingAnnotations
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("BindingToUnqualifiedCommonType")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("BindingToUnqualifiedCommonType")` to the enclosing element.
 
 ----------
 

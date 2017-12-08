@@ -31,7 +31,7 @@ type annotations in this context, so the above code is equivalent to:
 [`TYPE_USE`]: https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#TYPE_USE
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("QualifierWithTypeUse")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("QualifierWithTypeUse")` to the enclosing element.
 
 ----------
 

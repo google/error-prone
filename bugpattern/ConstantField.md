@@ -27,4 +27,4 @@ immutable. It is possible to create mutable enums, but doing so is
 strongly discouraged.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ConstantField")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstantField")` to the enclosing element.

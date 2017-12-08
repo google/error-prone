@@ -40,4 +40,4 @@ TIP: annotating the declaration of an annotation with `@Immutable` is
 unnecessary -- Error Prone assumes annotations are immutable by default.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ImmutableAnnotationChecker")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ImmutableAnnotationChecker")` to the enclosing element.

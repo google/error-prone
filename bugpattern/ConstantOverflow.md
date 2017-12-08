@@ -38,4 +38,4 @@ scale, see [`TimeUnit.convert`].
 [`TimeUnit.convert`]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/TimeUnit.html#convert(long,%20java.util.concurrent.TimeUnit)
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ConstantOverflow")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstantOverflow")` to the enclosing element.

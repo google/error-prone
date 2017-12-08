@@ -46,4 +46,4 @@ calls that accrued in static contexts, but that's probably no worse than those
 callers being out of luck in the first place.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MethodCanBeStatic")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MethodCanBeStatic")` to the enclosing element.

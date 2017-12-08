@@ -16,4 +16,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 `Log.isLoggable(tag, level)` throws an `IllegalArgumentException` if its tag argument is more than 23 characters long.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("IsLoggableTagLength")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("IsLoggableTagLength")` to the enclosing element.

@@ -41,7 +41,7 @@ assumptions. Possible resolutions to this error include:
     this subclass to use.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("OverridesJavaxInjectableMethod")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("OverridesJavaxInjectableMethod")` to the enclosing element.
 
 ----------
 

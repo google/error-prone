@@ -28,4 +28,4 @@ Use grouping parentheses to disambiguate expressions that contain both `||` and
 `&&`, or both shift and arithmetic operators.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("OperatorPrecedence")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("OperatorPrecedence")` to the enclosing element.

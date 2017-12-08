@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Guice `@Provides` methods annotate methods that are used as a means of declaring bindings. However, this is only helpful inside of a module. Methods outside of these modules are not used for binding declaration.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ProvidesMethodOutsideOfModule")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProvidesMethodOutsideOfModule")` to the enclosing element.
 
 ----------
 

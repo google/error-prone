@@ -22,7 +22,7 @@ JUnit 3 provides the method setUp(), to be overridden by subclasses when the tes
  If the method is part of an abstract test class hierarchy where this class's setUp() is invoked by a superclass method that is annotated with @Before, then please rename the abstract method or add @Before to the superclass's definition of setUp()
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("JUnit4SetUpNotRun")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit4SetUpNotRun")` to the enclosing element.
 
 ----------
 

@@ -20,7 +20,7 @@ However, this does not mean that all updates to a volatile variable are atomic. 
 If you intended for this update to be atomic, you should wrap all update operations on this variable in a synchronized block.  If the variable is an integer, you could use an AtomicInteger instead of a volatile int.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("NonAtomicVolatileUpdate")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonAtomicVolatileUpdate")` to the enclosing element.
 
 ----------
 

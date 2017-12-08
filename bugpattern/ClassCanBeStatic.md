@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 An inner class should be static unless it references members of its enclosing class. An inner class that is made non-static unnecessarily uses more memory and does not make the intent of the class clear.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ClassCanBeStatic")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ClassCanBeStatic")` to the enclosing element.
 
 ----------
 

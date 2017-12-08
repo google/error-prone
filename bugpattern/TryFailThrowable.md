@@ -20,7 +20,7 @@ When testing that a line of code throws an expected exception, it is typical to 
 To fix this, you usually want to catch Exception rather than Throwable. If you need to catch throwable (e.g., the expected exception is an AssertionError), then add logic in your catch block to ensure that the AssertionError that was caught is not the same one thrown by the call to `fail()` or `assert*()`.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("TryFailThrowable")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("TryFailThrowable")` to the enclosing element.
 
 ----------
 

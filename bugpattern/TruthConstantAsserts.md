@@ -18,7 +18,7 @@ method invocation. For eg. switch assertThat(1).isEqualTo(methodCall())
 to assertThat(methodCall()).isEqualTo(1).
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("TruthConstantAsserts")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthConstantAsserts")` to the enclosing element.
 
 ----------
 

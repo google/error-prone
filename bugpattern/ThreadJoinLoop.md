@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Thread.join() can be interrupted, and so requires users to catch InterruptedException. Most users should be looping until the join() actually succeeds.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ThreadJoinLoop")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThreadJoinLoop")` to the enclosing element.
 
 ----------
 

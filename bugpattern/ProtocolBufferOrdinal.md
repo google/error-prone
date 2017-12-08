@@ -32,7 +32,7 @@ getNumber() will return a different real value. Tread carefully to avoid
 mismatches if the ordinal was persisted elsewhere.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ProtocolBufferOrdinal")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtocolBufferOrdinal")` to the enclosing element.
 
 ----------
 

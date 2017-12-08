@@ -42,4 +42,4 @@ error: incompatible types: invalid method reference
 Consider renaming one of the methods to avoid the ambiguity.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("AmbiguousMethodReference")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("AmbiguousMethodReference")` to the enclosing element.

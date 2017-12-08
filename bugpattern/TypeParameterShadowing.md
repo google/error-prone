@@ -71,4 +71,4 @@ class BoxingBox<T> {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("TypeParameterShadowing")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeParameterShadowing")` to the enclosing element.

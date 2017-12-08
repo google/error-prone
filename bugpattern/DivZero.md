@@ -18,7 +18,7 @@ _Alternate names: divzero_
 This code will cause a runtime arithmetic exception if it is executed.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("DivZero")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("DivZero")` to the enclosing element.
 
 ----------
 

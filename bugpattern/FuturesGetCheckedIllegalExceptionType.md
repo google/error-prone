@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 The passed exception type must not be a RuntimeException, and it must expose a public constructor whose only parameters are of type String or Throwable. getChecked will reject any other type with an IllegalArgumentException.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FuturesGetCheckedIllegalExceptionType")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FuturesGetCheckedIllegalExceptionType")` to the enclosing element.
 
 ----------
 

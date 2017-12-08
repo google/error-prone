@@ -37,4 +37,4 @@ container for arbitrary binary data.
 [invalid-utf8-byte-sequences]: https://en.wikipedia.org/wiki/UTF-8#Invalid_byte_sequences
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("LiteByteStringUtf8")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("LiteByteStringUtf8")` to the enclosing element.

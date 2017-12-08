@@ -20,7 +20,7 @@ For test cases, instead of explicitly testing equals, use
 [EqualsTester from Guava](http://static.javadoc.io/com.google.guava/guava-testlib/19.0/com/google/common/testing/EqualsTester.html).
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("SelfEquals")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("SelfEquals")` to the enclosing element.
 
 ----------
 

@@ -18,4 +18,4 @@ Dagger `@Provides` methods may not return null unless annotated with `@Nullable`
 If you believe the `return null` path can never be taken, please throw a `RuntimeException` instead. Otherwise, please annotate the method with `@Nullable`.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("DaggerProvidesNull")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("DaggerProvidesNull")` to the enclosing element.

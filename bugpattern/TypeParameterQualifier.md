@@ -32,4 +32,4 @@ The use of `T.Builder` is unnecessary and misleading, so referring to the
 type by its canonical name should always be preferred.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("TypeParameterQualifier")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeParameterQualifier")` to the enclosing element.

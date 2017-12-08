@@ -24,4 +24,4 @@ Puzzlers](http://www.javapuzzlers.com/java-puzzlers-sampler.pdf):
 > to the new definition any time it is used inside its own package.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("JavaLangClash")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaLangClash")` to the enclosing element.

@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Method does not override method in superclass due to wrong package for parameter. For example, defining a method void foo(alpha.Foo x) when the superclass contains a method void foo(beta.Foo x). The defined method was probably meant to override the superclass method.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ParameterPackage")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ParameterPackage")` to the enclosing element.
 
 ----------
 

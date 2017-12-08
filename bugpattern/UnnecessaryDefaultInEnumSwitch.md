@@ -110,4 +110,4 @@ boolean isReady(State state) {
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("UnnecessaryDefaultInEnumSwitch")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryDefaultInEnumSwitch")` to the enclosing element.

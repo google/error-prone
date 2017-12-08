@@ -79,7 +79,7 @@ characteristics are present:
   `assertFalse(false)`, `assertTrue(true))` or `Mockito.verify()` call.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MissingFail")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingFail")` to the enclosing element.
 
 ----------
 

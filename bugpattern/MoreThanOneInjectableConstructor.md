@@ -18,7 +18,7 @@ _Alternate names: inject-constructors, InjectMultipleAtInjectConstructors_
 Injection frameworks may use `@Inject` to determine how to construct an object in the absence of other instructions. Annotating `@Inject` on a constructor tells the injection framework to use that constructor. However, if multiple `@Inject` constructors exist, injection frameworks can't reliably choose between them.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("MoreThanOneInjectableConstructor")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MoreThanOneInjectableConstructor")` to the enclosing element.
 
 ----------
 

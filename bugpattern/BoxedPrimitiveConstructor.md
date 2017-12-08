@@ -32,4 +32,4 @@ explicit constructors is extremely bad practice. Primitives should always be
 treated as identity-less value types, even in their boxed representations.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("BoxedPrimitiveConstructor")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("BoxedPrimitiveConstructor")` to the enclosing element.

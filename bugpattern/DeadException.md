@@ -18,7 +18,7 @@ _Alternate names: ThrowableInstanceNeverThrown_
 The exception is created with new, but is not thrown, and the reference is lost.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("DeadException")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("DeadException")` to the enclosing element.
 
 ----------
 

@@ -18,7 +18,7 @@ Methods that return `java.util.concurrent.Future` and its subclasses generally i
 If you don’t check the return value of these methods, you will never find out if they threw an exception.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FutureReturnValueIgnored")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FutureReturnValueIgnored")` to the enclosing element.
 
 ----------
 

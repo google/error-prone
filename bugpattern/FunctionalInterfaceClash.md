@@ -87,4 +87,4 @@ doIt(x -> {x.toString();}); // statement body, calls f(Consumer)
 ```
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("FunctionalInterfaceClash")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("FunctionalInterfaceClash")` to the enclosing element.

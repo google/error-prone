@@ -77,7 +77,7 @@ To avoid these ambiguities, use the same parameter style (varargs or explicit
 arrays) when overriding methods.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("Overrides")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("Overrides")` to the enclosing element.
 
 ----------
 

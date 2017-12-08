@@ -55,4 +55,4 @@ by hand, consider rewriting this class to use [AutoValue]
 (https://github.com/google/auto/tree/master/value).
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("NonOverridingEquals")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonOverridingEquals")` to the enclosing element.

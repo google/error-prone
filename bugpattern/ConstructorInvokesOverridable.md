@@ -36,7 +36,7 @@ example, wrap the `new` call in a factory method and invoke the overridable
 method afterward.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ConstructorInvokesOverridable")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstructorInvokesOverridable")` to the enclosing element.
 
 ----------
 

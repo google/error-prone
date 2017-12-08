@@ -18,7 +18,7 @@ Generally when comparing arrays for equality, the programmer intends to check th
 If reference equality is needed, == should be used instead for clarity. Otherwise, use java.util.Arrays#equals() to compare the contents of the arrays.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ArrayEquals")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArrayEquals")` to the enclosing element.
 
 ----------
 

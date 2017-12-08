@@ -53,4 +53,4 @@ public void testRemoveFails() {
 [`ExpectedException`]: http://junit.org/junit4/javadoc/latest/org/junit/rules/ExpectedException.html
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("ExpectedExceptionChecker")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ExpectedExceptionChecker")` to the enclosing element.

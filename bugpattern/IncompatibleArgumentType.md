@@ -53,4 +53,4 @@ void containmentCheck(Container<? extends Number> container) {
 [jls]: https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.5.1
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("IncompatibleArgumentType")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("IncompatibleArgumentType")` to the enclosing element.

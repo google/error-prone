@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("CollectionToArraySafeParameter")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("CollectionToArraySafeParameter")` to the enclosing element.
 
 ----------
 

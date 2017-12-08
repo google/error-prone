@@ -22,7 +22,7 @@ i.e., a no-op.
 See JLS 15.19, "Shift Operators", for more details.
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("BadShiftAmount")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("BadShiftAmount")` to the enclosing element.
 
 ----------
 

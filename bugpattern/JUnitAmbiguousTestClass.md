@@ -32,4 +32,4 @@ for replacements for base test classes, consider using Rules (see the `@Rule`
 annotation and implementations of `TestRule` and `MethodRule`).
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("JUnitAmbiguousTestClass")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnitAmbiguousTestClass")` to the enclosing element.

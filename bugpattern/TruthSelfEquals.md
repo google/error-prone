@@ -27,7 +27,7 @@ EqualsTester][javadoc].
 [javadoc]: http://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html
 
 ## Suppression
-Suppress false positives by adding an `@SuppressWarnings("TruthSelfEquals")` annotation to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthSelfEquals")` to the enclosing element.
 
 ----------
 
