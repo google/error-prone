@@ -112,4 +112,28 @@ public class ParameterCommentTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void positiveConstructor() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  Test (int x, int y) {}",
+            "  {",
+            "    new Test(0/*x*/, 1/*y=*/);",
+            "    new Test(0/*x*/, 1); // y",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  Test (int x, int y) {}",
+            "  {",
+            "    new Test(/* x= */ 0, /* y= */ 1);",
+            "    new Test(/* x= */ 0, /* y= */ 1); ",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
 }
