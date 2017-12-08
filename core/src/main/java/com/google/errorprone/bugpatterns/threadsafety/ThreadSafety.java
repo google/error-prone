@@ -80,6 +80,23 @@ public final class ThreadSafety {
   public ThreadSafety(
       VisitorState state,
       KnownTypes knownTypes,
+      Set<String> markerAnnotations,
+      Set<String> acceptedAnnotations,
+      @Nullable Class<? extends Annotation> containerOfAnnotation,
+      @Nullable Class<? extends Annotation> suppressAnnotation) {
+    this(
+        state,
+        knownTypes,
+        ImmutableSet.copyOf(checkNotNull(markerAnnotations)),
+        ImmutableSet.copyOf(checkNotNull(acceptedAnnotations)),
+        containerOfAnnotation,
+        suppressAnnotation);
+  }
+
+  // TODO(ringwalt): Remove this constructor. We currently need it for binary compatibility.
+  public ThreadSafety(
+      VisitorState state,
+      KnownTypes knownTypes,
       ImmutableSet<String> markerAnnotations,
       ImmutableSet<String> acceptedAnnotations,
       @Nullable Class<? extends Annotation> containerOfAnnotation,
@@ -159,6 +176,12 @@ public final class ThreadSafety {
    * @param type the type to check
    */
   public Violation threadSafeInstantiation(
+      Set<String> threadSafeTypeParams, AnnotationInfo annotation, Type type) {
+    return threadSafeInstantiation(ImmutableSet.copyOf(threadSafeTypeParams), annotation, type);
+  }
+
+  // TODO(ringwalt): Remove this method. We currently need it for binary compatibility.
+  public Violation threadSafeInstantiation(
       ImmutableSet<String> threadSafeTypeParams, AnnotationInfo annotation, Type type) {
     if (!annotation.containerOf().isEmpty()
         && type.tsym.getTypeParameters().size() != type.getTypeArguments().size()) {
@@ -196,15 +219,20 @@ public final class ThreadSafety {
   }
 
   /** Returns an {@link Violation} explaining whether the type is threadsafe. */
+  public Violation isThreadSafeType(Set<String> threadSafeTypeParams, Type type) {
+    return isThreadSafeType(ImmutableSet.copyOf(threadSafeTypeParams), type);
+  }
+
+  // TODO(ringwalt): Remove this method. We currently need it for binary compatibility.
   public Violation isThreadSafeType(ImmutableSet<String> threadSafeTypeParams, Type type) {
     return type.accept(new ThreadSafeTypeVisitor(threadSafeTypeParams), null);
   }
 
   private class ThreadSafeTypeVisitor extends Types.SimpleVisitor<Violation, Void> {
 
-    private final ImmutableSet<String> threadSafeTypeParams;
+    private final Set<String> threadSafeTypeParams;
 
-    private ThreadSafeTypeVisitor(ImmutableSet<String> threadSafeTypeParams) {
+    private ThreadSafeTypeVisitor(Set<String> threadSafeTypeParams) {
       this.threadSafeTypeParams = threadSafeTypeParams;
     }
 
@@ -329,6 +357,18 @@ public final class ThreadSafety {
    * </pre>
    */
   public ImmutableSet<String> threadSafeTypeParametersInScope(Symbol sym) {
+    return ImmutableSet.copyOf(threadSafeTypeParameterSetInScope(sym));
+  }
+
+  /**
+   * Gets the set of in-scope threadsafe type parameters from the containerOf specs on annotations.
+   *
+   * @deprecated This method only exists to make a non-binary-compatible change to the {@link
+   *     #threadSafeTypeParametersInScope} return value. It will be removed once we can safely
+   *     change that method's return value.
+   */
+  @Deprecated
+  public Set<String> threadSafeTypeParameterSetInScope(Symbol sym) {
     if (sym == null) {
       return ImmutableSet.of();
     }
