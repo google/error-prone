@@ -207,32 +207,8 @@ public @interface BugPattern {
     SUGGESTION
   }
 
-  /** @deprecated use {@link #suppressionAnnotations} instead. */
-  @Deprecated
-  Suppressibility suppressibility() default Suppressibility.DEFAULT;
-
-  /** @deprecated use {@link #suppressionAnnotations} instead. */
-  @Deprecated
-  public enum Suppressibility {
-    /**
-     * Can be suppressed using the standard {@code SuppressWarnings("foo")} mechanism. This setting
-     * should be used unless there is a good reason otherwise, e.g. security.
-     */
-    SUPPRESS_WARNINGS,
-    /** Can be suppressed with a custom annotation on a parent AST node. */
-    CUSTOM_ANNOTATION,
-    /** Cannot be suppressed. */
-    UNSUPPRESSIBLE,
-    /** The default - uses {@link #suppressionAnnotations} instead. */
-    DEFAULT;
-  }
-
   /** True if the check can be disabled using command-line flags. */
   boolean disableable() default true;
-
-  /** @deprecated use {@link #suppressionAnnotations} instead. */
-  @Deprecated
-  Class<? extends Annotation>[] customSuppressionAnnotations() default {};
 
   /**
    * A set of annotation types that can be used to suppress the check.
