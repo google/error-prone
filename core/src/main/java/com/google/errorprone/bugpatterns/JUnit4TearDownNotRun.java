@@ -24,7 +24,9 @@ import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATI
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_CLASS_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4AfterAnnotations;
 import static com.google.errorprone.matchers.JUnitMatchers.looksLikeJUnit3TearDown;
+import static com.google.errorprone.matchers.JUnitMatchers.looksLikeJUnit4After;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
@@ -34,20 +36,22 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Checks for the existence of a JUnit3 style tearDown() method in a JUnit4 test class.
+ * Checks for the existence of a JUnit3 style tearDown() method in a JUnit4 test class or methods
+ * annotated with a non-JUnit4 @After annotation.
  *
  * @author glorioso@google.com (Nick Glorioso)
  */
 @BugPattern(
   name = "JUnit4TearDownNotRun",
-  summary = "tearDown() method will not be run; Please add an @After annotation",
+  summary = "tearDown() method will not be run; please add JUnit's @After annotation",
   category = JUNIT,
   severity = ERROR
 )
 public class JUnit4TearDownNotRun extends AbstractJUnit4InitMethodNotRun {
   @Override
   protected Matcher<MethodTree> methodMatcher() {
-    return allOf(looksLikeJUnit3TearDown, not(hasJUnit4AfterAnnotations));
+    return allOf(
+        anyOf(looksLikeJUnit3TearDown, looksLikeJUnit4After), not(hasJUnit4AfterAnnotations));
   }
 
   @Override

@@ -751,6 +751,22 @@ public class Matchers {
   }
 
   /**
+   * Determines whether an expression has an annotation with the given simple name. This does not
+   * include annotations inherited from superclasses due to @Inherited.
+   *
+   * @param simpleName the simple name of the annotation (e.g. "Nullable")
+   */
+  public static <T extends Tree> Matcher<T> hasAnnotationWithSimpleName(final String simpleName) {
+    return new Matcher<T>() {
+      @Override
+      public boolean matches(T tree, VisitorState state) {
+        return ASTHelpers.hasDirectAnnotationWithSimpleName(
+            ASTHelpers.getDeclaredSymbol(tree), simpleName);
+      }
+    };
+  }
+
+  /**
    * Determines whether an expression refers to a symbol that has an annotation of the given type.
    * This includes annotations inherited from superclasses due to @Inherited.
    *
