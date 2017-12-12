@@ -100,7 +100,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.auto</groupId>
       <artifactId>auto-common</artifactId>
-      <version>0.7</version>
+      <version>0.9</version>
     </dependency>
     <dependency>
       <!-- LGPL -->

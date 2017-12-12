@@ -11,7 +11,7 @@ maven_jar(
 
 maven_jar(
     name = "auto_common",
-    artifact = "com.google.auto:auto-common:0.3",
+    artifact = "com.google.auto:auto-common:0.9",
 )
 
 maven_jar(
