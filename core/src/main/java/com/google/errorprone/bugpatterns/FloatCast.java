@@ -46,7 +46,7 @@ import javax.lang.model.type.TypeKind;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "FloatCast",
-  summary = "Use parenthesis to make the precedence explicit",
+  summary = "Use parentheses to make the precedence explicit",
   severity = WARNING,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
