@@ -44,6 +44,11 @@ public class JUnit4TearDownNotRunTest {
   }
 
   @Test
+  public void testPositiveCase_customAnnotationDifferentName() throws Exception {
+    compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCaseCustomAfter2.java").doTest();
+  }
+
+  @Test
   public void testNegativeCases() throws Exception {
     compilationHelper.addSourceFile("JUnit4TearDownNotRunNegativeCases.java").doTest();
   }

@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasAnnotationOnAnyOverriddenMethod;
+import static com.google.errorprone.matchers.Matchers.hasAnnotationWithSimpleName;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.hasMethod;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
@@ -87,10 +88,16 @@ public class JUnitMatchers {
           hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
           hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION));
 
+  public static final Matcher<MethodTree> hasNonJUnit4BeforeAnnotation =
+      allOf(hasAnnotationWithSimpleName("Before"), not(hasJUnit4BeforeAnnotations));
+
   public static final Matcher<MethodTree> hasJUnit4AfterAnnotations =
       anyOf(
           hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
           hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
+
+  public static final Matcher<MethodTree> hasNonJUnit4AfterAnnotation =
+      allOf(hasAnnotationWithSimpleName("After"), not(hasJUnit4AfterAnnotations));
 
   /** Matches a class that inherits from TestCase. */
   public static final Matcher<ClassTree> isTestCaseDescendant = isSubtypeOf(JUNIT3_TEST_CASE_CLASS);
@@ -134,15 +141,9 @@ public class JUnitMatchers {
           Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
           methodReturns(VOID_TYPE));
 
-  /**
-   * Match a method which appears to be a JUnit 3 setUp method
-   *
-   * <p>Matches if: 1) The method is named "setUp" 2) The method has no parameters 3) The method is
-   * a public or protected instance method that is not abstract 4) The method returns void
-   */
-  public static final Matcher<MethodTree> looksLikeJUnit3SetUp =
+  /** Common matcher for possible JUnit setUp/tearDown methods. */
+  private static final Matcher<MethodTree> looksLikeJUnitSetUpOrTearDown =
       allOf(
-          methodIsNamed("setUp"),
           methodHasParameters(),
           anyOf(
               methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
@@ -152,21 +153,40 @@ public class JUnitMatchers {
           methodReturns(VOID_TYPE));
 
   /**
+   * Match a method which appears to be a JUnit 3 setUp method
+   *
+   * <p>Matches if: 1) The method is named "setUp" 2) The method has no parameters 3) The method is
+   * a public or protected instance method that is not abstract 4) The method returns void
+   */
+  public static final Matcher<MethodTree> looksLikeJUnit3SetUp =
+      allOf(methodIsNamed("setUp"), looksLikeJUnitSetUpOrTearDown);
+
+  /**
+   * Matches a method which appears to be a JUnit4 @Before method.
+   *
+   * <p>Matches if: 1) The method is annotated {@code Before} 2) The method has no parameters 3) The
+   * method is a public or protected instance method that is not abstract 4) The method returns void
+   */
+  public static final Matcher<MethodTree> looksLikeJUnit4Before =
+      allOf(hasAnnotationWithSimpleName("Before"), looksLikeJUnitSetUpOrTearDown);
+
+  /**
    * Match a method which appears to be a JUnit 3 tearDown method
    *
    * <p>Matches if: 1) The method is named "tearDown" 2) The method has no parameters 3) The method
    * is a public or protected instance method that is not abstract 4) The method returns void
    */
   public static final Matcher<MethodTree> looksLikeJUnit3TearDown =
-      allOf(
-          methodIsNamed("tearDown"),
-          methodHasParameters(),
-          anyOf(
-              methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
-              methodHasVisibility(MethodVisibility.Visibility.PROTECTED)),
-          not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
-          not(Matchers.<MethodTree>hasModifier(Modifier.STATIC)),
-          methodReturns(VOID_TYPE));
+      allOf(methodIsNamed("tearDown"), looksLikeJUnitSetUpOrTearDown);
+
+  /**
+   * Matches a method which appears to be a JUnit4 @After method.
+   *
+   * <p>Matches if: 1) The method is annotated {@code After} 2) The method has no parameters 3) The
+   * method is a public or protected instance method that is not abstract 4) The method returns void
+   */
+  public static final Matcher<MethodTree> looksLikeJUnit4After =
+      allOf(hasAnnotationWithSimpleName("After"), looksLikeJUnitSetUpOrTearDown);
 
   /** Matches a method annotated with @Test but not @Ignore. */
   public static final Matcher<MethodTree> wouldRunInJUnit4 =

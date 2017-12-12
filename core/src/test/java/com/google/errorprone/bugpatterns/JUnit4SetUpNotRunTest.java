@@ -58,6 +58,11 @@ public class JUnit4SetUpNotRunTest {
   }
 
   @Test
+  public void testPositiveCase_customBeforeDifferentName() throws Exception {
+    compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCaseCustomBefore2.java").doTest();
+  }
+
+  @Test
   public void testNegativeCases() throws Exception {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunNegativeCases.java").doTest();
   }
