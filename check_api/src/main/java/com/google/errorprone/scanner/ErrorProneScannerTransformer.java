@@ -16,6 +16,8 @@
 
 package com.google.errorprone.scanner;
 
+import static java.util.Objects.requireNonNull;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.errorprone.CodeTransformer;
@@ -48,7 +50,7 @@ public abstract class ErrorProneScannerTransformer implements CodeTransformer {
 
   /** Create a VisitorState object from a compilation unit. */
   private VisitorState createVisitorState(Context context, DescriptionListener listener) {
-    return new VisitorState(
-        context, listener, scanner().severityMap(), context.get(ErrorProneOptions.class));
+    ErrorProneOptions options = requireNonNull(context.get(ErrorProneOptions.class));
+    return new VisitorState(context, listener, scanner().severityMap(), options);
   }
 }
