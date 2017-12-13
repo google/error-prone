@@ -98,4 +98,12 @@ public class ComparableTypeNegativeCases {
       return 0;
     }
   }
+
+  static final class XGram implements Comparable {
+
+    @Override
+    public int compareTo(Object o) {
+      return 0;
+    }
+  }
 }

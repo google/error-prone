@@ -49,16 +49,19 @@ public class ComparableType extends BugChecker implements ClassTreeMatcher {
     if (COMPARABLE_MATCHER.matches(tree, state)) {
 
       final Type comparableTypeArgument = getComparableTypeArgument(tree, state);
-      final Type classType = ASTHelpers.getType(tree);
 
-      if (!ASTHelpers.isCastable(classType, comparableTypeArgument, state)) {
-        return buildDescription(tree)
-            .setMessage(
-                String.format(
-                    "Type of Comparable (%s) is not compatible with the implementing class (%s).",
-                    Signatures.prettyType(comparableTypeArgument),
-                    Signatures.prettyType(classType)))
-            .build();
+      if (comparableTypeArgument != null) {
+        final Type classType = ASTHelpers.getType(tree);
+
+        if (!ASTHelpers.isCastable(classType, comparableTypeArgument, state)) {
+          return buildDescription(tree)
+              .setMessage(
+                  String.format(
+                      "Type of Comparable (%s) is not compatible with the implementing class (%s).",
+                      Signatures.prettyType(comparableTypeArgument),
+                      Signatures.prettyType(classType)))
+              .build();
+        }
       }
     }
 
