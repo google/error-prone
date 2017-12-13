@@ -24,7 +24,6 @@ import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Pair;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
@@ -121,8 +120,7 @@ public class SuppressionHelper {
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
       if ((attr.type.tsym == suppressWarningsType.tsym)
           || attr.type.tsym.getQualifiedName().contentEquals("android.annotation.SuppressLint")) {
-        for (List<Pair<MethodSymbol, Attribute>> v = attr.values; v.nonEmpty(); v = v.tail) {
-          Pair<MethodSymbol, Attribute> value = v.head;
+        for (Pair<MethodSymbol, Attribute> value : attr.values) {
           if (value.fst.name.contentEquals("value"))
             if (value.snd
                 instanceof Attribute.Array) { // SuppressWarnings/SuppressLint take an array

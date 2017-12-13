@@ -47,6 +47,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
+import java.util.List;
 
 /**
  * Checks for calls to Guava's {@code Futures.getChecked} method that will always fail because they
@@ -109,7 +110,8 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
             return false;
           }
 
-          Type exceptionType = ((ClassType) argType).getTypeArguments().head;
+          List<Type> typeArguments = ((ClassType) argType).getTypeArguments();
+          Type exceptionType = typeArguments.isEmpty() ? null : typeArguments.get(0);
           return types.isSubtype(exceptionType, runtimeExceptionType);
         }
       };
