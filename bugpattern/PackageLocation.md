@@ -22,6 +22,7 @@ located in: `.../edu/oswego/cs/dl/util/concurrent`.
 
 ## Suppression
 
+
 If necessary, the check may be suppressed by annotating the enclosing package
 declaration with `@com.google.errorprone.annotations.SuppressPackageLocation`,
 for example:

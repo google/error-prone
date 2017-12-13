@@ -4,7 +4,7 @@ summary: Parameter name in argument comment is incorrect
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

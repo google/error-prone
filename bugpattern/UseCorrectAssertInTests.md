@@ -4,7 +4,7 @@ summary: Java assert is used in test. For testing purposes Assert.* matchers sho
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

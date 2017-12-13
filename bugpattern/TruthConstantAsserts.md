@@ -4,7 +4,7 @@ summary: Truth Library assert is called on a constant.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

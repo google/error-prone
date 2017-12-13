@@ -4,7 +4,7 @@ summary: Calling getClass() on an object of type Class returns the Class object 
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

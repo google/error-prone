@@ -73,12 +73,33 @@
 <h1 title="Deprecated API" class="title">Deprecated API</h1>
 <h2 title="Contents">Contents</h2>
 <ul>
+<li><a href="#enum">Deprecated Enums</a></li>
 <li><a href="#method">Deprecated Methods</a></li>
 <li><a href="#constructor">Deprecated Constructors</a></li>
 <li><a href="#annotation.type.member">Deprecated Annotation Type Elements</a></li>
 </ul>
 </div>
-<div class="contentContainer"><a name="method">
+<div class="contentContainer"><a name="enum">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<table class="deprecatedSummary" border="0" cellpadding="3" cellspacing="0" summary="Deprecated Enums table, listing deprecated enums, and an explanation">
+<caption><span>Deprecated Enums</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Enum and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">com.google.errorprone.BugPattern.Suppressibility</a>
+<div class="block"><span class="deprecationComment">use <a href="com/google/errorprone/BugPattern.html#suppressionAnnotations--"><code>BugPattern.suppressionAnnotations()</code></a> instead.</span></div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<a name="method">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -97,6 +118,12 @@
 <tr class="rowColor">
 <td class="colOne"><a href="com/google/errorprone/matchers/Matchers.html#instanceMethod-com.google.errorprone.matchers.Matcher-java.lang.String-">com.google.errorprone.matchers.Matchers.instanceMethod(Matcher&lt;? super ExpressionTree&gt;, String)</a>
 <div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/matchers/method/MethodMatchers.html#instanceMethod--"><code>MethodMatchers.instanceMethod()</code></a></span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeTypeParameterSetInScope-com.sun.tools.javac.code.Symbol-">com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.threadSafeTypeParameterSetInScope(Symbol)</a>
+<div class="block"><span class="deprecationComment">This method only exists to make a non-binary-compatible change to the <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeTypeParametersInScope-com.sun.tools.javac.code.Symbol-"><code>ThreadSafety.threadSafeTypeParametersInScope(com.sun.tools.javac.code.Symbol)</code></a> return value. It will be removed once we can safely
+     change that method's return value.</span></div>
 </td>
 </tr>
 </tbody>
@@ -156,6 +183,16 @@
 <div class="block"><span class="deprecationComment">This category field hasn't provided much value, as the 'problem domain' of each
      BugChecker is evident from the checker itself. We've introduced <a href="com/google/errorprone/BugPattern.html#tags--"><code>BugPattern.tags()</code></a> as a means to
      apply general tags to checks.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="com/google/errorprone/BugPattern.html#customSuppressionAnnotations--">com.google.errorprone.BugPattern.customSuppressionAnnotations</a>
+<div class="block"><span class="deprecationComment">use <a href="com/google/errorprone/BugPattern.html#suppressionAnnotations--"><code>BugPattern.suppressionAnnotations()</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="com/google/errorprone/BugPattern.html#suppressibility--">com.google.errorprone.BugPattern.suppressibility</a>
+<div class="block"><span class="deprecationComment">use <a href="com/google/errorprone/BugPattern.html#suppressionAnnotations--"><code>BugPattern.suppressionAnnotations()</code></a> instead.</span></div>
 </td>
 </tr>
 </tbody>

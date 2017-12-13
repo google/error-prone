@@ -4,7 +4,7 @@ summary: Certain resources in `android.R.string` have names that do not match th
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

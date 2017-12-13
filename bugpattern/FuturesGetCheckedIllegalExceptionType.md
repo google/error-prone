@@ -4,7 +4,7 @@ summary: Futures.getChecked requires a checked exception type with a standard co
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

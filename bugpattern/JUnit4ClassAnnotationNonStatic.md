@@ -4,7 +4,7 @@ summary: This method should be static
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

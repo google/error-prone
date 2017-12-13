@@ -4,7 +4,7 @@ summary: This looks like a test method but is not run; please add @Test or @Igno
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

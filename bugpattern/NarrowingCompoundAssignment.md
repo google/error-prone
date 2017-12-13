@@ -4,7 +4,7 @@ summary: Compound assignments may hide dangerous casts
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

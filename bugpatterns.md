@@ -59,6 +59,9 @@ Ignored return value of method that is annotated with @CheckReturnValue
 __[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
 Incompatible type as argument to Object-accepting Java collections method
 
+__[ComparableType](bugpattern/ComparableType)__<br>
+ Implementing &#39;Comparable&lt;T&gt;&#39; where T is not compatible with the implementing class.
+
 __[ComparisonOutOfRange](bugpattern/ComparisonOutOfRange)__<br>
 Comparison to value that is out of range for the compared type
 
@@ -174,10 +177,10 @@ __[JUnit4ClassAnnotationNonStatic](bugpattern/JUnit4ClassAnnotationNonStatic)__<
 This method should be static
 
 __[JUnit4SetUpNotRun](bugpattern/JUnit4SetUpNotRun)__<br>
-setUp() method will not be run; Please add a @Before annotation
+setUp() method will not be run; please add JUnit&#39;s @Before annotation
 
 __[JUnit4TearDownNotRun](bugpattern/JUnit4TearDownNotRun)__<br>
-tearDown() method will not be run; Please add an @After annotation
+tearDown() method will not be run; please add JUnit&#39;s @After annotation
 
 __[JUnit4TestNotRun](bugpattern/JUnit4TestNotRun)__<br>
 This looks like a test method but is not run; please add @Test or @Ignore, or, if this is a helper method, reduce its visibility.
@@ -395,7 +398,7 @@ __[Finally](bugpattern/Finally)__<br>
 If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
 
 __[FloatCast](bugpattern/FloatCast)__<br>
-Use parenthesis to make the precedence explicit
+Use parentheses to make the precedence explicit
 
 __[FloatingPointLiteralPrecision](bugpattern/FloatingPointLiteralPrecision)__<br>
 Floating point literal loses precision

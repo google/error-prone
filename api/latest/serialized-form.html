@@ -126,14 +126,15 @@
  link should be displayed.</div>
 </li>
 <li class="blockList">
-<h4>supportsSuppressWarnings</h4>
-<pre>boolean supportsSuppressWarnings</pre>
+<h4>suppressibility</h4>
+<pre><a href="com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a> suppressibility</pre>
+<div class="block">Whether this check may be suppressed. Corresponds to the <code>suppressibility</code> attribute from
+ its <code>BugPattern</code>.</div>
 </li>
 <li class="blockList">
 <h4>customSuppressionAnnotations</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">E</a>&gt; customSuppressionAnnotations</pre>
-<div class="block">A set of suppression annotations for this check. Computed from the <code>suppressionAnnotations</code> attributes from its <code>BugPattern</code>. May be empty if there are no
- suppression annotations for this check.</div>
+<div class="block">A set of custom suppression annotations for this check. Computed from the <code>suppressibility</code> and <code>customSuppressionAnnotations</code> attributes from its <code>BugPattern</code>. May be empty if there are no custom suppression annotations for this check.</div>
 </li>
 <li class="blockListLast">
 <h4>disableable</h4>
@@ -439,6 +440,11 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/ComparableAndComparator.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ComparableAndComparator</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.ComparableType">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/ComparableType.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ComparableType</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.ComparisonContractViolated">
 <!--   -->

@@ -157,6 +157,14 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#hasJUnitAnnotation">hasJUnitAnnotation</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#hasNonJUnit4AfterAnnotation">hasNonJUnit4AfterAnnotation</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#hasNonJUnit4BeforeAnnotation">hasNonJUnit4BeforeAnnotation</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ClassTree&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#isAmbiguousJUnitVersion">isAmbiguousJUnitVersion</a></span></code>
 <div class="block">Matches classes which have attributes of both JUnit 3 and 4 classes.</div>
@@ -226,6 +234,18 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#looksLikeJUnit3TearDown">looksLikeJUnit3TearDown</a></span></code>
 <div class="block">Match a method which appears to be a JUnit 3 tearDown method</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#looksLikeJUnit4After">looksLikeJUnit4After</a></span></code>
+<div class="block">Matches a method which appears to be a JUnit4 @After method.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#looksLikeJUnit4Before">looksLikeJUnit4Before</a></span></code>
+<div class="block">Matches a method which appears to be a JUnit4 @Before method.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -390,6 +410,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt; hasJUnit4BeforeAnnotations</pre>
 </li>
 </ul>
+<a name="hasNonJUnit4BeforeAnnotation">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hasNonJUnit4BeforeAnnotation</h4>
+<pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt; hasNonJUnit4BeforeAnnotation</pre>
+</li>
+</ul>
 <a name="hasJUnit4AfterAnnotations">
 <!--   -->
 </a>
@@ -397,6 +426,15 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>hasJUnit4AfterAnnotations</h4>
 <pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt; hasJUnit4AfterAnnotations</pre>
+</li>
+</ul>
+<a name="hasNonJUnit4AfterAnnotation">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hasNonJUnit4AfterAnnotation</h4>
+<pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt; hasNonJUnit4AfterAnnotation</pre>
 </li>
 </ul>
 <a name="isTestCaseDescendant">
@@ -472,6 +510,19 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  a public or protected instance method that is not abstract 4) The method returns void</div>
 </li>
 </ul>
+<a name="looksLikeJUnit4Before">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>looksLikeJUnit4Before</h4>
+<pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt; looksLikeJUnit4Before</pre>
+<div class="block">Matches a method which appears to be a JUnit4 @Before method.
+
+ <p>Matches if: 1) The method is annotated <code>Before</code> 2) The method has no parameters 3) The
+ method is a public or protected instance method that is not abstract 4) The method returns void</div>
+</li>
+</ul>
 <a name="looksLikeJUnit3TearDown">
 <!--   -->
 </a>
@@ -483,6 +534,19 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 
  <p>Matches if: 1) The method is named "tearDown" 2) The method has no parameters 3) The method
  is a public or protected instance method that is not abstract 4) The method returns void</div>
+</li>
+</ul>
+<a name="looksLikeJUnit4After">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>looksLikeJUnit4After</h4>
+<pre>public static final&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt; looksLikeJUnit4After</pre>
+<div class="block">Matches a method which appears to be a JUnit4 @After method.
+
+ <p>Matches if: 1) The method is annotated <code>After</code> 2) The method has no parameters 3) The
+ method is a public or protected instance method that is not abstract 4) The method returns void</div>
 </li>
 </ul>
 <a name="wouldRunInJUnit4">

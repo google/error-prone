@@ -1,6 +1,6 @@
 ---
 title: FloatCast
-summary: Use parenthesis to make the precedence explicit
+summary: Use parentheses to make the precedence explicit
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -17,7 +17,7 @@ Casts have higher precedence than binary expressions, so `(int) 0.5f * 100` is
 equivalent to `((int) 0.5f) * 100` = `0 * 100` = `0`, not `(int) (0.5f * 100)` =
 `50`.
 
-To avoid this common source of error, add explicit parenthesis to make the
+To avoid this common source of error, add explicit parentheses to make the
 precedence explicit. For example, instead of this:
 
 ```java {.bad}

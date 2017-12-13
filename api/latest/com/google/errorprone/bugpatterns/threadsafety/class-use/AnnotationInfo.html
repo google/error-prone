@@ -163,6 +163,12 @@
 <td class="colFirst"><code><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <td class="colLast"><span class="typeNameLabel">ThreadSafety.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeInstantiation-com.google.common.collect.ImmutableSet-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">threadSafeInstantiation</a></span>(com.google.common.collect.ImmutableSet&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
                        <a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
+                       com.sun.tools.javac.code.Type&nbsp;type)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
+<td class="colLast"><span class="typeNameLabel">ThreadSafety.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">threadSafeInstantiation</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
+                       <a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
                        com.sun.tools.javac.code.Type&nbsp;type)</code>
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
  type arguments where required by its annotation's containerOf element.</div>

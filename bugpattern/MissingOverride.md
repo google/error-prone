@@ -4,7 +4,7 @@ summary: method overrides method in supertype; expected @Override
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--
