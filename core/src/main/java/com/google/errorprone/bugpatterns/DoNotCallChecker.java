@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.DoNotCall;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -42,7 +43,8 @@ import javax.lang.model.element.Modifier;
   name = "DoNotCall",
   category = JDK,
   summary = "This method should not be called.",
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class DoNotCallChecker extends BugChecker
     implements MethodTreeMatcher, MethodInvocationTreeMatcher {

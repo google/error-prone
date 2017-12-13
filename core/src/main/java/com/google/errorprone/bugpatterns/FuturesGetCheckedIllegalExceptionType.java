@@ -30,6 +30,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -59,7 +60,8 @@ import com.sun.tools.javac.code.Types;
           + "public constructor whose only parameters are of type String or Throwable. getChecked "
           + "will reject any other type with an IllegalArgumentException.",
   category = GUAVA,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
     implements MethodInvocationTreeMatcher {

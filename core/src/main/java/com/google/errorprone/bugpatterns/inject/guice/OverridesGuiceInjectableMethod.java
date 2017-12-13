@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.InjectMatchers.JAVAX_INJECT_ANNOTAT
 import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -54,7 +55,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
           + "annotated with `@Inject`. Because of this difference, it is recommended that you "
           + "annotate this method explicitly.",
   category = GUICE,
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class OverridesGuiceInjectableMethod extends BugChecker implements MethodTreeMatcher {
 

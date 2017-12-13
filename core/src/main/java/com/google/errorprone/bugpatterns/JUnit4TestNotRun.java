@@ -35,6 +35,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -65,7 +66,8 @@ import javax.lang.model.element.Modifier;
           + "are purposely disabling it. If this is a helper method and not a test, consider "
           + "reducing its visibility to non-public, if possible.",
   category = JUNIT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
