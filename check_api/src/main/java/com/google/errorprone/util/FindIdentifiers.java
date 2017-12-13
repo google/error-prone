@@ -61,6 +61,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.util.Name;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -150,7 +151,11 @@ public final class FindIdentifiers {
 
           // Collect inherited fields.
           Type classType = ASTHelpers.getType(curr);
-          com.sun.tools.javac.util.List<Type> superTypes = state.getTypes().closure(classType).tail;
+          List<Type> classTypeClosure = state.getTypes().closure(classType);
+          List<Type> superTypes =
+              classTypeClosure.size() <= 1
+                  ? Collections.emptyList()
+                  : classTypeClosure.subList(1, classTypeClosure.size());
           for (Type type : superTypes) {
             Scope scope = type.tsym.members();
             ImmutableList.Builder<VarSymbol> varsList = ImmutableList.builder();
