@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.WaitMatchers.waitMethod;
 import static com.google.errorprone.matchers.WaitMatchers.waitMethodWithTimeout;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -45,7 +46,8 @@ import com.sun.tools.javac.tree.JCTree.JCIf;
           + "called in a loop",
   category = JDK,
   severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
+  tags = StandardTags.FRAGILE_CODE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMatcher {
 

@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
@@ -42,7 +43,8 @@ import javax.annotation.Nullable;
   category = JUNIT,
   summary = "Calls to ExpectedException#expect should always be followed by exactly one statement.",
   severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
+  tags = StandardTags.FRAGILE_CODE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ExpectedExceptionChecker extends AbstractExpectedExceptionChecker {
   @Override

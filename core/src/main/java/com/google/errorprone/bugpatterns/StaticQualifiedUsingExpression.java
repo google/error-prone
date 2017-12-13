@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.staticFieldAccess;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
@@ -50,7 +51,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
   severity = WARNING,
   altNames = {"static", "static-access", "StaticAccessedFromInstance"},
   generateExamplesFromTestCases = false,
-  tags = StandardTags.STYLE
+  tags = StandardTags.STYLE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class StaticQualifiedUsingExpression extends BugChecker implements MemberSelectTreeMatcher {
 

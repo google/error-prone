@@ -24,6 +24,7 @@ import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.BLOCK;
 
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -54,7 +55,8 @@ import java.util.regex.Matcher;
   summary =
       "Detects `/* name= */`-style comments on actual parameters where the name doesn't match the"
           + " formal parameter",
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ParameterName extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
