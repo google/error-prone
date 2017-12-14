@@ -476,10 +476,9 @@ implements <a href="../../../../com/google/errorprone/matchers/Suppressible.html
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html#severity-java.util.Map-">severity</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severities)</code>&nbsp;</td>
 </tr>
 <tr id="i16" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html#suppressibility--">suppressibility</a></span>()</code>
-<div class="block">Returns how this checker can be suppressed (e.g., via <code>@SuppressWarnings</code> or a custom
- suppression annotation.</div>
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html#supportsSuppressWarnings--">supportsSuppressWarnings</a></span>()</code>
+<div class="block">Returns true if this checker can be suppressed using <code>@SuppressWarnings</code>.</div>
 </td>
 </tr>
 </table>
@@ -652,19 +651,18 @@ public static&nbsp;<a href="../../../../com/google/errorprone/matchers/Descripti
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;linkUrl()</pre>
 </li>
 </ul>
-<a name="suppressibility--">
+<a name="supportsSuppressWarnings--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>suppressibility</h4>
-<pre>public&nbsp;<a href="../../../../com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a>&nbsp;suppressibility()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/google/errorprone/matchers/Suppressible.html#suppressibility--">Suppressible</a></code></span></div>
-<div class="block">Returns how this checker can be suppressed (e.g., via <code>@SuppressWarnings</code> or a custom
- suppression annotation.</div>
+<h4>supportsSuppressWarnings</h4>
+<pre>public&nbsp;boolean&nbsp;supportsSuppressWarnings()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/google/errorprone/matchers/Suppressible.html#supportsSuppressWarnings--">Suppressible</a></code></span></div>
+<div class="block">Returns true if this checker can be suppressed using <code>@SuppressWarnings</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/google/errorprone/matchers/Suppressible.html#suppressibility--">suppressibility</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code></dd>
+<dd><code><a href="../../../../com/google/errorprone/matchers/Suppressible.html#supportsSuppressWarnings--">supportsSuppressWarnings</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code></dd>
 </dl>
 </li>
 </ul>

@@ -409,9 +409,6 @@ Classes extending PreferenceActivity must implement isValidFragment such that it
 __[FragmentNotInstantiable](bugpattern/FragmentNotInstantiable)__<br>
 Subclasses of Fragment must be instantiable via Class#newInstance(): the class must be public, static and have a public nullary constructor
 
-__[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
-Overloads will be ambiguous when passing lambda arguments
-
 __[FutureReturnValueIgnored](bugpattern/FutureReturnValueIgnored)__<br>
 Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.
 
@@ -691,6 +688,9 @@ Empty top-level type declaration
 
 __[ExpectedExceptionChecker](bugpattern/ExpectedExceptionChecker)__<br>
 Calls to ExpectedException#expect should always be followed by exactly one statement.
+
+__[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
+Overloads will be ambiguous when passing lambda arguments
 
 __[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
 Hardcoded reference to /sdcard

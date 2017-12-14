@@ -152,10 +152,9 @@ var activeTableTab = "activeTableTab";
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Suppressible.html#suppressibility--">suppressibility</a></span>()</code>
-<div class="block">Returns how this checker can be suppressed (e.g., via <code>@SuppressWarnings</code> or a custom
- suppression annotation.</div>
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/Suppressible.html#supportsSuppressWarnings--">supportsSuppressWarnings</a></span>()</code>
+<div class="block">Returns true if this checker can be suppressed using <code>@SuppressWarnings</code>.</div>
 </td>
 </tr>
 </table>
@@ -194,15 +193,14 @@ var activeTableTab = "activeTableTab";
 <div class="block">The canonical name of the check.</div>
 </li>
 </ul>
-<a name="suppressibility--">
+<a name="supportsSuppressWarnings--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>suppressibility</h4>
-<pre><a href="../../../../com/google/errorprone/BugPattern.Suppressibility.html" title="enum in com.google.errorprone">BugPattern.Suppressibility</a>&nbsp;suppressibility()</pre>
-<div class="block">Returns how this checker can be suppressed (e.g., via <code>@SuppressWarnings</code> or a custom
- suppression annotation.</div>
+<h4>supportsSuppressWarnings</h4>
+<pre>boolean&nbsp;supportsSuppressWarnings()</pre>
+<div class="block">Returns true if this checker can be suppressed using <code>@SuppressWarnings</code>.</div>
 </li>
 </ul>
 <a name="customSuppressionAnnotations--">
