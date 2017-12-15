@@ -26,16 +26,17 @@ import static com.google.errorprone.matchers.Matchers.not;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.tree.JCTree;
+import com.sun.source.tree.ModifiersTree;
+import com.sun.tools.javac.code.Symbol;
 import java.io.Serializable;
 import java.util.List;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -46,6 +47,7 @@ import javax.lang.model.element.Modifier;
  * @author glorioso@google.com
  */
 abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements MethodTreeMatcher {
+
   private static final String JUNIT_TEST = "org.junit.Test";
 
   /**
@@ -109,18 +111,13 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     String correctAnnotation = correctAnnotation();
     String unqualifiedClassName = getUnqualifiedClassName(correctAnnotation);
     for (AnnotationTree annotationNode : methodTree.getModifiers().getAnnotations()) {
-      String annotationClassName =
-          ASTHelpers.getSymbol(annotationNode).getQualifiedName().toString();
-      if (annotationClassName.endsWith("." + unqualifiedClassName)) {
+      Symbol annoSymbol = ASTHelpers.getSymbol(annotationNode);
+      if (annoSymbol.getSimpleName().toString().equals(unqualifiedClassName)) {
         SuggestedFix.Builder suggestedFix =
-            SuggestedFix.builder().removeImport(annotationClassName).addImport(correctAnnotation);
-        if (makeProtectedPublic(
-                methodTree, state, unqualifiedClassName, suggestedFix, /* addAnnotation= */ false)
-            == null) {
-          // No source position available, don't suggest a fix
-          return describeMatch(annotationNode);
-        }
-        suggestedFix.replace(annotationNode, "@" + unqualifiedClassName);
+            SuggestedFix.builder()
+                .removeImport(annoSymbol.getQualifiedName().toString())
+                .addImport(correctAnnotation);
+        makeProtectedPublic(methodTree, state, suggestedFix);
         return describeMatch(annotationNode, suggestedFix.build());
       }
     }
@@ -128,46 +125,19 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     // Add correctAnnotation() to the unannotated method
     // (and convert protected to public if it is)
     SuggestedFix.Builder suggestedFix = SuggestedFix.builder().addImport(correctAnnotation);
-
-    // The makeProtectedPublic will take care of adding the annotation for us
-    Boolean annotationAdded =
-        makeProtectedPublic(
-            methodTree, state, unqualifiedClassName, suggestedFix, /* addAnnotation= */ true);
-    //
-    if (annotationAdded == null) {
-      // No source position available, don't suggest a fix
-      return describeMatch(methodTree);
-    }
-
-    if (!annotationAdded) {
-      suggestedFix.prefixWith(methodTree, "@" + unqualifiedClassName + "\n");
-    }
-
+    makeProtectedPublic(methodTree, state, suggestedFix);
+    suggestedFix.prefixWith(methodTree, "@" + unqualifiedClassName + "\n");
     return describeMatch(methodTree, suggestedFix.build());
   }
 
-  // returns null if the method source isn't available for some reason. Caller should check
-  // null and not emit a fix in that case. Returns true if the method was upgraded from protected
-  // to public
-  @Nullable
-  private Boolean makeProtectedPublic(
-      MethodTree methodTree,
-      VisitorState state,
-      String unqualifiedClassName,
-      SuggestedFix.Builder suggestedFix,
-      boolean addAnnotation) {
+  private void makeProtectedPublic(
+      MethodTree methodTree, VisitorState state, Builder suggestedFix) {
     if (Matchers.<MethodTree>hasModifier(Modifier.PROTECTED).matches(methodTree, state)) {
-      CharSequence methodSource = state.getSourceForNode((JCTree.JCMethodDecl) methodTree);
-      if (methodSource == null) {
-        return null;
-      }
-      String methodString =
-          (addAnnotation ? "@" + unqualifiedClassName + "\n" : "")
-              + methodSource.toString().replaceFirst("protected ", "public ");
-      suggestedFix.replace(methodTree, methodString);
-      return true;
+      ModifiersTree modifiers = methodTree.getModifiers();
+      CharSequence modifiersSource = state.getSourceForNode(modifiers);
+      suggestedFix.replace(
+          modifiers, modifiersSource.toString().replaceFirst("protected", "public"));
     }
-    return false;
   }
 
   private Description tryToReplaceAnnotation(

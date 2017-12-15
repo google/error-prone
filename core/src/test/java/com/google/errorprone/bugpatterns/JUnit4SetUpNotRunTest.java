@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.common.io.ByteStreams;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -41,6 +42,8 @@ public class JUnit4SetUpNotRunTest {
   @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   private CompilationTestHelper compilationHelper;
+  private BugCheckerRefactoringTestHelper refactoringTestHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new JUnit4SetUpNotRun(), getClass());
 
   @Before
   public void setUp() {
@@ -55,6 +58,37 @@ public class JUnit4SetUpNotRunTest {
   @Test
   public void testPositiveCase_customBefore() throws Exception {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCaseCustomBefore.java").doTest();
+  }
+
+  @Test
+  public void customBefore_refactoring() throws Exception {
+    refactoringTestHelper
+        .addInputLines("Before.java", "  @interface Before {}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Foo.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class Foo {",
+            "  @Before",
+            "  public void initMocks() {}",
+            "  @Before",
+            "  protected void badVisibility() {}",
+            "}")
+        .addOutputLines(
+            "out/Foo.java",
+            "import org.junit.Before;",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class Foo {",
+            "  @Before",
+            "  public void initMocks() {}",
+            "  @Before",
+            "  public void badVisibility() {}",
+            "}")
+        .doTest();
   }
 
   @Test
