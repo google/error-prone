@@ -26,6 +26,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -61,9 +62,11 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.main.Arguments;
 import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
@@ -670,5 +673,61 @@ public class SuggestedFixes {
         .stream()
         .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
         .count();
+  }
+
+  /**
+   * Pretty-prints a Type for use in fixes, qualifying any enclosed type names using {@link
+   * #qualifyType}}.
+   */
+  public static String prettyType(
+      @Nullable VisitorState state, @Nullable SuggestedFix.Builder fix, Type type) {
+    return type.accept(
+        new DefaultTypeVisitor<String, Void>() {
+          @Override
+          public String visitWildcardType(Type.WildcardType t, Void unused) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(t.kind);
+            if (t.kind != BoundKind.UNBOUND) {
+              sb.append(t.type.accept(this, null));
+            }
+            return sb.toString();
+          }
+
+          @Override
+          public String visitClassType(Type.ClassType t, Void unused) {
+            StringBuilder sb = new StringBuilder();
+            if (state == null || fix == null) {
+              sb.append(t.tsym.getSimpleName());
+            } else {
+              sb.append(qualifyType(state, fix, t.tsym));
+            }
+            if (t.getTypeArguments().nonEmpty()) {
+              sb.append('<');
+              sb.append(
+                  t.getTypeArguments()
+                      .stream()
+                      .map(a -> a.accept(this, null))
+                      .collect(joining(", ")));
+              sb.append(">");
+            }
+            return sb.toString();
+          }
+
+          @Override
+          public String visitCapturedType(Type.CapturedType t, Void unused) {
+            return t.wildcard.accept(this, null);
+          }
+
+          @Override
+          public String visitArrayType(Type.ArrayType t, Void unused) {
+            return t.elemtype.accept(this, null) + "[]";
+          }
+
+          @Override
+          public String visitType(Type t, Void unused) {
+            return t.toString();
+          }
+        },
+        null);
   }
 }

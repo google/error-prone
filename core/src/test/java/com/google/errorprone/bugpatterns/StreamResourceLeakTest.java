@@ -17,18 +17,19 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link FilesLinesLeak}Test */
+/** {@link StreamResourceLeakTest}Test */
 @RunWith(JUnit4.class)
-public class FilesLinesLeakTest {
+public class StreamResourceLeakTest {
 
   private final CompilationTestHelper testHelper =
-      CompilationTestHelper.newInstance(FilesLinesLeak.class, getClass());
+      CompilationTestHelper.newInstance(StreamResourceLeak.class, getClass());
 
   @Test
   public void positive() {
@@ -41,6 +42,20 @@ public class FilesLinesLeakTest {
             "import java.util.stream.Collectors;",
             "class Test {",
             "  String f(Path p) throws IOException {",
+            "    // BUG: Diagnostic contains: should be closed",
+            "    Files.newDirectoryStream(p);",
+            "    // BUG: Diagnostic contains: should be closed",
+            "    Files.newDirectoryStream(p, /* glob= */ \"*\");",
+            "    // BUG: Diagnostic contains: should be closed",
+            "    Files.newDirectoryStream(p, /* filter= */ path -> true);",
+            "    // BUG: Diagnostic contains: should be closed",
+            "    Files.list(p);",
+            "    // BUG: Diagnostic contains: should be closed",
+            "    Files.walk(p, /* maxDepth= */ 0);",
+            "    // BUG: Diagnostic contains: should be closed",
+            "    Files.walk(p);",
+            "    // BUG: Diagnostic contains: should be closed",
+            "    Files.find(p, /* maxDepth= */ 0, (path, a) -> true);",
             "    // BUG: Diagnostic contains: should be closed",
             "    return Files.lines(p).collect(Collectors.joining(\", \"));",
             "  }",
@@ -70,7 +85,7 @@ public class FilesLinesLeakTest {
 
   @Test
   public void fix() throws IOException {
-    BugCheckerRefactoringTestHelper.newInstance(new FilesLinesLeak(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(new StreamResourceLeak(), getClass())
         .addInputLines(
             "in/Test.java",
             "import java.io.IOException;",
@@ -101,7 +116,7 @@ public class FilesLinesLeakTest {
 
   @Test
   public void fixVariable() throws IOException {
-    BugCheckerRefactoringTestHelper.newInstance(new FilesLinesLeak(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(new StreamResourceLeak(), getClass())
         .addInputLines(
             "in/Test.java",
             "import java.io.IOException;",
@@ -168,5 +183,48 @@ public class FilesLinesLeakTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void moreRefactorings() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new StreamResourceLeak(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.IOException;",
+            "import java.nio.file.DirectoryStream;",
+            "import java.nio.file.Files;",
+            "import java.nio.file.Path;",
+            "class Test {",
+            "  void f(Path p) throws IOException {",
+            "    DirectoryStream<Path> l = Files.newDirectoryStream(p);",
+            "    for (Path x : Files.newDirectoryStream(p)) {",
+            "      System.err.println(x);",
+            "    }",
+            "    System.err.println(l);",
+            "    System.err.println(Files.newDirectoryStream(p));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.io.IOException;",
+            "import java.nio.file.DirectoryStream;",
+            "import java.nio.file.Files;",
+            "import java.nio.file.Path;",
+            "class Test {",
+            "  void f(Path p) throws IOException {",
+            "    try (DirectoryStream<Path> l = Files.newDirectoryStream(p)) {",
+            "      try (DirectoryStream<Path> stream = Files.newDirectoryStream(p)) {",
+            "        for (Path x : stream) {",
+            "          System.err.println(x);",
+            "        }",
+            "      }",
+            "      System.err.println(l);",
+            "    }",
+            "    try (DirectoryStream<Path> stream = Files.newDirectoryStream(p)) {",
+            "      System.err.println(stream);",
+            "    }",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
   }
 }

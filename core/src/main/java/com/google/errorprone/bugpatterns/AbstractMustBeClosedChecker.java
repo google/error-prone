@@ -46,8 +46,8 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 
 /**
- * An abstract check for resources that must be closed; used by {@link FilesLinesLeak} and {@link
- * MustBeClosedChecker}.
+ * An abstract check for resources that must be closed; used by {@link StreamResourceLeak} and
+ * {@link MustBeClosedChecker}.
  */
 public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
@@ -65,7 +65,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    * Check that constructors and methods annotated with {@link MustBeClosed} occur within the
    * resource variable initializer of a try-with-resources statement.
    */
-  protected Description matchNewClassOrMethodInvocation(Tree tree, VisitorState state) {
+  protected Description matchNewClassOrMethodInvocation(ExpressionTree tree, VisitorState state) {
     Description description = checkClosed(tree, state);
     if (description == NO_MATCH) {
       return NO_MATCH;
@@ -77,7 +77,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     return description;
   }
 
-  private Description checkClosed(Tree tree, VisitorState state) {
+  private Description checkClosed(ExpressionTree tree, VisitorState state) {
     MethodTree callerMethodTree = enclosingMethod(state);
     if (state.getPath().getParentPath().getLeaf().getKind() == Tree.Kind.RETURN
         && callerMethodTree != null) {
@@ -135,7 +135,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    * Returns whether an invocation occurs within the resource variable initializer of a
    * try-with-resources statement.
    */
-  // TODO(cushon): This method has been copied from FilesLinesLeak. Move it to a shared class.
   private boolean inTWR(VisitorState state) {
     TreePath path = state.getPath().getParentPath();
     while (path.getLeaf().getKind() == Tree.Kind.CONDITIONAL_EXPRESSION) {
@@ -188,5 +187,5 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     return closed[0];
   }
 
-  protected void addFix(Description.Builder description, Tree tree, VisitorState state) {}
+  protected void addFix(Description.Builder description, ExpressionTree tree, VisitorState state) {}
 }

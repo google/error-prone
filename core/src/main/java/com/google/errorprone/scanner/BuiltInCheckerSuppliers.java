@@ -71,7 +71,6 @@ import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.EqualsReference;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.FallThrough;
-import com.google.errorprone.bugpatterns.FilesLinesLeak;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.FloatCast;
 import com.google.errorprone.bugpatterns.FloatingPointLiteralPrecision;
@@ -188,6 +187,7 @@ import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
+import com.google.errorprone.bugpatterns.StreamResourceLeak;
 import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
@@ -354,7 +354,6 @@ public class BuiltInCheckerSuppliers {
           DoNotCallChecker.class,
           EqualsNaN.class,
           EqualsReference.class,
-          FilesLinesLeak.class,
           ForOverrideChecker.class,
           FormatString.class,
           FormatStringAnnotationChecker.class,
@@ -421,6 +420,7 @@ public class BuiltInCheckerSuppliers {
           SelfEquals.class,
           SizeGreaterThanOrEqualsZero.class,
           ShouldHaveEvenArgs.class,
+          StreamResourceLeak.class,
           StreamToString.class,
           StringBuilderInitWithChar.class,
           SuppressWarningsDeprecated.class,
