@@ -311,4 +311,49 @@ public class RemoveUnusedImportsTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void b70690930() throws IOException {
+    testHelper
+        .addInputLines(
+            "a/One.java", //
+            "package a;",
+            "public class One {}")
+        .expectUnchanged()
+        .addInputLines(
+            "a/Two.java", //
+            "package a;",
+            "public class Two {}")
+        .expectUnchanged()
+        .addInputLines(
+            "p/Lib.java",
+            "package p;",
+            "import a.One;",
+            "import a.Two;",
+            "public class Lib {",
+            "  private static class I {",
+            "    public void f(One a) {}",
+            "  }",
+            "  public static class J {",
+            "    public void f(Two a) {}",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "p/Test.java", //
+            "package p;",
+            "import a.One;",
+            "import a.Two;",
+            "/** {@link Lib.I#f(One)} {@link Lib.J#f(Two)} */",
+            "public class Test {",
+            "}")
+        .addOutputLines(
+            "out/p/Test.java", //
+            "package p;",
+            "import a.Two;",
+            "/** {@link Lib.I#f(One)} {@link Lib.J#f(Two)} */",
+            "public class Test {",
+            "}")
+        .doTest();
+  }
 }
