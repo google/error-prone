@@ -95,6 +95,10 @@ public class JUnit4SetUpNotRunPositiveCaseCustomBefore2 {
   // BUG: Diagnostic contains: @Before
   @Before
   public void initMocks() {}
+
+  // BUG: Diagnostic contains: @Before
+  @Before
+  protected void badVisibility() {}
 }
 
 @interface Before {}
