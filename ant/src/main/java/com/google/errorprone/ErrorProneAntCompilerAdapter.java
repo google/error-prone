@@ -47,7 +47,7 @@ public class ErrorProneAntCompilerAdapter extends DefaultCompilerAdapter {
     if (originalLoader instanceof URLClassLoader) {
       urls = ((URLClassLoader) originalLoader).getURLs();
     } else if (originalLoader instanceof AntClassLoader) {
-      String[] pieces = ((AntClassLoader) originalLoader).getClasspath().split(":");
+      String[] pieces = ((AntClassLoader) originalLoader).getClasspath().split(":", -1);
       urls = new URL[pieces.length];
       for (int i = 0; i < pieces.length; ++i) {
         try {
