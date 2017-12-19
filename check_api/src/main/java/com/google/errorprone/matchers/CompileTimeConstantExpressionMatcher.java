@@ -16,14 +16,17 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.tree.JCTree;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -69,8 +72,29 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
 
     @Override
     public boolean matches(ExpressionTree t, VisitorState state) {
-      Object constValue = ((JCTree.JCExpression) t).type.constValue();
-      return constValue != null;
+      return firstNonNull(
+          t.accept(
+              new SimpleTreeVisitor<Boolean, Void>() {
+                @Override
+                public Boolean visitConditionalExpression(
+                    ConditionalExpressionTree tree, Void unused) {
+                  return reduce(
+                      tree.getTrueExpression().accept(this, null),
+                      tree.getFalseExpression().accept(this, null));
+                }
+
+                @Override
+                protected Boolean defaultAction(Tree node, Void aVoid) {
+                  Object constValue = ASTHelpers.constValue(node);
+                  return constValue != null;
+                }
+
+                public Boolean reduce(Boolean lhs, Boolean rhs) {
+                  return firstNonNull(lhs, false) && firstNonNull(rhs, false);
+                }
+              },
+              null),
+          false);
     }
   }
 
