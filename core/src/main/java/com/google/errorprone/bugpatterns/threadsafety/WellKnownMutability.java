@@ -160,6 +160,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(com.google.common.graph.ImmutableGraph.class, "N")
         .add(com.google.common.graph.ImmutableNetwork.class, "N", "E")
         .add(com.google.common.graph.ImmutableValueGraph.class, "N", "V")
+        .add("com.google.common.hash.AbstractHashFunction") // package-private
         .add(com.google.common.hash.HashCode.class)
         .add(com.google.common.io.BaseEncoding.class)
         .add(com.google.common.net.MediaType.class)
