@@ -17,10 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -219,7 +221,7 @@ public class JdkObsolete extends BugChecker
       if (obsolete == null) {
         continue;
       }
-      if (implementingObsoleteMethod(state, type)) {
+      if (shouldSkip(state, type)) {
         continue;
       }
       Description.Builder description =
@@ -364,13 +366,52 @@ public class JdkObsolete extends BugChecker
     return null;
   }
 
-  /** Allow creating obsolete types when overriding a method with an obsolete return type. */
-  private static boolean implementingObsoleteMethod(VisitorState state, Type type) {
+  private boolean shouldSkip(VisitorState state, Type type) {
     TreePath path = findEnclosingMethod(state);
     if (path == null) {
       return false;
     }
-    MethodSymbol method = ASTHelpers.getSymbol((MethodTree) path.getLeaf());
+    MethodTree enclosingMethod = (MethodTree) path.getLeaf();
+    if (enclosingMethod == null) {
+      return false;
+    }
+    return implementingObsoleteMethod(enclosingMethod, state, type)
+        || mockingObsoleteMethod(enclosingMethod, state, type);
+  }
+
+  private static final Matcher<ExpressionTree> MOCKITO_MATCHER =
+      staticMethod().onClass("org.mockito.Mockito").named("when");
+
+  /** Allow mocking APIs that return obsolete types. */
+  private boolean mockingObsoleteMethod(MethodTree enclosingMethod, VisitorState state, Type type) {
+    // mutable boolean to return result from visitor
+    boolean[] found = {false};
+    enclosingMethod.accept(
+        new TreeScanner<Void, Void>() {
+          @Override
+          public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
+            if (found[0]) {
+              return null;
+            }
+            if (MOCKITO_MATCHER.matches(node, state)) {
+              Type stubber = ASTHelpers.getReturnType(node);
+              if (!stubber.getTypeArguments().isEmpty()
+                  && ASTHelpers.isSameType(
+                      getOnlyElement(stubber.getTypeArguments()), type, state)) {
+                found[0] = true;
+              }
+            }
+            return super.visitMethodInvocation(node, null);
+          }
+        },
+        null);
+    return found[0];
+  }
+
+  /** Allow creating obsolete types when overriding a method with an obsolete return type. */
+  private static boolean implementingObsoleteMethod(
+      MethodTree enclosingMethod, VisitorState state, Type type) {
+    MethodSymbol method = ASTHelpers.getSymbol(enclosingMethod);
     if (method == null) {
       return false;
     }
@@ -384,4 +425,3 @@ public class JdkObsolete extends BugChecker
     return true;
   }
 }
-
