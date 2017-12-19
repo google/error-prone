@@ -261,4 +261,34 @@ public class JdkObsoleteTest {
             "}")
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void obsoleteMocking() throws IOException {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      addClassToJar(jos, Lib.class);
+    }
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.when;",
+            "import " + Lib.class.getCanonicalName() + ";",
+            "import java.util.Enumeration;",
+            "class Test {",
+            "  void test(Lib lib) {",
+            "    when(lib.foos())",
+            "        .thenReturn(",
+            "            new Enumeration<Integer>() {",
+            "              public boolean hasMoreElements() {",
+            "                return false;",
+            "              }",
+            "              public Integer nextElement() {",
+            "                return null;",
+            "              }",
+            "            });",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
