@@ -38,7 +38,7 @@ The problem is described in the [javadoc] for `Files`.
 
 [javadoc]: https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html
 
-# The solution
+## The solution
 
 To ensure the stream is closed, always use try-with-resources. For example, when
 using `Files.lines`, do this:
@@ -56,3 +56,9 @@ Not this:
 // the Reader is never closed!
 String input = Files.lines(path).collect(Collectors.joining(", ");
 ```
+
+## What about methods that return closeable streams? {#must-be-closed}
+
+Methods that return `Stream`s that encapsulate a closeable resource can be
+annotated with `com.google.errorprone.annotations.MustBeClosed` to ensure their
+callers remember to close the stream.
