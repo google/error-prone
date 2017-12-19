@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorClassMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorMatcher;
+import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -58,6 +59,11 @@ public class ConstructorMatcherImpl extends AbstractSimpleMatcher<MatchState>
       return null;
     }
     return method;
+  }
+
+  @Override
+  public ConstructorClassMatcher forClass(TypePredicate typePredicate) {
+    return new ConstructorClassMatcherImpl(this, typePredicate);
   }
 
   @Override

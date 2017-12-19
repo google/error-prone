@@ -195,6 +195,7 @@ import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
+import com.google.errorprone.bugpatterns.ThreadLocalUsage;
 import com.google.errorprone.bugpatterns.ThreeLetterTimeZoneID;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
 import com.google.errorprone.bugpatterns.ThrowNull;
@@ -507,6 +508,7 @@ public class BuiltInCheckerSuppliers {
           StaticGuardedByInstance.class,
           SynchronizeOnNonFinalField.class,
           ThreadJoinLoop.class,
+          ThreadLocalUsage.class,
           ThreeLetterTimeZoneID.class,
           TruthConstantAsserts.class,
           TypeParameterShadowing.class,
