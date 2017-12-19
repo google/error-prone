@@ -94,7 +94,8 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">AbstractMustBeClosedChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
-<div class="block">An abstract check for resources that must be closed; used by <a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns"><code>FilesLinesLeak</code></a> and <a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns"><code>MustBeClosedChecker</code></a>.</div>
+<div class="block">An abstract check for resources that must be closed; used by <a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns"><code>StreamResourceLeak</code></a> and
+ <a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns"><code>MustBeClosedChecker</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#AbstractMustBeClosedChecker--">AbstractMustBeClosedChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -162,9 +163,9 @@
 <dd>
 <div class="block">Add each fix in order.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">addFix(Description.Builder, Tree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">addFix(Description.Builder, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html#addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">addFix(Description.Builder, Tree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns">FilesLinesLeak</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html#addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">addFix(Description.Builder, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Description.Builder.html#addFix-com.google.errorprone.fixes.Fix-">addFix(Fix)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></dt>
 <dd>
@@ -2283,10 +2284,6 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/apply/FileDestination.html" title="interface in com.google.errorprone.apply"><span class="typeNameLink">FileDestination</span></a> - Interface in <a href="com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">FilesLinesLeak</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html#FilesLinesLeak--">FilesLinesLeak()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns">FilesLinesLeak</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/apply/FileSource.html" title="interface in com.google.errorprone.apply"><span class="typeNameLink">FileSource</span></a> - Interface in <a href="com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ScannerSupplier.html#filter-com.google.common.base.Predicate-">filter(Predicate&lt;? super BugCheckerInfo&gt;)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
@@ -2409,10 +2406,16 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/apply/PatchFileDestination.html#flush--">flush()</a></span> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/PatchFileDestination.html" title="class in com.google.errorprone.apply">PatchFileDestination</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/ConstructorMatcherImpl.html#forClass-com.google.errorprone.predicates.TypePredicate-">forClass(TypePredicate)</a></span> - Method in class com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/ConstructorMatcherImpl.html" title="class in com.google.errorprone.matchers.method">ConstructorMatcherImpl</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/ConstructorMatcherImpl.html#forClass-java.lang.String-">forClass(String)</a></span> - Method in class com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/ConstructorMatcherImpl.html" title="class in com.google.errorprone.matchers.method">ConstructorMatcherImpl</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/ConstructorMatcherImpl.html#forClass-com.google.errorprone.suppliers.Supplier-">forClass(Supplier&lt;Type&gt;)</a></span> - Method in class com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/ConstructorMatcherImpl.html" title="class in com.google.errorprone.matchers.method">ConstructorMatcherImpl</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodMatchers.ConstructorMatcher.html#forClass-com.google.errorprone.predicates.TypePredicate-">forClass(TypePredicate)</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.ConstructorMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ConstructorMatcher</a></dt>
+<dd>
+<div class="block">Match on types that satisfy the given predicate.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodMatchers.ConstructorMatcher.html#forClass-java.lang.String-">forClass(String)</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.ConstructorMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ConstructorMatcher</a></dt>
 <dd>
 <div class="block">Match on the given type exactly.</div>
@@ -4577,7 +4580,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/DeadException.html#MATCHER">MATCHER</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DeadException.html" title="class in com.google.errorprone.bugpatterns">DeadException</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html#MATCHER">MATCHER</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns">FilesLinesLeak</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html#MATCHER">MATCHER</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><span class="typeNameLink">Matcher</span></a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; - Interface in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
@@ -4923,8 +4926,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">EqualsIncompatibleType</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns">FilesLinesLeak</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></dt>
@@ -5030,6 +5031,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html" title="class in com.google.errorprone.bugpatterns">ShouldHaveEvenArgs</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThreadJoinLoop.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThreadJoinLoop.html" title="class in com.google.errorprone.bugpatterns">ThreadJoinLoop</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThreeLetterTimeZoneID.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThreeLetterTimeZoneID.html" title="class in com.google.errorprone.bugpatterns">ThreeLetterTimeZoneID</a></dt>
@@ -5102,13 +5105,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html" title="class in com.google.errorprone.bugpatterns">StringBuilderInitWithChar</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThreadLocalUsage.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThreadLocalUsage.html" title="class in com.google.errorprone.bugpatterns">ThreadLocalUsage</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryTypeArgument</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnusedAnonymousClass.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnusedAnonymousClass.html" title="class in com.google.errorprone.bugpatterns">UnusedAnonymousClass</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/URLEqualsHashCode.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/URLEqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">URLEqualsHashCode</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">matchNewClassOrMethodInvocation(Tree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matchNewClassOrMethodInvocation(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
 <dd>
 <div class="block">Check that constructors and methods annotated with <a href="com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> occur within the
  resource variable initializer of a try-with-resources statement.</div>
@@ -5779,11 +5784,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodMatchers.InstanceMethodMatcher.html#onClass-com.google.errorprone.predicates.TypePredicate-">onClass(TypePredicate)</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.InstanceMethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.InstanceMethodMatcher</a></dt>
 <dd>
-<div class="block">Match on types with satisfy the given predicate.</div>
+<div class="block">Match on types that satisfy the given predicate.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html#onClass-com.google.errorprone.predicates.TypePredicate-">onClass(TypePredicate)</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.StaticMethodMatcher</a></dt>
 <dd>
-<div class="block">Match on types with satisfy the given predicate.</div>
+<div class="block">Match on types that satisfy the given predicate.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html#onClass-java.lang.String-">onClass(String)</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.StaticMethodMatcher</a></dt>
 <dd>
@@ -6026,6 +6031,10 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/Signatures.html#prettyMethodSignature-com.sun.tools.javac.code.Symbol.ClassSymbol-com.sun.tools.javac.code.Symbol.MethodSymbol-">prettyMethodSignature(Symbol.ClassSymbol, Symbol.MethodSymbol)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Signatures.html" title="class in com.google.errorprone.util">Signatures</a></dt>
 <dd>
 <div class="block">Pretty-prints a method signature for use in diagnostics.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#prettyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Type-">prettyType(VisitorState, SuggestedFix.Builder, Type)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Pretty-prints a Type for use in fixes, qualifying any enclosed type names using <a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol-"><code>SuggestedFixes.qualifyType(com.google.errorprone.VisitorState, com.google.errorprone.fixes.SuggestedFix.Builder, com.sun.tools.javac.code.Symbol)</code></a>}.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/Signatures.html#prettyType-com.sun.tools.javac.code.Type-">prettyType(Type)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Signatures.html" title="class in com.google.errorprone.util">Signatures</a></dt>
 <dd>
@@ -6701,6 +6710,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ImportPolicy.html#staticReference-com.google.errorprone.refaster.Inliner-java.lang.CharSequence-java.lang.CharSequence-java.lang.CharSequence-">staticReference(Inliner, CharSequence, CharSequence, CharSequence)</a></span> - Method in enum com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ImportPolicy.html" title="enum in com.google.errorprone.refaster">ImportPolicy</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">StreamResourceLeak</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html#StreamResourceLeak--">StreamResourceLeak()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">StreamToString</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamToString.html#StreamToString--">StreamToString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns">StreamToString</a></dt>
@@ -6925,6 +6938,10 @@
 <dt><a href="com/google/errorprone/bugpatterns/ThreadJoinLoop.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ThreadJoinLoop</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThreadJoinLoop.html#ThreadJoinLoop--">ThreadJoinLoop()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThreadJoinLoop.html" title="class in com.google.errorprone.bugpatterns">ThreadJoinLoop</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ThreadLocalUsage.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ThreadLocalUsage</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThreadLocalUsage.html#ThreadLocalUsage--">ThreadLocalUsage()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThreadLocalUsage.html" title="class in com.google.errorprone.bugpatterns">ThreadLocalUsage</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">threadSafeInstantiation(Set&lt;String&gt;, AnnotationInfo, Type)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>

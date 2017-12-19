@@ -95,9 +95,6 @@ __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 __[EqualsReference](bugpattern/EqualsReference)__<br>
 == must be used in equals method to check equality to itself or an infinite loop will occur.
 
-__[FilesLinesLeak](bugpattern/FilesLinesLeak)__<br>
-The stream returned by Files.lines should be closed using try-with-resources
-
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class, or from an override of the method
 
@@ -298,6 +295,9 @@ This method must be called with an even number of arguments.
 
 __[SizeGreaterThanOrEqualsZero](bugpattern/SizeGreaterThanOrEqualsZero)__<br>
 Comparison of a size &gt;= 0 is always true, did you intend to check for non-emptiness?
+
+__[StreamResourceLeak](bugpattern/StreamResourceLeak)__<br>
+Streams that encapsulate a closeable resource should be closed using try-with-resources
 
 __[StreamToString](bugpattern/StreamToString)__<br>
 Calling toString on a Stream does not provide useful information
@@ -546,6 +546,9 @@ Synchronizing on non-final fields is not safe: if the field is ever updated, dif
 
 __[ThreadJoinLoop](bugpattern/ThreadJoinLoop)__<br>
 Thread.join needs to be surrounded by a loop until it succeeds, as in Uninterruptibles.joinUninterruptibly.
+
+__[ThreadLocalUsage](bugpattern/ThreadLocalUsage)__<br>
+ThreadLocals should be be stored in static fields
 
 __[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
 Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.

@@ -118,13 +118,14 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns">FilesLinesLeak</a>, <a href="../../../../com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dd>
+<dd><a href="../../../../com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a>, <a href="../../../../com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public abstract class <span class="typeNameLabel">AbstractMustBeClosedChecker</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></pre>
-<div class="block">An abstract check for resources that must be closed; used by <a href="../../../../com/google/errorprone/bugpatterns/FilesLinesLeak.html" title="class in com.google.errorprone.bugpatterns"><code>FilesLinesLeak</code></a> and <a href="../../../../com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns"><code>MustBeClosedChecker</code></a>.</div>
+<div class="block">An abstract check for resources that must be closed; used by <a href="../../../../com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns"><code>StreamResourceLeak</code></a> and
+ <a href="../../../../com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns"><code>MustBeClosedChecker</code></a>.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker">Serialized Form</a></dd>
@@ -200,13 +201,13 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" 
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">addFix</a></span>(<a href="../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;description,
-      com.sun.source.tree.Tree&nbsp;tree,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">addFix</a></span>(<a href="../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;description,
+      com.sun.source.tree.ExpressionTree&nbsp;tree,
       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected <a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">matchNewClassOrMethodInvocation</a></span>(com.sun.source.tree.Tree&nbsp;tree,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matchNewClassOrMethodInvocation</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
                                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Check that constructors and methods annotated with <a href="../../../../com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> occur within the
  resource variable initializer of a try-with-resources statement.</div>
@@ -275,26 +276,26 @@ extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" 
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="matchNewClassOrMethodInvocation-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
+<a name="matchNewClassOrMethodInvocation-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>matchNewClassOrMethodInvocation</h4>
-<pre>protected&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchNewClassOrMethodInvocation(com.sun.source.tree.Tree&nbsp;tree,
+<pre>protected&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree&nbsp;tree,
                                                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Check that constructors and methods annotated with <a href="../../../../com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> occur within the
  resource variable initializer of a try-with-resources statement.</div>
 </li>
 </ul>
-<a name="addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
+<a name="addFix-com.google.errorprone.matchers.Description.Builder-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>addFix</h4>
 <pre>protected&nbsp;void&nbsp;addFix(<a href="../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;description,
-                      com.sun.source.tree.Tree&nbsp;tree,
+                      com.sun.source.tree.ExpressionTree&nbsp;tree,
                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 </li>
 </ul>

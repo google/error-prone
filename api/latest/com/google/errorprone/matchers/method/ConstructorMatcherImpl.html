@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -169,11 +169,17 @@ implements <a href="../../../../../com/google/errorprone/matchers/method/MethodM
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.ConstructorClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ConstructorClassMatcher</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/ConstructorMatcherImpl.html#forClass-com.google.errorprone.predicates.TypePredicate-">forClass</a></span>(<a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;typePredicate)</code>
+<div class="block">Match on types that satisfy the given predicate.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/ConstructorMatcherImpl.html#matches-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matches</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
        <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>protected com.google.common.base.Optional&lt;com.google.errorprone.matchers.method.MatchState&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/ConstructorMatcherImpl.html#matchResult-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matchResult</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
            <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
@@ -232,6 +238,21 @@ implements <a href="../../../../../com/google/errorprone/matchers/method/MethodM
 <h4>matchResult</h4>
 <pre>protected&nbsp;com.google.common.base.Optional&lt;com.google.errorprone.matchers.method.MatchState&gt;&nbsp;matchResult(com.sun.source.tree.ExpressionTree&nbsp;tree,
                                                                                                         <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+</li>
+</ul>
+<a name="forClass-com.google.errorprone.predicates.TypePredicate-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>forClass</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.ConstructorClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ConstructorClassMatcher</a>&nbsp;forClass(<a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;typePredicate)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.ConstructorMatcher.html#forClass-com.google.errorprone.predicates.TypePredicate-">MethodMatchers.ConstructorMatcher</a></code></span></div>
+<div class="block">Match on types that satisfy the given predicate.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.ConstructorMatcher.html#forClass-com.google.errorprone.predicates.TypePredicate-">forClass</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.ConstructorMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ConstructorMatcher</a></code></dd>
+</dl>
 </li>
 </ul>
 <a name="forClass-java.lang.String-">
