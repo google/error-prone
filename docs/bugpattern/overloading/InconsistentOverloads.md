@@ -27,3 +27,5 @@ support he will most likely do it like `foo(bar, "quux", "norf")`. The compiler
 will accept this because the types match perfectly. However, this is clearly a
 bug caused by unintuitive API and method overloading.
 
+## Suppression
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InconsistentOverloads")` to the enclosing element (which is typically the class not the method; see https://github.com/google/error-prone/issues/717).
