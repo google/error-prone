@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "StreamResourceLeak",
+  altNames = "FilesLinesLeak",
   category = JDK,
   summary =
       "Streams that encapsulate a closeable resource should be closed using"
