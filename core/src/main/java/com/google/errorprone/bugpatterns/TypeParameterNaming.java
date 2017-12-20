@@ -42,7 +42,7 @@ import javax.lang.model.element.Name;
 @BugPattern(
   name = "TypeParameterNaming",
   summary =
-      "Type Parameters must be a single letter with a numeric suffix,"
+      "Type parameters must be a single letter with an optional numeric suffix,"
           + " or an UpperCamelCase name followed by the letter 'T'.",
   category = JDK,
   severity = SUGGESTION,
