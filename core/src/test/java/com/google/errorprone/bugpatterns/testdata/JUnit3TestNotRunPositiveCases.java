@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
-import org.junit.Test;
 
 /** @author rburny@google.com (Radoslaw Burny) */
 public class JUnit3TestNotRunPositiveCases extends TestCase {
