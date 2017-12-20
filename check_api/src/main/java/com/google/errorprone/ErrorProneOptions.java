@@ -238,7 +238,7 @@ public class ErrorProneOptions {
       // Strip prefix
       String remaining = arg.substring(SEVERITY_PREFIX.length());
       // Split on ':'
-      String[] parts = remaining.split(":");
+      String[] parts = remaining.split(":", -1);
       if (parts.length > 2 || parts[0].isEmpty()) {
         throw new InvalidCommandLineOptionException("invalid flag: " + arg);
       }

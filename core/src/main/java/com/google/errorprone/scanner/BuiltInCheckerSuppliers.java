@@ -191,6 +191,7 @@ import com.google.errorprone.bugpatterns.StreamResourceLeak;
 import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
+import com.google.errorprone.bugpatterns.StringSplit;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
@@ -586,6 +587,7 @@ public class BuiltInCheckerSuppliers {
           StaticQualifiedUsingExpression.class,
           StaticOrDefaultInterfaceMethod.class,
           StringEquality.class,
+          StringSplit.class,
           SwitchDefault.class,
           TestExceptionChecker.class,
           ThrowsUncheckedException.class,
