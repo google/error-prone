@@ -203,6 +203,7 @@ import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
+import com.google.errorprone.bugpatterns.TypeParameterNaming;
 import com.google.errorprone.bugpatterns.TypeParameterQualifier;
 import com.google.errorprone.bugpatterns.TypeParameterShadowing;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
@@ -588,6 +589,7 @@ public class BuiltInCheckerSuppliers {
           SwitchDefault.class,
           TestExceptionChecker.class,
           ThrowsUncheckedException.class,
+          TypeParameterNaming.class,
           UngroupedOverloads.class,
           UnlockMethodChecker.class,
           UnnecessaryDefaultInEnumSwitch.class,
