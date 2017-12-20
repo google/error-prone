@@ -86,7 +86,7 @@ __OverridesPositiveCase1.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -101,8 +101,6 @@ __OverridesPositiveCase1.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This tests that the a bug is reported when a method override changes the type of a parameter
@@ -192,7 +190,7 @@ __OverridesPositiveCase2.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -207,8 +205,6 @@ __OverridesPositiveCase2.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This tests the case where there is a chain of method overrides where the varargs constraint is
@@ -247,7 +243,7 @@ __OverridesPositiveCase3.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -262,8 +258,6 @@ __OverridesPositiveCase3.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This tests the case where there is a chain of method overrides where the varargs constraint is
@@ -302,7 +296,7 @@ __OverridesPositiveCase4.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -317,9 +311,7 @@ __OverridesPositiveCase4.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 /**
  * Test that the suggested fix is correct in the presence of whitespace, comments.
@@ -354,7 +346,7 @@ __OverridesPositiveCase5.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -369,9 +361,6 @@ __OverridesPositiveCase5.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -404,7 +393,7 @@ __OverridesNegativeCase1.java__
 
 {% highlight java %}
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -493,7 +482,7 @@ __OverridesNegativeCase2.java__
 
 {% highlight java %}
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -507,7 +496,6 @@ __OverridesNegativeCase2.java__
  */
 
 package com.google.errorprone.bugpatterns.testdata;
-
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 public class OverridesNegativeCase2 {
@@ -536,7 +524,7 @@ __OverridesNegativeCase3.java__
 
 {% highlight java %}
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -550,7 +538,6 @@ __OverridesNegativeCase3.java__
  */
 
 package com.google.errorprone.bugpatterns.testdata;
-
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 public class OverridesNegativeCase3 {

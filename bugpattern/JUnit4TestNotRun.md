@@ -25,7 +25,7 @@ __JUnit4TestNotRunPositiveCase1.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ __JUnit4TestNotRunPositiveCase2.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ __JUnit4TestNotRunNegativeCase1.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,7 +117,6 @@ __JUnit4TestNotRunNegativeCase1.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-
 /**
  * Not a JUnit 4 test (no @RunWith annotation on the class).
  *
@@ -132,7 +131,7 @@ __JUnit4TestNotRunNegativeCase2.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,7 +166,7 @@ __JUnit4TestNotRunNegativeCase3.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -227,7 +226,7 @@ __JUnit4TestNotRunNegativeCase4.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -263,7 +262,7 @@ __JUnit4TestNotRunNegativeCase5.java__
 
 {% highlight java %}
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

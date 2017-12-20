@@ -25,7 +25,7 @@ __PreconditionsCheckNotNullPositiveCase1.java__
 
 {% highlight java %}
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2011 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ __PreconditionsCheckNotNullPositiveCase2.java__
 
 {% highlight java %}
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2011 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ __PreconditionsCheckNotNullPositiveCase3.java__
 
 {% highlight java %}
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ __PreconditionsCheckNotNullNegativeCase1.java__
 
 {% highlight java %}
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2011 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -168,7 +168,7 @@ __PreconditionsCheckNotNullNegativeCase2.java__
 
 {% highlight java %}
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2011 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

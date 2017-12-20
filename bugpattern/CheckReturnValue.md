@@ -74,7 +74,7 @@ __CheckReturnValuePositiveCases.java__
 
 {% highlight java %}
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,6 @@ __CheckReturnValuePositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import javax.annotation.CheckReturnValue;
 import org.junit.rules.ExpectedException;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
@@ -249,7 +248,7 @@ __CheckReturnValueNegativeCases.java__
 
 {% highlight java %}
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

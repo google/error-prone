@@ -24,7 +24,7 @@ Suppress false positives by adding the suppression annotation `@SuppressWarnings
 __InstanceOfAndCastMatchWrongTypePositiveCases.java__
 
 {% highlight java %}
-/* Copyright 2016 Google Inc. All Rights Reserved.
+/* Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -202,7 +202,7 @@ class SuperClass {}
 __InstanceOfAndCastMatchWrongTypeNegativeCases.java__
 
 {% highlight java %}
-/* Copyright 2016 Google Inc. All Rights Reserved.
+/* Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

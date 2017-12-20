@@ -25,7 +25,7 @@ __SizeGreaterThanOrEqualsZeroPositiveCases.java__
 
 {% highlight java %}
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,7 +164,7 @@ __SizeGreaterThanOrEqualsZeroNegativeCases.java__
 
 {% highlight java %}
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

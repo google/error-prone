@@ -32,7 +32,7 @@ __JUnit3TestNotRunPositiveCases.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,6 @@ __JUnit3TestNotRunPositiveCases.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
-import org.junit.Test;
 
 /** @author rburny@google.com (Radoslaw Burny) */
 public class JUnit3TestNotRunPositiveCases extends TestCase {
@@ -81,7 +80,7 @@ __JUnit3TestNotRunNegativeCase1.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -154,7 +153,7 @@ __JUnit3TestNotRunNegativeCase2.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -202,7 +201,7 @@ __JUnit3TestNotRunNegativeCase3.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -246,7 +245,7 @@ __JUnit3TestNotRunNegativeCase4.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -287,7 +286,7 @@ __JUnit3TestNotRunNegativeCase5.java__
 
 {% highlight java %}
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

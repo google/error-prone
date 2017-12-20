@@ -793,6 +793,9 @@ The default case of a switch should appear at the end of the last statement grou
 __[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
 Unchecked exceptions do not need to be declared in the method signature.
 
+__[TypeParameterNaming](bugpattern/TypeParameterNaming)__<br>
+Type Parameters must be a single letter with a numeric suffix, or an UpperCamelCase name followed by the letter &#39;T&#39;.
+
 __[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
 Constructors and methods with the same name should appear sequentially with no other code in between
 

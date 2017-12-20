@@ -27,7 +27,7 @@ __EmptyIfStatementPositiveCases.java__
 
 {% highlight java %}
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2011 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ __EmptyIfStatementNegativeCases.java__
 
 {% highlight java %}
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2011 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

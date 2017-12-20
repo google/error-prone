@@ -25,7 +25,7 @@ __PrimitiveArrayPassedToVarargsMethodPositiveCases.java__
 
 {% highlight java %}
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ __PrimitiveArrayPassedToVarargsMethodNegativeCases.java__
 
 {% highlight java %}
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,6 @@ __PrimitiveArrayPassedToVarargsMethodNegativeCases.java__
  */
 
 package com.google.errorprone.bugpatterns.testdata;
-
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 public class PrimitiveArrayPassedToVarargsMethodNegativeCases {
