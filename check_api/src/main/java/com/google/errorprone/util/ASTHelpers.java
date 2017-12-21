@@ -342,6 +342,8 @@ public class ASTHelpers {
       return methodCall.type.getReturnType();
     } else if (expressionTree instanceof JCMethodInvocation) {
       return getReturnType(((JCMethodInvocation) expressionTree).getMethodSelect());
+    } else if (expressionTree instanceof JCMemberReference) {
+      return ((JCMemberReference) expressionTree).sym.type.getReturnType();
     }
     throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
   }

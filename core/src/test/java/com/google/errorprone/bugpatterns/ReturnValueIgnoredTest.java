@@ -118,4 +118,23 @@ public class ReturnValueIgnoredTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void issue876() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.nio.file.Path;",
+            "abstract class Test {",
+            "  void test(Path p) {",
+            "    // BUG: Diagnostic contains:",
+            "    E e = p::toRealPath;",
+            "  }",
+            "  abstract <T> void a(T t);",
+            "  public interface E {",
+            "    void run() throws Exception;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
