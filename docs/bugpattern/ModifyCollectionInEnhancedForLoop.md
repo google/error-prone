@@ -20,7 +20,7 @@ to this:
 
 ```java {.bad}
 for (String id : ids) {
-  if (shouldRemove(it.next())) {
+  if (shouldRemove(id)) {
     ids.remove(id); // will cause a ConcurrentModificationException!
   }
 }

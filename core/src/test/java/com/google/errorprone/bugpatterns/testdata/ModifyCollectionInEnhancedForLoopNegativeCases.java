@@ -76,7 +76,7 @@ public class ModifyCollectionInEnhancedForLoopNegativeCases {
 
   private static void customConcurrent(MyBlockingQueue<Integer> mbq) {
     for (Integer i : mbq) {
-      mbq.remove(i);
+      mbq.add(i);
     }
   }
 }
