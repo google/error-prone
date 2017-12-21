@@ -193,6 +193,7 @@ import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.StringSplit;
+import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
@@ -508,6 +509,7 @@ public class BuiltInCheckerSuppliers {
           ReferenceEquality.class,
           RequiredModifiersChecker.class,
           ShortCircuitBoolean.class,
+          StringSplitter.class,
           DateFormatConstant.class,
           StaticGuardedByInstance.class,
           SynchronizeOnNonFinalField.class,
