@@ -33,6 +33,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -238,17 +239,17 @@ public class ErrorProneOptions {
       // Strip prefix
       String remaining = arg.substring(SEVERITY_PREFIX.length());
       // Split on ':'
-      String[] parts = remaining.split(":");
-      if (parts.length > 2 || parts[0].isEmpty()) {
+      List<String> parts = Splitter.on(':').splitToList(remaining);
+      if (parts.size() > 2 || parts.get(0).isEmpty()) {
         throw new InvalidCommandLineOptionException("invalid flag: " + arg);
       }
-      String checkName = parts[0];
+      String checkName = parts.get(0);
       Severity severity;
-      if (parts.length == 1) {
+      if (parts.size() == 1) {
         severity = Severity.DEFAULT;
       } else { // parts.length == 2
         try {
-          severity = Severity.valueOf(parts[1]);
+          severity = Severity.valueOf(parts.get(1));
         } catch (IllegalArgumentException e) {
           throw new InvalidCommandLineOptionException("invalid flag: " + arg);
         }
