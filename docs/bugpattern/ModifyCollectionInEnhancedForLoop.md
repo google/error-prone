@@ -1,9 +1,10 @@
-From the [Java Collection
-Tutorial](https://docs.oracle.com/javase/tutorial/collections/interfaces/collection.html):
+From the javadoc for
+[`Iterator.remove`](https://docs.oracle.com/javase/9/docs/api/java/util/Iterator.html#remove--):
 
-> Note that `Iterator.remove` is the only safe way to modify a collection during
-> iteration; the behavior is unspecified if the underlying collection is
-> modified in any other way while the iteration is in progress.
+> The behavior of an iterator is unspecified if the underlying collection is
+> modified while the iteration is in progress in any way other than by calling
+> this method, unless an overriding class has specified a concurrent
+> modification policy.
 
 That is, prefer this:
 
