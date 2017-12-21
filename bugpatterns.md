@@ -472,6 +472,9 @@ Not calling fail() when expecting an exception masks bugs
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
 
+__[ModifyCollectionInEnhancedForLoop](bugpattern/ModifyCollectionInEnhancedForLoop)__<br>
+Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown.
+
 __[MultipleParallelOrSequentialCalls](bugpattern/MultipleParallelOrSequentialCalls)__<br>
 Multiple calls to either parallel or sequential are unnecessary and cause confusion.
 
@@ -728,6 +731,9 @@ A static variable or method should be qualified with a class name, not expressio
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
 
+__[StringSplit](bugpattern/StringSplit)__<br>
+String.split should never take only a single argument; it has surprising behavior
+
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
 
@@ -794,7 +800,7 @@ __[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
 Unchecked exceptions do not need to be declared in the method signature.
 
 __[TypeParameterNaming](bugpattern/TypeParameterNaming)__<br>
-Type Parameters must be a single letter with a numeric suffix, or an UpperCamelCase name followed by the letter &#39;T&#39;.
+Type parameters must be a single letter with an optional numeric suffix, or an UpperCamelCase name followed by the letter &#39;T&#39;.
 
 __[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
 Constructors and methods with the same name should appear sequentially with no other code in between

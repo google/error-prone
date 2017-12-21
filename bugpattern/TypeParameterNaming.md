@@ -1,6 +1,6 @@
 ---
 title: TypeParameterNaming
-summary: Type Parameters must be a single letter with a numeric suffix, or an UpperCamelCase name followed by the letter 'T'.
+summary: Type parameters must be a single letter with an optional numeric suffix, or an UpperCamelCase name followed by the letter 'T'.
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
