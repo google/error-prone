@@ -544,6 +544,9 @@ Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 __[StaticGuardedByInstance](bugpattern/StaticGuardedByInstance)__<br>
 Writes to static fields should not be guarded by instance locks
 
+__[StringSplitter](bugpattern/StringSplitter)__<br>
+Prefer Splitter to String.split
+
 __[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
 Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
 
