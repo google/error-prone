@@ -25,6 +25,9 @@ __Error Prone ...__
 ## How it works
 
 ```java
+import java.util.Set;
+import java.util.HashSet;
+
 public class ShortSet {
   public static void main (String[] args) {
     Set<Short> s = new HashSet<>();
