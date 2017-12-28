@@ -117,6 +117,16 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
       }
 
       if (!clash.isEmpty()) {
+
+        // ignore if there are overridden clashing methods in class
+        if (ASTHelpers.findSuperMethod(msym, types).isPresent()
+            && clash
+                .stream()
+                .anyMatch(
+                    methodSymbol -> ASTHelpers.findSuperMethod(methodSymbol, types).isPresent())) {
+          return NO_MATCH;
+        }
+
         String message =
             "When passing lambda arguments to this function, callers will need a cast to"
                 + " disambiguate with: "
