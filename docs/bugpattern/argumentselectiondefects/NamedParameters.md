@@ -64,6 +64,6 @@ there is at least a visual cue that this has happened.
 
 *Commonality with other languages*. Python support for named parameters uses an
 equals sign, and the clang-tidy
-[misc-comment-argument](https://clang.llvm.org/extra/clang-tidy/checks/misc-argument-comment.html)
+[bugprone-argument-comment](https://clang.llvm.org/extra/clang-tidy/checks/bugprone-argument-comment.html)
 check uses block-comments with equals signs.
 
