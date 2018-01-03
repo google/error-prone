@@ -88,6 +88,18 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   // isEmpty() method
   private static final ImmutableTable<String, MethodName, Boolean> CLASSES =
       ImmutableTable.<String, MethodName, Boolean>builder()
+          .put("android.util.LongSparseArray", MethodName.SIZE, false)
+          .put("android.util.LruCache", MethodName.SIZE, false)
+          .put("android.util.SparseArray", MethodName.SIZE, false)
+          .put("android.util.SparseBooleanArray", MethodName.SIZE, false)
+          .put("android.util.SparseIntArray", MethodName.SIZE, false)
+          .put("android.util.SparseLongArray", MethodName.SIZE, false)
+          .put("android.support.v4.util.CircularArray", MethodName.SIZE, true)
+          .put("android.support.v4.util.CircularIntArray", MethodName.SIZE, true)
+          .put("android.support.v4.util.LongSparseArray", MethodName.SIZE, false)
+          .put("android.support.v4.util.LruCache", MethodName.SIZE, false)
+          .put("android.support.v4.util.SimpleArrayMap", MethodName.SIZE, true)
+          .put("android.support.v4.util.SparseArrayCompat", MethodName.SIZE, false)
           .put("com.google.common.collect.FluentIterable", MethodName.SIZE, true)
           .put("com.google.common.collect.Multimap", MethodName.SIZE, true)
           .put("java.io.ByteArrayOutputStream", MethodName.SIZE, false)
