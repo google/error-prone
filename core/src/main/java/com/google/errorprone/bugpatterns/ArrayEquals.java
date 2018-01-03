@@ -48,7 +48,8 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
           + "the contents of the arrays are equal rather than that they are actually the same "
           + "object.  But many commonly used equals methods compare arrays for reference equality "
           + "rather than content equality. These include the instance .equals() method, Guava's "
-          + "com.google.common.base.Objects#equal(), and the JDK's java.util.Objects#equals().\n\n"
+          + "com.google.common.base.Objects#equal(), JDK's java.util.Objects#equals(), and "
+          + "Android's android.support.v4.util.ObjectsCompat#equals.\n\n"
           + "If reference equality is needed, == should be used instead for clarity. Otherwise, "
           + "use java.util.Arrays#equals() to compare the contents of the arrays.",
   category = JDK,
@@ -63,12 +64,17 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
           argument(0, Matchers.<ExpressionTree>isArrayType()));
 
   /**
-   * Matches when the Guava com.google.common.base.Objects#equal or the JDK7
-   * java.util.Objects#equals method is used to compare two arrays.
+   * Matches when the following methods compare two arrays:
+   *
+   * <ul>
+   *   <li>Android android.support.v4.util.ObjectsCompat#equals
+   *   <li>Guava com.google.common.base.Objects#equal
+   *   <li>JDK7 java.util.Objects#equals
    */
   private static final Matcher<MethodInvocationTree> staticEqualsMatcher =
       allOf(
           anyOf(
+              staticMethod().onClass("android.support.v4.util.ObjectsCompat").named("equals"),
               staticMethod().onClass("com.google.common.base.Objects").named("equal"),
               staticMethod().onClass("java.util.Objects").named("equals")),
           argument(0, Matchers.<ExpressionTree>isArrayType()),
