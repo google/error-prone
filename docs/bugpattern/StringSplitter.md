@@ -1,4 +1,4 @@
-`String.split(String)` has surprising behavoiur. For example, consider the
+`String.split(String)` has surprising behavior. For example, consider the
 following puzzler from
 http://konigsberg.blogspot.com/2009/11/final-thoughts-java-puzzler-splitting.html:
 
