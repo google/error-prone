@@ -56,6 +56,12 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
       anyOf(
           allOf(
               staticMethod()
+                  .onClass("android.support.v4.util.ObjectsCompat")
+                  .named("equals")
+                  .withParameters("java.lang.Object", "java.lang.Object"),
+              isSameType(BOOLEAN_TYPE)),
+          allOf(
+              staticMethod()
                   .onClass("java.util.Objects")
                   .named("equals")
                   .withParameters("java.lang.Object", "java.lang.Object"),
