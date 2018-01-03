@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 JUnit4 provides two annotations ([`@BeforeClass`][beforeclass] and
 [`@AfterClass`][afterclass]) that are applied to methods that are run once per
 **test class**. These complement the more-often used `@Before` and `@After`
-which are applied to methods that are run one per **test class**.
+which are applied to methods that are run once per **test method**.
 
 JUnit4 runs `@BeforeClass` and `@AfterClass` methods without making an instance
 of the test class, meaning that the methods must be `static`. JUnit4 will fail

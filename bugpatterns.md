@@ -361,6 +361,9 @@ Mockito cannot mock final classes
 __[CanonicalDuration](bugpattern/CanonicalDuration)__<br>
 Duration can be expressed more clearly with different units
 
+__[CatchFail](bugpattern/CatchFail)__<br>
+Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful
+
 __[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
 Inner class is non-static but does not reference enclosing class
 
@@ -554,7 +557,7 @@ __[ThreadJoinLoop](bugpattern/ThreadJoinLoop)__<br>
 Thread.join needs to be surrounded by a loop until it succeeds, as in Uninterruptibles.joinUninterruptibly.
 
 __[ThreadLocalUsage](bugpattern/ThreadLocalUsage)__<br>
-ThreadLocals should be be stored in static fields
+ThreadLocals should be stored in static fields
 
 __[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
 Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.
@@ -759,6 +762,9 @@ __[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributio
 
 __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
+
+__[LambdaFunctionalInterface](bugpattern/LambdaFunctionalInterface)__<br>
+Use Java&#39;s utility functional interfaces instead of Function&lt;A, B&gt; for primitive types.
 
 __[MethodCanBeStatic](bugpattern/MethodCanBeStatic)__<br>
 A private method that does not reference the enclosing instance can be static
