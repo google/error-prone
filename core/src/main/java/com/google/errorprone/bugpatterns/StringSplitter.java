@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.Regexes.convertRegexToLiteral;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -46,9 +47,7 @@ import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -62,23 +61,21 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
   private static final Matcher<ExpressionTree> MATCHER =
       instanceMethod().onExactClass("java.lang.String").withSignature("split(java.lang.String)");
 
-  /** Pattern that matches strings that are probably regexes. */
-  private static final Pattern REGEX_REGEX =
-      Pattern.compile(
-          Stream.of(
-                  ".", "+", "*", "\\d", "\\D", "\\s", "\\S", "\\w", "\\W", "[", "]", "\\p{", "^",
-                  "$", "\\b", "\\B", "\\A", "\\G", "\\Z", "\\z", "X?", "X*", "X+", "X{", "|", "(",
-                  ")")
-              .map(Pattern::quote)
-              .collect(Collectors.joining("|")));
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
     String value = ASTHelpers.constValue(getOnlyElement(tree.getArguments()), String.class);
-    boolean maybeRegex = value != null && REGEX_REGEX.matcher(value).find();
+    boolean maybeRegex = false;
+    if (value != null) {
+      Optional<String> regexAsLiteral = convertRegexToLiteral(value);
+      if (regexAsLiteral.isPresent()) {
+        value = regexAsLiteral.get();
+      } else {
+        maybeRegex = true;
+      }
+    }
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof EnhancedForLoopTree
         && ((EnhancedForLoopTree) parent).getExpression().equals(tree)) {
@@ -96,7 +93,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     if (!varTree.getInitializer().equals(tree)) {
       return NO_MATCH;
     }
-    VarSymbol sym = ASTHelpers.getSymbol((VariableTree) parent);
+    VarSymbol sym = ASTHelpers.getSymbol(varTree);
     TreePath enclosing = findEnclosing(state);
     if (enclosing == null) {
       return NO_MATCH;
@@ -161,10 +158,10 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
       }
     }
     if (needsList[0]) {
-      fix.replace(((VariableTree) parent).getType(), "List<String>").addImport("java.util.List");
+      fix.replace((varTree).getType(), "List<String>").addImport("java.util.List");
       replaceWithSplitter(fix, tree, state, "splitToList", maybeRegex);
     } else {
-      fix.replace(((VariableTree) parent).getType(), "Iterable<String>");
+      fix.replace((varTree).getType(), "Iterable<String>");
       replaceWithSplitter(fix, tree, state, "split", maybeRegex);
     }
     return describeMatch(tree, fix.build());
