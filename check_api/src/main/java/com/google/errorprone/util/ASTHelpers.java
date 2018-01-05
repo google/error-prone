@@ -1052,7 +1052,9 @@ public class ASTHelpers {
 
           @Override
           public Type visitReturn(ReturnTree node, Void unused) {
-            return getType(findEnclosingNode(parent, MethodTree.class).getReturnType());
+            // TODO(cushon): handle lambdas
+            MethodTree methodTree = findEnclosingNode(parent, MethodTree.class);
+            return methodTree != null ? getType(methodTree.getReturnType()) : null;
           }
 
           @Override

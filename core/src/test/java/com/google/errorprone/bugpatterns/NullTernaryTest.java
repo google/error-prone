@@ -78,4 +78,18 @@ public class NullTernaryTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void lambdas() throws IOException {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  Function<Boolean, Integer> s = b -> {",
+            "    return b ? 0 : null;",
+            "  };",
+            "}")
+        .doTest();
+  }
 }
