@@ -588,6 +588,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#ASTHelpers--">ASTHelpers()</a></span> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util"><span class="typeNameLink">ASTHelpers.TargetType</span></a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
+<dd>
+<div class="block">An expression's target type, see <a href="com/google/errorprone/util/ASTHelpers.html#targetType-com.google.errorprone.VisitorState-"><code>ASTHelpers.targetType(com.google.errorprone.VisitorState)</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Refaster.html#asVarargs-T-">asVarargs(T)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Refaster.html" title="class in com.google.errorprone.refaster">Refaster</a></dt>
 <dd>
 <div class="block">Indicates that Refaster should treat this <code>@Repeated</code> argument specifically as a varargs
@@ -1471,6 +1475,10 @@
 <dd>
 <div class="block">Use of this string as an expression in a member select will cause this method select to be
  inlined as an identifier.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/Regexes.html#convertRegexToLiteral-java.lang.String-">convertRegexToLiteral(String)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Regexes.html" title="class in com.google.errorprone.util">Regexes</a></dt>
+<dd>
+<div class="block">If the given regexes matches exactly one string, returns that string.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/names/NamingConventions.html#convertToLowerUnderscore-java.lang.String-">convertToLowerUnderscore(String)</a></span> - Static method in class com.google.errorprone.names.<a href="com/google/errorprone/names/NamingConventions.html" title="class in com.google.errorprone.names">NamingConventions</a></dt>
 <dd>&nbsp;</dd>
@@ -4026,8 +4034,6 @@
 <dd>
 <div class="block">Returns an <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> explaining whether the type is threadsafe.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-com.google.common.collect.ImmutableSet-com.sun.tools.javac.code.Type-">isThreadSafeType(ImmutableSet&lt;String&gt;, Type)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isTransient--">isTransient()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node that is transient.</div>
@@ -5992,6 +5998,8 @@
 <dd>
 <div class="block">The list of steps in the explanation.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.TargetType.html#path--">path()</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPattern.StandardTags.html#PERFORMANCE">PERFORMANCE</a></span> - Static variable in class com.google.errorprone.<a href="com/google/errorprone/BugPattern.StandardTags.html" title="class in com.google.errorprone">BugPattern.StandardTags</a></dt>
 <dd>
 <div class="block">This check detects a potential performance issue, where an easily-identifiable replacement
@@ -6280,6 +6288,12 @@
 <dd>
 <div class="block">Returns true if the tree references its enclosing class.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/Regexes.html" title="class in com.google.errorprone.util"><span class="typeNameLink">Regexes</span></a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
+<dd>
+<div class="block">Utilities for checks that work with regexes.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/Regexes.html#Regexes--">Regexes()</a></span> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/Regexes.html" title="class in com.google.errorprone.util">Regexes</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/apply/ImportStatements.html#remove-java.lang.String-">remove(String)</a></span> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportStatements.html" title="class in com.google.errorprone.apply">ImportStatements</a></dt>
 <dd>
 <div class="block">Remove an import from the list of imports.</div>
@@ -6919,6 +6933,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/DocGenTool.TargetEnumConverter.html#TargetEnumConverter--">TargetEnumConverter()</a></span> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/DocGenTool.TargetEnumConverter.html" title="class in com.google.errorprone">DocGenTool.TargetEnumConverter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#targetType-com.google.errorprone.VisitorState-">targetType(VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the target type of the tree at the given <a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>null</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.TargetType.html#TargetType--">TargetType()</a></span> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster"><span class="typeNameLink">Template</span></a>&lt;<a href="com/google/errorprone/refaster/Template.html" title="type parameter in Template">M</a> extends <a href="com/google/errorprone/refaster/TemplateMatch.html" title="class in com.google.errorprone.refaster">TemplateMatch</a>&gt; - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
 <div class="block">Abstract superclass for templates that can be used to search and replace in a Java syntax tree.</div>
@@ -6986,15 +7006,11 @@
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
  type arguments where required by its annotation's containerOf element.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeInstantiation-com.google.common.collect.ImmutableSet-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">threadSafeInstantiation(ImmutableSet&lt;String&gt;, AnnotationInfo, Type)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">ThreadSafety</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
 <div class="block">A class which gives information about the annotation of types; if a type isn't annotated, <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> gives information as to why it is not.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#ThreadSafety-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes-java.util.Set-java.util.Set-java.lang.Class-java.lang.Class-">ThreadSafety(VisitorState, ThreadSafety.KnownTypes, Set&lt;String&gt;, Set&lt;String&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;)</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#ThreadSafety-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes-com.google.common.collect.ImmutableSet-com.google.common.collect.ImmutableSet-java.lang.Class-java.lang.Class-">ThreadSafety(VisitorState, ThreadSafety.KnownTypes, ImmutableSet&lt;String&gt;, ImmutableSet&lt;String&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;)</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">ThreadSafety.KnownTypes</span></a> - Interface in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
@@ -7007,8 +7023,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeTypeParameterSetInScope-com.sun.tools.javac.code.Symbol-">threadSafeTypeParameterSetInScope(Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">This method only exists to make a non-binary-compatible change to the <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeTypeParametersInScope-com.sun.tools.javac.code.Symbol-"><code>ThreadSafety.threadSafeTypeParametersInScope(com.sun.tools.javac.code.Symbol)</code></a> return value. It will be removed once we can safely
-     change that method's return value.</span></div>
+<div class="block"><span class="deprecationComment">This method only exists to make a non-binary-compatible change to the <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeTypeParametersInScope-com.sun.tools.javac.code.Symbol-"><code>ThreadSafety.threadSafeTypeParametersInScope(com.sun.tools.javac.code.Symbol)</code></a> return value. It will be removed once all callers have
+     been updated.</span></div>
 </div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeTypeParametersInScope-com.sun.tools.javac.code.Symbol-">threadSafeTypeParametersInScope(Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
@@ -7157,6 +7173,8 @@
 <div class="block">Whether this is a positive or negative example.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html#type--">type()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html" title="class in com.google.errorprone.refaster">UTypeVar.TypeWithExpression</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.TargetType.html#type--">type()</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#typeCast-com.google.errorprone.matchers.Matcher-com.google.errorprone.matchers.Matcher-">typeCast(Matcher&lt;Tree&gt;, Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
