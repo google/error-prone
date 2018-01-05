@@ -20,7 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -30,8 +32,10 @@ import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -43,11 +47,13 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Flags;
@@ -998,5 +1004,91 @@ public class ASTHelpers {
             },
             null);
     return suppressions.build();
+  }
+
+  /** An expression's target type, see {@link #targetType}. */
+  @AutoValue
+  public abstract static class TargetType {
+    public abstract Type type();
+
+    public abstract TreePath path();
+
+    static TargetType create(Type type, TreePath path) {
+      return new AutoValue_ASTHelpers_TargetType(type, path);
+    }
+  }
+
+  /**
+   * Returns the target type of the tree at the given {@link VisitorState}'s path, or else {@code
+   * null}.
+   *
+   * <p>For example, the target type of an assignment expression is the variable's type, and the
+   * target type of a return statement is the enclosing method's type.
+   */
+  @Nullable
+  public static TargetType targetType(VisitorState state) {
+    TreePath path = state.getPath();
+    TreePath prev = null;
+    do {
+      prev = path;
+      path = path.getParentPath();
+    } while (path != null && path.getLeaf().getKind() == Kind.PARENTHESIZED);
+    if (path == null) {
+      return null;
+    }
+    TreePath current = prev;
+    TreePath parent = path;
+    Type type =
+        new TreeScanner<Type, Void>() {
+          @Override
+          public Type visitAssignment(AssignmentTree node, Void unused) {
+            return getType(node.getVariable());
+          }
+
+          @Override
+          public Type visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
+            return getType(node.getVariable());
+          }
+
+          @Override
+          public Type visitReturn(ReturnTree node, Void unused) {
+            return getType(findEnclosingNode(parent, MethodTree.class).getReturnType());
+          }
+
+          @Override
+          public Type visitVariable(VariableTree node, Void unused) {
+            return getType(node.getType());
+          }
+
+          @Override
+          public Type visitBinary(BinaryTree tree, Void unused) {
+            return ASTHelpers.getType(
+                tree.getLeftOperand().equals(current.getLeaf())
+                    ? tree.getRightOperand()
+                    : tree.getLeftOperand());
+          }
+
+          @Override
+          public Type visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+            int idx = tree.getArguments().indexOf(current.getLeaf());
+            if (idx == -1) {
+              return null;
+            }
+            MethodSymbol sym = ASTHelpers.getSymbol(tree);
+            if (sym.getParameters().size() <= idx) {
+              Preconditions.checkState(sym.isVarArgs());
+              idx = sym.getParameters().size() - 1;
+            }
+            Type type = sym.getParameters().get(idx).asType();
+            if (sym.isVarArgs() && idx == sym.getParameters().size() - 1) {
+              type = state.getTypes().elemtype(type);
+            }
+            return type;
+          }
+        }.scan(parent.getLeaf(), null);
+    if (type == null) {
+      return null;
+    }
+    return TargetType.create(type, parent);
   }
 }
