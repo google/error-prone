@@ -149,6 +149,6 @@ public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMa
       return Optional.empty();
     }
     return Optional.of(
-        String.format("%s.isNan(%s)", name, state.getSourceForNode(tree.getLeftOperand())));
+        String.format("%s.isNaN(%s)", name, state.getSourceForNode(tree.getLeftOperand())));
   }
 }
