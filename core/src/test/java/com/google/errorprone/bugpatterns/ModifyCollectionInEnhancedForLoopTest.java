@@ -41,4 +41,23 @@ public class ModifyCollectionInEnhancedForLoopTest {
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("ModifyCollectionInEnhancedForLoopNegativeCases.java").doTest();
   }
+
+  @Test
+  public void modifyCollectionInItself() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.AbstractCollection;",
+            "import java.util.Collection;",
+            "abstract class Test<E> extends AbstractCollection<E> {",
+            "  public boolean addAll(Collection<? extends E> c) {",
+            "    boolean modified = false;",
+            "    for (E e : c)",
+            "      if (add(e))",
+            "        modified = true;",
+            "    return modified;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
