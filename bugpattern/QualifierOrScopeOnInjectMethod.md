@@ -43,7 +43,7 @@ class SomeModule extends AbstractModule {
 Qualifier annotations (annotations that are themselves annotated with
 `@Qualifier` or `@BindingAnnotation`) are used to distinguish different
 instances of the same type of object (the `@Red Robot` instead of the `@Blue
-robot`). These annotations can be used _inside_ injection points, or on those
+Robot`). These annotations can be used _inside_ injection points, or on those
 provider methods:
 
 ```java

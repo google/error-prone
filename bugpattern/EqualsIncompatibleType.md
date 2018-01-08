@@ -192,6 +192,11 @@ __EqualsIncompatibleTypePositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /** @author avenet@google.com (Arnaud J. Venet) */
 public class EqualsIncompatibleTypePositiveCases {
   class A {}
@@ -280,6 +285,54 @@ public class EqualsIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains: incompatible types
     com.google.common.base.Objects.equal(mm, m);
   }
+
+  void collectionsWithGenericMismatches(
+      List<String> stringList,
+      List<Integer> intList,
+      Set<String> stringSet,
+      Set<Integer> intSet,
+      ImmutableList<String> stringImmutableList) {
+
+    // BUG: Diagnostic contains: incompatible types
+    stringList.equals(intList);
+
+    // BUG: Diagnostic contains: incompatible types
+    stringSet.equals(intSet);
+
+    // BUG: Diagnostic contains: incompatible types
+    stringList.equals(stringSet);
+
+    // BUG: Diagnostic contains: incompatible types
+    intList.equals(stringImmutableList);
+  }
+
+  void mapKeyChecking(
+      Map<String, Integer> stringIntegerMap,
+      Map<Integer, String> integerStringMap,
+      Map<List<String>, Set<String>> stringListSetMap,
+      Map<List<String>, Set<Integer>> intListSetMap) {
+    // BUG: Diagnostic contains: incompatible types
+    stringIntegerMap.equals(integerStringMap);
+
+    // BUG: Diagnostic contains: incompatible types
+    stringListSetMap.equals(intListSetMap);
+  }
+
+  void nestedColls(Set<List<String>> setListString, Set<List<Integer>> setListInteger) {
+    // BUG: Diagnostic contains: String and Integer are incompatible
+    boolean equals = setListString.equals(setListInteger);
+  }
+
+  class MyGenericClazz<T> {}
+
+  <T extends I> void testSomeGenerics(
+      MyGenericClazz<String> strClazz, MyGenericClazz<Integer> intClazz, MyGenericClazz<T> iClazz) {
+    // BUG: Diagnostic contains: String and Integer are incompatible
+    strClazz.equals(intClazz);
+
+    // BUG: Diagnostic contains: T and String are incompatible
+    iClazz.equals(strClazz);
+  }
 }
 {% endhighlight %}
 
@@ -304,6 +357,11 @@ __EqualsIncompatibleTypeNegativeCases.java__
  */
 
 package com.google.errorprone.bugpatterns.testdata;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import java.util.List;
+import java.util.Set;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 public class EqualsIncompatibleTypeNegativeCases {
@@ -420,7 +478,8 @@ public class EqualsIncompatibleTypeNegativeCases {
 
   class E3 extends E2 {}
 
-  void checkEqualsIE1E2E3(I e, E1 e1, E2 e2, E3 e3) {
+  void checkEqualsIE1E2E3(
+      I e, E1 e1, E2 e2, E3 e3, List<I> eList, List<E1> e1List, List<E2> e2List) {
     e.equals(e);
     e.equals(e1);
     e.equals(e2);
@@ -444,6 +503,32 @@ public class EqualsIncompatibleTypeNegativeCases {
     e3.equals(e2);
     e3.equals(e3);
     e3.equals(null);
+
+    eList.equals(e1List);
+    eList.equals(e2List);
+    eList.equals(null);
+
+    e1List.equals(eList);
+    e1List.equals(e2List);
+    e1List.equals(null);
+
+    e2List.equals(eList);
+    e2List.equals(e1List);
+    e2List.equals(null);
+  }
+
+  void collectionStuff(
+      List rawList,
+      List<String> stringList,
+      Set<String> stringSet,
+      ImmutableSet<String> immutableStringSet,
+      ImmutableList<String> immutableStringList) {
+
+    // With raw types, we can't be sure. So... /shrug
+    rawList.equals(stringList);
+
+    stringSet.equals(immutableStringSet);
+    stringList.equals(immutableStringList);
   }
 
   interface J {}

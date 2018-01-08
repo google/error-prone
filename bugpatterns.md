@@ -74,6 +74,9 @@ Non-compile-time constant expression passed to parameter with @CompileTimeConsta
 __[ComplexBooleanConstant](bugpattern/ComplexBooleanConstant)__<br>
 Non-trivial compile time constant boolean expressions shouldn&#39;t be used.
 
+__[ConditionalExpressionNumericPromotion](bugpattern/ConditionalExpressionNumericPromotion)__<br>
+A conditional expression with numeric operands of differing types will perform binary numeric promotion of the operands; when these operands are of reference types, the expression&#39;s result may not be of the expected type.
+
 __[ConstantOverflow](bugpattern/ConstantOverflow)__<br>
 Compile-time constant expression overflows
 
