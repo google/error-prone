@@ -84,11 +84,26 @@ public class NullTernaryTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
             "class Test {",
-            "  Function<Boolean, Integer> s = b -> {",
-            "    return b ? 0 : null;",
-            "  };",
+            "  interface I {",
+            "    int f();",
+            "  }",
+            "  interface J {",
+            "    Integer f();",
+            "  }",
+            "  interface K<X> {",
+            "    X f();",
+            "  }",
+            "  void f(boolean b) {",
+            "    // BUG: Diagnostic contains:",
+            "    I i = () -> { return b ? null : 1; };",
+            "    J j = () -> { return b ? null : 1; };",
+            "    K<Integer> k = () -> { return b ? null : 1; };",
+            "    // BUG: Diagnostic contains:",
+            "    i = () -> b ? null : 1;",
+            "    j = () -> b ? null : 1;",
+            "    k = () -> b ? null : 1;",
+            "  }",
             "}")
         .doTest();
   }

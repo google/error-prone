@@ -38,6 +38,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -1051,10 +1052,27 @@ public class ASTHelpers {
           }
 
           @Override
+          public Type visitLambdaExpression(
+              LambdaExpressionTree lambdaExpressionTree, Void unused) {
+            return state
+                .getTypes()
+                .findDescriptorType(getType(lambdaExpressionTree))
+                .getReturnType();
+          }
+
+          @Override
           public Type visitReturn(ReturnTree node, Void unused) {
-            // TODO(cushon): handle lambdas
-            MethodTree methodTree = findEnclosingNode(parent, MethodTree.class);
-            return methodTree != null ? getType(methodTree.getReturnType()) : null;
+            for (TreePath path = parent; path != null; path = path.getParentPath()) {
+              Tree enclosing = path.getLeaf();
+              switch (enclosing.getKind()) {
+                case METHOD:
+                  return getType(((MethodTree) enclosing).getReturnType());
+                case LAMBDA_EXPRESSION:
+                  return visitLambdaExpression((LambdaExpressionTree) enclosing, null);
+                default: // fall out
+              }
+            }
+            throw new AssertionError("return not enclosed by method or lambda");
           }
 
           @Override
