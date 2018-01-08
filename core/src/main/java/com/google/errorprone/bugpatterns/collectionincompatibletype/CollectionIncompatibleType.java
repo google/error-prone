@@ -29,6 +29,8 @@ import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
+import com.google.errorprone.bugpatterns.EqualsIncompatibleType.TypeCompatibilityReport;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -149,8 +151,10 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
     MatchResult result = MoreObjects.firstNonNull(directResult, typeArgResult);
 
     Types types = state.getTypes();
-    if (types.isCastable(
-        result.sourceType(), types.erasure(ASTHelpers.getUpperBound(result.targetType(), types)))) {
+    TypeCompatibilityReport compatibilityReport =
+        EqualsIncompatibleType.compatibilityOfTypes(
+            result.targetType(), result.sourceType(), state);
+    if (compatibilityReport.compatible()) {
       return Description.NO_MATCH;
     }
 

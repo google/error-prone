@@ -16,6 +16,11 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /** @author avenet@google.com (Arnaud J. Venet) */
 public class EqualsIncompatibleTypePositiveCases {
   class A {}
@@ -103,5 +108,53 @@ public class EqualsIncompatibleTypePositiveCases {
     com.google.common.base.Objects.equal(m, mm);
     // BUG: Diagnostic contains: incompatible types
     com.google.common.base.Objects.equal(mm, m);
+  }
+
+  void collectionsWithGenericMismatches(
+      List<String> stringList,
+      List<Integer> intList,
+      Set<String> stringSet,
+      Set<Integer> intSet,
+      ImmutableList<String> stringImmutableList) {
+
+    // BUG: Diagnostic contains: incompatible types
+    stringList.equals(intList);
+
+    // BUG: Diagnostic contains: incompatible types
+    stringSet.equals(intSet);
+
+    // BUG: Diagnostic contains: incompatible types
+    stringList.equals(stringSet);
+
+    // BUG: Diagnostic contains: incompatible types
+    intList.equals(stringImmutableList);
+  }
+
+  void mapKeyChecking(
+      Map<String, Integer> stringIntegerMap,
+      Map<Integer, String> integerStringMap,
+      Map<List<String>, Set<String>> stringListSetMap,
+      Map<List<String>, Set<Integer>> intListSetMap) {
+    // BUG: Diagnostic contains: incompatible types
+    stringIntegerMap.equals(integerStringMap);
+
+    // BUG: Diagnostic contains: incompatible types
+    stringListSetMap.equals(intListSetMap);
+  }
+
+  void nestedColls(Set<List<String>> setListString, Set<List<Integer>> setListInteger) {
+    // BUG: Diagnostic contains: String and Integer are incompatible
+    boolean equals = setListString.equals(setListInteger);
+  }
+
+  class MyGenericClazz<T> {}
+
+  <T extends I> void testSomeGenerics(
+      MyGenericClazz<String> strClazz, MyGenericClazz<Integer> intClazz, MyGenericClazz<T> iClazz) {
+    // BUG: Diagnostic contains: String and Integer are incompatible
+    strClazz.equals(intClazz);
+
+    // BUG: Diagnostic contains: T and String are incompatible
+    iClazz.equals(strClazz);
   }
 }

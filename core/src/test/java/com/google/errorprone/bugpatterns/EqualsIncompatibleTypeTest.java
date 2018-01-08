@@ -44,6 +44,11 @@ public class EqualsIncompatibleTypeTest {
   }
 
   @Test
+  public void testNegativeCase_recursive() throws Exception {
+    compilationHelper.addSourceFile("EqualsIncompatibleTypeRecursiveTypes.java").doTest();
+  }
+
+  @Test
   public void testPrimitiveBoxingIntoObject() throws Exception {
     compilationHelper
         .addSourceLines(

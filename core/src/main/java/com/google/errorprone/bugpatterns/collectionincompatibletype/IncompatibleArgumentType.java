@@ -26,6 +26,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompatibleWith;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
@@ -110,11 +111,13 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
       }
       ExpressionTree argument = arguments.get(i);
       Type argType = ASTHelpers.getType(argument);
-      if (requiredType.type() != null
-          && !types.isCastable(
-              argType, types.erasure(ASTHelpers.getUpperBound(requiredType.type(), types)))) {
+      if (requiredType.type() != null) {
         // Report a violation for this type
-        state.reportMatch(describeViolation(argument, argType, requiredType.type(), types));
+        EqualsIncompatibleType.TypeCompatibilityReport report =
+            EqualsIncompatibleType.compatibilityOfTypes(requiredType.type(), argType, state);
+        if (!report.compatible()) {
+          state.reportMatch(describeViolation(argument, argType, requiredType.type(), types));
+        }
       }
     }
   }

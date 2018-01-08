@@ -26,7 +26,11 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -37,12 +41,17 @@ import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.util.Name;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
@@ -110,7 +119,9 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
       argumentType = ASTHelpers.getType(invocationTree.getArguments().get(0));
     }
 
-    if (!incompatibleTypes(receiverType, argumentType, state)) {
+    TypeCompatibilityReport compatibilityReport =
+        compatibilityOfTypes(receiverType, argumentType, state);
+    if (compatibilityReport.compatible()) {
       return Description.NO_MATCH;
     }
 
@@ -129,13 +140,32 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     // programmer's intent. Hence, this is reported as an error. There is no sensible fix to suggest
     // in this situation.
     return buildDescription(invocationTree)
-        .setMessage(getMessage(invocationTree, receiverType, argumentType))
+        .setMessage(
+            getMessage(
+                invocationTree,
+                receiverType,
+                argumentType,
+                compatibilityReport.lhs(),
+                compatibilityReport.rhs(),
+                state))
         .build();
   }
 
-  static boolean incompatibleTypes(Type receiverType, Type argumentType, final VisitorState state) {
+  public static TypeCompatibilityReport compatibilityOfTypes(
+      Type receiverType, Type argumentType, VisitorState state) {
+    return compatibilityOfTypes(
+        receiverType, argumentType, new HashSet<>(), new HashSet<>(), state);
+  }
+
+  public static TypeCompatibilityReport compatibilityOfTypes(
+      Type receiverType,
+      Type argumentType,
+      Set<Type> previousReceiverTypes,
+      Set<Type> previousArgumentTypes,
+      VisitorState state) {
+
     if (receiverType == null || argumentType == null) {
-      return false;
+      return TypeCompatibilityReport.createCompatibleReport();
     }
 
     // If one type can be cast into the other, we don't flag the equality test.
@@ -143,29 +173,26 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     // 1.6: java.lang.Object can't be cast to primitives
     // 1.7: java.lang.Object can be cast to primitives (implicitly through the boxed primitive type)
     if (ASTHelpers.isCastable(argumentType, receiverType, state)) {
-      return false;
+      return leastUpperBoundGenericMismatch(
+          receiverType, argumentType, previousReceiverTypes, previousArgumentTypes, state);
     }
 
     // Otherwise, we explore the superclasses of the receiver type as well as the interfaces it
     // implements and we collect all overrides of java.lang.Object.equals(). If one of those
     // overrides is inherited by the argument, then we don't flag the equality test.
-    final Types types = state.getTypes();
+    Types types = state.getTypes();
     Predicate<MethodSymbol> equalsPredicate =
-        new Predicate<MethodSymbol>() {
-          @Override
-          public boolean apply(MethodSymbol methodSymbol) {
-            return !methodSymbol.isStatic()
+        methodSymbol ->
+            !methodSymbol.isStatic()
                 && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
                 && types.isSameType(methodSymbol.getReturnType(), state.getSymtab().booleanType)
                 && methodSymbol.getParameters().size() == 1
                 && types.isSameType(
                     methodSymbol.getParameters().get(0).type, state.getSymtab().objectType);
-          }
-        };
-    Name equalsName = state.getName("equals");
     Set<MethodSymbol> overridesOfEquals =
-        ASTHelpers.findMatchingMethods(equalsName, equalsPredicate, receiverType, types);
-    ClassSymbol argumentClass = (ClassSymbol) argumentType.tsym;
+        ASTHelpers.findMatchingMethods(
+            state.getName("equals"), equalsPredicate, receiverType, types);
+    Symbol argumentClass = ASTHelpers.getUpperBound(argumentType, state.getTypes()).tsym;
 
     for (MethodSymbol method : overridesOfEquals) {
       ClassSymbol methodClass = method.enclClass();
@@ -175,25 +202,187 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
         // The type of the argument shares a superclass
         // (other then java.lang.Object or java.lang.Enum) or interface
         // with the receiver that implements an override of java.lang.Object.equals().
-        return false;
+
+        // These should be compatible, but check any generic types for their compatbilities.
+        return leastUpperBoundGenericMismatch(
+            receiverType, argumentType, previousReceiverTypes, previousArgumentTypes, state);
       }
     }
-    return true;
+    return TypeCompatibilityReport.incompatible(receiverType, argumentType);
+  }
+
+  private static TypeCompatibilityReport leastUpperBoundGenericMismatch(
+      Type receiverType,
+      Type argumentType,
+      Set<Type> previousReceiverTypes,
+      Set<Type> previousArgumentTypes,
+      VisitorState state) {
+
+    // Now, see if we can find a generic superclass between the two types, and if so, check the
+    // generic parameters for cast-compatibility:
+
+    // class Super<T> (with an equals() override)
+    // class Bar extends Super<String>
+    // class Foo extends Super<Integer>
+    // Bar and Foo would least-upper-bound to Super, and we compare String and Integer to eachother
+    Type lub = state.getTypes().lub(argumentType, receiverType);
+    // primitives, etc. can't have a common superclass.
+    if (lub.getTag().equals(TypeTag.BOT) || lub.getTag().equals(TypeTag.ERROR)) {
+      return TypeCompatibilityReport.createCompatibleReport();
+    }
+
+    TypeCompatibilityReport compatibilityReport =
+        matchesSubtypeAndIsGenericMismatch(
+            receiverType, argumentType, lub, previousReceiverTypes, previousArgumentTypes, state);
+    if (!compatibilityReport.compatible()) {
+      return compatibilityReport;
+    }
+
+    // Collection, Set, and List is unfortunate since List<String> and Set<String> have a lub class
+    // of Collection<String>, but Set and List are incompatible with eachother due to their own
+    // equality declarations. Since they're all interfaces, however, they're technically
+    // cast-compatible to eachother.
+    //
+    // We want to disallow equality between these collection sub-interfaces, but *do* want to
+    // allow equality between Collection and List. So, here's my attempt to express that cleanly.
+    //
+    // There are likely other type hierarchies where this situation occurs, but this one is the
+    // most common.
+    Type collectionType = state.getTypeFromString("java.util.Collection");
+    if (ASTHelpers.isSameType(lub, collectionType, state)
+        && !ASTHelpers.isSameType(receiverType, collectionType, state)
+        && !ASTHelpers.isSameType(argumentType, collectionType, state)) {
+      // Here, the LHS and RHS are disjoint collection types (List, Set, Multiset, etc.)
+      // (if they were both of one subtype, the lub wouldn't be Collection directly)
+      // So consider them incompatible with eachother.
+      return TypeCompatibilityReport.incompatible(receiverType, argumentType);
+    }
+
+    return compatibilityReport;
+  }
+
+  private static TypeCompatibilityReport matchesSubtypeAndIsGenericMismatch(
+      Type receiverType,
+      Type argumentType,
+      Type superType,
+      Set<Type> previousReceiverTypes,
+      Set<Type> previousArgumentTypes,
+      VisitorState state) {
+    List<Type> receiverTypes = typeArgsAsSuper(receiverType, superType, state);
+    List<Type> argumentTypes = typeArgsAsSuper(argumentType, superType, state);
+
+    return Streams.zip(receiverTypes.stream(), argumentTypes.stream(), TypePair::new)
+        // If we encounter an f-bound, skip that index's type when comparing the compatibility of
+        // types to avoid infinite recursion:
+        // interface Super<A extends Super<A, B>, B>
+        // class Foo extends Super<Foo, String>
+        // class Bar extends Super<Bar, Integer>
+        .filter(
+            tp ->
+                !(previousReceiverTypes.contains(tp.receiver)
+                    || tp.receiver.equals(receiverType)
+                    || previousArgumentTypes.contains(tp.argument)
+                    || tp.argument.equals(argumentType)))
+        .map(
+            types ->
+                compatibilityOfTypes(
+                    types.receiver,
+                    types.argument,
+                    Sets.union(previousReceiverTypes, ImmutableSet.of(receiverType)),
+                    Sets.union(previousArgumentTypes, ImmutableSet.of(argumentType)),
+                    state))
+        .filter(tcr -> !tcr.compatible())
+        .findFirst()
+        .orElse(TypeCompatibilityReport.createCompatibleReport());
+  }
+
+  private static final class TypePair {
+    final Type receiver;
+    final Type argument;
+
+    TypePair(Type receiver, Type argument) {
+      this.receiver = receiver;
+      this.argument = argument;
+    }
+  }
+
+  private static List<Type> typeArgsAsSuper(Type baseType, Type superType, VisitorState state) {
+    Type projectedType = state.getTypes().asSuper(baseType, superType.tsym);
+    if (projectedType != null) {
+      return projectedType.getTypeArguments();
+    }
+    return new ArrayList<>();
   }
 
   private static String getMessage(
-      MethodInvocationTree invocationTree, Type receiverType, Type argumentType) {
-    String receiverTypeString = Signatures.prettyType(receiverType);
-    String argumentTypeString = Signatures.prettyType(argumentType);
-    if (argumentTypeString.equals(receiverTypeString)) {
-      receiverTypeString = receiverType.toString();
-      argumentTypeString = argumentType.toString();
+      MethodInvocationTree invocationTree,
+      Type receiverType,
+      Type argumentType,
+      Type conflictingReceiverType,
+      Type conflictingArgumentType,
+      VisitorState state) {
+    TypeStringPair typeStringPair = new TypeStringPair(receiverType, argumentType);
+    String baseMessage =
+        "Calling "
+            + ASTHelpers.getSymbol(invocationTree).getSimpleName()
+            + " on incompatible types "
+            + typeStringPair.getReceiverTypeString()
+            + " and "
+            + typeStringPair.getArgumentTypeString();
+
+    // If receiver/argument are incompatible due to a conflict in the generic type, message that out
+    if (!state.getTypes().isSameType(receiverType, conflictingReceiverType)) {
+      TypeStringPair conflictingTypes =
+          new TypeStringPair(conflictingReceiverType, conflictingArgumentType);
+      baseMessage +=
+          ". They are incompatible because "
+              + conflictingTypes.getReceiverTypeString()
+              + " and "
+              + conflictingTypes.getArgumentTypeString()
+              + " are incompatible.";
     }
-    return "Calling "
-        + ASTHelpers.getSymbol(invocationTree).getSimpleName()
-        + " on incompatible types "
-        + receiverTypeString
-        + " and "
-        + argumentTypeString;
+    return baseMessage;
+  }
+
+  @AutoValue
+  public abstract static class TypeCompatibilityReport {
+    public abstract boolean compatible();
+
+    @Nullable
+    public abstract Type lhs();
+
+    @Nullable
+    public abstract Type rhs();
+
+    static TypeCompatibilityReport createCompatibleReport() {
+      return new AutoValue_EqualsIncompatibleType_TypeCompatibilityReport(true, null, null);
+    }
+
+    static TypeCompatibilityReport incompatible(Type lhs, Type rhs) {
+      return new AutoValue_EqualsIncompatibleType_TypeCompatibilityReport(false, lhs, rhs);
+    }
+  }
+
+  public static class TypeStringPair {
+    private String receiverTypeString;
+    private String argumentTypeString;
+
+    public TypeStringPair(Type receiverType, Type argumentType) {
+      receiverTypeString = Signatures.prettyType(receiverType);
+      argumentTypeString = Signatures.prettyType(argumentType);
+      if (argumentTypeString.equals(receiverTypeString)) {
+        receiverTypeString = receiverType.toString();
+        argumentTypeString = argumentType.toString();
+      }
+    }
+
+    public String getReceiverTypeString() {
+      return receiverTypeString;
+    }
+
+    public String getArgumentTypeString() {
+      return argumentTypeString;
+    }
   }
 }
+
