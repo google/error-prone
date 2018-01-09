@@ -59,6 +59,9 @@ public class ConditionalExpressionNumericPromotionTest {
             "  void variableNumber(boolean b) {",
             "    Number obj = b ? Integer.valueOf(0) : Long.valueOf(0);",
             "  }",
+            "  void invokeMethod(boolean b, Number n) {",
+            "    invokeMethod(b, b ? Integer.valueOf(0) : Long.valueOf(0));",
+            "  }",
             "}")
         .addOutputLines(
             "out/Test.java",
@@ -86,6 +89,9 @@ public class ConditionalExpressionNumericPromotionTest {
             "  void variableNumber(boolean b) {",
             "    Number obj = b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));",
             "  }",
+            "  void invokeMethod(boolean b, Number n) {",
+            "    invokeMethod(b, b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0)));",
+            "  }",
             "}")
         .doTest();
   }
@@ -108,6 +114,9 @@ public class ConditionalExpressionNumericPromotionTest {
             "  }",
             "  void variablePrimitive(boolean b) {",
             "    long obj = b ? Integer.valueOf(0) : Long.valueOf(0);",
+            "  }",
+            "  void invokeMethod(boolean b, Long n) {",
+            "    invokeMethod(b, b ? Integer.valueOf(0) : Long.valueOf(0));",
             "  }",
             "}")
         .expectUnchanged()
