@@ -140,7 +140,7 @@ public class ParameterName extends BugChecker
           buildDescription(actual)
               .setMessage(
                   String.format(
-                      "%s does not match parameter name '%s'",
+                      "`%s` does not match formal parameter name `%s`",
                       match.getText(), formal.getSimpleName()))
               .addFix(
                   SuggestedFix.replace(

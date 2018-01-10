@@ -242,7 +242,6 @@ import com.google.errorprone.bugpatterns.android.WakelockReleasedDangerously;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
-import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterChecker;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
@@ -494,7 +493,6 @@ public class BuiltInCheckerSuppliers {
           ModifyCollectionInEnhancedForLoop.class,
           MultipleParallelOrSequentialCalls.class,
           MutableConstantField.class,
-          NamedParameterChecker.class,
           NarrowingCompoundAssignment.class,
           NestedInstanceOfConditions.class,
           NonAtomicVolatileUpdate.class,
