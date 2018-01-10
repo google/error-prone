@@ -225,6 +225,7 @@ import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
 import com.google.errorprone.bugpatterns.UnusedCollectionModifiedInPlace;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
 import com.google.errorprone.bugpatterns.VarChecker;
+import com.google.errorprone.bugpatterns.VarTypeName;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
@@ -439,7 +440,8 @@ public class BuiltInCheckerSuppliers {
           TypeParameterQualifier.class,
           UnnecessaryTypeArgument.class,
           UnusedAnonymousClass.class,
-          UnusedCollectionModifiedInPlace.class);
+          UnusedCollectionModifiedInPlace.class,
+          VarTypeName.class);
 
   /** A list of all checks with severity WARNING that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
