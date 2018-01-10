@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static java.util.stream.Collectors.joining;
 
@@ -79,15 +78,9 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
   public static final MethodNameMatcher ASSERT_WITH_MESSAGE =
       staticMethod().onClass("com.google.common.truth.Truth").named("assertWithMessage");
 
-  public static final MethodNameMatcher TRUTH =
-      instanceMethod()
-          .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
-          .named("fail");
-
   private static final Matcher<StatementTree> FAIL_METHOD =
       expressionStatement(
           anyOf(
-              TRUTH,
               staticMethod().onClass("org.junit.Assert").named("fail"),
               staticMethod().onClass("junit.framework.Assert").named("fail"),
               staticMethod().onClass("junit.framework.TestCase").named("fail")));
@@ -144,9 +137,6 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
           MethodInvocationTree methodInvocationTree =
               (MethodInvocationTree) ((ExpressionStatementTree) statementTree).getExpression();
           String message = null;
-          if (TRUTH.matches(methodInvocationTree, state)) {
-            message = getAssertWithMessageString(methodInvocationTree, state);
-          }
           if (message == null && !methodInvocationTree.getArguments().isEmpty()) {
             message = getMessageOrFormat(methodInvocationTree, state);
           }
@@ -163,20 +153,6 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
 
   // Extract the argument to a call to assertWithMessage, e.g. in:
   // assertWithMessage("message").fail();
-  private String getAssertWithMessageString(
-      MethodInvocationTree methodInvocationTree, VisitorState state) {
-    String[] message = {null};
-    new TreeScanner<Void, Void>() {
-      @Override
-      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        if (ASSERT_WITH_MESSAGE.matches(tree, state)) {
-          message[0] = getMessageOrFormat(tree, state);
-        }
-        return super.visitMethodInvocation(tree, null);
-      }
-    }.scan(methodInvocationTree, null);
-    return message[0];
-  }
 
   Optional<Fix> deleteFix(TryTree tree, ImmutableList<CatchTree> catchBlocks, VisitorState state) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
