@@ -181,4 +181,31 @@ public class StringSplitterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void mutation() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void f() {",
+            "    String[] xs = \"\".split(\"c\");",
+            "    xs[0] = null;",
+            "    System.err.println(xs[0]);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.base.Splitter;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void f() {",
+            "    List<String> xs = new ArrayList<>(Splitter.on('c').splitToList(\"\"));",
+            "    xs.set(0, null);",
+            "    System.err.println(xs.get(0));",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
 }
