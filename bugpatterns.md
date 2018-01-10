@@ -487,9 +487,6 @@ Multiple calls to either parallel or sequential are unnecessary and cause confus
 __[MutableConstantField](bugpattern/MutableConstantField)__<br>
 Constant field declarations should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
 
-__[NamedParameters](bugpattern/NamedParameters)__<br>
-Parameter name in argument comment is incorrect
-
 __[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
 Compound assignments may hide dangerous casts
 
