@@ -182,4 +182,18 @@ public final class UngroupedOverloadsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void staticAndNonStatic() throws Exception {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void foo() {}",
+            "  void bar() {}",
+            "  static void foo(int x) {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
