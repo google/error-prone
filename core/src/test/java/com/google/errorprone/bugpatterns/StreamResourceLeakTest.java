@@ -58,8 +58,8 @@ public class StreamResourceLeakTest {
             "    // BUG: Diagnostic contains: should be closed",
             "    Files.find(p, /* maxDepth= */ 0, (path, a) -> true);",
             "    // BUG: Diagnostic contains: should be closed",
-            "    try (Stream<String> stream =",
-            "        Files.lines(p).collect(Collectors.toList()).stream()) {",
+            "    try (Stream<String> stream ="
+                + " Files.lines(p).collect(Collectors.toList()).stream()) {",
             "      stream.collect(Collectors.joining(\", \"));",
             "    }",
             "    // BUG: Diagnostic contains: should be closed",
