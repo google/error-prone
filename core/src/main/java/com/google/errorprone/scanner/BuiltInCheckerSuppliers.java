@@ -39,6 +39,7 @@ import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
 import com.google.errorprone.bugpatterns.CanonicalDuration;
+import com.google.errorprone.bugpatterns.CatchAndPrintStackTrace;
 import com.google.errorprone.bugpatterns.CatchFail;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
@@ -455,6 +456,7 @@ public class BuiltInCheckerSuppliers {
           BoxedPrimitiveConstructor.class,
           CannotMockFinalClass.class,
           CanonicalDuration.class,
+          CatchAndPrintStackTrace.class,
           CatchFail.class,
           ClassCanBeStatic.class,
           ClassNewInstance.class,
