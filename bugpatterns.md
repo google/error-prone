@@ -335,6 +335,9 @@ Instance created but never used
 __[UnusedCollectionModifiedInPlace](bugpattern/UnusedCollectionModifiedInPlace)__<br>
 Collection is modified in place, but the result is not used
 
+__[VarTypeName](bugpattern/VarTypeName)__<br>
+`var` should not be used as a type name.
+
 ## On by default : WARNING
 
 __[AmbiguousMethodReference](bugpattern/AmbiguousMethodReference)__<br>
