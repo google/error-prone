@@ -329,18 +329,6 @@ public final class ThreadSafety {
    * </pre>
    */
   public Set<String> threadSafeTypeParametersInScope(Symbol sym) {
-    return threadSafeTypeParameterSetInScope(sym);
-  }
-
-  /**
-   * Gets the set of in-scope threadsafe type parameters from the containerOf specs on annotations.
-   *
-   * @deprecated This method only exists to make a non-binary-compatible change to the {@link
-   *     #threadSafeTypeParametersInScope} return value. It will be removed once all callers have
-   *     been updated.
-   */
-  @Deprecated
-  public Set<String> threadSafeTypeParameterSetInScope(Symbol sym) {
     if (sym == null) {
       return ImmutableSet.of();
     }
