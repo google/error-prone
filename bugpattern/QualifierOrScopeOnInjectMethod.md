@@ -2,8 +2,8 @@
 title: QualifierOrScopeOnInjectMethod
 summary: Qualifiers/Scope annotations on @Inject methods don't have any effect. Move the qualifier annotation to the binding location.
 layout: bugpattern
-tags: ''
-severity: ERROR
+tags: LikelyError
+severity: WARNING
 providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 

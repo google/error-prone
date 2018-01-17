@@ -4,7 +4,7 @@ summary: Constructors and methods with the same name should appear sequentially 
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

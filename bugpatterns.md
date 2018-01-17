@@ -367,6 +367,9 @@ Mockito cannot mock final classes
 __[CanonicalDuration](bugpattern/CanonicalDuration)__<br>
 Duration can be expressed more clearly with different units
 
+__[CatchAndPrintStackTrace](bugpattern/CatchAndPrintStackTrace)__<br>
+Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace
+
 __[CatchFail](bugpattern/CatchFail)__<br>
 Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful
 
@@ -389,7 +392,7 @@ __[DateFormatConstant](bugpattern/DateFormatConstant)__<br>
 DateFormat is not thread-safe, and should not be used as a constant field.
 
 __[DefaultCharset](bugpattern/DefaultCharset)__<br>
-Implicit use of the platform default charset, which can result in e.g. non-ASCII characters being silently replaced with &#39;?&#39; in many environments
+Implicit use of the platform default charset, which can result in differing behavior between JVM executions or incorrect behavior if the encoding of the data source doesn&#39;t match expectations.
 
 __[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
 Double-checked locking on non-volatile fields is unsafe
@@ -535,6 +538,9 @@ Preconditions only accepts the %s placeholder in error message strings
 __[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
 Protobuf fields cannot be null, so this check is redundant
 
+__[QualifierOrScopeOnInjectMethod](bugpattern/QualifierOrScopeOnInjectMethod)__<br>
+Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move the qualifier annotation to the binding location.
+
 __[ReachabilityFenceUsage](bugpattern/ReachabilityFenceUsage)__<br>
 reachabilityFence should always be called inside a finally block
 
@@ -662,9 +668,6 @@ Method parameter has wrong package
 
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
-
-__[QualifierOrScopeOnInjectMethod](bugpattern/QualifierOrScopeOnInjectMethod)__<br>
-Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move the qualifier annotation to the binding location.
 
 __[RestrictTo](bugpattern/RestrictTo)__<br>
 Use of method or class annotated with @RestrictTo
