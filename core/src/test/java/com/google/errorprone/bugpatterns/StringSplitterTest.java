@@ -208,4 +208,29 @@ public class StringSplitterTest {
             "}")
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  // regression test for b/72088500
+  @Test
+  public void b72088500() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void f(String input) {",
+            "    String[] lines = input.split(\"\\\\r?\\\\n\");",
+            "    System.err.println(lines[0]);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.base.Splitter;",
+            "import java.util.List;",
+            "class Test {",
+            "  void f(String input) {",
+            "    List<String> lines = Splitter.onPattern(\"\\\\r?\\\\n\").splitToList(input);",
+            "    System.err.println(lines.get(0));",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
