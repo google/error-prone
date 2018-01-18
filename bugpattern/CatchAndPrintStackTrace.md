@@ -41,5 +41,11 @@ try {
 }
 ```
 
+If you truly intend to print a stack trace to stderr, do so explicitly:
+
+```java
+e.printStackTrace(System.err);
+```
+
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CatchAndPrintStackTrace")` to the enclosing element.

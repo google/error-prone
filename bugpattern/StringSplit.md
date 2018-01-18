@@ -29,6 +29,12 @@ Prefer guava's
 which has more predicitable behaviour and provides explicit control over the
 handling of empty strings and the trimming of whitespace.
 
+Alternately, consider using [`String.split(String,
+int)`](https://docs.oracle.com/javase/9/docs/api/java/lang/String.html#split-java.lang.String-int-)
+and setting an explicit 'limit'.
+
+TIP: consider extracting the `Splitter` instance to a static final field.
+
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StringSplit")` to the enclosing element.
 
