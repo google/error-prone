@@ -269,6 +269,7 @@ import com.google.errorprone.bugpatterns.inject.dagger.AndroidInjectionBeforeSup
 import com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions;
 import com.google.errorprone.bugpatterns.inject.dagger.PrivateConstructorForNoninstantiableModule;
 import com.google.errorprone.bugpatterns.inject.dagger.ProvidesNull;
+import com.google.errorprone.bugpatterns.inject.dagger.ScopeOnModule;
 import com.google.errorprone.bugpatterns.inject.dagger.UseBinds;
 import com.google.errorprone.bugpatterns.inject.guice.AssistedInjectScoping;
 import com.google.errorprone.bugpatterns.inject.guice.AssistedParameters;
@@ -595,6 +596,7 @@ public class BuiltInCheckerSuppliers {
           RestrictToEnforcer.class,
           ReturnMissingNullable.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
+          ScopeOnModule.class,
           ScopeOrQualifierAnnotationRetention.class,
           StaticQualifiedUsingExpression.class,
           StaticOrDefaultInterfaceMethod.class,
