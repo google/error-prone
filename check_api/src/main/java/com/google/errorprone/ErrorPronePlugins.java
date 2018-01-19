@@ -16,10 +16,10 @@
 
 package com.google.errorprone;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
 import java.util.ServiceLoader;
 import javax.tools.JavaFileManager;
@@ -28,28 +28,23 @@ import javax.tools.StandardLocation;
 /** Loads custom Error Prone checks from the annotation processor classpath. */
 public class ErrorPronePlugins {
 
-  private static final Function<BugChecker, Class<? extends BugChecker>> GET_CLASS =
-      new Function<BugChecker, Class<? extends BugChecker>>() {
-        @Override
-        public Class<? extends BugChecker> apply(BugChecker input) {
-          return input.getClass();
-        }
-      };
-
   public static ScannerSupplier loadPlugins(ScannerSupplier scannerSupplier, Context context) {
-
     JavaFileManager fileManager = context.get(JavaFileManager.class);
-    // Search ANNOTATION_PROCESSOR_PATH if it's available. Unlike in annotation processor
-    // discovery, we never search CLASS_PATH.
+    // Unlike in annotation processor discovery, we never search CLASS_PATH if
+    // ANNOTATION_PROCESSOR_PATH is unavailable.
     if (!fileManager.hasLocation(StandardLocation.ANNOTATION_PROCESSOR_PATH)) {
       return scannerSupplier;
     }
-    ClassLoader loader = fileManager.getClassLoader(StandardLocation.ANNOTATION_PROCESSOR_PATH);
+    // Use the same classloader that Error Prone was loaded from to avoid classloader skew
+    // when using Error Prone plugins together with the Error Prone javac plugin.
+    JavacProcessingEnvironment processingEnvironment = JavacProcessingEnvironment.instance(context);
+    ClassLoader loader = processingEnvironment.getProcessorClassLoader();
     Iterable<BugChecker> extraBugCheckers = ServiceLoader.load(BugChecker.class, loader);
     if (Iterables.isEmpty(extraBugCheckers)) {
       return scannerSupplier;
     }
     return scannerSupplier.plus(
-        ScannerSupplier.fromBugCheckerClasses(Iterables.transform(extraBugCheckers, GET_CLASS)));
+        ScannerSupplier.fromBugCheckerClasses(
+            Iterables.transform(extraBugCheckers, BugChecker::getClass)));
   }
 }
