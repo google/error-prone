@@ -383,7 +383,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
 
     private Description.Builder buildMethodDescription(Name methodName) {
       MethodTree methodTree = getFirstOccurrences().get(methodName);
-      return buildDescription(methodTree).setMessage(getMethodFixMessage());
+      return buildDescription(methodTree).setMessage(getMethodFixMessage(methodTree));
     }
 
     private Description.Builder buildClassDescription(Collection<Name> methodNames) {
@@ -458,8 +458,8 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
         .collect(toImmutableMap(Map.Entry::getKey, entry -> mapper.apply(entry.getValue())));
   }
 
-  private static String getMethodFixMessage() {
-    return "Overloaded versions of this method are not grouped together";
+  private static String getMethodFixMessage(MethodTree methodTree) {
+    return String.format("Overloads of '%s' are not grouped together", methodTree.getName());
   }
 
   private static String getClassFixMessage(Collection<Name> methodNames) {
