@@ -254,4 +254,28 @@ public class StringSplitterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void immediateArrayAccess() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void f() {",
+            "    String x = \"\".split(\"c\")[0];",
+            "    x = \"\".split(\"c\")[1];",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.base.Splitter;",
+            "import com.google.common.collect.Iterables;",
+            "class Test {",
+            "  void f() {",
+            "    String x = Iterables.get(Splitter.on('c').split(\"\"), 0);",
+            "    x = Iterables.get(Splitter.on('c').split(\"\"), 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

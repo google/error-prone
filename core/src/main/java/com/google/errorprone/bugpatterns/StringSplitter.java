@@ -102,6 +102,32 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
                   /* mutableList= */ false)
               .build());
     }
+    if (parent instanceof ArrayAccessTree) {
+      ArrayAccessTree arrayAccessTree = (ArrayAccessTree) parent;
+      if (!arrayAccessTree.getExpression().equals(tree)) {
+        return NO_MATCH;
+      }
+      SuggestedFix.Builder fix =
+          SuggestedFix.builder()
+              .addImport("com.google.common.collect.Iterables")
+              .replace(
+                  ((JCTree) arrayAccessTree).getStartPosition(),
+                  ((JCTree) arrayAccessTree).getStartPosition(),
+                  "Iterables.get(")
+              .replace(
+                  state.getEndPosition(arrayAccessTree.getExpression()),
+                  ((JCTree) arrayAccessTree.getIndex()).getStartPosition(),
+                  String.format(", "))
+              .replace(
+                  state.getEndPosition(arrayAccessTree.getIndex()),
+                  state.getEndPosition(arrayAccessTree),
+                  ")");
+      return describeMatch(
+          tree,
+          replaceWithSplitter(
+                  fix, tree, value, state, "split", maybeRegex, /* mutableList= */ false)
+              .build());
+    }
     // If the result of split is assigned to a variable, try to fix all uses of the variable in the
     // enclosing method. If we don't know how to fix any of them, bail out.
     if (!(parent instanceof VariableTree)) {
