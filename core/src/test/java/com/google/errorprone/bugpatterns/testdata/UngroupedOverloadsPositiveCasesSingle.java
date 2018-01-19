@@ -23,7 +23,7 @@ public class UngroupedOverloadsPositiveCasesSingle {
     foo();
   }
 
-  // BUG: Diagnostic contains: Overloaded versions of this method are not grouped together
+  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
   public void foo() {
     foo(42);
   }
