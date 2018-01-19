@@ -233,4 +233,25 @@ public class StringSplitterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void escape() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void f() {",
+            "    String[] pieces = \"\".split(\"\\n\\t\\r\\f\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.base.Splitter;",
+            "class Test {",
+            "  void f() {",
+            "    Iterable<String> pieces = Splitter.on(\"\\n\\t\\r\\f\").split(\"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

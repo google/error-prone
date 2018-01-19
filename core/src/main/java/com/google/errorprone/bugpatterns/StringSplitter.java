@@ -31,6 +31,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -72,7 +73,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     if (value != null) {
       Optional<String> regexAsLiteral = convertRegexToLiteral(value);
       if (regexAsLiteral.isPresent()) {
-        value = regexAsLiteral.get();
+        value = SourceCodeEscapers.javaCharEscaper().escape(regexAsLiteral.get());
         if (value.length() == 1) {
           value = String.format("'%s'", value.charAt(0));
         } else {
