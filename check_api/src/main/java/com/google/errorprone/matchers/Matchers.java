@@ -60,6 +60,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -1457,4 +1458,19 @@ public class Matchers {
     }
   }
 
+
+  /** Matches an AST node whose compilation unit's package name matches the given pattern. */
+  public static <T extends Tree> Matcher<T> packageMatches(Pattern pattern) {
+    return (tree, state) -> pattern.matcher(getPackageFullName(state)).matches();
+  }
+
+  /** Matches an AST node whose compilation unit starts with this prefix. */
+  public static <T extends Tree> Matcher<T> packageStartsWith(String prefix) {
+    return (tree, state) -> getPackageFullName(state).startsWith(prefix);
+  }
+
+  private static String getPackageFullName(VisitorState state) {
+    JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
+    return compilationUnit.packge.fullname.toString();
+  }
 }
