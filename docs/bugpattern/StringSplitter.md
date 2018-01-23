@@ -9,8 +9,8 @@ String[] bunchOfNothing = ":".split(":");
 
 The result is `[""]` and `[]`!
 
-Prefer guava's
-[`String.splitter`](http://google.github.io/guava/releases/23.0/api/docs/com/google/common/base/Splitter.html),
+Prefer Guava's
+[`Splitter`](http://google.github.io/guava/releases/23.0/api/docs/com/google/common/base/Splitter.html),
 which has more predicitable behaviour and provides explicit control over the
 handling of empty strings and the trimming of whitespace.
 
