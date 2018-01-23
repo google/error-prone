@@ -23,12 +23,34 @@ the same everywhere; special-casing for enums isn't worth it.
 
 ### How about a reference equality comparison before a more expensive content equality comparison?
 
-We _do_ exempt methods that override `Object#equals()` from this check. In other
-cases, calling `Type#equals()` should be just as fast, because that method will
-likely be inlined, and the first thing it will likely do is that same instance
-comparison.
+The check allows implementations of `Object#equals()` to perform reference
+equality tests on the type equality is being implemented for. For example:
 
-Alternatively, if you're okay with accepting null, you could call
+```
+abstract class Foo {
+
+  abstract String bar();
+
+  @Override
+  public boolean equals(Object other) {
+    if (this == other) {
+      return true; // fast path, reference equality is allowed here
+    }
+    if (!(other instanceof Foo)) {
+      return false;
+    }
+    Foo that = (Foo) other;
+    // value equality should still be used for types other than `Foo`
+    return bar().equals(that.bar());
+  }
+}
+```
+
+In other cases, calling `Type#equals()` should be just as fast, because that
+method will likely be inlined, and the first thing it will likely do is that
+same instance comparison.
+
+Alternatively, if you're okay with accepting `null`, you could call
 `java.util.Objects.equals()`, which first does a reference equality comparison
 and then falls back to content equality for non-null arguments.
 
