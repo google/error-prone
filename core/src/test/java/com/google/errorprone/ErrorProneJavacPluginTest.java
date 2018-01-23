@@ -21,6 +21,7 @@ import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ENGLISH;
+import static org.junit.Assert.fail;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.StandardSystemProperty;
@@ -32,6 +33,8 @@ import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -80,7 +83,7 @@ public class ErrorProneJavacPluginTest {
                 null,
                 fileManager,
                 diagnosticCollector,
-                ImmutableList.of("-Xplugin:ErrorProne"),
+                ImmutableList.of("-Xplugin:ErrorProne", "-XDcompilePolicy=byfile"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(source));
     assertThat(task.call()).isFalse();
@@ -125,7 +128,8 @@ public class ErrorProneJavacPluginTest {
                 diagnosticCollector,
                 ImmutableList.of(
                     "-Xplugin:ErrorProne"
-                        + " -XepPatchChecks:MissingOverride -XepPatchLocation:IN_PLACE"),
+                        + " -XepPatchChecks:MissingOverride -XepPatchLocation:IN_PLACE",
+                    "-XDcompilePolicy=byfile"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(fileA, fileB));
     assertThat(task.call())
@@ -183,7 +187,8 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of(
                     "-Xplugin:ErrorProne"
                         + " -XepPatchChecks:MissingOverride -XepPatchLocation:"
-                        + patchDir.toString()),
+                        + patchDir.toString(),
+                    "-XDcompilePolicy=byfile"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(fileA, fileB));
     assertThat(task.call())
@@ -196,5 +201,57 @@ public class ErrorProneJavacPluginTest {
                 .map(l -> Paths.get(l.substring("--- ".length())).getFileName().toString())
                 .collect(toImmutableList()))
         .containsExactly("A.java", "B.java");
+  }
+
+  @Test
+  public void noPolicyGiven() throws IOException {
+    FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    Path source = fileSystem.getPath("Test.java");
+    Files.write(source, "class Test {}".getBytes(UTF_8));
+    JavacFileManager fileManager = new JavacFileManager(new Context(), false, UTF_8);
+    DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
+    StringWriter sw = new StringWriter();
+    JavacTask task =
+        JavacTool.create()
+            .getTask(
+                new PrintWriter(sw, true),
+                fileManager,
+                diagnosticCollector,
+                ImmutableList.of("-Xplugin:ErrorProne"),
+                ImmutableList.of(),
+                fileManager.getJavaFileObjects(source));
+    try {
+      task.call();
+      fail();
+    } catch (Throwable expected) {
+      assertThat(expected)
+          .hasMessageThat()
+          .contains("The default compilation policy (by-todo) is not supported");
+    }
+  }
+
+  @Test
+  public void explicitBadPolicyGiven() throws IOException {
+    FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    Path source = fileSystem.getPath("Test.java");
+    Files.write(source, "class Test {}".getBytes(UTF_8));
+    JavacFileManager fileManager = new JavacFileManager(new Context(), false, UTF_8);
+    DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
+    StringWriter sw = new StringWriter();
+    JavacTask task =
+        JavacTool.create()
+            .getTask(
+                new PrintWriter(sw, true),
+                fileManager,
+                diagnosticCollector,
+                ImmutableList.of("-XDcompilePolicy=bytodo", "-Xplugin:ErrorProne"),
+                ImmutableList.of(),
+                fileManager.getJavaFileObjects(source));
+    try {
+      task.call();
+      fail();
+    } catch (Throwable expected) {
+      assertThat(expected).hasMessageThat().contains("-XDcompilePolicy=bytodo is not supported");
+    }
   }
 }
