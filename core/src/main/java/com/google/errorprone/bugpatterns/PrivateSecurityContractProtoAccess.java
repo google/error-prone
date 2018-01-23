@@ -23,15 +23,14 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
 import java.util.regex.Pattern;
 
 /** Check for non-whitelisted access to private_do_not_access_or_else proto fields. */
@@ -60,15 +59,11 @@ public class PrivateSecurityContractProtoAccess extends BugChecker
               createFieldMatcher("com.google.common.html.types.SafeScriptProto"),
               createFieldMatcher("com.google.common.html.types.SafeStyleProto"),
               createFieldMatcher("com.google.common.html.types.SafeStyleSheetProto")),
-          not(createPackageMatcher("com.google.common.html.types")));
+          not(packageStartsWith("com.google.common.html.types")));
 
 
   private static final String MESSAGE = "Forbidden access to a private proto field. See ";
   private static final String SAFEHTML_LINK = "https://github.com/google/safe-html-types/blob/master/doc/safehtml-types.md#protocol-buffer-conversion";
-
-  private static final Matcher<Tree> createPackageMatcher(String packageName) {
-    return (t, vs) -> matchesPackagePrefix(vs, packageName);
-  }
 
   // Matches instance methods with PrivateDoNotAccessOrElse in their names.
   private static final Matcher<MethodInvocationTree> createFieldMatcher(String className) {
@@ -76,11 +71,6 @@ public class PrivateSecurityContractProtoAccess extends BugChecker
     return anyOf(
         instanceMethod().onExactClass(className).withNameMatching(PRIVATE_DO_NOT_ACCESS_OR_ELSE),
         instanceMethod().onExactClass(builderName).withNameMatching(PRIVATE_DO_NOT_ACCESS_OR_ELSE));
-  }
-
-  private static boolean matchesPackagePrefix(VisitorState state, String matchedPackage) {
-    ExpressionTree packageName = state.getPath().getCompilationUnit().getPackageName();
-    return packageName != null && packageName.toString().startsWith(matchedPackage);
   }
 
   private Description buildErrorMessage(MethodInvocationTree tree, String link) {
