@@ -808,6 +808,9 @@ Unused imports
 __[ReturnMissingNullable](bugpattern/ReturnMissingNullable)__<br>
 Methods that can return null should be annotated @Nullable
 
+__[ScopeOnModule](bugpattern/ScopeOnModule)__<br>
+Scopes on modules have no function and will soon be an error.
+
 __[SwitchDefault](bugpattern/SwitchDefault)__<br>
 The default case of a switch should appear at the end of the last statement group
 
