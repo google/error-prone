@@ -36,11 +36,16 @@ import java.util.Collection;
  * }
  * }</pre>
  *
- * To indicate that invocations of {@link Collection#contains} must be passed an argument whose type
- * is compatible with the generic type argument of the Collection instance.
+ * <p>To indicate that invocations of {@link Collection#contains} must be passed an argument whose
+ * type is compatible with the generic type argument of the Collection instance:
  *
- * <p>Note: currently, this annotation can't be used with varargs method parameters, or if the
- * method overrides another method with {@code @CompatibleWith} already present.
+ * <pre>{@code
+ * Collection<String> stringCollection = ...;
+ * boolean shouldBeFalse = stringCollection.contains(42); // BUG! int isn't compatible with String
+ * }</pre>
+ *
+ * <p>Note: currently, this annotation can't be used if the method overrides another method that has
+ * {@code @CompatibleWith} already present.
  */
 @Documented
 @Retention(RetentionPolicy.CLASS)
