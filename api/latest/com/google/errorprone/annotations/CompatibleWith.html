@@ -93,15 +93,15 @@
 <li class="blockList">
 <hr>
 <br>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</a>
- <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#CLASS" title="class or interface in java.lang.annotation">CLASS</a>)
- <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</a>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/Target.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/ElementType.html?is-external=true#PARAMETER" title="class or interface in java.lang.annotation">PARAMETER</a>)
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</a>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#CLASS" title="class or interface in java.lang.annotation">CLASS</a>)
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#PARAMETER" title="class or interface in java.lang.annotation">PARAMETER</a>)
 public @interface <span class="memberNameLabel">CompatibleWith</span></pre>
 <div class="block">Declares that a parameter to a method must be "compatible with" one of the type parameters in the
  method's enclosing class, or on the method itself. "Compatible with" means that there can exist a
  "reference casting conversion" from one type to the other (JLS 5.5.1).
 
- <p>For example, <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true#contains-java.lang.Object-" title="class or interface in java.util"><code>Collection.contains(java.lang.Object)</code></a> would be annotated as follows:
+ <p>For example, <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true#contains-java.lang.Object-" title="class or interface in java.util"><code>Collection.contains(java.lang.Object)</code></a> would be annotated as follows:
 
  <pre><code>
  interface Collection&lt;E&gt; {
@@ -109,7 +109,7 @@ public @interface <span class="memberNameLabel">CompatibleWith</span></pre>
  }
  </code></pre>
 
- To indicate that invocations of <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true#contains-java.lang.Object-" title="class or interface in java.util"><code>Collection.contains(java.lang.Object)</code></a> must be passed an argument whose type
+ To indicate that invocations of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true#contains-java.lang.Object-" title="class or interface in java.util"><code>Collection.contains(java.lang.Object)</code></a> must be passed an argument whose type
  is compatible with the generic type argument of the Collection instance.
 
  <p>Note: currently, this annotation can't be used with varargs method parameters, or if the
@@ -133,7 +133,7 @@ public @interface <span class="memberNameLabel">CompatibleWith</span></pre>
 <th class="colLast" scope="col">Required Element and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/annotations/CompatibleWith.html#value--">value</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -157,7 +157,7 @@ public @interface <span class="memberNameLabel">CompatibleWith</span></pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>value</h4>
-<pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;value</pre>
+<pre>public abstract&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;value</pre>
 </li>
 </ul>
 </li>

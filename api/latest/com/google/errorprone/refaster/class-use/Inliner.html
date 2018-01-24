@@ -104,11 +104,11 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></code></td>
-<td class="colLast"><span class="typeNameLabel">TemplateMatch.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/TemplateMatch.html#createInliner--">createInliner</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">Unifier.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/Unifier.html#createInliner--">createInliner</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Unifier.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/Unifier.html#createInliner--">createInliner</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">TemplateMatch.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/TemplateMatch.html#createInliner--">createInliner</a></span>()</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -133,8 +133,8 @@
 <tr class="altColor">
 <td class="colFirst"><code>abstract com.sun.tools.javac.tree.JCTree.JCExpression</code></td>
 <td class="colLast"><span class="typeNameLabel">ImportPolicy.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/ImportPolicy.html#classReference-com.google.errorprone.refaster.Inliner-java.lang.CharSequence-java.lang.CharSequence-">classReference</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
-              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;topLevelClazz,
-              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;fullyQualifiedClazz)</code>&nbsp;</td>
+              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;topLevelClazz,
+              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;fullyQualifiedClazz)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected com.sun.tools.javac.util.List&lt;com.sun.tools.javac.code.Type&gt;</code></td>
@@ -183,6 +183,14 @@
 <td class="colLast"><span class="typeNameLabel">ULiteral.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/ULiteral.html#inline-com.google.errorprone.refaster.Inliner-">inline</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
+<td class="colLast"><span class="typeNameLabel">UTypeVar.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UTypeVar.html#inline-com.google.errorprone.refaster.Inliner-">inline</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.sun.tools.javac.tree.JCTree.JCExpression</code></td>
+<td class="colLast"><span class="typeNameLabel">UTypeVar.TypeWithExpression.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html#inline-com.google.errorprone.refaster.Inliner-">inline</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.tree.JCTree.JCVariableDecl</code></td>
 <td class="colLast"><span class="typeNameLabel">UVariableDecl.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UVariableDecl.html#inline-com.google.errorprone.refaster.Inliner-">inline</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
 </tr>
@@ -199,14 +207,6 @@
 <td class="colLast"><span class="typeNameLabel">StringName.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/StringName.html#inline-com.google.errorprone.refaster.Inliner-">inline</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
-<td class="colLast"><span class="typeNameLabel">UTypeVar.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UTypeVar.html#inline-com.google.errorprone.refaster.Inliner-">inline</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>com.sun.tools.javac.tree.JCTree.JCExpression</code></td>
-<td class="colLast"><span class="typeNameLabel">UTypeVar.TypeWithExpression.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html#inline-com.google.errorprone.refaster.Inliner-">inline</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.tree.JCTree.JCVariableDecl</code></td>
 <td class="colLast"><span class="typeNameLabel">UVariableDecl.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/UVariableDecl.html#inlineImplicitType-com.google.errorprone.refaster.Inliner-">inlineImplicitType</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code>&nbsp;</td>
 </tr>
@@ -217,9 +217,9 @@
 <tr class="altColor">
 <td class="colFirst"><code>abstract com.sun.tools.javac.tree.JCTree.JCExpression</code></td>
 <td class="colLast"><span class="typeNameLabel">ImportPolicy.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/refaster/ImportPolicy.html#staticReference-com.google.errorprone.refaster.Inliner-java.lang.CharSequence-java.lang.CharSequence-java.lang.CharSequence-">staticReference</a></span>(<a href="../../../../../com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
-               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;topLevelClazz,
-               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;fullyQualifiedClazz,
-               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;member)</code>&nbsp;</td>
+               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;topLevelClazz,
+               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;fullyQualifiedClazz,
+               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;member)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
