@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
@@ -55,7 +55,7 @@ import java.util.regex.Pattern;
   summary =
       "Streams that encapsulate a closeable resource should be closed using"
           + " try-with-resources",
-  severity = ERROR,
+  severity = WARNING,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class StreamResourceLeak extends AbstractMustBeClosedChecker
