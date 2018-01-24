@@ -99,14 +99,13 @@ public class CompatibleWithMisuseTest {
   }
 
   @Test
-  public void notAllowedOnVarArgs() {
+  public void allowedOnVarargs() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "import com.google.errorprone.annotations.CompatibleWith;",
             "class Test<Y> {",
-            "  // BUG: Diagnostic contains: varargs",
-            "  void doSomething(@CompatibleWith(\"Y\") Object... bad) {}",
+            "  void doSomething(@CompatibleWith(\"Y\") Object... ok) {}",
             "}")
         .doTest();
   }
