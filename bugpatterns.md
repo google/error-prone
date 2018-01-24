@@ -299,9 +299,6 @@ This method must be called with an even number of arguments.
 __[SizeGreaterThanOrEqualsZero](bugpattern/SizeGreaterThanOrEqualsZero)__<br>
 Comparison of a size &gt;= 0 is always true, did you intend to check for non-emptiness?
 
-__[StreamResourceLeak](bugpattern/StreamResourceLeak)__<br>
-Streams that encapsulate a closeable resource should be closed using try-with-resources
-
 __[StreamToString](bugpattern/StreamToString)__<br>
 Calling toString on a Stream does not provide useful information
 
@@ -555,6 +552,9 @@ Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 
 __[StaticGuardedByInstance](bugpattern/StaticGuardedByInstance)__<br>
 Writes to static fields should not be guarded by instance locks
+
+__[StreamResourceLeak](bugpattern/StreamResourceLeak)__<br>
+Streams that encapsulate a closeable resource should be closed using try-with-resources
 
 __[StringSplitter](bugpattern/StringSplitter)__<br>
 Prefer Splitter to String.split

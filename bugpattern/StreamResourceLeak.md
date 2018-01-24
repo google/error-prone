@@ -3,7 +3,7 @@ title: StreamResourceLeak
 summary: Streams that encapsulate a closeable resource should be closed using try-with-resources
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
