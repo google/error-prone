@@ -49,13 +49,22 @@ public class MultipleTopLevelClassesTest {
   @Test
   public void packageInfo() throws Exception {
     compilationHelper
-        .addSourceLines("a/package-info.java", "/** Documentation for our package */", "package a;")
+        .addSourceLines(
+            "a/package-info.java", //
+            "/** Documentation for our package */",
+            "package a;")
         .doTest();
   }
 
   @Test
   public void defaultPackage() throws Exception {
-    compilationHelper.addSourceLines("a/A.java", "class A {}", "class B {}").doTest();
+    compilationHelper
+        .addSourceLines(
+            "a/A.java", //
+            "// BUG: Diagnostic contains:",
+            "class A {}",
+            "class B {}")
+        .doTest();
   }
 
   @Test
