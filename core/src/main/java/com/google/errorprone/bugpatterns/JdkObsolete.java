@@ -286,6 +286,9 @@ public class JdkObsolete extends BugChecker
     Types types = state.getTypes();
     for (String replacement : ImmutableList.of("java.util.ArrayList", "java.util.ArrayDeque")) {
       Symbol sym = state.getSymbolFromString(replacement);
+      if (sym == null) {
+        continue;
+      }
       if (types.isAssignable(types.erasure(sym.asType()), types.erasure(type))) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
         while (tree instanceof ParameterizedTypeTree) {
