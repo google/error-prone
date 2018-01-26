@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.MaskedClassLoader.MaskedFileManager;
@@ -87,6 +88,20 @@ public class BaseErrorProneCompiler {
       return this;
     }
   }
+  
+  private static Charset getCharsetFromArgs(String[] argv)
+  {
+    for (int i = 0; i < argv.length; i++) {
+      if ("-encoding".equals(argv[i])) {
+        if (i < argv.length - 1) {
+          return Charset.forName(argv[i + 1]);
+        } else {
+          throw new RuntimeException("missing encoding");
+        }
+      }
+    }
+    return UTF_8;
+ }
 
   public Result run(String[] argv) {
     try {
@@ -104,7 +119,7 @@ public class BaseErrorProneCompiler {
         javacOpts.add(arg);
       }
     }
-    StandardJavaFileManager fileManager = new MaskedFileManager();
+    StandardJavaFileManager fileManager = new MaskedFileManager(getCharsetFromArgs(argv));
     return run(
         javacOpts.toArray(new String[0]),
         fileManager,
