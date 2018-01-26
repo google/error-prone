@@ -16,8 +16,6 @@
 
 package com.google.errorprone;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.sun.tools.javac.api.ClientCodeWrapper.Trusted;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
