@@ -252,14 +252,14 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
   abstract static class OverloadKey {
     abstract String name();
 
+    // TODO(cushon): re-enable this, but don't warn about interspersed static/non-static overloads
     // Include static-ness when grouping overloads. Static and non-static methods are still
     // overloads per the JLS, but are less interesting in practice.
-    abstract boolean isStatic();
+    // abstract boolean isStatic();
 
     public static OverloadKey create(MethodTree methodTree) {
       MethodSymbol sym = ASTHelpers.getSymbol(methodTree);
-      return new AutoValue_UngroupedOverloads_OverloadKey(
-          sym.getSimpleName().toString(), sym.isStatic());
+      return new AutoValue_UngroupedOverloads_OverloadKey(sym.getSimpleName().toString());
     }
   }
 
