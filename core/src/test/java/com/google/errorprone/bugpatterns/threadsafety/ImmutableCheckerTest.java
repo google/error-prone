@@ -476,6 +476,34 @@ public class ImmutableCheckerTest {
         .doTest();
   }
 
+  @Ignore("http://b/72495910")
+  @Test
+  public void containerOf_extendsImmutable() {
+    compilationHelper
+        .addSourceLines(
+            "X.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class X<V> {",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "  // BUG: Diagnostic contains: 'V' is a mutable type variable",
+            "@Immutable(containerOf=\"V\") class Test<V> extends X<V> {",
+            "  private final V t = null;",
+            "}")
+        .addSourceLines(
+            "MutableLeak.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class MutableLeak {",
+            "  private static class Mutable {",
+            "    int mutableInt;",
+            "  }",
+            "  private final X<Mutable> bad = new Test<Mutable>();",
+            "}")
+        .doTest();
+  }
+
   @Test
   public void containerOf_mutableInstantiation() {
     compilationHelper
