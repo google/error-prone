@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.MaskedClassLoader.MaskedFileManager;
@@ -29,7 +30,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Processor;
@@ -100,7 +100,7 @@ public class BaseErrorProneCompiler {
         }
       }
     }
-    return StandardCharsets.UTF_8;
+    return UTF_8;
  }
 
   public Result run(String[] argv) {
