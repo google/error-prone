@@ -166,6 +166,8 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(com.google.common.net.MediaType.class)
         .add(com.google.common.primitives.UnsignedInteger.class)
         .add(com.google.common.primitives.UnsignedLong.class)
+        .add("com.ibm.icu.number.LocalizedNumberFormatter")
+        .add("com.ibm.icu.number.UnlocalizedNumberFormatter")
         .add(java.lang.Class.class)
         .add(java.lang.String.class)
         .add(java.lang.annotation.Annotation.class)
