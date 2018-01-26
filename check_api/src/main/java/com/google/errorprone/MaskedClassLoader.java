@@ -23,6 +23,8 @@ import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
+
 import javax.tools.JavaFileManager;
 
 /**
@@ -35,13 +37,13 @@ public class MaskedClassLoader extends ClassLoader {
    * An alternative to {@link JavacFileManager#preRegister(Context)} that installs a {@link
    * MaskedClassLoader}.
    */
-  public static void preRegisterFileManager(Context context) {
+  public static void preRegisterFileManager(Context context, Charset charset) {
     context.put(
         JavaFileManager.class,
         new Context.Factory<JavaFileManager>() {
           @Override
           public JavaFileManager make(Context c) {
-            return new MaskedFileManager(c);
+            return new MaskedFileManager(c, charset);
           }
         });
   }
@@ -63,12 +65,12 @@ public class MaskedClassLoader extends ClassLoader {
   @Trusted
   static class MaskedFileManager extends JavacFileManager {
 
-    public MaskedFileManager(Context context) {
-      super(context, /* register= */ true, UTF_8);
+    public MaskedFileManager(Context context, Charset charset) {
+      super(context, /* register= */ true, charset);
     }
 
-    public MaskedFileManager() {
-      this(new Context());
+    public MaskedFileManager(Charset charset) {
+      this(new Context(), charset);
     }
 
     @Override
