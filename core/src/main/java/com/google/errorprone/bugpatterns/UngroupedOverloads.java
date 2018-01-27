@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -59,8 +58,7 @@ import javax.lang.model.element.Name;
   category = JDK,
   severity = SUGGESTION,
   linkType = CUSTOM,
-  link = "https://google.github.io/styleguide/javaguide.html#s3.4.2.1-overloads-never-split",
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
+  link = "https://google.github.io/styleguide/javaguide.html#s3.4.2.1-overloads-never-split"
 )
 public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
 
