@@ -109,11 +109,16 @@ public @interface <span class="memberNameLabel">CompatibleWith</span></pre>
  }
  </code></pre>
 
- To indicate that invocations of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true#contains-java.lang.Object-" title="class or interface in java.util"><code>Collection.contains(java.lang.Object)</code></a> must be passed an argument whose type
- is compatible with the generic type argument of the Collection instance.
+ <p>To indicate that invocations of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true#contains-java.lang.Object-" title="class or interface in java.util"><code>Collection.contains(java.lang.Object)</code></a> must be passed an argument whose
+ type is compatible with the generic type argument of the Collection instance:
 
- <p>Note: currently, this annotation can't be used with varargs method parameters, or if the
- method overrides another method with <code>@CompatibleWith</code> already present.</div>
+ <pre><code>
+ Collection&lt;String&gt; stringCollection = ...;
+ boolean shouldBeFalse = stringCollection.contains(42); // BUG! int isn't compatible with String
+ </code></pre>
+
+ <p>Note: currently, this annotation can't be used if the method overrides another method that has
+ <code>@CompatibleWith</code> already present.</div>
 </li>
 </ul>
 </div>

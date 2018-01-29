@@ -517,6 +517,9 @@ Use grouping parenthesis to make the operator precedence explicit
 __[OptionalNotPresent](bugpattern/OptionalNotPresent)__<br>
 One should not call optional.get() inside an if statement that checks !optional.isPresent
 
+__[OrphanedFormatString](bugpattern/OrphanedFormatString)__<br>
+String literal contains format specifiers, but is not passed to a format method
+
 __[OverrideThrowableToString](bugpattern/OverrideThrowableToString)__<br>
 To return a custom message with a Throwable class, one should override getMessage() instead of toString() for Throwable.
 
