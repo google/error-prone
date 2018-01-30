@@ -17,19 +17,18 @@ import java.util.stream.Collectors;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Util.generateMethodId;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Util.generateVarId;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Util.*;
 
 @AutoService(BugChecker.class)
 @BugPattern(
-        name = "DataCollector",
+        name = "ProtoBuffDataGen",
         category = JDK,
         summary = "String formatting inside print method",
         severity = ERROR,
         linkType = CUSTOM,
         link = "example.com/bugpattern/MyCustomCheck"
 )
-public class DataCollector extends BugChecker implements BugChecker.MethodTreeMatcher, BugChecker.MethodInvocationTreeMatcher, BugChecker.NewClassTreeMatcher,BugChecker.VariableTreeMatcher
+public class ProtoBuffDataGen extends BugChecker implements BugChecker.MethodTreeMatcher, BugChecker.MethodInvocationTreeMatcher, BugChecker.NewClassTreeMatcher,BugChecker.VariableTreeMatcher
                                                         ,BugChecker.AssignmentTreeMatcher,BugChecker.ClassTreeMatcher
 {
 
@@ -46,7 +45,8 @@ public class DataCollector extends BugChecker implements BugChecker.MethodTreeMa
                     .setSignature(symb.type.toString())
                     .setKind(symb.getKind().toString())
                     .setId(generateMethodId(symb));
-            mthdDcl.setReturnType(ASTHelpers.getType(methodTree.getReturnType()) != null ? ASTHelpers.getType(methodTree.getReturnType()).toString() : "###");
+
+            mthdDcl.setReturnType(ASTHelpers.getType(methodTree.getReturnType()) != null ? ASTHelpers.getType(methodTree.getReturnType()).toString() : RTRN_TYPE_NOT_FOUND);
 
             List<String> y = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().map(x -> x.owner.toString()).collect(Collectors.toList());
 
@@ -54,7 +54,7 @@ public class DataCollector extends BugChecker implements BugChecker.MethodTreeMa
                 mthdDcl.setSuperMethodIn(y.get(0));
             }
             params.stream().filter(x -> Util.isLT(x, state)).map(x -> Util.analysisFromTree(x, params.indexOf(x))).forEach(mthdDcl::addParam);
-            ProtoBuffPersist.write(mthdDcl,methodTree.getKind().toString());
+            ProtoBuffPersist.write(mthdDcl, methodTree.getKind().toString());
         }
         return null;
     }
@@ -67,8 +67,8 @@ public class DataCollector extends BugChecker implements BugChecker.MethodTreeMa
         boolean retLt = Util.isLT(tree, state);
         boolean paramLT = params.stream().filter(x -> Util.isLT(x.type, state)).count() > 0;
         boolean ofLT = Util.isLT(symb.owner.type,state);
-       // boolean ofLT = ASTHelpers.getReceiverType(tree.getMethodSelect()) != null ? Util.isLT( ASTHelpers.getReceiverType(tree.getMethodSelect()),state) : false;
         MethodInvocation.MthdInvc.Builder mthdInvc = null;
+
         if (retLt || paramLT || ofLT) {
             mthdInvc = MethodInvocation.MthdInvc.newBuilder();
             mthdInvc.setName(Util.getName(symb))
@@ -79,11 +79,8 @@ public class DataCollector extends BugChecker implements BugChecker.MethodTreeMa
 
             if(paramLT){
                 params.stream().filter(x -> Util.isLT(x.type, state)).map(x -> params.indexOf(x))
-                                .map(x -> Util.analysisFromTree(tree.getArguments().get(x),x)).forEach(mthdInvc::addArgs);
+                        .map(x -> Util.analysisFromTree(tree.getArguments().get(x),x)).forEach(mthdInvc::addArgs);
             }
-
-//            if (paramLT) tree.getArguments().stream().filter(x -> Util.isLT(x, state))
-//                    .map(x -> Util.analysisFromTree(x)).forEach(mthdInvc::addArgs);
             mthdInvc.setSrcFile(state.getPath().getCompilationUnit().getSourceFile().getName())
                     .setPckg(state.getPath().getCompilationUnit().getPackageName().toString());
             if(ofLT) {
@@ -110,12 +107,12 @@ public class DataCollector extends BugChecker implements BugChecker.MethodTreeMa
                     .setOwner(Util.getOwner(symb))
                     .setSignature(symb.type.toString())
                     .setKind(symb.getKind().toString())
-                    .setId(mthdInvc.getName() + "|" + mthdInvc.getOwner() + "|" + mthdInvc.getSignature());
+                    .setId(mthdInvc.getName() + COLUMN_SEPERATOR + mthdInvc.getOwner() + COLUMN_SEPERATOR + mthdInvc.getSignature());
             if (paramLT) var1.getArguments().stream().filter(x -> Util.isLT(x, state))
                     .map(x -> Util.analysisFromTree(x)).forEach(mthdInvc::addArgs);
             mthdInvc.setSrcFile(state.getPath().getCompilationUnit().getSourceFile().getName())
                     .setPckg(state.getPath().getCompilationUnit().getPackageName().toString());
-            ProtoBuffPersist.write(mthdInvc,var1.getKind().toString() );
+            ProtoBuffPersist.write(mthdInvc, var1.getKind().toString());
         }
         return null;
     }
@@ -157,10 +154,10 @@ public class DataCollector extends BugChecker implements BugChecker.MethodTreeMa
             try {
                 Assignment.Asgn.Builder asgn = Assignment.Asgn.newBuilder();
                 asgn.setLhs(Util.analysisFromTree(lhs))
-                    .setRhs(Util.analysisFromTree(var1.getExpression()));
+                        .setRhs(Util.analysisFromTree(var1.getExpression()));
                 asgn.setSrcFile(state.getPath().getCompilationUnit().getSourceFile().getName())
                         .setPckg(state.getPath().getCompilationUnit().getPackageName().toString());
-                ProtoBuffPersist.write(asgn,var1.getKind().toString());
+                ProtoBuffPersist.write(asgn, var1.getKind().toString());
             }catch(Exception e){
                 System.out.println(e.toString());
             }
@@ -170,22 +167,23 @@ public class DataCollector extends BugChecker implements BugChecker.MethodTreeMa
 
    @Override
    public Description matchClass(ClassTree classTree, VisitorState state) {
-            boolean implementsLt = classTree.getImplementsClause().stream().filter(x -> Util.isLT(x, state)).count() > 0;
-            boolean isLT = Util.isLT(classTree, state);
-            if(implementsLt|| isLT){
-                Symbol.ClassSymbol symb = ASTHelpers.getSymbol(classTree);
-                ClassDecl.clsDcl.Builder clsDcl = ClassDecl.clsDcl.newBuilder();
-                clsDcl.setName(Util.getOwner(symb))
-                        .setOwner(symb.owner.toString())
-                        .setKind(symb.getKind().toString());
-                if(isLT) clsDcl.addLTtype(ASTHelpers.getType(classTree).toString());
-                else clsDcl.addAllLTtype(classTree.getImplementsClause().stream().filter(x -> Util.isLT(x, state))
-                        .map(x -> ASTHelpers.getType(x).toString()).collect(Collectors.toList()));
-                clsDcl.setSrcFile(state.getPath().getCompilationUnit().getSourceFile().getName())
-                        .setPckg(state.getPath().getCompilationUnit().getPackageName().toString());
-                ProtoBuffPersist.write(clsDcl,classTree.getKind().toString());
-            }
+       boolean implementsLt = classTree.getImplementsClause().stream().filter(x -> Util.isLT(x, state)).count() > 0;
+       boolean isLT = Util.isLT(classTree, state);
+       if(implementsLt|| isLT){
+           Symbol.ClassSymbol symb = ASTHelpers.getSymbol(classTree);
+           ClassDecl.clsDcl.Builder clsDcl = ClassDecl.clsDcl.newBuilder();
+           clsDcl.setName(Util.getOwner(symb))
+                   .setOwner(symb.owner.toString())
+                   .setKind(symb.getKind().toString());
 
-            return null;
-        }
+           if(isLT) clsDcl.addLTtype(ASTHelpers.getType(classTree).toString());
+           else clsDcl.addAllLTtype(classTree.getImplementsClause().stream().filter(x -> Util.isLT(x, state))
+                   .map(x -> ASTHelpers.getType(x).toString()).collect(Collectors.toList()));
+           clsDcl.setSrcFile(state.getPath().getCompilationUnit().getSourceFile().getName())
+                   .setPckg(state.getPath().getCompilationUnit().getPackageName().toString());
+           ProtoBuffPersist.write(clsDcl,classTree.getKind().toString());
+       }
+
+       return null;
+   }
 }
