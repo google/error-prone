@@ -211,4 +211,17 @@ public final class UngroupedOverloadsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suppressOnAnyMethod() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo() {}",
+            "  void bar() {}",
+            "  @SuppressWarnings(\"UngroupedOverloads\") void foo(int x) {}",
+            "}")
+        .doTest();
+  }
 }

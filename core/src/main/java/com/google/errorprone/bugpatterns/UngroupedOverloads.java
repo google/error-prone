@@ -319,6 +319,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     private final ImmutableList<? extends Tree> classMembers; // Initial, unchanged members.
     private final VisitorState state;
     private final List<OverloadViolation> violations;
+    private final ImmutableSet<String> suppressed;
 
     public MethodFixSuggester(
         ClassTree classTree, List<? extends Tree> classMembers, VisitorState state) {
@@ -326,10 +327,24 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
       this.classMembers = ImmutableList.copyOf(classMembers);
       this.state = state;
       this.violations = new ArrayList<>();
+      this.suppressed =
+          classMembers
+              .stream()
+              .filter(MethodTree.class::isInstance)
+              .map(MethodTree.class::cast)
+              .filter(m -> isSuppressed(m))
+              .map(m -> m.getName().toString())
+              .collect(toImmutableSet());
+    }
+
+    private void addViolation(OverloadViolation violation) {
+      if (!suppressed.contains(violation.getMethodName().toString())) {
+        violations.add(violation);
+      }
     }
 
     public void justReport(int currentOccurrence) {
-      violations.add(new JustReport((MethodTree) classMembers.get(currentOccurrence)));
+      addViolation(new JustReport((MethodTree) classMembers.get(currentOccurrence)));
     }
 
     public void moveBlock(int currentOccurrence) {
@@ -346,7 +361,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
 
       int startPosition = getBroadStartPosition(state, currentTree, previousTree);
       int endPosition = getBroadEndPosition(state, currentTree, nextTree);
-      violations.add(new MoveBlock(currentName, startPosition, endPosition));
+      addViolation(new MoveBlock(currentName, startPosition, endPosition));
     }
 
     public Description describeFix() {
