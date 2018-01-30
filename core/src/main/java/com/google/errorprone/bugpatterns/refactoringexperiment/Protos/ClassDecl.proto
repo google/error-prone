@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+package Models;
+
+option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
+option java_outer_classname = "ClassDecl";
+
+message clsDcl {
+  required string name = 1;
+  required string owner = 2;
+  repeated string LTtype = 3;
+  required string kind = 4;
+  required string srcFile = 5;
+  required string pckg = 6;
+
+ }

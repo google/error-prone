@@ -1,0 +1,20 @@
+syntax = "proto2";
+import "Analysis.proto";
+
+package Models;
+
+option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
+option java_outer_classname = "Variable";
+
+message Vrbl {
+  required string id = 1;
+  required string name = 2;
+  required string owner = 3;
+  optional string ownerMethodId = 9;
+  optional string ownerClass = 10;
+  required string type = 4;
+  required string kind = 5;
+  optional anlys  initializer = 6;
+  required string pckg = 7;
+  required string srcFile = 8;
+ }

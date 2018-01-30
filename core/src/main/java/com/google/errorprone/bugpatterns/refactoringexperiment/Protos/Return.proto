@@ -1,0 +1,15 @@
+syntax = "proto2";
+import "Analysis.proto";
+package Models;
+
+option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
+option java_outer_classname = "Return";
+
+message rtrn {
+  required string methodName = 1;
+  required string methodOwner = 2;
+  required string signature = 3;
+  required string srcFile = 4;
+  required string pckg = 5;
+  required anlys retExpr = 6;
+ }
