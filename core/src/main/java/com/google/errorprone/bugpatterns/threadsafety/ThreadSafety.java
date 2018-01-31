@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
@@ -286,7 +287,9 @@ public final class ThreadSafety {
           String.format(
               "the declaration of type '%s' is not annotated with %s",
               type,
-              markerAnnotations.stream().map(a -> "@" + a).collect(Collectors.joining(" or "))));
+              Streams.concat(markerAnnotations.stream(), acceptedAnnotations.stream())
+                  .map(a -> "@" + a)
+                  .collect(Collectors.joining(" or "))));
     }
   }
 
