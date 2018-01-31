@@ -78,6 +78,7 @@ public class JUnitMatchers {
            * annotation.  @BeforeClass and @AfterClass can only be applied to static methods, so they
            * cannot be inherited. */
           hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
+          hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION),
           hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
           hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
           hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
