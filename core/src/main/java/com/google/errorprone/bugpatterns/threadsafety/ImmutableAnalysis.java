@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
@@ -72,6 +73,10 @@ public class ImmutableAnalysis {
         state,
         wellKnownMutability,
         ImmutableSet.of(Immutable.class.getName()));
+  }
+
+  public Violation isThreadSafeType(Set<String> threadSafeTypeParams, Type type) {
+    return threadSafety.isThreadSafeType(threadSafeTypeParams, type);
   }
 
   @FunctionalInterface
