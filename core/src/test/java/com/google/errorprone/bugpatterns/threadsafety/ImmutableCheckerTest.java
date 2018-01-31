@@ -1487,4 +1487,66 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void immutableTypeParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class Test<@ImmutableTypeParameter T> {",
+            "  final T t = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterInstantiation() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  A<String> f() {",
+            "    return new A<>();",
+            "  }",
+            "  A<Object> g() {",
+            "   // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'Object' is mutable",
+            "    return new A<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterUsage() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class T {",
+            " // BUG: Diagnostic contains: only supported on classes",
+            "  <@ImmutableTypeParameter T> void f() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterMutableClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            " // BUG: Diagnostic contains: only supported on immutable classes",
+            "class A<@ImmutableTypeParameter T> {}")
+        .doTest();
+  }
 }

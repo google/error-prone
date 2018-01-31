@@ -45,6 +45,7 @@
     <module>core</module>
     <module>annotation</module>
     <module>annotations</module>
+    <module>type_annotations</module>
     <module>docgen</module>
     <module>docgen_processor</module>
     <module>ant</module>
