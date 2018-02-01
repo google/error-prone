@@ -1556,4 +1556,36 @@ public class GuardedByCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void multipleLocks() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "GuardedBy.java", //
+            "@interface GuardedBy {",
+            "  String[] value() default {};",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  private final Object mu = new Object();",
+            "  @GuardedBy({\"this\", \"mu\"}) int x;",
+            "  void f() {",
+            "    synchronized (this) {",
+            "      synchronized (mu) {",
+            "        x++;",
+            "      }",
+            "    }",
+            "    synchronized (this) {",
+            "      // BUG: Diagnostic contains: should be guarded by 'this.mu'",
+            "      x++;",
+            "    }",
+            "    synchronized (mu) {",
+            "      // BUG: Diagnostic contains: should be guarded by 'this'",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
