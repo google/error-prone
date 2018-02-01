@@ -133,6 +133,10 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("com.google.protobuf.Descriptors$ServiceDescriptor")
         .add("com.google.protobuf.Extension")
         .add("com.google.protobuf.ExtensionRegistry$ExtensionInfo")
+        // NOTE: GeneratedMessage is included here for external tests that use this class for
+        // checking whether classes are immutable. Within error prone, protos are verified
+        // using isProto2MessageClass from this class.
+        .add("com.google.protobuf.GeneratedMessage")
         .add("com.google.re2j.Pattern")
         .add("com.google.inject.TypeLiteral")
         .add("com.google.inject.Key")
