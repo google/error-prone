@@ -73,6 +73,26 @@ public class UnsafeFinalizationTest {
   }
 
   @Test
+  public void negative_this() {
+    compilationTestHelper
+        .addSourceLines(
+            "NativeStuff.java",
+            "class NativeStuff {",
+            "  static native void doNative(long ctx, NativeResource instance);",
+            "}")
+        .addSourceLines(
+            "NativeResource.java",
+            "class NativeResource {",
+            "  private static long ctx;",
+            "  @Override protected void finalize() {}",
+            "  public void run() {",
+            "    NativeStuff.doNative(ctx, this);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative_nonIntOrLong() {
     compilationTestHelper
         .addSourceLines(
