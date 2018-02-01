@@ -3502,6 +3502,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ImmutableModification.html#ImmutableModification--">ImmutableModification()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ImmutableModification.html" title="class in com.google.errorprone.bugpatterns">ImmutableModification</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/annotations/ImmutableTypeParameter.html" title="annotation in com.google.errorprone.annotations"><span class="typeNameLink">ImmutableTypeParameter</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
+<dd>
+<div class="block">The type parameter to which this annotation is applied should only be instantiated with immutable
+ types.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ReferenceEquality.html#implementsEquals-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">implementsEquals(Type, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">ReferenceEquality</a></dt>
 <dd>
 <div class="block">Check if the method declares or inherits an implementation of .equals()</div>
@@ -4057,6 +4062,8 @@
 <div class="block">Matches a class that inherits from TestCase.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneOptions.html#isTestOnlyTarget--">isTestOnlyTarget()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html#isThreadSafeType-java.util.Set-com.sun.tools.javac.code.Type-">isThreadSafeType(Set&lt;String&gt;, Type)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-java.util.Set-com.sun.tools.javac.code.Type-">isThreadSafeType(Set&lt;String&gt;, Type)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
@@ -5181,6 +5188,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThreadLocalUsage.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThreadLocalUsage.html" title="class in com.google.errorprone.bugpatterns">ThreadLocalUsage</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryTypeArgument</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnusedAnonymousClass.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnusedAnonymousClass.html" title="class in com.google.errorprone.bugpatterns">UnusedAnonymousClass</a></dt>
@@ -5271,6 +5280,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.TypeParameterTreeMatcher.html#matchTypeParameter-com.sun.source.tree.TypeParameterTree-com.google.errorprone.VisitorState-">matchTypeParameter(TypeParameterTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.TypeParameterTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TypeParameterTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JavaLangClash.html#matchTypeParameter-com.sun.source.tree.TypeParameterTree-com.google.errorprone.VisitorState-">matchTypeParameter(TypeParameterTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JavaLangClash.html" title="class in com.google.errorprone.bugpatterns">JavaLangClash</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html#matchTypeParameter-com.sun.source.tree.TypeParameterTree-com.google.errorprone.VisitorState-">matchTypeParameter(TypeParameterTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TypeParameterNaming.html#matchTypeParameter-com.sun.source.tree.TypeParameterTree-com.google.errorprone.VisitorState-">matchTypeParameter(TypeParameterTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterNaming.html" title="class in com.google.errorprone.bugpatterns">TypeParameterNaming</a></dt>
 <dd>&nbsp;</dd>
