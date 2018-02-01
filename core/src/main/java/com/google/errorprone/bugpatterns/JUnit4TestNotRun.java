@@ -56,8 +56,8 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
   name = "JUnit4TestNotRun",
   summary =
-      "This looks like a test method but is not run; please add @Test or @Ignore, or, if this is a "
-          + "helper method, reduce its visibility.",
+      "This looks like a test method but is not run; please add @Test and @Ignore, or, if this is "
+          + "a helper method, reduce its visibility.",
   explanation =
       "Unlike in JUnit 3, JUnit 4 tests will not be run unless annotated with @Test. "
           + "The test method that triggered this error looks like it was meant to be a test, but "
