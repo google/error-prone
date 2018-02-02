@@ -74,6 +74,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Resolve;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCAnnotatedType;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -205,6 +206,9 @@ public class ASTHelpers {
     }
     if (tree instanceof MemberReferenceTree) {
       return ((JCMemberReference) tree).sym;
+    }
+    if (tree instanceof JCAnnotatedType) {
+      return getSymbol(((JCAnnotatedType) tree).underlyingType);
     }
 
     return getDeclaredSymbol(tree);
