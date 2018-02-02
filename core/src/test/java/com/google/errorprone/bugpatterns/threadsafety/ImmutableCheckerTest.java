@@ -1549,4 +1549,100 @@ public class ImmutableCheckerTest {
             "class A<@ImmutableTypeParameter T> {}")
         .doTest();
   }
+
+  @Test
+  public void containerOf_extendsThreadSafe() {
+    compilationHelper
+        .addSourceLines(
+            "X.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class X<V> {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "// BUG: Diagnostic contains: 'X' is not a container of 'V'",
+            "@Immutable(containerOf = {\"Y\"}) class Test<Y> extends X<Y> {",
+            "  private final Y t = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containerOf_extendsThreadSafeContainerOf() {
+    compilationHelper
+        .addSourceLines(
+            "X.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf = {\"V\"}) class X<V> {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf = {\"Y\"}) class Test<Y> extends X<Y> {",
+            "  private final Y t = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containerOf_extendsThreadSafe_nonContainer() {
+    compilationHelper
+        .addSourceLines(
+            "X.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf = {\"V\"}) class X<U, V> {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf = {\"Y\"}) class Test<Y> extends X<Object, Y> {",
+            "  private final Y t = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containerOf_extendsThreadSafe_interface() {
+    compilationHelper
+        .addSourceLines(
+            "X.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable interface X<V> {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "// BUG: Diagnostic contains: 'X' is not a container of 'V'",
+            "@Immutable(containerOf = {\"Y\"}) class Test<Y> implements X<Y> {",
+            "  private final Y t = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containerOf_field() {
+    compilationHelper
+        .addSourceLines(
+            "X.java", //
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable interface X<Y> {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf=\"V\") class Test<V> {",
+            "  private final X<V> t = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void annotatedClassType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static java.lang.annotation.ElementType.TYPE_USE;",
+            "import java.lang.annotation.Target;",
+            "@Target(TYPE_USE) @interface A {}",
+            "class Test {",
+            "  Object o = new @A Object();",
+            "}")
+        .doTest();
+  }
 }

@@ -119,7 +119,7 @@ public class ImmutableAnalysis {
         continue;
       }
       info =
-          threadSafety.threadSafeInstantiation(
+          threadSafety.checkSuperInstantiation(
               immutableTyParams, interfaceAnnotation, interfaceType);
       if (info.isPresent()) {
         return info.plus(
@@ -167,7 +167,7 @@ public class ImmutableAnalysis {
       // If the superclass does happen to be immutable, we don't need to recursively
       // inspect it. We just have to check that it's instantiated correctly:
       Violation info =
-          threadSafety.threadSafeInstantiation(immutableTyParams, superannotation, superType);
+          threadSafety.checkSuperInstantiation(immutableTyParams, superannotation, superType);
       if (!info.isPresent()) {
         return Violation.absent();
       }

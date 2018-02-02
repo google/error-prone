@@ -29,6 +29,7 @@ import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
+import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Attribute;
@@ -195,6 +196,73 @@ public final class ThreadSafety {
       }
     }
     return Violation.absent();
+  }
+
+  /**
+   * Checks that the super-type of a {@code @ThreadSafe}-annotated type is instantiated with
+   * threadsafe type arguments where required by its annotation's containerOf element, and that any
+   * type arguments that correspond to containerOf type parameters on the sub-type are also in the
+   * super-type's containerOf spec.
+   *
+   * @param threadSafeTypeParams the in-scope threadsafe type parameters, declared on some enclosing
+   *     class.
+   * @param annotation the type's {@code @ThreadSafe} info
+   * @param type the type to check
+   */
+  public Violation checkSuperInstantiation(
+      Set<String> threadSafeTypeParams, AnnotationInfo annotation, Type type) {
+    Violation info = threadSafeInstantiation(threadSafeTypeParams, annotation, type);
+    if (info.isPresent()) {
+      return info;
+    }
+    return Streams.zip(
+            type.asElement().getTypeParameters().stream(),
+            type.getTypeArguments().stream(),
+            (typaram, argument) -> {
+              if (containerOfSubtyping(threadSafeTypeParams, annotation, typaram, argument)) {
+                return Violation.of(
+                    String.format(
+                        "'%s' is not a container of '%s'", annotation.typeName(), typaram));
+              }
+              return Violation.absent();
+            })
+        .filter(Violation::isPresent)
+        .findFirst()
+        .orElse(Violation.absent());
+  }
+
+  // Enforce strong behavioral subtyping for containers.
+  // If:
+  // (1) a generic super type is instantiated with a type argument that is a type variable
+  //     declared by the current class, and
+  // (2) the current class is a container of that type parameter, then
+  // (3) require the super-class to also be a container of its corresponding type parameter.
+  private static boolean containerOfSubtyping(
+      Set<String> threadSafeTypeParams,
+      AnnotationInfo annotation,
+      TypeVariableSymbol typaram,
+      Type tyargument) {
+    // (1)
+    if (!tyargument.hasTag(TypeTag.TYPEVAR)) {
+      return false;
+    }
+    // (2)
+    if (!threadSafeTypeParams.contains(tyargument.asElement().getSimpleName().toString())) {
+      return false;
+    }
+    // (3)
+    if (annotation.containerOf().contains(typaram.getSimpleName().toString())) {
+      return false;
+    }
+    return true;
+  }
+
+  static boolean isImmutableTypeParameter(TypeVariableSymbol tyvar) {
+    String name = ImmutableTypeParameter.class.getName();
+    return tyvar
+        .getAnnotationMirrors()
+        .stream()
+        .anyMatch(t -> t.type.tsym.getQualifiedName().contentEquals(name));
   }
 
   /** Returns an {@link Violation} explaining whether the type is threadsafe. */
