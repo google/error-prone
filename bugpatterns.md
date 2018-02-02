@@ -183,7 +183,7 @@ __[JUnit4TearDownNotRun](bugpattern/JUnit4TearDownNotRun)__<br>
 tearDown() method will not be run; please add JUnit&#39;s @After annotation
 
 __[JUnit4TestNotRun](bugpattern/JUnit4TestNotRun)__<br>
-This looks like a test method but is not run; please add @Test or @Ignore, or, if this is a helper method, reduce its visibility.
+This looks like a test method but is not run; please add @Test and @Ignore, or, if this is a helper method, reduce its visibility.
 
 __[JUnitAssertSameCheck](bugpattern/JUnitAssertSameCheck)__<br>
 An object is tested for reference equality to itself using JUnit library.

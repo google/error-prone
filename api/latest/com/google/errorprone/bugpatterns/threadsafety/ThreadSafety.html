@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -180,6 +180,17 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkSuperInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">checkSuperInstantiation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
+                       <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
+                       com.sun.tools.javac.code.Type&nbsp;type)</code>
+<div class="block">Checks that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
+ threadsafe type arguments where required by its annotation's containerOf element, and that any
+ type arguments that correspond to containerOf type parameters on the sub-type are also in the
+ super-type's containerOf spec.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getInheritedAnnotation-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">getInheritedAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
                       <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
@@ -187,7 +198,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  containerOf spec's from super-classes.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getMarkerOrAcceptedAnnotation-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">getMarkerOrAcceptedAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
                              <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
@@ -195,27 +206,27 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  an accepted annotation on the symbol, or from the list of well-known types.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getPrettyName-com.sun.tools.javac.code.Symbol-">getPrettyName</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code>
 <div class="block">Gets a human-friendly name for the given <code>Symbol</code> to use in diagnostics.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-java.util.Set-com.sun.tools.javac.code.Type-">isThreadSafeType</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
                 com.sun.tools.javac.code.Type&nbsp;type)</code>
 <div class="block">Returns an <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> explaining whether the type is threadsafe.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#mutableEnclosingInstance-java.util.Optional-com.sun.tools.javac.code.Type.ClassType-">mutableEnclosingInstance</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;com.sun.source.tree.ClassTree&gt;&nbsp;tree,
                         com.sun.tools.javac.code.Type.ClassType&nbsp;type)</code>
 <div class="block">Returns an enclosing instance for the specified type if it is thread-safe.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">threadSafeInstantiation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
                        <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
@@ -224,7 +235,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  type arguments where required by its annotation's containerOf element.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeTypeParametersInScope-com.sun.tools.javac.code.Symbol-">threadSafeTypeParametersInScope</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code>
 <div class="block">Gets the set of in-scope threadsafe type parameters from the containerOf specs on annotations.</div>
@@ -298,6 +309,28 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                                                       com.sun.tools.javac.code.Type&nbsp;type)</pre>
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
  type arguments where required by its annotation's containerOf element.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>threadSafeTypeParams</code> - the in-scope threadsafe type parameters, declared on some enclosing
+     class.</dd>
+<dd><code>annotation</code> - the type's <code>@ThreadSafe</code> info</dd>
+<dd><code>type</code> - the type to check</dd>
+</dl>
+</li>
+</ul>
+<a name="checkSuperInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>checkSuperInstantiation</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;checkSuperInstantiation(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
+                                                      <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
+                                                      com.sun.tools.javac.code.Type&nbsp;type)</pre>
+<div class="block">Checks that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
+ threadsafe type arguments where required by its annotation's containerOf element, and that any
+ type arguments that correspond to containerOf type parameters on the sub-type are also in the
+ super-type's containerOf spec.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>threadSafeTypeParams</code> - the in-scope threadsafe type parameters, declared on some enclosing

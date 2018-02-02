@@ -1084,6 +1084,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CheckReturnValue.html#CheckReturnValue--">CheckReturnValue()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkSuperInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">checkSuperInstantiation(Set&lt;String&gt;, AnnotationInfo, Type)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
+<dd>
+<div class="block">Checks that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
+ threadsafe type arguments where required by its annotation's containerOf element, and that any
+ type arguments that correspond to containerOf type parameters on the sub-type are also in the
+ super-type's containerOf spec.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">ChildMultiMatcher</span></a>&lt;<a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a> extends com.sun.source.tree.Tree,<a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a> extends com.sun.source.tree.Tree&gt; - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers"><code>MultiMatcher</code></a> that applies a matcher across multiple children of a single ancestor node.</div>
