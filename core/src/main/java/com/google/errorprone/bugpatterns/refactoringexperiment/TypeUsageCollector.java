@@ -71,7 +71,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
                 mthdDcl.setSuperMethodIn(y.get(0));
             }
             mthdDcl.putAllParam(params.stream().filter(x -> DataFilter.apply(x, state))
-                    .collect(Collectors.toMap(x -> params.indexOf(x), x -> generateId(ASTHelpers.getSymbol(x)))));
+                    .collect(Collectors.toMap(x -> params.indexOf(x), x -> getName(ASTHelpers.getSymbol(x)))));
 
             mthdDcl.addAllModifier(symb.getModifiers().stream().map(x -> x.toString()).collect(Collectors.toList()));
 
