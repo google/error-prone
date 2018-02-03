@@ -19,29 +19,29 @@ public final class Return {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required string methodName = 1;</code>
+     * <code>required string method_name = 1;</code>
      */
     boolean hasMethodName();
     /**
-     * <code>required string methodName = 1;</code>
+     * <code>required string method_name = 1;</code>
      */
     java.lang.String getMethodName();
     /**
-     * <code>required string methodName = 1;</code>
+     * <code>required string method_name = 1;</code>
      */
     com.google.protobuf.ByteString
         getMethodNameBytes();
 
     /**
-     * <code>required string methodOwner = 2;</code>
+     * <code>required string method_owner = 2;</code>
      */
     boolean hasMethodOwner();
     /**
-     * <code>required string methodOwner = 2;</code>
+     * <code>required string method_owner = 2;</code>
      */
     java.lang.String getMethodOwner();
     /**
-     * <code>required string methodOwner = 2;</code>
+     * <code>required string method_owner = 2;</code>
      */
     com.google.protobuf.ByteString
         getMethodOwnerBytes();
@@ -65,26 +65,26 @@ public final class Return {
      *id | kind| additional info
      * </pre>
      *
-     * <code>required string retExpr = 4;</code>
+     * <code>required string return_expr = 4;</code>
      */
-    boolean hasRetExpr();
+    boolean hasReturnExpr();
     /**
      * <pre>
      *id | kind| additional info
      * </pre>
      *
-     * <code>required string retExpr = 4;</code>
+     * <code>required string return_expr = 4;</code>
      */
-    java.lang.String getRetExpr();
+    java.lang.String getReturnExpr();
     /**
      * <pre>
      *id | kind| additional info
      * </pre>
      *
-     * <code>required string retExpr = 4;</code>
+     * <code>required string return_expr = 4;</code>
      */
     com.google.protobuf.ByteString
-        getRetExprBytes();
+        getReturnExprBytes();
   }
   /**
    * Protobuf type {@code Models.rtrn}
@@ -102,7 +102,7 @@ public final class Return {
       methodName_ = "";
       methodOwner_ = "";
       signature_ = "";
-      retExpr_ = "";
+      returnExpr_ = "";
     }
 
     @java.lang.Override
@@ -157,7 +157,7 @@ public final class Return {
             case 34: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000008;
-              retExpr_ = bs;
+              returnExpr_ = bs;
               break;
             }
           }
@@ -185,16 +185,16 @@ public final class Return {
     }
 
     private int bitField0_;
-    public static final int METHODNAME_FIELD_NUMBER = 1;
+    public static final int METHOD_NAME_FIELD_NUMBER = 1;
     private volatile java.lang.Object methodName_;
     /**
-     * <code>required string methodName = 1;</code>
+     * <code>required string method_name = 1;</code>
      */
     public boolean hasMethodName() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string methodName = 1;</code>
+     * <code>required string method_name = 1;</code>
      */
     public java.lang.String getMethodName() {
       java.lang.Object ref = methodName_;
@@ -211,7 +211,7 @@ public final class Return {
       }
     }
     /**
-     * <code>required string methodName = 1;</code>
+     * <code>required string method_name = 1;</code>
      */
     public com.google.protobuf.ByteString
         getMethodNameBytes() {
@@ -227,16 +227,16 @@ public final class Return {
       }
     }
 
-    public static final int METHODOWNER_FIELD_NUMBER = 2;
+    public static final int METHOD_OWNER_FIELD_NUMBER = 2;
     private volatile java.lang.Object methodOwner_;
     /**
-     * <code>required string methodOwner = 2;</code>
+     * <code>required string method_owner = 2;</code>
      */
     public boolean hasMethodOwner() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required string methodOwner = 2;</code>
+     * <code>required string method_owner = 2;</code>
      */
     public java.lang.String getMethodOwner() {
       java.lang.Object ref = methodOwner_;
@@ -253,7 +253,7 @@ public final class Return {
       }
     }
     /**
-     * <code>required string methodOwner = 2;</code>
+     * <code>required string method_owner = 2;</code>
      */
     public com.google.protobuf.ByteString
         getMethodOwnerBytes() {
@@ -311,16 +311,16 @@ public final class Return {
       }
     }
 
-    public static final int RETEXPR_FIELD_NUMBER = 4;
-    private volatile java.lang.Object retExpr_;
+    public static final int RETURN_EXPR_FIELD_NUMBER = 4;
+    private volatile java.lang.Object returnExpr_;
     /**
      * <pre>
      *id | kind| additional info
      * </pre>
      *
-     * <code>required string retExpr = 4;</code>
+     * <code>required string return_expr = 4;</code>
      */
-    public boolean hasRetExpr() {
+    public boolean hasReturnExpr() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
@@ -328,10 +328,10 @@ public final class Return {
      *id | kind| additional info
      * </pre>
      *
-     * <code>required string retExpr = 4;</code>
+     * <code>required string return_expr = 4;</code>
      */
-    public java.lang.String getRetExpr() {
-      java.lang.Object ref = retExpr_;
+    public java.lang.String getReturnExpr() {
+      java.lang.Object ref = returnExpr_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -339,7 +339,7 @@ public final class Return {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          retExpr_ = s;
+          returnExpr_ = s;
         }
         return s;
       }
@@ -349,16 +349,16 @@ public final class Return {
      *id | kind| additional info
      * </pre>
      *
-     * <code>required string retExpr = 4;</code>
+     * <code>required string return_expr = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getRetExprBytes() {
-      java.lang.Object ref = retExpr_;
+        getReturnExprBytes() {
+      java.lang.Object ref = returnExpr_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        retExpr_ = b;
+        returnExpr_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -383,7 +383,7 @@ public final class Return {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasRetExpr()) {
+      if (!hasReturnExpr()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -403,7 +403,7 @@ public final class Return {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, signature_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, retExpr_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, returnExpr_);
       }
       unknownFields.writeTo(output);
     }
@@ -423,7 +423,7 @@ public final class Return {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, signature_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, retExpr_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, returnExpr_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -456,10 +456,10 @@ public final class Return {
         result = result && getSignature()
             .equals(other.getSignature());
       }
-      result = result && (hasRetExpr() == other.hasRetExpr());
-      if (hasRetExpr()) {
-        result = result && getRetExpr()
-            .equals(other.getRetExpr());
+      result = result && (hasReturnExpr() == other.hasReturnExpr());
+      if (hasReturnExpr()) {
+        result = result && getReturnExpr()
+            .equals(other.getReturnExpr());
       }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -473,20 +473,20 @@ public final class Return {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       if (hasMethodName()) {
-        hash = (37 * hash) + METHODNAME_FIELD_NUMBER;
+        hash = (37 * hash) + METHOD_NAME_FIELD_NUMBER;
         hash = (53 * hash) + getMethodName().hashCode();
       }
       if (hasMethodOwner()) {
-        hash = (37 * hash) + METHODOWNER_FIELD_NUMBER;
+        hash = (37 * hash) + METHOD_OWNER_FIELD_NUMBER;
         hash = (53 * hash) + getMethodOwner().hashCode();
       }
       if (hasSignature()) {
         hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
         hash = (53 * hash) + getSignature().hashCode();
       }
-      if (hasRetExpr()) {
-        hash = (37 * hash) + RETEXPR_FIELD_NUMBER;
-        hash = (53 * hash) + getRetExpr().hashCode();
+      if (hasReturnExpr()) {
+        hash = (37 * hash) + RETURN_EXPR_FIELD_NUMBER;
+        hash = (53 * hash) + getReturnExpr().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -623,7 +623,7 @@ public final class Return {
         bitField0_ = (bitField0_ & ~0x00000002);
         signature_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
-        retExpr_ = "";
+        returnExpr_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
@@ -664,7 +664,7 @@ public final class Return {
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.retExpr_ = retExpr_;
+        result.returnExpr_ = returnExpr_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -722,9 +722,9 @@ public final class Return {
           signature_ = other.signature_;
           onChanged();
         }
-        if (other.hasRetExpr()) {
+        if (other.hasReturnExpr()) {
           bitField0_ |= 0x00000008;
-          retExpr_ = other.retExpr_;
+          returnExpr_ = other.returnExpr_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -742,7 +742,7 @@ public final class Return {
         if (!hasSignature()) {
           return false;
         }
-        if (!hasRetExpr()) {
+        if (!hasReturnExpr()) {
           return false;
         }
         return true;
@@ -769,13 +769,13 @@ public final class Return {
 
       private java.lang.Object methodName_ = "";
       /**
-       * <code>required string methodName = 1;</code>
+       * <code>required string method_name = 1;</code>
        */
       public boolean hasMethodName() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string methodName = 1;</code>
+       * <code>required string method_name = 1;</code>
        */
       public java.lang.String getMethodName() {
         java.lang.Object ref = methodName_;
@@ -792,7 +792,7 @@ public final class Return {
         }
       }
       /**
-       * <code>required string methodName = 1;</code>
+       * <code>required string method_name = 1;</code>
        */
       public com.google.protobuf.ByteString
           getMethodNameBytes() {
@@ -808,7 +808,7 @@ public final class Return {
         }
       }
       /**
-       * <code>required string methodName = 1;</code>
+       * <code>required string method_name = 1;</code>
        */
       public Builder setMethodName(
           java.lang.String value) {
@@ -821,7 +821,7 @@ public final class Return {
         return this;
       }
       /**
-       * <code>required string methodName = 1;</code>
+       * <code>required string method_name = 1;</code>
        */
       public Builder clearMethodName() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -830,7 +830,7 @@ public final class Return {
         return this;
       }
       /**
-       * <code>required string methodName = 1;</code>
+       * <code>required string method_name = 1;</code>
        */
       public Builder setMethodNameBytes(
           com.google.protobuf.ByteString value) {
@@ -845,13 +845,13 @@ public final class Return {
 
       private java.lang.Object methodOwner_ = "";
       /**
-       * <code>required string methodOwner = 2;</code>
+       * <code>required string method_owner = 2;</code>
        */
       public boolean hasMethodOwner() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required string methodOwner = 2;</code>
+       * <code>required string method_owner = 2;</code>
        */
       public java.lang.String getMethodOwner() {
         java.lang.Object ref = methodOwner_;
@@ -868,7 +868,7 @@ public final class Return {
         }
       }
       /**
-       * <code>required string methodOwner = 2;</code>
+       * <code>required string method_owner = 2;</code>
        */
       public com.google.protobuf.ByteString
           getMethodOwnerBytes() {
@@ -884,7 +884,7 @@ public final class Return {
         }
       }
       /**
-       * <code>required string methodOwner = 2;</code>
+       * <code>required string method_owner = 2;</code>
        */
       public Builder setMethodOwner(
           java.lang.String value) {
@@ -897,7 +897,7 @@ public final class Return {
         return this;
       }
       /**
-       * <code>required string methodOwner = 2;</code>
+       * <code>required string method_owner = 2;</code>
        */
       public Builder clearMethodOwner() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -906,7 +906,7 @@ public final class Return {
         return this;
       }
       /**
-       * <code>required string methodOwner = 2;</code>
+       * <code>required string method_owner = 2;</code>
        */
       public Builder setMethodOwnerBytes(
           com.google.protobuf.ByteString value) {
@@ -995,15 +995,15 @@ public final class Return {
         return this;
       }
 
-      private java.lang.Object retExpr_ = "";
+      private java.lang.Object returnExpr_ = "";
       /**
        * <pre>
        *id | kind| additional info
        * </pre>
        *
-       * <code>required string retExpr = 4;</code>
+       * <code>required string return_expr = 4;</code>
        */
-      public boolean hasRetExpr() {
+      public boolean hasReturnExpr() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
@@ -1011,16 +1011,16 @@ public final class Return {
        *id | kind| additional info
        * </pre>
        *
-       * <code>required string retExpr = 4;</code>
+       * <code>required string return_expr = 4;</code>
        */
-      public java.lang.String getRetExpr() {
-        java.lang.Object ref = retExpr_;
+      public java.lang.String getReturnExpr() {
+        java.lang.Object ref = returnExpr_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
-            retExpr_ = s;
+            returnExpr_ = s;
           }
           return s;
         } else {
@@ -1032,16 +1032,16 @@ public final class Return {
        *id | kind| additional info
        * </pre>
        *
-       * <code>required string retExpr = 4;</code>
+       * <code>required string return_expr = 4;</code>
        */
       public com.google.protobuf.ByteString
-          getRetExprBytes() {
-        java.lang.Object ref = retExpr_;
+          getReturnExprBytes() {
+        java.lang.Object ref = returnExpr_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          retExpr_ = b;
+          returnExpr_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
@@ -1052,15 +1052,15 @@ public final class Return {
        *id | kind| additional info
        * </pre>
        *
-       * <code>required string retExpr = 4;</code>
+       * <code>required string return_expr = 4;</code>
        */
-      public Builder setRetExpr(
+      public Builder setReturnExpr(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000008;
-        retExpr_ = value;
+        returnExpr_ = value;
         onChanged();
         return this;
       }
@@ -1069,11 +1069,11 @@ public final class Return {
        *id | kind| additional info
        * </pre>
        *
-       * <code>required string retExpr = 4;</code>
+       * <code>required string return_expr = 4;</code>
        */
-      public Builder clearRetExpr() {
+      public Builder clearReturnExpr() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        retExpr_ = getDefaultInstance().getRetExpr();
+        returnExpr_ = getDefaultInstance().getReturnExpr();
         onChanged();
         return this;
       }
@@ -1082,15 +1082,15 @@ public final class Return {
        *id | kind| additional info
        * </pre>
        *
-       * <code>required string retExpr = 4;</code>
+       * <code>required string return_expr = 4;</code>
        */
-      public Builder setRetExprBytes(
+      public Builder setReturnExprBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000008;
-        retExpr_ = value;
+        returnExpr_ = value;
         onChanged();
         return this;
       }
@@ -1157,11 +1157,11 @@ public final class Return {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014Return.proto\022\006Models\"S\n\004rtrn\022\022\n\nmethod" +
-      "Name\030\001 \002(\t\022\023\n\013methodOwner\030\002 \002(\t\022\021\n\tsigna" +
-      "ture\030\003 \002(\t\022\017\n\007retExpr\030\004 \002(\tBH\n>com.googl" +
-      "e.errorprone.bugpatterns.refactoringexpe" +
-      "riment.modelsB\006Return"
+      "\n\014Return.proto\022\006Models\"Y\n\004rtrn\022\023\n\013method" +
+      "_name\030\001 \002(\t\022\024\n\014method_owner\030\002 \002(\t\022\021\n\tsig" +
+      "nature\030\003 \002(\t\022\023\n\013return_expr\030\004 \002(\tBH\n>com" +
+      ".google.errorprone.bugpatterns.refactori" +
+      "ngexperiment.modelsB\006Return"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1180,7 +1180,7 @@ public final class Return {
     internal_static_Models_rtrn_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_rtrn_descriptor,
-        new java.lang.String[] { "MethodName", "MethodOwner", "Signature", "RetExpr", });
+        new java.lang.String[] { "MethodName", "MethodOwner", "Signature", "ReturnExpr", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -163,17 +163,14 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     @Override
     public Description matchAssignment(AssignmentTree var1, VisitorState state) {
         ExpressionTree lhs = var1.getVariable();
-        System.out.println(lhs.toString());
-        //TODO: remove this filter
-        // for some reason ASTHelper.isSubtype throws an Assertion error without this check .
-        if ((lhs.getKind().equals(Tree.Kind.IDENTIFIER) || lhs.getKind().equals(Tree.Kind.MEMBER_SELECT)
-                || lhs.getKind().equals(Tree.Kind.VARIABLE))
-                && DataFilter.apply(var1, state)) {
+        Symbol symb = ASTHelpers.getSymbol(var1);
+        if (symb!= null && DataFilter.apply(symb.type,state)) {
             Assignment.Asgn.Builder asgn = Assignment.Asgn.newBuilder();
             asgn.setLhs(infoOfTree(lhs))
                     .setRhs(infoOfTree(var1.getExpression()));
             ProtoBuffPersist.write(asgn, var1.getKind().toString());
         }
+
         return null;
     }
 
@@ -188,9 +185,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
                     .setOwner(symb.owner.toString())
                     .setKind(classTree.getKind().toString());
 
-            if (isLT) clsDcl.addLTtype(ASTHelpers.getType(classTree).toString());
+            if (isLT) clsDcl.addSuperType(ASTHelpers.getType(classTree).toString());
             else
-                clsDcl.addAllLTtype(classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state))
+                clsDcl.addAllSuperType(classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state))
                         .map(x -> ASTHelpers.getType(x).toString()).collect(Collectors.toList()));
             ProtoBuffPersist.write(clsDcl, classTree.getKind().toString());
         }

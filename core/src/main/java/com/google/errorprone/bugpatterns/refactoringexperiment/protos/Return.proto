@@ -5,9 +5,9 @@ option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.m
 option java_outer_classname = "Return";
 
 message rtrn {
-  required string methodName = 1;
-  required string methodOwner = 2;
+  required string method_name = 1;
+  required string method_owner = 2;
   required string signature = 3;
-  required string retExpr = 4; //id | kind| additional info
+  required string return_expr = 4; //id | kind| additional info
 
  }

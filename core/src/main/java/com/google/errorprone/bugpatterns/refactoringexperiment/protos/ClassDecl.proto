@@ -8,7 +8,7 @@ option java_outer_classname = "ClassDecl";
 message clsDcl {
   required string name = 1;
   required string owner = 2;
-  repeated string LTtype = 3;
+  repeated string super_type = 3;
   required string kind = 4;
 
  }

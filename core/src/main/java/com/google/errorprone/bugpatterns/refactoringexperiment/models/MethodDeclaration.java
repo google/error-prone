@@ -89,15 +89,15 @@ public final class MethodDeclaration {
         getKindBytes();
 
     /**
-     * <code>optional string returnType = 6;</code>
+     * <code>optional string return_type = 6;</code>
      */
     boolean hasReturnType();
     /**
-     * <code>optional string returnType = 6;</code>
+     * <code>optional string return_type = 6;</code>
      */
     java.lang.String getReturnType();
     /**
-     * <code>optional string returnType = 6;</code>
+     * <code>optional string return_type = 6;</code>
      */
     com.google.protobuf.ByteString
         getReturnTypeBytes();
@@ -107,7 +107,7 @@ public final class MethodDeclaration {
      * index against id
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; param = 8;</code>
+     * <code>map&lt;int32, string&gt; param = 7;</code>
      */
     int getParamCount();
     /**
@@ -115,7 +115,7 @@ public final class MethodDeclaration {
      * index against id
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; param = 8;</code>
+     * <code>map&lt;int32, string&gt; param = 7;</code>
      */
     boolean containsParam(
         int key);
@@ -130,7 +130,7 @@ public final class MethodDeclaration {
      * index against id
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; param = 8;</code>
+     * <code>map&lt;int32, string&gt; param = 7;</code>
      */
     java.util.Map<java.lang.Integer, java.lang.String>
     getParamMap();
@@ -139,7 +139,7 @@ public final class MethodDeclaration {
      * index against id
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; param = 8;</code>
+     * <code>map&lt;int32, string&gt; param = 7;</code>
      */
 
     java.lang.String getParamOrDefault(
@@ -150,41 +150,41 @@ public final class MethodDeclaration {
      * index against id
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; param = 8;</code>
+     * <code>map&lt;int32, string&gt; param = 7;</code>
      */
 
     java.lang.String getParamOrThrow(
         int key);
 
     /**
-     * <code>repeated string modifier = 9;</code>
+     * <code>repeated string modifier = 8;</code>
      */
     java.util.List<java.lang.String>
         getModifierList();
     /**
-     * <code>repeated string modifier = 9;</code>
+     * <code>repeated string modifier = 8;</code>
      */
     int getModifierCount();
     /**
-     * <code>repeated string modifier = 9;</code>
+     * <code>repeated string modifier = 8;</code>
      */
     java.lang.String getModifier(int index);
     /**
-     * <code>repeated string modifier = 9;</code>
+     * <code>repeated string modifier = 8;</code>
      */
     com.google.protobuf.ByteString
         getModifierBytes(int index);
 
     /**
-     * <code>optional string superMethodIn = 10;</code>
+     * <code>optional string super_method_in = 9;</code>
      */
     boolean hasSuperMethodIn();
     /**
-     * <code>optional string superMethodIn = 10;</code>
+     * <code>optional string super_method_in = 9;</code>
      */
     java.lang.String getSuperMethodIn();
     /**
-     * <code>optional string superMethodIn = 10;</code>
+     * <code>optional string super_method_in = 9;</code>
      */
     com.google.protobuf.ByteString
         getSuperMethodInBytes();
@@ -279,7 +279,7 @@ public final class MethodDeclaration {
               returnType_ = bs;
               break;
             }
-            case 66: {
+            case 58: {
               if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
                 param_ = com.google.protobuf.MapField.newMapField(
                     ParamDefaultEntryHolder.defaultEntry);
@@ -292,7 +292,7 @@ public final class MethodDeclaration {
                   param__.getKey(), param__.getValue());
               break;
             }
-            case 74: {
+            case 66: {
               com.google.protobuf.ByteString bs = input.readBytes();
               if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
                 modifier_ = new com.google.protobuf.LazyStringArrayList();
@@ -301,7 +301,7 @@ public final class MethodDeclaration {
               modifier_.add(bs);
               break;
             }
-            case 82: {
+            case 74: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000040;
               superMethodIn_ = bs;
@@ -331,7 +331,7 @@ public final class MethodDeclaration {
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 8:
+        case 7:
           return internalGetParam();
         default:
           throw new RuntimeException(
@@ -556,16 +556,16 @@ public final class MethodDeclaration {
       }
     }
 
-    public static final int RETURNTYPE_FIELD_NUMBER = 6;
+    public static final int RETURN_TYPE_FIELD_NUMBER = 6;
     private volatile java.lang.Object returnType_;
     /**
-     * <code>optional string returnType = 6;</code>
+     * <code>optional string return_type = 6;</code>
      */
     public boolean hasReturnType() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
-     * <code>optional string returnType = 6;</code>
+     * <code>optional string return_type = 6;</code>
      */
     public java.lang.String getReturnType() {
       java.lang.Object ref = returnType_;
@@ -582,7 +582,7 @@ public final class MethodDeclaration {
       }
     }
     /**
-     * <code>optional string returnType = 6;</code>
+     * <code>optional string return_type = 6;</code>
      */
     public com.google.protobuf.ByteString
         getReturnTypeBytes() {
@@ -598,7 +598,7 @@ public final class MethodDeclaration {
       }
     }
 
-    public static final int PARAM_FIELD_NUMBER = 8;
+    public static final int PARAM_FIELD_NUMBER = 7;
     private static final class ParamDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.Integer, java.lang.String> defaultEntry =
@@ -629,7 +629,7 @@ public final class MethodDeclaration {
      * index against id
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; param = 8;</code>
+     * <code>map&lt;int32, string&gt; param = 7;</code>
      */
 
     public boolean containsParam(
@@ -649,7 +649,7 @@ public final class MethodDeclaration {
      * index against id
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; param = 8;</code>
+     * <code>map&lt;int32, string&gt; param = 7;</code>
      */
 
     public java.util.Map<java.lang.Integer, java.lang.String> getParamMap() {
@@ -660,7 +660,7 @@ public final class MethodDeclaration {
      * index against id
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; param = 8;</code>
+     * <code>map&lt;int32, string&gt; param = 7;</code>
      */
 
     public java.lang.String getParamOrDefault(
@@ -676,7 +676,7 @@ public final class MethodDeclaration {
      * index against id
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; param = 8;</code>
+     * <code>map&lt;int32, string&gt; param = 7;</code>
      */
 
     public java.lang.String getParamOrThrow(
@@ -690,45 +690,45 @@ public final class MethodDeclaration {
       return map.get(key);
     }
 
-    public static final int MODIFIER_FIELD_NUMBER = 9;
+    public static final int MODIFIER_FIELD_NUMBER = 8;
     private com.google.protobuf.LazyStringList modifier_;
     /**
-     * <code>repeated string modifier = 9;</code>
+     * <code>repeated string modifier = 8;</code>
      */
     public com.google.protobuf.ProtocolStringList
         getModifierList() {
       return modifier_;
     }
     /**
-     * <code>repeated string modifier = 9;</code>
+     * <code>repeated string modifier = 8;</code>
      */
     public int getModifierCount() {
       return modifier_.size();
     }
     /**
-     * <code>repeated string modifier = 9;</code>
+     * <code>repeated string modifier = 8;</code>
      */
     public java.lang.String getModifier(int index) {
       return modifier_.get(index);
     }
     /**
-     * <code>repeated string modifier = 9;</code>
+     * <code>repeated string modifier = 8;</code>
      */
     public com.google.protobuf.ByteString
         getModifierBytes(int index) {
       return modifier_.getByteString(index);
     }
 
-    public static final int SUPERMETHODIN_FIELD_NUMBER = 10;
+    public static final int SUPER_METHOD_IN_FIELD_NUMBER = 9;
     private volatile java.lang.Object superMethodIn_;
     /**
-     * <code>optional string superMethodIn = 10;</code>
+     * <code>optional string super_method_in = 9;</code>
      */
     public boolean hasSuperMethodIn() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
-     * <code>optional string superMethodIn = 10;</code>
+     * <code>optional string super_method_in = 9;</code>
      */
     public java.lang.String getSuperMethodIn() {
       java.lang.Object ref = superMethodIn_;
@@ -745,7 +745,7 @@ public final class MethodDeclaration {
       }
     }
     /**
-     * <code>optional string superMethodIn = 10;</code>
+     * <code>optional string super_method_in = 9;</code>
      */
     public com.google.protobuf.ByteString
         getSuperMethodInBytes() {
@@ -816,12 +816,12 @@ public final class MethodDeclaration {
           output,
           internalGetParam(),
           ParamDefaultEntryHolder.defaultEntry,
-          8);
+          7);
       for (int i = 0; i < modifier_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, modifier_.getRaw(i));
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, modifier_.getRaw(i));
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, superMethodIn_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, superMethodIn_);
       }
       unknownFields.writeTo(output);
     }
@@ -857,7 +857,7 @@ public final class MethodDeclaration {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(8, param__);
+            .computeMessageSize(7, param__);
       }
       {
         int dataSize = 0;
@@ -868,7 +868,7 @@ public final class MethodDeclaration {
         size += 1 * getModifierList().size();
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, superMethodIn_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, superMethodIn_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -957,7 +957,7 @@ public final class MethodDeclaration {
         hash = (53 * hash) + getKind().hashCode();
       }
       if (hasReturnType()) {
-        hash = (37 * hash) + RETURNTYPE_FIELD_NUMBER;
+        hash = (37 * hash) + RETURN_TYPE_FIELD_NUMBER;
         hash = (53 * hash) + getReturnType().hashCode();
       }
       if (!internalGetParam().getMap().isEmpty()) {
@@ -969,7 +969,7 @@ public final class MethodDeclaration {
         hash = (53 * hash) + getModifierList().hashCode();
       }
       if (hasSuperMethodIn()) {
-        hash = (37 * hash) + SUPERMETHODIN_FIELD_NUMBER;
+        hash = (37 * hash) + SUPER_METHOD_IN_FIELD_NUMBER;
         hash = (53 * hash) + getSuperMethodIn().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
@@ -1081,7 +1081,7 @@ public final class MethodDeclaration {
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 8:
+          case 7:
             return internalGetParam();
           default:
             throw new RuntimeException(
@@ -1092,7 +1092,7 @@ public final class MethodDeclaration {
       protected com.google.protobuf.MapField internalGetMutableMapField(
           int number) {
         switch (number) {
-          case 8:
+          case 7:
             return internalGetMutableParam();
           default:
             throw new RuntimeException(
@@ -1713,13 +1713,13 @@ public final class MethodDeclaration {
 
       private java.lang.Object returnType_ = "";
       /**
-       * <code>optional string returnType = 6;</code>
+       * <code>optional string return_type = 6;</code>
        */
       public boolean hasReturnType() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       /**
-       * <code>optional string returnType = 6;</code>
+       * <code>optional string return_type = 6;</code>
        */
       public java.lang.String getReturnType() {
         java.lang.Object ref = returnType_;
@@ -1736,7 +1736,7 @@ public final class MethodDeclaration {
         }
       }
       /**
-       * <code>optional string returnType = 6;</code>
+       * <code>optional string return_type = 6;</code>
        */
       public com.google.protobuf.ByteString
           getReturnTypeBytes() {
@@ -1752,7 +1752,7 @@ public final class MethodDeclaration {
         }
       }
       /**
-       * <code>optional string returnType = 6;</code>
+       * <code>optional string return_type = 6;</code>
        */
       public Builder setReturnType(
           java.lang.String value) {
@@ -1765,7 +1765,7 @@ public final class MethodDeclaration {
         return this;
       }
       /**
-       * <code>optional string returnType = 6;</code>
+       * <code>optional string return_type = 6;</code>
        */
       public Builder clearReturnType() {
         bitField0_ = (bitField0_ & ~0x00000020);
@@ -1774,7 +1774,7 @@ public final class MethodDeclaration {
         return this;
       }
       /**
-       * <code>optional string returnType = 6;</code>
+       * <code>optional string return_type = 6;</code>
        */
       public Builder setReturnTypeBytes(
           com.google.protobuf.ByteString value) {
@@ -1818,7 +1818,7 @@ public final class MethodDeclaration {
        * index against id
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; param = 8;</code>
+       * <code>map&lt;int32, string&gt; param = 7;</code>
        */
 
       public boolean containsParam(
@@ -1838,7 +1838,7 @@ public final class MethodDeclaration {
        * index against id
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; param = 8;</code>
+       * <code>map&lt;int32, string&gt; param = 7;</code>
        */
 
       public java.util.Map<java.lang.Integer, java.lang.String> getParamMap() {
@@ -1849,7 +1849,7 @@ public final class MethodDeclaration {
        * index against id
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; param = 8;</code>
+       * <code>map&lt;int32, string&gt; param = 7;</code>
        */
 
       public java.lang.String getParamOrDefault(
@@ -1865,7 +1865,7 @@ public final class MethodDeclaration {
        * index against id
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; param = 8;</code>
+       * <code>map&lt;int32, string&gt; param = 7;</code>
        */
 
       public java.lang.String getParamOrThrow(
@@ -1889,7 +1889,7 @@ public final class MethodDeclaration {
        * index against id
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; param = 8;</code>
+       * <code>map&lt;int32, string&gt; param = 7;</code>
        */
 
       public Builder removeParam(
@@ -1912,7 +1912,7 @@ public final class MethodDeclaration {
        * index against id
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; param = 8;</code>
+       * <code>map&lt;int32, string&gt; param = 7;</code>
        */
       public Builder putParam(
           int key,
@@ -1928,7 +1928,7 @@ public final class MethodDeclaration {
        * index against id
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; param = 8;</code>
+       * <code>map&lt;int32, string&gt; param = 7;</code>
        */
 
       public Builder putAllParam(
@@ -1946,33 +1946,33 @@ public final class MethodDeclaration {
          }
       }
       /**
-       * <code>repeated string modifier = 9;</code>
+       * <code>repeated string modifier = 8;</code>
        */
       public com.google.protobuf.ProtocolStringList
           getModifierList() {
         return modifier_.getUnmodifiableView();
       }
       /**
-       * <code>repeated string modifier = 9;</code>
+       * <code>repeated string modifier = 8;</code>
        */
       public int getModifierCount() {
         return modifier_.size();
       }
       /**
-       * <code>repeated string modifier = 9;</code>
+       * <code>repeated string modifier = 8;</code>
        */
       public java.lang.String getModifier(int index) {
         return modifier_.get(index);
       }
       /**
-       * <code>repeated string modifier = 9;</code>
+       * <code>repeated string modifier = 8;</code>
        */
       public com.google.protobuf.ByteString
           getModifierBytes(int index) {
         return modifier_.getByteString(index);
       }
       /**
-       * <code>repeated string modifier = 9;</code>
+       * <code>repeated string modifier = 8;</code>
        */
       public Builder setModifier(
           int index, java.lang.String value) {
@@ -1985,7 +1985,7 @@ public final class MethodDeclaration {
         return this;
       }
       /**
-       * <code>repeated string modifier = 9;</code>
+       * <code>repeated string modifier = 8;</code>
        */
       public Builder addModifier(
           java.lang.String value) {
@@ -1998,7 +1998,7 @@ public final class MethodDeclaration {
         return this;
       }
       /**
-       * <code>repeated string modifier = 9;</code>
+       * <code>repeated string modifier = 8;</code>
        */
       public Builder addAllModifier(
           java.lang.Iterable<java.lang.String> values) {
@@ -2009,7 +2009,7 @@ public final class MethodDeclaration {
         return this;
       }
       /**
-       * <code>repeated string modifier = 9;</code>
+       * <code>repeated string modifier = 8;</code>
        */
       public Builder clearModifier() {
         modifier_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -2018,7 +2018,7 @@ public final class MethodDeclaration {
         return this;
       }
       /**
-       * <code>repeated string modifier = 9;</code>
+       * <code>repeated string modifier = 8;</code>
        */
       public Builder addModifierBytes(
           com.google.protobuf.ByteString value) {
@@ -2033,13 +2033,13 @@ public final class MethodDeclaration {
 
       private java.lang.Object superMethodIn_ = "";
       /**
-       * <code>optional string superMethodIn = 10;</code>
+       * <code>optional string super_method_in = 9;</code>
        */
       public boolean hasSuperMethodIn() {
         return ((bitField0_ & 0x00000100) == 0x00000100);
       }
       /**
-       * <code>optional string superMethodIn = 10;</code>
+       * <code>optional string super_method_in = 9;</code>
        */
       public java.lang.String getSuperMethodIn() {
         java.lang.Object ref = superMethodIn_;
@@ -2056,7 +2056,7 @@ public final class MethodDeclaration {
         }
       }
       /**
-       * <code>optional string superMethodIn = 10;</code>
+       * <code>optional string super_method_in = 9;</code>
        */
       public com.google.protobuf.ByteString
           getSuperMethodInBytes() {
@@ -2072,7 +2072,7 @@ public final class MethodDeclaration {
         }
       }
       /**
-       * <code>optional string superMethodIn = 10;</code>
+       * <code>optional string super_method_in = 9;</code>
        */
       public Builder setSuperMethodIn(
           java.lang.String value) {
@@ -2085,7 +2085,7 @@ public final class MethodDeclaration {
         return this;
       }
       /**
-       * <code>optional string superMethodIn = 10;</code>
+       * <code>optional string super_method_in = 9;</code>
        */
       public Builder clearSuperMethodIn() {
         bitField0_ = (bitField0_ & ~0x00000100);
@@ -2094,7 +2094,7 @@ public final class MethodDeclaration {
         return this;
       }
       /**
-       * <code>optional string superMethodIn = 10;</code>
+       * <code>optional string super_method_in = 9;</code>
        */
       public Builder setSuperMethodInBytes(
           com.google.protobuf.ByteString value) {
@@ -2174,15 +2174,15 @@ public final class MethodDeclaration {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rMthdDcl.proto\022\006Models\"\351\001\n\007MthdDcl\022\n\n\002i" +
+      "\n\rMthdDcl.proto\022\006Models\"\354\001\n\007MthdDcl\022\n\n\002i" +
       "d\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\022\r\n\005owner\030\003 \002(\t\022\021\n\t" +
-      "signature\030\004 \002(\t\022\014\n\004kind\030\005 \002(\t\022\022\n\nreturnT" +
-      "ype\030\006 \001(\t\022)\n\005param\030\010 \003(\0132\032.Models.MthdDc" +
-      "l.ParamEntry\022\020\n\010modifier\030\t \003(\t\022\025\n\rsuperM" +
-      "ethodIn\030\n \001(\t\032,\n\nParamEntry\022\013\n\003key\030\001 \001(\005" +
-      "\022\r\n\005value\030\002 \001(\t:\0028\001BS\n>com.google.errorp" +
-      "rone.bugpatterns.refactoringexperiment.m" +
-      "odelsB\021MethodDeclaration"
+      "signature\030\004 \002(\t\022\014\n\004kind\030\005 \002(\t\022\023\n\013return_" +
+      "type\030\006 \001(\t\022)\n\005param\030\007 \003(\0132\032.Models.MthdD" +
+      "cl.ParamEntry\022\020\n\010modifier\030\010 \003(\t\022\027\n\017super" +
+      "_method_in\030\t \001(\t\032,\n\nParamEntry\022\013\n\003key\030\001 " +
+      "\001(\005\022\r\n\005value\030\002 \001(\t:\0028\001BS\n>com.google.err" +
+      "orprone.bugpatterns.refactoringexperimen" +
+      "t.modelsB\021MethodDeclaration"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

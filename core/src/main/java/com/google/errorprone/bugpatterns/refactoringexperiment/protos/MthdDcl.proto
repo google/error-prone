@@ -10,8 +10,8 @@ message MthdDcl {
   required string owner = 3;
   required string signature = 4;
   required string kind = 5;
-  optional string returnType = 6;
-  map<int32,string> param = 8; // index against id
-  repeated string modifier = 9;
-  optional string superMethodIn = 10;
+  optional string return_type = 6;
+  map<int32,string> param = 7; // index against id
+  repeated string modifier = 8;
+  optional string super_method_in = 9;
  }

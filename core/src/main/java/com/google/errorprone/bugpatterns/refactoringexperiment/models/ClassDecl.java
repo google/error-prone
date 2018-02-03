@@ -47,23 +47,23 @@ public final class ClassDecl {
         getOwnerBytes();
 
     /**
-     * <code>repeated string LTtype = 3;</code>
+     * <code>repeated string super_type = 3;</code>
      */
     java.util.List<java.lang.String>
-        getLTtypeList();
+        getSuperTypeList();
     /**
-     * <code>repeated string LTtype = 3;</code>
+     * <code>repeated string super_type = 3;</code>
      */
-    int getLTtypeCount();
+    int getSuperTypeCount();
     /**
-     * <code>repeated string LTtype = 3;</code>
+     * <code>repeated string super_type = 3;</code>
      */
-    java.lang.String getLTtype(int index);
+    java.lang.String getSuperType(int index);
     /**
-     * <code>repeated string LTtype = 3;</code>
+     * <code>repeated string super_type = 3;</code>
      */
     com.google.protobuf.ByteString
-        getLTtypeBytes(int index);
+        getSuperTypeBytes(int index);
 
     /**
      * <code>required string kind = 4;</code>
@@ -94,7 +94,7 @@ public final class ClassDecl {
     private clsDcl() {
       name_ = "";
       owner_ = "";
-      lTtype_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      superType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       kind_ = "";
     }
 
@@ -144,10 +144,10 @@ public final class ClassDecl {
             case 26: {
               com.google.protobuf.ByteString bs = input.readBytes();
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                lTtype_ = new com.google.protobuf.LazyStringArrayList();
+                superType_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000004;
               }
-              lTtype_.add(bs);
+              superType_.add(bs);
               break;
             }
             case 34: {
@@ -165,7 +165,7 @@ public final class ClassDecl {
             e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          lTtype_ = lTtype_.getUnmodifiableView();
+          superType_ = superType_.getUnmodifiableView();
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -268,33 +268,33 @@ public final class ClassDecl {
       }
     }
 
-    public static final int LTTYPE_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList lTtype_;
+    public static final int SUPER_TYPE_FIELD_NUMBER = 3;
+    private com.google.protobuf.LazyStringList superType_;
     /**
-     * <code>repeated string LTtype = 3;</code>
+     * <code>repeated string super_type = 3;</code>
      */
     public com.google.protobuf.ProtocolStringList
-        getLTtypeList() {
-      return lTtype_;
+        getSuperTypeList() {
+      return superType_;
     }
     /**
-     * <code>repeated string LTtype = 3;</code>
+     * <code>repeated string super_type = 3;</code>
      */
-    public int getLTtypeCount() {
-      return lTtype_.size();
+    public int getSuperTypeCount() {
+      return superType_.size();
     }
     /**
-     * <code>repeated string LTtype = 3;</code>
+     * <code>repeated string super_type = 3;</code>
      */
-    public java.lang.String getLTtype(int index) {
-      return lTtype_.get(index);
+    public java.lang.String getSuperType(int index) {
+      return superType_.get(index);
     }
     /**
-     * <code>repeated string LTtype = 3;</code>
+     * <code>repeated string super_type = 3;</code>
      */
     public com.google.protobuf.ByteString
-        getLTtypeBytes(int index) {
-      return lTtype_.getByteString(index);
+        getSuperTypeBytes(int index) {
+      return superType_.getByteString(index);
     }
 
     public static final int KIND_FIELD_NUMBER = 4;
@@ -369,8 +369,8 @@ public final class ClassDecl {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, owner_);
       }
-      for (int i = 0; i < lTtype_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, lTtype_.getRaw(i));
+      for (int i = 0; i < superType_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, superType_.getRaw(i));
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, kind_);
@@ -391,11 +391,11 @@ public final class ClassDecl {
       }
       {
         int dataSize = 0;
-        for (int i = 0; i < lTtype_.size(); i++) {
-          dataSize += computeStringSizeNoTag(lTtype_.getRaw(i));
+        for (int i = 0; i < superType_.size(); i++) {
+          dataSize += computeStringSizeNoTag(superType_.getRaw(i));
         }
         size += dataSize;
-        size += 1 * getLTtypeList().size();
+        size += 1 * getSuperTypeList().size();
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, kind_);
@@ -426,8 +426,8 @@ public final class ClassDecl {
         result = result && getOwner()
             .equals(other.getOwner());
       }
-      result = result && getLTtypeList()
-          .equals(other.getLTtypeList());
+      result = result && getSuperTypeList()
+          .equals(other.getSuperTypeList());
       result = result && (hasKind() == other.hasKind());
       if (hasKind()) {
         result = result && getKind()
@@ -452,9 +452,9 @@ public final class ClassDecl {
         hash = (37 * hash) + OWNER_FIELD_NUMBER;
         hash = (53 * hash) + getOwner().hashCode();
       }
-      if (getLTtypeCount() > 0) {
-        hash = (37 * hash) + LTTYPE_FIELD_NUMBER;
-        hash = (53 * hash) + getLTtypeList().hashCode();
+      if (getSuperTypeCount() > 0) {
+        hash = (37 * hash) + SUPER_TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getSuperTypeList().hashCode();
       }
       if (hasKind()) {
         hash = (37 * hash) + KIND_FIELD_NUMBER;
@@ -593,7 +593,7 @@ public final class ClassDecl {
         bitField0_ = (bitField0_ & ~0x00000001);
         owner_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        lTtype_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        superType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
         kind_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -630,10 +630,10 @@ public final class ClassDecl {
         }
         result.owner_ = owner_;
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          lTtype_ = lTtype_.getUnmodifiableView();
+          superType_ = superType_.getUnmodifiableView();
           bitField0_ = (bitField0_ & ~0x00000004);
         }
-        result.lTtype_ = lTtype_;
+        result.superType_ = superType_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000004;
         }
@@ -690,13 +690,13 @@ public final class ClassDecl {
           owner_ = other.owner_;
           onChanged();
         }
-        if (!other.lTtype_.isEmpty()) {
-          if (lTtype_.isEmpty()) {
-            lTtype_ = other.lTtype_;
+        if (!other.superType_.isEmpty()) {
+          if (superType_.isEmpty()) {
+            superType_ = other.superType_;
             bitField0_ = (bitField0_ & ~0x00000004);
           } else {
-            ensureLTtypeIsMutable();
-            lTtype_.addAll(other.lTtype_);
+            ensureSuperTypeIsMutable();
+            superType_.addAll(other.superType_);
           }
           onChanged();
         }
@@ -894,95 +894,95 @@ public final class ClassDecl {
         return this;
       }
 
-      private com.google.protobuf.LazyStringList lTtype_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureLTtypeIsMutable() {
+      private com.google.protobuf.LazyStringList superType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureSuperTypeIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          lTtype_ = new com.google.protobuf.LazyStringArrayList(lTtype_);
+          superType_ = new com.google.protobuf.LazyStringArrayList(superType_);
           bitField0_ |= 0x00000004;
          }
       }
       /**
-       * <code>repeated string LTtype = 3;</code>
+       * <code>repeated string super_type = 3;</code>
        */
       public com.google.protobuf.ProtocolStringList
-          getLTtypeList() {
-        return lTtype_.getUnmodifiableView();
+          getSuperTypeList() {
+        return superType_.getUnmodifiableView();
       }
       /**
-       * <code>repeated string LTtype = 3;</code>
+       * <code>repeated string super_type = 3;</code>
        */
-      public int getLTtypeCount() {
-        return lTtype_.size();
+      public int getSuperTypeCount() {
+        return superType_.size();
       }
       /**
-       * <code>repeated string LTtype = 3;</code>
+       * <code>repeated string super_type = 3;</code>
        */
-      public java.lang.String getLTtype(int index) {
-        return lTtype_.get(index);
+      public java.lang.String getSuperType(int index) {
+        return superType_.get(index);
       }
       /**
-       * <code>repeated string LTtype = 3;</code>
+       * <code>repeated string super_type = 3;</code>
        */
       public com.google.protobuf.ByteString
-          getLTtypeBytes(int index) {
-        return lTtype_.getByteString(index);
+          getSuperTypeBytes(int index) {
+        return superType_.getByteString(index);
       }
       /**
-       * <code>repeated string LTtype = 3;</code>
+       * <code>repeated string super_type = 3;</code>
        */
-      public Builder setLTtype(
+      public Builder setSuperType(
           int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureLTtypeIsMutable();
-        lTtype_.set(index, value);
+  ensureSuperTypeIsMutable();
+        superType_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string LTtype = 3;</code>
+       * <code>repeated string super_type = 3;</code>
        */
-      public Builder addLTtype(
+      public Builder addSuperType(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureLTtypeIsMutable();
-        lTtype_.add(value);
+  ensureSuperTypeIsMutable();
+        superType_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string LTtype = 3;</code>
+       * <code>repeated string super_type = 3;</code>
        */
-      public Builder addAllLTtype(
+      public Builder addAllSuperType(
           java.lang.Iterable<java.lang.String> values) {
-        ensureLTtypeIsMutable();
+        ensureSuperTypeIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, lTtype_);
+            values, superType_);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string LTtype = 3;</code>
+       * <code>repeated string super_type = 3;</code>
        */
-      public Builder clearLTtype() {
-        lTtype_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      public Builder clearSuperType() {
+        superType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string LTtype = 3;</code>
+       * <code>repeated string super_type = 3;</code>
        */
-      public Builder addLTtypeBytes(
+      public Builder addSuperTypeBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureLTtypeIsMutable();
-        lTtype_.add(value);
+  ensureSuperTypeIsMutable();
+        superType_.add(value);
         onChanged();
         return this;
       }
@@ -1125,11 +1125,11 @@ public final class ClassDecl {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\017ClassDecl.proto\022\006Models\"C\n\006clsDcl\022\014\n\004n" +
-      "ame\030\001 \002(\t\022\r\n\005owner\030\002 \002(\t\022\016\n\006LTtype\030\003 \003(\t" +
-      "\022\014\n\004kind\030\004 \002(\tBK\n>com.google.errorprone." +
-      "bugpatterns.refactoringexperiment.models" +
-      "B\tClassDecl"
+      "\n\017ClassDecl.proto\022\006Models\"G\n\006clsDcl\022\014\n\004n" +
+      "ame\030\001 \002(\t\022\r\n\005owner\030\002 \002(\t\022\022\n\nsuper_type\030\003" +
+      " \003(\t\022\014\n\004kind\030\004 \002(\tBK\n>com.google.errorpr" +
+      "one.bugpatterns.refactoringexperiment.mo" +
+      "delsB\tClassDecl"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1148,7 +1148,7 @@ public final class ClassDecl {
     internal_static_Models_clsDcl_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_clsDcl_descriptor,
-        new java.lang.String[] { "Name", "Owner", "LTtype", "Kind", });
+        new java.lang.String[] { "Name", "Owner", "SuperType", "Kind", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
