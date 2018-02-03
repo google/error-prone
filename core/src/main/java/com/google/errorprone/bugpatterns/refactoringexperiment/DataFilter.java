@@ -9,7 +9,7 @@ import com.sun.tools.javac.code.Type;
 /**
  * Created by ameya on 1/17/18.
  */
-public class LegacyTypeInfoProvider {
+public class DataFilter {
 
     private static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
     private static final String LONG = "Long";
@@ -21,9 +21,9 @@ public class LegacyTypeInfoProvider {
     // TODO : put in the code for checking all LT.
 
 
-    public static boolean isLT(Tree tree, VisitorState state) {
+    public static boolean apply(Tree tree, VisitorState state) {
 
-        return isLT(ASTHelpers.getType(tree), state);
+        return apply(ASTHelpers.getType(tree), state);
 
 
     }
@@ -35,7 +35,7 @@ public class LegacyTypeInfoProvider {
     * c. TODO: Type is a container of LT
     * d. TODO: add a way to capture generic types. Function<T,U>
     * */
-    public static boolean isLT(Type t1, VisitorState state) {
+    public static boolean apply(Type t1, VisitorState state) {
 
         return ASTHelpers.isSameType(
                 t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)
