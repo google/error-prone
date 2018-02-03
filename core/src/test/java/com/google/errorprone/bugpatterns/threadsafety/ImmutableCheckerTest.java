@@ -1533,8 +1533,19 @@ public class ImmutableCheckerTest {
             "Test.java",
             "import com.google.errorprone.annotations.ImmutableTypeParameter;",
             "class T {",
-            " // BUG: Diagnostic contains: only supported on classes",
-            "  <@ImmutableTypeParameter T> void f() {}",
+            "  static <@ImmutableTypeParameter T> void f() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterUsage_interface() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "@Immutable interface T<@ImmutableTypeParameter T> {",
             "}")
         .doTest();
   }

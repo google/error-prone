@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
@@ -32,10 +33,12 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.util.Filter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,14 +49,14 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 
 /** Analyzes types for deep immutability. */
-public class ImmutableAnalysis {
+class ImmutableAnalysis {
 
   private final BugChecker bugChecker;
   private final VisitorState state;
   private final WellKnownMutability wellKnownMutability;
   private final ThreadSafety threadSafety;
 
-  public ImmutableAnalysis(
+  ImmutableAnalysis(
       BugChecker bugChecker,
       VisitorState state,
       WellKnownMutability wellKnownMutability,
@@ -62,11 +65,14 @@ public class ImmutableAnalysis {
     this.state = state;
     this.wellKnownMutability = wellKnownMutability;
     this.threadSafety =
-        new ThreadSafety(
-            state, wellKnownMutability, immutableAnnotations, ImmutableSet.of(), null, null);
+        ThreadSafety.builder()
+            .knownTypes(wellKnownMutability)
+            .markerAnnotations(immutableAnnotations)
+            .typeParameterAnnotation(ImmutableTypeParameter.class)
+            .build(state);
   }
 
-  public ImmutableAnalysis(
+  ImmutableAnalysis(
       BugChecker bugChecker, VisitorState state, WellKnownMutability wellKnownMutability) {
     this(
         bugChecker,
@@ -75,8 +81,23 @@ public class ImmutableAnalysis {
         ImmutableSet.of(Immutable.class.getName()));
   }
 
-  public Violation isThreadSafeType(Set<String> threadSafeTypeParams, Type type) {
-    return threadSafety.isThreadSafeType(threadSafeTypeParams, type);
+  Violation isThreadSafeType(
+      boolean allowContainerTypeParameters, Set<String> containerTypeParameters, Type type) {
+    return threadSafety.isThreadSafeType(
+        allowContainerTypeParameters, containerTypeParameters, type);
+  }
+
+  boolean isImmutableTypeParameter(TypeVariableSymbol sym) {
+    return threadSafety.isThreadSafeTypeParameter(sym);
+  }
+
+  Violation checkInstantiation(
+      Collection<TypeVariableSymbol> classTypeParameters, Collection<Type> typeArguments) {
+    return threadSafety.checkInstantiation(classTypeParameters, typeArguments);
+  }
+
+  public Violation checkInvocation(Type methodType, Symbol symbol) {
+    return threadSafety.checkInvocation(methodType, symbol);
   }
 
   @FunctionalInterface
@@ -270,7 +291,9 @@ public class ImmutableAnalysis {
       return info;
     }
     Type varType = state.getTypes().memberType(classType, var);
-    Violation info = threadSafety.isThreadSafeType(immutableTyParams, varType);
+    Violation info =
+        threadSafety.isThreadSafeType(
+            /* allowContainerTypeParameters= */ true, immutableTyParams, varType);
     if (info.isPresent()) {
       info =
           info.plus(
