@@ -3,6 +3,7 @@ package com.google.errorprone.bugpatterns.refactoringexperiment;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static java.util.stream.Collectors.collectingAndThen;
 
 import com.google.auto.service.AutoService;
 import com.google.common.base.Optional;
@@ -27,6 +28,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -65,7 +67,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
 
             mthdDcl.setReturnType(ASTHelpers.getType(methodTree.getReturnType()) != null ? ASTHelpers.getType(methodTree.getReturnType()).toString() : RTRN_TYPE_NOT_FOUND);
 
-            List<String> y = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().map(x -> x.owner.toString()).collect(Collectors.toList());
+            List<String> y = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().map(x -> x.owner.toString()).collect(collectingAndThen(Collectors.toList(),
+                                                                                                                      Collections::unmodifiableList));
+
 
             if (y != null && !y.isEmpty()) {
                 mthdDcl.setSuperMethodIn(y.get(0));
@@ -100,10 +104,6 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             mthdInvc.putAllArgs(params.stream().filter(x -> DataFilter.apply(x.type, state))
                     .map(x -> params.indexOf(x))
                     .collect(Collectors.toMap(Function.identity(), x -> infoOfTree(tree.getArguments().get(x)))));
-
-            if (paramLT)
-                params.stream().filter(x -> DataFilter.apply(x.type, state)).map(x -> params.indexOf(x))
-                        .map(x -> infoOfTree(tree.getArguments().get(x)));
 
             if (ofLT) mthdInvc.setReceiver(infoOfTree(ASTHelpers.getReceiver(tree)));
 
