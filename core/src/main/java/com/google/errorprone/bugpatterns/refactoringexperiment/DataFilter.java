@@ -12,10 +12,10 @@ import com.sun.tools.javac.code.Type;
 public class DataFilter {
 
     private static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
-    private static final String LONG = "Long";
-    private static final String INTEGER = "Integer";
-    private static final String DOUBLE = "Double";
-    private static final String BOOLEAN = "Boolean";
+    private static final String LONG = "java.lang.Long";
+    private static final String INTEGER = "java.lang.Integer";
+    private static final String DOUBLE = "java.lang.Double";
+    private static final String BOOLEAN = "java.lang.Boolean";
 
 
     // TODO : put in the code for checking all LT.
@@ -35,14 +35,23 @@ public class DataFilter {
     * c. TODO: Type is a container of LT
     * d. TODO: add a way to capture generic types. Function<T,U>
     * */
-    public static boolean apply(Type t1, VisitorState state) {
 
-        return ASTHelpers.isSameType(
-                t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)
-                || ASTHelpers.isSubtype(t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)
-                &&
-                (t1.getTypeArguments().stream().filter(x -> x.toString().contains(INTEGER) || x.toString().contains(DOUBLE) ||
-                        x.toString().contains(LONG) || x.toString().contains(BOOLEAN)).count() > 0);
+        public static boolean apply(Type t1, VisitorState state) {
+            try {
+                return (ASTHelpers.isSameType(
+                        t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)
+                        || ASTHelpers.isSubtype(t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state))
+                        &&
+                        (t1.getTypeArguments().stream().filter(x -> ASTHelpers.isSameType(
+                                x, state.getTypeFromString(INTEGER), state) || ASTHelpers.isSameType(
+                                x, state.getTypeFromString(DOUBLE), state) || ASTHelpers.isSameType(
+                                x, state.getTypeFromString(LONG), state) || ASTHelpers.isSameType(
+                                x, state.getTypeFromString(BOOLEAN), state)).count() > 0);
+            }catch(Exception e){
+                return false;
+            }
+
+        }
 
     }
 
