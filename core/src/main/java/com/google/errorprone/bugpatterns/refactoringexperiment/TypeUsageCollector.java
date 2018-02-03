@@ -67,17 +67,17 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
 
             mthdDcl.setReturnType(ASTHelpers.getType(methodTree.getReturnType()) != null ? ASTHelpers.getType(methodTree.getReturnType()).toString() : RTRN_TYPE_NOT_FOUND);
 
-            List<String> y = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().map(x -> x.owner.toString()).collect(collectingAndThen(Collectors.toList(),
-                                                                                                                      Collections::unmodifiableList));
+            List<String> super_methods = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().map(x -> x.owner.toString()).collect(collectingAndThen(Collectors.toList(),
+                    Collections::unmodifiableList));
 
-
-            if (y != null && !y.isEmpty()) {
-                mthdDcl.setSuperMethodIn(y.get(0));
+            if (super_methods != null && !super_methods.isEmpty()) {
+                mthdDcl.setSuperMethodIn(super_methods.get(0));
             }
-            mthdDcl.putAllParam(params.stream().filter(x -> DataFilter.apply(x, state))
-                    .collect(Collectors.toMap(x -> params.indexOf(x), x -> getName(ASTHelpers.getSymbol(x)))));
+            mthdDcl.putAllParam(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x, state))
+                    .collect(Collectors.toMap(x -> params.indexOf(x), x -> getName(ASTHelpers.getSymbol(x))))));
 
-            mthdDcl.addAllModifier(symb.getModifiers().stream().map(x -> x.toString()).collect(Collectors.toList()));
+            mthdDcl.addAllModifier(symb.getModifiers().stream().map(x -> x.toString()).collect(collectingAndThen(Collectors.toList(),
+                    Collections::unmodifiableList)));
 
             ProtoBuffPersist.write(mthdDcl, methodTree.getKind().toString());
         }
@@ -101,9 +101,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
                     .setKind(tree.getKind().toString())
                     .setId(generateId(symb));
 
-            mthdInvc.putAllArgs(params.stream().filter(x -> DataFilter.apply(x.type, state))
+            mthdInvc.putAllArgs(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x.type, state))
                     .map(x -> params.indexOf(x))
-                    .collect(Collectors.toMap(Function.identity(), x -> infoOfTree(tree.getArguments().get(x)))));
+                    .collect(Collectors.toMap(Function.identity(), x -> infoOfTree(tree.getArguments().get(x))))));
 
             if (ofLT) mthdInvc.setReceiver(infoOfTree(ASTHelpers.getReceiver(tree)));
 
@@ -130,9 +130,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
                     .setId(generateId(symb));
 
             if (paramLT)
-                mthdInvc.putAllArgs(params.stream().filter(x -> DataFilter.apply(x.type, state))
+                mthdInvc.putAllArgs(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x.type, state))
                         .map(x -> params.indexOf(x))
-                        .collect(Collectors.toMap(Function.identity(), x -> infoOfTree(var1.getArguments().get(x)))));
+                        .collect(Collectors.toMap(Function.identity(), x -> infoOfTree(var1.getArguments().get(x))))));
 
             ProtoBuffPersist.write(mthdInvc, var1.getKind().toString());
         }
@@ -187,8 +187,8 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
 
             if (isLT) clsDcl.addSuperType(ASTHelpers.getType(classTree).toString());
             else
-                clsDcl.addAllSuperType(classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state))
-                        .map(x -> ASTHelpers.getType(x).toString()).collect(Collectors.toList()));
+                clsDcl.addAllSuperType(Collections.unmodifiableList(classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state))
+                        .map(x -> ASTHelpers.getType(x).toString()).collect(Collectors.toList())));
             ProtoBuffPersist.write(clsDcl, classTree.getKind().toString());
         }
 
