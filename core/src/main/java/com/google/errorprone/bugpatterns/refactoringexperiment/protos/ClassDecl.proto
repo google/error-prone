@@ -10,7 +10,5 @@ message clsDcl {
   required string owner = 2;
   repeated string LTtype = 3;
   required string kind = 4;
-  required string srcFile = 5;
-  required string pckg = 6;
 
  }

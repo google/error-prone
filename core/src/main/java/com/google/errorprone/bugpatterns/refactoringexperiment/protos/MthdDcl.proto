@@ -1,5 +1,4 @@
 syntax = "proto2";
-import "Analysis.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
@@ -12,8 +11,7 @@ message MthdDcl {
   required string signature = 4;
   required string kind = 5;
   optional string returnType = 6;
-  optional bool returnTypeMatters = 7;
-  repeated anlys param = 8;
+  map<int32,string> param = 8; // index against id
   repeated string modifier = 9;
   optional string superMethodIn = 10;
  }

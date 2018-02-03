@@ -61,45 +61,30 @@ public final class Return {
         getSignatureBytes();
 
     /**
-     * <code>required string srcFile = 4;</code>
-     */
-    boolean hasSrcFile();
-    /**
-     * <code>required string srcFile = 4;</code>
-     */
-    java.lang.String getSrcFile();
-    /**
-     * <code>required string srcFile = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getSrcFileBytes();
-
-    /**
-     * <code>required string pckg = 5;</code>
-     */
-    boolean hasPckg();
-    /**
-     * <code>required string pckg = 5;</code>
-     */
-    java.lang.String getPckg();
-    /**
-     * <code>required string pckg = 5;</code>
-     */
-    com.google.protobuf.ByteString
-        getPckgBytes();
-
-    /**
-     * <code>required .Models.anlys retExpr = 6;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string retExpr = 4;</code>
      */
     boolean hasRetExpr();
     /**
-     * <code>required .Models.anlys retExpr = 6;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string retExpr = 4;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getRetExpr();
+    java.lang.String getRetExpr();
     /**
-     * <code>required .Models.anlys retExpr = 6;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string retExpr = 4;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getRetExprOrBuilder();
+    com.google.protobuf.ByteString
+        getRetExprBytes();
   }
   /**
    * Protobuf type {@code Models.rtrn}
@@ -117,8 +102,7 @@ public final class Return {
       methodName_ = "";
       methodOwner_ = "";
       signature_ = "";
-      srcFile_ = "";
-      pckg_ = "";
+      retExpr_ = "";
     }
 
     @java.lang.Override
@@ -173,26 +157,7 @@ public final class Return {
             case 34: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000008;
-              srcFile_ = bs;
-              break;
-            }
-            case 42: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000010;
-              pckg_ = bs;
-              break;
-            }
-            case 50: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000020) == 0x00000020)) {
-                subBuilder = retExpr_.toBuilder();
-              }
-              retExpr_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(retExpr_);
-                retExpr_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000020;
+              retExpr_ = bs;
               break;
             }
           }
@@ -346,19 +311,27 @@ public final class Return {
       }
     }
 
-    public static final int SRCFILE_FIELD_NUMBER = 4;
-    private volatile java.lang.Object srcFile_;
+    public static final int RETEXPR_FIELD_NUMBER = 4;
+    private volatile java.lang.Object retExpr_;
     /**
-     * <code>required string srcFile = 4;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string retExpr = 4;</code>
      */
-    public boolean hasSrcFile() {
+    public boolean hasRetExpr() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>required string srcFile = 4;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string retExpr = 4;</code>
      */
-    public java.lang.String getSrcFile() {
-      java.lang.Object ref = srcFile_;
+    public java.lang.String getRetExpr() {
+      java.lang.Object ref = retExpr_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -366,89 +339,30 @@ public final class Return {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          srcFile_ = s;
+          retExpr_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string srcFile = 4;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string retExpr = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getSrcFileBytes() {
-      java.lang.Object ref = srcFile_;
+        getRetExprBytes() {
+      java.lang.Object ref = retExpr_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        srcFile_ = b;
+        retExpr_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
-    }
-
-    public static final int PCKG_FIELD_NUMBER = 5;
-    private volatile java.lang.Object pckg_;
-    /**
-     * <code>required string pckg = 5;</code>
-     */
-    public boolean hasPckg() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>required string pckg = 5;</code>
-     */
-    public java.lang.String getPckg() {
-      java.lang.Object ref = pckg_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          pckg_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string pckg = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPckgBytes() {
-      java.lang.Object ref = pckg_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        pckg_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int RETEXPR_FIELD_NUMBER = 6;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys retExpr_;
-    /**
-     * <code>required .Models.anlys retExpr = 6;</code>
-     */
-    public boolean hasRetExpr() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
-    }
-    /**
-     * <code>required .Models.anlys retExpr = 6;</code>
-     */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getRetExpr() {
-      return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : retExpr_;
-    }
-    /**
-     * <code>required .Models.anlys retExpr = 6;</code>
-     */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getRetExprOrBuilder() {
-      return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : retExpr_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -466,14 +380,6 @@ public final class Return {
         return false;
       }
       if (!hasSignature()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSrcFile()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasPckg()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -497,13 +403,7 @@ public final class Return {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, signature_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, srcFile_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, pckg_);
-      }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeMessage(6, getRetExpr());
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, retExpr_);
       }
       unknownFields.writeTo(output);
     }
@@ -523,14 +423,7 @@ public final class Return {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, signature_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, srcFile_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, pckg_);
-      }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, getRetExpr());
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, retExpr_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -563,16 +456,6 @@ public final class Return {
         result = result && getSignature()
             .equals(other.getSignature());
       }
-      result = result && (hasSrcFile() == other.hasSrcFile());
-      if (hasSrcFile()) {
-        result = result && getSrcFile()
-            .equals(other.getSrcFile());
-      }
-      result = result && (hasPckg() == other.hasPckg());
-      if (hasPckg()) {
-        result = result && getPckg()
-            .equals(other.getPckg());
-      }
       result = result && (hasRetExpr() == other.hasRetExpr());
       if (hasRetExpr()) {
         result = result && getRetExpr()
@@ -600,14 +483,6 @@ public final class Return {
       if (hasSignature()) {
         hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
         hash = (53 * hash) + getSignature().hashCode();
-      }
-      if (hasSrcFile()) {
-        hash = (37 * hash) + SRCFILE_FIELD_NUMBER;
-        hash = (53 * hash) + getSrcFile().hashCode();
-      }
-      if (hasPckg()) {
-        hash = (37 * hash) + PCKG_FIELD_NUMBER;
-        hash = (53 * hash) + getPckg().hashCode();
       }
       if (hasRetExpr()) {
         hash = (37 * hash) + RETEXPR_FIELD_NUMBER;
@@ -725,7 +600,7 @@ public final class Return {
                 com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.Builder.class);
       }
 
-      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.newBuilder()
+      // Construct using Return.rtrn.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -738,7 +613,6 @@ public final class Return {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getRetExprFieldBuilder();
         }
       }
       public Builder clear() {
@@ -749,16 +623,8 @@ public final class Return {
         bitField0_ = (bitField0_ & ~0x00000002);
         signature_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
-        srcFile_ = "";
+        retExpr_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        pckg_ = "";
-        bitField0_ = (bitField0_ & ~0x00000010);
-        if (retExprBuilder_ == null) {
-          retExpr_ = null;
-        } else {
-          retExprBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -798,19 +664,7 @@ public final class Return {
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.srcFile_ = srcFile_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
-        }
-        result.pckg_ = pckg_;
-        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-          to_bitField0_ |= 0x00000020;
-        }
-        if (retExprBuilder_ == null) {
-          result.retExpr_ = retExpr_;
-        } else {
-          result.retExpr_ = retExprBuilder_.build();
-        }
+        result.retExpr_ = retExpr_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -868,18 +722,10 @@ public final class Return {
           signature_ = other.signature_;
           onChanged();
         }
-        if (other.hasSrcFile()) {
-          bitField0_ |= 0x00000008;
-          srcFile_ = other.srcFile_;
-          onChanged();
-        }
-        if (other.hasPckg()) {
-          bitField0_ |= 0x00000010;
-          pckg_ = other.pckg_;
-          onChanged();
-        }
         if (other.hasRetExpr()) {
-          mergeRetExpr(other.getRetExpr());
+          bitField0_ |= 0x00000008;
+          retExpr_ = other.retExpr_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -894,12 +740,6 @@ public final class Return {
           return false;
         }
         if (!hasSignature()) {
-          return false;
-        }
-        if (!hasSrcFile()) {
-          return false;
-        }
-        if (!hasPckg()) {
           return false;
         }
         if (!hasRetExpr()) {
@@ -1155,24 +995,32 @@ public final class Return {
         return this;
       }
 
-      private java.lang.Object srcFile_ = "";
+      private java.lang.Object retExpr_ = "";
       /**
-       * <code>required string srcFile = 4;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string retExpr = 4;</code>
        */
-      public boolean hasSrcFile() {
+      public boolean hasRetExpr() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>required string srcFile = 4;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string retExpr = 4;</code>
        */
-      public java.lang.String getSrcFile() {
-        java.lang.Object ref = srcFile_;
+      public java.lang.String getRetExpr() {
+        java.lang.Object ref = retExpr_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
-            srcFile_ = s;
+            retExpr_ = s;
           }
           return s;
         } else {
@@ -1180,249 +1028,71 @@ public final class Return {
         }
       }
       /**
-       * <code>required string srcFile = 4;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string retExpr = 4;</code>
        */
       public com.google.protobuf.ByteString
-          getSrcFileBytes() {
-        java.lang.Object ref = srcFile_;
+          getRetExprBytes() {
+        java.lang.Object ref = retExpr_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          srcFile_ = b;
+          retExpr_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>required string srcFile = 4;</code>
-       */
-      public Builder setSrcFile(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        srcFile_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string srcFile = 4;</code>
-       */
-      public Builder clearSrcFile() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        srcFile_ = getDefaultInstance().getSrcFile();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string srcFile = 4;</code>
-       */
-      public Builder setSrcFileBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        srcFile_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object pckg_ = "";
-      /**
-       * <code>required string pckg = 5;</code>
-       */
-      public boolean hasPckg() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>required string pckg = 5;</code>
-       */
-      public java.lang.String getPckg() {
-        java.lang.Object ref = pckg_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            pckg_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string pckg = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getPckgBytes() {
-        java.lang.Object ref = pckg_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          pckg_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string pckg = 5;</code>
-       */
-      public Builder setPckg(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        pckg_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string pckg = 5;</code>
-       */
-      public Builder clearPckg() {
-        bitField0_ = (bitField0_ & ~0x00000010);
-        pckg_ = getDefaultInstance().getPckg();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string pckg = 5;</code>
-       */
-      public Builder setPckgBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        pckg_ = value;
-        onChanged();
-        return this;
-      }
-
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys retExpr_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> retExprBuilder_;
-      /**
-       * <code>required .Models.anlys retExpr = 6;</code>
-       */
-      public boolean hasRetExpr() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
-      }
-      /**
-       * <code>required .Models.anlys retExpr = 6;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getRetExpr() {
-        if (retExprBuilder_ == null) {
-          return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : retExpr_;
-        } else {
-          return retExprBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>required .Models.anlys retExpr = 6;</code>
-       */
-      public Builder setRetExpr(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (retExprBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          retExpr_ = value;
-          onChanged();
-        } else {
-          retExprBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000020;
-        return this;
-      }
-      /**
-       * <code>required .Models.anlys retExpr = 6;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string retExpr = 4;</code>
        */
       public Builder setRetExpr(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (retExprBuilder_ == null) {
-          retExpr_ = builderForValue.build();
-          onChanged();
-        } else {
-          retExprBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000020;
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        retExpr_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>required .Models.anlys retExpr = 6;</code>
-       */
-      public Builder mergeRetExpr(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (retExprBuilder_ == null) {
-          if (((bitField0_ & 0x00000020) == 0x00000020) &&
-              retExpr_ != null &&
-              retExpr_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance()) {
-            retExpr_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.newBuilder(retExpr_).mergeFrom(value).buildPartial();
-          } else {
-            retExpr_ = value;
-          }
-          onChanged();
-        } else {
-          retExprBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000020;
-        return this;
-      }
-      /**
-       * <code>required .Models.anlys retExpr = 6;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string retExpr = 4;</code>
        */
       public Builder clearRetExpr() {
-        if (retExprBuilder_ == null) {
-          retExpr_ = null;
-          onChanged();
-        } else {
-          retExprBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000008);
+        retExpr_ = getDefaultInstance().getRetExpr();
+        onChanged();
         return this;
       }
       /**
-       * <code>required .Models.anlys retExpr = 6;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string retExpr = 4;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder getRetExprBuilder() {
-        bitField0_ |= 0x00000020;
+      public Builder setRetExprBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        retExpr_ = value;
         onChanged();
-        return getRetExprFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>required .Models.anlys retExpr = 6;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getRetExprOrBuilder() {
-        if (retExprBuilder_ != null) {
-          return retExprBuilder_.getMessageOrBuilder();
-        } else {
-          return retExpr_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : retExpr_;
-        }
-      }
-      /**
-       * <code>required .Models.anlys retExpr = 6;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-          getRetExprFieldBuilder() {
-        if (retExprBuilder_ == null) {
-          retExprBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder>(
-                  getRetExpr(),
-                  getParentForChildren(),
-                  isClean());
-          retExpr_ = null;
-        }
-        return retExprBuilder_;
+        return this;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1487,13 +1157,11 @@ public final class Return {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014Return.proto\022\006Models\032\016Analysis.proto\"\201" +
-      "\001\n\004rtrn\022\022\n\nmethodName\030\001 \002(\t\022\023\n\013methodOwn" +
-      "er\030\002 \002(\t\022\021\n\tsignature\030\003 \002(\t\022\017\n\007srcFile\030\004" +
-      " \002(\t\022\014\n\004pckg\030\005 \002(\t\022\036\n\007retExpr\030\006 \002(\0132\r.Mo" +
-      "dels.anlysBH\n>com.google.errorprone.bugp" +
-      "atterns.refactoringexperiment.modelsB\006Re" +
-      "turn"
+      "\n\014Return.proto\022\006Models\"S\n\004rtrn\022\022\n\nmethod" +
+      "Name\030\001 \002(\t\022\023\n\013methodOwner\030\002 \002(\t\022\021\n\tsigna" +
+      "ture\030\003 \002(\t\022\017\n\007retExpr\030\004 \002(\tBH\n>com.googl" +
+      "e.errorprone.bugpatterns.refactoringexpe" +
+      "riment.modelsB\006Return"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1506,15 +1174,13 @@ public final class Return {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.getDescriptor(),
         }, assigner);
     internal_static_Models_rtrn_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Models_rtrn_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_rtrn_descriptor,
-        new java.lang.String[] { "MethodName", "MethodOwner", "Signature", "SrcFile", "Pckg", "RetExpr", });
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.getDescriptor();
+        new java.lang.String[] { "MethodName", "MethodOwner", "Signature", "RetExpr", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

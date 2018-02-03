@@ -89,69 +89,72 @@ public final class MethodInvocation {
         getKindBytes();
 
     /**
-     * <code>repeated .Models.anlys args = 6;</code>
-     */
-    java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> 
-        getArgsList();
-    /**
-     * <code>repeated .Models.anlys args = 6;</code>
-     */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getArgs(int index);
-    /**
-     * <code>repeated .Models.anlys args = 6;</code>
+     * <pre>
+     * index against id | kind| additional info
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; args = 6;</code>
      */
     int getArgsCount();
     /**
-     * <code>repeated .Models.anlys args = 6;</code>
+     * <pre>
+     * index against id | kind| additional info
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; args = 6;</code>
      */
-    java.util.List<? extends com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-        getArgsOrBuilderList();
+    boolean containsArgs(
+        int key);
     /**
-     * <code>repeated .Models.anlys args = 6;</code>
+     * Use {@link #getArgsMap()} instead.
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getArgsOrBuilder(
-        int index);
+    @java.lang.Deprecated
+    java.util.Map<java.lang.Integer, java.lang.String>
+    getArgs();
+    /**
+     * <pre>
+     * index against id | kind| additional info
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; args = 6;</code>
+     */
+    java.util.Map<java.lang.Integer, java.lang.String>
+    getArgsMap();
+    /**
+     * <pre>
+     * index against id | kind| additional info
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; args = 6;</code>
+     */
+
+    java.lang.String getArgsOrDefault(
+        int key,
+        java.lang.String defaultValue);
+    /**
+     * <pre>
+     * index against id | kind| additional info
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; args = 6;</code>
+     */
+
+    java.lang.String getArgsOrThrow(
+        int key);
 
     /**
-     * <code>optional .Models.anlys receiver = 7;</code>
+     * <code>optional string receiver = 7;</code>
      */
     boolean hasReceiver();
     /**
-     * <code>optional .Models.anlys receiver = 7;</code>
+     * <code>optional string receiver = 7;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getReceiver();
+    java.lang.String getReceiver();
     /**
-     * <code>optional .Models.anlys receiver = 7;</code>
-     */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getReceiverOrBuilder();
-
-    /**
-     * <code>required string pckg = 8;</code>
-     */
-    boolean hasPckg();
-    /**
-     * <code>required string pckg = 8;</code>
-     */
-    java.lang.String getPckg();
-    /**
-     * <code>required string pckg = 8;</code>
+     * <code>optional string receiver = 7;</code>
      */
     com.google.protobuf.ByteString
-        getPckgBytes();
-
-    /**
-     * <code>required string srcFile = 9;</code>
-     */
-    boolean hasSrcFile();
-    /**
-     * <code>required string srcFile = 9;</code>
-     */
-    java.lang.String getSrcFile();
-    /**
-     * <code>required string srcFile = 9;</code>
-     */
-    com.google.protobuf.ByteString
-        getSrcFileBytes();
+        getReceiverBytes();
   }
   /**
    * Protobuf type {@code Models.MthdInvc}
@@ -171,9 +174,7 @@ public final class MethodInvocation {
       owner_ = "";
       signature_ = "";
       kind_ = "";
-      args_ = java.util.Collections.emptyList();
-      pckg_ = "";
-      srcFile_ = "";
+      receiver_ = "";
     }
 
     @java.lang.Override
@@ -239,36 +240,21 @@ public final class MethodInvocation {
             }
             case 50: {
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-                args_ = new java.util.ArrayList<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys>();
+                args_ = com.google.protobuf.MapField.newMapField(
+                    ArgsDefaultEntryHolder.defaultEntry);
                 mutable_bitField0_ |= 0x00000020;
               }
-              args_.add(
-                  input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.PARSER, extensionRegistry));
+              com.google.protobuf.MapEntry<java.lang.Integer, java.lang.String>
+              args__ = input.readMessage(
+                  ArgsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              args_.getMutableMap().put(
+                  args__.getKey(), args__.getValue());
               break;
             }
             case 58: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000020) == 0x00000020)) {
-                subBuilder = receiver_.toBuilder();
-              }
-              receiver_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(receiver_);
-                receiver_ = subBuilder.buildPartial();
-              }
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000020;
-              break;
-            }
-            case 66: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000040;
-              pckg_ = bs;
-              break;
-            }
-            case 74: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000080;
-              srcFile_ = bs;
+              receiver_ = bs;
               break;
             }
           }
@@ -279,9 +265,6 @@ public final class MethodInvocation {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-          args_ = java.util.Collections.unmodifiableList(args_);
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -291,6 +274,17 @@ public final class MethodInvocation {
       return com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.internal_static_Models_MthdInvc_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 6:
+          return internalGetArgs();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.internal_static_Models_MthdInvc_fieldAccessorTable
@@ -510,74 +504,110 @@ public final class MethodInvocation {
     }
 
     public static final int ARGS_FIELD_NUMBER = 6;
-    private java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> args_;
-    /**
-     * <code>repeated .Models.anlys args = 6;</code>
-     */
-    public java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> getArgsList() {
+    private static final class ArgsDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.Integer, java.lang.String> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.Integer, java.lang.String>newDefaultInstance(
+                  com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.internal_static_Models_MthdInvc_ArgsEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.INT32,
+                  0,
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "");
+    }
+    private com.google.protobuf.MapField<
+        java.lang.Integer, java.lang.String> args_;
+    private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
+    internalGetArgs() {
+      if (args_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            ArgsDefaultEntryHolder.defaultEntry);
+      }
       return args_;
     }
-    /**
-     * <code>repeated .Models.anlys args = 6;</code>
-     */
-    public java.util.List<? extends com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-        getArgsOrBuilderList() {
-      return args_;
-    }
-    /**
-     * <code>repeated .Models.anlys args = 6;</code>
-     */
+
     public int getArgsCount() {
-      return args_.size();
+      return internalGetArgs().getMap().size();
     }
     /**
-     * <code>repeated .Models.anlys args = 6;</code>
+     * <pre>
+     * index against id | kind| additional info
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; args = 6;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getArgs(int index) {
-      return args_.get(index);
+
+    public boolean containsArgs(
+        int key) {
+      
+      return internalGetArgs().getMap().containsKey(key);
     }
     /**
-     * <code>repeated .Models.anlys args = 6;</code>
+     * Use {@link #getArgsMap()} instead.
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getArgsOrBuilder(
-        int index) {
-      return args_.get(index);
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.Integer, java.lang.String> getArgs() {
+      return getArgsMap();
+    }
+    /**
+     * <pre>
+     * index against id | kind| additional info
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; args = 6;</code>
+     */
+
+    public java.util.Map<java.lang.Integer, java.lang.String> getArgsMap() {
+      return internalGetArgs().getMap();
+    }
+    /**
+     * <pre>
+     * index against id | kind| additional info
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; args = 6;</code>
+     */
+
+    public java.lang.String getArgsOrDefault(
+        int key,
+        java.lang.String defaultValue) {
+      
+      java.util.Map<java.lang.Integer, java.lang.String> map =
+          internalGetArgs().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * index against id | kind| additional info
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; args = 6;</code>
+     */
+
+    public java.lang.String getArgsOrThrow(
+        int key) {
+      
+      java.util.Map<java.lang.Integer, java.lang.String> map =
+          internalGetArgs().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
     }
 
     public static final int RECEIVER_FIELD_NUMBER = 7;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys receiver_;
+    private volatile java.lang.Object receiver_;
     /**
-     * <code>optional .Models.anlys receiver = 7;</code>
+     * <code>optional string receiver = 7;</code>
      */
     public boolean hasReceiver() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
-     * <code>optional .Models.anlys receiver = 7;</code>
+     * <code>optional string receiver = 7;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getReceiver() {
-      return receiver_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : receiver_;
-    }
-    /**
-     * <code>optional .Models.anlys receiver = 7;</code>
-     */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getReceiverOrBuilder() {
-      return receiver_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : receiver_;
-    }
-
-    public static final int PCKG_FIELD_NUMBER = 8;
-    private volatile java.lang.Object pckg_;
-    /**
-     * <code>required string pckg = 8;</code>
-     */
-    public boolean hasPckg() {
-      return ((bitField0_ & 0x00000040) == 0x00000040);
-    }
-    /**
-     * <code>required string pckg = 8;</code>
-     */
-    public java.lang.String getPckg() {
-      java.lang.Object ref = pckg_;
+    public java.lang.String getReceiver() {
+      java.lang.Object ref = receiver_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -585,64 +615,22 @@ public final class MethodInvocation {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          pckg_ = s;
+          receiver_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string pckg = 8;</code>
+     * <code>optional string receiver = 7;</code>
      */
     public com.google.protobuf.ByteString
-        getPckgBytes() {
-      java.lang.Object ref = pckg_;
+        getReceiverBytes() {
+      java.lang.Object ref = receiver_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        pckg_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int SRCFILE_FIELD_NUMBER = 9;
-    private volatile java.lang.Object srcFile_;
-    /**
-     * <code>required string srcFile = 9;</code>
-     */
-    public boolean hasSrcFile() {
-      return ((bitField0_ & 0x00000080) == 0x00000080);
-    }
-    /**
-     * <code>required string srcFile = 9;</code>
-     */
-    public java.lang.String getSrcFile() {
-      java.lang.Object ref = srcFile_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          srcFile_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string srcFile = 9;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSrcFileBytes() {
-      java.lang.Object ref = srcFile_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        srcFile_ = b;
+        receiver_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -675,14 +663,6 @@ public final class MethodInvocation {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasPckg()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSrcFile()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -704,17 +684,14 @@ public final class MethodInvocation {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 5, kind_);
       }
-      for (int i = 0; i < args_.size(); i++) {
-        output.writeMessage(6, args_.get(i));
-      }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeIntegerMapTo(
+          output,
+          internalGetArgs(),
+          ArgsDefaultEntryHolder.defaultEntry,
+          6);
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeMessage(7, getReceiver());
-      }
-      if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, pckg_);
-      }
-      if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, srcFile_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, receiver_);
       }
       unknownFields.writeTo(output);
     }
@@ -739,19 +716,18 @@ public final class MethodInvocation {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, kind_);
       }
-      for (int i = 0; i < args_.size(); i++) {
+      for (java.util.Map.Entry<java.lang.Integer, java.lang.String> entry
+           : internalGetArgs().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.Integer, java.lang.String>
+        args__ = ArgsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, args_.get(i));
+            .computeMessageSize(6, args__);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, getReceiver());
-      }
-      if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, pckg_);
-      }
-      if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, srcFile_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, receiver_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -794,22 +770,12 @@ public final class MethodInvocation {
         result = result && getKind()
             .equals(other.getKind());
       }
-      result = result && getArgsList()
-          .equals(other.getArgsList());
+      result = result && internalGetArgs().equals(
+          other.internalGetArgs());
       result = result && (hasReceiver() == other.hasReceiver());
       if (hasReceiver()) {
         result = result && getReceiver()
             .equals(other.getReceiver());
-      }
-      result = result && (hasPckg() == other.hasPckg());
-      if (hasPckg()) {
-        result = result && getPckg()
-            .equals(other.getPckg());
-      }
-      result = result && (hasSrcFile() == other.hasSrcFile());
-      if (hasSrcFile()) {
-        result = result && getSrcFile()
-            .equals(other.getSrcFile());
       }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -842,21 +808,13 @@ public final class MethodInvocation {
         hash = (37 * hash) + KIND_FIELD_NUMBER;
         hash = (53 * hash) + getKind().hashCode();
       }
-      if (getArgsCount() > 0) {
+      if (!internalGetArgs().getMap().isEmpty()) {
         hash = (37 * hash) + ARGS_FIELD_NUMBER;
-        hash = (53 * hash) + getArgsList().hashCode();
+        hash = (53 * hash) + internalGetArgs().hashCode();
       }
       if (hasReceiver()) {
         hash = (37 * hash) + RECEIVER_FIELD_NUMBER;
         hash = (53 * hash) + getReceiver().hashCode();
-      }
-      if (hasPckg()) {
-        hash = (37 * hash) + PCKG_FIELD_NUMBER;
-        hash = (53 * hash) + getPckg().hashCode();
-      }
-      if (hasSrcFile()) {
-        hash = (37 * hash) + SRCFILE_FIELD_NUMBER;
-        hash = (53 * hash) + getSrcFile().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -963,6 +921,28 @@ public final class MethodInvocation {
         return com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.internal_static_Models_MthdInvc_descriptor;
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 6:
+            return internalGetArgs();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 6:
+            return internalGetMutableArgs();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.internal_static_Models_MthdInvc_fieldAccessorTable
@@ -970,7 +950,7 @@ public final class MethodInvocation {
                 com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.MthdInvc.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.MthdInvc.Builder.class);
       }
 
-      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.MthdInvc.newBuilder()
+      // Construct using MethodInvocation.MthdInvc.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -983,8 +963,6 @@ public final class MethodInvocation {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getArgsFieldBuilder();
-          getReceiverFieldBuilder();
         }
       }
       public Builder clear() {
@@ -999,22 +977,9 @@ public final class MethodInvocation {
         bitField0_ = (bitField0_ & ~0x00000008);
         kind_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
-        if (argsBuilder_ == null) {
-          args_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000020);
-        } else {
-          argsBuilder_.clear();
-        }
-        if (receiverBuilder_ == null) {
-          receiver_ = null;
-        } else {
-          receiverBuilder_.clear();
-        }
+        internalGetMutableArgs().clear();
+        receiver_ = "";
         bitField0_ = (bitField0_ & ~0x00000040);
-        pckg_ = "";
-        bitField0_ = (bitField0_ & ~0x00000080);
-        srcFile_ = "";
-        bitField0_ = (bitField0_ & ~0x00000100);
         return this;
       }
 
@@ -1059,31 +1024,12 @@ public final class MethodInvocation {
           to_bitField0_ |= 0x00000010;
         }
         result.kind_ = kind_;
-        if (argsBuilder_ == null) {
-          if (((bitField0_ & 0x00000020) == 0x00000020)) {
-            args_ = java.util.Collections.unmodifiableList(args_);
-            bitField0_ = (bitField0_ & ~0x00000020);
-          }
-          result.args_ = args_;
-        } else {
-          result.args_ = argsBuilder_.build();
-        }
+        result.args_ = internalGetArgs();
+        result.args_.makeImmutable();
         if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
           to_bitField0_ |= 0x00000020;
         }
-        if (receiverBuilder_ == null) {
-          result.receiver_ = receiver_;
-        } else {
-          result.receiver_ = receiverBuilder_.build();
-        }
-        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
-          to_bitField0_ |= 0x00000040;
-        }
-        result.pckg_ = pckg_;
-        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
-          to_bitField0_ |= 0x00000080;
-        }
-        result.srcFile_ = srcFile_;
+        result.receiver_ = receiver_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1151,43 +1097,11 @@ public final class MethodInvocation {
           kind_ = other.kind_;
           onChanged();
         }
-        if (argsBuilder_ == null) {
-          if (!other.args_.isEmpty()) {
-            if (args_.isEmpty()) {
-              args_ = other.args_;
-              bitField0_ = (bitField0_ & ~0x00000020);
-            } else {
-              ensureArgsIsMutable();
-              args_.addAll(other.args_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.args_.isEmpty()) {
-            if (argsBuilder_.isEmpty()) {
-              argsBuilder_.dispose();
-              argsBuilder_ = null;
-              args_ = other.args_;
-              bitField0_ = (bitField0_ & ~0x00000020);
-              argsBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getArgsFieldBuilder() : null;
-            } else {
-              argsBuilder_.addAllMessages(other.args_);
-            }
-          }
-        }
+        internalGetMutableArgs().mergeFrom(
+            other.internalGetArgs());
         if (other.hasReceiver()) {
-          mergeReceiver(other.getReceiver());
-        }
-        if (other.hasPckg()) {
-          bitField0_ |= 0x00000080;
-          pckg_ = other.pckg_;
-          onChanged();
-        }
-        if (other.hasSrcFile()) {
-          bitField0_ |= 0x00000100;
-          srcFile_ = other.srcFile_;
+          bitField0_ |= 0x00000040;
+          receiver_ = other.receiver_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -1209,12 +1123,6 @@ public final class MethodInvocation {
           return false;
         }
         if (!hasKind()) {
-          return false;
-        }
-        if (!hasPckg()) {
-          return false;
-        }
-        if (!hasSrcFile()) {
           return false;
         }
         return true;
@@ -1619,512 +1527,229 @@ public final class MethodInvocation {
         return this;
       }
 
-      private java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> args_ =
-        java.util.Collections.emptyList();
-      private void ensureArgsIsMutable() {
-        if (!((bitField0_ & 0x00000020) == 0x00000020)) {
-          args_ = new java.util.ArrayList<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys>(args_);
-          bitField0_ |= 0x00000020;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> argsBuilder_;
-
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> getArgsList() {
-        if (argsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(args_);
-        } else {
-          return argsBuilder_.getMessageList();
+      private com.google.protobuf.MapField<
+          java.lang.Integer, java.lang.String> args_;
+      private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
+      internalGetArgs() {
+        if (args_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              ArgsDefaultEntryHolder.defaultEntry);
         }
+        return args_;
       }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
+      private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
+      internalGetMutableArgs() {
+        onChanged();;
+        if (args_ == null) {
+          args_ = com.google.protobuf.MapField.newMapField(
+              ArgsDefaultEntryHolder.defaultEntry);
+        }
+        if (!args_.isMutable()) {
+          args_ = args_.copy();
+        }
+        return args_;
+      }
+
       public int getArgsCount() {
-        if (argsBuilder_ == null) {
-          return args_.size();
-        } else {
-          return argsBuilder_.getCount();
+        return internalGetArgs().getMap().size();
+      }
+      /**
+       * <pre>
+       * index against id | kind| additional info
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; args = 6;</code>
+       */
+
+      public boolean containsArgs(
+          int key) {
+        
+        return internalGetArgs().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getArgsMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Integer, java.lang.String> getArgs() {
+        return getArgsMap();
+      }
+      /**
+       * <pre>
+       * index against id | kind| additional info
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; args = 6;</code>
+       */
+
+      public java.util.Map<java.lang.Integer, java.lang.String> getArgsMap() {
+        return internalGetArgs().getMap();
+      }
+      /**
+       * <pre>
+       * index against id | kind| additional info
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; args = 6;</code>
+       */
+
+      public java.lang.String getArgsOrDefault(
+          int key,
+          java.lang.String defaultValue) {
+        
+        java.util.Map<java.lang.Integer, java.lang.String> map =
+            internalGetArgs().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * index against id | kind| additional info
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; args = 6;</code>
+       */
+
+      public java.lang.String getArgsOrThrow(
+          int key) {
+        
+        java.util.Map<java.lang.Integer, java.lang.String> map =
+            internalGetArgs().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
         }
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getArgs(int index) {
-        if (argsBuilder_ == null) {
-          return args_.get(index);
-        } else {
-          return argsBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public Builder setArgs(
-          int index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (argsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureArgsIsMutable();
-          args_.set(index, value);
-          onChanged();
-        } else {
-          argsBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public Builder setArgs(
-          int index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (argsBuilder_ == null) {
-          ensureArgsIsMutable();
-          args_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          argsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public Builder addArgs(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (argsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureArgsIsMutable();
-          args_.add(value);
-          onChanged();
-        } else {
-          argsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public Builder addArgs(
-          int index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (argsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureArgsIsMutable();
-          args_.add(index, value);
-          onChanged();
-        } else {
-          argsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public Builder addArgs(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (argsBuilder_ == null) {
-          ensureArgsIsMutable();
-          args_.add(builderForValue.build());
-          onChanged();
-        } else {
-          argsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public Builder addArgs(
-          int index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (argsBuilder_ == null) {
-          ensureArgsIsMutable();
-          args_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          argsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public Builder addAllArgs(
-          java.lang.Iterable<? extends com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> values) {
-        if (argsBuilder_ == null) {
-          ensureArgsIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, args_);
-          onChanged();
-        } else {
-          argsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public Builder clearArgs() {
-        if (argsBuilder_ == null) {
-          args_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000020);
-          onChanged();
-        } else {
-          argsBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public Builder removeArgs(int index) {
-        if (argsBuilder_ == null) {
-          ensureArgsIsMutable();
-          args_.remove(index);
-          onChanged();
-        } else {
-          argsBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder getArgsBuilder(
-          int index) {
-        return getArgsFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getArgsOrBuilder(
-          int index) {
-        if (argsBuilder_ == null) {
-          return args_.get(index);  } else {
-          return argsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public java.util.List<? extends com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-           getArgsOrBuilderList() {
-        if (argsBuilder_ != null) {
-          return argsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(args_);
-        }
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder addArgsBuilder() {
-        return getArgsFieldBuilder().addBuilder(
-            com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder addArgsBuilder(
-          int index) {
-        return getArgsFieldBuilder().addBuilder(
-            index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .Models.anlys args = 6;</code>
-       */
-      public java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder> 
-           getArgsBuilderList() {
-        return getArgsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-          getArgsFieldBuilder() {
-        if (argsBuilder_ == null) {
-          argsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder>(
-                  args_,
-                  ((bitField0_ & 0x00000020) == 0x00000020),
-                  getParentForChildren(),
-                  isClean());
-          args_ = null;
-        }
-        return argsBuilder_;
+        return map.get(key);
       }
 
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys receiver_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> receiverBuilder_;
+      public Builder clearArgs() {
+        internalGetMutableArgs().getMutableMap()
+            .clear();
+        return this;
+      }
       /**
-       * <code>optional .Models.anlys receiver = 7;</code>
+       * <pre>
+       * index against id | kind| additional info
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; args = 6;</code>
+       */
+
+      public Builder removeArgs(
+          int key) {
+        
+        internalGetMutableArgs().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Integer, java.lang.String>
+      getMutableArgs() {
+        return internalGetMutableArgs().getMutableMap();
+      }
+      /**
+       * <pre>
+       * index against id | kind| additional info
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; args = 6;</code>
+       */
+      public Builder putArgs(
+          int key,
+          java.lang.String value) {
+        
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableArgs().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * index against id | kind| additional info
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; args = 6;</code>
+       */
+
+      public Builder putAllArgs(
+          java.util.Map<java.lang.Integer, java.lang.String> values) {
+        internalGetMutableArgs().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private java.lang.Object receiver_ = "";
+      /**
+       * <code>optional string receiver = 7;</code>
        */
       public boolean hasReceiver() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
       }
       /**
-       * <code>optional .Models.anlys receiver = 7;</code>
+       * <code>optional string receiver = 7;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getReceiver() {
-        if (receiverBuilder_ == null) {
-          return receiver_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : receiver_;
-        } else {
-          return receiverBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .Models.anlys receiver = 7;</code>
-       */
-      public Builder setReceiver(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (receiverBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
+      public java.lang.String getReceiver() {
+        java.lang.Object ref = receiver_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            receiver_ = s;
           }
-          receiver_ = value;
-          onChanged();
+          return s;
         } else {
-          receiverBuilder_.setMessage(value);
+          return (java.lang.String) ref;
         }
-        bitField0_ |= 0x00000040;
-        return this;
       }
       /**
-       * <code>optional .Models.anlys receiver = 7;</code>
+       * <code>optional string receiver = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getReceiverBytes() {
+        java.lang.Object ref = receiver_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          receiver_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string receiver = 7;</code>
        */
       public Builder setReceiver(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (receiverBuilder_ == null) {
-          receiver_ = builderForValue.build();
-          onChanged();
-        } else {
-          receiverBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000040;
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        receiver_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>optional .Models.anlys receiver = 7;</code>
-       */
-      public Builder mergeReceiver(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (receiverBuilder_ == null) {
-          if (((bitField0_ & 0x00000040) == 0x00000040) &&
-              receiver_ != null &&
-              receiver_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance()) {
-            receiver_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.newBuilder(receiver_).mergeFrom(value).buildPartial();
-          } else {
-            receiver_ = value;
-          }
-          onChanged();
-        } else {
-          receiverBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000040;
-        return this;
-      }
-      /**
-       * <code>optional .Models.anlys receiver = 7;</code>
+       * <code>optional string receiver = 7;</code>
        */
       public Builder clearReceiver() {
-        if (receiverBuilder_ == null) {
-          receiver_ = null;
-          onChanged();
-        } else {
-          receiverBuilder_.clear();
-        }
         bitField0_ = (bitField0_ & ~0x00000040);
-        return this;
-      }
-      /**
-       * <code>optional .Models.anlys receiver = 7;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder getReceiverBuilder() {
-        bitField0_ |= 0x00000040;
-        onChanged();
-        return getReceiverFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .Models.anlys receiver = 7;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getReceiverOrBuilder() {
-        if (receiverBuilder_ != null) {
-          return receiverBuilder_.getMessageOrBuilder();
-        } else {
-          return receiver_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : receiver_;
-        }
-      }
-      /**
-       * <code>optional .Models.anlys receiver = 7;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-          getReceiverFieldBuilder() {
-        if (receiverBuilder_ == null) {
-          receiverBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder>(
-                  getReceiver(),
-                  getParentForChildren(),
-                  isClean());
-          receiver_ = null;
-        }
-        return receiverBuilder_;
-      }
-
-      private java.lang.Object pckg_ = "";
-      /**
-       * <code>required string pckg = 8;</code>
-       */
-      public boolean hasPckg() {
-        return ((bitField0_ & 0x00000080) == 0x00000080);
-      }
-      /**
-       * <code>required string pckg = 8;</code>
-       */
-      public java.lang.String getPckg() {
-        java.lang.Object ref = pckg_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            pckg_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string pckg = 8;</code>
-       */
-      public com.google.protobuf.ByteString
-          getPckgBytes() {
-        java.lang.Object ref = pckg_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          pckg_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string pckg = 8;</code>
-       */
-      public Builder setPckg(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000080;
-        pckg_ = value;
+        receiver_ = getDefaultInstance().getReceiver();
         onChanged();
         return this;
       }
       /**
-       * <code>required string pckg = 8;</code>
+       * <code>optional string receiver = 7;</code>
        */
-      public Builder clearPckg() {
-        bitField0_ = (bitField0_ & ~0x00000080);
-        pckg_ = getDefaultInstance().getPckg();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string pckg = 8;</code>
-       */
-      public Builder setPckgBytes(
+      public Builder setReceiverBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000080;
-        pckg_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object srcFile_ = "";
-      /**
-       * <code>required string srcFile = 9;</code>
-       */
-      public boolean hasSrcFile() {
-        return ((bitField0_ & 0x00000100) == 0x00000100);
-      }
-      /**
-       * <code>required string srcFile = 9;</code>
-       */
-      public java.lang.String getSrcFile() {
-        java.lang.Object ref = srcFile_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            srcFile_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string srcFile = 9;</code>
-       */
-      public com.google.protobuf.ByteString
-          getSrcFileBytes() {
-        java.lang.Object ref = srcFile_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          srcFile_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string srcFile = 9;</code>
-       */
-      public Builder setSrcFile(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000100;
-        srcFile_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string srcFile = 9;</code>
-       */
-      public Builder clearSrcFile() {
-        bitField0_ = (bitField0_ & ~0x00000100);
-        srcFile_ = getDefaultInstance().getSrcFile();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string srcFile = 9;</code>
-       */
-      public Builder setSrcFileBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000100;
-        srcFile_ = value;
+  bitField0_ |= 0x00000040;
+        receiver_ = value;
         onChanged();
         return this;
       }
@@ -2182,6 +1807,11 @@ public final class MethodInvocation {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Models_MthdInvc_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Models_MthdInvc_ArgsEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Models_MthdInvc_ArgsEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2191,14 +1821,14 @@ public final class MethodInvocation {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016MthdInvc.proto\022\006Models\032\016Analysis.proto" +
-      "\"\261\001\n\010MthdInvc\022\n\n\002id\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\022" +
-      "\r\n\005owner\030\003 \002(\t\022\021\n\tsignature\030\004 \002(\t\022\014\n\004kin" +
-      "d\030\005 \002(\t\022\033\n\004args\030\006 \003(\0132\r.Models.anlys\022\037\n\010" +
-      "receiver\030\007 \001(\0132\r.Models.anlys\022\014\n\004pckg\030\010 " +
-      "\002(\t\022\017\n\007srcFile\030\t \002(\tBR\n>com.google.error" +
-      "prone.bugpatterns.refactoringexperiment." +
-      "modelsB\020MethodInvocation"
+      "\n\016MthdInvc.proto\022\006Models\"\275\001\n\010MthdInvc\022\n\n" +
+      "\002id\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\022\r\n\005owner\030\003 \002(\t\022\021" +
+      "\n\tsignature\030\004 \002(\t\022\014\n\004kind\030\005 \002(\t\022(\n\004args\030" +
+      "\006 \003(\0132\032.Models.MthdInvc.ArgsEntry\022\020\n\010rec" +
+      "eiver\030\007 \001(\t\032+\n\tArgsEntry\022\013\n\003key\030\001 \001(\005\022\r\n" +
+      "\005value\030\002 \001(\t:\0028\001BR\n>com.google.errorpron" +
+      "e.bugpatterns.refactoringexperiment.mode" +
+      "lsB\020MethodInvocation"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2211,15 +1841,19 @@ public final class MethodInvocation {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.getDescriptor(),
         }, assigner);
     internal_static_Models_MthdInvc_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Models_MthdInvc_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_MthdInvc_descriptor,
-        new java.lang.String[] { "Id", "Name", "Owner", "Signature", "Kind", "Args", "Receiver", "Pckg", "SrcFile", });
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.getDescriptor();
+        new java.lang.String[] { "Id", "Name", "Owner", "Signature", "Kind", "Args", "Receiver", });
+    internal_static_Models_MthdInvc_ArgsEntry_descriptor =
+      internal_static_Models_MthdInvc_descriptor.getNestedTypes().get(0);
+    internal_static_Models_MthdInvc_ArgsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Models_MthdInvc_ArgsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

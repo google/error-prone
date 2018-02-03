@@ -1,5 +1,4 @@
 syntax = "proto2";
-import "Analysis.proto";
 
 package Models;
 
@@ -7,8 +6,6 @@ option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.m
 option java_outer_classname = "Assignment";
 
 message Asgn {
-  required anlys lhs = 1;
-  required anlys rhs = 2;
-  required string pckg = 3;
-  required string srcFile = 4;
+  required string lhs =1; // id
+  required string rhs =2; //id | kind| additional info
  }

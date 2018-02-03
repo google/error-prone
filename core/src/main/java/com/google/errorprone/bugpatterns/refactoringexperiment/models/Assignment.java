@@ -19,58 +19,56 @@ public final class Assignment {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required .Models.anlys lhs = 1;</code>
+     * <pre>
+     * id
+     * </pre>
+     *
+     * <code>required string lhs = 1;</code>
      */
     boolean hasLhs();
     /**
-     * <code>required .Models.anlys lhs = 1;</code>
+     * <pre>
+     * id
+     * </pre>
+     *
+     * <code>required string lhs = 1;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getLhs();
+    java.lang.String getLhs();
     /**
-     * <code>required .Models.anlys lhs = 1;</code>
+     * <pre>
+     * id
+     * </pre>
+     *
+     * <code>required string lhs = 1;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getLhsOrBuilder();
+    com.google.protobuf.ByteString
+        getLhsBytes();
 
     /**
-     * <code>required .Models.anlys rhs = 2;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string rhs = 2;</code>
      */
     boolean hasRhs();
     /**
-     * <code>required .Models.anlys rhs = 2;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string rhs = 2;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getRhs();
+    java.lang.String getRhs();
     /**
-     * <code>required .Models.anlys rhs = 2;</code>
-     */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getRhsOrBuilder();
-
-    /**
-     * <code>required string pckg = 3;</code>
-     */
-    boolean hasPckg();
-    /**
-     * <code>required string pckg = 3;</code>
-     */
-    java.lang.String getPckg();
-    /**
-     * <code>required string pckg = 3;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string rhs = 2;</code>
      */
     com.google.protobuf.ByteString
-        getPckgBytes();
-
-    /**
-     * <code>required string srcFile = 4;</code>
-     */
-    boolean hasSrcFile();
-    /**
-     * <code>required string srcFile = 4;</code>
-     */
-    java.lang.String getSrcFile();
-    /**
-     * <code>required string srcFile = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getSrcFileBytes();
+        getRhsBytes();
   }
   /**
    * Protobuf type {@code Models.Asgn}
@@ -85,8 +83,8 @@ public final class Assignment {
       super(builder);
     }
     private Asgn() {
-      pckg_ = "";
-      srcFile_ = "";
+      lhs_ = "";
+      rhs_ = "";
     }
 
     @java.lang.Override
@@ -121,41 +119,15 @@ public final class Assignment {
               break;
             }
             case 10: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                subBuilder = lhs_.toBuilder();
-              }
-              lhs_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(lhs_);
-                lhs_ = subBuilder.buildPartial();
-              }
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000001;
+              lhs_ = bs;
               break;
             }
             case 18: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                subBuilder = rhs_.toBuilder();
-              }
-              rhs_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(rhs_);
-                rhs_ = subBuilder.buildPartial();
-              }
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000002;
-              break;
-            }
-            case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000004;
-              pckg_ = bs;
-              break;
-            }
-            case 34: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000008;
-              srcFile_ = bs;
+              rhs_ = bs;
               break;
             }
           }
@@ -184,60 +156,26 @@ public final class Assignment {
 
     private int bitField0_;
     public static final int LHS_FIELD_NUMBER = 1;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys lhs_;
+    private volatile java.lang.Object lhs_;
     /**
-     * <code>required .Models.anlys lhs = 1;</code>
+     * <pre>
+     * id
+     * </pre>
+     *
+     * <code>required string lhs = 1;</code>
      */
     public boolean hasLhs() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required .Models.anlys lhs = 1;</code>
+     * <pre>
+     * id
+     * </pre>
+     *
+     * <code>required string lhs = 1;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getLhs() {
-      return lhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : lhs_;
-    }
-    /**
-     * <code>required .Models.anlys lhs = 1;</code>
-     */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getLhsOrBuilder() {
-      return lhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : lhs_;
-    }
-
-    public static final int RHS_FIELD_NUMBER = 2;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys rhs_;
-    /**
-     * <code>required .Models.anlys rhs = 2;</code>
-     */
-    public boolean hasRhs() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required .Models.anlys rhs = 2;</code>
-     */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getRhs() {
-      return rhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : rhs_;
-    }
-    /**
-     * <code>required .Models.anlys rhs = 2;</code>
-     */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getRhsOrBuilder() {
-      return rhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : rhs_;
-    }
-
-    public static final int PCKG_FIELD_NUMBER = 3;
-    private volatile java.lang.Object pckg_;
-    /**
-     * <code>required string pckg = 3;</code>
-     */
-    public boolean hasPckg() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>required string pckg = 3;</code>
-     */
-    public java.lang.String getPckg() {
-      java.lang.Object ref = pckg_;
+    public java.lang.String getLhs() {
+      java.lang.Object ref = lhs_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -245,41 +183,53 @@ public final class Assignment {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          pckg_ = s;
+          lhs_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string pckg = 3;</code>
+     * <pre>
+     * id
+     * </pre>
+     *
+     * <code>required string lhs = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getPckgBytes() {
-      java.lang.Object ref = pckg_;
+        getLhsBytes() {
+      java.lang.Object ref = lhs_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        pckg_ = b;
+        lhs_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int SRCFILE_FIELD_NUMBER = 4;
-    private volatile java.lang.Object srcFile_;
+    public static final int RHS_FIELD_NUMBER = 2;
+    private volatile java.lang.Object rhs_;
     /**
-     * <code>required string srcFile = 4;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string rhs = 2;</code>
      */
-    public boolean hasSrcFile() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+    public boolean hasRhs() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required string srcFile = 4;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string rhs = 2;</code>
      */
-    public java.lang.String getSrcFile() {
-      java.lang.Object ref = srcFile_;
+    public java.lang.String getRhs() {
+      java.lang.Object ref = rhs_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -287,22 +237,26 @@ public final class Assignment {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          srcFile_ = s;
+          rhs_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string srcFile = 4;</code>
+     * <pre>
+     *id | kind| additional info
+     * </pre>
+     *
+     * <code>required string rhs = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getSrcFileBytes() {
-      java.lang.Object ref = srcFile_;
+        getRhsBytes() {
+      java.lang.Object ref = rhs_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        srcFile_ = b;
+        rhs_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -323,14 +277,6 @@ public final class Assignment {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasPckg()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSrcFile()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -338,16 +284,10 @@ public final class Assignment {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getLhs());
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, lhs_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, getRhs());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, pckg_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, srcFile_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, rhs_);
       }
       unknownFields.writeTo(output);
     }
@@ -358,18 +298,10 @@ public final class Assignment {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getLhs());
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, lhs_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getRhs());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, pckg_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, srcFile_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, rhs_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -397,16 +329,6 @@ public final class Assignment {
         result = result && getRhs()
             .equals(other.getRhs());
       }
-      result = result && (hasPckg() == other.hasPckg());
-      if (hasPckg()) {
-        result = result && getPckg()
-            .equals(other.getPckg());
-      }
-      result = result && (hasSrcFile() == other.hasSrcFile());
-      if (hasSrcFile()) {
-        result = result && getSrcFile()
-            .equals(other.getSrcFile());
-      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -425,14 +347,6 @@ public final class Assignment {
       if (hasRhs()) {
         hash = (37 * hash) + RHS_FIELD_NUMBER;
         hash = (53 * hash) + getRhs().hashCode();
-      }
-      if (hasPckg()) {
-        hash = (37 * hash) + PCKG_FIELD_NUMBER;
-        hash = (53 * hash) + getPckg().hashCode();
-      }
-      if (hasSrcFile()) {
-        hash = (37 * hash) + SRCFILE_FIELD_NUMBER;
-        hash = (53 * hash) + getSrcFile().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -546,7 +460,7 @@ public final class Assignment {
                 com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.Builder.class);
       }
 
-      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.newBuilder()
+      // Construct using Assignment.Asgn.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -559,28 +473,14 @@ public final class Assignment {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getLhsFieldBuilder();
-          getRhsFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
-        if (lhsBuilder_ == null) {
-          lhs_ = null;
-        } else {
-          lhsBuilder_.clear();
-        }
+        lhs_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        if (rhsBuilder_ == null) {
-          rhs_ = null;
-        } else {
-          rhsBuilder_.clear();
-        }
+        rhs_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        pckg_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        srcFile_ = "";
-        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -608,27 +508,11 @@ public final class Assignment {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        if (lhsBuilder_ == null) {
-          result.lhs_ = lhs_;
-        } else {
-          result.lhs_ = lhsBuilder_.build();
-        }
+        result.lhs_ = lhs_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        if (rhsBuilder_ == null) {
-          result.rhs_ = rhs_;
-        } else {
-          result.rhs_ = rhsBuilder_.build();
-        }
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.pckg_ = pckg_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.srcFile_ = srcFile_;
+        result.rhs_ = rhs_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -672,19 +556,13 @@ public final class Assignment {
       public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn other) {
         if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.getDefaultInstance()) return this;
         if (other.hasLhs()) {
-          mergeLhs(other.getLhs());
-        }
-        if (other.hasRhs()) {
-          mergeRhs(other.getRhs());
-        }
-        if (other.hasPckg()) {
-          bitField0_ |= 0x00000004;
-          pckg_ = other.pckg_;
+          bitField0_ |= 0x00000001;
+          lhs_ = other.lhs_;
           onChanged();
         }
-        if (other.hasSrcFile()) {
-          bitField0_ |= 0x00000008;
-          srcFile_ = other.srcFile_;
+        if (other.hasRhs()) {
+          bitField0_ |= 0x00000002;
+          rhs_ = other.rhs_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -697,12 +575,6 @@ public final class Assignment {
           return false;
         }
         if (!hasRhs()) {
-          return false;
-        }
-        if (!hasPckg()) {
-          return false;
-        }
-        if (!hasSrcFile()) {
           return false;
         }
         return true;
@@ -727,390 +599,202 @@ public final class Assignment {
       }
       private int bitField0_;
 
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys lhs_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> lhsBuilder_;
+      private java.lang.Object lhs_ = "";
       /**
-       * <code>required .Models.anlys lhs = 1;</code>
+       * <pre>
+       * id
+       * </pre>
+       *
+       * <code>required string lhs = 1;</code>
        */
       public boolean hasLhs() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required .Models.anlys lhs = 1;</code>
+       * <pre>
+       * id
+       * </pre>
+       *
+       * <code>required string lhs = 1;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getLhs() {
-        if (lhsBuilder_ == null) {
-          return lhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : lhs_;
-        } else {
-          return lhsBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>required .Models.anlys lhs = 1;</code>
-       */
-      public Builder setLhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (lhsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
+      public java.lang.String getLhs() {
+        java.lang.Object ref = lhs_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            lhs_ = s;
           }
-          lhs_ = value;
-          onChanged();
+          return s;
         } else {
-          lhsBuilder_.setMessage(value);
+          return (java.lang.String) ref;
         }
-        bitField0_ |= 0x00000001;
-        return this;
       }
       /**
-       * <code>required .Models.anlys lhs = 1;</code>
+       * <pre>
+       * id
+       * </pre>
+       *
+       * <code>required string lhs = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getLhsBytes() {
+        java.lang.Object ref = lhs_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          lhs_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * id
+       * </pre>
+       *
+       * <code>required string lhs = 1;</code>
        */
       public Builder setLhs(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (lhsBuilder_ == null) {
-          lhs_ = builderForValue.build();
-          onChanged();
-        } else {
-          lhsBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000001;
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        lhs_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>required .Models.anlys lhs = 1;</code>
-       */
-      public Builder mergeLhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (lhsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              lhs_ != null &&
-              lhs_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance()) {
-            lhs_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.newBuilder(lhs_).mergeFrom(value).buildPartial();
-          } else {
-            lhs_ = value;
-          }
-          onChanged();
-        } else {
-          lhsBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .Models.anlys lhs = 1;</code>
+       * <pre>
+       * id
+       * </pre>
+       *
+       * <code>required string lhs = 1;</code>
        */
       public Builder clearLhs() {
-        if (lhsBuilder_ == null) {
-          lhs_ = null;
-          onChanged();
-        } else {
-          lhsBuilder_.clear();
-        }
         bitField0_ = (bitField0_ & ~0x00000001);
+        lhs_ = getDefaultInstance().getLhs();
+        onChanged();
         return this;
       }
       /**
-       * <code>required .Models.anlys lhs = 1;</code>
+       * <pre>
+       * id
+       * </pre>
+       *
+       * <code>required string lhs = 1;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder getLhsBuilder() {
-        bitField0_ |= 0x00000001;
+      public Builder setLhsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        lhs_ = value;
         onChanged();
-        return getLhsFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>required .Models.anlys lhs = 1;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getLhsOrBuilder() {
-        if (lhsBuilder_ != null) {
-          return lhsBuilder_.getMessageOrBuilder();
-        } else {
-          return lhs_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : lhs_;
-        }
-      }
-      /**
-       * <code>required .Models.anlys lhs = 1;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-          getLhsFieldBuilder() {
-        if (lhsBuilder_ == null) {
-          lhsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder>(
-                  getLhs(),
-                  getParentForChildren(),
-                  isClean());
-          lhs_ = null;
-        }
-        return lhsBuilder_;
+        return this;
       }
 
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys rhs_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> rhsBuilder_;
+      private java.lang.Object rhs_ = "";
       /**
-       * <code>required .Models.anlys rhs = 2;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string rhs = 2;</code>
        */
       public boolean hasRhs() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required .Models.anlys rhs = 2;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string rhs = 2;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getRhs() {
-        if (rhsBuilder_ == null) {
-          return rhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : rhs_;
-        } else {
-          return rhsBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>required .Models.anlys rhs = 2;</code>
-       */
-      public Builder setRhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (rhsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
+      public java.lang.String getRhs() {
+        java.lang.Object ref = rhs_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            rhs_ = s;
           }
-          rhs_ = value;
-          onChanged();
+          return s;
         } else {
-          rhsBuilder_.setMessage(value);
+          return (java.lang.String) ref;
         }
-        bitField0_ |= 0x00000002;
-        return this;
       }
       /**
-       * <code>required .Models.anlys rhs = 2;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string rhs = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getRhsBytes() {
+        java.lang.Object ref = rhs_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          rhs_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string rhs = 2;</code>
        */
       public Builder setRhs(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (rhsBuilder_ == null) {
-          rhs_ = builderForValue.build();
-          onChanged();
-        } else {
-          rhsBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000002;
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        rhs_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>required .Models.anlys rhs = 2;</code>
-       */
-      public Builder mergeRhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (rhsBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              rhs_ != null &&
-              rhs_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance()) {
-            rhs_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.newBuilder(rhs_).mergeFrom(value).buildPartial();
-          } else {
-            rhs_ = value;
-          }
-          onChanged();
-        } else {
-          rhsBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000002;
-        return this;
-      }
-      /**
-       * <code>required .Models.anlys rhs = 2;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string rhs = 2;</code>
        */
       public Builder clearRhs() {
-        if (rhsBuilder_ == null) {
-          rhs_ = null;
-          onChanged();
-        } else {
-          rhsBuilder_.clear();
-        }
         bitField0_ = (bitField0_ & ~0x00000002);
-        return this;
-      }
-      /**
-       * <code>required .Models.anlys rhs = 2;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder getRhsBuilder() {
-        bitField0_ |= 0x00000002;
-        onChanged();
-        return getRhsFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>required .Models.anlys rhs = 2;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getRhsOrBuilder() {
-        if (rhsBuilder_ != null) {
-          return rhsBuilder_.getMessageOrBuilder();
-        } else {
-          return rhs_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance() : rhs_;
-        }
-      }
-      /**
-       * <code>required .Models.anlys rhs = 2;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-          getRhsFieldBuilder() {
-        if (rhsBuilder_ == null) {
-          rhsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder>(
-                  getRhs(),
-                  getParentForChildren(),
-                  isClean());
-          rhs_ = null;
-        }
-        return rhsBuilder_;
-      }
-
-      private java.lang.Object pckg_ = "";
-      /**
-       * <code>required string pckg = 3;</code>
-       */
-      public boolean hasPckg() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>required string pckg = 3;</code>
-       */
-      public java.lang.String getPckg() {
-        java.lang.Object ref = pckg_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            pckg_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string pckg = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getPckgBytes() {
-        java.lang.Object ref = pckg_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          pckg_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string pckg = 3;</code>
-       */
-      public Builder setPckg(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        pckg_ = value;
+        rhs_ = getDefaultInstance().getRhs();
         onChanged();
         return this;
       }
       /**
-       * <code>required string pckg = 3;</code>
+       * <pre>
+       *id | kind| additional info
+       * </pre>
+       *
+       * <code>required string rhs = 2;</code>
        */
-      public Builder clearPckg() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        pckg_ = getDefaultInstance().getPckg();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string pckg = 3;</code>
-       */
-      public Builder setPckgBytes(
+      public Builder setRhsBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
-        pckg_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object srcFile_ = "";
-      /**
-       * <code>required string srcFile = 4;</code>
-       */
-      public boolean hasSrcFile() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>required string srcFile = 4;</code>
-       */
-      public java.lang.String getSrcFile() {
-        java.lang.Object ref = srcFile_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            srcFile_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string srcFile = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getSrcFileBytes() {
-        java.lang.Object ref = srcFile_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          srcFile_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string srcFile = 4;</code>
-       */
-      public Builder setSrcFile(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        srcFile_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string srcFile = 4;</code>
-       */
-      public Builder clearSrcFile() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        srcFile_ = getDefaultInstance().getSrcFile();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string srcFile = 4;</code>
-       */
-      public Builder setSrcFileBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        srcFile_ = value;
+  bitField0_ |= 0x00000002;
+        rhs_ = value;
         onChanged();
         return this;
       }
@@ -1177,12 +861,10 @@ public final class Assignment {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020Assignment.proto\022\006Models\032\016Analysis.pro" +
-      "to\"]\n\004Asgn\022\032\n\003lhs\030\001 \002(\0132\r.Models.anlys\022\032" +
-      "\n\003rhs\030\002 \002(\0132\r.Models.anlys\022\014\n\004pckg\030\003 \002(\t" +
-      "\022\017\n\007srcFile\030\004 \002(\tBL\n>com.google.errorpro" +
-      "ne.bugpatterns.refactoringexperiment.mod" +
-      "elsB\nAssignment"
+      "\n\020Assignment.proto\022\006Models\" \n\004Asgn\022\013\n\003lh" +
+      "s\030\001 \002(\t\022\013\n\003rhs\030\002 \002(\tBL\n>com.google.error" +
+      "prone.bugpatterns.refactoringexperiment." +
+      "modelsB\nAssignment"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1195,15 +877,13 @@ public final class Assignment {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.getDescriptor(),
         }, assigner);
     internal_static_Models_Asgn_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Models_Asgn_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_Asgn_descriptor,
-        new java.lang.String[] { "Lhs", "Rhs", "Pckg", "SrcFile", });
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.getDescriptor();
+        new java.lang.String[] { "Lhs", "Rhs", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

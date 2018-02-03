@@ -103,37 +103,58 @@ public final class MethodDeclaration {
         getReturnTypeBytes();
 
     /**
-     * <code>optional bool returnTypeMatters = 7;</code>
-     */
-    boolean hasReturnTypeMatters();
-    /**
-     * <code>optional bool returnTypeMatters = 7;</code>
-     */
-    boolean getReturnTypeMatters();
-
-    /**
-     * <code>repeated .Models.anlys param = 8;</code>
-     */
-    java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> 
-        getParamList();
-    /**
-     * <code>repeated .Models.anlys param = 8;</code>
-     */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getParam(int index);
-    /**
-     * <code>repeated .Models.anlys param = 8;</code>
+     * <pre>
+     * index against id
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; param = 8;</code>
      */
     int getParamCount();
     /**
-     * <code>repeated .Models.anlys param = 8;</code>
+     * <pre>
+     * index against id
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; param = 8;</code>
      */
-    java.util.List<? extends com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-        getParamOrBuilderList();
+    boolean containsParam(
+        int key);
     /**
-     * <code>repeated .Models.anlys param = 8;</code>
+     * Use {@link #getParamMap()} instead.
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getParamOrBuilder(
-        int index);
+    @java.lang.Deprecated
+    java.util.Map<java.lang.Integer, java.lang.String>
+    getParam();
+    /**
+     * <pre>
+     * index against id
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; param = 8;</code>
+     */
+    java.util.Map<java.lang.Integer, java.lang.String>
+    getParamMap();
+    /**
+     * <pre>
+     * index against id
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; param = 8;</code>
+     */
+
+    java.lang.String getParamOrDefault(
+        int key,
+        java.lang.String defaultValue);
+    /**
+     * <pre>
+     * index against id
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; param = 8;</code>
+     */
+
+    java.lang.String getParamOrThrow(
+        int key);
 
     /**
      * <code>repeated string modifier = 9;</code>
@@ -187,8 +208,6 @@ public final class MethodDeclaration {
       signature_ = "";
       kind_ = "";
       returnType_ = "";
-      returnTypeMatters_ = false;
-      param_ = java.util.Collections.emptyList();
       modifier_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       superMethodIn_ = "";
     }
@@ -260,32 +279,31 @@ public final class MethodDeclaration {
               returnType_ = bs;
               break;
             }
-            case 56: {
-              bitField0_ |= 0x00000040;
-              returnTypeMatters_ = input.readBool();
-              break;
-            }
             case 66: {
-              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-                param_ = new java.util.ArrayList<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys>();
-                mutable_bitField0_ |= 0x00000080;
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+                param_ = com.google.protobuf.MapField.newMapField(
+                    ParamDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000040;
               }
-              param_.add(
-                  input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.PARSER, extensionRegistry));
+              com.google.protobuf.MapEntry<java.lang.Integer, java.lang.String>
+              param__ = input.readMessage(
+                  ParamDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              param_.getMutableMap().put(
+                  param__.getKey(), param__.getValue());
               break;
             }
             case 74: {
               com.google.protobuf.ByteString bs = input.readBytes();
-              if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
                 modifier_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000100;
+                mutable_bitField0_ |= 0x00000080;
               }
               modifier_.add(bs);
               break;
             }
             case 82: {
               com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000080;
+              bitField0_ |= 0x00000040;
               superMethodIn_ = bs;
               break;
             }
@@ -298,9 +316,6 @@ public final class MethodDeclaration {
             e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-          param_ = java.util.Collections.unmodifiableList(param_);
-        }
-        if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
           modifier_ = modifier_.getUnmodifiableView();
         }
         this.unknownFields = unknownFields.build();
@@ -312,6 +327,17 @@ public final class MethodDeclaration {
       return com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclaration.internal_static_Models_MthdDcl_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 8:
+          return internalGetParam();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclaration.internal_static_Models_MthdDcl_fieldAccessorTable
@@ -572,54 +598,96 @@ public final class MethodDeclaration {
       }
     }
 
-    public static final int RETURNTYPEMATTERS_FIELD_NUMBER = 7;
-    private boolean returnTypeMatters_;
-    /**
-     * <code>optional bool returnTypeMatters = 7;</code>
-     */
-    public boolean hasReturnTypeMatters() {
-      return ((bitField0_ & 0x00000040) == 0x00000040);
+    public static final int PARAM_FIELD_NUMBER = 8;
+    private static final class ParamDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.Integer, java.lang.String> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.Integer, java.lang.String>newDefaultInstance(
+                  com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclaration.internal_static_Models_MthdDcl_ParamEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.INT32,
+                  0,
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "");
     }
-    /**
-     * <code>optional bool returnTypeMatters = 7;</code>
-     */
-    public boolean getReturnTypeMatters() {
-      return returnTypeMatters_;
+    private com.google.protobuf.MapField<
+        java.lang.Integer, java.lang.String> param_;
+    private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
+    internalGetParam() {
+      if (param_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            ParamDefaultEntryHolder.defaultEntry);
+      }
+      return param_;
     }
 
-    public static final int PARAM_FIELD_NUMBER = 8;
-    private java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> param_;
-    /**
-     * <code>repeated .Models.anlys param = 8;</code>
-     */
-    public java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> getParamList() {
-      return param_;
-    }
-    /**
-     * <code>repeated .Models.anlys param = 8;</code>
-     */
-    public java.util.List<? extends com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-        getParamOrBuilderList() {
-      return param_;
-    }
-    /**
-     * <code>repeated .Models.anlys param = 8;</code>
-     */
     public int getParamCount() {
-      return param_.size();
+      return internalGetParam().getMap().size();
     }
     /**
-     * <code>repeated .Models.anlys param = 8;</code>
+     * <pre>
+     * index against id
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; param = 8;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getParam(int index) {
-      return param_.get(index);
+
+    public boolean containsParam(
+        int key) {
+      
+      return internalGetParam().getMap().containsKey(key);
     }
     /**
-     * <code>repeated .Models.anlys param = 8;</code>
+     * Use {@link #getParamMap()} instead.
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getParamOrBuilder(
-        int index) {
-      return param_.get(index);
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.Integer, java.lang.String> getParam() {
+      return getParamMap();
+    }
+    /**
+     * <pre>
+     * index against id
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; param = 8;</code>
+     */
+
+    public java.util.Map<java.lang.Integer, java.lang.String> getParamMap() {
+      return internalGetParam().getMap();
+    }
+    /**
+     * <pre>
+     * index against id
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; param = 8;</code>
+     */
+
+    public java.lang.String getParamOrDefault(
+        int key,
+        java.lang.String defaultValue) {
+      
+      java.util.Map<java.lang.Integer, java.lang.String> map =
+          internalGetParam().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * index against id
+     * </pre>
+     *
+     * <code>map&lt;int32, string&gt; param = 8;</code>
+     */
+
+    public java.lang.String getParamOrThrow(
+        int key) {
+      
+      java.util.Map<java.lang.Integer, java.lang.String> map =
+          internalGetParam().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
     }
 
     public static final int MODIFIER_FIELD_NUMBER = 9;
@@ -657,7 +725,7 @@ public final class MethodDeclaration {
      * <code>optional string superMethodIn = 10;</code>
      */
     public boolean hasSuperMethodIn() {
-      return ((bitField0_ & 0x00000080) == 0x00000080);
+      return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
      * <code>optional string superMethodIn = 10;</code>
@@ -743,16 +811,16 @@ public final class MethodDeclaration {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, returnType_);
       }
-      if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeBool(7, returnTypeMatters_);
-      }
-      for (int i = 0; i < param_.size(); i++) {
-        output.writeMessage(8, param_.get(i));
-      }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeIntegerMapTo(
+          output,
+          internalGetParam(),
+          ParamDefaultEntryHolder.defaultEntry,
+          8);
       for (int i = 0; i < modifier_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 9, modifier_.getRaw(i));
       }
-      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 10, superMethodIn_);
       }
       unknownFields.writeTo(output);
@@ -781,13 +849,15 @@ public final class MethodDeclaration {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, returnType_);
       }
-      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+      for (java.util.Map.Entry<java.lang.Integer, java.lang.String> entry
+           : internalGetParam().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.Integer, java.lang.String>
+        param__ = ParamDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(7, returnTypeMatters_);
-      }
-      for (int i = 0; i < param_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(8, param_.get(i));
+            .computeMessageSize(8, param__);
       }
       {
         int dataSize = 0;
@@ -797,7 +867,7 @@ public final class MethodDeclaration {
         size += dataSize;
         size += 1 * getModifierList().size();
       }
-      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, superMethodIn_);
       }
       size += unknownFields.getSerializedSize();
@@ -846,13 +916,8 @@ public final class MethodDeclaration {
         result = result && getReturnType()
             .equals(other.getReturnType());
       }
-      result = result && (hasReturnTypeMatters() == other.hasReturnTypeMatters());
-      if (hasReturnTypeMatters()) {
-        result = result && (getReturnTypeMatters()
-            == other.getReturnTypeMatters());
-      }
-      result = result && getParamList()
-          .equals(other.getParamList());
+      result = result && internalGetParam().equals(
+          other.internalGetParam());
       result = result && getModifierList()
           .equals(other.getModifierList());
       result = result && (hasSuperMethodIn() == other.hasSuperMethodIn());
@@ -895,14 +960,9 @@ public final class MethodDeclaration {
         hash = (37 * hash) + RETURNTYPE_FIELD_NUMBER;
         hash = (53 * hash) + getReturnType().hashCode();
       }
-      if (hasReturnTypeMatters()) {
-        hash = (37 * hash) + RETURNTYPEMATTERS_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getReturnTypeMatters());
-      }
-      if (getParamCount() > 0) {
+      if (!internalGetParam().getMap().isEmpty()) {
         hash = (37 * hash) + PARAM_FIELD_NUMBER;
-        hash = (53 * hash) + getParamList().hashCode();
+        hash = (53 * hash) + internalGetParam().hashCode();
       }
       if (getModifierCount() > 0) {
         hash = (37 * hash) + MODIFIER_FIELD_NUMBER;
@@ -1017,6 +1077,28 @@ public final class MethodDeclaration {
         return com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclaration.internal_static_Models_MthdDcl_descriptor;
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 8:
+            return internalGetParam();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 8:
+            return internalGetMutableParam();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclaration.internal_static_Models_MthdDcl_fieldAccessorTable
@@ -1024,7 +1106,7 @@ public final class MethodDeclaration {
                 com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclaration.MthdDcl.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclaration.MthdDcl.Builder.class);
       }
 
-      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclaration.MthdDcl.newBuilder()
+      // Construct using MethodDeclaration.MthdDcl.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1037,7 +1119,6 @@ public final class MethodDeclaration {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getParamFieldBuilder();
         }
       }
       public Builder clear() {
@@ -1054,18 +1135,11 @@ public final class MethodDeclaration {
         bitField0_ = (bitField0_ & ~0x00000010);
         returnType_ = "";
         bitField0_ = (bitField0_ & ~0x00000020);
-        returnTypeMatters_ = false;
-        bitField0_ = (bitField0_ & ~0x00000040);
-        if (paramBuilder_ == null) {
-          param_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000080);
-        } else {
-          paramBuilder_.clear();
-        }
+        internalGetMutableParam().clear();
         modifier_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ = (bitField0_ & ~0x00000080);
         superMethodIn_ = "";
-        bitField0_ = (bitField0_ & ~0x00000200);
+        bitField0_ = (bitField0_ & ~0x00000100);
         return this;
       }
 
@@ -1114,26 +1188,15 @@ public final class MethodDeclaration {
           to_bitField0_ |= 0x00000020;
         }
         result.returnType_ = returnType_;
-        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
-          to_bitField0_ |= 0x00000040;
-        }
-        result.returnTypeMatters_ = returnTypeMatters_;
-        if (paramBuilder_ == null) {
-          if (((bitField0_ & 0x00000080) == 0x00000080)) {
-            param_ = java.util.Collections.unmodifiableList(param_);
-            bitField0_ = (bitField0_ & ~0x00000080);
-          }
-          result.param_ = param_;
-        } else {
-          result.param_ = paramBuilder_.build();
-        }
-        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        result.param_ = internalGetParam();
+        result.param_.makeImmutable();
+        if (((bitField0_ & 0x00000080) == 0x00000080)) {
           modifier_ = modifier_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000100);
+          bitField0_ = (bitField0_ & ~0x00000080);
         }
         result.modifier_ = modifier_;
-        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
-          to_bitField0_ |= 0x00000080;
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+          to_bitField0_ |= 0x00000040;
         }
         result.superMethodIn_ = superMethodIn_;
         result.bitField0_ = to_bitField0_;
@@ -1208,39 +1271,12 @@ public final class MethodDeclaration {
           returnType_ = other.returnType_;
           onChanged();
         }
-        if (other.hasReturnTypeMatters()) {
-          setReturnTypeMatters(other.getReturnTypeMatters());
-        }
-        if (paramBuilder_ == null) {
-          if (!other.param_.isEmpty()) {
-            if (param_.isEmpty()) {
-              param_ = other.param_;
-              bitField0_ = (bitField0_ & ~0x00000080);
-            } else {
-              ensureParamIsMutable();
-              param_.addAll(other.param_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.param_.isEmpty()) {
-            if (paramBuilder_.isEmpty()) {
-              paramBuilder_.dispose();
-              paramBuilder_ = null;
-              param_ = other.param_;
-              bitField0_ = (bitField0_ & ~0x00000080);
-              paramBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getParamFieldBuilder() : null;
-            } else {
-              paramBuilder_.addAllMessages(other.param_);
-            }
-          }
-        }
+        internalGetMutableParam().mergeFrom(
+            other.internalGetParam());
         if (!other.modifier_.isEmpty()) {
           if (modifier_.isEmpty()) {
             modifier_ = other.modifier_;
-            bitField0_ = (bitField0_ & ~0x00000100);
+            bitField0_ = (bitField0_ & ~0x00000080);
           } else {
             ensureModifierIsMutable();
             modifier_.addAll(other.modifier_);
@@ -1248,7 +1284,7 @@ public final class MethodDeclaration {
           onChanged();
         }
         if (other.hasSuperMethodIn()) {
-          bitField0_ |= 0x00000200;
+          bitField0_ |= 0x00000100;
           superMethodIn_ = other.superMethodIn_;
           onChanged();
         }
@@ -1751,283 +1787,162 @@ public final class MethodDeclaration {
         return this;
       }
 
-      private boolean returnTypeMatters_ ;
-      /**
-       * <code>optional bool returnTypeMatters = 7;</code>
-       */
-      public boolean hasReturnTypeMatters() {
-        return ((bitField0_ & 0x00000040) == 0x00000040);
-      }
-      /**
-       * <code>optional bool returnTypeMatters = 7;</code>
-       */
-      public boolean getReturnTypeMatters() {
-        return returnTypeMatters_;
-      }
-      /**
-       * <code>optional bool returnTypeMatters = 7;</code>
-       */
-      public Builder setReturnTypeMatters(boolean value) {
-        bitField0_ |= 0x00000040;
-        returnTypeMatters_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool returnTypeMatters = 7;</code>
-       */
-      public Builder clearReturnTypeMatters() {
-        bitField0_ = (bitField0_ & ~0x00000040);
-        returnTypeMatters_ = false;
-        onChanged();
-        return this;
-      }
-
-      private java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> param_ =
-        java.util.Collections.emptyList();
-      private void ensureParamIsMutable() {
-        if (!((bitField0_ & 0x00000080) == 0x00000080)) {
-          param_ = new java.util.ArrayList<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys>(param_);
-          bitField0_ |= 0x00000080;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> paramBuilder_;
-
-      /**
-       * <code>repeated .Models.anlys param = 8;</code>
-       */
-      public java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> getParamList() {
-        if (paramBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(param_);
-        } else {
-          return paramBuilder_.getMessageList();
+      private com.google.protobuf.MapField<
+          java.lang.Integer, java.lang.String> param_;
+      private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
+      internalGetParam() {
+        if (param_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              ParamDefaultEntryHolder.defaultEntry);
         }
+        return param_;
       }
-      /**
-       * <code>repeated .Models.anlys param = 8;</code>
-       */
+      private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
+      internalGetMutableParam() {
+        onChanged();;
+        if (param_ == null) {
+          param_ = com.google.protobuf.MapField.newMapField(
+              ParamDefaultEntryHolder.defaultEntry);
+        }
+        if (!param_.isMutable()) {
+          param_ = param_.copy();
+        }
+        return param_;
+      }
+
       public int getParamCount() {
-        if (paramBuilder_ == null) {
-          return param_.size();
-        } else {
-          return paramBuilder_.getCount();
-        }
+        return internalGetParam().getMap().size();
       }
       /**
-       * <code>repeated .Models.anlys param = 8;</code>
+       * <pre>
+       * index against id
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; param = 8;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys getParam(int index) {
-        if (paramBuilder_ == null) {
-          return param_.get(index);
-        } else {
-          return paramBuilder_.getMessage(index);
-        }
+
+      public boolean containsParam(
+          int key) {
+        
+        return internalGetParam().getMap().containsKey(key);
       }
       /**
-       * <code>repeated .Models.anlys param = 8;</code>
+       * Use {@link #getParamMap()} instead.
        */
-      public Builder setParam(
-          int index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (paramBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureParamIsMutable();
-          param_.set(index, value);
-          onChanged();
-        } else {
-          paramBuilder_.setMessage(index, value);
-        }
-        return this;
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Integer, java.lang.String> getParam() {
+        return getParamMap();
       }
       /**
-       * <code>repeated .Models.anlys param = 8;</code>
+       * <pre>
+       * index against id
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; param = 8;</code>
        */
-      public Builder setParam(
-          int index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (paramBuilder_ == null) {
-          ensureParamIsMutable();
-          param_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          paramBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
+
+      public java.util.Map<java.lang.Integer, java.lang.String> getParamMap() {
+        return internalGetParam().getMap();
       }
       /**
-       * <code>repeated .Models.anlys param = 8;</code>
+       * <pre>
+       * index against id
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; param = 8;</code>
        */
-      public Builder addParam(com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (paramBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureParamIsMutable();
-          param_.add(value);
-          onChanged();
-        } else {
-          paramBuilder_.addMessage(value);
-        }
-        return this;
+
+      public java.lang.String getParamOrDefault(
+          int key,
+          java.lang.String defaultValue) {
+        
+        java.util.Map<java.lang.Integer, java.lang.String> map =
+            internalGetParam().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>repeated .Models.anlys param = 8;</code>
+       * <pre>
+       * index against id
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; param = 8;</code>
        */
-      public Builder addParam(
-          int index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys value) {
-        if (paramBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureParamIsMutable();
-          param_.add(index, value);
-          onChanged();
-        } else {
-          paramBuilder_.addMessage(index, value);
+
+      public java.lang.String getParamOrThrow(
+          int key) {
+        
+        java.util.Map<java.lang.Integer, java.lang.String> map =
+            internalGetParam().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
         }
-        return this;
+        return map.get(key);
       }
-      /**
-       * <code>repeated .Models.anlys param = 8;</code>
-       */
-      public Builder addParam(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (paramBuilder_ == null) {
-          ensureParamIsMutable();
-          param_.add(builderForValue.build());
-          onChanged();
-        } else {
-          paramBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys param = 8;</code>
-       */
-      public Builder addParam(
-          int index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder builderForValue) {
-        if (paramBuilder_ == null) {
-          ensureParamIsMutable();
-          param_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          paramBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys param = 8;</code>
-       */
-      public Builder addAllParam(
-          java.lang.Iterable<? extends com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys> values) {
-        if (paramBuilder_ == null) {
-          ensureParamIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, param_);
-          onChanged();
-        } else {
-          paramBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .Models.anlys param = 8;</code>
-       */
+
       public Builder clearParam() {
-        if (paramBuilder_ == null) {
-          param_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000080);
-          onChanged();
-        } else {
-          paramBuilder_.clear();
-        }
+        internalGetMutableParam().getMutableMap()
+            .clear();
         return this;
       }
       /**
-       * <code>repeated .Models.anlys param = 8;</code>
+       * <pre>
+       * index against id
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; param = 8;</code>
        */
-      public Builder removeParam(int index) {
-        if (paramBuilder_ == null) {
-          ensureParamIsMutable();
-          param_.remove(index);
-          onChanged();
-        } else {
-          paramBuilder_.remove(index);
-        }
+
+      public Builder removeParam(
+          int key) {
+        
+        internalGetMutableParam().getMutableMap()
+            .remove(key);
         return this;
       }
       /**
-       * <code>repeated .Models.anlys param = 8;</code>
+       * Use alternate mutation accessors instead.
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder getParamBuilder(
-          int index) {
-        return getParamFieldBuilder().getBuilder(index);
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Integer, java.lang.String>
+      getMutableParam() {
+        return internalGetMutableParam().getMutableMap();
       }
       /**
-       * <code>repeated .Models.anlys param = 8;</code>
+       * <pre>
+       * index against id
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; param = 8;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder getParamOrBuilder(
-          int index) {
-        if (paramBuilder_ == null) {
-          return param_.get(index);  } else {
-          return paramBuilder_.getMessageOrBuilder(index);
-        }
+      public Builder putParam(
+          int key,
+          java.lang.String value) {
+        
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableParam().getMutableMap()
+            .put(key, value);
+        return this;
       }
       /**
-       * <code>repeated .Models.anlys param = 8;</code>
+       * <pre>
+       * index against id
+       * </pre>
+       *
+       * <code>map&lt;int32, string&gt; param = 8;</code>
        */
-      public java.util.List<? extends com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-           getParamOrBuilderList() {
-        if (paramBuilder_ != null) {
-          return paramBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(param_);
-        }
-      }
-      /**
-       * <code>repeated .Models.anlys param = 8;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder addParamBuilder() {
-        return getParamFieldBuilder().addBuilder(
-            com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .Models.anlys param = 8;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder addParamBuilder(
-          int index) {
-        return getParamFieldBuilder().addBuilder(
-            index, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .Models.anlys param = 8;</code>
-       */
-      public java.util.List<com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder> 
-           getParamBuilderList() {
-        return getParamFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder> 
-          getParamFieldBuilder() {
-        if (paramBuilder_ == null) {
-          paramBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlys.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.anlysOrBuilder>(
-                  param_,
-                  ((bitField0_ & 0x00000080) == 0x00000080),
-                  getParentForChildren(),
-                  isClean());
-          param_ = null;
-        }
-        return paramBuilder_;
+
+      public Builder putAllParam(
+          java.util.Map<java.lang.Integer, java.lang.String> values) {
+        internalGetMutableParam().getMutableMap()
+            .putAll(values);
+        return this;
       }
 
       private com.google.protobuf.LazyStringList modifier_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureModifierIsMutable() {
-        if (!((bitField0_ & 0x00000100) == 0x00000100)) {
+        if (!((bitField0_ & 0x00000080) == 0x00000080)) {
           modifier_ = new com.google.protobuf.LazyStringArrayList(modifier_);
-          bitField0_ |= 0x00000100;
+          bitField0_ |= 0x00000080;
          }
       }
       /**
@@ -2098,7 +2013,7 @@ public final class MethodDeclaration {
        */
       public Builder clearModifier() {
         modifier_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ = (bitField0_ & ~0x00000080);
         onChanged();
         return this;
       }
@@ -2121,7 +2036,7 @@ public final class MethodDeclaration {
        * <code>optional string superMethodIn = 10;</code>
        */
       public boolean hasSuperMethodIn() {
-        return ((bitField0_ & 0x00000200) == 0x00000200);
+        return ((bitField0_ & 0x00000100) == 0x00000100);
       }
       /**
        * <code>optional string superMethodIn = 10;</code>
@@ -2164,7 +2079,7 @@ public final class MethodDeclaration {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000200;
+  bitField0_ |= 0x00000100;
         superMethodIn_ = value;
         onChanged();
         return this;
@@ -2173,7 +2088,7 @@ public final class MethodDeclaration {
        * <code>optional string superMethodIn = 10;</code>
        */
       public Builder clearSuperMethodIn() {
-        bitField0_ = (bitField0_ & ~0x00000200);
+        bitField0_ = (bitField0_ & ~0x00000100);
         superMethodIn_ = getDefaultInstance().getSuperMethodIn();
         onChanged();
         return this;
@@ -2186,7 +2101,7 @@ public final class MethodDeclaration {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000200;
+  bitField0_ |= 0x00000100;
         superMethodIn_ = value;
         onChanged();
         return this;
@@ -2245,6 +2160,11 @@ public final class MethodDeclaration {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Models_MthdDcl_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Models_MthdDcl_ParamEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Models_MthdDcl_ParamEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2254,15 +2174,15 @@ public final class MethodDeclaration {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rMthdDcl.proto\022\006Models\032\016Analysis.proto\"" +
-      "\311\001\n\007MthdDcl\022\n\n\002id\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\022\r\n" +
-      "\005owner\030\003 \002(\t\022\021\n\tsignature\030\004 \002(\t\022\014\n\004kind\030" +
-      "\005 \002(\t\022\022\n\nreturnType\030\006 \001(\t\022\031\n\021returnTypeM" +
-      "atters\030\007 \001(\010\022\034\n\005param\030\010 \003(\0132\r.Models.anl" +
-      "ys\022\020\n\010modifier\030\t \003(\t\022\025\n\rsuperMethodIn\030\n " +
-      "\001(\tBS\n>com.google.errorprone.bugpatterns" +
-      ".refactoringexperiment.modelsB\021MethodDec" +
-      "laration"
+      "\n\rMthdDcl.proto\022\006Models\"\351\001\n\007MthdDcl\022\n\n\002i" +
+      "d\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\022\r\n\005owner\030\003 \002(\t\022\021\n\t" +
+      "signature\030\004 \002(\t\022\014\n\004kind\030\005 \002(\t\022\022\n\nreturnT" +
+      "ype\030\006 \001(\t\022)\n\005param\030\010 \003(\0132\032.Models.MthdDc" +
+      "l.ParamEntry\022\020\n\010modifier\030\t \003(\t\022\025\n\rsuperM" +
+      "ethodIn\030\n \001(\t\032,\n\nParamEntry\022\013\n\003key\030\001 \001(\005" +
+      "\022\r\n\005value\030\002 \001(\t:\0028\001BS\n>com.google.errorp" +
+      "rone.bugpatterns.refactoringexperiment.m" +
+      "odelsB\021MethodDeclaration"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2275,15 +2195,19 @@ public final class MethodDeclaration {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.getDescriptor(),
         }, assigner);
     internal_static_Models_MthdDcl_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Models_MthdDcl_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_MthdDcl_descriptor,
-        new java.lang.String[] { "Id", "Name", "Owner", "Signature", "Kind", "ReturnType", "ReturnTypeMatters", "Param", "Modifier", "SuperMethodIn", });
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Analysis.getDescriptor();
+        new java.lang.String[] { "Id", "Name", "Owner", "Signature", "Kind", "ReturnType", "Param", "Modifier", "SuperMethodIn", });
+    internal_static_Models_MthdDcl_ParamEntry_descriptor =
+      internal_static_Models_MthdDcl_descriptor.getNestedTypes().get(0);
+    internal_static_Models_MthdDcl_ParamEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Models_MthdDcl_ParamEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

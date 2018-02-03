@@ -1,5 +1,4 @@
 syntax = "proto2";
-import "Analysis.proto";
 
 package Models;
 
@@ -10,11 +9,7 @@ message Vrbl {
   required string id = 1;
   required string name = 2;
   required string owner = 3;
-  optional string ownerMethodId = 9;
-  optional string ownerClass = 10;
   required string type = 4;
   required string kind = 5;
-  optional anlys  initializer = 6;
-  required string pckg = 7;
-  required string srcFile = 8;
+  optional string initializer = 6; //id | kind| additional info
  }

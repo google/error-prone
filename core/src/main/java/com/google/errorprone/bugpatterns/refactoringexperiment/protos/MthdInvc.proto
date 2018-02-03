@@ -1,5 +1,4 @@
 syntax = "proto2";
-import "Analysis.proto";
 
 package Models;
 
@@ -12,8 +11,7 @@ message MthdInvc {
   required string owner = 3;
   required string signature = 4;
   required string kind = 5;
-  repeated anlys args = 6;
-  optional anlys receiver = 7;
-  required string pckg = 8;
-  required string srcFile = 9;
+  // index against id | kind| additional info
+  map<int32,string> args = 6;
+  optional string receiver = 7;
  }

@@ -78,34 +78,6 @@ public final class ClassDecl {
      */
     com.google.protobuf.ByteString
         getKindBytes();
-
-    /**
-     * <code>required string srcFile = 5;</code>
-     */
-    boolean hasSrcFile();
-    /**
-     * <code>required string srcFile = 5;</code>
-     */
-    java.lang.String getSrcFile();
-    /**
-     * <code>required string srcFile = 5;</code>
-     */
-    com.google.protobuf.ByteString
-        getSrcFileBytes();
-
-    /**
-     * <code>required string pckg = 6;</code>
-     */
-    boolean hasPckg();
-    /**
-     * <code>required string pckg = 6;</code>
-     */
-    java.lang.String getPckg();
-    /**
-     * <code>required string pckg = 6;</code>
-     */
-    com.google.protobuf.ByteString
-        getPckgBytes();
   }
   /**
    * Protobuf type {@code Models.clsDcl}
@@ -124,8 +96,6 @@ public final class ClassDecl {
       owner_ = "";
       lTtype_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       kind_ = "";
-      srcFile_ = "";
-      pckg_ = "";
     }
 
     @java.lang.Override
@@ -184,18 +154,6 @@ public final class ClassDecl {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000004;
               kind_ = bs;
-              break;
-            }
-            case 42: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000008;
-              srcFile_ = bs;
-              break;
-            }
-            case 50: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000010;
-              pckg_ = bs;
               break;
             }
           }
@@ -381,90 +339,6 @@ public final class ClassDecl {
       }
     }
 
-    public static final int SRCFILE_FIELD_NUMBER = 5;
-    private volatile java.lang.Object srcFile_;
-    /**
-     * <code>required string srcFile = 5;</code>
-     */
-    public boolean hasSrcFile() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>required string srcFile = 5;</code>
-     */
-    public java.lang.String getSrcFile() {
-      java.lang.Object ref = srcFile_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          srcFile_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string srcFile = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSrcFileBytes() {
-      java.lang.Object ref = srcFile_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        srcFile_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int PCKG_FIELD_NUMBER = 6;
-    private volatile java.lang.Object pckg_;
-    /**
-     * <code>required string pckg = 6;</code>
-     */
-    public boolean hasPckg() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>required string pckg = 6;</code>
-     */
-    public java.lang.String getPckg() {
-      java.lang.Object ref = pckg_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          pckg_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string pckg = 6;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPckgBytes() {
-      java.lang.Object ref = pckg_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        pckg_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -480,14 +354,6 @@ public final class ClassDecl {
         return false;
       }
       if (!hasKind()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSrcFile()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasPckg()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -508,12 +374,6 @@ public final class ClassDecl {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, kind_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, srcFile_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, pckg_);
       }
       unknownFields.writeTo(output);
     }
@@ -539,12 +399,6 @@ public final class ClassDecl {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, kind_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, srcFile_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, pckg_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -579,16 +433,6 @@ public final class ClassDecl {
         result = result && getKind()
             .equals(other.getKind());
       }
-      result = result && (hasSrcFile() == other.hasSrcFile());
-      if (hasSrcFile()) {
-        result = result && getSrcFile()
-            .equals(other.getSrcFile());
-      }
-      result = result && (hasPckg() == other.hasPckg());
-      if (hasPckg()) {
-        result = result && getPckg()
-            .equals(other.getPckg());
-      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -615,14 +459,6 @@ public final class ClassDecl {
       if (hasKind()) {
         hash = (37 * hash) + KIND_FIELD_NUMBER;
         hash = (53 * hash) + getKind().hashCode();
-      }
-      if (hasSrcFile()) {
-        hash = (37 * hash) + SRCFILE_FIELD_NUMBER;
-        hash = (53 * hash) + getSrcFile().hashCode();
-      }
-      if (hasPckg()) {
-        hash = (37 * hash) + PCKG_FIELD_NUMBER;
-        hash = (53 * hash) + getPckg().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -736,7 +572,7 @@ public final class ClassDecl {
                 com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDecl.clsDcl.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDecl.clsDcl.Builder.class);
       }
 
-      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDecl.clsDcl.newBuilder()
+      // Construct using ClassDecl.clsDcl.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -761,10 +597,6 @@ public final class ClassDecl {
         bitField0_ = (bitField0_ & ~0x00000004);
         kind_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        srcFile_ = "";
-        bitField0_ = (bitField0_ & ~0x00000010);
-        pckg_ = "";
-        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -806,14 +638,6 @@ public final class ClassDecl {
           to_bitField0_ |= 0x00000004;
         }
         result.kind_ = kind_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.srcFile_ = srcFile_;
-        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-          to_bitField0_ |= 0x00000010;
-        }
-        result.pckg_ = pckg_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -881,16 +705,6 @@ public final class ClassDecl {
           kind_ = other.kind_;
           onChanged();
         }
-        if (other.hasSrcFile()) {
-          bitField0_ |= 0x00000010;
-          srcFile_ = other.srcFile_;
-          onChanged();
-        }
-        if (other.hasPckg()) {
-          bitField0_ |= 0x00000020;
-          pckg_ = other.pckg_;
-          onChanged();
-        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -904,12 +718,6 @@ public final class ClassDecl {
           return false;
         }
         if (!hasKind()) {
-          return false;
-        }
-        if (!hasSrcFile()) {
-          return false;
-        }
-        if (!hasPckg()) {
           return false;
         }
         return true;
@@ -1254,158 +1062,6 @@ public final class ClassDecl {
         onChanged();
         return this;
       }
-
-      private java.lang.Object srcFile_ = "";
-      /**
-       * <code>required string srcFile = 5;</code>
-       */
-      public boolean hasSrcFile() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>required string srcFile = 5;</code>
-       */
-      public java.lang.String getSrcFile() {
-        java.lang.Object ref = srcFile_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            srcFile_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string srcFile = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getSrcFileBytes() {
-        java.lang.Object ref = srcFile_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          srcFile_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string srcFile = 5;</code>
-       */
-      public Builder setSrcFile(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        srcFile_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string srcFile = 5;</code>
-       */
-      public Builder clearSrcFile() {
-        bitField0_ = (bitField0_ & ~0x00000010);
-        srcFile_ = getDefaultInstance().getSrcFile();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string srcFile = 5;</code>
-       */
-      public Builder setSrcFileBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        srcFile_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object pckg_ = "";
-      /**
-       * <code>required string pckg = 6;</code>
-       */
-      public boolean hasPckg() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
-      }
-      /**
-       * <code>required string pckg = 6;</code>
-       */
-      public java.lang.String getPckg() {
-        java.lang.Object ref = pckg_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            pckg_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string pckg = 6;</code>
-       */
-      public com.google.protobuf.ByteString
-          getPckgBytes() {
-        java.lang.Object ref = pckg_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          pckg_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string pckg = 6;</code>
-       */
-      public Builder setPckg(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000020;
-        pckg_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string pckg = 6;</code>
-       */
-      public Builder clearPckg() {
-        bitField0_ = (bitField0_ & ~0x00000020);
-        pckg_ = getDefaultInstance().getPckg();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string pckg = 6;</code>
-       */
-      public Builder setPckgBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000020;
-        pckg_ = value;
-        onChanged();
-        return this;
-      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -1469,12 +1125,11 @@ public final class ClassDecl {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\017ClassDecl.proto\022\006Models\"b\n\006clsDcl\022\014\n\004n" +
+      "\n\017ClassDecl.proto\022\006Models\"C\n\006clsDcl\022\014\n\004n" +
       "ame\030\001 \002(\t\022\r\n\005owner\030\002 \002(\t\022\016\n\006LTtype\030\003 \003(\t" +
-      "\022\014\n\004kind\030\004 \002(\t\022\017\n\007srcFile\030\005 \002(\t\022\014\n\004pckg\030" +
-      "\006 \002(\tBK\n>com.google.errorprone.bugpatter" +
-      "ns.refactoringexperiment.modelsB\tClassDe" +
-      "cl"
+      "\022\014\n\004kind\030\004 \002(\tBK\n>com.google.errorprone." +
+      "bugpatterns.refactoringexperiment.models" +
+      "B\tClassDecl"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1493,7 +1148,7 @@ public final class ClassDecl {
     internal_static_Models_clsDcl_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_clsDcl_descriptor,
-        new java.lang.String[] { "Name", "Owner", "LTtype", "Kind", "SrcFile", "Pckg", });
+        new java.lang.String[] { "Name", "Owner", "LTtype", "Kind", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
