@@ -66,6 +66,7 @@ import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
+import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
 import com.google.errorprone.bugpatterns.EqualsHashCode;
@@ -466,6 +467,7 @@ public class BuiltInCheckerSuppliers {
           ComparableAndComparator.class,
           DateFormatConstant.class,
           DefaultCharset.class,
+          DoubleBraceInitialization.class,
           DoubleCheckedLocking.class,
           EqualsHashCode.class,
           EqualsIncompatibleType.class,
