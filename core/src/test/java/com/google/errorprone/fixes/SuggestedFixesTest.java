@@ -746,6 +746,100 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
+  @BugPattern(
+    name = "SuppressMeWithComment",
+    category = ONE_OFF,
+    summary = "",
+    severity = ERROR,
+    providesFix = REQUIRES_HUMAN_ATTENTION
+  )
+  static final class SuppressMeWithComment extends BugChecker implements LiteralTreeMatcher {
+    private final String lineComment;
+
+    SuppressMeWithComment(String lineComment) {
+      this.lineComment = lineComment;
+    }
+
+    @Override
+    public Description matchLiteral(LiteralTree tree, VisitorState state) {
+      Fix potentialFix = SuggestedFixes.addSuppressWarnings(state, "SuppressMe", lineComment);
+      return describeMatch(tree, potentialFix);
+    }
+  }
+
+  @Test
+  public void testSuppressWarningsWithCommentFix() throws IOException {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(
+            new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  int BEST_NUMBER = 42;",
+            "  @SuppressWarnings(\"x\") int BEST = 42;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  // b/XXXX: fix me!",
+            "  @SuppressWarnings(\"SuppressMe\") int BEST_NUMBER = 42;",
+            "  // b/XXXX: fix me!",
+            "  @SuppressWarnings({\"x\", \"SuppressMe\"}) int BEST = 42;",
+            "}")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void testSuppressWarningsWithCommentFix_existingComment() throws IOException {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(
+            new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  // This comment was here already.",
+            "  int BEST_NUMBER = 42;",
+            "",
+            "  // As was this one.",
+            "  @SuppressWarnings(\"x\") int BEST = 42;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  // This comment was here already.",
+            "  // b/XXXX: fix me!",
+            "  @SuppressWarnings(\"SuppressMe\") int BEST_NUMBER = 42;",
+            "",
+            "  // As was this one.",
+            "  // b/XXXX: fix me!",
+            "  @SuppressWarnings({\"x\", \"SuppressMe\"}) int BEST = 42;",
+            "}")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void testSuppressWarningsWithCommentFix_commentHasToBeLineWrapped() throws IOException {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(
+            new SuppressMeWithComment(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                    + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
+            getClass());
+    refactorTestHelper
+        .addInputLines("in/Test.java", "public class Test {", "  int BEST = 42;", "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  // Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
+                + "incididunt ut",
+            "  // labore et dolore magna aliqua.",
+            "  @SuppressWarnings(\"SuppressMe\") int BEST = 42;",
+            "}")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
   /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
   @BugPattern(
     name = "CompilesWithFixChecker",
