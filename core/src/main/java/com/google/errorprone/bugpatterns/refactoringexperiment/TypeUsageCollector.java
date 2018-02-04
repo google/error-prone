@@ -117,11 +117,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     public Description matchNewClass(NewClassTree var1, VisitorState state) {
         Symbol.MethodSymbol symb = ASTHelpers.getSymbol(var1);
         List<Symbol.VarSymbol> params = symb.getParameters();
-        boolean retLt = DataFilter.apply(var1, state);
-        boolean paramLT = symb.getParameters().stream().filter(x -> DataFilter.apply(x.type, state)).count() > 0;
-        boolean objRefLT = DataFilter.apply(symb.owner.type, state);
+        boolean paramMatters = symb.getParameters().stream().filter(x -> DataFilter.apply(x.type, state)).count() > 0;
         MethodInvocation.MthdInvc.Builder mthdInvc = null;
-        if (retLt || paramLT || objRefLT) {
+        if (paramMatters) {
             mthdInvc = MethodInvocation.MthdInvc.newBuilder();
             mthdInvc.setName(getName(symb))
                     .setOwner(getOwner(symb))
@@ -129,10 +127,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
                     .setKind(var1.getKind().toString())
                     .setId(generateId(symb));
 
-            if (paramLT)
-                mthdInvc.putAllArgs(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x.type, state))
-                        .map(x -> params.indexOf(x))
-                        .collect(Collectors.toMap(Function.identity(), x -> infoOfTree(var1.getArguments().get(x))))));
+            mthdInvc.putAllArgs(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x.type, state))
+                    .map(x -> params.indexOf(x))
+                    .collect(Collectors.toMap(Function.identity(), x -> infoOfTree(var1.getArguments().get(x))))));
 
             ProtoBuffPersist.write(mthdInvc, var1.getKind().toString());
         }
@@ -164,7 +161,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     public Description matchAssignment(AssignmentTree var1, VisitorState state) {
         ExpressionTree lhs = var1.getVariable();
         Symbol symb = ASTHelpers.getSymbol(var1);
-        if (symb!= null && DataFilter.apply(symb.type,state)) {
+        if (symb != null && DataFilter.apply(symb.type, state)) {
             Assignment.Asgn.Builder asgn = Assignment.Asgn.newBuilder();
             asgn.setLhs(infoOfTree(lhs))
                     .setRhs(infoOfTree(var1.getExpression()));
@@ -229,7 +226,6 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
                 (symb.owner.getKind().equals(ElementKind.METHOD) || symb.owner.getKind().equals(ElementKind.CONSTRUCTOR) ?
                         symb.owner.owner.getKind() + COLUMN_SEPERATOR + symb.owner.owner.toString() + COLUMN_SEPERATOR : COLUMN_SEPERATOR);
     }
-
 
 
 }
