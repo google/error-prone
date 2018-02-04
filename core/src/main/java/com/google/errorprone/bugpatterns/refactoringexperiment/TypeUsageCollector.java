@@ -25,6 +25,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 
@@ -161,7 +162,8 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     public Description matchAssignment(AssignmentTree var1, VisitorState state) {
         ExpressionTree lhs = var1.getVariable();
         Symbol symb = ASTHelpers.getSymbol(var1);
-        if (symb != null && DataFilter.apply(symb.type, state)) {
+        if ((lhs.getKind().equals(Tree.Kind.IDENTIFIER) || lhs.getKind().equals(Tree.Kind.MEMBER_SELECT)
+                || lhs.getKind().equals(Kind.VARIABLE)) && DataFilter.apply(ASTHelpers.getType(var1), state)) {
             Assignment.Asgn.Builder asgn = Assignment.Asgn.newBuilder();
             asgn.setLhs(infoOfTree(lhs))
                     .setRhs(infoOfTree(var1.getExpression()));
