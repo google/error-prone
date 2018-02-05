@@ -1,5 +1,5 @@
-The double-brace initialization pattern, also known as 'crazybob's contraption',
-should be avoided—especially in non-static contexts.
+The [double-brace initialization pattern][dbi] should be avoided—especially in
+non-static contexts.
 
 The double-brace pattern uses an instance-initializer in an anonymous inner
 class to express the initialization of a class (often a collection) in a single
@@ -36,3 +36,5 @@ new ArrayList<>() {
 };
 ```
 
+
+[dbi]: https://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-in-java
