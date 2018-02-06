@@ -18,8 +18,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":42,"i9":10,"i10":10,"i11":10,"i12":10};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/SynchronizeOnNonFinalField.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" target="_top">Frames</a></li>
@@ -131,12 +131,18 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Class and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></span></code>
+<div class="block"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a>Builder</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static interface&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a></span></code>
 <div class="block">Information about known types and whether they're known to be safe or unsafe.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></span></code>
 <div class="block">A human-friendly explanation of a thread safety violations.</div>
@@ -162,7 +168,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
             <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;containerOfAnnotation,
-            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;suppressAnnotation)</code>&nbsp;</td>
+            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;suppressAnnotation)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#ThreadSafety-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes-java.util.Set-java.util.Set-java.lang.Class-java.lang.Class-java.lang.Class-">ThreadSafety</a></span>(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+            <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a>&nbsp;knownTypes,
+            <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations,
+            <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations,
+            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;containerOfAnnotation,
+            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;suppressAnnotation,
+            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;typeParameterAnnotation)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+</td>
 </tr>
 </table>
 </li>
@@ -174,23 +193,41 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#builder--">builder</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkSuperInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">checkSuperInstantiation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkInstantiation-java.util.Collection-java.util.Collection-">checkInstantiation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol&gt;&nbsp;typeParameters,
+                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeArguments)</code>
+<div class="block">Checks that any thread-safe type parameters are instantiated with thread-safe types.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkInvocation-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Symbol-">checkInvocation</a></span>(com.sun.tools.javac.code.Type&nbsp;methodType,
+               com.sun.tools.javac.code.Symbol&nbsp;symbol)</code>
+<div class="block">Checks the instantiation of any thread-safe type parameters in the current invocation.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkSuperInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">checkSuperInstantiation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
                        <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
                        com.sun.tools.javac.code.Type&nbsp;type)</code>
-<div class="block">Checks that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
+<div class="block">Check that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
  threadsafe type arguments where required by its annotation's containerOf element, and that any
  type arguments that correspond to containerOf type parameters on the sub-type are also in the
  super-type's containerOf spec.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getInheritedAnnotation-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">getInheritedAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
                       <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
@@ -198,7 +235,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  containerOf spec's from super-classes.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getMarkerOrAcceptedAnnotation-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">getMarkerOrAcceptedAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
                              <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
@@ -206,36 +243,52 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  an accepted annotation on the symbol, or from the list of well-known types.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getPrettyName-com.sun.tools.javac.code.Symbol-">getPrettyName</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code>
 <div class="block">Gets a human-friendly name for the given <code>Symbol</code> to use in diagnostics.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-java.util.Set-com.sun.tools.javac.code.Type-">isThreadSafeType</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-boolean-java.util.Set-com.sun.tools.javac.code.Type-">isThreadSafeType</a></span>(boolean&nbsp;allowContainerTypeParameters,
+                <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
                 com.sun.tools.javac.code.Type&nbsp;type)</code>
 <div class="block">Returns an <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> explaining whether the type is threadsafe.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-java.util.Set-com.sun.tools.javac.code.Type-">isThreadSafeType</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
+                com.sun.tools.javac.code.Type&nbsp;type)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">use <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-boolean-java.util.Set-com.sun.tools.javac.code.Type-"><code>isThreadSafeType(boolean, Set, Type)</code></a> instead.</span></div>
+</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeTypeParameter-com.sun.tools.javac.code.Symbol.TypeVariableSymbol-">isThreadSafeTypeParameter</a></span>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code>
+<div class="block">Returns true if the given type parameter's declaration is annotated with <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#typeParameterAnnotation"><code>typeParameterAnnotation</code></a> indicated it will only ever be instantiated with thread-safe types.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#mutableEnclosingInstance-java.util.Optional-com.sun.tools.javac.code.Type.ClassType-">mutableEnclosingInstance</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;com.sun.source.tree.ClassTree&gt;&nbsp;tree,
                         com.sun.tools.javac.code.Type.ClassType&nbsp;type)</code>
 <div class="block">Returns an enclosing instance for the specified type if it is thread-safe.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">threadSafeInstantiation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">threadSafeInstantiation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
                        <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
                        com.sun.tools.javac.code.Type&nbsp;type)</code>
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
  type arguments where required by its annotation's containerOf element.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeTypeParametersInScope-com.sun.tools.javac.code.Symbol-">threadSafeTypeParametersInScope</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code>
 <div class="block">Gets the set of in-scope threadsafe type parameters from the containerOf specs on annotations.</div>
@@ -266,28 +319,41 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <a name="ThreadSafety-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes-java.util.Set-java.util.Set-java.lang.Class-java.lang.Class-">
 <!--   -->
 </a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ThreadSafety</h4>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
+public&nbsp;ThreadSafety(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                                <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a>&nbsp;knownTypes,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;containerOfAnnotation,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;suppressAnnotation)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+<div class="block">Use <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#builder--"><code>builder()</code></a> instead.</div>
+</li>
+</ul>
+<a name="ThreadSafety-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes-java.util.Set-java.util.Set-java.lang.Class-java.lang.Class-java.lang.Class-">
+<!--   -->
+</a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ThreadSafety</h4>
-<pre>public&nbsp;ThreadSafety(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-                    <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a>&nbsp;knownTypes,
-                    <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations,
-                    <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations,
-                    <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
-                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;containerOfAnnotation,
-                    <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
-                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;suppressAnnotation)</pre>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>markerAnnotations</code> - annotations that will cause a class to be tested with this <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> instance; for example, when testing a class for immutability, this should
-     be @Immutable.</dd>
-<dd><code>acceptedAnnotations</code> - annotations that do *not* cause a class to be tested, but which are
-     treated as valid annotations to pass the test; for example, if @ThreadSafe is the marker
-     annotation, @Immutable would be included in this list, as an immutable class is by
-     definition thread-safe.</dd>
-<dd><code>containerOfAnnotation</code> - an annotation which marks a generic parameter as a container type</dd>
-<dd><code>suppressAnnotation</code> - an annotation which, when found on a class, should suppress the test</dd>
-</dl>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
+public&nbsp;ThreadSafety(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                                <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a>&nbsp;knownTypes,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;containerOfAnnotation,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;suppressAnnotation,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;typeParameterAnnotation)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+<div class="block">Use <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#builder--"><code>builder()</code></a> instead.</div>
 </li>
 </ul>
 </li>
@@ -298,21 +364,30 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="builder--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>builder</h4>
+<pre>public static&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a>&nbsp;builder()</pre>
+</li>
+</ul>
 <a name="threadSafeInstantiation-java.util.Set-com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo-com.sun.tools.javac.code.Type-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>threadSafeInstantiation</h4>
-<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;threadSafeInstantiation(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;threadSafeInstantiation(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
                                                       <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
                                                       com.sun.tools.javac.code.Type&nbsp;type)</pre>
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
  type arguments where required by its annotation's containerOf element.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>threadSafeTypeParams</code> - the in-scope threadsafe type parameters, declared on some enclosing
-     class.</dd>
+<dd><code>containerTypeParameters</code> - the in-scope threadsafe type parameters, declared on some
+     enclosing class.</dd>
 <dd><code>annotation</code> - the type's <code>@ThreadSafe</code> info</dd>
 <dd><code>type</code> - the type to check</dd>
 </dl>
@@ -324,17 +399,17 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>checkSuperInstantiation</h4>
-<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;checkSuperInstantiation(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;checkSuperInstantiation(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
                                                       <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
                                                       com.sun.tools.javac.code.Type&nbsp;type)</pre>
-<div class="block">Checks that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
+<div class="block">Check that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
  threadsafe type arguments where required by its annotation's containerOf element, and that any
  type arguments that correspond to containerOf type parameters on the sub-type are also in the
  super-type's containerOf spec.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>threadSafeTypeParams</code> - the in-scope threadsafe type parameters, declared on some enclosing
-     class.</dd>
+<dd><code>containerTypeParameters</code> - the in-scope threadsafe type parameters, declared on some
+     enclosing class.</dd>
 <dd><code>annotation</code> - the type's <code>@ThreadSafe</code> info</dd>
 <dd><code>type</code> - the type to check</dd>
 </dl>
@@ -346,9 +421,39 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isThreadSafeType</h4>
-<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;isThreadSafeType(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;threadSafeTypeParams,
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
+public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;isThreadSafeType(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
+                                                           com.sun.tools.javac.code.Type&nbsp;type)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-boolean-java.util.Set-com.sun.tools.javac.code.Type-"><code>isThreadSafeType(boolean, Set, Type)</code></a> instead.</span></div>
+</li>
+</ul>
+<a name="isThreadSafeType-boolean-java.util.Set-com.sun.tools.javac.code.Type-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isThreadSafeType</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;isThreadSafeType(boolean&nbsp;allowContainerTypeParameters,
+                                               <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
                                                com.sun.tools.javac.code.Type&nbsp;type)</pre>
 <div class="block">Returns an <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> explaining whether the type is threadsafe.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>allowContainerTypeParameters</code> - true when checking the instantiation of an <code>typeParameterAnnotation</code>-annotated type parameter; indicates that <code>containerTypeParameters</code> should be ignored</dd>
+<dd><code>containerTypeParameters</code> - type parameters in enclosing elements' containerOf
+     specifications</dd>
+<dd><code>type</code> - to check for thread-safety</dd>
+</dl>
+</li>
+</ul>
+<a name="isThreadSafeTypeParameter-com.sun.tools.javac.code.Symbol.TypeVariableSymbol-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isThreadSafeTypeParameter</h4>
+<pre>public&nbsp;boolean&nbsp;isThreadSafeTypeParameter(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</pre>
+<div class="block">Returns true if the given type parameter's declaration is annotated with <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#typeParameterAnnotation"><code>typeParameterAnnotation</code></a> indicated it will only ever be instantiated with thread-safe types.</div>
 </li>
 </ul>
 <a name="getMarkerOrAcceptedAnnotation-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">
@@ -408,11 +513,33 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <a name="getPrettyName-com.sun.tools.javac.code.Symbol-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getPrettyName</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getPrettyName(com.sun.tools.javac.code.Symbol&nbsp;sym)</pre>
 <div class="block">Gets a human-friendly name for the given <code>Symbol</code> to use in diagnostics.</div>
+</li>
+</ul>
+<a name="checkInstantiation-java.util.Collection-java.util.Collection-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>checkInstantiation</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;checkInstantiation(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol&gt;&nbsp;typeParameters,
+                                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeArguments)</pre>
+<div class="block">Checks that any thread-safe type parameters are instantiated with thread-safe types.</div>
+</li>
+</ul>
+<a name="checkInvocation-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Symbol-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>checkInvocation</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;checkInvocation(com.sun.tools.javac.code.Type&nbsp;methodType,
+                                              com.sun.tools.javac.code.Symbol&nbsp;symbol)</pre>
+<div class="block">Checks the instantiation of any thread-safe type parameters in the current invocation.</div>
 </li>
 </ul>
 </li>
@@ -444,7 +571,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/SynchronizeOnNonFinalField.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" target="_top">Frames</a></li>

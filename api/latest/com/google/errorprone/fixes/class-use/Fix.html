@@ -310,6 +310,16 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
+<td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#addSuppressWarnings-com.google.errorprone.VisitorState-java.lang.String-java.lang.String-">addSuppressWarnings</a></span>(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;warningToSuppress,
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;lineComment)</code>
+<div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
+ suppressible element to the node pointed at by <code>state.getPath()</code>, optionally suffixing
+ the suppression with a comment suffix (e.g.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#deleteExceptions-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-">deleteExceptions</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
                 <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;toDelete)</code>
