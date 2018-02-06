@@ -208,6 +208,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     public static String getOwner(Symbol symb) {
         return (symb.owner.getKind().equals(ElementKind.METHOD) || symb.owner.getKind().equals(ElementKind.CONSTRUCTOR) ?
                 symb.owner.owner.toString()  : symb.owner.toString());
+        symb.getQualifiedName()
     }
 
 
