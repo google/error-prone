@@ -47,9 +47,11 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -99,19 +101,31 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
     Optional<Fix> maybeFix(NewClassTree tree, VisitorState state, BlockTree block) {
       // scan the body for mutator methods (add, put) and record their arguments for rewriting as
       // a static factory method
-      List<String> args = new ArrayList<>();
+      List<List<? extends ExpressionTree>> arguments = new ArrayList<>();
       for (StatementTree statement : block.getStatements()) {
         if (!mutateMatcher.matches(statement, state)) {
           return Optional.empty();
         }
-        args.add(
+        arguments.add(
             ((MethodInvocationTree) ((ExpressionStatementTree) statement).getExpression())
-                .getArguments()
-                .stream()
-                .map(ASTHelpers::stripParentheses)
-                .map(state::getSourceForNode)
-                .collect(joining(", ", "\n", "")));
+                .getArguments());
       }
+      if (arguments
+          .stream()
+          .flatMap(Collection::stream)
+          .anyMatch(a -> a.getKind() == Kind.NULL_LITERAL)) {
+        return Optional.empty();
+      }
+      List<String> args =
+          arguments
+              .stream()
+              .map(
+                  arg ->
+                      arg.stream()
+                          .map(ASTHelpers::stripParentheses)
+                          .map(state::getSourceForNode)
+                          .collect(joining(", ", "\n", "")))
+              .collect(toImmutableList());
 
       // check the enclosing context: calls to Collections.unmodifiable* are now redundant, and
       // if there's an enclosing constant variable declaration we can rewrite its type to Immutable*
