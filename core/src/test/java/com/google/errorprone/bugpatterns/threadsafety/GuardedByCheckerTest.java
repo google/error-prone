@@ -1588,4 +1588,28 @@ public class GuardedByCheckerTest {
             "}")
         .doTest();
   }
+
+  // Ensure sure outer instance handling doesn't accidentally include enclosing classes of
+  // static member classes.
+  @Test
+  public void testInnerClass_staticOuterClassLock() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  final Object mu = new Object();",
+            "  private static final class Baz {",
+            "    // BUG: Diagnostic contains: could not resolve guard",
+            "    @GuardedBy(\"mu\") int x;",
+            "  }",
+            "  public void m(Baz b) {",
+            "    synchronized (mu) {",
+            "      b.x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
