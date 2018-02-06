@@ -215,4 +215,21 @@ public class DoubleBraceInitializationTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nulls() throws Exception {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "import java.util.*;",
+            "// BUG: Diagnostic contains:",
+            "class Test {",
+            "  static final List<Integer> a = new ArrayList<Integer>() {{ add(null); }};",
+            "  static final Set<Integer> b = new HashSet<Integer>() {{ add(null); }};",
+            "  static final Map<String, Integer> c =",
+            "      new HashMap<String, Integer>() {{ put(null, null); }};",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
