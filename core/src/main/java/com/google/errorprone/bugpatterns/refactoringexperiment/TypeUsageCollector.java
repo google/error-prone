@@ -12,6 +12,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDecl;
+import com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclaration;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.Variable;
@@ -31,7 +32,6 @@ import com.sun.tools.javac.code.Symbol;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.ElementKind;
@@ -60,11 +60,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         boolean returnMatter = DataFilter.apply(methodTree.getReturnType(), state);
         if (paramsMatter || returnMatter) {
             MethodDeclaration.MthdDcl.Builder mthdDcl = MethodDeclaration.MthdDcl.newBuilder();
-            mthdDcl.setName(getName(symb))
-                    .setOwner(symb.owner.toString())
-                    .setSignature(symb.type.toString())
-                    .setKind(methodTree.getKind().toString())
-                    .setId(generateId(symb));
+            infoFromSymbol(methodTree).transform(id -> mthdDcl.setId(id));
 
             mthdDcl.setReturnType(ASTHelpers.getType(methodTree.getReturnType()) != null ? ASTHelpers.getType(methodTree.getReturnType()).toString() : RTRN_TYPE_NOT_FOUND);
 
@@ -74,8 +70,8 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             if (super_methods != null && !super_methods.isEmpty()) {
                 mthdDcl.setSuperMethodIn(super_methods.get(0));
             }
-            mthdDcl.putAllParam(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x, state))
-                    .collect(Collectors.toMap(x -> params.indexOf(x), x -> getName(ASTHelpers.getSymbol(x))))));
+            mthdDcl.putAllParameters(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x, state))
+                    .collect(Collectors.toMap(x -> params.indexOf(x), x -> infoOfTree(x).build()))));
 
             mthdDcl.addAllModifier(symb.getModifiers().stream().map(x -> x.toString()).collect(collectingAndThen(Collectors.toList(),
                     Collections::unmodifiableList)));
@@ -93,18 +89,12 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         List<Symbol.VarSymbol> params = symb.getParameters();
         boolean paramLT = params.stream().filter(x -> DataFilter.apply(x.type, state)).count() > 0;
         boolean ofLT = DataFilter.apply(ASTHelpers.getReceiverType(tree), state);
-        MethodInvocation.MthdInvc.Builder mthdInvc = null;
         if (paramLT || ofLT) {
-            mthdInvc = MethodInvocation.MthdInvc.newBuilder();
-            mthdInvc.setName(getName(symb))
-                    .setOwner(getOwner(symb))
-                    .setSignature(symb.type.toString())
-                    .setKind(tree.getKind().toString())
-                    .setId(generateId(symb));
+            MethodInvocation.MthdInvc.Builder mthdInvc = MethodInvocation.MthdInvc.newBuilder();
+            infoFromSymbol(tree).transform(id -> mthdInvc.setId(id));
 
-            mthdInvc.putAllArgs(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x.type, state))
-                    .map(x -> params.indexOf(x))
-                    .collect(Collectors.toMap(Function.identity(), x -> infoOfTree(tree.getArguments().get(x))))));
+            mthdInvc.putAllArguments(Collections.unmodifiableMap(tree.getArguments().stream().filter(x -> DataFilter.apply(x, state))
+                    .collect(Collectors.toMap(x -> tree.getArguments().indexOf(x), x -> infoOfTree(x).build()))));
 
             if (ofLT) mthdInvc.setReceiver(infoOfTree(ASTHelpers.getReceiver(tree)));
 
@@ -119,18 +109,13 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         Symbol.MethodSymbol symb = ASTHelpers.getSymbol(var1);
         List<Symbol.VarSymbol> params = symb.getParameters();
         boolean paramMatters = symb.getParameters().stream().filter(x -> DataFilter.apply(x.type, state)).count() > 0;
-        MethodInvocation.MthdInvc.Builder mthdInvc = null;
         if (paramMatters) {
-            mthdInvc = MethodInvocation.MthdInvc.newBuilder();
-            mthdInvc.setName(getName(symb))
-                    .setOwner(getOwner(symb))
-                    .setSignature(symb.type.toString())
-                    .setKind(var1.getKind().toString())
-                    .setId(generateId(symb));
+            MethodInvocation.MthdInvc.Builder mthdInvc = MethodInvocation.MthdInvc.newBuilder();
+            infoFromSymbol(var1).transform(id -> mthdInvc.setId(id));
 
-            mthdInvc.putAllArgs(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x.type, state))
-                    .map(x -> params.indexOf(x))
-                    .collect(Collectors.toMap(Function.identity(), x -> infoOfTree(var1.getArguments().get(x))))));
+            mthdInvc.putAllArguments(Collections.unmodifiableMap(var1.getArguments().stream().filter(x ->DataFilter.apply(x, state))
+                    .collect(Collectors.toMap(x -> var1.getArguments().indexOf(x), x -> infoOfTree(x).build()))));
+
 
             ProtoBuffPersist.write(mthdInvc, var1.getKind().toString());
         }
@@ -143,11 +128,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         Symbol.VarSymbol symb = ASTHelpers.getSymbol(var1);
         if (DataFilter.apply(var1, state)) {
             Variable.Vrbl.Builder vrbl = Variable.Vrbl.newBuilder();
-            vrbl.setName(symb.getQualifiedName().toString())
-                    .setKind(symb.getKind().toString())
-                    .setType(symb.type.toString())
-                    .setOwner(getOwner(symb))
-                    .setId(generateId(symb));
+            infoFromSymbol(var1).transform(id -> vrbl.setId(id));
 
             if (var1.getInitializer() != null)
                 vrbl.setInitializer(infoOfTree(var1.getInitializer()));
@@ -180,9 +161,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         if (implementsLt || isLT) {
             Symbol.ClassSymbol symb = ASTHelpers.getSymbol(classTree);
             ClassDecl.clsDcl.Builder clsDcl = ClassDecl.clsDcl.newBuilder();
-            clsDcl.setName(getOwner(symb))
-                    .setOwner(symb.owner.toString())
-                    .setKind(classTree.getKind().toString());
+            infoFromSymbol(classTree).transform(id -> clsDcl.setId(id));
 
             if (isLT) clsDcl.addSuperType(ASTHelpers.getType(classTree).toString());
             else
@@ -194,29 +173,32 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         return null;
     }
 
-    public static String infoOfTree(Tree tree) {
+    public static Id.Builder infoOfTree(Tree tree) {
         return infoFromSymbol(tree).or(
                 tree.getKind().equals(Tree.Kind.LAMBDA_EXPRESSION) ? checksInsideLambda(tree) :
-                        tree.getKind().toString());
+                        Id.newBuilder().setKind(tree.getKind().toString()));
     }
 
 
-    private static String checksInsideLambda(Tree tree) {
+    private static Id.Builder checksInsideLambda(Tree tree) {
         //TODO: check if wrapper methods are called upon input parameters
-        return tree.getKind().toString();
+        Id.Builder id = Id.newBuilder();
+        id.setKind(tree.getKind().toString());
+        return id;
     }
 
-    public static Optional<String> infoFromSymbol(Tree tree) {
+    public static Optional<Id.Builder> infoFromSymbol(Tree tree) {
         try {
             Symbol symb = ASTHelpers.getSymbol(tree);
-            return Optional.of(generateId(symb) + COLUMN_SEPERATOR + symb.getKind().toString());
+            Id.Builder id = Id.newBuilder();
+            id.setName(getName(symb))
+                    .setKind(symb.getKind().toString())
+                    .setOwner(getOwner(symb))
+                    .setType(symb.type.toString());
+            return Optional.of(id);
         } catch (Exception e) {
             return Optional.absent();
         }
-    }
-
-    public static String generateId(Symbol symb) {
-        return getName(symb) + COLUMN_SEPERATOR + symb.owner.toString() + COLUMN_SEPERATOR + symb.type.toString();
     }
 
     public static String getName(Symbol symb) {
@@ -224,9 +206,8 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     }
 
     public static String getOwner(Symbol symb) {
-        return symb.owner.getKind() + COLUMN_SEPERATOR + symb.owner.toString() + COLUMN_SEPERATOR +
-                (symb.owner.getKind().equals(ElementKind.METHOD) || symb.owner.getKind().equals(ElementKind.CONSTRUCTOR) ?
-                        symb.owner.owner.getKind() + COLUMN_SEPERATOR + symb.owner.owner.toString() + COLUMN_SEPERATOR : COLUMN_SEPERATOR);
+        return (symb.owner.getKind().equals(ElementKind.METHOD) || symb.owner.getKind().equals(ElementKind.CONSTRUCTOR) ?
+                symb.owner.owner.toString()  : symb.owner.toString());
     }
 
 

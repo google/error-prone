@@ -19,72 +19,30 @@ public final class Return {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required string method_name = 1;</code>
+     * <code>optional .Models.Id method_id = 1;</code>
      */
-    boolean hasMethodName();
+    boolean hasMethodId();
     /**
-     * <code>required string method_name = 1;</code>
+     * <code>optional .Models.Id method_id = 1;</code>
      */
-    java.lang.String getMethodName();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getMethodId();
     /**
-     * <code>required string method_name = 1;</code>
+     * <code>optional .Models.Id method_id = 1;</code>
      */
-    com.google.protobuf.ByteString
-        getMethodNameBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getMethodIdOrBuilder();
 
     /**
-     * <code>required string method_owner = 2;</code>
+     * <code>optional .Models.Id ret_expr = 2;</code>
      */
-    boolean hasMethodOwner();
+    boolean hasRetExpr();
     /**
-     * <code>required string method_owner = 2;</code>
+     * <code>optional .Models.Id ret_expr = 2;</code>
      */
-    java.lang.String getMethodOwner();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getRetExpr();
     /**
-     * <code>required string method_owner = 2;</code>
+     * <code>optional .Models.Id ret_expr = 2;</code>
      */
-    com.google.protobuf.ByteString
-        getMethodOwnerBytes();
-
-    /**
-     * <code>required string signature = 3;</code>
-     */
-    boolean hasSignature();
-    /**
-     * <code>required string signature = 3;</code>
-     */
-    java.lang.String getSignature();
-    /**
-     * <code>required string signature = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getSignatureBytes();
-
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>required string return_expr = 4;</code>
-     */
-    boolean hasReturnExpr();
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>required string return_expr = 4;</code>
-     */
-    java.lang.String getReturnExpr();
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>required string return_expr = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getReturnExprBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getRetExprOrBuilder();
   }
   /**
    * Protobuf type {@code Models.rtrn}
@@ -99,10 +57,6 @@ public final class Return {
       super(builder);
     }
     private rtrn() {
-      methodName_ = "";
-      methodOwner_ = "";
-      signature_ = "";
-      returnExpr_ = "";
     }
 
     @java.lang.Override
@@ -137,27 +91,29 @@ public final class Return {
               break;
             }
             case 10: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = methodId_.toBuilder();
+              }
+              methodId_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(methodId_);
+                methodId_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000001;
-              methodName_ = bs;
               break;
             }
             case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = retExpr_.toBuilder();
+              }
+              retExpr_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(retExpr_);
+                retExpr_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000002;
-              methodOwner_ = bs;
-              break;
-            }
-            case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000004;
-              signature_ = bs;
-              break;
-            }
-            case 34: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000008;
-              returnExpr_ = bs;
               break;
             }
           }
@@ -185,184 +141,46 @@ public final class Return {
     }
 
     private int bitField0_;
-    public static final int METHOD_NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object methodName_;
+    public static final int METHOD_ID_FIELD_NUMBER = 1;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id methodId_;
     /**
-     * <code>required string method_name = 1;</code>
+     * <code>optional .Models.Id method_id = 1;</code>
      */
-    public boolean hasMethodName() {
+    public boolean hasMethodId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string method_name = 1;</code>
+     * <code>optional .Models.Id method_id = 1;</code>
      */
-    public java.lang.String getMethodName() {
-      java.lang.Object ref = methodName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          methodName_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getMethodId() {
+      return methodId_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : methodId_;
     }
     /**
-     * <code>required string method_name = 1;</code>
+     * <code>optional .Models.Id method_id = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getMethodNameBytes() {
-      java.lang.Object ref = methodName_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        methodName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getMethodIdOrBuilder() {
+      return methodId_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : methodId_;
     }
 
-    public static final int METHOD_OWNER_FIELD_NUMBER = 2;
-    private volatile java.lang.Object methodOwner_;
+    public static final int RET_EXPR_FIELD_NUMBER = 2;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id retExpr_;
     /**
-     * <code>required string method_owner = 2;</code>
+     * <code>optional .Models.Id ret_expr = 2;</code>
      */
-    public boolean hasMethodOwner() {
+    public boolean hasRetExpr() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required string method_owner = 2;</code>
+     * <code>optional .Models.Id ret_expr = 2;</code>
      */
-    public java.lang.String getMethodOwner() {
-      java.lang.Object ref = methodOwner_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          methodOwner_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getRetExpr() {
+      return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : retExpr_;
     }
     /**
-     * <code>required string method_owner = 2;</code>
+     * <code>optional .Models.Id ret_expr = 2;</code>
      */
-    public com.google.protobuf.ByteString
-        getMethodOwnerBytes() {
-      java.lang.Object ref = methodOwner_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        methodOwner_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int SIGNATURE_FIELD_NUMBER = 3;
-    private volatile java.lang.Object signature_;
-    /**
-     * <code>required string signature = 3;</code>
-     */
-    public boolean hasSignature() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>required string signature = 3;</code>
-     */
-    public java.lang.String getSignature() {
-      java.lang.Object ref = signature_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          signature_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string signature = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSignatureBytes() {
-      java.lang.Object ref = signature_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        signature_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int RETURN_EXPR_FIELD_NUMBER = 4;
-    private volatile java.lang.Object returnExpr_;
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>required string return_expr = 4;</code>
-     */
-    public boolean hasReturnExpr() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>required string return_expr = 4;</code>
-     */
-    public java.lang.String getReturnExpr() {
-      java.lang.Object ref = returnExpr_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          returnExpr_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>required string return_expr = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getReturnExprBytes() {
-      java.lang.Object ref = returnExpr_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        returnExpr_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getRetExprOrBuilder() {
+      return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : retExpr_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -371,22 +189,6 @@ public final class Return {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasMethodName()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasMethodOwner()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSignature()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasReturnExpr()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -394,16 +196,10 @@ public final class Return {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, methodName_);
+        output.writeMessage(1, getMethodId());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, methodOwner_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, signature_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, returnExpr_);
+        output.writeMessage(2, getRetExpr());
       }
       unknownFields.writeTo(output);
     }
@@ -414,16 +210,12 @@ public final class Return {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, methodName_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getMethodId());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, methodOwner_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, signature_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, returnExpr_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getRetExpr());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -441,25 +233,15 @@ public final class Return {
       com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn) obj;
 
       boolean result = true;
-      result = result && (hasMethodName() == other.hasMethodName());
-      if (hasMethodName()) {
-        result = result && getMethodName()
-            .equals(other.getMethodName());
+      result = result && (hasMethodId() == other.hasMethodId());
+      if (hasMethodId()) {
+        result = result && getMethodId()
+            .equals(other.getMethodId());
       }
-      result = result && (hasMethodOwner() == other.hasMethodOwner());
-      if (hasMethodOwner()) {
-        result = result && getMethodOwner()
-            .equals(other.getMethodOwner());
-      }
-      result = result && (hasSignature() == other.hasSignature());
-      if (hasSignature()) {
-        result = result && getSignature()
-            .equals(other.getSignature());
-      }
-      result = result && (hasReturnExpr() == other.hasReturnExpr());
-      if (hasReturnExpr()) {
-        result = result && getReturnExpr()
-            .equals(other.getReturnExpr());
+      result = result && (hasRetExpr() == other.hasRetExpr());
+      if (hasRetExpr()) {
+        result = result && getRetExpr()
+            .equals(other.getRetExpr());
       }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -472,21 +254,13 @@ public final class Return {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      if (hasMethodName()) {
-        hash = (37 * hash) + METHOD_NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getMethodName().hashCode();
+      if (hasMethodId()) {
+        hash = (37 * hash) + METHOD_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getMethodId().hashCode();
       }
-      if (hasMethodOwner()) {
-        hash = (37 * hash) + METHOD_OWNER_FIELD_NUMBER;
-        hash = (53 * hash) + getMethodOwner().hashCode();
-      }
-      if (hasSignature()) {
-        hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
-        hash = (53 * hash) + getSignature().hashCode();
-      }
-      if (hasReturnExpr()) {
-        hash = (37 * hash) + RETURN_EXPR_FIELD_NUMBER;
-        hash = (53 * hash) + getReturnExpr().hashCode();
+      if (hasRetExpr()) {
+        hash = (37 * hash) + RET_EXPR_FIELD_NUMBER;
+        hash = (53 * hash) + getRetExpr().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -613,18 +387,24 @@ public final class Return {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getMethodIdFieldBuilder();
+          getRetExprFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
-        methodName_ = "";
+        if (methodIdBuilder_ == null) {
+          methodId_ = null;
+        } else {
+          methodIdBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        methodOwner_ = "";
+        if (retExprBuilder_ == null) {
+          retExpr_ = null;
+        } else {
+          retExprBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000002);
-        signature_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        returnExpr_ = "";
-        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -652,19 +432,19 @@ public final class Return {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.methodName_ = methodName_;
+        if (methodIdBuilder_ == null) {
+          result.methodId_ = methodId_;
+        } else {
+          result.methodId_ = methodIdBuilder_.build();
+        }
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.methodOwner_ = methodOwner_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
+        if (retExprBuilder_ == null) {
+          result.retExpr_ = retExpr_;
+        } else {
+          result.retExpr_ = retExprBuilder_.build();
         }
-        result.signature_ = signature_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.returnExpr_ = returnExpr_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -707,25 +487,11 @@ public final class Return {
 
       public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn other) {
         if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.getDefaultInstance()) return this;
-        if (other.hasMethodName()) {
-          bitField0_ |= 0x00000001;
-          methodName_ = other.methodName_;
-          onChanged();
+        if (other.hasMethodId()) {
+          mergeMethodId(other.getMethodId());
         }
-        if (other.hasMethodOwner()) {
-          bitField0_ |= 0x00000002;
-          methodOwner_ = other.methodOwner_;
-          onChanged();
-        }
-        if (other.hasSignature()) {
-          bitField0_ |= 0x00000004;
-          signature_ = other.signature_;
-          onChanged();
-        }
-        if (other.hasReturnExpr()) {
-          bitField0_ |= 0x00000008;
-          returnExpr_ = other.returnExpr_;
-          onChanged();
+        if (other.hasRetExpr()) {
+          mergeRetExpr(other.getRetExpr());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -733,18 +499,6 @@ public final class Return {
       }
 
       public final boolean isInitialized() {
-        if (!hasMethodName()) {
-          return false;
-        }
-        if (!hasMethodOwner()) {
-          return false;
-        }
-        if (!hasSignature()) {
-          return false;
-        }
-        if (!hasReturnExpr()) {
-          return false;
-        }
         return true;
       }
 
@@ -767,332 +521,240 @@ public final class Return {
       }
       private int bitField0_;
 
-      private java.lang.Object methodName_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id methodId_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> methodIdBuilder_;
       /**
-       * <code>required string method_name = 1;</code>
+       * <code>optional .Models.Id method_id = 1;</code>
        */
-      public boolean hasMethodName() {
+      public boolean hasMethodId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string method_name = 1;</code>
+       * <code>optional .Models.Id method_id = 1;</code>
        */
-      public java.lang.String getMethodName() {
-        java.lang.Object ref = methodName_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            methodName_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getMethodId() {
+        if (methodIdBuilder_ == null) {
+          return methodId_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : methodId_;
+        } else {
+          return methodIdBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.Id method_id = 1;</code>
+       */
+      public Builder setMethodId(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (methodIdBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          methodId_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          methodIdBuilder_.setMessage(value);
         }
-      }
-      /**
-       * <code>required string method_name = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getMethodNameBytes() {
-        java.lang.Object ref = methodName_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          methodName_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string method_name = 1;</code>
-       */
-      public Builder setMethodName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        methodName_ = value;
-        onChanged();
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>required string method_name = 1;</code>
+       * <code>optional .Models.Id method_id = 1;</code>
        */
-      public Builder clearMethodName() {
+      public Builder setMethodId(
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+        if (methodIdBuilder_ == null) {
+          methodId_ = builderForValue.build();
+          onChanged();
+        } else {
+          methodIdBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Id method_id = 1;</code>
+       */
+      public Builder mergeMethodId(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (methodIdBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              methodId_ != null &&
+              methodId_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+            methodId_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(methodId_).mergeFrom(value).buildPartial();
+          } else {
+            methodId_ = value;
+          }
+          onChanged();
+        } else {
+          methodIdBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Id method_id = 1;</code>
+       */
+      public Builder clearMethodId() {
+        if (methodIdBuilder_ == null) {
+          methodId_ = null;
+          onChanged();
+        } else {
+          methodIdBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        methodName_ = getDefaultInstance().getMethodName();
-        onChanged();
         return this;
       }
       /**
-       * <code>required string method_name = 1;</code>
+       * <code>optional .Models.Id method_id = 1;</code>
        */
-      public Builder setMethodNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        methodName_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getMethodIdBuilder() {
+        bitField0_ |= 0x00000001;
         onChanged();
-        return this;
+        return getMethodIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .Models.Id method_id = 1;</code>
+       */
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getMethodIdOrBuilder() {
+        if (methodIdBuilder_ != null) {
+          return methodIdBuilder_.getMessageOrBuilder();
+        } else {
+          return methodId_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : methodId_;
+        }
+      }
+      /**
+       * <code>optional .Models.Id method_id = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          getMethodIdFieldBuilder() {
+        if (methodIdBuilder_ == null) {
+          methodIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+                  getMethodId(),
+                  getParentForChildren(),
+                  isClean());
+          methodId_ = null;
+        }
+        return methodIdBuilder_;
       }
 
-      private java.lang.Object methodOwner_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id retExpr_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> retExprBuilder_;
       /**
-       * <code>required string method_owner = 2;</code>
+       * <code>optional .Models.Id ret_expr = 2;</code>
        */
-      public boolean hasMethodOwner() {
+      public boolean hasRetExpr() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required string method_owner = 2;</code>
+       * <code>optional .Models.Id ret_expr = 2;</code>
        */
-      public java.lang.String getMethodOwner() {
-        java.lang.Object ref = methodOwner_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            methodOwner_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getRetExpr() {
+        if (retExprBuilder_ == null) {
+          return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : retExpr_;
+        } else {
+          return retExprBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.Id ret_expr = 2;</code>
+       */
+      public Builder setRetExpr(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (retExprBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          retExpr_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          retExprBuilder_.setMessage(value);
         }
-      }
-      /**
-       * <code>required string method_owner = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getMethodOwnerBytes() {
-        java.lang.Object ref = methodOwner_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          methodOwner_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string method_owner = 2;</code>
-       */
-      public Builder setMethodOwner(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        methodOwner_ = value;
-        onChanged();
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required string method_owner = 2;</code>
+       * <code>optional .Models.Id ret_expr = 2;</code>
        */
-      public Builder clearMethodOwner() {
+      public Builder setRetExpr(
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+        if (retExprBuilder_ == null) {
+          retExpr_ = builderForValue.build();
+          onChanged();
+        } else {
+          retExprBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Id ret_expr = 2;</code>
+       */
+      public Builder mergeRetExpr(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (retExprBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              retExpr_ != null &&
+              retExpr_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+            retExpr_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(retExpr_).mergeFrom(value).buildPartial();
+          } else {
+            retExpr_ = value;
+          }
+          onChanged();
+        } else {
+          retExprBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Id ret_expr = 2;</code>
+       */
+      public Builder clearRetExpr() {
+        if (retExprBuilder_ == null) {
+          retExpr_ = null;
+          onChanged();
+        } else {
+          retExprBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000002);
-        methodOwner_ = getDefaultInstance().getMethodOwner();
-        onChanged();
         return this;
       }
       /**
-       * <code>required string method_owner = 2;</code>
+       * <code>optional .Models.Id ret_expr = 2;</code>
        */
-      public Builder setMethodOwnerBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        methodOwner_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getRetExprBuilder() {
+        bitField0_ |= 0x00000002;
         onChanged();
-        return this;
-      }
-
-      private java.lang.Object signature_ = "";
-      /**
-       * <code>required string signature = 3;</code>
-       */
-      public boolean hasSignature() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return getRetExprFieldBuilder().getBuilder();
       }
       /**
-       * <code>required string signature = 3;</code>
+       * <code>optional .Models.Id ret_expr = 2;</code>
        */
-      public java.lang.String getSignature() {
-        java.lang.Object ref = signature_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            signature_ = s;
-          }
-          return s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getRetExprOrBuilder() {
+        if (retExprBuilder_ != null) {
+          return retExprBuilder_.getMessageOrBuilder();
         } else {
-          return (java.lang.String) ref;
+          return retExpr_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : retExpr_;
         }
       }
       /**
-       * <code>required string signature = 3;</code>
+       * <code>optional .Models.Id ret_expr = 2;</code>
        */
-      public com.google.protobuf.ByteString
-          getSignatureBytes() {
-        java.lang.Object ref = signature_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          signature_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          getRetExprFieldBuilder() {
+        if (retExprBuilder_ == null) {
+          retExprBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+                  getRetExpr(),
+                  getParentForChildren(),
+                  isClean());
+          retExpr_ = null;
         }
-      }
-      /**
-       * <code>required string signature = 3;</code>
-       */
-      public Builder setSignature(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        signature_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string signature = 3;</code>
-       */
-      public Builder clearSignature() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        signature_ = getDefaultInstance().getSignature();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string signature = 3;</code>
-       */
-      public Builder setSignatureBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        signature_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object returnExpr_ = "";
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>required string return_expr = 4;</code>
-       */
-      public boolean hasReturnExpr() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>required string return_expr = 4;</code>
-       */
-      public java.lang.String getReturnExpr() {
-        java.lang.Object ref = returnExpr_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            returnExpr_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>required string return_expr = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getReturnExprBytes() {
-        java.lang.Object ref = returnExpr_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          returnExpr_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>required string return_expr = 4;</code>
-       */
-      public Builder setReturnExpr(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        returnExpr_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>required string return_expr = 4;</code>
-       */
-      public Builder clearReturnExpr() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        returnExpr_ = getDefaultInstance().getReturnExpr();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>required string return_expr = 4;</code>
-       */
-      public Builder setReturnExprBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        returnExpr_ = value;
-        onChanged();
-        return this;
+        return retExprBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1157,9 +819,9 @@ public final class Return {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014Return.proto\022\006Models\"Y\n\004rtrn\022\023\n\013method" +
-      "_name\030\001 \002(\t\022\024\n\014method_owner\030\002 \002(\t\022\021\n\tsig" +
-      "nature\030\003 \002(\t\022\023\n\013return_expr\030\004 \002(\tBH\n>com" +
+      "\n\014Return.proto\022\006Models\032\024Identification.p" +
+      "roto\"C\n\004rtrn\022\035\n\tmethod_id\030\001 \001(\0132\n.Models" +
+      ".Id\022\034\n\010ret_expr\030\002 \001(\0132\n.Models.IdBH\n>com" +
       ".google.errorprone.bugpatterns.refactori" +
       "ngexperiment.modelsB\006Return"
     };
@@ -1174,13 +836,15 @@ public final class Return {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor(),
         }, assigner);
     internal_static_Models_rtrn_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Models_rtrn_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_rtrn_descriptor,
-        new java.lang.String[] { "MethodName", "MethodOwner", "Signature", "ReturnExpr", });
+        new java.lang.String[] { "MethodId", "RetExpr", });
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -1,17 +1,12 @@
 syntax = "proto2";
-
+import "Identification.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
 option java_outer_classname = "MethodInvocation";
 
 message MthdInvc {
-  required string id = 1;
-  required string name = 2;
-  required string owner = 3;
-  required string signature = 4;
-  required string kind = 5;
-  // index against id | kind| additional info
-  map<int32,string> args = 6;
-  optional string receiver = 7;
+  optional Id id = 1;
+  map<int32, Id> arguments = 2; // index -> arg
+  optional Id receiver = 3;
  }

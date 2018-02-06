@@ -19,100 +19,30 @@ public final class Variable {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
     boolean hasId();
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
-    java.lang.String getId();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getId();
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
-    com.google.protobuf.ByteString
-        getIdBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getIdOrBuilder();
 
     /**
-     * <code>required string name = 2;</code>
-     */
-    boolean hasName();
-    /**
-     * <code>required string name = 2;</code>
-     */
-    java.lang.String getName();
-    /**
-     * <code>required string name = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getNameBytes();
-
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    boolean hasOwner();
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    java.lang.String getOwner();
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getOwnerBytes();
-
-    /**
-     * <code>required string type = 4;</code>
-     */
-    boolean hasType();
-    /**
-     * <code>required string type = 4;</code>
-     */
-    java.lang.String getType();
-    /**
-     * <code>required string type = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getTypeBytes();
-
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    boolean hasKind();
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    java.lang.String getKind();
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    com.google.protobuf.ByteString
-        getKindBytes();
-
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>optional string initializer = 6;</code>
+     * <code>optional .Models.Id initializer = 2;</code>
      */
     boolean hasInitializer();
     /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>optional string initializer = 6;</code>
+     * <code>optional .Models.Id initializer = 2;</code>
      */
-    java.lang.String getInitializer();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getInitializer();
     /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>optional string initializer = 6;</code>
+     * <code>optional .Models.Id initializer = 2;</code>
      */
-    com.google.protobuf.ByteString
-        getInitializerBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getInitializerOrBuilder();
   }
   /**
    * Protobuf type {@code Models.Vrbl}
@@ -127,12 +57,6 @@ public final class Variable {
       super(builder);
     }
     private Vrbl() {
-      id_ = "";
-      name_ = "";
-      owner_ = "";
-      type_ = "";
-      kind_ = "";
-      initializer_ = "";
     }
 
     @java.lang.Override
@@ -167,39 +91,29 @@ public final class Variable {
               break;
             }
             case 10: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = id_.toBuilder();
+              }
+              id_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(id_);
+                id_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000001;
-              id_ = bs;
               break;
             }
             case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = initializer_.toBuilder();
+              }
+              initializer_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(initializer_);
+                initializer_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000002;
-              name_ = bs;
-              break;
-            }
-            case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000004;
-              owner_ = bs;
-              break;
-            }
-            case 34: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000008;
-              type_ = bs;
-              break;
-            }
-            case 42: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000010;
-              kind_ = bs;
-              break;
-            }
-            case 50: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000020;
-              initializer_ = bs;
               break;
             }
           }
@@ -228,267 +142,45 @@ public final class Variable {
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object id_;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id id_;
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
     public boolean hasId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
-    public java.lang.String getId() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          id_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getId() {
+      return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : id_;
     }
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getIdOrBuilder() {
+      return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : id_;
     }
 
-    public static final int NAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object name_;
+    public static final int INITIALIZER_FIELD_NUMBER = 2;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id initializer_;
     /**
-     * <code>required string name = 2;</code>
+     * <code>optional .Models.Id initializer = 2;</code>
      */
-    public boolean hasName() {
+    public boolean hasInitializer() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required string name = 2;</code>
+     * <code>optional .Models.Id initializer = 2;</code>
      */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          name_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getInitializer() {
+      return initializer_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : initializer_;
     }
     /**
-     * <code>required string name = 2;</code>
+     * <code>optional .Models.Id initializer = 2;</code>
      */
-    public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        name_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int OWNER_FIELD_NUMBER = 3;
-    private volatile java.lang.Object owner_;
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    public boolean hasOwner() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    public java.lang.String getOwner() {
-      java.lang.Object ref = owner_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          owner_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getOwnerBytes() {
-      java.lang.Object ref = owner_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        owner_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int TYPE_FIELD_NUMBER = 4;
-    private volatile java.lang.Object type_;
-    /**
-     * <code>required string type = 4;</code>
-     */
-    public boolean hasType() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>required string type = 4;</code>
-     */
-    public java.lang.String getType() {
-      java.lang.Object ref = type_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          type_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string type = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTypeBytes() {
-      java.lang.Object ref = type_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        type_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int KIND_FIELD_NUMBER = 5;
-    private volatile java.lang.Object kind_;
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    public boolean hasKind() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    public java.lang.String getKind() {
-      java.lang.Object ref = kind_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          kind_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getKindBytes() {
-      java.lang.Object ref = kind_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        kind_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int INITIALIZER_FIELD_NUMBER = 6;
-    private volatile java.lang.Object initializer_;
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>optional string initializer = 6;</code>
-     */
-    public boolean hasInitializer() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
-    }
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>optional string initializer = 6;</code>
-     */
-    public java.lang.String getInitializer() {
-      java.lang.Object ref = initializer_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          initializer_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     *id | kind| additional info
-     * </pre>
-     *
-     * <code>optional string initializer = 6;</code>
-     */
-    public com.google.protobuf.ByteString
-        getInitializerBytes() {
-      java.lang.Object ref = initializer_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        initializer_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getInitializerOrBuilder() {
+      return initializer_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : initializer_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -497,26 +189,6 @@ public final class Variable {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasName()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasOwner()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasType()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasKind()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -524,22 +196,10 @@ public final class Variable {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+        output.writeMessage(1, getId());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, name_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, owner_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, type_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, kind_);
-      }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, initializer_);
+        output.writeMessage(2, getInitializer());
       }
       unknownFields.writeTo(output);
     }
@@ -550,22 +210,12 @@ public final class Variable {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getId());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, name_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, owner_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, type_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, kind_);
-      }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, initializer_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getInitializer());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -588,26 +238,6 @@ public final class Variable {
         result = result && getId()
             .equals(other.getId());
       }
-      result = result && (hasName() == other.hasName());
-      if (hasName()) {
-        result = result && getName()
-            .equals(other.getName());
-      }
-      result = result && (hasOwner() == other.hasOwner());
-      if (hasOwner()) {
-        result = result && getOwner()
-            .equals(other.getOwner());
-      }
-      result = result && (hasType() == other.hasType());
-      if (hasType()) {
-        result = result && getType()
-            .equals(other.getType());
-      }
-      result = result && (hasKind() == other.hasKind());
-      if (hasKind()) {
-        result = result && getKind()
-            .equals(other.getKind());
-      }
       result = result && (hasInitializer() == other.hasInitializer());
       if (hasInitializer()) {
         result = result && getInitializer()
@@ -627,22 +257,6 @@ public final class Variable {
       if (hasId()) {
         hash = (37 * hash) + ID_FIELD_NUMBER;
         hash = (53 * hash) + getId().hashCode();
-      }
-      if (hasName()) {
-        hash = (37 * hash) + NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getName().hashCode();
-      }
-      if (hasOwner()) {
-        hash = (37 * hash) + OWNER_FIELD_NUMBER;
-        hash = (53 * hash) + getOwner().hashCode();
-      }
-      if (hasType()) {
-        hash = (37 * hash) + TYPE_FIELD_NUMBER;
-        hash = (53 * hash) + getType().hashCode();
-      }
-      if (hasKind()) {
-        hash = (37 * hash) + KIND_FIELD_NUMBER;
-        hash = (53 * hash) + getKind().hashCode();
       }
       if (hasInitializer()) {
         hash = (37 * hash) + INITIALIZER_FIELD_NUMBER;
@@ -773,22 +387,24 @@ public final class Variable {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getIdFieldBuilder();
+          getInitializerFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
-        id_ = "";
+        if (idBuilder_ == null) {
+          id_ = null;
+        } else {
+          idBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        name_ = "";
+        if (initializerBuilder_ == null) {
+          initializer_ = null;
+        } else {
+          initializerBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000002);
-        owner_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        type_ = "";
-        bitField0_ = (bitField0_ & ~0x00000008);
-        kind_ = "";
-        bitField0_ = (bitField0_ & ~0x00000010);
-        initializer_ = "";
-        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -816,27 +432,19 @@ public final class Variable {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.id_ = id_;
+        if (idBuilder_ == null) {
+          result.id_ = id_;
+        } else {
+          result.id_ = idBuilder_.build();
+        }
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.name_ = name_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
+        if (initializerBuilder_ == null) {
+          result.initializer_ = initializer_;
+        } else {
+          result.initializer_ = initializerBuilder_.build();
         }
-        result.owner_ = owner_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.type_ = type_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
-        }
-        result.kind_ = kind_;
-        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-          to_bitField0_ |= 0x00000020;
-        }
-        result.initializer_ = initializer_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -880,34 +488,10 @@ public final class Variable {
       public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.Variable.Vrbl other) {
         if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.Variable.Vrbl.getDefaultInstance()) return this;
         if (other.hasId()) {
-          bitField0_ |= 0x00000001;
-          id_ = other.id_;
-          onChanged();
-        }
-        if (other.hasName()) {
-          bitField0_ |= 0x00000002;
-          name_ = other.name_;
-          onChanged();
-        }
-        if (other.hasOwner()) {
-          bitField0_ |= 0x00000004;
-          owner_ = other.owner_;
-          onChanged();
-        }
-        if (other.hasType()) {
-          bitField0_ |= 0x00000008;
-          type_ = other.type_;
-          onChanged();
-        }
-        if (other.hasKind()) {
-          bitField0_ |= 0x00000010;
-          kind_ = other.kind_;
-          onChanged();
+          mergeId(other.getId());
         }
         if (other.hasInitializer()) {
-          bitField0_ |= 0x00000020;
-          initializer_ = other.initializer_;
-          onChanged();
+          mergeInitializer(other.getInitializer());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -915,21 +499,6 @@ public final class Variable {
       }
 
       public final boolean isInitialized() {
-        if (!hasId()) {
-          return false;
-        }
-        if (!hasName()) {
-          return false;
-        }
-        if (!hasOwner()) {
-          return false;
-        }
-        if (!hasType()) {
-          return false;
-        }
-        if (!hasKind()) {
-          return false;
-        }
         return true;
       }
 
@@ -952,484 +521,240 @@ public final class Variable {
       }
       private int bitField0_;
 
-      private java.lang.Object id_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id id_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> idBuilder_;
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
       public boolean hasId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
-      public java.lang.String getId() {
-        java.lang.Object ref = id_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            id_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getId() {
+        if (idBuilder_ == null) {
+          return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : id_;
+        } else {
+          return idBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.Id id = 1;</code>
+       */
+      public Builder setId(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (idBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          id_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          idBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000001;
+        return this;
       }
       /**
-       * <code>required string id = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getIdBytes() {
-        java.lang.Object ref = id_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          id_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
       public Builder setId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        id_ = value;
-        onChanged();
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+        if (idBuilder_ == null) {
+          id_ = builderForValue.build();
+          onChanged();
+        } else {
+          idBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
+       */
+      public Builder mergeId(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (idBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              id_ != null &&
+              id_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+            id_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(id_).mergeFrom(value).buildPartial();
+          } else {
+            id_ = value;
+          }
+          onChanged();
+        } else {
+          idBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Id id = 1;</code>
        */
       public Builder clearId() {
+        if (idBuilder_ == null) {
+          id_ = null;
+          onChanged();
+        } else {
+          idBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        id_ = getDefaultInstance().getId();
-        onChanged();
         return this;
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
-      public Builder setIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        id_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getIdBuilder() {
+        bitField0_ |= 0x00000001;
         onChanged();
-        return this;
+        return getIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .Models.Id id = 1;</code>
+       */
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getIdOrBuilder() {
+        if (idBuilder_ != null) {
+          return idBuilder_.getMessageOrBuilder();
+        } else {
+          return id_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : id_;
+        }
+      }
+      /**
+       * <code>optional .Models.Id id = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          getIdFieldBuilder() {
+        if (idBuilder_ == null) {
+          idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+                  getId(),
+                  getParentForChildren(),
+                  isClean());
+          id_ = null;
+        }
+        return idBuilder_;
       }
 
-      private java.lang.Object name_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id initializer_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> initializerBuilder_;
       /**
-       * <code>required string name = 2;</code>
+       * <code>optional .Models.Id initializer = 2;</code>
        */
-      public boolean hasName() {
+      public boolean hasInitializer() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required string name = 2;</code>
+       * <code>optional .Models.Id initializer = 2;</code>
        */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            name_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getInitializer() {
+        if (initializerBuilder_ == null) {
+          return initializer_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : initializer_;
+        } else {
+          return initializerBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.Id initializer = 2;</code>
+       */
+      public Builder setInitializer(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (initializerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          initializer_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          initializerBuilder_.setMessage(value);
         }
-      }
-      /**
-       * <code>required string name = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          name_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string name = 2;</code>
-       */
-      public Builder setName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        name_ = value;
-        onChanged();
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required string name = 2;</code>
-       */
-      public Builder clearName() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        name_ = getDefaultInstance().getName();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string name = 2;</code>
-       */
-      public Builder setNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        name_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object owner_ = "";
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public boolean hasOwner() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public java.lang.String getOwner() {
-        java.lang.Object ref = owner_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            owner_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getOwnerBytes() {
-        java.lang.Object ref = owner_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          owner_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public Builder setOwner(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        owner_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public Builder clearOwner() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        owner_ = getDefaultInstance().getOwner();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public Builder setOwnerBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        owner_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object type_ = "";
-      /**
-       * <code>required string type = 4;</code>
-       */
-      public boolean hasType() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>required string type = 4;</code>
-       */
-      public java.lang.String getType() {
-        java.lang.Object ref = type_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            type_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string type = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getTypeBytes() {
-        java.lang.Object ref = type_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          type_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string type = 4;</code>
-       */
-      public Builder setType(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string type = 4;</code>
-       */
-      public Builder clearType() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        type_ = getDefaultInstance().getType();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string type = 4;</code>
-       */
-      public Builder setTypeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        type_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object kind_ = "";
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public boolean hasKind() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public java.lang.String getKind() {
-        java.lang.Object ref = kind_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            kind_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getKindBytes() {
-        java.lang.Object ref = kind_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          kind_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public Builder setKind(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        kind_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public Builder clearKind() {
-        bitField0_ = (bitField0_ & ~0x00000010);
-        kind_ = getDefaultInstance().getKind();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public Builder setKindBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        kind_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object initializer_ = "";
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>optional string initializer = 6;</code>
-       */
-      public boolean hasInitializer() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
-      }
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>optional string initializer = 6;</code>
-       */
-      public java.lang.String getInitializer() {
-        java.lang.Object ref = initializer_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            initializer_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>optional string initializer = 6;</code>
-       */
-      public com.google.protobuf.ByteString
-          getInitializerBytes() {
-        java.lang.Object ref = initializer_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          initializer_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>optional string initializer = 6;</code>
+       * <code>optional .Models.Id initializer = 2;</code>
        */
       public Builder setInitializer(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000020;
-        initializer_ = value;
-        onChanged();
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+        if (initializerBuilder_ == null) {
+          initializer_ = builderForValue.build();
+          onChanged();
+        } else {
+          initializerBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>optional string initializer = 6;</code>
+       * <code>optional .Models.Id initializer = 2;</code>
+       */
+      public Builder mergeInitializer(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (initializerBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              initializer_ != null &&
+              initializer_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+            initializer_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(initializer_).mergeFrom(value).buildPartial();
+          } else {
+            initializer_ = value;
+          }
+          onChanged();
+        } else {
+          initializerBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Id initializer = 2;</code>
        */
       public Builder clearInitializer() {
-        bitField0_ = (bitField0_ & ~0x00000020);
-        initializer_ = getDefaultInstance().getInitializer();
-        onChanged();
+        if (initializerBuilder_ == null) {
+          initializer_ = null;
+          onChanged();
+        } else {
+          initializerBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       /**
-       * <pre>
-       *id | kind| additional info
-       * </pre>
-       *
-       * <code>optional string initializer = 6;</code>
+       * <code>optional .Models.Id initializer = 2;</code>
        */
-      public Builder setInitializerBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000020;
-        initializer_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getInitializerBuilder() {
+        bitField0_ |= 0x00000002;
         onChanged();
-        return this;
+        return getInitializerFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .Models.Id initializer = 2;</code>
+       */
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getInitializerOrBuilder() {
+        if (initializerBuilder_ != null) {
+          return initializerBuilder_.getMessageOrBuilder();
+        } else {
+          return initializer_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : initializer_;
+        }
+      }
+      /**
+       * <code>optional .Models.Id initializer = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          getInitializerFieldBuilder() {
+        if (initializerBuilder_ == null) {
+          initializerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+                  getInitializer(),
+                  getParentForChildren(),
+                  isClean());
+          initializer_ = null;
+        }
+        return initializerBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1494,11 +819,11 @@ public final class Variable {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016Variable.proto\022\006Models\"`\n\004Vrbl\022\n\n\002id\030\001" +
-      " \002(\t\022\014\n\004name\030\002 \002(\t\022\r\n\005owner\030\003 \002(\t\022\014\n\004typ" +
-      "e\030\004 \002(\t\022\014\n\004kind\030\005 \002(\t\022\023\n\013initializer\030\006 \001" +
-      "(\tBJ\n>com.google.errorprone.bugpatterns." +
-      "refactoringexperiment.modelsB\010Variable"
+      "\n\016Variable.proto\022\006Models\032\024Identification" +
+      ".proto\"?\n\004Vrbl\022\026\n\002id\030\001 \001(\0132\n.Models.Id\022\037" +
+      "\n\013initializer\030\002 \001(\0132\n.Models.IdBJ\n>com.g" +
+      "oogle.errorprone.bugpatterns.refactoring" +
+      "experiment.modelsB\010Variable"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1511,13 +836,15 @@ public final class Variable {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor(),
         }, assigner);
     internal_static_Models_Vrbl_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Models_Vrbl_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_Vrbl_descriptor,
-        new java.lang.String[] { "Id", "Name", "Owner", "Type", "Kind", "Initializer", });
+        new java.lang.String[] { "Id", "Initializer", });
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

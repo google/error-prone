@@ -19,142 +19,84 @@ public final class MethodInvocation {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
     boolean hasId();
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
-    java.lang.String getId();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getId();
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
-    com.google.protobuf.ByteString
-        getIdBytes();
-
-    /**
-     * <code>required string name = 2;</code>
-     */
-    boolean hasName();
-    /**
-     * <code>required string name = 2;</code>
-     */
-    java.lang.String getName();
-    /**
-     * <code>required string name = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getNameBytes();
-
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    boolean hasOwner();
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    java.lang.String getOwner();
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getOwnerBytes();
-
-    /**
-     * <code>required string signature = 4;</code>
-     */
-    boolean hasSignature();
-    /**
-     * <code>required string signature = 4;</code>
-     */
-    java.lang.String getSignature();
-    /**
-     * <code>required string signature = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getSignatureBytes();
-
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    boolean hasKind();
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    java.lang.String getKind();
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    com.google.protobuf.ByteString
-        getKindBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getIdOrBuilder();
 
     /**
      * <pre>
-     * index against id | kind| additional info
+     * index -&gt; arg
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; args = 6;</code>
+     * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
      */
-    int getArgsCount();
+    int getArgumentsCount();
     /**
      * <pre>
-     * index against id | kind| additional info
+     * index -&gt; arg
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; args = 6;</code>
+     * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
      */
-    boolean containsArgs(
+    boolean containsArguments(
         int key);
     /**
-     * Use {@link #getArgsMap()} instead.
+     * Use {@link #getArgumentsMap()} instead.
      */
     @java.lang.Deprecated
-    java.util.Map<java.lang.Integer, java.lang.String>
-    getArgs();
+    java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id>
+    getArguments();
     /**
      * <pre>
-     * index against id | kind| additional info
+     * index -&gt; arg
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; args = 6;</code>
+     * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
      */
-    java.util.Map<java.lang.Integer, java.lang.String>
-    getArgsMap();
+    java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id>
+    getArgumentsMap();
     /**
      * <pre>
-     * index against id | kind| additional info
+     * index -&gt; arg
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; args = 6;</code>
+     * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
      */
 
-    java.lang.String getArgsOrDefault(
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getArgumentsOrDefault(
         int key,
-        java.lang.String defaultValue);
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id defaultValue);
     /**
      * <pre>
-     * index against id | kind| additional info
+     * index -&gt; arg
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; args = 6;</code>
+     * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
      */
 
-    java.lang.String getArgsOrThrow(
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getArgumentsOrThrow(
         int key);
 
     /**
-     * <code>optional string receiver = 7;</code>
+     * <code>optional .Models.Id receiver = 3;</code>
      */
     boolean hasReceiver();
     /**
-     * <code>optional string receiver = 7;</code>
+     * <code>optional .Models.Id receiver = 3;</code>
      */
-    java.lang.String getReceiver();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getReceiver();
     /**
-     * <code>optional string receiver = 7;</code>
+     * <code>optional .Models.Id receiver = 3;</code>
      */
-    com.google.protobuf.ByteString
-        getReceiverBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getReceiverOrBuilder();
   }
   /**
    * Protobuf type {@code Models.MthdInvc}
@@ -169,12 +111,6 @@ public final class MethodInvocation {
       super(builder);
     }
     private MthdInvc() {
-      id_ = "";
-      name_ = "";
-      owner_ = "";
-      signature_ = "";
-      kind_ = "";
-      receiver_ = "";
     }
 
     @java.lang.Override
@@ -209,52 +145,42 @@ public final class MethodInvocation {
               break;
             }
             case 10: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = id_.toBuilder();
+              }
+              id_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(id_);
+                id_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000001;
-              id_ = bs;
               break;
             }
             case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000002;
-              name_ = bs;
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                arguments_ = com.google.protobuf.MapField.newMapField(
+                    ArgumentsDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000002;
+              }
+              com.google.protobuf.MapEntry<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id>
+              arguments__ = input.readMessage(
+                  ArgumentsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              arguments_.getMutableMap().put(
+                  arguments__.getKey(), arguments__.getValue());
               break;
             }
             case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000004;
-              owner_ = bs;
-              break;
-            }
-            case 34: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000008;
-              signature_ = bs;
-              break;
-            }
-            case 42: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000010;
-              kind_ = bs;
-              break;
-            }
-            case 50: {
-              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-                args_ = com.google.protobuf.MapField.newMapField(
-                    ArgsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000020;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = receiver_.toBuilder();
               }
-              com.google.protobuf.MapEntry<java.lang.Integer, java.lang.String>
-              args__ = input.readMessage(
-                  ArgsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              args_.getMutableMap().put(
-                  args__.getKey(), args__.getValue());
-              break;
-            }
-            case 58: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000020;
-              receiver_ = bs;
+              receiver_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(receiver_);
+                receiver_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
               break;
             }
           }
@@ -278,8 +204,8 @@ public final class MethodInvocation {
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 6:
-          return internalGetArgs();
+        case 2:
+          return internalGetArguments();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -294,347 +220,137 @@ public final class MethodInvocation {
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object id_;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id id_;
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
     public boolean hasId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
-    public java.lang.String getId() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          id_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getId() {
+      return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : id_;
     }
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional .Models.Id id = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getIdOrBuilder() {
+      return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : id_;
     }
 
-    public static final int NAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object name_;
-    /**
-     * <code>required string name = 2;</code>
-     */
-    public boolean hasName() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required string name = 2;</code>
-     */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          name_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string name = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        name_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int OWNER_FIELD_NUMBER = 3;
-    private volatile java.lang.Object owner_;
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    public boolean hasOwner() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    public java.lang.String getOwner() {
-      java.lang.Object ref = owner_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          owner_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string owner = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getOwnerBytes() {
-      java.lang.Object ref = owner_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        owner_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int SIGNATURE_FIELD_NUMBER = 4;
-    private volatile java.lang.Object signature_;
-    /**
-     * <code>required string signature = 4;</code>
-     */
-    public boolean hasSignature() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>required string signature = 4;</code>
-     */
-    public java.lang.String getSignature() {
-      java.lang.Object ref = signature_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          signature_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string signature = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSignatureBytes() {
-      java.lang.Object ref = signature_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        signature_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int KIND_FIELD_NUMBER = 5;
-    private volatile java.lang.Object kind_;
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    public boolean hasKind() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    public java.lang.String getKind() {
-      java.lang.Object ref = kind_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          kind_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string kind = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getKindBytes() {
-      java.lang.Object ref = kind_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        kind_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ARGS_FIELD_NUMBER = 6;
-    private static final class ArgsDefaultEntryHolder {
+    public static final int ARGUMENTS_FIELD_NUMBER = 2;
+    private static final class ArgumentsDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
-          java.lang.Integer, java.lang.String> defaultEntry =
+          java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> defaultEntry =
               com.google.protobuf.MapEntry
-              .<java.lang.Integer, java.lang.String>newDefaultInstance(
-                  com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.internal_static_Models_MthdInvc_ArgsEntry_descriptor, 
+              .<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id>newDefaultInstance(
+                  com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.internal_static_Models_MthdInvc_ArgumentsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.INT32,
                   0,
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "");
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance());
     }
     private com.google.protobuf.MapField<
-        java.lang.Integer, java.lang.String> args_;
-    private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
-    internalGetArgs() {
-      if (args_ == null) {
+        java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> arguments_;
+    private com.google.protobuf.MapField<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id>
+    internalGetArguments() {
+      if (arguments_ == null) {
         return com.google.protobuf.MapField.emptyMapField(
-            ArgsDefaultEntryHolder.defaultEntry);
+            ArgumentsDefaultEntryHolder.defaultEntry);
       }
-      return args_;
+      return arguments_;
     }
 
-    public int getArgsCount() {
-      return internalGetArgs().getMap().size();
+    public int getArgumentsCount() {
+      return internalGetArguments().getMap().size();
     }
     /**
      * <pre>
-     * index against id | kind| additional info
+     * index -&gt; arg
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; args = 6;</code>
+     * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
      */
 
-    public boolean containsArgs(
+    public boolean containsArguments(
         int key) {
       
-      return internalGetArgs().getMap().containsKey(key);
+      return internalGetArguments().getMap().containsKey(key);
     }
     /**
-     * Use {@link #getArgsMap()} instead.
+     * Use {@link #getArgumentsMap()} instead.
      */
     @java.lang.Deprecated
-    public java.util.Map<java.lang.Integer, java.lang.String> getArgs() {
-      return getArgsMap();
+    public java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> getArguments() {
+      return getArgumentsMap();
     }
     /**
      * <pre>
-     * index against id | kind| additional info
+     * index -&gt; arg
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; args = 6;</code>
+     * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
      */
 
-    public java.util.Map<java.lang.Integer, java.lang.String> getArgsMap() {
-      return internalGetArgs().getMap();
+    public java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> getArgumentsMap() {
+      return internalGetArguments().getMap();
     }
     /**
      * <pre>
-     * index against id | kind| additional info
+     * index -&gt; arg
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; args = 6;</code>
+     * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
      */
 
-    public java.lang.String getArgsOrDefault(
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getArgumentsOrDefault(
         int key,
-        java.lang.String defaultValue) {
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id defaultValue) {
       
-      java.util.Map<java.lang.Integer, java.lang.String> map =
-          internalGetArgs().getMap();
+      java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> map =
+          internalGetArguments().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
      * <pre>
-     * index against id | kind| additional info
+     * index -&gt; arg
      * </pre>
      *
-     * <code>map&lt;int32, string&gt; args = 6;</code>
+     * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
      */
 
-    public java.lang.String getArgsOrThrow(
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getArgumentsOrThrow(
         int key) {
       
-      java.util.Map<java.lang.Integer, java.lang.String> map =
-          internalGetArgs().getMap();
+      java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> map =
+          internalGetArguments().getMap();
       if (!map.containsKey(key)) {
         throw new java.lang.IllegalArgumentException();
       }
       return map.get(key);
     }
 
-    public static final int RECEIVER_FIELD_NUMBER = 7;
-    private volatile java.lang.Object receiver_;
+    public static final int RECEIVER_FIELD_NUMBER = 3;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id receiver_;
     /**
-     * <code>optional string receiver = 7;</code>
+     * <code>optional .Models.Id receiver = 3;</code>
      */
     public boolean hasReceiver() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional string receiver = 7;</code>
+     * <code>optional .Models.Id receiver = 3;</code>
      */
-    public java.lang.String getReceiver() {
-      java.lang.Object ref = receiver_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          receiver_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getReceiver() {
+      return receiver_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : receiver_;
     }
     /**
-     * <code>optional string receiver = 7;</code>
+     * <code>optional .Models.Id receiver = 3;</code>
      */
-    public com.google.protobuf.ByteString
-        getReceiverBytes() {
-      java.lang.Object ref = receiver_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        receiver_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getReceiverOrBuilder() {
+      return receiver_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : receiver_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -643,26 +359,6 @@ public final class MethodInvocation {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasName()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasOwner()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSignature()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasKind()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -670,28 +366,16 @@ public final class MethodInvocation {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, name_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, owner_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, signature_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, kind_);
+        output.writeMessage(1, getId());
       }
       com.google.protobuf.GeneratedMessageV3
         .serializeIntegerMapTo(
           output,
-          internalGetArgs(),
-          ArgsDefaultEntryHolder.defaultEntry,
-          6);
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, receiver_);
+          internalGetArguments(),
+          ArgumentsDefaultEntryHolder.defaultEntry,
+          2);
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(3, getReceiver());
       }
       unknownFields.writeTo(output);
     }
@@ -702,32 +386,22 @@ public final class MethodInvocation {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getId());
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, name_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, owner_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, signature_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, kind_);
-      }
-      for (java.util.Map.Entry<java.lang.Integer, java.lang.String> entry
-           : internalGetArgs().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.Integer, java.lang.String>
-        args__ = ArgsDefaultEntryHolder.defaultEntry.newBuilderForType()
+      for (java.util.Map.Entry<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> entry
+           : internalGetArguments().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id>
+        arguments__ = ArgumentsDefaultEntryHolder.defaultEntry.newBuilderForType()
             .setKey(entry.getKey())
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(6, args__);
+            .computeMessageSize(2, arguments__);
       }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, receiver_);
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getReceiver());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -750,28 +424,8 @@ public final class MethodInvocation {
         result = result && getId()
             .equals(other.getId());
       }
-      result = result && (hasName() == other.hasName());
-      if (hasName()) {
-        result = result && getName()
-            .equals(other.getName());
-      }
-      result = result && (hasOwner() == other.hasOwner());
-      if (hasOwner()) {
-        result = result && getOwner()
-            .equals(other.getOwner());
-      }
-      result = result && (hasSignature() == other.hasSignature());
-      if (hasSignature()) {
-        result = result && getSignature()
-            .equals(other.getSignature());
-      }
-      result = result && (hasKind() == other.hasKind());
-      if (hasKind()) {
-        result = result && getKind()
-            .equals(other.getKind());
-      }
-      result = result && internalGetArgs().equals(
-          other.internalGetArgs());
+      result = result && internalGetArguments().equals(
+          other.internalGetArguments());
       result = result && (hasReceiver() == other.hasReceiver());
       if (hasReceiver()) {
         result = result && getReceiver()
@@ -792,25 +446,9 @@ public final class MethodInvocation {
         hash = (37 * hash) + ID_FIELD_NUMBER;
         hash = (53 * hash) + getId().hashCode();
       }
-      if (hasName()) {
-        hash = (37 * hash) + NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getName().hashCode();
-      }
-      if (hasOwner()) {
-        hash = (37 * hash) + OWNER_FIELD_NUMBER;
-        hash = (53 * hash) + getOwner().hashCode();
-      }
-      if (hasSignature()) {
-        hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
-        hash = (53 * hash) + getSignature().hashCode();
-      }
-      if (hasKind()) {
-        hash = (37 * hash) + KIND_FIELD_NUMBER;
-        hash = (53 * hash) + getKind().hashCode();
-      }
-      if (!internalGetArgs().getMap().isEmpty()) {
-        hash = (37 * hash) + ARGS_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetArgs().hashCode();
+      if (!internalGetArguments().getMap().isEmpty()) {
+        hash = (37 * hash) + ARGUMENTS_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetArguments().hashCode();
       }
       if (hasReceiver()) {
         hash = (37 * hash) + RECEIVER_FIELD_NUMBER;
@@ -925,8 +563,8 @@ public final class MethodInvocation {
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 6:
-            return internalGetArgs();
+          case 2:
+            return internalGetArguments();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -936,8 +574,8 @@ public final class MethodInvocation {
       protected com.google.protobuf.MapField internalGetMutableMapField(
           int number) {
         switch (number) {
-          case 6:
-            return internalGetMutableArgs();
+          case 2:
+            return internalGetMutableArguments();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -963,23 +601,25 @@ public final class MethodInvocation {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getIdFieldBuilder();
+          getReceiverFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
-        id_ = "";
+        if (idBuilder_ == null) {
+          id_ = null;
+        } else {
+          idBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        name_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        owner_ = "";
+        internalGetMutableArguments().clear();
+        if (receiverBuilder_ == null) {
+          receiver_ = null;
+        } else {
+          receiverBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000004);
-        signature_ = "";
-        bitField0_ = (bitField0_ & ~0x00000008);
-        kind_ = "";
-        bitField0_ = (bitField0_ & ~0x00000010);
-        internalGetMutableArgs().clear();
-        receiver_ = "";
-        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -1007,29 +647,21 @@ public final class MethodInvocation {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.id_ = id_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+        if (idBuilder_ == null) {
+          result.id_ = id_;
+        } else {
+          result.id_ = idBuilder_.build();
+        }
+        result.arguments_ = internalGetArguments();
+        result.arguments_.makeImmutable();
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.name_ = name_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
+        if (receiverBuilder_ == null) {
+          result.receiver_ = receiver_;
+        } else {
+          result.receiver_ = receiverBuilder_.build();
         }
-        result.owner_ = owner_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.signature_ = signature_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
-        }
-        result.kind_ = kind_;
-        result.args_ = internalGetArgs();
-        result.args_.makeImmutable();
-        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
-          to_bitField0_ |= 0x00000020;
-        }
-        result.receiver_ = receiver_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1073,36 +705,12 @@ public final class MethodInvocation {
       public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.MthdInvc other) {
         if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocation.MthdInvc.getDefaultInstance()) return this;
         if (other.hasId()) {
-          bitField0_ |= 0x00000001;
-          id_ = other.id_;
-          onChanged();
+          mergeId(other.getId());
         }
-        if (other.hasName()) {
-          bitField0_ |= 0x00000002;
-          name_ = other.name_;
-          onChanged();
-        }
-        if (other.hasOwner()) {
-          bitField0_ |= 0x00000004;
-          owner_ = other.owner_;
-          onChanged();
-        }
-        if (other.hasSignature()) {
-          bitField0_ |= 0x00000008;
-          signature_ = other.signature_;
-          onChanged();
-        }
-        if (other.hasKind()) {
-          bitField0_ |= 0x00000010;
-          kind_ = other.kind_;
-          onChanged();
-        }
-        internalGetMutableArgs().mergeFrom(
-            other.internalGetArgs());
+        internalGetMutableArguments().mergeFrom(
+            other.internalGetArguments());
         if (other.hasReceiver()) {
-          bitField0_ |= 0x00000040;
-          receiver_ = other.receiver_;
-          onChanged();
+          mergeReceiver(other.getReceiver());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1110,21 +718,6 @@ public final class MethodInvocation {
       }
 
       public final boolean isInitialized() {
-        if (!hasId()) {
-          return false;
-        }
-        if (!hasName()) {
-          return false;
-        }
-        if (!hasOwner()) {
-          return false;
-        }
-        if (!hasSignature()) {
-          return false;
-        }
-        if (!hasKind()) {
-          return false;
-        }
         return true;
       }
 
@@ -1147,495 +740,233 @@ public final class MethodInvocation {
       }
       private int bitField0_;
 
-      private java.lang.Object id_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id id_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> idBuilder_;
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
       public boolean hasId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
-      public java.lang.String getId() {
-        java.lang.Object ref = id_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            id_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getId() {
+        if (idBuilder_ == null) {
+          return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : id_;
+        } else {
+          return idBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.Id id = 1;</code>
+       */
+      public Builder setId(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (idBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          id_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          idBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000001;
+        return this;
       }
       /**
-       * <code>required string id = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getIdBytes() {
-        java.lang.Object ref = id_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          id_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
       public Builder setId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        id_ = value;
-        onChanged();
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+        if (idBuilder_ == null) {
+          id_ = builderForValue.build();
+          onChanged();
+        } else {
+          idBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
+       */
+      public Builder mergeId(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (idBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              id_ != null &&
+              id_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+            id_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(id_).mergeFrom(value).buildPartial();
+          } else {
+            id_ = value;
+          }
+          onChanged();
+        } else {
+          idBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Id id = 1;</code>
        */
       public Builder clearId() {
+        if (idBuilder_ == null) {
+          id_ = null;
+          onChanged();
+        } else {
+          idBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        id_ = getDefaultInstance().getId();
-        onChanged();
         return this;
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
-      public Builder setIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        id_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getIdBuilder() {
+        bitField0_ |= 0x00000001;
         onChanged();
-        return this;
-      }
-
-      private java.lang.Object name_ = "";
-      /**
-       * <code>required string name = 2;</code>
-       */
-      public boolean hasName() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return getIdFieldBuilder().getBuilder();
       }
       /**
-       * <code>required string name = 2;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            name_ = s;
-          }
-          return s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getIdOrBuilder() {
+        if (idBuilder_ != null) {
+          return idBuilder_.getMessageOrBuilder();
         } else {
-          return (java.lang.String) ref;
+          return id_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : id_;
         }
       }
       /**
-       * <code>required string name = 2;</code>
+       * <code>optional .Models.Id id = 1;</code>
        */
-      public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          name_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          getIdFieldBuilder() {
+        if (idBuilder_ == null) {
+          idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+                  getId(),
+                  getParentForChildren(),
+                  isClean());
+          id_ = null;
         }
-      }
-      /**
-       * <code>required string name = 2;</code>
-       */
-      public Builder setName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        name_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string name = 2;</code>
-       */
-      public Builder clearName() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        name_ = getDefaultInstance().getName();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string name = 2;</code>
-       */
-      public Builder setNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        name_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object owner_ = "";
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public boolean hasOwner() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public java.lang.String getOwner() {
-        java.lang.Object ref = owner_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            owner_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getOwnerBytes() {
-        java.lang.Object ref = owner_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          owner_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public Builder setOwner(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        owner_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public Builder clearOwner() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        owner_ = getDefaultInstance().getOwner();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string owner = 3;</code>
-       */
-      public Builder setOwnerBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        owner_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object signature_ = "";
-      /**
-       * <code>required string signature = 4;</code>
-       */
-      public boolean hasSignature() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>required string signature = 4;</code>
-       */
-      public java.lang.String getSignature() {
-        java.lang.Object ref = signature_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            signature_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string signature = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getSignatureBytes() {
-        java.lang.Object ref = signature_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          signature_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string signature = 4;</code>
-       */
-      public Builder setSignature(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        signature_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string signature = 4;</code>
-       */
-      public Builder clearSignature() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        signature_ = getDefaultInstance().getSignature();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string signature = 4;</code>
-       */
-      public Builder setSignatureBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        signature_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object kind_ = "";
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public boolean hasKind() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public java.lang.String getKind() {
-        java.lang.Object ref = kind_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            kind_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getKindBytes() {
-        java.lang.Object ref = kind_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          kind_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public Builder setKind(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        kind_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public Builder clearKind() {
-        bitField0_ = (bitField0_ & ~0x00000010);
-        kind_ = getDefaultInstance().getKind();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string kind = 5;</code>
-       */
-      public Builder setKindBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        kind_ = value;
-        onChanged();
-        return this;
+        return idBuilder_;
       }
 
       private com.google.protobuf.MapField<
-          java.lang.Integer, java.lang.String> args_;
-      private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
-      internalGetArgs() {
-        if (args_ == null) {
+          java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> arguments_;
+      private com.google.protobuf.MapField<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id>
+      internalGetArguments() {
+        if (arguments_ == null) {
           return com.google.protobuf.MapField.emptyMapField(
-              ArgsDefaultEntryHolder.defaultEntry);
+              ArgumentsDefaultEntryHolder.defaultEntry);
         }
-        return args_;
+        return arguments_;
       }
-      private com.google.protobuf.MapField<java.lang.Integer, java.lang.String>
-      internalGetMutableArgs() {
+      private com.google.protobuf.MapField<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id>
+      internalGetMutableArguments() {
         onChanged();;
-        if (args_ == null) {
-          args_ = com.google.protobuf.MapField.newMapField(
-              ArgsDefaultEntryHolder.defaultEntry);
+        if (arguments_ == null) {
+          arguments_ = com.google.protobuf.MapField.newMapField(
+              ArgumentsDefaultEntryHolder.defaultEntry);
         }
-        if (!args_.isMutable()) {
-          args_ = args_.copy();
+        if (!arguments_.isMutable()) {
+          arguments_ = arguments_.copy();
         }
-        return args_;
+        return arguments_;
       }
 
-      public int getArgsCount() {
-        return internalGetArgs().getMap().size();
+      public int getArgumentsCount() {
+        return internalGetArguments().getMap().size();
       }
       /**
        * <pre>
-       * index against id | kind| additional info
+       * index -&gt; arg
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; args = 6;</code>
+       * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
        */
 
-      public boolean containsArgs(
+      public boolean containsArguments(
           int key) {
         
-        return internalGetArgs().getMap().containsKey(key);
+        return internalGetArguments().getMap().containsKey(key);
       }
       /**
-       * Use {@link #getArgsMap()} instead.
+       * Use {@link #getArgumentsMap()} instead.
        */
       @java.lang.Deprecated
-      public java.util.Map<java.lang.Integer, java.lang.String> getArgs() {
-        return getArgsMap();
+      public java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> getArguments() {
+        return getArgumentsMap();
       }
       /**
        * <pre>
-       * index against id | kind| additional info
+       * index -&gt; arg
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; args = 6;</code>
+       * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
        */
 
-      public java.util.Map<java.lang.Integer, java.lang.String> getArgsMap() {
-        return internalGetArgs().getMap();
+      public java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> getArgumentsMap() {
+        return internalGetArguments().getMap();
       }
       /**
        * <pre>
-       * index against id | kind| additional info
+       * index -&gt; arg
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; args = 6;</code>
+       * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
        */
 
-      public java.lang.String getArgsOrDefault(
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getArgumentsOrDefault(
           int key,
-          java.lang.String defaultValue) {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id defaultValue) {
         
-        java.util.Map<java.lang.Integer, java.lang.String> map =
-            internalGetArgs().getMap();
+        java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> map =
+            internalGetArguments().getMap();
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
        * <pre>
-       * index against id | kind| additional info
+       * index -&gt; arg
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; args = 6;</code>
+       * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
        */
 
-      public java.lang.String getArgsOrThrow(
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getArgumentsOrThrow(
           int key) {
         
-        java.util.Map<java.lang.Integer, java.lang.String> map =
-            internalGetArgs().getMap();
+        java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> map =
+            internalGetArguments().getMap();
         if (!map.containsKey(key)) {
           throw new java.lang.IllegalArgumentException();
         }
         return map.get(key);
       }
 
-      public Builder clearArgs() {
-        internalGetMutableArgs().getMutableMap()
+      public Builder clearArguments() {
+        internalGetMutableArguments().getMutableMap()
             .clear();
         return this;
       }
       /**
        * <pre>
-       * index against id | kind| additional info
+       * index -&gt; arg
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; args = 6;</code>
+       * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
        */
 
-      public Builder removeArgs(
+      public Builder removeArguments(
           int key) {
         
-        internalGetMutableArgs().getMutableMap()
+        internalGetMutableArguments().getMutableMap()
             .remove(key);
         return this;
       }
@@ -1643,115 +974,157 @@ public final class MethodInvocation {
        * Use alternate mutation accessors instead.
        */
       @java.lang.Deprecated
-      public java.util.Map<java.lang.Integer, java.lang.String>
-      getMutableArgs() {
-        return internalGetMutableArgs().getMutableMap();
+      public java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id>
+      getMutableArguments() {
+        return internalGetMutableArguments().getMutableMap();
       }
       /**
        * <pre>
-       * index against id | kind| additional info
+       * index -&gt; arg
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; args = 6;</code>
+       * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
        */
-      public Builder putArgs(
+      public Builder putArguments(
           int key,
-          java.lang.String value) {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
         
         if (value == null) { throw new java.lang.NullPointerException(); }
-        internalGetMutableArgs().getMutableMap()
+        internalGetMutableArguments().getMutableMap()
             .put(key, value);
         return this;
       }
       /**
        * <pre>
-       * index against id | kind| additional info
+       * index -&gt; arg
        * </pre>
        *
-       * <code>map&lt;int32, string&gt; args = 6;</code>
+       * <code>map&lt;int32, .Models.Id&gt; arguments = 2;</code>
        */
 
-      public Builder putAllArgs(
-          java.util.Map<java.lang.Integer, java.lang.String> values) {
-        internalGetMutableArgs().getMutableMap()
+      public Builder putAllArguments(
+          java.util.Map<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id> values) {
+        internalGetMutableArguments().getMutableMap()
             .putAll(values);
         return this;
       }
 
-      private java.lang.Object receiver_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id receiver_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> receiverBuilder_;
       /**
-       * <code>optional string receiver = 7;</code>
+       * <code>optional .Models.Id receiver = 3;</code>
        */
       public boolean hasReceiver() {
-        return ((bitField0_ & 0x00000040) == 0x00000040);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional string receiver = 7;</code>
+       * <code>optional .Models.Id receiver = 3;</code>
        */
-      public java.lang.String getReceiver() {
-        java.lang.Object ref = receiver_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            receiver_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getReceiver() {
+        if (receiverBuilder_ == null) {
+          return receiver_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : receiver_;
+        } else {
+          return receiverBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.Id receiver = 3;</code>
+       */
+      public Builder setReceiver(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (receiverBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          receiver_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          receiverBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000004;
+        return this;
       }
       /**
-       * <code>optional string receiver = 7;</code>
-       */
-      public com.google.protobuf.ByteString
-          getReceiverBytes() {
-        java.lang.Object ref = receiver_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          receiver_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string receiver = 7;</code>
+       * <code>optional .Models.Id receiver = 3;</code>
        */
       public Builder setReceiver(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000040;
-        receiver_ = value;
-        onChanged();
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+        if (receiverBuilder_ == null) {
+          receiver_ = builderForValue.build();
+          onChanged();
+        } else {
+          receiverBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>optional string receiver = 7;</code>
+       * <code>optional .Models.Id receiver = 3;</code>
+       */
+      public Builder mergeReceiver(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+        if (receiverBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              receiver_ != null &&
+              receiver_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+            receiver_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(receiver_).mergeFrom(value).buildPartial();
+          } else {
+            receiver_ = value;
+          }
+          onChanged();
+        } else {
+          receiverBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Id receiver = 3;</code>
        */
       public Builder clearReceiver() {
-        bitField0_ = (bitField0_ & ~0x00000040);
-        receiver_ = getDefaultInstance().getReceiver();
-        onChanged();
+        if (receiverBuilder_ == null) {
+          receiver_ = null;
+          onChanged();
+        } else {
+          receiverBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       /**
-       * <code>optional string receiver = 7;</code>
+       * <code>optional .Models.Id receiver = 3;</code>
        */
-      public Builder setReceiverBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000040;
-        receiver_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getReceiverBuilder() {
+        bitField0_ |= 0x00000004;
         onChanged();
-        return this;
+        return getReceiverFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .Models.Id receiver = 3;</code>
+       */
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getReceiverOrBuilder() {
+        if (receiverBuilder_ != null) {
+          return receiverBuilder_.getMessageOrBuilder();
+        } else {
+          return receiver_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : receiver_;
+        }
+      }
+      /**
+       * <code>optional .Models.Id receiver = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          getReceiverFieldBuilder() {
+        if (receiverBuilder_ == null) {
+          receiverBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+                  getReceiver(),
+                  getParentForChildren(),
+                  isClean());
+          receiver_ = null;
+        }
+        return receiverBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1808,10 +1181,10 @@ public final class MethodInvocation {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Models_MthdInvc_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Models_MthdInvc_ArgsEntry_descriptor;
+    internal_static_Models_MthdInvc_ArgumentsEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Models_MthdInvc_ArgsEntry_fieldAccessorTable;
+      internal_static_Models_MthdInvc_ArgumentsEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1821,14 +1194,14 @@ public final class MethodInvocation {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016MthdInvc.proto\022\006Models\"\275\001\n\010MthdInvc\022\n\n" +
-      "\002id\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\022\r\n\005owner\030\003 \002(\t\022\021" +
-      "\n\tsignature\030\004 \002(\t\022\014\n\004kind\030\005 \002(\t\022(\n\004args\030" +
-      "\006 \003(\0132\032.Models.MthdInvc.ArgsEntry\022\020\n\010rec" +
-      "eiver\030\007 \001(\t\032+\n\tArgsEntry\022\013\n\003key\030\001 \001(\005\022\r\n" +
-      "\005value\030\002 \001(\t:\0028\001BR\n>com.google.errorpron" +
-      "e.bugpatterns.refactoringexperiment.mode" +
-      "lsB\020MethodInvocation"
+      "\n\016MthdInvc.proto\022\006Models\032\024Identification" +
+      ".proto\"\262\001\n\010MthdInvc\022\026\n\002id\030\001 \001(\0132\n.Models" +
+      ".Id\0222\n\targuments\030\002 \003(\0132\037.Models.MthdInvc" +
+      ".ArgumentsEntry\022\034\n\010receiver\030\003 \001(\0132\n.Mode" +
+      "ls.Id\032<\n\016ArgumentsEntry\022\013\n\003key\030\001 \001(\005\022\031\n\005" +
+      "value\030\002 \001(\0132\n.Models.Id:\0028\001BR\n>com.googl" +
+      "e.errorprone.bugpatterns.refactoringexpe" +
+      "riment.modelsB\020MethodInvocation"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1841,19 +1214,21 @@ public final class MethodInvocation {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor(),
         }, assigner);
     internal_static_Models_MthdInvc_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Models_MthdInvc_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_MthdInvc_descriptor,
-        new java.lang.String[] { "Id", "Name", "Owner", "Signature", "Kind", "Args", "Receiver", });
-    internal_static_Models_MthdInvc_ArgsEntry_descriptor =
+        new java.lang.String[] { "Id", "Arguments", "Receiver", });
+    internal_static_Models_MthdInvc_ArgumentsEntry_descriptor =
       internal_static_Models_MthdInvc_descriptor.getNestedTypes().get(0);
-    internal_static_Models_MthdInvc_ArgsEntry_fieldAccessorTable = new
+    internal_static_Models_MthdInvc_ArgumentsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Models_MthdInvc_ArgsEntry_descriptor,
+        internal_static_Models_MthdInvc_ArgumentsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

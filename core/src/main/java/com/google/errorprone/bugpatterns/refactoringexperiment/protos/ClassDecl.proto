@@ -1,14 +1,11 @@
 syntax = "proto2";
-
+import "Identification.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
 option java_outer_classname = "ClassDecl";
 
 message clsDcl {
-  required string name = 1;
-  required string owner = 2;
-  repeated string super_type = 3;
-  required string kind = 4;
-
+    optional Id id = 1;
+    repeated string super_type = 2;
  }

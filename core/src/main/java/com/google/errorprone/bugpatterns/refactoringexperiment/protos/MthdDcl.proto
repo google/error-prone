@@ -1,17 +1,14 @@
 syntax = "proto2";
+import "Identification.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
 option java_outer_classname = "MethodDeclaration";
 
 message MthdDcl {
-  required string id = 1;
-  required string name = 2;
-  required string owner = 3;
-  required string signature = 4;
-  required string kind = 5;
-  optional string return_type = 6;
-  map<int32,string> param = 7; // index against id
-  repeated string modifier = 8;
-  optional string super_method_in = 9;
+  optional Id id = 1;
+  optional string return_type = 2;
+  map<int32, Id> parameters = 3; // index -> parameter
+  repeated string modifier = 4;
+  optional string super_method_in = 5;
  }

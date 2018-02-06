@@ -1,15 +1,11 @@
 syntax = "proto2";
-
+import "Identification.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
 option java_outer_classname = "Variable";
 
 message Vrbl {
-  required string id = 1;
-  required string name = 2;
-  required string owner = 3;
-  required string type = 4;
-  required string kind = 5;
-  optional string initializer = 6; //id | kind| additional info
+  optional Id id = 1;
+  optional Id initializer = 2;
  }
