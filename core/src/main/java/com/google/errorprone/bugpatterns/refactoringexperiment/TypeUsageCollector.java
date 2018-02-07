@@ -187,7 +187,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             Identification.Builder id = Identification.newBuilder();
             id.setName(getName(symb))
                     .setKind(getKindFromTree(tree).or(symb.getKind().toString()))
-                    .setOwner(getName(symb.owner))
+                    .setOwner(symb.owner.toString())
                     .setType(symb.type.toString());
             return Optional.of(id);
         } catch (Exception e) {
