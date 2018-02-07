@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,4 +90,32 @@ public class MissingOverrideTest {
             "Test.java", "public class Test extends Super {", "  public void f() {}", "}")
         .doTest();
   }
+
+  @Test
+  public void interfaceOverride() throws Exception {
+    compilationHelper
+        .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
+        .addSourceLines(
+            "Test.java",
+            "public interface Test extends Super {",
+            "  // BUG: Diagnostic contains: f implements method in Super; expected @Override",
+            "  void f();",
+            "}")
+        .doTest();
+  }
+
+  // this doesn't work!  need new APIs in CompilationTestHelper
+//  @Test
+//  public void ignoreInterfaceOverride() throws Exception {
+//    compilationHelper
+//        .setArgs(ImmutableList.of("-XepOpt:MissingOverride:IgnoreInterfaceOverrides=true"));
+//    compilationHelper
+//        .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
+//        .addSourceLines(
+//            "Test.java",
+//            "public interface Test extends Super {",
+//            "  void f();",
+//            "}")
+//        .doTest();
+//  }
 }
