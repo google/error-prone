@@ -34,8 +34,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.lang.model.element.ElementKind;
-
 @AutoService(BugChecker.class)
 @BugPattern(
         name = "TypeUsageCollector",
@@ -131,6 +129,8 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             if (var1.getInitializer() != null)
                 vrbl.setInitializer(infoOfTree(var1.getInitializer()));
 
+            vrbl.setEnclosingClass(getEnclosingClass(var1));
+
             ProtoBuffPersist.write(vrbl, var1.getKind().toString());
         }
         return null;
@@ -189,7 +189,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             Identification.Builder id = Identification.newBuilder();
             id.setName(getName(symb))
                     .setKind(getKindFromTree(tree).or(symb.getKind().toString()))
-                    .setOwner(getOwner(symb))
+                    .setOwner(getName(symb.owner))
                     .setType(symb.type.toString());
             return Optional.of(id);
         } catch (Exception e) {
@@ -207,10 +207,12 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         return symb.isConstructor() ? symb.enclClass().toString() : symb.name.toString();
     }
 
-    public static String getOwner(Symbol symb) {
-        return (symb.owner.getKind().equals(ElementKind.METHOD) || symb.owner.getKind().equals(ElementKind.CONSTRUCTOR) ?
-                symb.owner.owner.toString()  : symb.owner.toString());
-
+    public static String getEnclosingClass(Tree tree){
+        try{
+            return  ASTHelpers.getSymbol(tree).enclClass().toString();
+        }catch (Exception e) {
+            return "";
+        }
     }
 
 

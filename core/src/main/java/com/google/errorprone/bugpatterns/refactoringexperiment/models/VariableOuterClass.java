@@ -43,6 +43,20 @@ public final class VariableOuterClass {
      * <code>optional .Models.Identification initializer = 2;</code>
      */
     com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getInitializerOrBuilder();
+
+    /**
+     * <code>optional string enclosingClass = 3;</code>
+     */
+    boolean hasEnclosingClass();
+    /**
+     * <code>optional string enclosingClass = 3;</code>
+     */
+    java.lang.String getEnclosingClass();
+    /**
+     * <code>optional string enclosingClass = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getEnclosingClassBytes();
   }
   /**
    * Protobuf type {@code Models.Variable}
@@ -57,6 +71,7 @@ public final class VariableOuterClass {
       super(builder);
     }
     private Variable() {
+      enclosingClass_ = "";
     }
 
     @java.lang.Override
@@ -114,6 +129,12 @@ public final class VariableOuterClass {
                 initializer_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000002;
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              enclosingClass_ = bs;
               break;
             }
           }
@@ -183,6 +204,48 @@ public final class VariableOuterClass {
       return initializer_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : initializer_;
     }
 
+    public static final int ENCLOSINGCLASS_FIELD_NUMBER = 3;
+    private volatile java.lang.Object enclosingClass_;
+    /**
+     * <code>optional string enclosingClass = 3;</code>
+     */
+    public boolean hasEnclosingClass() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string enclosingClass = 3;</code>
+     */
+    public java.lang.String getEnclosingClass() {
+      java.lang.Object ref = enclosingClass_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          enclosingClass_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string enclosingClass = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEnclosingClassBytes() {
+      java.lang.Object ref = enclosingClass_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        enclosingClass_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -201,6 +264,9 @@ public final class VariableOuterClass {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeMessage(2, getInitializer());
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, enclosingClass_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -216,6 +282,9 @@ public final class VariableOuterClass {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getInitializer());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, enclosingClass_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -243,6 +312,11 @@ public final class VariableOuterClass {
         result = result && getInitializer()
             .equals(other.getInitializer());
       }
+      result = result && (hasEnclosingClass() == other.hasEnclosingClass());
+      if (hasEnclosingClass()) {
+        result = result && getEnclosingClass()
+            .equals(other.getEnclosingClass());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -261,6 +335,10 @@ public final class VariableOuterClass {
       if (hasInitializer()) {
         hash = (37 * hash) + INITIALIZER_FIELD_NUMBER;
         hash = (53 * hash) + getInitializer().hashCode();
+      }
+      if (hasEnclosingClass()) {
+        hash = (37 * hash) + ENCLOSINGCLASS_FIELD_NUMBER;
+        hash = (53 * hash) + getEnclosingClass().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -405,6 +483,8 @@ public final class VariableOuterClass {
           initializerBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
+        enclosingClass_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -445,6 +525,10 @@ public final class VariableOuterClass {
         } else {
           result.initializer_ = initializerBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.enclosingClass_ = enclosingClass_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -492,6 +576,11 @@ public final class VariableOuterClass {
         }
         if (other.hasInitializer()) {
           mergeInitializer(other.getInitializer());
+        }
+        if (other.hasEnclosingClass()) {
+          bitField0_ |= 0x00000004;
+          enclosingClass_ = other.enclosingClass_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -756,6 +845,82 @@ public final class VariableOuterClass {
         }
         return initializerBuilder_;
       }
+
+      private java.lang.Object enclosingClass_ = "";
+      /**
+       * <code>optional string enclosingClass = 3;</code>
+       */
+      public boolean hasEnclosingClass() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional string enclosingClass = 3;</code>
+       */
+      public java.lang.String getEnclosingClass() {
+        java.lang.Object ref = enclosingClass_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            enclosingClass_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string enclosingClass = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEnclosingClassBytes() {
+        java.lang.Object ref = enclosingClass_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          enclosingClass_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string enclosingClass = 3;</code>
+       */
+      public Builder setEnclosingClass(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        enclosingClass_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string enclosingClass = 3;</code>
+       */
+      public Builder clearEnclosingClass() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        enclosingClass_ = getDefaultInstance().getEnclosingClass();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string enclosingClass = 3;</code>
+       */
+      public Builder setEnclosingClassBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        enclosingClass_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -820,11 +985,11 @@ public final class VariableOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\016Variable.proto\022\006Models\032\024Identification" +
-      ".proto\"[\n\010Variable\022\"\n\002id\030\001 \001(\0132\026.Models." +
+      ".proto\"s\n\010Variable\022\"\n\002id\030\001 \001(\0132\026.Models." +
       "Identification\022+\n\013initializer\030\002 \001(\0132\026.Mo" +
-      "dels.IdentificationB@\n>com.google.errorp" +
-      "rone.bugpatterns.refactoringexperiment.m" +
-      "odels"
+      "dels.Identification\022\026\n\016enclosingClass\030\003 " +
+      "\001(\tB@\n>com.google.errorprone.bugpatterns" +
+      ".refactoringexperiment.models"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -844,7 +1009,7 @@ public final class VariableOuterClass {
     internal_static_Models_Variable_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_Variable_descriptor,
-        new java.lang.String[] { "Id", "Initializer", });
+        new java.lang.String[] { "Id", "Initializer", "EnclosingClass", });
     com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor();
   }
 

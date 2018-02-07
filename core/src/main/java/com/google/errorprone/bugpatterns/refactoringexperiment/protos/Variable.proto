@@ -7,4 +7,5 @@ option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.m
 message Variable {
   optional Identification id = 1;
   optional Identification initializer = 2;
+  optional string enclosingClass = 3;
  }
