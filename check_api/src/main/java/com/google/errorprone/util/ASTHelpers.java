@@ -16,13 +16,14 @@
 
 package com.google.errorprone.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -32,12 +33,17 @@ import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
+import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.IfTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -49,10 +55,13 @@ import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute;
@@ -98,6 +107,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -1024,6 +1034,58 @@ public class ASTHelpers {
   }
 
   /**
+   * Implementation of unary numeric promotion rules.
+   *
+   * <p><a href="https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.1">JLS
+   * §5.6.1</a>
+   */
+  @Nullable
+  private static Type unaryNumericPromotion(Type type, VisitorState state) {
+    Type unboxed = unboxAndEnsureNumeric(type, state);
+    switch (unboxed.getTag()) {
+      case BYTE:
+      case SHORT:
+      case CHAR:
+        return state.getSymtab().intType;
+      case INT:
+      case LONG:
+      case FLOAT:
+      case DOUBLE:
+        return unboxed;
+      default:
+        throw new AssertionError("Should not reach here: " + type);
+    }
+  }
+
+  /**
+   * Implementation of binary numeric promotion rules.
+   *
+   * <p><a href="https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.2">JLS
+   * §5.6.2</a>
+   */
+  @Nullable
+  private static Type binaryNumericPromotion(Type leftType, Type rightType, VisitorState state) {
+    Type unboxedLeft = unboxAndEnsureNumeric(leftType, state);
+    Type unboxedRight = unboxAndEnsureNumeric(rightType, state);
+    Set<TypeTag> tags = EnumSet.of(unboxedLeft.getTag(), unboxedRight.getTag());
+    if (tags.contains(TypeTag.DOUBLE)) {
+      return state.getSymtab().doubleType;
+    } else if (tags.contains(TypeTag.FLOAT)) {
+      return state.getSymtab().floatType;
+    } else if (tags.contains(TypeTag.LONG)) {
+      return state.getSymtab().longType;
+    } else {
+      return state.getSymtab().intType;
+    }
+  }
+
+  private static Type unboxAndEnsureNumeric(Type type, VisitorState state) {
+    Type unboxed = state.getTypes().unboxedTypeOrType(type);
+    checkArgument(unboxed.isNumeric(), "[%s] is not numeric", type);
+    return unboxed;
+  }
+
+  /**
    * Returns the target type of the tree at the given {@link VisitorState}'s path, or else {@code
    * null}.
    *
@@ -1032,87 +1094,242 @@ public class ASTHelpers {
    */
   @Nullable
   public static TargetType targetType(VisitorState state) {
-    TreePath path = state.getPath();
-    TreePath prev = null;
-    do {
-      prev = path;
-      path = path.getParentPath();
-    } while (path != null && path.getLeaf().getKind() == Kind.PARENTHESIZED);
-    if (path == null) {
+    if (!(state.getPath().getLeaf() instanceof ExpressionTree)) {
       return null;
     }
-    TreePath current = prev;
-    TreePath parent = path;
-    Type type =
-        new TreeScanner<Type, Void>() {
-          @Override
-          public Type visitAssignment(AssignmentTree node, Void unused) {
-            return getType(node.getVariable());
-          }
-
-          @Override
-          public Type visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
-            return getType(node.getVariable());
-          }
-
-          @Override
-          public Type visitLambdaExpression(
-              LambdaExpressionTree lambdaExpressionTree, Void unused) {
-            return state
-                .getTypes()
-                .findDescriptorType(getType(lambdaExpressionTree))
-                .getReturnType();
-          }
-
-          @Override
-          public Type visitReturn(ReturnTree node, Void unused) {
-            for (TreePath path = parent; path != null; path = path.getParentPath()) {
-              Tree enclosing = path.getLeaf();
-              switch (enclosing.getKind()) {
-                case METHOD:
-                  return getType(((MethodTree) enclosing).getReturnType());
-                case LAMBDA_EXPRESSION:
-                  return visitLambdaExpression((LambdaExpressionTree) enclosing, null);
-                default: // fall out
-              }
-            }
-            throw new AssertionError("return not enclosed by method or lambda");
-          }
-
-          @Override
-          public Type visitVariable(VariableTree node, Void unused) {
-            return getType(node.getType());
-          }
-
-          @Override
-          public Type visitBinary(BinaryTree tree, Void unused) {
-            return ASTHelpers.getType(
-                tree.getLeftOperand().equals(current.getLeaf())
-                    ? tree.getRightOperand()
-                    : tree.getLeftOperand());
-          }
-
-          @Override
-          public Type visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-            int idx = tree.getArguments().indexOf(current.getLeaf());
-            if (idx == -1) {
-              return null;
-            }
-            MethodSymbol sym = ASTHelpers.getSymbol(tree);
-            if (sym.getParameters().size() <= idx) {
-              Preconditions.checkState(sym.isVarArgs());
-              idx = sym.getParameters().size() - 1;
-            }
-            Type type = sym.getParameters().get(idx).asType();
-            if (sym.isVarArgs() && idx == sym.getParameters().size() - 1) {
-              type = state.getTypes().elemtype(type);
-            }
-            return type;
-          }
-        }.scan(parent.getLeaf(), null);
+    TreePath parent = state.getPath();
+    ExpressionTree current;
+    do {
+      current = (ExpressionTree) parent.getLeaf();
+      parent = parent.getParentPath();
+    } while (parent != null && parent.getLeaf().getKind() == Kind.PARENTHESIZED);
+    if (parent == null) {
+      return null;
+    }
+    Type type = new TargetTypeScanner(current, state, parent).scan(parent.getLeaf(), null);
     if (type == null) {
       return null;
     }
     return TargetType.create(type, parent);
+  }
+
+  private static class TargetTypeScanner extends TreeScanner<Type, Void> {
+    private final VisitorState state;
+    private final TreePath parent;
+    private final ExpressionTree current;
+
+    private TargetTypeScanner(ExpressionTree current, VisitorState state, TreePath parent) {
+      this.current = current;
+      this.state = state;
+      this.parent = parent;
+    }
+
+    @Override
+    public Type visitArrayAccess(ArrayAccessTree node, Void aVoid) {
+      if (current.equals(node.getIndex())) {
+        return state.getSymtab().intType;
+      } else {
+        return getType(node.getExpression());
+      }
+    }
+
+    @Override
+    public Type visitAssignment(AssignmentTree tree, Void unused) {
+      return getType(tree.getVariable());
+    }
+
+    @Override
+    public Type visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
+      switch (tree.getKind()) {
+        case LEFT_SHIFT_ASSIGNMENT:
+        case RIGHT_SHIFT_ASSIGNMENT:
+        case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
+          // Shift operators perform *unary* numeric promotion on the operands, separately.
+          if (tree.getExpression().equals(current)) {
+            return unaryNumericPromotion(ASTHelpers.getType(current), state);
+          }
+          // Fall through.
+        default:
+          return getType(tree.getVariable());
+      }
+    }
+
+    @Override
+    public Type visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree, Void unused) {
+      return state.getTypes().findDescriptorType(getType(lambdaExpressionTree)).getReturnType();
+    }
+
+    @Override
+    public Type visitReturn(ReturnTree tree, Void unused) {
+      for (TreePath path = parent; path != null; path = path.getParentPath()) {
+        Tree enclosing = path.getLeaf();
+        switch (enclosing.getKind()) {
+          case METHOD:
+            return getType(((MethodTree) enclosing).getReturnType());
+          case LAMBDA_EXPRESSION:
+            return visitLambdaExpression((LambdaExpressionTree) enclosing, null);
+          default: // fall out
+        }
+      }
+      throw new AssertionError("return not enclosed by method or lambda");
+    }
+
+    @Override
+    public Type visitVariable(VariableTree tree, Void unused) {
+      return getType(tree.getType());
+    }
+
+    @Override
+    public Type visitUnary(UnaryTree tree, Void unused) {
+      return getType(tree);
+    }
+
+    @Override
+    public Type visitBinary(BinaryTree tree, Void unused) {
+      Type leftType = checkNotNull(getType(tree.getLeftOperand()));
+      Type rightType = checkNotNull(getType(tree.getRightOperand()));
+      switch (tree.getKind()) {
+          // The addition and subtraction operators for numeric types + and - (§15.18.2)
+        case PLUS:
+          // If either operand is of string type, string concatenation is performed.
+          Type stringType = state.getSymtab().stringType;
+          if (isSameType(stringType, leftType, state) || isSameType(stringType, rightType, state)) {
+            return stringType;
+          }
+          // Fall through.
+        case MINUS:
+          // The multiplicative operators *, /, and % (§15.17)
+        case MULTIPLY:
+        case DIVIDE:
+        case REMAINDER:
+          // The numerical comparison operators <, <=, >, and >= (§15.20.1)
+        case LESS_THAN:
+        case LESS_THAN_EQUAL:
+        case GREATER_THAN:
+        case GREATER_THAN_EQUAL:
+          // The integer bitwise operators &, ^, and |
+        case AND:
+        case XOR:
+        case OR:
+          if (typeIsBoolean(state.getTypes().unboxedTypeOrType(leftType))
+              && typeIsBoolean(state.getTypes().unboxedTypeOrType(rightType))) {
+            return state.getSymtab().booleanType;
+          }
+          return binaryNumericPromotion(leftType, rightType, state);
+        case EQUAL_TO:
+        case NOT_EQUAL_TO:
+          return handleEqualityOperator(tree, leftType, rightType);
+        case LEFT_SHIFT:
+        case RIGHT_SHIFT:
+        case UNSIGNED_RIGHT_SHIFT:
+          // Shift operators perform *unary* numeric promotion on the operands, separately.
+          return unaryNumericPromotion(getType(current), state);
+        default:
+          return getType(tree);
+      }
+    }
+
+    private Type handleEqualityOperator(BinaryTree tree, Type leftType, Type rightType) {
+      Type unboxedLeft = checkNotNull(state.getTypes().unboxedTypeOrType(leftType));
+      Type unboxedRight = checkNotNull(state.getTypes().unboxedTypeOrType(rightType));
+
+      // If the operands of an equality operator are both of numeric type, or one is of numeric
+      // type and the other is convertible (§5.1.8) to numeric type, binary numeric promotion is
+      // performed on the operands (§5.6.2).
+      if ((leftType.isNumeric() && rightType.isNumeric())
+          || (leftType.isNumeric() != rightType.isNumeric()
+              && (unboxedLeft.isNumeric() || unboxedRight.isNumeric()))) {
+        // https://docs.oracle.com/javase/specs/jls/se9/html/jls-15.html#jls-15.21.1
+        // Numerical equality.
+        return binaryNumericPromotion(unboxedLeft, unboxedRight, state);
+      }
+
+      // If the operands of an equality operator are both of type boolean, or if one operand is
+      // of type boolean and the other is of type Boolean, then the operation is boolean
+      // equality.
+      boolean leftIsBoolean = typeIsBoolean(leftType);
+      boolean rightIsBoolean = typeIsBoolean(rightType);
+      if ((leftIsBoolean && rightIsBoolean)
+          || (leftIsBoolean != rightIsBoolean
+              && (typeIsBoolean(unboxedLeft) || typeIsBoolean(unboxedRight)))) {
+        return state.getSymtab().booleanType;
+      }
+
+      // If the operands of an equality operator are both of either reference type or the null
+      // type, then the operation is object equality.
+      return tree.getLeftOperand().equals(current) ? leftType : rightType;
+    }
+
+    private static boolean typeIsBoolean(Type type) {
+      return type.getTag() == TypeTag.BOOLEAN;
+    }
+
+    @Override
+    public Type visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
+      return tree.getCondition().equals(current) ? state.getSymtab().booleanType : getType(tree);
+    }
+
+    @Override
+    public Type visitNewClass(NewClassTree tree, Void unused) {
+      return visitMethodInvocationOrNewClass(tree.getArguments(), ASTHelpers.getSymbol(tree));
+    }
+
+    @Override
+    public Type visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+      return visitMethodInvocationOrNewClass(tree.getArguments(), ASTHelpers.getSymbol(tree));
+    }
+
+    private Type visitMethodInvocationOrNewClass(
+        List<? extends ExpressionTree> arguments, MethodSymbol sym) {
+      int idx = arguments.indexOf(current);
+      if (idx == -1) {
+        return null;
+      }
+      if (sym.getParameters().size() <= idx) {
+        checkState(sym.isVarArgs());
+        idx = sym.getParameters().size() - 1;
+      }
+      Type type = sym.getParameters().get(idx).asType();
+      if (sym.isVarArgs() && idx == sym.getParameters().size() - 1) {
+        type = state.getTypes().elemtype(type);
+      }
+      return type;
+    }
+
+    @Override
+    public Type visitIf(IfTree tree, Void unused) {
+      return getConditionType(tree.getCondition());
+    }
+
+    @Override
+    public Type visitWhileLoop(WhileLoopTree tree, Void unused) {
+      return getConditionType(tree.getCondition());
+    }
+
+    @Override
+    public Type visitDoWhileLoop(DoWhileLoopTree tree, Void unused) {
+      return getConditionType(tree.getCondition());
+    }
+
+    @Override
+    public Type visitForLoop(ForLoopTree tree, Void unused) {
+      return getConditionType(tree.getCondition());
+    }
+
+    @Override
+    public Type visitSwitch(SwitchTree node, Void unused) {
+      if (current == node.getExpression()) {
+        return state.getTypes().unboxedTypeOrType(getType(current));
+      } else {
+        return null;
+      }
+    }
+
+    private Type getConditionType(Tree condition) {
+      if (condition != null && condition.equals(current)) {
+        return state.getSymtab().booleanType;
+      }
+      return null;
+    }
   }
 }
