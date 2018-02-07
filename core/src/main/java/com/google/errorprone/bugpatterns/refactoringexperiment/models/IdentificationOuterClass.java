@@ -3,8 +3,8 @@
 
 package com.google.errorprone.bugpatterns.refactoringexperiment.models;
 
-public final class Identification {
-  private Identification() {}
+public final class IdentificationOuterClass {
+  private IdentificationOuterClass() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
@@ -14,8 +14,8 @@ public final class Identification {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public interface IdOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Models.Id)
+  public interface IdentificationOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Models.Identification)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -75,18 +75,18 @@ public final class Identification {
         getKindBytes();
   }
   /**
-   * Protobuf type {@code Models.Id}
+   * Protobuf type {@code Models.Identification}
    */
-  public  static final class Id extends
+  public  static final class Identification extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Models.Id)
-      IdOrBuilder {
+      // @@protoc_insertion_point(message_implements:Models.Identification)
+      IdentificationOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use Id.newBuilder() to construct.
-    private Id(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use Identification.newBuilder() to construct.
+    private Identification(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private Id() {
+    private Identification() {
       name_ = "";
       type_ = "";
       owner_ = "";
@@ -98,7 +98,7 @@ public final class Identification {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Id(
+    private Identification(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -162,14 +162,14 @@ public final class Identification {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.internal_static_Models_Id_descriptor;
+      return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Identification_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.internal_static_Models_Id_fieldAccessorTable
+      return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Identification_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder.class);
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder.class);
     }
 
     private int bitField0_;
@@ -395,10 +395,10 @@ public final class Identification {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id)) {
+      if (!(obj instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification)) {
         return super.equals(obj);
       }
-      com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id) obj;
+      com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification) obj;
 
       boolean result = true;
       result = result && (hasName() == other.hasName());
@@ -453,69 +453,69 @@ public final class Identification {
       return hash;
     }
 
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(byte[] data)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(java.io.InputStream input)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseDelimitedFrom(java.io.InputStream input)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseDelimitedFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -527,7 +527,7 @@ public final class Identification {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id prototype) {
+    public static Builder newBuilder(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -542,25 +542,25 @@ public final class Identification {
       return builder;
     }
     /**
-     * Protobuf type {@code Models.Id}
+     * Protobuf type {@code Models.Identification}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Models.Id)
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder {
+        // @@protoc_insertion_point(builder_implements:Models.Identification)
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.internal_static_Models_Id_descriptor;
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Identification_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.internal_static_Models_Id_fieldAccessorTable
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Identification_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder.class);
+                com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder.class);
       }
 
-      // Construct using Identification.Id.newBuilder()
+      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -590,23 +590,23 @@ public final class Identification {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.internal_static_Models_Id_descriptor;
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Identification_descriptor;
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getDefaultInstanceForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance();
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getDefaultInstanceForType() {
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance();
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id build() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id result = buildPartial();
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification build() {
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id buildPartial() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id result = new com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id(this);
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification buildPartial() {
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification result = new com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -657,16 +657,16 @@ public final class Identification {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id) {
-          return mergeFrom((com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id)other);
+        if (other instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification) {
+          return mergeFrom((com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id other) {
-        if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification other) {
+        if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance()) return this;
         if (other.hasName()) {
           bitField0_ |= 0x00000001;
           name_ = other.name_;
@@ -700,11 +700,11 @@ public final class Identification {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id parsedMessage = null;
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id) e.getUnfinishedMessage();
+          parsedMessage = (com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1029,49 +1029,49 @@ public final class Identification {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Models.Id)
+      // @@protoc_insertion_point(builder_scope:Models.Identification)
     }
 
-    // @@protoc_insertion_point(class_scope:Models.Id)
-    private static final com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:Models.Identification)
+    private static final com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id();
+      DEFAULT_INSTANCE = new com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification();
     }
 
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getDefaultInstance() {
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Id>
-        PARSER = new com.google.protobuf.AbstractParser<Id>() {
-      public Id parsePartialFrom(
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Identification>
+        PARSER = new com.google.protobuf.AbstractParser<Identification>() {
+      public Identification parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Id(input, extensionRegistry);
+        return new Identification(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<Id> parser() {
+    public static com.google.protobuf.Parser<Identification> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Id> getParserForType() {
+    public com.google.protobuf.Parser<Identification> getParserForType() {
       return PARSER;
     }
 
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getDefaultInstanceForType() {
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Models_Id_descriptor;
+    internal_static_Models_Identification_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Models_Id_fieldAccessorTable;
+      internal_static_Models_Identification_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1081,11 +1081,11 @@ public final class Identification {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\024Identification.proto\022\006Models\"=\n\002Id\022\014\n\004" +
-      "name\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\022\r\n\005owner\030\003 \001(\t\022" +
-      "\014\n\004kind\030\004 \001(\tBP\n>com.google.errorprone.b" +
-      "ugpatterns.refactoringexperiment.modelsB" +
-      "\016Identification"
+      "\n\024Identification.proto\022\006Models\"I\n\016Identi" +
+      "fication\022\014\n\004name\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\022\r\n\005" +
+      "owner\030\003 \001(\t\022\014\n\004kind\030\004 \001(\tB@\n>com.google." +
+      "errorprone.bugpatterns.refactoringexperi" +
+      "ment.models"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1099,11 +1099,11 @@ public final class Identification {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_Models_Id_descriptor =
+    internal_static_Models_Identification_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_Models_Id_fieldAccessorTable = new
+    internal_static_Models_Identification_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Models_Id_descriptor,
+        internal_static_Models_Identification_descriptor,
         new java.lang.String[] { "Name", "Type", "Owner", "Kind", });
   }
 

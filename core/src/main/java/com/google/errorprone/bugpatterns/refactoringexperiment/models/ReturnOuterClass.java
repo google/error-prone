@@ -3,8 +3,8 @@
 
 package com.google.errorprone.bugpatterns.refactoringexperiment.models;
 
-public final class Return {
-  private Return() {}
+public final class ReturnOuterClass {
+  private ReturnOuterClass() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
@@ -14,49 +14,49 @@ public final class Return {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public interface rtrnOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Models.rtrn)
+  public interface ReturnOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Models.Return)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional .Models.Id method_id = 1;</code>
+     * <code>optional .Models.Identification method_id = 1;</code>
      */
     boolean hasMethodId();
     /**
-     * <code>optional .Models.Id method_id = 1;</code>
+     * <code>optional .Models.Identification method_id = 1;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getMethodId();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getMethodId();
     /**
-     * <code>optional .Models.Id method_id = 1;</code>
+     * <code>optional .Models.Identification method_id = 1;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getMethodIdOrBuilder();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getMethodIdOrBuilder();
 
     /**
-     * <code>optional .Models.Id ret_expr = 2;</code>
+     * <code>optional .Models.Identification ret_expr = 2;</code>
      */
     boolean hasRetExpr();
     /**
-     * <code>optional .Models.Id ret_expr = 2;</code>
+     * <code>optional .Models.Identification ret_expr = 2;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getRetExpr();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getRetExpr();
     /**
-     * <code>optional .Models.Id ret_expr = 2;</code>
+     * <code>optional .Models.Identification ret_expr = 2;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getRetExprOrBuilder();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getRetExprOrBuilder();
   }
   /**
-   * Protobuf type {@code Models.rtrn}
+   * Protobuf type {@code Models.Return}
    */
-  public  static final class rtrn extends
+  public  static final class Return extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Models.rtrn)
-      rtrnOrBuilder {
+      // @@protoc_insertion_point(message_implements:Models.Return)
+      ReturnOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use rtrn.newBuilder() to construct.
-    private rtrn(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use Return.newBuilder() to construct.
+    private Return(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private rtrn() {
+    private Return() {
     }
 
     @java.lang.Override
@@ -64,7 +64,7 @@ public final class Return {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private rtrn(
+    private Return(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -91,11 +91,11 @@ public final class Return {
               break;
             }
             case 10: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder subBuilder = null;
               if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 subBuilder = methodId_.toBuilder();
               }
-              methodId_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              methodId_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(methodId_);
                 methodId_ = subBuilder.buildPartial();
@@ -104,11 +104,11 @@ public final class Return {
               break;
             }
             case 18: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 subBuilder = retExpr_.toBuilder();
               }
-              retExpr_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              retExpr_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(retExpr_);
                 retExpr_ = subBuilder.buildPartial();
@@ -130,57 +130,57 @@ public final class Return {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.internal_static_Models_rtrn_descriptor;
+      return com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.internal_static_Models_Return_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.internal_static_Models_rtrn_fieldAccessorTable
+      return com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.internal_static_Models_Return_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.Builder.class);
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return.Builder.class);
     }
 
     private int bitField0_;
     public static final int METHOD_ID_FIELD_NUMBER = 1;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id methodId_;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification methodId_;
     /**
-     * <code>optional .Models.Id method_id = 1;</code>
+     * <code>optional .Models.Identification method_id = 1;</code>
      */
     public boolean hasMethodId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .Models.Id method_id = 1;</code>
+     * <code>optional .Models.Identification method_id = 1;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getMethodId() {
-      return methodId_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : methodId_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getMethodId() {
+      return methodId_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : methodId_;
     }
     /**
-     * <code>optional .Models.Id method_id = 1;</code>
+     * <code>optional .Models.Identification method_id = 1;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getMethodIdOrBuilder() {
-      return methodId_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : methodId_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getMethodIdOrBuilder() {
+      return methodId_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : methodId_;
     }
 
     public static final int RET_EXPR_FIELD_NUMBER = 2;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id retExpr_;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification retExpr_;
     /**
-     * <code>optional .Models.Id ret_expr = 2;</code>
+     * <code>optional .Models.Identification ret_expr = 2;</code>
      */
     public boolean hasRetExpr() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional .Models.Id ret_expr = 2;</code>
+     * <code>optional .Models.Identification ret_expr = 2;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getRetExpr() {
-      return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : retExpr_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getRetExpr() {
+      return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : retExpr_;
     }
     /**
-     * <code>optional .Models.Id ret_expr = 2;</code>
+     * <code>optional .Models.Identification ret_expr = 2;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getRetExprOrBuilder() {
-      return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : retExpr_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getRetExprOrBuilder() {
+      return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : retExpr_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -227,10 +227,10 @@ public final class Return {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn)) {
+      if (!(obj instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return)) {
         return super.equals(obj);
       }
-      com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn) obj;
+      com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return) obj;
 
       boolean result = true;
       result = result && (hasMethodId() == other.hasMethodId());
@@ -267,69 +267,69 @@ public final class Return {
       return hash;
     }
 
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(byte[] data)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(java.io.InputStream input)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseDelimitedFrom(java.io.InputStream input)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseDelimitedFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -341,7 +341,7 @@ public final class Return {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn prototype) {
+    public static Builder newBuilder(com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -356,25 +356,25 @@ public final class Return {
       return builder;
     }
     /**
-     * Protobuf type {@code Models.rtrn}
+     * Protobuf type {@code Models.Return}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Models.rtrn)
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrnOrBuilder {
+        // @@protoc_insertion_point(builder_implements:Models.Return)
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.ReturnOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.internal_static_Models_rtrn_descriptor;
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.internal_static_Models_Return_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.internal_static_Models_rtrn_fieldAccessorTable
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.internal_static_Models_Return_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.Builder.class);
+                com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return.Builder.class);
       }
 
-      // Construct using Return.rtrn.newBuilder()
+      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -410,23 +410,23 @@ public final class Return {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.internal_static_Models_rtrn_descriptor;
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.internal_static_Models_Return_descriptor;
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn getDefaultInstanceForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.getDefaultInstance();
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return getDefaultInstanceForType() {
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return.getDefaultInstance();
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn build() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn result = buildPartial();
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return build() {
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn buildPartial() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn result = new com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn(this);
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return buildPartial() {
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return result = new com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -477,16 +477,16 @@ public final class Return {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn) {
-          return mergeFrom((com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn)other);
+        if (other instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return) {
+          return mergeFrom((com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn other) {
-        if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return other) {
+        if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return.getDefaultInstance()) return this;
         if (other.hasMethodId()) {
           mergeMethodId(other.getMethodId());
         }
@@ -506,11 +506,11 @@ public final class Return {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn parsedMessage = null;
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn) e.getUnfinishedMessage();
+          parsedMessage = (com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -521,29 +521,29 @@ public final class Return {
       }
       private int bitField0_;
 
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id methodId_ = null;
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification methodId_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> methodIdBuilder_;
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> methodIdBuilder_;
       /**
-       * <code>optional .Models.Id method_id = 1;</code>
+       * <code>optional .Models.Identification method_id = 1;</code>
        */
       public boolean hasMethodId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .Models.Id method_id = 1;</code>
+       * <code>optional .Models.Identification method_id = 1;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getMethodId() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getMethodId() {
         if (methodIdBuilder_ == null) {
-          return methodId_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : methodId_;
+          return methodId_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : methodId_;
         } else {
           return methodIdBuilder_.getMessage();
         }
       }
       /**
-       * <code>optional .Models.Id method_id = 1;</code>
+       * <code>optional .Models.Identification method_id = 1;</code>
        */
-      public Builder setMethodId(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+      public Builder setMethodId(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (methodIdBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -557,10 +557,10 @@ public final class Return {
         return this;
       }
       /**
-       * <code>optional .Models.Id method_id = 1;</code>
+       * <code>optional .Models.Identification method_id = 1;</code>
        */
       public Builder setMethodId(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder builderForValue) {
         if (methodIdBuilder_ == null) {
           methodId_ = builderForValue.build();
           onChanged();
@@ -571,15 +571,15 @@ public final class Return {
         return this;
       }
       /**
-       * <code>optional .Models.Id method_id = 1;</code>
+       * <code>optional .Models.Identification method_id = 1;</code>
        */
-      public Builder mergeMethodId(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+      public Builder mergeMethodId(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (methodIdBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
               methodId_ != null &&
-              methodId_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+              methodId_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance()) {
             methodId_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(methodId_).mergeFrom(value).buildPartial();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.newBuilder(methodId_).mergeFrom(value).buildPartial();
           } else {
             methodId_ = value;
           }
@@ -591,7 +591,7 @@ public final class Return {
         return this;
       }
       /**
-       * <code>optional .Models.Id method_id = 1;</code>
+       * <code>optional .Models.Identification method_id = 1;</code>
        */
       public Builder clearMethodId() {
         if (methodIdBuilder_ == null) {
@@ -604,33 +604,33 @@ public final class Return {
         return this;
       }
       /**
-       * <code>optional .Models.Id method_id = 1;</code>
+       * <code>optional .Models.Identification method_id = 1;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getMethodIdBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder getMethodIdBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getMethodIdFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .Models.Id method_id = 1;</code>
+       * <code>optional .Models.Identification method_id = 1;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getMethodIdOrBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getMethodIdOrBuilder() {
         if (methodIdBuilder_ != null) {
           return methodIdBuilder_.getMessageOrBuilder();
         } else {
           return methodId_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : methodId_;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : methodId_;
         }
       }
       /**
-       * <code>optional .Models.Id method_id = 1;</code>
+       * <code>optional .Models.Identification method_id = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> 
           getMethodIdFieldBuilder() {
         if (methodIdBuilder_ == null) {
           methodIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder>(
                   getMethodId(),
                   getParentForChildren(),
                   isClean());
@@ -639,29 +639,29 @@ public final class Return {
         return methodIdBuilder_;
       }
 
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id retExpr_ = null;
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification retExpr_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> retExprBuilder_;
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> retExprBuilder_;
       /**
-       * <code>optional .Models.Id ret_expr = 2;</code>
+       * <code>optional .Models.Identification ret_expr = 2;</code>
        */
       public boolean hasRetExpr() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional .Models.Id ret_expr = 2;</code>
+       * <code>optional .Models.Identification ret_expr = 2;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getRetExpr() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getRetExpr() {
         if (retExprBuilder_ == null) {
-          return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : retExpr_;
+          return retExpr_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : retExpr_;
         } else {
           return retExprBuilder_.getMessage();
         }
       }
       /**
-       * <code>optional .Models.Id ret_expr = 2;</code>
+       * <code>optional .Models.Identification ret_expr = 2;</code>
        */
-      public Builder setRetExpr(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+      public Builder setRetExpr(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (retExprBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -675,10 +675,10 @@ public final class Return {
         return this;
       }
       /**
-       * <code>optional .Models.Id ret_expr = 2;</code>
+       * <code>optional .Models.Identification ret_expr = 2;</code>
        */
       public Builder setRetExpr(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder builderForValue) {
         if (retExprBuilder_ == null) {
           retExpr_ = builderForValue.build();
           onChanged();
@@ -689,15 +689,15 @@ public final class Return {
         return this;
       }
       /**
-       * <code>optional .Models.Id ret_expr = 2;</code>
+       * <code>optional .Models.Identification ret_expr = 2;</code>
        */
-      public Builder mergeRetExpr(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+      public Builder mergeRetExpr(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (retExprBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
               retExpr_ != null &&
-              retExpr_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+              retExpr_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance()) {
             retExpr_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(retExpr_).mergeFrom(value).buildPartial();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.newBuilder(retExpr_).mergeFrom(value).buildPartial();
           } else {
             retExpr_ = value;
           }
@@ -709,7 +709,7 @@ public final class Return {
         return this;
       }
       /**
-       * <code>optional .Models.Id ret_expr = 2;</code>
+       * <code>optional .Models.Identification ret_expr = 2;</code>
        */
       public Builder clearRetExpr() {
         if (retExprBuilder_ == null) {
@@ -722,33 +722,33 @@ public final class Return {
         return this;
       }
       /**
-       * <code>optional .Models.Id ret_expr = 2;</code>
+       * <code>optional .Models.Identification ret_expr = 2;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getRetExprBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder getRetExprBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
         return getRetExprFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .Models.Id ret_expr = 2;</code>
+       * <code>optional .Models.Identification ret_expr = 2;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getRetExprOrBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getRetExprOrBuilder() {
         if (retExprBuilder_ != null) {
           return retExprBuilder_.getMessageOrBuilder();
         } else {
           return retExpr_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : retExpr_;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : retExpr_;
         }
       }
       /**
-       * <code>optional .Models.Id ret_expr = 2;</code>
+       * <code>optional .Models.Identification ret_expr = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> 
           getRetExprFieldBuilder() {
         if (retExprBuilder_ == null) {
           retExprBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder>(
                   getRetExpr(),
                   getParentForChildren(),
                   isClean());
@@ -767,49 +767,49 @@ public final class Return {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Models.rtrn)
+      // @@protoc_insertion_point(builder_scope:Models.Return)
     }
 
-    // @@protoc_insertion_point(class_scope:Models.rtrn)
-    private static final com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:Models.Return)
+    private static final com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn();
+      DEFAULT_INSTANCE = new com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return();
     }
 
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn getDefaultInstance() {
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<rtrn>
-        PARSER = new com.google.protobuf.AbstractParser<rtrn>() {
-      public rtrn parsePartialFrom(
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Return>
+        PARSER = new com.google.protobuf.AbstractParser<Return>() {
+      public Return parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new rtrn(input, extensionRegistry);
+        return new Return(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<rtrn> parser() {
+    public static com.google.protobuf.Parser<Return> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<rtrn> getParserForType() {
+    public com.google.protobuf.Parser<Return> getParserForType() {
       return PARSER;
     }
 
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Return.rtrn getDefaultInstanceForType() {
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.ReturnOuterClass.Return getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Models_rtrn_descriptor;
+    internal_static_Models_Return_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Models_rtrn_fieldAccessorTable;
+      internal_static_Models_Return_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -820,10 +820,11 @@ public final class Return {
   static {
     java.lang.String[] descriptorData = {
       "\n\014Return.proto\022\006Models\032\024Identification.p" +
-      "roto\"C\n\004rtrn\022\035\n\tmethod_id\030\001 \001(\0132\n.Models" +
-      ".Id\022\034\n\010ret_expr\030\002 \001(\0132\n.Models.IdBH\n>com" +
-      ".google.errorprone.bugpatterns.refactori" +
-      "ngexperiment.modelsB\006Return"
+      "roto\"]\n\006Return\022)\n\tmethod_id\030\001 \001(\0132\026.Mode" +
+      "ls.Identification\022(\n\010ret_expr\030\002 \001(\0132\026.Mo" +
+      "dels.IdentificationB@\n>com.google.errorp" +
+      "rone.bugpatterns.refactoringexperiment.m" +
+      "odels"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -836,15 +837,15 @@ public final class Return {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor(),
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor(),
         }, assigner);
-    internal_static_Models_rtrn_descriptor =
+    internal_static_Models_Return_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_Models_rtrn_fieldAccessorTable = new
+    internal_static_Models_Return_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Models_rtrn_descriptor,
+        internal_static_Models_Return_descriptor,
         new java.lang.String[] { "MethodId", "RetExpr", });
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

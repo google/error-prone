@@ -3,8 +3,8 @@
 
 package com.google.errorprone.bugpatterns.refactoringexperiment.models;
 
-public final class Assignment {
-  private Assignment() {}
+public final class AssignmentOuterClass {
+  private AssignmentOuterClass() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
@@ -14,49 +14,49 @@ public final class Assignment {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public interface AsgnOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Models.Asgn)
+  public interface AssignmentOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Models.Assignment)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional .Models.Id lhs = 1;</code>
+     * <code>optional .Models.Identification lhs = 1;</code>
      */
     boolean hasLhs();
     /**
-     * <code>optional .Models.Id lhs = 1;</code>
+     * <code>optional .Models.Identification lhs = 1;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getLhs();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getLhs();
     /**
-     * <code>optional .Models.Id lhs = 1;</code>
+     * <code>optional .Models.Identification lhs = 1;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getLhsOrBuilder();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getLhsOrBuilder();
 
     /**
-     * <code>optional .Models.Id rhs = 2;</code>
+     * <code>optional .Models.Identification rhs = 2;</code>
      */
     boolean hasRhs();
     /**
-     * <code>optional .Models.Id rhs = 2;</code>
+     * <code>optional .Models.Identification rhs = 2;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getRhs();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getRhs();
     /**
-     * <code>optional .Models.Id rhs = 2;</code>
+     * <code>optional .Models.Identification rhs = 2;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getRhsOrBuilder();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getRhsOrBuilder();
   }
   /**
-   * Protobuf type {@code Models.Asgn}
+   * Protobuf type {@code Models.Assignment}
    */
-  public  static final class Asgn extends
+  public  static final class Assignment extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Models.Asgn)
-      AsgnOrBuilder {
+      // @@protoc_insertion_point(message_implements:Models.Assignment)
+      AssignmentOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use Asgn.newBuilder() to construct.
-    private Asgn(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use Assignment.newBuilder() to construct.
+    private Assignment(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private Asgn() {
+    private Assignment() {
     }
 
     @java.lang.Override
@@ -64,7 +64,7 @@ public final class Assignment {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Asgn(
+    private Assignment(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -91,11 +91,11 @@ public final class Assignment {
               break;
             }
             case 10: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder subBuilder = null;
               if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 subBuilder = lhs_.toBuilder();
               }
-              lhs_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              lhs_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(lhs_);
                 lhs_ = subBuilder.buildPartial();
@@ -104,11 +104,11 @@ public final class Assignment {
               break;
             }
             case 18: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder subBuilder = null;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 subBuilder = rhs_.toBuilder();
               }
-              rhs_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.PARSER, extensionRegistry);
+              rhs_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(rhs_);
                 rhs_ = subBuilder.buildPartial();
@@ -130,57 +130,57 @@ public final class Assignment {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.internal_static_Models_Asgn_descriptor;
+      return com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.internal_static_Models_Assignment_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.internal_static_Models_Asgn_fieldAccessorTable
+      return com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.internal_static_Models_Assignment_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.Builder.class);
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment.Builder.class);
     }
 
     private int bitField0_;
     public static final int LHS_FIELD_NUMBER = 1;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id lhs_;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification lhs_;
     /**
-     * <code>optional .Models.Id lhs = 1;</code>
+     * <code>optional .Models.Identification lhs = 1;</code>
      */
     public boolean hasLhs() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .Models.Id lhs = 1;</code>
+     * <code>optional .Models.Identification lhs = 1;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getLhs() {
-      return lhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : lhs_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getLhs() {
+      return lhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : lhs_;
     }
     /**
-     * <code>optional .Models.Id lhs = 1;</code>
+     * <code>optional .Models.Identification lhs = 1;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getLhsOrBuilder() {
-      return lhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : lhs_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getLhsOrBuilder() {
+      return lhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : lhs_;
     }
 
     public static final int RHS_FIELD_NUMBER = 2;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id rhs_;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification rhs_;
     /**
-     * <code>optional .Models.Id rhs = 2;</code>
+     * <code>optional .Models.Identification rhs = 2;</code>
      */
     public boolean hasRhs() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional .Models.Id rhs = 2;</code>
+     * <code>optional .Models.Identification rhs = 2;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getRhs() {
-      return rhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : rhs_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getRhs() {
+      return rhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : rhs_;
     }
     /**
-     * <code>optional .Models.Id rhs = 2;</code>
+     * <code>optional .Models.Identification rhs = 2;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getRhsOrBuilder() {
-      return rhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : rhs_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getRhsOrBuilder() {
+      return rhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : rhs_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -227,10 +227,10 @@ public final class Assignment {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn)) {
+      if (!(obj instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment)) {
         return super.equals(obj);
       }
-      com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn) obj;
+      com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment) obj;
 
       boolean result = true;
       result = result && (hasLhs() == other.hasLhs());
@@ -267,69 +267,69 @@ public final class Assignment {
       return hash;
     }
 
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(byte[] data)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(java.io.InputStream input)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseDelimitedFrom(java.io.InputStream input)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseDelimitedFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -341,7 +341,7 @@ public final class Assignment {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn prototype) {
+    public static Builder newBuilder(com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -356,25 +356,25 @@ public final class Assignment {
       return builder;
     }
     /**
-     * Protobuf type {@code Models.Asgn}
+     * Protobuf type {@code Models.Assignment}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Models.Asgn)
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.AsgnOrBuilder {
+        // @@protoc_insertion_point(builder_implements:Models.Assignment)
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.AssignmentOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.internal_static_Models_Asgn_descriptor;
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.internal_static_Models_Assignment_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.internal_static_Models_Asgn_fieldAccessorTable
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.internal_static_Models_Assignment_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.Builder.class);
+                com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment.Builder.class);
       }
 
-      // Construct using Assignment.Asgn.newBuilder()
+      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -410,23 +410,23 @@ public final class Assignment {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.internal_static_Models_Asgn_descriptor;
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.internal_static_Models_Assignment_descriptor;
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn getDefaultInstanceForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.getDefaultInstance();
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment getDefaultInstanceForType() {
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment.getDefaultInstance();
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn build() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn result = buildPartial();
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment build() {
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn buildPartial() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn result = new com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn(this);
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment buildPartial() {
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment result = new com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -477,16 +477,16 @@ public final class Assignment {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn) {
-          return mergeFrom((com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn)other);
+        if (other instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment) {
+          return mergeFrom((com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn other) {
-        if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment other) {
+        if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment.getDefaultInstance()) return this;
         if (other.hasLhs()) {
           mergeLhs(other.getLhs());
         }
@@ -506,11 +506,11 @@ public final class Assignment {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn parsedMessage = null;
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn) e.getUnfinishedMessage();
+          parsedMessage = (com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -521,29 +521,29 @@ public final class Assignment {
       }
       private int bitField0_;
 
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id lhs_ = null;
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification lhs_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> lhsBuilder_;
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> lhsBuilder_;
       /**
-       * <code>optional .Models.Id lhs = 1;</code>
+       * <code>optional .Models.Identification lhs = 1;</code>
        */
       public boolean hasLhs() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .Models.Id lhs = 1;</code>
+       * <code>optional .Models.Identification lhs = 1;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getLhs() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getLhs() {
         if (lhsBuilder_ == null) {
-          return lhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : lhs_;
+          return lhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : lhs_;
         } else {
           return lhsBuilder_.getMessage();
         }
       }
       /**
-       * <code>optional .Models.Id lhs = 1;</code>
+       * <code>optional .Models.Identification lhs = 1;</code>
        */
-      public Builder setLhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+      public Builder setLhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (lhsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -557,10 +557,10 @@ public final class Assignment {
         return this;
       }
       /**
-       * <code>optional .Models.Id lhs = 1;</code>
+       * <code>optional .Models.Identification lhs = 1;</code>
        */
       public Builder setLhs(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder builderForValue) {
         if (lhsBuilder_ == null) {
           lhs_ = builderForValue.build();
           onChanged();
@@ -571,15 +571,15 @@ public final class Assignment {
         return this;
       }
       /**
-       * <code>optional .Models.Id lhs = 1;</code>
+       * <code>optional .Models.Identification lhs = 1;</code>
        */
-      public Builder mergeLhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+      public Builder mergeLhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (lhsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
               lhs_ != null &&
-              lhs_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+              lhs_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance()) {
             lhs_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(lhs_).mergeFrom(value).buildPartial();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.newBuilder(lhs_).mergeFrom(value).buildPartial();
           } else {
             lhs_ = value;
           }
@@ -591,7 +591,7 @@ public final class Assignment {
         return this;
       }
       /**
-       * <code>optional .Models.Id lhs = 1;</code>
+       * <code>optional .Models.Identification lhs = 1;</code>
        */
       public Builder clearLhs() {
         if (lhsBuilder_ == null) {
@@ -604,33 +604,33 @@ public final class Assignment {
         return this;
       }
       /**
-       * <code>optional .Models.Id lhs = 1;</code>
+       * <code>optional .Models.Identification lhs = 1;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getLhsBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder getLhsBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getLhsFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .Models.Id lhs = 1;</code>
+       * <code>optional .Models.Identification lhs = 1;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getLhsOrBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getLhsOrBuilder() {
         if (lhsBuilder_ != null) {
           return lhsBuilder_.getMessageOrBuilder();
         } else {
           return lhs_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : lhs_;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : lhs_;
         }
       }
       /**
-       * <code>optional .Models.Id lhs = 1;</code>
+       * <code>optional .Models.Identification lhs = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> 
           getLhsFieldBuilder() {
         if (lhsBuilder_ == null) {
           lhsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder>(
                   getLhs(),
                   getParentForChildren(),
                   isClean());
@@ -639,29 +639,29 @@ public final class Assignment {
         return lhsBuilder_;
       }
 
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id rhs_ = null;
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification rhs_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> rhsBuilder_;
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> rhsBuilder_;
       /**
-       * <code>optional .Models.Id rhs = 2;</code>
+       * <code>optional .Models.Identification rhs = 2;</code>
        */
       public boolean hasRhs() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional .Models.Id rhs = 2;</code>
+       * <code>optional .Models.Identification rhs = 2;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id getRhs() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getRhs() {
         if (rhsBuilder_ == null) {
-          return rhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : rhs_;
+          return rhs_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : rhs_;
         } else {
           return rhsBuilder_.getMessage();
         }
       }
       /**
-       * <code>optional .Models.Id rhs = 2;</code>
+       * <code>optional .Models.Identification rhs = 2;</code>
        */
-      public Builder setRhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+      public Builder setRhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (rhsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -675,10 +675,10 @@ public final class Assignment {
         return this;
       }
       /**
-       * <code>optional .Models.Id rhs = 2;</code>
+       * <code>optional .Models.Identification rhs = 2;</code>
        */
       public Builder setRhs(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder builderForValue) {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder builderForValue) {
         if (rhsBuilder_ == null) {
           rhs_ = builderForValue.build();
           onChanged();
@@ -689,15 +689,15 @@ public final class Assignment {
         return this;
       }
       /**
-       * <code>optional .Models.Id rhs = 2;</code>
+       * <code>optional .Models.Identification rhs = 2;</code>
        */
-      public Builder mergeRhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id value) {
+      public Builder mergeRhs(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (rhsBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
               rhs_ != null &&
-              rhs_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance()) {
+              rhs_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance()) {
             rhs_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.newBuilder(rhs_).mergeFrom(value).buildPartial();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.newBuilder(rhs_).mergeFrom(value).buildPartial();
           } else {
             rhs_ = value;
           }
@@ -709,7 +709,7 @@ public final class Assignment {
         return this;
       }
       /**
-       * <code>optional .Models.Id rhs = 2;</code>
+       * <code>optional .Models.Identification rhs = 2;</code>
        */
       public Builder clearRhs() {
         if (rhsBuilder_ == null) {
@@ -722,33 +722,33 @@ public final class Assignment {
         return this;
       }
       /**
-       * <code>optional .Models.Id rhs = 2;</code>
+       * <code>optional .Models.Identification rhs = 2;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder getRhsBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder getRhsBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
         return getRhsFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .Models.Id rhs = 2;</code>
+       * <code>optional .Models.Identification rhs = 2;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder getRhsOrBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getRhsOrBuilder() {
         if (rhsBuilder_ != null) {
           return rhsBuilder_.getMessageOrBuilder();
         } else {
           return rhs_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.getDefaultInstance() : rhs_;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : rhs_;
         }
       }
       /**
-       * <code>optional .Models.Id rhs = 2;</code>
+       * <code>optional .Models.Identification rhs = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder> 
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> 
           getRhsFieldBuilder() {
         if (rhsBuilder_ == null) {
           rhsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.Id.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.IdOrBuilder>(
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder>(
                   getRhs(),
                   getParentForChildren(),
                   isClean());
@@ -767,49 +767,49 @@ public final class Assignment {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Models.Asgn)
+      // @@protoc_insertion_point(builder_scope:Models.Assignment)
     }
 
-    // @@protoc_insertion_point(class_scope:Models.Asgn)
-    private static final com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:Models.Assignment)
+    private static final com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn();
+      DEFAULT_INSTANCE = new com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment();
     }
 
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn getDefaultInstance() {
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Asgn>
-        PARSER = new com.google.protobuf.AbstractParser<Asgn>() {
-      public Asgn parsePartialFrom(
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Assignment>
+        PARSER = new com.google.protobuf.AbstractParser<Assignment>() {
+      public Assignment parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Asgn(input, extensionRegistry);
+        return new Assignment(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<Asgn> parser() {
+    public static com.google.protobuf.Parser<Assignment> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Asgn> getParserForType() {
+    public com.google.protobuf.Parser<Assignment> getParserForType() {
       return PARSER;
     }
 
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.Assignment.Asgn getDefaultInstanceForType() {
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Models_Asgn_descriptor;
+    internal_static_Models_Assignment_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Models_Asgn_fieldAccessorTable;
+      internal_static_Models_Assignment_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -820,10 +820,11 @@ public final class Assignment {
   static {
     java.lang.String[] descriptorData = {
       "\n\020Assignment.proto\022\006Models\032\024Identificati" +
-      "on.proto\"8\n\004Asgn\022\027\n\003lhs\030\001 \001(\0132\n.Models.I" +
-      "d\022\027\n\003rhs\030\002 \001(\0132\n.Models.IdBL\n>com.google" +
-      ".errorprone.bugpatterns.refactoringexper" +
-      "iment.modelsB\nAssignment"
+      "on.proto\"V\n\nAssignment\022#\n\003lhs\030\001 \001(\0132\026.Mo" +
+      "dels.Identification\022#\n\003rhs\030\002 \001(\0132\026.Model" +
+      "s.IdentificationB@\n>com.google.errorpron" +
+      "e.bugpatterns.refactoringexperiment.mode" +
+      "ls"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -836,15 +837,15 @@ public final class Assignment {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor(),
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor(),
         }, assigner);
-    internal_static_Models_Asgn_descriptor =
+    internal_static_Models_Assignment_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_Models_Asgn_fieldAccessorTable = new
+    internal_static_Models_Assignment_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Models_Asgn_descriptor,
+        internal_static_Models_Assignment_descriptor,
         new java.lang.String[] { "Lhs", "Rhs", });
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.Identification.getDescriptor();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

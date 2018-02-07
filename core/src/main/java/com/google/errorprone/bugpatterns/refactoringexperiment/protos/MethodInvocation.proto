@@ -4,7 +4,8 @@ package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
 
-message Variable {
+message MethodInvocation {
   optional Identification id = 1;
-  optional Identification initializer = 2;
+  map<int32, Identification> arguments = 2; // index -> arg
+  optional Identification receiver = 3;
  }

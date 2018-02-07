@@ -3,9 +3,9 @@ import "Identification.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
-option java_outer_classname = "ClassDecl";
 
-message clsDcl {
-    optional Id id = 1;
+
+message ClassDeclaration {
+    optional Identification id = 1;
     repeated string super_type = 2;
  }

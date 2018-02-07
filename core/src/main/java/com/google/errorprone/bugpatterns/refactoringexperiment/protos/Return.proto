@@ -3,9 +3,8 @@ import "Identification.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
-option java_outer_classname = "Return";
 
-message rtrn {
-    optional Id method_id = 1;
-    optional Id ret_expr = 2;
+message Return {
+    optional Identification method_id = 1;
+    optional Identification ret_expr = 2;
  }

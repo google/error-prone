@@ -3,12 +3,12 @@ import "Identification.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
-option java_outer_classname = "MethodDeclaration";
 
-message MthdDcl {
-  optional Id id = 1;
+
+message MethodDeclaration {
+  optional Identification id = 1;
   optional string return_type = 2;
-  map<int32, Id> parameters = 3; // index -> parameter
+  map<int32, Identification> parameters = 3; // index -> parameter
   repeated string modifier = 4;
   optional string super_method_in = 5;
  }

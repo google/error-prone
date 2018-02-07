@@ -3,9 +3,9 @@ import "Identification.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
-option java_outer_classname = "Assignment";
+//option java_outer_classname = "Assignment";
 
-message Asgn {
-    optional Id lhs = 1;
-    optional Id rhs = 2;
+message Assignment {
+    optional Identification lhs = 1;
+    optional Identification rhs = 2;
 }
