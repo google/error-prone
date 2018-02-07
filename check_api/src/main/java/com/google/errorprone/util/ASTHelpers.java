@@ -857,17 +857,6 @@ public class ASTHelpers {
     return false;
   }
 
-  /**
-   * Finds a declaration with the given name that is in scope at the current location.
-   *
-   * @deprecated Use {@link FindIdentifiers#findIdent} instead.
-   */
-  // TODO(eaftan): migrate plugin callers and delete this
-  @Deprecated
-  public static Symbol findIdent(String name, VisitorState state) {
-    return FindIdentifiers.findIdent(name, state);
-  }
-
   /** Returns an {@link AnnotationTree} with the given simple name, or {@code null}. */
   public static AnnotationTree getAnnotationWithSimpleName(
       List<? extends AnnotationTree> annotations, String name) {
