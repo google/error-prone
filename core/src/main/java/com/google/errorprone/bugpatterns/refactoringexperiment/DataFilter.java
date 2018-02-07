@@ -1,10 +1,13 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
+
+import java.util.Set;
 
 /**
  * Created by ameya on 1/17/18.
@@ -17,10 +20,9 @@ public class DataFilter {
     private static final String DOUBLE = "java.lang.Double";
     private static final String BOOLEAN = "java.lang.Boolean";
 
+    private static Set<String> WRAPPER_CLASSES = ImmutableSet.of("java.lang.Long", "java.lang.Integer", "java.lang.Double", "java.lang.Boolean");
 
     // TODO : put in the code for checking all LT.
-
-
     public static boolean apply(Tree tree, VisitorState state) {
 
         return apply(ASTHelpers.getType(tree), state);
@@ -36,24 +38,21 @@ public class DataFilter {
     * d. TODO: add a way to capture generic types. Function<T,U>
     * */
 
-        public static boolean apply(Type t1, VisitorState state) {
-            try {
-                return (ASTHelpers.isSameType(
-                        t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)
-                        || ASTHelpers.isSubtype(t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state))
-                        &&
-                        (t1.getTypeArguments().stream().filter(x -> ASTHelpers.isSameType(
-                                x, state.getTypeFromString(INTEGER), state) || ASTHelpers.isSameType(
-                                x, state.getTypeFromString(DOUBLE), state) || ASTHelpers.isSameType(
-                                x, state.getTypeFromString(LONG), state) || ASTHelpers.isSameType(
-                                x, state.getTypeFromString(BOOLEAN), state)).count() > 0);
-            }catch(Exception e){
-                return false;
-            }
-
+    public static boolean apply(Type t1, VisitorState state) {
+        try {
+            return (ASTHelpers.isSameType(
+                    t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)
+                    || ASTHelpers.isSubtype(t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state))
+                    &&
+                    t1.getTypeArguments().stream().anyMatch(x -> WRAPPER_CLASSES.stream().anyMatch(w -> ASTHelpers.isSameType(
+                            x, state.getTypeFromString(w), state)));
+        } catch (Exception e) {
+            return false;
         }
 
     }
+
+}
 
 
 

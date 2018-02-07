@@ -46,9 +46,7 @@ import java.util.stream.Collectors;
 public class TypeUsageCollector extends BugChecker implements BugChecker.MethodTreeMatcher, BugChecker.MethodInvocationTreeMatcher, BugChecker.NewClassTreeMatcher, BugChecker.VariableTreeMatcher
         , BugChecker.AssignmentTreeMatcher, BugChecker.ClassTreeMatcher {
 
-    public static final String COLUMN_SEPERATOR = "|";
     public static final String RTRN_TYPE_NOT_FOUND = "RTRN_TYPE_NOT_FOUND";
-    private static final String WARNING = "WARNING";
 
     @Override
     public Description matchMethod(MethodTree methodTree, VisitorState state) {
@@ -110,7 +108,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
             infoFromSymbol(var1).transform(mthdInvc::setId);
 
-            mthdInvc.putAllArguments(Collections.unmodifiableMap(var1.getArguments().stream().filter(x ->DataFilter.apply(x, state))
+            mthdInvc.putAllArguments(Collections.unmodifiableMap(var1.getArguments().stream().filter(x -> DataFilter.apply(x, state))
                     .collect(Collectors.toMap(x -> var1.getArguments().indexOf(x), x -> infoOfTree(x).build()))));
 
 
@@ -197,9 +195,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         }
     }
 
-    private static Optional<String> getKindFromTree(Tree tree){
-            if(tree.getKind().equals(Kind.METHOD_INVOCATION) || tree.getKind().equals(Kind.NEW_CLASS))
-                return Optional.of(tree.getKind().toString());
+    private static Optional<String> getKindFromTree(Tree tree) {
+        if (tree.getKind().equals(Kind.METHOD_INVOCATION) || tree.getKind().equals(Kind.NEW_CLASS))
+            return Optional.of(tree.getKind().toString());
         return Optional.absent();
     }
 
@@ -207,10 +205,10 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         return symb.isConstructor() ? symb.enclClass().toString() : symb.name.toString();
     }
 
-    public static String getEnclosingClass(Tree tree){
-        try{
-            return  ASTHelpers.getSymbol(tree).enclClass().toString();
-        }catch (Exception e) {
+    public static String getEnclosingClass(Tree tree) {
+        try {
+            return ASTHelpers.getSymbol(tree).enclClass().toString();
+        } catch (Exception e) {
             return "";
         }
     }
