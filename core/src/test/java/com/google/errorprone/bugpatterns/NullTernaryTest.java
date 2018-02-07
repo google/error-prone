@@ -70,8 +70,7 @@ public class NullTernaryTest {
             "    h(\"\", 1, b ? 1 : 0);",
             "    h(\"\", 1, b ? 1 : 0, 3);",
             "    int z = 0 + (b ? 0 : 1);",
-            "    boolean t = Integer.valueOf(0) == (b ? 0 : null);",
-            "    t = (b ? 0 : null) == Integer.valueOf(0);",
+            "    boolean t = (b ? 0 : null) == Integer.valueOf(0);",
             "  }",
             "  void g(String s, int y) {}",
             "  void h(String s, int... y) {}",
@@ -103,6 +102,22 @@ public class NullTernaryTest {
             "    i = () -> b ? null : 1;",
             "    j = () -> b ? null : 1;",
             "    k = () -> b ? null : 1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void conditionalInCondition() throws IOException {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void conditionalInCondition(Object array, String input) {",
+            "    int arrayDimensions = ",
+            "        ((array!=null?input:null) == null)",
+            "            ? 0",
+            "            : (array!=null?input:null).length();",
             "  }",
             "}")
         .doTest();
