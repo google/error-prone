@@ -290,8 +290,7 @@ public final class ThreadSafety {
                     a ->
                         ((ClassSymbol) a.getAnnotationType().asElement())
                             .flatName()
-                            .toString()
-                            .equals(suppressAnnotation.getName()))) {
+                            .contentEquals(suppressAnnotation.getName()))) {
           continue;
         }
         Violation info = isThreadSafeType(!immutableTypeParameter, containerTypeParameters, tyarg);
@@ -491,12 +490,7 @@ public final class ThreadSafety {
         && symbol
             .getAnnotationMirrors()
             .stream()
-            .anyMatch(
-                t ->
-                    t.type
-                        .tsym
-                        .getQualifiedName()
-                        .contentEquals(typeParameterAnnotation.getName()));
+            .anyMatch(t -> t.type.tsym.flatName().contentEquals(typeParameterAnnotation.getName()));
   }
 
   /**
