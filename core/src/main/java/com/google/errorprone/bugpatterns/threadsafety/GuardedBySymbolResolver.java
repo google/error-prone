@@ -162,6 +162,14 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
         return sym;
       }
     }
+    if (classSymbol.owner != null
+        && classSymbol != classSymbol.owner
+        && classSymbol.owner instanceof Symbol.ClassSymbol) {
+      T sym = getMember(type, kind, classSymbol.owner, name);
+      if (sym != null && sym.isStatic()) {
+        return sym;
+      }
+    }
     return null;
   }
 
