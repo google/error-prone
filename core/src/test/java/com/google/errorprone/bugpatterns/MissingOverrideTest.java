@@ -104,18 +104,16 @@ public class MissingOverrideTest {
         .doTest();
   }
 
-  // this doesn't work!  need new APIs in CompilationTestHelper
-//  @Test
-//  public void ignoreInterfaceOverride() throws Exception {
-//    compilationHelper
-//        .setArgs(ImmutableList.of("-XepOpt:MissingOverride:IgnoreInterfaceOverrides=true"));
-//    compilationHelper
-//        .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
-//        .addSourceLines(
-//            "Test.java",
-//            "public interface Test extends Super {",
-//            "  void f();",
-//            "}")
-//        .doTest();
-//  }
+  @Test
+  public void ignoreInterfaceOverride() throws Exception {
+    compilationHelper
+        .setArgs(ImmutableList.of("-XepOpt:MissingOverride:IgnoreInterfaceOverrides=true"))
+        .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
+        .addSourceLines(
+            "Test.java",
+            "public interface Test extends Super {",
+            "  void f();",
+            "}")
+        .doTest();
+  }
 }

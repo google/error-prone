@@ -48,12 +48,12 @@ import javax.lang.model.element.Modifier;
 public class MissingOverride extends BugChecker implements MethodTreeMatcher {
 
   /**
-   * if true, don't warn on missing @Override annotations inside interfaces
+   * if true, don't warn on missing {@code @Override} annotations inside interfaces
    */
   private final boolean ignoreInterfaceOverrides;
 
   public MissingOverride() {
-    this.ignoreInterfaceOverrides = false;
+    this(ErrorProneFlags.empty());
   }
 
   public MissingOverride(ErrorProneFlags flags) {
