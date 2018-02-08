@@ -16,6 +16,8 @@
 
 package com.google.errorprone.matchers.method;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
@@ -50,6 +52,10 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
     Exact(AbstractSimpleMatcher<MatchState> baseMatcher, String name) {
       super(baseMatcher);
       this.name = name;
+      checkArgument(
+          !name.contains("(") || !name.contains(")"),
+          "method name (%s) cannot contain parentheses; use \"getBytes\" instead of \"getBytes()\"",
+          name);
     }
 
     @Override

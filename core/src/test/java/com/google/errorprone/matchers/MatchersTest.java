@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.isVoidType;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static org.junit.Assert.fail;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
@@ -54,6 +55,15 @@ public class MatchersTest {
   @Before
   public void setUp() {
     compilationHelper = CompilationTestHelper.newInstance(InLoopChecker.class, getClass());
+  }
+
+  @Test
+  public void methodNameWithParenthesisThrows() {
+    try {
+      Matchers.instanceMethod().onExactClass("java.lang.String").named("getBytes()");
+      fail("Expected an IAE to be throw but wasn't");
+    } catch (IllegalArgumentException expected) {
+    }
   }
 
   @Test
