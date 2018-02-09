@@ -16,13 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,84 +27,35 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class UngroupedOverloadsTest {
 
-  /**
-   * Specialized version of the {@link UngroupedOverloads} bug checker for testing with a low cutoff
-   * limit set.
-   *
-   * <p>This class needs to be public because of the limitation of {@link CompilationTestHelper}.
-   */
-  @BugPattern(
-    name = "UngroupedOverloadsLowCutoff",
-    summary = "A specialized version of the ungrouped overloads checker with a low cutoff limit",
-    category = JDK,
-    severity = SUGGESTION
-  )
-  public static final class UngroupedOverloadsLowCutoff extends UngroupedOverloads {
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(UngroupedOverloads.class, getClass());
 
-    public UngroupedOverloadsLowCutoff() {
-      super(5);
-    }
-  }
-
-  private CompilationTestHelper compilationHelper;
-  private CompilationTestHelper cutoffCompilationHelper;
-
-  private BugCheckerRefactoringTestHelper refactoringHelper;
-  private BugCheckerRefactoringTestHelper cutoffRefactoringHelper;
-
-  @Before
-  public void createCompilationHelpers() {
-    compilationHelper = createCompilationHelper(UngroupedOverloads.class);
-    cutoffCompilationHelper = createCompilationHelper(UngroupedOverloadsLowCutoff.class);
-  }
-
-  private CompilationTestHelper createCompilationHelper(Class<? extends BugChecker> bugChecker) {
-    return CompilationTestHelper.newInstance(bugChecker, getClass());
-  }
-
-  @Before
-  public void createRefactoringHelper() {
-    refactoringHelper = createRefactoringHelper(new UngroupedOverloads());
-    cutoffRefactoringHelper = createRefactoringHelper(new UngroupedOverloadsLowCutoff());
-  }
-
-  private BugCheckerRefactoringTestHelper createRefactoringHelper(BugChecker bugChecker) {
-    return BugCheckerRefactoringTestHelper.newInstance(bugChecker, getClass());
-  }
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new UngroupedOverloads(), getClass());
 
   @Test
   public void ungroupedOverloadsPositiveCasesSingle() throws Exception {
-    final String path = "UngroupedOverloadsPositiveCasesSingle.java";
-    compilationHelper.addSourceFile(path).doTest();
-    cutoffCompilationHelper.addSourceFile(path).doTest();
+    compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesSingle.java").doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesMultiple() throws Exception {
-    final String path = "UngroupedOverloadsPositiveCasesMultiple.java";
-    compilationHelper.addSourceFile(path).doTest();
-    cutoffCompilationHelper.addSourceFile(path).doTest();
+    compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesMultiple.java").doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesInterleaved() throws Exception {
-    final String path = "UngroupedOverloadsPositiveCasesInterleaved.java";
-    compilationHelper.addSourceFile(path).doTest();
-    cutoffCompilationHelper.addSourceFile(path).doTest();
+    compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesInterleaved.java").doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesCovering() throws Exception {
-    final String path = "UngroupedOverloadsPositiveCasesCovering.java";
-    compilationHelper.addSourceFile(path).doTest();
-    cutoffCompilationHelper.addSourceFile(path).doTest();
+    compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesCovering.java").doTest();
   }
 
   @Test
   public void ungroupedOverloadsNegativeCases() throws Exception {
-    final String path = "UngroupedOverloadsNegativeCases.java";
-    compilationHelper.addSourceFile(path).doTest();
-    cutoffCompilationHelper.addSourceFile(path).doTest();
+    compilationHelper.addSourceFile("UngroupedOverloadsNegativeCases.java").doTest();
   }
 
   @Test
@@ -139,7 +85,7 @@ public final class UngroupedOverloadsTest {
   @Test
   public void ungroupedOverloadsRefactoringBelowCutoffLimit() throws Exception {
     // Here we have 4 methods so refactoring should be applied.
-    cutoffRefactoringHelper
+    refactoringHelper
         .addInputLines(
             "in/BelowLimit.java",
             "class BelowLimit {",
@@ -160,9 +106,8 @@ public final class UngroupedOverloadsTest {
   }
 
   @Test
-  public void ungroupedOverloadsRefactoringAboveCutoffLimit() throws Exception {
-    // Here we have 5 methods so refactoring should NOT be applied.
-    cutoffRefactoringHelper
+  public void ungroupedOverloadsRefactoring_fiveMethods() throws Exception {
+    refactoringHelper
         .addInputLines(
             "in/AboveLimit.java",
             "class AboveLimit {",
@@ -177,8 +122,8 @@ public final class UngroupedOverloadsTest {
             "class AboveLimit {",
             "  AboveLimit() {}",
             "  void foo() {}",
-            "  void bar() {}",
             "  void foo(int x) {}",
+            "  void bar() {}",
             "  void baz() {}",
             "}")
         .doTest();
@@ -201,7 +146,7 @@ public final class UngroupedOverloadsTest {
 
   @Test
   public void staticAndNonStaticInterspersed() throws Exception {
-    cutoffCompilationHelper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "class Test {",
