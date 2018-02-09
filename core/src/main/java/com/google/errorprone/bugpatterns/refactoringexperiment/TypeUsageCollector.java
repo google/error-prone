@@ -3,6 +3,7 @@ package com.google.errorprone.bugpatterns.refactoringexperiment;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.RTRN_TYPE_NOT_FOUND;
 import static java.util.stream.Collectors.collectingAndThen;
 
 import com.google.auto.service.AutoService;
@@ -46,7 +47,6 @@ import java.util.stream.Collectors;
 public class TypeUsageCollector extends BugChecker implements BugChecker.MethodTreeMatcher, BugChecker.MethodInvocationTreeMatcher, BugChecker.NewClassTreeMatcher, BugChecker.VariableTreeMatcher
         , BugChecker.AssignmentTreeMatcher, BugChecker.ClassTreeMatcher {
 
-    public static final String RTRN_TYPE_NOT_FOUND = "RTRN_TYPE_NOT_FOUND";
 
     @Override
     public Description matchMethod(MethodTree methodTree, VisitorState state) {
