@@ -1,8 +1,6 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.COLUMN_SEPERATOR;
-
 import com.google.common.base.Objects;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
 
@@ -18,6 +16,7 @@ public class Node {
     private String type;
     private boolean isRefactorable;
     private boolean visited;
+    public static final String COLUMN_SEPERATOR = "|";
     // only for var and methods
 
     public Node(Identification id) {

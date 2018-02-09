@@ -9,8 +9,7 @@ import java.util.Set;
  */
 public class Constants {
 
-    public static final String pckgName = "/Users/ameya/pilot_plugin/ProtoBuffOutput/";
-    public static final String COLUMN_SEPERATOR = "|";
+
     public static final String REFACTOR_INFO = "RefactorInfo";
     public static final String RTRN_TYPE_NOT_FOUND = "RTRN_TYPE_NOT_FOUND";
 
@@ -18,7 +17,7 @@ public class Constants {
     public static final String INTEGER = "java.lang.Integer";
     public static final String DOUBLE = "java.lang.Double";
     public static final String BOOLEAN = "java.lang.Boolean";
-    public static Set<String> WRAPPER_CLASSES = ImmutableSet.of(LONG,INTEGER,DOUBLE,BOOLEAN);
+    public static final Set<String> WRAPPER_CLASSES = ImmutableSet.of(LONG,INTEGER,DOUBLE,BOOLEAN);
 
     public static final String lambdaExpr = "LAMBDA_EXPRESSION";
     public static final String PARAMETER = "PARAMETER";

@@ -52,10 +52,7 @@ public class Analyzer {
         }
         //
         subGraphs.stream().filter(PRE_CONDITION_1).filter(PRE_CONDITION_2).filter(PRE_CONDITION_3).forEach(g -> {
-            Node param = g.nodes().stream().filter(x -> {
-
-                return x.getKind().equals(PARAMETER) || x.getKind().equals(LOCAL_VARIABLE) || x.getKind().equals(FIELD);
-            }).findFirst().get();
+            Node param = g.nodes().stream().filter(x ->  x.getKind().equals(PARAMETER) || x.getKind().equals(LOCAL_VARIABLE) || x.getKind().equals(FIELD)).findFirst().get();
             Entry<String, List<String>> refactInfo = getRefactorFromInfo(param.getType());
             String refactorTo = Mapping.getMappedTypeFor(refactInfo.getKey(),refactInfo.getValue().get(0),refactInfo.getValue().get(1));
             g.nodes().stream().map(n -> mapToRefactorObj(n,refactorTo)).forEach(r -> ProtoBuffPersist.write(r,REFACTOR_INFO));
