@@ -17,17 +17,26 @@ import java.util.stream.Collectors;
  */
 public class HierarchyUtil {
 
+
+    //Here the logic is:
+    // 1. get all methods connected by hierarchy in a list of list : methodsGroupedByHierarchy
+    //          Iterate over all methods,
+    //                  if it has supermethod, get the corresponding method decl of super method
+    //                  Check if any list contains either the methd or super method are in any hierarchy list
+    //                              IF yes, Add the whichever (mthd/supr mthd) is not present to the list
+    //                              ELSE create a new list with mthd and supermthd as members and add it to methodsGroupedByHierarchy
+    // 2. Return the list containing the method queried. Remove the queried method from the returned list for convinince.
     private static List<Set<MethodDeclaration>> methodsGroupedByHierarchy = new ArrayList<>();
 
     public static List<MethodDeclaration> methodsAffectedHierarchy(Identification id, List<MethodDeclaration> mthdDecls) {
         if (methodsGroupedByHierarchy.isEmpty())
-            methodsGroupedByHierarchy = getMthdDclHierarchy(mthdDecls);
+            getMthdDclHierarchy(mthdDecls);
         return methodsGroupedByHierarchy.stream().filter(x -> x.stream().anyMatch(y -> y.getId().equals(id)))
                 .map(y -> y.stream().filter(m -> !m.getId().equals(id)).collect(Collectors.toList())).findFirst().get();
     }
 
     //TODO: make this better
-    private static List<Set<MethodDeclaration>> getMthdDclHierarchy(List<MethodDeclaration> mthdDecls) {
+    private static void getMthdDclHierarchy(List<MethodDeclaration> mthdDecls) {
         List<Set<MethodDeclaration>> lists = new ArrayList<>();
         for (MethodDeclaration m : mthdDecls) {
             if (m.hasSuperMethodIn()) {
@@ -41,11 +50,10 @@ public class HierarchyUtil {
                     Set<MethodDeclaration> set = new HashSet<>();
                     set.add(superMthd);
                     set.add(m);
-                    lists.add(set);
+                    methodsGroupedByHierarchy.add(set);
                 }
             }
         }
-        return lists;
     }
 
     private static Optional<Set<MethodDeclaration>> hierarchyListContains(List<Set<MethodDeclaration>> lists, MethodDeclaration superMthd, MethodDeclaration mthd) {
@@ -53,9 +61,7 @@ public class HierarchyUtil {
     }
 
     //TODO Exception handling
-    private static MethodDeclaration getSuperMethodId(MethodDeclaration
-                                                              md, List<MethodDeclaration> mthDcl) {
-
+    private static MethodDeclaration getSuperMethodId(MethodDeclaration md, List<MethodDeclaration> mthDcl) {
         try {
             return mthDcl.stream().filter(m -> m.getId().getName().equals(md.getId().getName())
                     && m.getId().getOwner().equals(md.getSuperMethodIn()) && m.getId().getKind().equals(md.getId().getKind())
