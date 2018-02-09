@@ -21,6 +21,17 @@ import java.util.stream.Collectors;
  */
 public class CreateGraph {
 
+    //TODO: parameter owner should have the enclosing class too.
+    // I think the best way to is append "|<enclosing_class_name>" to variable when param
+    // Current known issues:
+    // If we have two similar methods in different classes, the variables of both methods will be treated as one.
+    // Class t1 {
+    //m1(F f) {}
+    //}
+    // Class t2 {
+    //m1(F f) {}
+    //}
+    // t1.m1.f == t2.m1.f
 
     public static MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
     private static String COLUMN_SPERATOR = "|";
