@@ -12,12 +12,12 @@ import com.google.errorprone.bugpatterns.refactoringexperiment.models.Identifica
  */
 public class Node {
 
-    public String kind;
-    public String name;
-    public String owner;
-    public String type;
-    public boolean isRefactorable;
-    public boolean visited;
+    private String kind;
+    private String name;
+    private String owner;
+    private String type;
+    private boolean isRefactorable;
+    private boolean visited;
     // only for var and methods
 
     public Node(Identification id) {
@@ -83,5 +83,53 @@ public class Node {
     @Override
     public String toString() {
         return this.name + COLUMN_SEPERATOR + kind + COLUMN_SEPERATOR + owner + COLUMN_SEPERATOR + type;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isRefactorable() {
+        return isRefactorable;
+    }
+
+    public void setRefactorable(boolean refactorable) {
+        isRefactorable = refactorable;
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
 }
