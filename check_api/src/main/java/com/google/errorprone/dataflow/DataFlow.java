@@ -22,6 +22,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -34,8 +35,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
-import javax.annotation.Nullable;
-import javax.annotation.processing.ProcessingEnvironment;
+
 import org.checkerframework.dataflow.analysis.AbstractValue;
 import org.checkerframework.dataflow.analysis.Analysis;
 import org.checkerframework.dataflow.analysis.Store;
@@ -44,6 +44,9 @@ import org.checkerframework.dataflow.cfg.CFGBuilder;
 import org.checkerframework.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.dataflow.cfg.UnderlyingAST;
 
+import javax.annotation.Nullable;
+import javax.annotation.processing.ProcessingEnvironment;
+
 /**
  * Provides a wrapper around {@link org.checkerframework.dataflow.analysis.Analysis}.
  *
@@ -51,7 +54,7 @@ import org.checkerframework.dataflow.cfg.UnderlyingAST;
  */
 public final class DataFlow {
 
-  /** A pair of analysis and ControlFlowGraph. */
+  /** A pair of Analysis and ControlFlowGraph. */
   public static interface Result<
       A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>> {
     Analysis<A, S, T> getAnalysis();
