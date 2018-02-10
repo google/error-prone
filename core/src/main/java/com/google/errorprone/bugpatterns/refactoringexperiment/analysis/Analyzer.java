@@ -56,8 +56,6 @@ public class Analyzer {
             Entry<String, List<String>> refactInfo = getRefactorFromInfo(param.getType());
             String refactorTo = Mapping.getMappedTypeFor(refactInfo.getKey(),refactInfo.getValue().get(0),refactInfo.getValue().get(1));
             g.nodes().stream().map(n -> mapToRefactorObj(n,refactorTo)).forEach(r -> ProtoBuffPersist.write(r,REFACTOR_INFO));
-            g.nodes().stream().forEach(System.out::println);
-            System.out.println("**");
         });
 
 
