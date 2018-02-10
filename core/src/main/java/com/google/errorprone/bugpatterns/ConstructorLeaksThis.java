@@ -29,6 +29,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import javax.lang.model.element.Name;
 
@@ -83,7 +84,11 @@ public class ConstructorLeaksThis extends ConstructorLeakChecker {
 
   private void checkForThis(
       ExpressionTree node, Name identifier, ClassSymbol thisClass, VisitorState state) {
-    if (identifier.contentEquals("this") && thisClass.equals(ASTHelpers.getSymbol(node).owner)) {
+    Symbol sym = ASTHelpers.getSymbol(node);
+    if (sym != null
+        && !sym.isConstructor()
+        && identifier.contentEquals("this")
+        && thisClass.equals(sym.owner)) {
       state.reportMatch(describeMatch(node));
     }
   }
