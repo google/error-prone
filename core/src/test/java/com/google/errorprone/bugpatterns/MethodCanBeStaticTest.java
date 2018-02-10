@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -267,6 +268,32 @@ public class MethodCanBeStaticTest {
             "  private void readObjectNoData() throws ObjectStreamException {}",
             "  private Object readResolve() { return null; }",
             "  private Object writeReplace() { return null; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new MethodCanBeStatic(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.function.ToIntBiFunction;",
+            "class Test {",
+            "  private int add(int x, int y) {",
+            "    return x + y;",
+            "  }",
+            "  ToIntBiFunction<Integer, Integer> f = this::add;",
+            "  ToIntBiFunction<Integer, Integer> g = (x, y) -> this.add(x, y);",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.util.function.ToIntBiFunction;",
+            "class Test {",
+            "  private static int add(int x, int y) {",
+            "    return x + y;",
+            "  }",
+            "  ToIntBiFunction<Integer, Integer> f = Test::add;",
+            "  ToIntBiFunction<Integer, Integer> g = (x, y) -> Test.add(x, y);",
             "}")
         .doTest();
   }
