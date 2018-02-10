@@ -32,6 +32,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.lang.model.element.AnnotationValue;
@@ -39,17 +40,32 @@ import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 public class GuardedByUtils {
+  public static ImmutableSet<String> getGuardValues(Symbol sym) {
+    return getAnnotationValueAsStrings(sym, "GuardedBy");
+  }
+
   static ImmutableSet<String> getGuardValues(Tree tree, VisitorState state) {
     Symbol sym = getSymbol(tree);
     if (sym == null) {
       return null;
     }
+    return getAnnotationValueAsStrings(sym, "GuardedBy");
+  }
+
+  private static ImmutableSet<String> getAnnotationValueAsStrings(Symbol sym, String guardedBy) {
     return sym.getRawAttributes()
         .stream()
-        .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals("GuardedBy"))
-        .map(a -> a.member(state.getName("value")))
-        .filter(v -> v != null)
-        .flatMap(a -> asStrings(a))
+        .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals(guardedBy))
+        .flatMap(
+            a ->
+                a.getElementValues()
+                    .entrySet()
+                    .stream()
+                    .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
+                    .map(Map.Entry::getValue)
+                    .findFirst()
+                    .map(v -> asStrings(v))
+                    .orElse(Stream.empty()))
         .collect(toImmutableSet());
   }
 
