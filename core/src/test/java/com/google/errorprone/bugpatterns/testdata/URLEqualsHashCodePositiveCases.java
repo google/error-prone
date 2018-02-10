@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableSet;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -81,5 +84,29 @@ public class URLEqualsHashCodePositiveCases {
 
     // BUG: Diagnostic contains: java.net.URL
     Map urlMap = new ExtendedMap();
+  }
+
+  public void hashBiMapOfURL() {
+    // BUG: Diagnostic contains: java.net.URL
+    BiMap<URL, String> urlBiMap = HashBiMap.create();
+
+    // BUG: Diagnostic contains: java.net.URL
+    BiMap<String, URL> toUrlBiMap = HashBiMap.create();
+  }
+
+  public void hashBiMapOfCompleteURL() {
+    // BUG: Diagnostic contains: java.net.URL
+    HashBiMap<java.net.URL, String> urlBiMap = HashBiMap.create();
+
+    // BUG: Diagnostic contains: java.net.URL
+    HashBiMap<String, java.net.URL> toUrlBiMap = HashBiMap.create();
+  }
+
+  public void immutableSetOfURL() {
+    // BUG: Diagnostic contains: java.net.URL
+    ImmutableSet<URL> urlSet = ImmutableSet.of();
+
+    // BUG: Diagnostic contains: java.net.URL
+    ImmutableSet<URL> urlSet2 = ImmutableSet.<URL>builder().build();
   }
 }
