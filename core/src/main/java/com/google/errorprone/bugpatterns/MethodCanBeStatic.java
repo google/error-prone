@@ -28,9 +28,15 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import javax.lang.model.element.Modifier;
 
@@ -104,6 +110,36 @@ public class MethodCanBeStatic extends BugChecker implements MethodTreeMatcher {
         default: // fall out
       }
     }
-    return describeMatch(tree.getModifiers(), addModifiers(tree, state, Modifier.STATIC));
+    return describeMatch(
+        tree.getModifiers(),
+        addModifiers(tree, state, Modifier.STATIC).map(f -> fixQualifiers(state, sym, f)));
+  }
+
+  /**
+   * Replace instance references to the method with static access (e.g. `this.foo(...)` ->
+   * `EnclosingClass.foo(...)` and `this::foo` to `EnclosingClass::foo`).
+   */
+  private SuggestedFix fixQualifiers(VisitorState state, MethodSymbol sym, SuggestedFix f) {
+    SuggestedFix.Builder builder = SuggestedFix.builder().merge(f);
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
+        fixQualifier(tree, tree.getExpression());
+        return super.visitMemberSelect(tree, unused);
+      }
+
+      @Override
+      public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
+        fixQualifier(tree, tree.getQualifierExpression());
+        return super.visitMemberReference(tree, unused);
+      }
+
+      private void fixQualifier(Tree tree, ExpressionTree qualifierExpression) {
+        if (sym.equals(ASTHelpers.getSymbol(tree))) {
+          builder.replace(qualifierExpression, sym.owner.enclClass().getSimpleName().toString());
+        }
+      }
+    }.scan(state.getPath().getCompilationUnit(), null);
+    return builder.build();
   }
 }
