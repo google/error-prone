@@ -16,7 +16,9 @@
 
 package com.google.errorprone;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.expectThrows;
 
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.LinkType;
@@ -182,5 +184,20 @@ public class BugPatternValidatorTest {
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
     assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
+  }
+
+  @Test
+  public void spacesInNameNotAllowed() {
+    @BugPattern(
+      name = "name with spaces",
+      summary = "Has a name with spaces",
+      severity = SeverityLevel.ERROR
+    )
+    final class BugPatternTestClass {}
+
+    BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
+    ValidationException e =
+        expectThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
+    assertThat(e.getMessage()).contains("Name must not contain whitespace");
   }
 }

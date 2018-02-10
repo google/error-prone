@@ -47,5 +47,11 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.truth</groupId>
+      <artifactId>truth</artifactId>
+      <version>0.39</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableSet;
 import java.lang.annotation.Annotation;
 import java.util.Set;
@@ -30,6 +31,11 @@ public class BugPatternValidator {
   public static void validate(BugPattern pattern) throws ValidationException {
     if (pattern == null) {
       throw new ValidationException("No @BugPattern provided");
+    }
+
+    // name must not contain spaces
+    if (CharMatcher.whitespace().matchesAnyOf(pattern.name())) {
+      throw new ValidationException("Name must not contain whitespace: " + pattern.name());
     }
 
     // linkType must be consistent with link element.
