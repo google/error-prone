@@ -1,4 +1,4 @@
-[`DateFormat`][] is not thread-safe. The documentation recommendeds creating
+[`DateFormat`][] is not thread-safe. The documentation recommends creating
 separate format instances for each thread. If multiple threads access a format
 concurrently, it must be synchronized externally.
 
