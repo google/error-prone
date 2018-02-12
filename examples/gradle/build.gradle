@@ -1,11 +1,14 @@
 // See https://github.com/tbroyer/gradle-errorprone-plugin
 plugins {
   id 'java'
-  id 'net.ltgt.errorprone' version '0.0.11'
+  id 'net.ltgt.errorprone' version '0.0.13'
 }
 repositories {
   mavenCentral()
+  maven {
+    url "https://oss.sonatype.org/content/repositories/snapshots/"
+  }
 }
 dependencies {
-  errorprone 'com.google.errorprone:error_prone_core:2.2.0'
+  errorprone 'com.google.errorprone:error_prone_core:2.2.1-SNAPSHOT'
 }
