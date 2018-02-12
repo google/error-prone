@@ -53,7 +53,7 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
       super(baseMatcher);
       this.name = name;
       checkArgument(
-          !name.contains("(") || !name.contains(")"),
+          !name.contains("(") && !name.contains(")"),
           "method name (%s) cannot contain parentheses; use \"getBytes\" instead of \"getBytes()\"",
           name);
     }
