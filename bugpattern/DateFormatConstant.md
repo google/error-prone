@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-[`DateFormat`][] is not thread-safe. The documentation recommendeds creating
+[`DateFormat`][] is not thread-safe. The documentation recommends creating
 separate format instances for each thread. If multiple threads access a format
 concurrently, it must be synchronized externally.
 

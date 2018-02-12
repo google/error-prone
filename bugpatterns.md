@@ -587,7 +587,7 @@ __[TypeParameterUnusedInFormals](bugpattern/TypeParameterUnusedInFormals)__<br>
 Declaring a type parameter that is only used in the return type is a misuse of generics: operations on the type parameter are unchecked, it hides unsafe casts at invocations of the method, and it interacts badly with method overload resolution.
 
 __[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
-Creation of a Set/HashSet/HashMap of java.net.URL. equals() and hashCode() of java.net.URL class make blocking internet connections.
+Avoid hash-based containers of java.net.URL--the containers rely on equals() and hashCode(), which cause java.net.URL to make blocking internet connections.
 
 __[UnsafeFinalization](bugpattern/UnsafeFinalization)__<br>
 Finalizer may run before native code finishes execution

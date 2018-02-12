@@ -243,6 +243,15 @@ public class ConstructorLeaksThisNegativeCases {
     @SuppressWarnings("ConstructorLeaksThis")
     final FixtureController that = new FixtureController(this);
   }
+
+  static final class WithTwoConstructors {
+    public WithTwoConstructors() {
+      // 'this' references another constructor, not an object
+      this(0);
+    }
+
+    public WithTwoConstructors(int i) {}
+  }
 }
 {% endhighlight %}
 
