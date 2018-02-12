@@ -64,6 +64,16 @@ public class MatchersTest {
       fail("Expected an IAE to be throw but wasn't");
     } catch (IllegalArgumentException expected) {
     }
+    try {
+      Matchers.instanceMethod().onExactClass("java.lang.String").named("getBytes)");
+      fail("Expected an IAE to be throw but wasn't");
+    } catch (IllegalArgumentException expected) {
+    }
+    try {
+      Matchers.instanceMethod().onExactClass("java.lang.String").named("getBytes(");
+      fail("Expected an IAE to be throw but wasn't");
+    } catch (IllegalArgumentException expected) {
+    }
   }
 
   @Test
