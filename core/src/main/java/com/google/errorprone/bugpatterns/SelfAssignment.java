@@ -28,6 +28,7 @@ import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static com.sun.source.tree.Tree.Kind.VARIABLE;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import com.google.common.base.Preconditions;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -177,7 +178,7 @@ public class SelfAssignment extends BugChecker
       // as the rhs
 
       // rhs should be either identifier or field access
-      assert (rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
+      Preconditions.checkState(rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
 
       // get current name of rhs
       String rhsName = null;
@@ -214,7 +215,7 @@ public class SelfAssignment extends BugChecker
       // find a field of the same type and similar name and suggest it as the lhs
 
       // lhs should be identifier
-      assert (lhs.getKind() == IDENTIFIER);
+      Preconditions.checkState(lhs.getKind() == IDENTIFIER);
 
       // get current name of lhs
       String lhsName = ((JCIdent) rhs).name.toString();
