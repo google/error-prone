@@ -16,8 +16,8 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import com.google.errorprone.annotations.CheckReturnValue;
 import java.util.Collection;
-import javax.annotation.CheckReturnValue;
 import org.pcollections.Empty;
 import org.pcollections.PSet;
 

@@ -16,8 +16,8 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.errorprone.annotations.CheckReturnValue;
 import java.util.function.Supplier;
-import javax.annotation.CheckReturnValue;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 public class CheckReturnValueNegativeCases {

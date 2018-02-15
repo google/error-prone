@@ -21,13 +21,13 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLAB
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer.tryGetMethodSymbol;
 import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.dataflow.LocalStore;
 import com.google.errorprone.dataflow.LocalVariableValues;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.annotation.CheckReturnValue;
 import javax.lang.model.element.Element;
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
 import org.checkerframework.dataflow.analysis.RegularTransferResult;

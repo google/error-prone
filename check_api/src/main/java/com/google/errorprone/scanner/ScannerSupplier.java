@@ -31,6 +31,7 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.InvalidCommandLineOptionException;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +39,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.CheckReturnValue;
 
 /**
  * Supplies {@link Scanner}s and provides access to the backing sets of all {@link BugChecker}s and
