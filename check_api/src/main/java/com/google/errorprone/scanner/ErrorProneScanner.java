@@ -36,6 +36,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CaseTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CatchTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeEndMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ConditionalExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ContinueTreeMatcher;
@@ -74,6 +75,7 @@ import com.google.errorprone.bugpatterns.BugChecker.UnionTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WildcardTreeMatcher;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotatedTypeTree;
@@ -208,6 +210,7 @@ public class ErrorProneScanner extends Scanner {
   private final List<CatchTreeMatcher> catchMatchers = new ArrayList<>();
   private final List<ClassTreeMatcher> classMatchers = new ArrayList<>();
   private final List<CompilationUnitTreeMatcher> compilationUnitMatchers = new ArrayList<>();
+  private final List<CompilationUnitTreeEndMatcher> compilationUnitEndMatchers = new ArrayList<>();
   private final List<CompoundAssignmentTreeMatcher> compoundAssignmentMatchers = new ArrayList<>();
   private final List<ConditionalExpressionTreeMatcher> conditionalExpressionMatchers =
       new ArrayList<>();
@@ -290,6 +293,9 @@ public class ErrorProneScanner extends Scanner {
     }
     if (checker instanceof CompilationUnitTreeMatcher) {
       compilationUnitMatchers.add((CompilationUnitTreeMatcher) checker);
+    }
+    if (checker instanceof CompilationUnitTreeEndMatcher) {
+      compilationUnitEndMatchers.add((CompilationUnitTreeEndMatcher) checker);
     }
     if (checker instanceof CompoundAssignmentTreeMatcher) {
       compoundAssignmentMatchers.add((CompoundAssignmentTreeMatcher) checker);
@@ -599,7 +605,19 @@ public class ErrorProneScanner extends Scanner {
         }
       }
     }
-    return super.visitCompilationUnit(tree, state);
+    Void result = super.visitCompilationUnit(tree, state);
+    for (CompilationUnitTreeEndMatcher matcher : compilationUnitEndMatchers) {
+      if (!isSuppressed(matcher, state)) {
+        try {
+          for (Description desc : matcher.endCompilationUnit(tree, state)) {
+            reportMatch(desc, tree, state);
+          }
+        } catch (Throwable t) {
+          handleError(matcher, t);
+        }
+      }
+    }
+    return result;
   }
 
   @Override
