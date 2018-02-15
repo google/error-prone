@@ -22,6 +22,7 @@ import com.google.common.base.Preconditions;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
@@ -87,7 +88,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.CheckReturnValue;
 
 /**
  * A base class for implementing bug checkers. The {@code BugChecker} supplies a Scanner

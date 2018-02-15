@@ -26,11 +26,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.fixes.Fix;
 import com.sun.source.tree.Tree;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
 /**

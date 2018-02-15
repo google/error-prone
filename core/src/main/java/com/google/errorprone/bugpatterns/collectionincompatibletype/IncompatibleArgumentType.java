@@ -23,6 +23,7 @@ import static com.google.errorprone.bugpatterns.collectionincompatibletype.Abstr
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.CompatibleWith;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -41,7 +42,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
