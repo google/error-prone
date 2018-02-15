@@ -1,0 +1,9 @@
+syntax = "proto2";
+package Models;
+
+option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
+
+message FilteredType {
+    optional string interfaceName = 1;
+    repeated string typeParameter = 2;
+}

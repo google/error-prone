@@ -17,4 +17,5 @@ public class Relationships {
     public static final String recurssive = "RECURSSIVE";
     public static final String method_invoked = "METHOD_INVOKED";
     public static final String reference = "REFERENCE";
+    public static String initialized_as = "INITIALIZED_AS";
 }

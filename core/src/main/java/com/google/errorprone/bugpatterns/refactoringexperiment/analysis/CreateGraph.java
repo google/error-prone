@@ -21,18 +21,6 @@ import java.util.stream.Collectors;
  */
 public class CreateGraph {
 
-    //TODO: parameter owner should have the enclosing class too.
-    // I think the best way to is append "|<enclosing_class_name>" to variable when param
-    // Current known issues:
-    // If we have two similar methods in different classes, the variables of both methods will be treated as one.
-    // Class t1 {
-    //m1(F f) {}
-    //}
-    // Class t2 {
-    //m1(F f) {}
-    //}
-    // t1.m1.f == t2.m1.f
-
     public static MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
     private static String COLUMN_SPERATOR = "|";
 
@@ -66,17 +54,25 @@ public class CreateGraph {
     }
 
     //1. If local or field add node to graph
+    //          manage initialiser if any, like rhs of assignment
     //2. If Parameter, the node already exists, so get the params connected by hierarchy. At this step i know i have all nodes for any parameter
     private static void populateFromVariables() throws Exception {
         List<Variable> vars = QueryProtoBuffData.getAllVrbl();
         for (Variable v : vars) {
-            if (!v.getId().getKind().equals(Constants.PARAMETER))
-                addNodeToGraph(v.getId());
+            Node n;
+            if (!v.getId().getKind().equals(Constants.PARAMETER)) {
+                n = addNodeToGraph(v.getId());
+                if(v.hasInitializer()) {
+                    Node initializer = addNodeToGraphIfAbsent(v.getInitializer(), n);
+                    createBiDerectionalRelation(n, initializer, Relationships.initialized_as, Relationships.assigned_to, false);
+                }
+            }
             else {
-                Node n = getNode(v.getId()).orElseThrow(() -> new Exception());
+                n = getNode(v.getId()).orElseThrow(() -> new Exception());
                 for (Node p : paramsAffectedHierarchy(n))
                     createBiDerectionalRelation(p, n, Relationships.affected_by_hierarchy, Relationships.affected_by_hierarchy, false);
             }
+           // n.setRefactorable(Mapping.getMappedTypeFor(v.getFilteredType()));
         }
     }
 
@@ -188,7 +184,6 @@ public class CreateGraph {
         } else
             return addNodeToGraphIfAbsent(mi.getId());
     }
-
 
     private static Optional<Node> getNode(Identification id) {
         return g.nodes().stream().filter(x -> x.isSameAs(id)).findFirst();

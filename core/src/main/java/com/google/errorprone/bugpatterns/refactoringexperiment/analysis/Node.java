@@ -14,9 +14,9 @@ public class Node {
     private String name;
     private String owner;
     private String type;
-    private boolean isRefactorable;
+    private String refactorTo;
     private boolean visited;
-    public static final String COLUMN_SEPERATOR = "|";
+    private static String COLUMN_SEPERATOR = "|";
     // only for var and methods
 
     public Node(Identification id) {
@@ -116,12 +116,12 @@ public class Node {
         this.type = type;
     }
 
-    public boolean isRefactorable() {
-        return isRefactorable;
+    public String refactorTo() {
+        return refactorTo;
     }
 
-    public void setRefactorable(boolean refactorable) {
-        isRefactorable = refactorable;
+    public void setRefactorable(String refactorable) {
+        refactorTo = refactorable;
     }
 
     public boolean isVisited() {

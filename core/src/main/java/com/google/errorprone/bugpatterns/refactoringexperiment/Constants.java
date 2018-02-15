@@ -56,4 +56,9 @@ public class Constants {
     public static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
 
     public static final String NO_MAPPING ="NO MAPPING";
+    public static final String TEST = "test";
+    public static final String APPLY = "apply";
+    public static final String APPLY_AS_LONG = "applyAsLong";
+    public static final String APPLY_AS_DOUBLE = "applyAsDouble";
+    public static final String APPLY_AS_INT = "applyAsInt";
 }

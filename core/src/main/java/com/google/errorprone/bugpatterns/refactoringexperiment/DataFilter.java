@@ -6,6 +6,7 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 
@@ -14,13 +15,20 @@ import com.sun.tools.javac.code.Type;
  */
 public class DataFilter {
 
+
     // TODO : put in the code for checking all LT.
+
+
     public static boolean apply(Tree tree, VisitorState state) {
-
-        return apply(ASTHelpers.getType(tree), state);
-
-
+        return  tree!=null ? apply(ASTHelpers.getType(tree),state) : false;
     }
+
+    public static boolean apply(ClassTree classTree, VisitorState state) {
+        boolean implementsLt = classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state)).count() > 0;
+        boolean isLT = apply(ASTHelpers.getType(classTree),state);
+        return  implementsLt || isLT;
+    }
+
 
     /*
     * this method checks if :
@@ -32,17 +40,31 @@ public class DataFilter {
 
     public static boolean apply(Type t1, VisitorState state) {
         try {
+
             return (ASTHelpers.isSameType(
-                    t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)
-                    || ASTHelpers.isSubtype(t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state))
-                    &&
-                    t1.getTypeArguments().stream().anyMatch(x -> WRAPPER_CLASSES.stream().anyMatch(w -> ASTHelpers.isSameType(
-                            x, state.getTypeFromString(w), state)));
+                    t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state) && t1.getTypeArguments().stream().anyMatch(x -> WRAPPER_CLASSES.stream().anyMatch(w -> ASTHelpers.isSameType(
+                    x, state.getTypeFromString(w), state))))
+                    || state.getTypes().interfaces(t1).stream().filter(x ->ASTHelpers.isSameType(x,state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state))
+                    .anyMatch(tp -> tp.getTypeArguments().stream().anyMatch(x -> WRAPPER_CLASSES.stream().anyMatch(w -> ASTHelpers.isSameType(
+                            x, state.getTypeFromString(w), state))));
+
         } catch (Exception e) {
             return false;
         }
 
     }
+    //@Ali, this is how i populate filteredType (the newly suggested proto)
+//    public static FilteredType getFilteredType(VariableTree var, VisitorState state){
+//        FilteredType.Builder ft = FilteredType.newBuilder();
+//        ft.setInterfaceName(JAVA_UTIL_FUNCTION_FUNCTION); // because i know its always this for now.
+//        Type t1 = ASTHelpers.getType(var);
+//        List<String> args = t1.getTypeArguments().stream().map(x -> x.toString()).collect(Collectors.toList());
+//        if(args.size() == 0)
+//            args = state.getTypes().interfaces(t1).stream().filter(x ->ASTHelpers.isSameType(x,state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)).findFirst()
+//                    .map(x -> x.getTypeArguments().stream().map(y -> y.toString()).collect(Collectors.toList())).orElse(new ArrayList<>());
+//        return  ft.addAllTypeParameter(args).build();
+//    }
+
 
 }
 

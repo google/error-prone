@@ -35,6 +35,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.lang.model.element.ElementKind;
+
 @AutoService(BugChecker.class)
 @BugPattern(
         name = "TypeUsageCollector",
@@ -57,17 +59,16 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         if (paramsMatter || returnMatter) {
             MethodDeclaration.Builder mthdDcl = MethodDeclaration.newBuilder();
             infoFromSymbol(methodTree).transform(mthdDcl::setId);
-
             mthdDcl.setReturnType(ASTHelpers.getType(methodTree.getReturnType()) != null ? ASTHelpers.getType(methodTree.getReturnType()).toString() : RTRN_TYPE_NOT_FOUND);
 
-            List<String> super_methods = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().map(x -> x.owner.toString()).collect(collectingAndThen(Collectors.toList(),
+            List<String> y = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().map(x -> x.owner.toString()).collect(collectingAndThen(Collectors.toList(),
                     Collections::unmodifiableList));
 
-            if (super_methods != null && !super_methods.isEmpty()) {
-                mthdDcl.setSuperMethodIn(super_methods.get(0));
-            }
+            if (!y.isEmpty())
+                mthdDcl.setSuperMethodIn(y.get(0));
+
             mthdDcl.putAllParameters(Collections.unmodifiableMap(params.stream().filter(x -> DataFilter.apply(x, state))
-                    .collect(Collectors.toMap(params::indexOf, x -> infoOfTree(x).build()))));
+                    .collect(Collectors.toMap(x -> params.indexOf(x), x -> infoOfTree(x).build()))));
 
             mthdDcl.addAllModifier(symb.getModifiers().stream().map(x -> x.toString()).collect(collectingAndThen(Collectors.toList(),
                     Collections::unmodifiableList)));
@@ -78,39 +79,70 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     }
 
     //TODO: Removing method invocation returning lambda for now.
-    // ideally i shud not be capturing it. It could be caught in assignments and method invocations needing paramLT
+    //mthod returning lambda shud be caught here because i could have something
+    //like : getLambda().apply(8);
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-        Symbol.MethodSymbol symb = ASTHelpers.getSymbol(tree);
-        List<Symbol.VarSymbol> params = symb.getParameters();
-        boolean paramLT = params.stream().filter(x -> DataFilter.apply(x.type, state)).count() > 0;
-        boolean ofLT = DataFilter.apply(ASTHelpers.getReceiverType(tree), state);
-        if (paramLT || ofLT) {
-            MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
-            infoFromSymbol(tree).transform(mthdInvc::setId);
+        boolean paramLT = tree.getArguments().stream().filter(x -> {
+            if (x.getKind().equals(Kind.NEW_CLASS)) {
+                NewClassTree nt = (NewClassTree) x;
+                if (nt.getClassBody() != null) {
+                    return DataFilter.apply(nt.getClassBody(), state);
+                }
+            }
+            return DataFilter.apply(x, state);
+        }).count() > 0;
 
-            mthdInvc.putAllArguments(Collections.unmodifiableMap(tree.getArguments().stream().filter(x -> DataFilter.apply(x, state))
+        boolean ofLT = DataFilter.apply(ASTHelpers.getReceiverType(tree), state);
+        boolean returnMatter = DataFilter.apply(ASTHelpers.getReturnType(tree), state);
+        if (paramLT || ofLT || returnMatter) {
+            MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
+            infoFromSymbol(tree).transform(id -> mthdInvc.setId(id));
+            mthdInvc.putAllArguments(Collections.unmodifiableMap(tree.getArguments().stream().filter(x -> {
+                if (x.getKind().equals(Kind.NEW_CLASS)) {
+                    NewClassTree nt = (NewClassTree) x;
+                    if (nt.getClassBody() != null) {
+                        return DataFilter.apply(nt.getClassBody(), state);
+                    }
+                }
+                return DataFilter.apply(x, state);
+            })
                     .collect(Collectors.toMap(x -> tree.getArguments().indexOf(x), x -> infoOfTree(x).build()))));
 
-            if (ofLT) mthdInvc.setReceiver(infoOfTree(ASTHelpers.getReceiver(tree)));
-
+            if (ofLT) {
+                mthdInvc.setReceiver(infoOfTree(ASTHelpers.getReceiver(tree)));
+            }
             ProtoBuffPersist.write(mthdInvc, tree.getKind().toString());
         }
         return null;
     }
 
-
     @Override
     public Description matchNewClass(NewClassTree var1, VisitorState state) {
-        Symbol.MethodSymbol symb = ASTHelpers.getSymbol(var1);
-        boolean paramMatters = symb.getParameters().stream().filter(x -> DataFilter.apply(x.type, state)).count() > 0;
+        boolean paramMatters = var1.getArguments().stream().filter(x -> {
+            if (x.getKind().equals(Kind.NEW_CLASS)){
+                NewClassTree nt = (NewClassTree) x;
+                if(nt.getClassBody()!=null){
+                    return DataFilter.apply(nt.getClassBody(), state);
+                }
+            }
+            return DataFilter.apply(x, state);
+        }).count() > 0;
+
         if (paramMatters) {
             MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
-            infoFromSymbol(var1).transform(mthdInvc::setId);
+            infoFromSymbol(var1).transform(id -> mthdInvc.setId(id));
 
-            mthdInvc.putAllArguments(Collections.unmodifiableMap(var1.getArguments().stream().filter(x -> DataFilter.apply(x, state))
+            mthdInvc.putAllArguments(Collections.unmodifiableMap(var1.getArguments().stream().filter(x -> {
+                if (x.getKind().equals(Kind.NEW_CLASS)){
+                    NewClassTree nt = (NewClassTree) x;
+                    if(nt.getClassBody()!=null){
+                        return DataFilter.apply(nt.getClassBody(), state);
+                    }
+                }
+                return DataFilter.apply(x, state);
+            })
                     .collect(Collectors.toMap(x -> var1.getArguments().indexOf(x), x -> infoOfTree(x).build()))));
-
 
             ProtoBuffPersist.write(mthdInvc, var1.getKind().toString());
         }
@@ -122,18 +154,14 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     public Description matchVariable(VariableTree var1, VisitorState state) {
         if (DataFilter.apply(var1, state)) {
             Variable.Builder vrbl = Variable.newBuilder();
-            infoFromSymbol(var1).transform(vrbl::setId);
-
+            infoFromSymbol(var1).transform(id -> vrbl.setId(id));
             if (var1.getInitializer() != null)
                 vrbl.setInitializer(infoOfTree(var1.getInitializer()));
-
-            vrbl.setEnclosingClass(getEnclosingClass(var1));
-
+           // vrbl.setFilteredType(DataFilter.getFilteredType(var1,state));
             ProtoBuffPersist.write(vrbl, var1.getKind().toString());
         }
         return null;
     }
-
 
     @Override
     public Description matchAssignment(AssignmentTree var1, VisitorState state) {
@@ -149,21 +177,21 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         return null;
     }
 
+
     @Override
     public Description matchClass(ClassTree classTree, VisitorState state) {
         boolean implementsLt = classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state)).count() > 0;
         boolean isLT = DataFilter.apply(classTree, state);
-        if (implementsLt || isLT) {
-            ClassDeclaration.Builder clsDcl = ClassDeclaration.newBuilder();
-            infoFromSymbol(classTree).transform(clsDcl::setId);
-
+        ClassDeclaration.Builder clsDcl = ClassDeclaration.newBuilder();
+        if ((implementsLt || isLT)) {
+            infoFromSymbol(classTree).transform(id -> clsDcl.setId(id));
             if (isLT) clsDcl.addSuperType(ASTHelpers.getType(classTree).toString());
             else
                 clsDcl.addAllSuperType(Collections.unmodifiableList(classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state))
                         .map(x -> ASTHelpers.getType(x).toString()).collect(Collectors.toList())));
+
             ProtoBuffPersist.write(clsDcl, classTree.getKind().toString());
         }
-
         return null;
     }
 
@@ -187,12 +215,18 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             Identification.Builder id = Identification.newBuilder();
             id.setName(getName(symb))
                     .setKind(getKindFromTree(tree).or(symb.getKind().toString()))
-                    .setOwner(symb.owner.toString())
+                    .setOwner(getOwner(symb))
                     .setType(symb.type.toString());
             return Optional.of(id);
         } catch (Exception e) {
             return Optional.absent();
         }
+    }
+
+    private static String getOwner(Symbol symb) {
+        if (symb.owner.getKind().equals(ElementKind.METHOD))
+            return symb.owner.toString() + "|" + symb.owner.owner.toString();
+        return symb.owner.toString();
     }
 
     private static Optional<String> getKindFromTree(Tree tree) {
@@ -201,17 +235,12 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         return Optional.absent();
     }
 
+
     public static String getName(Symbol symb) {
-        return symb.isConstructor() ? symb.enclClass().toString() : symb.name.toString();
-    }
-
-    public static String getEnclosingClass(Tree tree) {
-        try {
-            return ASTHelpers.getSymbol(tree).enclClass().toString();
-        } catch (Exception e) {
+        if (symb.name != null)
+            return symb.isConstructor() ? symb.enclClass().toString() : symb.name.toString();
+        else
             return "";
-        }
     }
-
 
 }
