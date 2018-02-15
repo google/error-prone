@@ -36,6 +36,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import javax.lang.model.element.Name;
@@ -95,12 +96,19 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
                     m -> OverloadKey.create((MethodTree) m.tree()),
                     x -> x,
                     LinkedHashMultimap::create));
-    methods.asMap().forEach((key, overloads) -> checkOverloads(state, key.name(), overloads));
+    methods
+        .asMap()
+        .forEach(
+            (key, overloads) ->
+                checkOverloads(state, classTree.getMembers(), key.name(), overloads));
     return NO_MATCH;
   }
 
   private void checkOverloads(
-      VisitorState state, Name name, Collection<MemberWithIndex> overloads) {
+      VisitorState state,
+      List<? extends Tree> members,
+      Name name,
+      Collection<MemberWithIndex> overloads) {
     if (overloads.size() <= 1) {
       return;
     }
@@ -127,8 +135,10 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
         .filter(o -> o != first)
         .forEach(
             o -> {
-              sb.append(state.getSourceForNode(o.tree())).append('\n');
-              fixBuilder.delete(o.tree());
+              int start = state.getEndPosition(members.get(o.index() - 1));
+              int end = state.getEndPosition(o.tree());
+              sb.append(state.getSourceCode(), start, end).append('\n');
+              fixBuilder.replace(start, end, "");
             });
     fixBuilder.postfixWith(first.tree(), sb.toString());
     SuggestedFix fix = fixBuilder.build();
