@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -168,5 +169,28 @@ public final class UngroupedOverloadsTest {
             "  @SuppressWarnings(\"UngroupedOverloads\") void foo(int x) {}",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void javadoc() throws Exception {
+    refactoringHelper
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void foo() {}",
+            "  void bar() {}",
+            "  /** doc */",
+            "  void foo(int x) {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void foo() {}",
+            "",
+            "  /** doc */",
+            "  void foo(int x) {}",
+            "  void bar() {}",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
   }
 }
