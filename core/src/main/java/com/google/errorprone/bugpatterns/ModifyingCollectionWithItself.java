@@ -28,6 +28,7 @@ import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -144,7 +145,7 @@ public class ModifyingCollectionWithItself extends BugChecker
       fixes = fixesFromMethodParameters(state, argument);
     } else {
       // a.addAll(...)
-      assert (receiver.getKind() == IDENTIFIER);
+      Preconditions.checkState(receiver.getKind() == IDENTIFIER, "receiver.getKind is identifier");
 
       boolean lhsIsField = ASTHelpers.getSymbol(receiver).getKind() == ElementKind.FIELD;
       fixes =
@@ -207,7 +208,8 @@ public class ModifyingCollectionWithItself extends BugChecker
     // find a method parameter of the same type and similar name and suggest it
     // as the new argument
 
-    assert (argument.getKind() == IDENTIFIER || argument.getKind() == MEMBER_SELECT);
+    Preconditions.checkState(
+        argument.getKind() == IDENTIFIER || argument.getKind() == MEMBER_SELECT);
 
     FluentIterable<JCVariableDecl> collectionParams =
         FluentIterable.from(
