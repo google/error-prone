@@ -44,20 +44,27 @@ public class DataFilter {
     * d. TODO: add a way to capture generic types. Function<T,U>
     * */
 
-    public static boolean apply(Type t1, VisitorState state) {
+    public static boolean apply(Type type, VisitorState state) {
         try {
-
-            return (ASTHelpers.isSameType(
-                    t1, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state) && t1.getTypeArguments().stream().anyMatch(x -> WRAPPER_CLASSES.stream().anyMatch(w -> ASTHelpers.isSameType(
-                    x, state.getTypeFromString(w), state))))
-                    || state.getTypes().interfaces(t1).stream().filter(x ->ASTHelpers.isSameType(x,state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state))
-                    .anyMatch(tp -> tp.getTypeArguments().stream().anyMatch(x -> WRAPPER_CLASSES.stream().anyMatch(w -> ASTHelpers.isSameType(
-                            x, state.getTypeFromString(w), state))));
-
-        } catch (Exception e) {
+            if (!ASTHelpers.isSubtype(type, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)) {
+                return false;
+            }
+            return getTypeArgsAsSuper(type, state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)
+                    .stream()
+                    .anyMatch(x -> WRAPPER_CLASSES.contains(x.toString()));
+        }
+        catch (Exception e) {
             return false;
         }
 
+    }
+
+    private static List<Type> getTypeArgsAsSuper(Type baseType, Type superType, VisitorState state) {
+        Type projectedType = state.getTypes().asSuper(baseType, superType.tsym);
+        if (projectedType != null) {
+            return projectedType.getTypeArguments();
+        }
+        return new ArrayList<>();
     }
 
     public static FilteredType getFilteredType(VariableTree var, VisitorState state){
