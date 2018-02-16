@@ -305,4 +305,18 @@ public class BoxedPrimitiveConstructorTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void autoboxGenerics() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  <T> T f(Object o) {",
+            "    // BUG: Diagnostic contains: return (T) Integer.valueOf(o.hashCode());",
+            "    return (T) new Integer(o.hashCode());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
