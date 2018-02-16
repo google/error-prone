@@ -275,6 +275,9 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
       case MEMBER_SELECT:
         // can't select members on primitives (e.g. `theInteger.toString()`)
         return false;
+      case TYPE_CAST:
+        // can't combine autoboxing and casts to reference types
+        return false;
       default:
         return true;
     }
