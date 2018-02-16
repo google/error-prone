@@ -72,7 +72,7 @@ public class CreateGraph {
                 for (Node p : paramsAffectedHierarchy(n))
                     createBiDerectionalRelation(p, n, Relationships.affected_by_hierarchy, Relationships.affected_by_hierarchy, false);
             }
-           // n.setRefactorable(Mapping.getMappedTypeFor(v.getFilteredType()));
+            n.setRefactorable(Mapping.getMappedTypeFor(v.getFilteredType()));
         }
     }
 

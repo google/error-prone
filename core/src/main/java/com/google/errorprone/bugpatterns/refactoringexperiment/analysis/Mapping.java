@@ -1,42 +1,55 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.DOUBLE_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.DOUBLE_PREDICATE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.DOUBLE_TO_INTEGER_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.DOUBLE_TO_LONG_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.DOUBLE_UNARY_OPERATOR;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INT_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INT_PREDICATE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INT_TO_DOUBLE_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INT_TO_LONG_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INT_UNARY_OPERATOR;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.JAVA_UTIL_FUNCTION_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LANG_BOOLEAN;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LANG_DOUBLE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LANG_INTEGER;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LANG_LONG;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LONG_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LONG_PREDICATE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LONG_TO_DOUBLE_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LONG_TO_INTEGER_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LONG_UNARY_OPERATOR;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.NO_MAPPING;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PREDICATE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.TO_DOUBLE_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.TO_INT_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.TO_LONG_FUNCTION;
 
-import com.google.errorprone.bugpatterns.refactoringexperiment.Constants;
+import com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType;
 
 /**
  * Created by ameya on 2/8/18.
  */
 public class Mapping {
 
-//    public static String getMappedTypeFor(FilteredType ft){
-//        return getMappedTypeFor(ft.getInterfaceName(),ft.getTypeParameter(0),ft.getTypeParameter(1));
-//    }
+    public static final String LANG_INTEGER = "java.lang.Integer";
+    public static final String LANG_BOOLEAN = "java.lang.Boolean";
+    public static final String LANG_LONG = "java.lang.Long";
+    public static final String LANG_DOUBLE = "java.lang.Double";
+    public static final String INT_UNARY_OPERATOR = "java.util.function.IntUnaryOperator";
+    public static final String INT_FUNCTION = "java.util.function.IntFunction";
+    public static final String TO_INT_FUNCTION = "java.util.function.ToIntFunction";
+    public static final String INT_PREDICATE = "java.util.function.IntPredicate";
+
+    public static final String INT_TO_LONG_FUNCTION = "java.util.function.IntToLongFunction";
+    public static final String INT_TO_DOUBLE_FUNCTION = "java.util.function.IntToDoubleFunction";
+
+    //Double Functions
+    public static final String DOUBLE_UNARY_OPERATOR = "java.util.function.DoubleUnaryOperator";
+    public static final String DOUBLE_FUNCTION = "java.util.function.DoubleFunction";
+    public static final String TO_DOUBLE_FUNCTION = "java.util.function.ToDoubleFunction";
+    public static final String DOUBLE_PREDICATE = "java.util.function.DoublePredicate";
+    public static final String DOUBLE_TO_LONG_FUNCTION = "java.util.function.DoubleToLongFunction";
+    public static final String DOUBLE_TO_INTEGER_FUNCTION = "java.util.function.DoubleToIntFunction";
+
+    //Long Functions
+    public static final String LONG_UNARY_OPERATOR = "java.util.function.LongUnaryOperator";
+    public static final String LONG_FUNCTION = "java.util.function.LongFunction";
+    public static final String TO_LONG_FUNCTION = "java.util.function.TolongFunction";
+    public static final String LONG_PREDICATE = "java.util.function.LongPredicate";
+    public static final String LONG_TO_DOUBLE_FUNCTION = "java.util.function.LongToDoubleFunction";
+    public static final String LONG_TO_INTEGER_FUNCTION = "java.util.function.LongToIntFunction";
+    public static final String PREDICATE = "java.util.function.Predicate";
+
+
+    public static final String NO_MAPPING ="NO MAPPING";
+    public static final String TEST = "test";
+    public static final String APPLY = "apply";
+    public static final String APPLY_AS_LONG = "applyAsLong";
+    public static final String APPLY_AS_DOUBLE = "applyAsDouble";
+    public static final String APPLY_AS_INT = "applyAsInt";
+
+    public static String getMappedTypeFor(FilteredType ft){
+        return getMappedTypeFor(ft.getInterfaceName(),ft.getTypeParameter(0),ft.getTypeParameter(1));
+    }
 
     public static String getMappedTypeFor(String className, String i, String o) {
         if(className.equals(JAVA_UTIL_FUNCTION_FUNCTION)){
@@ -130,7 +143,7 @@ public class Mapping {
 //            return APPLY;
         if(name.equals(PREDICATE) || name.equals(DOUBLE_PREDICATE)
                 || name.equals(INT_PREDICATE) || name.equals(LONG_PREDICATE))
-            return Constants.TEST;
+            return TEST;
 //        if(methodName.equals(TEST) && (name.equals(BI_PREDICATE) || name.equals(PREDICATE) || name.equals(DOUBLE_PREDICATE)
 //                || name.equals(INT_PREDICATE) || name.equals(LONG_PREDICATE)))
 //            return TEST;
@@ -142,20 +155,20 @@ public class Mapping {
 //                || name.equals(OBJECT_DOUBLE_CONSUMER) || name.equals(OBJECT_INT_CONSUMER) || name.equals(OBJECT_LONG_CONSUMER))
 //            return ACCEPT;|| name.equals(FUNCTION_LIBRARY)
         else if(name.equals(DOUBLE_FUNCTION) || name.equals(INT_FUNCTION) || name.equals(LONG_FUNCTION) )
-            return Constants.APPLY;
+            return APPLY;
 //        else if(name.equals(DOUBLE_SUPPLIER) || name.equals(OPTIONAL_DOUBLE))
 //            return GET_AS_DOUBLE;
         else if(name.equals(DOUBLE_TO_LONG_FUNCTION) || name.equals(INT_TO_LONG_FUNCTION)
                 || name.equals(LONG_UNARY_OPERATOR) || name.equals(TO_LONG_FUNCTION))
-            return Constants.APPLY_AS_LONG;
+            return APPLY_AS_LONG;
         else if(name.equals(DOUBLE_UNARY_OPERATOR) || name.equals(INT_TO_DOUBLE_FUNCTION) || name.equals(LONG_TO_DOUBLE_FUNCTION)
                 || name.equals(TO_DOUBLE_FUNCTION)  )
-            return Constants.APPLY_AS_DOUBLE;
+            return APPLY_AS_DOUBLE;
             //name.equals(INT_BINARY_OPERATOR) |||| name.equals(TO_INT_BI_FUNCTION) || name.equals(TO_DOUBLE_BI_FUNCTION)|| name.equals(DOUBLE_BINARY_OPERATOR)
             //|| name.equals(LONG_BINARY_OPERATOR)  || name.equals(TO_LONG_BI_FUNCTION)
         else if( name.equals(INT_UNARY_OPERATOR) || name.equals(DOUBLE_TO_INTEGER_FUNCTION)
                 || name.equals(LONG_TO_INTEGER_FUNCTION)  || name.equals(TO_INT_FUNCTION))
-            return Constants.APPLY_AS_INT;
+            return APPLY_AS_INT;
 //        else if(name.equals(INT_SUPPLIER) || name.equals(OPTIONAL_INT))
 //            return GET_AS_INT;
 //        else if(name.equals(LONG_SUPPLIER) || name.equals(OPTIONAL_LONG))

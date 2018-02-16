@@ -4,11 +4,17 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.WRAPPER_CLASSES;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by ameya on 1/17/18.
@@ -53,17 +59,17 @@ public class DataFilter {
         }
 
     }
-    //@Ali, this is how i populate filteredType (the newly suggested proto)
-//    public static FilteredType getFilteredType(VariableTree var, VisitorState state){
-//        FilteredType.Builder ft = FilteredType.newBuilder();
-//        ft.setInterfaceName(JAVA_UTIL_FUNCTION_FUNCTION); // because i know its always this for now.
-//        Type t1 = ASTHelpers.getType(var);
-//        List<String> args = t1.getTypeArguments().stream().map(x -> x.toString()).collect(Collectors.toList());
-//        if(args.size() == 0)
-//            args = state.getTypes().interfaces(t1).stream().filter(x ->ASTHelpers.isSameType(x,state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)).findFirst()
-//                    .map(x -> x.getTypeArguments().stream().map(y -> y.toString()).collect(Collectors.toList())).orElse(new ArrayList<>());
-//        return  ft.addAllTypeParameter(args).build();
-//    }
+
+    public static FilteredType getFilteredType(VariableTree var, VisitorState state){
+        FilteredType.Builder ft = FilteredType.newBuilder();
+        ft.setInterfaceName(JAVA_UTIL_FUNCTION_FUNCTION); // because i know its always this for now.
+        Type t1 = ASTHelpers.getType(var);
+        List<String> args = t1.getTypeArguments().stream().map(x -> x.toString()).collect(Collectors.toList());
+        if(args.size() == 0)
+            args = state.getTypes().interfaces(t1).stream().filter(x ->ASTHelpers.isSameType(x,state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)).findFirst()
+                    .map(x -> x.getTypeArguments().stream().map(y -> y.toString()).collect(Collectors.toList())).orElse(new ArrayList<>());
+        return  ft.addAllTypeParameter(args).build();
+    }
 
 
 }

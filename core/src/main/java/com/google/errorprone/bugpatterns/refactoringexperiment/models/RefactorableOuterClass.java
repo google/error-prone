@@ -3,8 +3,8 @@
 
 package com.google.errorprone.bugpatterns.refactoringexperiment.models;
 
-public final class RefactorInfoOuterClass {
-  private RefactorInfoOuterClass() {}
+public final class RefactorableOuterClass {
+  private RefactorableOuterClass() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
@@ -14,8 +14,8 @@ public final class RefactorInfoOuterClass {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public interface RefactorInfoOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Models.RefactorInfo)
+  public interface RefactorableOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Models.Refactorable)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -89,18 +89,18 @@ public final class RefactorInfoOuterClass {
         getRefactorToBytes();
   }
   /**
-   * Protobuf type {@code Models.RefactorInfo}
+   * Protobuf type {@code Models.Refactorable}
    */
-  public  static final class RefactorInfo extends
+  public  static final class Refactorable extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Models.RefactorInfo)
-      RefactorInfoOrBuilder {
+      // @@protoc_insertion_point(message_implements:Models.Refactorable)
+      RefactorableOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use RefactorInfo.newBuilder() to construct.
-    private RefactorInfo(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use Refactorable.newBuilder() to construct.
+    private Refactorable(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private RefactorInfo() {
+    private Refactorable() {
       name_ = "";
       type_ = "";
       owner_ = "";
@@ -113,7 +113,7 @@ public final class RefactorInfoOuterClass {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private RefactorInfo(
+    private Refactorable(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -183,14 +183,14 @@ public final class RefactorInfoOuterClass {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.internal_static_Models_RefactorInfo_descriptor;
+      return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.internal_static_Models_Refactorable_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.internal_static_Models_RefactorInfo_fieldAccessorTable
+      return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.internal_static_Models_Refactorable_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo.Builder.class);
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable.Builder.class);
     }
 
     private int bitField0_;
@@ -464,10 +464,10 @@ public final class RefactorInfoOuterClass {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo)) {
+      if (!(obj instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable)) {
         return super.equals(obj);
       }
-      com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo) obj;
+      com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable) obj;
 
       boolean result = true;
       result = result && (hasName() == other.hasName());
@@ -531,69 +531,69 @@ public final class RefactorInfoOuterClass {
       return hash;
     }
 
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(byte[] data)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(java.io.InputStream input)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseDelimitedFrom(java.io.InputStream input)
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseDelimitedFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parseFrom(
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -605,7 +605,7 @@ public final class RefactorInfoOuterClass {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo prototype) {
+    public static Builder newBuilder(com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -620,25 +620,25 @@ public final class RefactorInfoOuterClass {
       return builder;
     }
     /**
-     * Protobuf type {@code Models.RefactorInfo}
+     * Protobuf type {@code Models.Refactorable}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Models.RefactorInfo)
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfoOrBuilder {
+        // @@protoc_insertion_point(builder_implements:Models.Refactorable)
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.RefactorableOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.internal_static_Models_RefactorInfo_descriptor;
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.internal_static_Models_Refactorable_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.internal_static_Models_RefactorInfo_fieldAccessorTable
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.internal_static_Models_Refactorable_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo.Builder.class);
+                com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable.Builder.class);
       }
 
-      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo.newBuilder()
+      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -670,23 +670,23 @@ public final class RefactorInfoOuterClass {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.internal_static_Models_RefactorInfo_descriptor;
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.internal_static_Models_Refactorable_descriptor;
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo getDefaultInstanceForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo.getDefaultInstance();
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable getDefaultInstanceForType() {
+        return com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable.getDefaultInstance();
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo build() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo result = buildPartial();
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable build() {
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo buildPartial() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo result = new com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo(this);
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable buildPartial() {
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable result = new com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -741,16 +741,16 @@ public final class RefactorInfoOuterClass {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo) {
-          return mergeFrom((com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo)other);
+        if (other instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable) {
+          return mergeFrom((com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo other) {
-        if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable other) {
+        if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable.getDefaultInstance()) return this;
         if (other.hasName()) {
           bitField0_ |= 0x00000001;
           name_ = other.name_;
@@ -789,11 +789,11 @@ public final class RefactorInfoOuterClass {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo parsedMessage = null;
+        com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo) e.getUnfinishedMessage();
+          parsedMessage = (com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1194,49 +1194,49 @@ public final class RefactorInfoOuterClass {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Models.RefactorInfo)
+      // @@protoc_insertion_point(builder_scope:Models.Refactorable)
     }
 
-    // @@protoc_insertion_point(class_scope:Models.RefactorInfo)
-    private static final com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:Models.Refactorable)
+    private static final com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo();
+      DEFAULT_INSTANCE = new com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable();
     }
 
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo getDefaultInstance() {
+    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<RefactorInfo>
-        PARSER = new com.google.protobuf.AbstractParser<RefactorInfo>() {
-      public RefactorInfo parsePartialFrom(
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Refactorable>
+        PARSER = new com.google.protobuf.AbstractParser<Refactorable>() {
+      public Refactorable parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new RefactorInfo(input, extensionRegistry);
+        return new Refactorable(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<RefactorInfo> parser() {
+    public static com.google.protobuf.Parser<Refactorable> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<RefactorInfo> getParserForType() {
+    public com.google.protobuf.Parser<Refactorable> getParserForType() {
       return PARSER;
     }
 
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorInfoOuterClass.RefactorInfo getDefaultInstanceForType() {
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Models_RefactorInfo_descriptor;
+    internal_static_Models_Refactorable_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Models_RefactorInfo_fieldAccessorTable;
+      internal_static_Models_Refactorable_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1246,8 +1246,8 @@ public final class RefactorInfoOuterClass {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\022RefactorInfo.proto\022\006Models\"\\\n\014Refactor" +
-      "Info\022\014\n\004name\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\022\r\n\005owne" +
+      "\n\022Refactorable.proto\022\006Models\"\\\n\014Refactor" +
+      "able\022\014\n\004name\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\022\r\n\005owne" +
       "r\030\003 \001(\t\022\014\n\004kind\030\004 \001(\t\022\023\n\013refactor_to\030\005 \001" +
       "(\tB@\n>com.google.errorprone.bugpatterns." +
       "refactoringexperiment.models"
@@ -1264,11 +1264,11 @@ public final class RefactorInfoOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_Models_RefactorInfo_descriptor =
+    internal_static_Models_Refactorable_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_Models_RefactorInfo_fieldAccessorTable = new
+    internal_static_Models_Refactorable_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Models_RefactorInfo_descriptor,
+        internal_static_Models_Refactorable_descriptor,
         new java.lang.String[] { "Name", "Type", "Owner", "Kind", "RefactorTo", });
   }
 

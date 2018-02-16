@@ -22,7 +22,7 @@ public class Node {
     public Node(Identification id) {
         this.name = id.getName();
         this.kind = id.getKind();
-        this.owner = id.getOwner();
+        //this.owner = id.getOwner();
         this.type = id.getType();
 
     }

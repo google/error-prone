@@ -7,6 +7,10 @@ option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.m
 message Identification {
     optional string name = 1;
     optional string type = 2;
-    optional string owner = 3;
+    optional Owner owner = 3;
     optional string kind = 4;
+}
+
+message Owner {
+    optional Identification id = 1;
 }

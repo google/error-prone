@@ -45,18 +45,17 @@ public final class VariableOuterClass {
     com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getInitializerOrBuilder();
 
     /**
-     * <code>optional string enclosingClass = 3;</code>
+     * <code>optional .Models.FilteredType filtered_type = 3;</code>
      */
-    boolean hasEnclosingClass();
+    boolean hasFilteredType();
     /**
-     * <code>optional string enclosingClass = 3;</code>
+     * <code>optional .Models.FilteredType filtered_type = 3;</code>
      */
-    java.lang.String getEnclosingClass();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType getFilteredType();
     /**
-     * <code>optional string enclosingClass = 3;</code>
+     * <code>optional .Models.FilteredType filtered_type = 3;</code>
      */
-    com.google.protobuf.ByteString
-        getEnclosingClassBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder getFilteredTypeOrBuilder();
   }
   /**
    * Protobuf type {@code Models.Variable}
@@ -71,7 +70,6 @@ public final class VariableOuterClass {
       super(builder);
     }
     private Variable() {
-      enclosingClass_ = "";
     }
 
     @java.lang.Override
@@ -132,9 +130,16 @@ public final class VariableOuterClass {
               break;
             }
             case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = filteredType_.toBuilder();
+              }
+              filteredType_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(filteredType_);
+                filteredType_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000004;
-              enclosingClass_ = bs;
               break;
             }
           }
@@ -204,46 +209,25 @@ public final class VariableOuterClass {
       return initializer_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : initializer_;
     }
 
-    public static final int ENCLOSINGCLASS_FIELD_NUMBER = 3;
-    private volatile java.lang.Object enclosingClass_;
+    public static final int FILTERED_TYPE_FIELD_NUMBER = 3;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType filteredType_;
     /**
-     * <code>optional string enclosingClass = 3;</code>
+     * <code>optional .Models.FilteredType filtered_type = 3;</code>
      */
-    public boolean hasEnclosingClass() {
+    public boolean hasFilteredType() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional string enclosingClass = 3;</code>
+     * <code>optional .Models.FilteredType filtered_type = 3;</code>
      */
-    public java.lang.String getEnclosingClass() {
-      java.lang.Object ref = enclosingClass_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          enclosingClass_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType getFilteredType() {
+      return filteredType_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance() : filteredType_;
     }
     /**
-     * <code>optional string enclosingClass = 3;</code>
+     * <code>optional .Models.FilteredType filtered_type = 3;</code>
      */
-    public com.google.protobuf.ByteString
-        getEnclosingClassBytes() {
-      java.lang.Object ref = enclosingClass_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        enclosingClass_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder getFilteredTypeOrBuilder() {
+      return filteredType_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance() : filteredType_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -265,7 +249,7 @@ public final class VariableOuterClass {
         output.writeMessage(2, getInitializer());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, enclosingClass_);
+        output.writeMessage(3, getFilteredType());
       }
       unknownFields.writeTo(output);
     }
@@ -284,7 +268,8 @@ public final class VariableOuterClass {
           .computeMessageSize(2, getInitializer());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, enclosingClass_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getFilteredType());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -312,10 +297,10 @@ public final class VariableOuterClass {
         result = result && getInitializer()
             .equals(other.getInitializer());
       }
-      result = result && (hasEnclosingClass() == other.hasEnclosingClass());
-      if (hasEnclosingClass()) {
-        result = result && getEnclosingClass()
-            .equals(other.getEnclosingClass());
+      result = result && (hasFilteredType() == other.hasFilteredType());
+      if (hasFilteredType()) {
+        result = result && getFilteredType()
+            .equals(other.getFilteredType());
       }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -336,9 +321,9 @@ public final class VariableOuterClass {
         hash = (37 * hash) + INITIALIZER_FIELD_NUMBER;
         hash = (53 * hash) + getInitializer().hashCode();
       }
-      if (hasEnclosingClass()) {
-        hash = (37 * hash) + ENCLOSINGCLASS_FIELD_NUMBER;
-        hash = (53 * hash) + getEnclosingClass().hashCode();
+      if (hasFilteredType()) {
+        hash = (37 * hash) + FILTERED_TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getFilteredType().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -467,6 +452,7 @@ public final class VariableOuterClass {
                 .alwaysUseFieldBuilders) {
           getIdFieldBuilder();
           getInitializerFieldBuilder();
+          getFilteredTypeFieldBuilder();
         }
       }
       public Builder clear() {
@@ -483,7 +469,11 @@ public final class VariableOuterClass {
           initializerBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
-        enclosingClass_ = "";
+        if (filteredTypeBuilder_ == null) {
+          filteredType_ = null;
+        } else {
+          filteredTypeBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
@@ -528,7 +518,11 @@ public final class VariableOuterClass {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.enclosingClass_ = enclosingClass_;
+        if (filteredTypeBuilder_ == null) {
+          result.filteredType_ = filteredType_;
+        } else {
+          result.filteredType_ = filteredTypeBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -577,10 +571,8 @@ public final class VariableOuterClass {
         if (other.hasInitializer()) {
           mergeInitializer(other.getInitializer());
         }
-        if (other.hasEnclosingClass()) {
-          bitField0_ |= 0x00000004;
-          enclosingClass_ = other.enclosingClass_;
-          onChanged();
+        if (other.hasFilteredType()) {
+          mergeFilteredType(other.getFilteredType());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -846,80 +838,122 @@ public final class VariableOuterClass {
         return initializerBuilder_;
       }
 
-      private java.lang.Object enclosingClass_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType filteredType_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder> filteredTypeBuilder_;
       /**
-       * <code>optional string enclosingClass = 3;</code>
+       * <code>optional .Models.FilteredType filtered_type = 3;</code>
        */
-      public boolean hasEnclosingClass() {
+      public boolean hasFilteredType() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional string enclosingClass = 3;</code>
+       * <code>optional .Models.FilteredType filtered_type = 3;</code>
        */
-      public java.lang.String getEnclosingClass() {
-        java.lang.Object ref = enclosingClass_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            enclosingClass_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType getFilteredType() {
+        if (filteredTypeBuilder_ == null) {
+          return filteredType_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance() : filteredType_;
+        } else {
+          return filteredTypeBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.FilteredType filtered_type = 3;</code>
+       */
+      public Builder setFilteredType(com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType value) {
+        if (filteredTypeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          filteredType_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          filteredTypeBuilder_.setMessage(value);
         }
-      }
-      /**
-       * <code>optional string enclosingClass = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getEnclosingClassBytes() {
-        java.lang.Object ref = enclosingClass_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          enclosingClass_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string enclosingClass = 3;</code>
-       */
-      public Builder setEnclosingClass(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        enclosingClass_ = value;
-        onChanged();
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>optional string enclosingClass = 3;</code>
+       * <code>optional .Models.FilteredType filtered_type = 3;</code>
        */
-      public Builder clearEnclosingClass() {
+      public Builder setFilteredType(
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder builderForValue) {
+        if (filteredTypeBuilder_ == null) {
+          filteredType_ = builderForValue.build();
+          onChanged();
+        } else {
+          filteredTypeBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .Models.FilteredType filtered_type = 3;</code>
+       */
+      public Builder mergeFilteredType(com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType value) {
+        if (filteredTypeBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              filteredType_ != null &&
+              filteredType_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance()) {
+            filteredType_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.newBuilder(filteredType_).mergeFrom(value).buildPartial();
+          } else {
+            filteredType_ = value;
+          }
+          onChanged();
+        } else {
+          filteredTypeBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .Models.FilteredType filtered_type = 3;</code>
+       */
+      public Builder clearFilteredType() {
+        if (filteredTypeBuilder_ == null) {
+          filteredType_ = null;
+          onChanged();
+        } else {
+          filteredTypeBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000004);
-        enclosingClass_ = getDefaultInstance().getEnclosingClass();
-        onChanged();
         return this;
       }
       /**
-       * <code>optional string enclosingClass = 3;</code>
+       * <code>optional .Models.FilteredType filtered_type = 3;</code>
        */
-      public Builder setEnclosingClassBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        enclosingClass_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder getFilteredTypeBuilder() {
+        bitField0_ |= 0x00000004;
         onChanged();
-        return this;
+        return getFilteredTypeFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .Models.FilteredType filtered_type = 3;</code>
+       */
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder getFilteredTypeOrBuilder() {
+        if (filteredTypeBuilder_ != null) {
+          return filteredTypeBuilder_.getMessageOrBuilder();
+        } else {
+          return filteredType_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance() : filteredType_;
+        }
+      }
+      /**
+       * <code>optional .Models.FilteredType filtered_type = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder> 
+          getFilteredTypeFieldBuilder() {
+        if (filteredTypeBuilder_ == null) {
+          filteredTypeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder>(
+                  getFilteredType(),
+                  getParentForChildren(),
+                  isClean());
+          filteredType_ = null;
+        }
+        return filteredTypeBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -985,11 +1019,12 @@ public final class VariableOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\016Variable.proto\022\006Models\032\024Identification" +
-      ".proto\"s\n\010Variable\022\"\n\002id\030\001 \001(\0132\026.Models." +
-      "Identification\022+\n\013initializer\030\002 \001(\0132\026.Mo" +
-      "dels.Identification\022\026\n\016enclosingClass\030\003 " +
-      "\001(\tB@\n>com.google.errorprone.bugpatterns" +
-      ".refactoringexperiment.models"
+      ".proto\032\022FilteredType.proto\"\210\001\n\010Variable\022" +
+      "\"\n\002id\030\001 \001(\0132\026.Models.Identification\022+\n\013i" +
+      "nitializer\030\002 \001(\0132\026.Models.Identification" +
+      "\022+\n\rfiltered_type\030\003 \001(\0132\024.Models.Filtere" +
+      "dTypeB@\n>com.google.errorprone.bugpatter" +
+      "ns.refactoringexperiment.models"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1003,14 +1038,16 @@ public final class VariableOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor(),
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.getDescriptor(),
         }, assigner);
     internal_static_Models_Variable_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Models_Variable_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_Variable_descriptor,
-        new java.lang.String[] { "Id", "Initializer", "EnclosingClass", });
+        new java.lang.String[] { "Id", "Initializer", "FilteredType", });
     com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

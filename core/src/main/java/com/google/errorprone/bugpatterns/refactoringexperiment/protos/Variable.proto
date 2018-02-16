@@ -1,5 +1,6 @@
 syntax = "proto2";
 import "Identification.proto";
+import "FilteredType.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
@@ -7,5 +8,5 @@ option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.m
 message Variable {
   optional Identification id = 1;
   optional Identification initializer = 2;
-  optional string enclosingClass = 3;
+  optional FilteredType filtered_type = 3;
  }
