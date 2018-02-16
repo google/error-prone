@@ -72,7 +72,7 @@ public class CreateGraph {
                 for (Node p : paramsAffectedHierarchy(n))
                     createBiDerectionalRelation(p, n, Relationships.affected_by_hierarchy, Relationships.affected_by_hierarchy, false);
             }
-            n.setRefactorable(Mapping.getMappedTypeFor(v.getFilteredType()));
+            //n.setRefactorTo(Mapping.getMappedTypeFor(v.getFilteredType()));
         }
     }
 
@@ -167,7 +167,7 @@ public class CreateGraph {
         if (!value.hasName()) {
             Optional<Node> n = getNode(param, value.getKind());
             return n.isPresent() ?
-                    n.get() : addNodeToGraph(value.getKind(), param);
+                    n.get() : addNodeToGraph(param,value.getKind());
         } else
             return addNodeToGraphIfAbsent(value);
 
@@ -177,8 +177,9 @@ public class CreateGraph {
     // This is helper method, creates/gets node for methodinvocation based on receiver if present.
     private static Node addNodeToGraphIfAbsent(MethodInvocation mi) {
         if (mi.hasReceiver()) {
-            String owner = mi.getReceiver().getName() + COLUMN_SPERATOR + mi.getReceiver().getOwner();
-            Optional<Node> n = getNode(owner, mi.getId());
+            Identification owner = mi.getReceiver();
+            // String owner = mi.getReceiver().getName() + COLUMN_SPERATOR + mi.getReceiver().getOwner();
+            Optional<Node> n = getNode(mi.getId(),owner);
             return n.isPresent() ?
                     n.get() : addNodeToGraph(mi.getId(), owner);
         } else
@@ -190,7 +191,7 @@ public class CreateGraph {
     }
 
     // This is to search method invocations which has receiver
-    private static Optional<Node> getNode(String owner, Identification id) {
+    private static Optional<Node> getNode(Identification id,Identification owner) {
         return g.nodes().stream().filter(x -> x.isSameAs(owner, id)).findFirst();
     }
 
@@ -227,14 +228,14 @@ public class CreateGraph {
         return n;
     }
 
-    public static Node addNodeToGraph(Identification id, String owner) {
+    public static Node addNodeToGraph(Identification id, Identification owner) {
         Node n = new Node(id, owner);
         g.addNode(n);
         return n;
     }
 
-    public static Node addNodeToGraph(String kind, Node param) {
-        Node n = new Node(kind, param);
+    public static Node addNodeToGraph(Node param,String kind) {
+        Node n = new Node(param,kind);
         g.addNode(n);
         return n;
     }
@@ -242,4 +243,5 @@ public class CreateGraph {
     private static void removeEdges() {
         g.edges().stream().filter(x -> g.edgeValue(x.nodeU(), x.nodeV()).contains(Relationships.param_index)).forEach(x -> g.removeEdge(x.nodeU(), x.nodeV()));
     }
+
 }

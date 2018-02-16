@@ -32,7 +32,7 @@ public class HierarchyUtil {
         if (methodsGroupedByHierarchy.isEmpty())
             getMthdDclHierarchy(mthdDecls);
         return methodsGroupedByHierarchy.stream().filter(x -> x.stream().anyMatch(y -> y.getId().equals(id)))
-                .map(y -> y.stream().filter(m -> !m.getId().equals(id)).collect(Collectors.toList())).findFirst().get();
+                .map(y -> y.stream().filter(m -> !m.getId().equals(id)).collect(Collectors.toList())).findFirst().orElse(new ArrayList<>());
     }
 
     //TODO: make this better
@@ -64,7 +64,7 @@ public class HierarchyUtil {
     private static MethodDeclaration getSuperMethodId(MethodDeclaration md, List<MethodDeclaration> mthDcl) {
         try {
             return mthDcl.stream().filter(m -> m.getId().getName().equals(md.getId().getName())
-                    && m.getId().getOwner().equals(md.getSuperMethodIn()) && m.getId().getKind().equals(md.getId().getKind())
+                    && m.getId().getOwner().getId().getType().equals(md.getSuperMethodIn()) && m.getId().getKind().equals(md.getId().getKind())
                     && m.getId().getType().equals(md.getId().getType())).findFirst().map(Function.identity()).orElseThrow(() -> new Exception());
         } catch (Exception e) {
             System.out.println("Super method not found!");

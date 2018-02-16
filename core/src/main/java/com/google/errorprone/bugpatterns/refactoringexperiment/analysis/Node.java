@@ -10,119 +10,95 @@ import com.google.errorprone.bugpatterns.refactoringexperiment.models.Identifica
  */
 public class Node {
 
-    private String kind;
-    private String name;
-    private String owner;
-    private String type;
+    private NodeID id;
     private String refactorTo;
     private boolean visited;
-    private static String COLUMN_SEPERATOR = "|";
     // only for var and methods
 
     public Node(Identification id) {
-        this.name = id.getName();
-        this.kind = id.getKind();
-        //this.owner = id.getOwner();
-        this.type = id.getType();
-
+        this.id = new NodeID(id);
     }
 
-    public Node(Identification id, String owner) {
-        this.name = id.getName();
-        this.kind = id.getKind();
-        this.owner = owner;
-        this.type = id.getType();
-
+    public Node(Identification id, Identification owner) {
+        this.id = new NodeID(id,owner);
     }
 
-    public Node(String kind, Node n) {
-        this.name = n.name;
-        this.kind = kind;
-        this.owner = n.owner;
-        this.type = n.type;
+    public Node( Node n, String kind) {
+        this.id = new NodeID(n.id,kind);
+    }
 
+    public Node(Identification id,String kind) {
+        this.id = new NodeID(id,kind);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof Node) {
             Node n = (Node) o;
-            return this.kind.equals(n.kind) && this.owner.equals(n.owner)
-                    && this.name.equals(n.name) && this.type.equals(n.type);
+            return this.id.equals(n.id);
         }
         return false;
     }
 
     public boolean isSameAs(Identification id) {
-        return this.kind.equals(id.getKind()) && this.owner.equals(id.getOwner())
-                && this.name.equals(id.getName()) && this.type.equals(id.getType());
+        return this.id.isSameAs(id);
+    }
+
+    public boolean isSameAs(Identification n, String kind) {
+        return this.id.isSameAs(n,kind);
+    }
+
+    public boolean isSameAs(Identification id, Identification owner) {
+        return this.id.isSameAs(id,owner);
     }
 
     public boolean isSameAs(Node n, String kind) {
-        return this.kind.equals(kind) && this.owner.equals(n.owner)
-                && this.name.equals(n.name) && this.type.equals(n.type);
+        return this.id.isSameAs(n.id,kind);
     }
 
-    public boolean isSameAs(String owner, Identification id) {
-        return this.kind.equals(id.getKind()) && this.owner.equals(owner)
-                && this.name.equals(id.getName()) && this.type.equals(id.getType());
-    }
-
-    public boolean isSameAs(Identification id, String kind) {
-        return this.kind.equals(kind) && this.owner.equals(id.getOwner())
-                && this.name.equals(id.getName()) && this.type.equals(id.getType());
-    }
+//    public boolean isSameAs(Identification id, String kind) {
+//        return this.kind.equals(kind) && this.owner.equals(id.getOwner())
+//                && this.name.equals(id.getName()) && this.type.equals(id.getType());
+//    }
 
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.name, this.kind, this.type, this.owner);
+        return Objects.hashCode(this.id);
     }
 
     @Override
     public String toString() {
-        return this.name + COLUMN_SEPERATOR + kind + COLUMN_SEPERATOR + owner + COLUMN_SEPERATOR + type;
+        return this.getName() + "|" + this.getKind() + "| " + this.getType() + "|" +
+                this.getOwner().getName()+ "| " + this.getOwner().getType()+ "| " + this.getOwner().getKind();
     }
 
     public String getKind() {
-        return kind;
+        return id.getKind();
     }
 
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
 
     public String getName() {
-        return name;
+        return id.getName();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public NodeID getId(){
+        return id;
+    }
+    public NodeID getOwner() {
+        return id.getOwner();
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 
     public String getType() {
-        return type;
+        return id.getType();
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String refactorTo() {
         return refactorTo;
     }
 
-    public void setRefactorable(String refactorable) {
-        refactorTo = refactorable;
-    }
 
     public boolean isVisited() {
         return visited;
@@ -130,5 +106,9 @@ public class Node {
 
     public void setVisited(boolean visited) {
         this.visited = visited;
+    }
+
+    public void setRefactorTo(String s){
+        this.refactorTo = s;
     }
 }
