@@ -84,30 +84,15 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     //like : getLambda().apply(8);
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-        boolean paramLT = tree.getArguments().stream().filter(x -> {
-            if (x.getKind().equals(Kind.NEW_CLASS)) {
-                NewClassTree nt = (NewClassTree) x;
-                if (nt.getClassBody() != null) {
-                    return DataFilter.apply(nt.getClassBody(), state);
-                }
-            }
-            return DataFilter.apply(x, state);
-        }).count() > 0;
+        boolean paramLT = tree.getArguments().stream().filter(x -> DataFilter.apply(x, state))
+                .count() > 0;
 
         boolean ofLT = DataFilter.apply(ASTHelpers.getReceiverType(tree), state);
         boolean returnMatter = DataFilter.apply(ASTHelpers.getReturnType(tree), state);
         if (paramLT || ofLT || returnMatter) {
             MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
             infoFromTree(tree).transform(id -> mthdInvc.setId(id));
-            mthdInvc.putAllArguments(Collections.unmodifiableMap(tree.getArguments().stream().filter(x -> {
-                if (x.getKind().equals(Kind.NEW_CLASS)) {
-                    NewClassTree nt = (NewClassTree) x;
-                    if (nt.getClassBody() != null) {
-                        return DataFilter.apply(nt.getClassBody(), state);
-                    }
-                }
-                return DataFilter.apply(x, state);
-            })
+            mthdInvc.putAllArguments(Collections.unmodifiableMap(tree.getArguments().stream().filter(x ->DataFilter.apply(x, state))
                     .collect(Collectors.toMap(x -> tree.getArguments().indexOf(x), x -> infoOfTree(x).build()))));
 
             if (ofLT) {
@@ -118,31 +103,16 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         return null;
     }
 
+
     @Override
     public Description matchNewClass(NewClassTree var1, VisitorState state) {
-        boolean paramMatters = var1.getArguments().stream().filter(x -> {
-            if (x.getKind().equals(Kind.NEW_CLASS)){
-                NewClassTree nt = (NewClassTree) x;
-                if(nt.getClassBody()!=null){
-                    return DataFilter.apply(nt.getClassBody(), state);
-                }
-            }
-            return DataFilter.apply(x, state);
-        }).count() > 0;
-
+        boolean paramMatters = var1.getArguments().stream().filter(x -> DataFilter.apply(x, state))
+                .count() > 0;
         if (paramMatters) {
             MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
             infoFromTree(var1).transform(id -> mthdInvc.setId(id));
 
-            mthdInvc.putAllArguments(Collections.unmodifiableMap(var1.getArguments().stream().filter(x -> {
-                if (x.getKind().equals(Kind.NEW_CLASS)){
-                    NewClassTree nt = (NewClassTree) x;
-                    if(nt.getClassBody()!=null){
-                        return DataFilter.apply(nt.getClassBody(), state);
-                    }
-                }
-                return DataFilter.apply(x, state);
-            })
+            mthdInvc.putAllArguments(Collections.unmodifiableMap(var1.getArguments().stream().filter(x ->DataFilter.apply(x, state))
                     .collect(Collectors.toMap(x -> var1.getArguments().indexOf(x), x -> infoOfTree(x).build()))));
 
             ProtoBuffPersist.write(mthdInvc, var1.getKind().toString());
@@ -158,7 +128,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             infoFromTree(var1).transform(id -> vrbl.setId(id));
             if (var1.getInitializer() != null)
                 vrbl.setInitializer(infoOfTree(var1.getInitializer()));
-            vrbl.setFilteredType(DataFilter.getFilteredType(var1,state));
+            vrbl.setFilteredType(DataFilter.getFilteredType(var1, state));
             ProtoBuffPersist.write(vrbl, var1.getKind().toString());
         }
         return null;
