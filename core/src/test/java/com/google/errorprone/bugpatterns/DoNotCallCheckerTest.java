@@ -44,6 +44,8 @@ public class DoNotCallCheckerTest {
             "    // BUG: Diagnostic contains:",
             "    // This method should not be called, see its documentation for details",
             "    g();",
+            "    // BUG: Diagnostic contains:",
+            "    Runnable r = this::g;",
             "  }",
             "}")
         .doTest();

@@ -26,14 +26,17 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.DoNotCall;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import javax.lang.model.element.Modifier;
 
@@ -47,7 +50,7 @@ import javax.lang.model.element.Modifier;
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class DoNotCallChecker extends BugChecker
-    implements MethodTreeMatcher, MethodInvocationTreeMatcher {
+    implements MethodTreeMatcher, MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
@@ -94,7 +97,16 @@ public class DoNotCallChecker extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    DoNotCall doNotCall = ASTHelpers.getAnnotation(tree, DoNotCall.class);
+    return checkTree(tree, ASTHelpers.getSymbol(tree));
+  }
+
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    return checkTree(tree, ASTHelpers.getSymbol(tree));
+  }
+
+  private Description checkTree(Tree tree, MethodSymbol sym) {
+    DoNotCall doNotCall = ASTHelpers.getAnnotation(sym, DoNotCall.class);
     if (doNotCall == null) {
       return NO_MATCH;
     }
@@ -106,4 +118,5 @@ public class DoNotCallChecker extends BugChecker
     }
     return buildDescription(tree).setMessage(message.toString()).build();
   }
+
 }
