@@ -28,14 +28,6 @@ public class DataFilter {
     public static boolean apply(Tree tree, VisitorState state) {
         return  tree!=null ? apply(ASTHelpers.getType(tree),state) : false;
     }
-
-    public static boolean apply(ClassTree classTree, VisitorState state) {
-        boolean implementsLt = classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state)).count() > 0;
-        boolean isLT = apply(ASTHelpers.getType(classTree),state);
-        return  implementsLt || isLT;
-    }
-
-
     /*
     * this method checks if :
     * a. Type is LT
