@@ -2,6 +2,7 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
+import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner;
 
 /**
  * Created by ameya on 2/16/18.
@@ -12,6 +13,16 @@ public class NodeID {
     private String name;
     private NodeID owner;
     private String type;
+
+    public Identification getIdentification(){
+        Identification.Builder build = Identification.newBuilder().setName(this.name)
+                .setKind(this.kind);
+        if(type!=null)
+            build.setType(this.type);
+        if(owner!=null)
+            build.setOwner(Owner.newBuilder().setId(owner.getIdentification()));
+        return build.build();
+    }
 
 
     public NodeID(Identification id) {

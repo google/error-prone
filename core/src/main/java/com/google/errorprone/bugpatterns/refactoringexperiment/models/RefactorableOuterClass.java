@@ -19,71 +19,28 @@ public final class RefactorableOuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional string name = 1;</code>
+     * <code>optional .Models.Identification id = 1;</code>
      */
-    boolean hasName();
+    boolean hasId();
     /**
-     * <code>optional string name = 1;</code>
+     * <code>optional .Models.Identification id = 1;</code>
      */
-    java.lang.String getName();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getId();
     /**
-     * <code>optional string name = 1;</code>
+     * <code>optional .Models.Identification id = 1;</code>
      */
-    com.google.protobuf.ByteString
-        getNameBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getIdOrBuilder();
 
     /**
-     * <code>optional string type = 2;</code>
-     */
-    boolean hasType();
-    /**
-     * <code>optional string type = 2;</code>
-     */
-    java.lang.String getType();
-    /**
-     * <code>optional string type = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getTypeBytes();
-
-    /**
-     * <code>optional string owner = 3;</code>
-     */
-    boolean hasOwner();
-    /**
-     * <code>optional string owner = 3;</code>
-     */
-    java.lang.String getOwner();
-    /**
-     * <code>optional string owner = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getOwnerBytes();
-
-    /**
-     * <code>optional string kind = 4;</code>
-     */
-    boolean hasKind();
-    /**
-     * <code>optional string kind = 4;</code>
-     */
-    java.lang.String getKind();
-    /**
-     * <code>optional string kind = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getKindBytes();
-
-    /**
-     * <code>optional string refactor_to = 5;</code>
+     * <code>optional string refactor_to = 2;</code>
      */
     boolean hasRefactorTo();
     /**
-     * <code>optional string refactor_to = 5;</code>
+     * <code>optional string refactor_to = 2;</code>
      */
     java.lang.String getRefactorTo();
     /**
-     * <code>optional string refactor_to = 5;</code>
+     * <code>optional string refactor_to = 2;</code>
      */
     com.google.protobuf.ByteString
         getRefactorToBytes();
@@ -101,10 +58,6 @@ public final class RefactorableOuterClass {
       super(builder);
     }
     private Refactorable() {
-      name_ = "";
-      type_ = "";
-      owner_ = "";
-      kind_ = "";
       refactorTo_ = "";
     }
 
@@ -140,32 +93,21 @@ public final class RefactorableOuterClass {
               break;
             }
             case 10: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = id_.toBuilder();
+              }
+              id_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(id_);
+                id_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000001;
-              name_ = bs;
               break;
             }
             case 18: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000002;
-              type_ = bs;
-              break;
-            }
-            case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000004;
-              owner_ = bs;
-              break;
-            }
-            case 34: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000008;
-              kind_ = bs;
-              break;
-            }
-            case 42: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000010;
               refactorTo_ = bs;
               break;
             }
@@ -194,184 +136,37 @@ public final class RefactorableOuterClass {
     }
 
     private int bitField0_;
-    public static final int NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object name_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification id_;
     /**
-     * <code>optional string name = 1;</code>
+     * <code>optional .Models.Identification id = 1;</code>
      */
-    public boolean hasName() {
+    public boolean hasId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional string name = 1;</code>
+     * <code>optional .Models.Identification id = 1;</code>
      */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          name_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getId() {
+      return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : id_;
     }
     /**
-     * <code>optional string name = 1;</code>
+     * <code>optional .Models.Identification id = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        name_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getIdOrBuilder() {
+      return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : id_;
     }
 
-    public static final int TYPE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object type_;
+    public static final int REFACTOR_TO_FIELD_NUMBER = 2;
+    private volatile java.lang.Object refactorTo_;
     /**
-     * <code>optional string type = 2;</code>
+     * <code>optional string refactor_to = 2;</code>
      */
-    public boolean hasType() {
+    public boolean hasRefactorTo() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional string type = 2;</code>
-     */
-    public java.lang.String getType() {
-      java.lang.Object ref = type_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          type_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string type = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTypeBytes() {
-      java.lang.Object ref = type_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        type_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int OWNER_FIELD_NUMBER = 3;
-    private volatile java.lang.Object owner_;
-    /**
-     * <code>optional string owner = 3;</code>
-     */
-    public boolean hasOwner() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional string owner = 3;</code>
-     */
-    public java.lang.String getOwner() {
-      java.lang.Object ref = owner_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          owner_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string owner = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getOwnerBytes() {
-      java.lang.Object ref = owner_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        owner_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int KIND_FIELD_NUMBER = 4;
-    private volatile java.lang.Object kind_;
-    /**
-     * <code>optional string kind = 4;</code>
-     */
-    public boolean hasKind() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>optional string kind = 4;</code>
-     */
-    public java.lang.String getKind() {
-      java.lang.Object ref = kind_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          kind_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string kind = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getKindBytes() {
-      java.lang.Object ref = kind_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        kind_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int REFACTOR_TO_FIELD_NUMBER = 5;
-    private volatile java.lang.Object refactorTo_;
-    /**
-     * <code>optional string refactor_to = 5;</code>
-     */
-    public boolean hasRefactorTo() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>optional string refactor_to = 5;</code>
+     * <code>optional string refactor_to = 2;</code>
      */
     public java.lang.String getRefactorTo() {
       java.lang.Object ref = refactorTo_;
@@ -388,7 +183,7 @@ public final class RefactorableOuterClass {
       }
     }
     /**
-     * <code>optional string refactor_to = 5;</code>
+     * <code>optional string refactor_to = 2;</code>
      */
     public com.google.protobuf.ByteString
         getRefactorToBytes() {
@@ -417,19 +212,10 @@ public final class RefactorableOuterClass {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
+        output.writeMessage(1, getId());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, type_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, owner_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, kind_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, refactorTo_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, refactorTo_);
       }
       unknownFields.writeTo(output);
     }
@@ -440,19 +226,11 @@ public final class RefactorableOuterClass {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getId());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, type_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, owner_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, kind_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, refactorTo_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, refactorTo_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -470,25 +248,10 @@ public final class RefactorableOuterClass {
       com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable) obj;
 
       boolean result = true;
-      result = result && (hasName() == other.hasName());
-      if (hasName()) {
-        result = result && getName()
-            .equals(other.getName());
-      }
-      result = result && (hasType() == other.hasType());
-      if (hasType()) {
-        result = result && getType()
-            .equals(other.getType());
-      }
-      result = result && (hasOwner() == other.hasOwner());
-      if (hasOwner()) {
-        result = result && getOwner()
-            .equals(other.getOwner());
-      }
-      result = result && (hasKind() == other.hasKind());
-      if (hasKind()) {
-        result = result && getKind()
-            .equals(other.getKind());
+      result = result && (hasId() == other.hasId());
+      if (hasId()) {
+        result = result && getId()
+            .equals(other.getId());
       }
       result = result && (hasRefactorTo() == other.hasRefactorTo());
       if (hasRefactorTo()) {
@@ -506,21 +269,9 @@ public final class RefactorableOuterClass {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      if (hasName()) {
-        hash = (37 * hash) + NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getName().hashCode();
-      }
-      if (hasType()) {
-        hash = (37 * hash) + TYPE_FIELD_NUMBER;
-        hash = (53 * hash) + getType().hashCode();
-      }
-      if (hasOwner()) {
-        hash = (37 * hash) + OWNER_FIELD_NUMBER;
-        hash = (53 * hash) + getOwner().hashCode();
-      }
-      if (hasKind()) {
-        hash = (37 * hash) + KIND_FIELD_NUMBER;
-        hash = (53 * hash) + getKind().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
       }
       if (hasRefactorTo()) {
         hash = (37 * hash) + REFACTOR_TO_FIELD_NUMBER;
@@ -651,20 +402,19 @@ public final class RefactorableOuterClass {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getIdFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
-        name_ = "";
+        if (idBuilder_ == null) {
+          id_ = null;
+        } else {
+          idBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        owner_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        kind_ = "";
-        bitField0_ = (bitField0_ & ~0x00000008);
         refactorTo_ = "";
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -692,21 +442,13 @@ public final class RefactorableOuterClass {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.name_ = name_;
+        if (idBuilder_ == null) {
+          result.id_ = id_;
+        } else {
+          result.id_ = idBuilder_.build();
+        }
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
-        }
-        result.type_ = type_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.owner_ = owner_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.kind_ = kind_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
         }
         result.refactorTo_ = refactorTo_;
         result.bitField0_ = to_bitField0_;
@@ -751,28 +493,11 @@ public final class RefactorableOuterClass {
 
       public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable other) {
         if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable.getDefaultInstance()) return this;
-        if (other.hasName()) {
-          bitField0_ |= 0x00000001;
-          name_ = other.name_;
-          onChanged();
-        }
-        if (other.hasType()) {
-          bitField0_ |= 0x00000002;
-          type_ = other.type_;
-          onChanged();
-        }
-        if (other.hasOwner()) {
-          bitField0_ |= 0x00000004;
-          owner_ = other.owner_;
-          onChanged();
-        }
-        if (other.hasKind()) {
-          bitField0_ |= 0x00000008;
-          kind_ = other.kind_;
-          onChanged();
+        if (other.hasId()) {
+          mergeId(other.getId());
         }
         if (other.hasRefactorTo()) {
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000002;
           refactorTo_ = other.refactorTo_;
           onChanged();
         }
@@ -804,319 +529,133 @@ public final class RefactorableOuterClass {
       }
       private int bitField0_;
 
-      private java.lang.Object name_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification id_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> idBuilder_;
       /**
-       * <code>optional string name = 1;</code>
+       * <code>optional .Models.Identification id = 1;</code>
        */
-      public boolean hasName() {
+      public boolean hasId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional string name = 1;</code>
+       * <code>optional .Models.Identification id = 1;</code>
        */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            name_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getId() {
+        if (idBuilder_ == null) {
+          return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : id_;
+        } else {
+          return idBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.Identification id = 1;</code>
+       */
+      public Builder setId(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
+        if (idBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          id_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          idBuilder_.setMessage(value);
         }
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          name_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      public Builder setName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        name_ = value;
-        onChanged();
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>optional string name = 1;</code>
+       * <code>optional .Models.Identification id = 1;</code>
        */
-      public Builder clearName() {
+      public Builder setId(
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder builderForValue) {
+        if (idBuilder_ == null) {
+          id_ = builderForValue.build();
+          onChanged();
+        } else {
+          idBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Identification id = 1;</code>
+       */
+      public Builder mergeId(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
+        if (idBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              id_ != null &&
+              id_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance()) {
+            id_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.newBuilder(id_).mergeFrom(value).buildPartial();
+          } else {
+            id_ = value;
+          }
+          onChanged();
+        } else {
+          idBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Identification id = 1;</code>
+       */
+      public Builder clearId() {
+        if (idBuilder_ == null) {
+          id_ = null;
+          onChanged();
+        } else {
+          idBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        name_ = getDefaultInstance().getName();
-        onChanged();
         return this;
       }
       /**
-       * <code>optional string name = 1;</code>
+       * <code>optional .Models.Identification id = 1;</code>
        */
-      public Builder setNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        name_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder getIdBuilder() {
+        bitField0_ |= 0x00000001;
         onChanged();
-        return this;
-      }
-
-      private java.lang.Object type_ = "";
-      /**
-       * <code>optional string type = 2;</code>
-       */
-      public boolean hasType() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return getIdFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional string type = 2;</code>
+       * <code>optional .Models.Identification id = 1;</code>
        */
-      public java.lang.String getType() {
-        java.lang.Object ref = type_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            type_ = s;
-          }
-          return s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getIdOrBuilder() {
+        if (idBuilder_ != null) {
+          return idBuilder_.getMessageOrBuilder();
         } else {
-          return (java.lang.String) ref;
+          return id_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : id_;
         }
       }
       /**
-       * <code>optional string type = 2;</code>
+       * <code>optional .Models.Identification id = 1;</code>
        */
-      public com.google.protobuf.ByteString
-          getTypeBytes() {
-        java.lang.Object ref = type_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          type_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> 
+          getIdFieldBuilder() {
+        if (idBuilder_ == null) {
+          idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder>(
+                  getId(),
+                  getParentForChildren(),
+                  isClean());
+          id_ = null;
         }
-      }
-      /**
-       * <code>optional string type = 2;</code>
-       */
-      public Builder setType(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string type = 2;</code>
-       */
-      public Builder clearType() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        type_ = getDefaultInstance().getType();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string type = 2;</code>
-       */
-      public Builder setTypeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        type_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object owner_ = "";
-      /**
-       * <code>optional string owner = 3;</code>
-       */
-      public boolean hasOwner() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional string owner = 3;</code>
-       */
-      public java.lang.String getOwner() {
-        java.lang.Object ref = owner_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            owner_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string owner = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getOwnerBytes() {
-        java.lang.Object ref = owner_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          owner_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string owner = 3;</code>
-       */
-      public Builder setOwner(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        owner_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string owner = 3;</code>
-       */
-      public Builder clearOwner() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        owner_ = getDefaultInstance().getOwner();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string owner = 3;</code>
-       */
-      public Builder setOwnerBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        owner_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object kind_ = "";
-      /**
-       * <code>optional string kind = 4;</code>
-       */
-      public boolean hasKind() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>optional string kind = 4;</code>
-       */
-      public java.lang.String getKind() {
-        java.lang.Object ref = kind_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            kind_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string kind = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getKindBytes() {
-        java.lang.Object ref = kind_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          kind_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string kind = 4;</code>
-       */
-      public Builder setKind(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        kind_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string kind = 4;</code>
-       */
-      public Builder clearKind() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        kind_ = getDefaultInstance().getKind();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string kind = 4;</code>
-       */
-      public Builder setKindBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        kind_ = value;
-        onChanged();
-        return this;
+        return idBuilder_;
       }
 
       private java.lang.Object refactorTo_ = "";
       /**
-       * <code>optional string refactor_to = 5;</code>
+       * <code>optional string refactor_to = 2;</code>
        */
       public boolean hasRefactorTo() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional string refactor_to = 5;</code>
+       * <code>optional string refactor_to = 2;</code>
        */
       public java.lang.String getRefactorTo() {
         java.lang.Object ref = refactorTo_;
@@ -1133,7 +672,7 @@ public final class RefactorableOuterClass {
         }
       }
       /**
-       * <code>optional string refactor_to = 5;</code>
+       * <code>optional string refactor_to = 2;</code>
        */
       public com.google.protobuf.ByteString
           getRefactorToBytes() {
@@ -1149,36 +688,36 @@ public final class RefactorableOuterClass {
         }
       }
       /**
-       * <code>optional string refactor_to = 5;</code>
+       * <code>optional string refactor_to = 2;</code>
        */
       public Builder setRefactorTo(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000002;
         refactorTo_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string refactor_to = 5;</code>
+       * <code>optional string refactor_to = 2;</code>
        */
       public Builder clearRefactorTo() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000002);
         refactorTo_ = getDefaultInstance().getRefactorTo();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string refactor_to = 5;</code>
+       * <code>optional string refactor_to = 2;</code>
        */
       public Builder setRefactorToBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000002;
         refactorTo_ = value;
         onChanged();
         return this;
@@ -1246,11 +785,11 @@ public final class RefactorableOuterClass {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\022Refactorable.proto\022\006Models\"\\\n\014Refactor" +
-      "able\022\014\n\004name\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\022\r\n\005owne" +
-      "r\030\003 \001(\t\022\014\n\004kind\030\004 \001(\t\022\023\n\013refactor_to\030\005 \001" +
-      "(\tB@\n>com.google.errorprone.bugpatterns." +
-      "refactoringexperiment.models"
+      "\n\022Refactorable.proto\022\006Models\032\024Identifica" +
+      "tion.proto\"G\n\014Refactorable\022\"\n\002id\030\001 \001(\0132\026" +
+      ".Models.Identification\022\023\n\013refactor_to\030\002 " +
+      "\001(\tB@\n>com.google.errorprone.bugpatterns" +
+      ".refactoringexperiment.models"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1263,13 +802,15 @@ public final class RefactorableOuterClass {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor(),
         }, assigner);
     internal_static_Models_Refactorable_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Models_Refactorable_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_Refactorable_descriptor,
-        new java.lang.String[] { "Name", "Type", "Owner", "Kind", "RefactorTo", });
+        new java.lang.String[] { "Id", "RefactorTo", });
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

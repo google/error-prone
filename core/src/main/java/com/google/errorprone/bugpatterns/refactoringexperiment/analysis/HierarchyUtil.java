@@ -67,7 +67,6 @@ public class HierarchyUtil {
                     && m.getId().getOwner().getId().getType().equals(md.getSuperMethodIn()) && m.getId().getKind().equals(md.getId().getKind())
                     && m.getId().getType().equals(md.getId().getType())).findFirst().map(Function.identity()).orElseThrow(() -> new Exception());
         } catch (Exception e) {
-            System.out.println("Super method not found!");
             return null;
         }
     }

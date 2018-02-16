@@ -1,13 +1,10 @@
 syntax = "proto2";
-
+import "Identification.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
 
 message Refactorable {
-    optional string name = 1;
-    optional string type = 2;
-    optional string owner = 3;
-    optional string kind = 4;
-    optional string refactor_to = 5;
+    optional Identification id = 1;
+    optional string refactor_to = 2;
 }
