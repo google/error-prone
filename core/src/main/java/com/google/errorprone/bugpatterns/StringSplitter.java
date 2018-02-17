@@ -53,7 +53,7 @@ import java.util.Optional;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "StringSplitter",
-  summary = "Prefer Splitter to String.split",
+  summary = "String.split(String) has surprising behavior",
   severity = WARNING,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
