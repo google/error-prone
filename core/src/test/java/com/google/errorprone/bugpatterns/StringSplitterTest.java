@@ -278,4 +278,39 @@ public class StringSplitterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testStringSplitPositive() throws Exception {
+    CompilationTestHelper.newInstance(StringSplitter.class, getClass())
+        .addSourceFile("StringSplitPositiveCases.java")
+        .doTest();
+  }
+
+  @Test
+  public void testStringSplitNegative() throws Exception {
+    CompilationTestHelper.newInstance(StringSplitter.class, getClass())
+        .addSourceFile("StringSplitNegativeCases.java")
+        .doTest();
+  }
+
+  @Test
+  public void noSplitterOnClassPath() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void f() {",
+            "    for (String s : \"\".split(\":\")) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void f() {",
+            "    for (String s : \"\".split(\":\", -1)) {}",
+            "  }",
+            "}")
+        .setArgs("-cp", ":")
+        .doTest(TestMode.TEXT_MATCH);
+  }
 }
