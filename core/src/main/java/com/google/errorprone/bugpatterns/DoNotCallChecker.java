@@ -58,6 +58,11 @@ public class DoNotCallChecker extends BugChecker
       return NO_MATCH;
     }
     if (hasAnnotation(tree, DoNotCall.class, state)) {
+      if (symbol.getModifiers().contains(Modifier.PRIVATE)) {
+        return buildDescription(tree)
+            .setMessage("A private method that should not be called should simply be removed.")
+            .build();
+      }
       if (symbol.getModifiers().contains(Modifier.ABSTRACT)) {
         return NO_MATCH;
       }

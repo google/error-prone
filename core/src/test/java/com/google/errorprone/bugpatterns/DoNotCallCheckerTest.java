@@ -144,4 +144,17 @@ public class DoNotCallCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void privateMethod() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "public final class Test {",
+            "  // BUG: Diagnostic contains: private method",
+            "  @DoNotCall private void f() {}",
+            "}")
+        .doTest();
+  }
 }
