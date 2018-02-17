@@ -27,6 +27,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -67,6 +68,20 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
+    Description.Builder description = buildDescription(tree);
+    Optional<Fix> fix = buildFix(tree, state);
+    if (!fix.isPresent()) {
+      return NO_MATCH;
+    }
+    if (state.getTypeFromString("com.google.common.base.Splitter") != null) {
+      description.addFix(fix.get());
+    } else {
+      description.addFix(SuggestedFix.postfixWith(getOnlyElement(tree.getArguments()), ", -1"));
+    }
+    return description.build();
+  }
+
+  public Optional<Fix> buildFix(MethodInvocationTree tree, VisitorState state) {
     Tree arg = getOnlyElement(tree.getArguments());
     String value = ASTHelpers.constValue(arg, String.class);
     boolean maybeRegex = false;
@@ -90,8 +105,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     if (parent instanceof EnhancedForLoopTree
         && ((EnhancedForLoopTree) parent).getExpression().equals(tree)) {
       // fix for `for (... : s.split(...)) {}` -> `for (... : Splitter.on(...).split(s)) {}`
-      return describeMatch(
-          tree,
+      return Optional.of(
           replaceWithSplitter(
                   SuggestedFix.builder(),
                   tree,
@@ -105,7 +119,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     if (parent instanceof ArrayAccessTree) {
       ArrayAccessTree arrayAccessTree = (ArrayAccessTree) parent;
       if (!arrayAccessTree.getExpression().equals(tree)) {
-        return NO_MATCH;
+        return Optional.empty();
       }
       SuggestedFix.Builder fix =
           SuggestedFix.builder()
@@ -115,15 +129,14 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
                   ((JCTree) arrayAccessTree).getStartPosition(),
                   "Iterables.get(")
               .replace(
-                  state.getEndPosition(arrayAccessTree.getExpression()),
-                  ((JCTree) arrayAccessTree.getIndex()).getStartPosition(),
+                  /* startPos= */ state.getEndPosition(arrayAccessTree.getExpression()),
+                  /* endPos= */ ((JCTree) arrayAccessTree.getIndex()).getStartPosition(),
                   String.format(", "))
               .replace(
                   state.getEndPosition(arrayAccessTree.getIndex()),
                   state.getEndPosition(arrayAccessTree),
                   ")");
-      return describeMatch(
-          tree,
+      return Optional.of(
           replaceWithSplitter(
                   fix, tree, value, state, "split", maybeRegex, /* mutableList= */ false)
               .build());
@@ -131,16 +144,16 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     // If the result of split is assigned to a variable, try to fix all uses of the variable in the
     // enclosing method. If we don't know how to fix any of them, bail out.
     if (!(parent instanceof VariableTree)) {
-      return NO_MATCH;
+      return Optional.empty();
     }
     VariableTree varTree = (VariableTree) parent;
     if (!varTree.getInitializer().equals(tree)) {
-      return NO_MATCH;
+      return Optional.empty();
     }
     VarSymbol sym = ASTHelpers.getSymbol(varTree);
     TreePath enclosing = findEnclosing(state);
     if (enclosing == null) {
-      return NO_MATCH;
+      return Optional.empty();
     }
     // find all uses of the variable in the enclosing method
     List<TreePath> uses = new ArrayList<>();
@@ -214,7 +227,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
         }
       }
       if (!firstNonNull(new UseFixer().scan(path.getParentPath(), null), false)) {
-        return NO_MATCH;
+        return Optional.empty();
       }
     }
     if (needsList[0]) {
@@ -224,7 +237,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
       fix.replace((varTree).getType(), "Iterable<String>");
       replaceWithSplitter(fix, tree, value, state, "split", maybeRegex, needsMutableList[0]);
     }
-    return describeMatch(tree, fix.build());
+    return Optional.of(fix.build());
   }
 
   private SuggestedFix.Builder replaceWithSplitter(

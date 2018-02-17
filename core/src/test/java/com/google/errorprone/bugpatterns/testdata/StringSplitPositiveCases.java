@@ -25,7 +25,7 @@ public class StringSplitPositiveCases {
 
   public void StringSplitOneArg() {
     String foo = "a:b";
-    // BUG: Diagnostic contains: String.split
-    foo.split(":");
+    // BUG: Diagnostic contains:
+    String[] xs = foo.split(":");
   }
 }
