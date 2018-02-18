@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
@@ -29,6 +30,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -36,6 +38,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
@@ -70,7 +73,7 @@ import javax.annotation.Nullable;
   severity = WARNING
 )
 public class JdkObsolete extends BugChecker
-    implements NewClassTreeMatcher, ClassTreeMatcher, MemberReferenceTreeMatcher {
+    implements NewClassTreeMatcher, ClassTreeMatcher, MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
 
   static class Obsolete {
     final String qualifiedName;
@@ -119,6 +122,9 @@ public class JdkObsolete extends BugChecker
                       + " prefer ArrayDeque. Note that the Stack methods push/pop/peek correspond"
                       + " to the Deque methods addFirst/removeFirst/peekFirst."),
               new Obsolete(
+                  "java.lang.String",
+                  "String methods should use typed Charset instead of String charset."),
+              new Obsolete(
                   "java.lang.StringBuffer",
                   "StringBuffer performs synchronization that is usually unnecessary;"
                       + " prefer StringBuilder.") {
@@ -157,6 +163,17 @@ public class JdkObsolete extends BugChecker
               .onExactClass("com.google.re2j.Matcher")
               .withSignature("appendReplacement(java.lang.StringBuffer,java.lang.String)"));
 
+  static final Matcher<ExpressionTree> MATCHER_STRING =
+      anyOf(
+          constructor()
+              .forClass("java.lang.String")
+              .withParameters(ImmutableList.of(
+                  Suppliers.arrayOf(Suppliers.BYTE_TYPE),
+                  Suppliers.typeFromClass(String.class))),
+          instanceMethod()
+              .onExactClass("java.lang.String")
+              .withSignature("getBytes(java.lang.String)"));
+
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol constructor = ASTHelpers.getSymbol(tree);
@@ -189,6 +206,10 @@ public class JdkObsolete extends BugChecker
       if (found[0]) {
         return NO_MATCH;
       }
+    } else if (owner.getQualifiedName().contentEquals("java.lang.String")) {
+      if (!MATCHER_STRING.matches(tree, state)) {
+        return NO_MATCH;
+      }
     }
     return description;
   }
@@ -205,6 +226,16 @@ public class JdkObsolete extends BugChecker
       return NO_MATCH;
     }
     return describeIfObsolete(null, state.getTypes().directSupertypes(symbol.asType()), state);
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (MATCHER_STRING.matches(tree, state)) {
+      MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+      return describeIfObsolete(
+          tree, ImmutableList.of(symbol.owner.asType()), state);
+    }
+    return NO_MATCH;
   }
 
   @Override

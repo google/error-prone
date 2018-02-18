@@ -45,9 +45,9 @@ public class JdkObsoleteTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.nio.file.Path;",
+            "import java.io.UnsupportedEncodingException;",
             "class Test {",
-            "  {",
+            "  void f() throws UnsupportedEncodingException {",
             "    // BUG: Diagnostic contains:",
             "    new java.util.LinkedList<>();",
             "    // BUG: Diagnostic contains:",
@@ -60,6 +60,25 @@ public class JdkObsoleteTest {
             "    new StringBuffer();",
             "    // BUG: Diagnostic contains:",
             "    new java.util.Hashtable<Object, Object>() {};",
+            "    // BUG: Diagnostic contains:",
+            "    new String(new byte[0], \"UTF-8\");",
+            "    // BUG: Diagnostic contains:",
+            "    \"\".getBytes(\"UTF-8\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.nio.charset.StandardCharsets;",
+            "class Test {",
+            "  void f() {",
+            "    new String(new byte[0], StandardCharsets.UTF_8);",
+            "    \"\".getBytes(StandardCharsets.UTF_8);",
             "  }",
             "}")
         .doTest();
