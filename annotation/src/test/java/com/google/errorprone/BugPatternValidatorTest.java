@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.expectThrows;
 
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.LinkType;
@@ -197,7 +196,7 @@ public class BugPatternValidatorTest {
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
     ValidationException e =
-        expectThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
+        assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
     assertThat(e.getMessage()).contains("Name must not contain whitespace");
   }
 }

@@ -241,14 +241,12 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
         return baseFix;
       }
       SuggestedFix.Builder fix = SuggestedFix.builder().merge(baseFix);
+      fix.addStaticImport("org.junit.Assert.assertThrows");
       StringBuilder fixPrefix = new StringBuilder();
-      if (newAsserts.isEmpty()) {
-        fix.addStaticImport("org.junit.Assert.assertThrows");
-        fixPrefix.append("assertThrows");
-      } else {
-        fix.addStaticImport("org.junit.Assert.expectThrows");
-        fixPrefix.append(String.format("%s thrown = expectThrows", exceptionClass));
+      if (!newAsserts.isEmpty()) {
+        fixPrefix.append(String.format("%s thrown = ", exceptionClass));
       }
+      fixPrefix.append("assertThrows");
       fixPrefix.append(String.format("(%s.class, () -> ", exceptionClass));
       boolean useExpressionLambda =
           throwingStatements.size() == 1

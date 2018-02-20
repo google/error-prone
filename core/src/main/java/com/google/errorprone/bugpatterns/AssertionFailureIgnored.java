@@ -86,7 +86,7 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
 
   // Provide a fix for one of the classic blunders:
   // rewrite `try { ..., fail(); } catch (AssertionError e) { ... }`
-  // to `AssertionError e = expectThrows(AssertionError.class, () -> ...); ...`.
+  // to `AssertionError e = assertThrows(AssertionError.class, () -> ...); ...`.
   private static Optional<Fix> buildFix(
       JCTry tryStatement, MethodInvocationTree tree, VisitorState state) {
     if (!ASTHelpers.getSymbol(tree).getSimpleName().contentEquals("fail")) {
@@ -132,13 +132,13 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
                   state.getSourceForNode(catchTree.getParameter().getType())))
           .replace(endPosition, state.getEndPosition(catchTree), (expression ? "" : "}") + ");\n");
     } else {
-      fix.addStaticImport("org.junit.Assert.expectThrows")
+      fix.addStaticImport("org.junit.Assert.assertThrows")
           .prefixWith(tryStatement, state.getSourceForNode(catchTree.getParameter()))
           .replace(
               tryStatement.getStartPosition(),
               startPosition,
               String.format(
-                  " = expectThrows(%s.class, () -> ",
+                  " = assertThrows(%s.class, () -> ",
                   state.getSourceForNode(catchTree.getParameter().getType())))
           .replace(
               /* startPos= */ endPosition,
