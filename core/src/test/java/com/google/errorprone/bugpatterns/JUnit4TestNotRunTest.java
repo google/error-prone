@@ -198,14 +198,14 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.expectThrows;",
+            "import static org.junit.Assert.assertThrows;",
             "import org.junit.runner.RunWith;",
             "import org.junit.runners.JUnit4;",
             "@RunWith(JUnit4.class)",
             "public class Test {",
             "  // BUG: Diagnostic contains: @Test",
             "  public void shouldDoSomething() {",
-            "    expectThrows(null, null);",
+            "    assertThrows(null, null);",
             "  }",
             "}")
         .doTest();
@@ -223,7 +223,7 @@ public class JUnit4TestNotRunTest {
             "public class Test {",
             "  // BUG: Diagnostic contains: @Test",
             "  public void shouldDoSomething() {",
-            "    Assert.expectThrows(null, null);",
+            "    Assert.assertThrows(null, null);",
             "  }",
             "}")
         .doTest();

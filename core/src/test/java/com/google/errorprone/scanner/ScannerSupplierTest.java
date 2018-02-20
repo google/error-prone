@@ -22,7 +22,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.expectThrows;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicates;
@@ -161,7 +161,7 @@ public class ScannerSupplierTest {
     ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(OtherArrayEquals.class);
 
     IllegalArgumentException thrown =
-        expectThrows(IllegalArgumentException.class, () -> ss1.plus(ss2));
+        assertThrows(IllegalArgumentException.class, () -> ss1.plus(ss2));
     assertThat(thrown)
         .hasMessageThat()
         .contains(
@@ -198,7 +198,7 @@ public class ScannerSupplierTest {
     ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(class2);
 
     IllegalArgumentException thrown =
-        expectThrows(IllegalArgumentException.class, () -> ss1.plus(ss2));
+        assertThrows(IllegalArgumentException.class, () -> ss1.plus(ss2));
 
     assertThat(class1).isNotEqualTo(class2);
     assertThat(thrown)
@@ -468,7 +468,7 @@ public class ScannerSupplierTest {
         ErrorProneOptions.processArgs(ImmutableList.of("-Xep:ArrayEquals:OFF"));
 
     InvalidCommandLineOptionException exception =
-        expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
+        assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
     assertThat(exception.getMessage()).contains("may not be disabled");
   }
 
@@ -481,7 +481,7 @@ public class ScannerSupplierTest {
         ErrorProneOptions.processArgs(ImmutableList.of("-Xep:ArrayEquals:WARN"));
 
     InvalidCommandLineOptionException exception =
-        expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
+        assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
     assertThat(exception.getMessage()).contains("may not be demoted to a warning");
   }
 
@@ -613,7 +613,7 @@ public class ScannerSupplierTest {
         ErrorProneOptions.processArgs(ImmutableList.of("-Xep:PackageLocation:OFF"));
 
     InvalidCommandLineOptionException exception =
-        expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
+        assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
     assertThat(exception.getMessage()).contains("may not be disabled");
   }
 
