@@ -563,7 +563,7 @@ __[StreamResourceLeak](bugpattern/StreamResourceLeak)__<br>
 Streams that encapsulate a closeable resource should be closed using try-with-resources
 
 __[StringSplitter](bugpattern/StringSplitter)__<br>
-Prefer Splitter to String.split
+String.split(String) has surprising behavior
 
 __[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
 Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
@@ -748,9 +748,6 @@ A static variable or method should be qualified with a class name, not expressio
 
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
-
-__[StringSplit](bugpattern/StringSplit)__<br>
-String.split should never take only a single argument; it has surprising behavior
 
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception

@@ -26,15 +26,15 @@ try {
 }
 ```
 
-To avoid this issue, prefer JUnit's `assertThrows()` or `expectThrows()` API:
+To avoid this issue, prefer JUnit's `assertThrows()` API:
 
 ```java
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.expectThrows;
+import static org.junit.Assert.assertThrows;
 
 @Test
 public void testFailsWithAssertionError() {
-  AssertionError thrown = expectThrows(
+  AssertionError thrown = assertThrows(
       AssertionError.class,
       () -> {
         doSomething();

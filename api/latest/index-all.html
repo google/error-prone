@@ -991,6 +991,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractTestExceptionChecker.html#buildFix-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.tree.JCTree.JCExpression-java.util.List-">buildFix(VisitorState, SuggestedFix.Builder, JCTree.JCExpression, List&lt;? extends StatementTree&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractTestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractTestExceptionChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StringSplitter.html#buildFix-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">buildFix(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StringSplitter.html" title="class in com.google.errorprone.bugpatterns">StringSplitter</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html#buildMessage-java.lang.String-">buildMessage(String)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a></dt>
 <dd>
 <div class="block">Builds the error message, given the list of locks that were not handled.</div>
@@ -4835,6 +4837,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.MemberReferenceTreeMatcher.html#matchMemberReference-com.sun.source.tree.MemberReferenceTree-com.google.errorprone.VisitorState-">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/DoNotCallChecker.html#matchMemberReference-com.sun.source.tree.MemberReferenceTree-com.google.errorprone.VisitorState-">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DoNotCallChecker.html" title="class in com.google.errorprone.bugpatterns">DoNotCallChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#matchMemberReference-com.sun.source.tree.MemberReferenceTree-com.google.errorprone.VisitorState-">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">FutureReturnValueIgnored</a></dt>
 <dd>
 <div class="block">Detect member references that implement an interface that return Object, but resolve to a
@@ -5164,8 +5168,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html" title="class in com.google.errorprone.bugpatterns">ShouldHaveEvenArgs</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StringSplit.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StringSplit.html" title="class in com.google.errorprone.bugpatterns">StringSplit</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StringSplitter.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StringSplitter.html" title="class in com.google.errorprone.bugpatterns">StringSplitter</a></dt>
 <dd>&nbsp;</dd>
@@ -6938,10 +6940,6 @@
 <div class="block">A simple wrapper to view a <code>String</code> as a <code>Name</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/StringName.html#StringName--">StringName()</a></span> - Constructor for class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/StringName.html" title="class in com.google.errorprone.refaster">StringName</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/StringSplit.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">StringSplit</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StringSplit.html#StringSplit--">StringSplit()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StringSplit.html" title="class in com.google.errorprone.bugpatterns">StringSplit</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StringSplitter.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">StringSplitter</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>

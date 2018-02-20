@@ -31,16 +31,16 @@ public void testRemoveFails() {
 }
 ```
 
-To avoid this issue, prefer JUnit's `assertThrows()` or `expectThrows()` API:
+To avoid this issue, prefer JUnit's `assertThrows()` API:
 
 ```java
-import static org.junit.Assert.expectThrows;
+import static org.junit.Assert.assertThrows;
 
 @Test
 public void testRemoveFails() {
   AppendOnlyList list = new AppendOnlyList();
   list.add(0, "a");
-  UnsupportedOperationException thrown = expectThrows(
+  UnsupportedOperationException thrown = assertThrows(
       UnsupportedOperationException.class,
       () -> {
         list.remove(0);
