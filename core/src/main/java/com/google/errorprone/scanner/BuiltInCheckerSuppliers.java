@@ -248,6 +248,7 @@ import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConst
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.TruthIncompatibleType;
 import com.google.errorprone.bugpatterns.formatstring.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChecker;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
@@ -524,6 +525,7 @@ public class BuiltInCheckerSuppliers {
           StringSplitter.class,
           StaticGuardedByInstance.class,
           StreamResourceLeak.class,
+          TruthIncompatibleType.class,
           SynchronizeOnNonFinalField.class,
           ThreadJoinLoop.class,
           ThreadLocalUsage.class,
