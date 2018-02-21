@@ -558,6 +558,7 @@ public class ASTHelpers {
    *
    * @param annotationClass the binary class name of the annotation (e.g.
    *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
+   * @return true if the symbol is annotated with given type.
    */
   public static boolean hasAnnotation(Symbol sym, String annotationClass, VisitorState state) {
     Name annotationName = state.getName(annotationClass);
@@ -603,12 +604,23 @@ public class ASTHelpers {
   /**
    * Check for the presence of an annotation, considering annotation inheritance.
    *
-   * @return the annotation of given type on the tree's symbol, or null.
+   * @param annotationClass the binary class name of the annotation (e.g.
+   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
+   * @return true if the tree is annotated with given type.
+   */
+  public static boolean hasAnnotation(Tree tree, String annotationClass, VisitorState state) {
+    Symbol sym = getDeclaredSymbol(tree);
+    return hasAnnotation(sym, annotationClass, state);
+  }
+
+  /**
+   * Check for the presence of an annotation, considering annotation inheritance.
+   *
+   * @return true if the tree is annotated with given type.
    */
   public static boolean hasAnnotation(
       Tree tree, Class<? extends Annotation> annotationClass, VisitorState state) {
-    Symbol sym = getDeclaredSymbol(tree);
-    return hasAnnotation(sym, annotationClass.getName(), state);
+    return hasAnnotation(tree, annotationClass.getName(), state);
   }
 
   /**
@@ -626,6 +638,18 @@ public class ASTHelpers {
       }
     }
     return false;
+  }
+
+  /**
+   * Check for the presence of an annotation with a specific simple name directly on this symbol.
+   * Does *not* consider annotation inheritance.
+   *
+   * @param tree the tree to check for the presence of the annotation
+   * @param simpleName the simple name of the annotation to look for, e.g. "Nullable" or
+   *     "CheckReturnValue"
+   */
+  public static boolean hasDirectAnnotationWithSimpleName(Tree tree, String simpleName) {
+    return hasDirectAnnotationWithSimpleName(getDeclaredSymbol(tree), simpleName);
   }
 
   /**
