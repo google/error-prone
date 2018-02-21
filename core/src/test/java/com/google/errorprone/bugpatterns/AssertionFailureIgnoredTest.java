@@ -55,6 +55,19 @@ public class AssertionFailureIgnoredTest {
             "      Assert.fail();",
             "    } catch (NoSuchFieldException | NoSuchMethodException | AssertionError t) {",
             "    }",
+            "    AssertionError e = null;",
+            "    try {",
+            "      // BUG: Diagnostic contains:",
+            "      Assert.fail();",
+            "    } catch (AssertionError t) {",
+            "      throw e;",
+            "    }",
+            "    try {",
+            "      // BUG: Diagnostic contains:",
+            "      Assert.fail();",
+            "    } catch (AssertionError t) {",
+            "      throw new AssertionError(e);",
+            "    }",
             "  }",
             "}")
         .doTest();
@@ -87,6 +100,16 @@ public class AssertionFailureIgnoredTest {
             "    try {",
             "    } catch (Throwable t) {",
             "      Assert.fail();",
+            "    }",
+            "    try {",
+            "      Assert.fail();",
+            "    } catch (AssertionError t) {",
+            "      throw t;",
+            "    }",
+            "    try {",
+            "      Assert.fail();",
+            "    } catch (AssertionError t) {",
+            "      throw new AssertionError(t);",
             "    }",
             "  }",
             "}")
@@ -232,3 +255,4 @@ public class AssertionFailureIgnoredTest {
         .doTest();
   }
 }
+
