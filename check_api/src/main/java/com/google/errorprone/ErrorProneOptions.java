@@ -137,21 +137,7 @@ public class ErrorProneOptions {
 
       abstract Builder importOrganizer(ImportOrganizer importOrganizer);
 
-      abstract PatchingOptions autoBuild();
-
-      final PatchingOptions build() {
-
-        PatchingOptions patchingOptions = autoBuild();
-
-        // If anything is specified, then (checkers or refaster) and output must be set.
-        if ((!patchingOptions.namedCheckers().isEmpty()
-                || patchingOptions.customRefactorer().isPresent())
-            ^ patchingOptions.doRefactor()) {
-          throw new InvalidCommandLineOptionException(
-              "-XepPatchChecks and -XepPatchLocation must be specified together");
-        }
-        return patchingOptions;
-      }
+      abstract PatchingOptions build();
     }
   }
 
@@ -390,6 +376,8 @@ public class ErrorProneOptions {
      * You can pass the IGNORE_UNKNOWN_CHECKS_FLAG to opt-out of that checking.  This allows you to
      * use command lines from different versions of error-prone interchangeably.
      */
+    boolean patchLocationSet = false;
+    boolean patchCheckSet = false;
     Builder builder = new Builder();
     for (String arg : args) {
       switch (arg) {
@@ -423,6 +411,7 @@ public class ErrorProneOptions {
           } else if (arg.startsWith(ErrorProneFlags.PREFIX)) {
             builder.parseFlag(arg);
           } else if (arg.startsWith(PATCH_OUTPUT_LOCATION)) {
+            patchLocationSet = true;
             String remaining = arg.substring(PATCH_OUTPUT_LOCATION.length());
             if (remaining.equals("IN_PLACE")) {
               builder.patchingOptionsBuilder().inPlace(true);
@@ -433,6 +422,7 @@ public class ErrorProneOptions {
               builder.patchingOptionsBuilder().baseDirectory(remaining);
             }
           } else if (arg.startsWith(PATCH_CHECKS_PREFIX)) {
+            patchCheckSet = true;
             String remaining = arg.substring(PATCH_CHECKS_PREFIX.length());
             if (remaining.startsWith("refaster:")) {
               // Refaster rule, load from InputStream at file
@@ -450,7 +440,8 @@ public class ErrorProneOptions {
                         }
                       });
             } else {
-              Iterable<String> checks = Splitter.on(',').trimResults().split(remaining);
+              Iterable<String> checks =
+                  Splitter.on(',').trimResults().omitEmptyStrings().split(remaining);
               builder.patchingOptionsBuilder().namedCheckers(ImmutableSet.copyOf(checks));
             }
           } else if (arg.startsWith(PATCH_IMPORT_ORDER_PREFIX)) {
@@ -468,6 +459,11 @@ public class ErrorProneOptions {
             remainingArgs.add(arg);
           }
       }
+    }
+
+    if (patchCheckSet && !patchLocationSet) {
+      throw new InvalidCommandLineOptionException(
+          "-XepPatchLocation must be specified when -XepPatchChecks is");
     }
 
     return builder.build(remainingArgs.build());
