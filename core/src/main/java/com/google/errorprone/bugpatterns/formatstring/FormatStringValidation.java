@@ -21,6 +21,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
@@ -51,6 +52,7 @@ import java.util.MissingFormatArgumentException;
 import java.util.MissingFormatWidthException;
 import java.util.UnknownFormatConversionException;
 import java.util.UnknownFormatFlagsException;
+import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 
@@ -72,14 +74,28 @@ public class FormatStringValidation {
     }
   }
 
+  static Stream<String> constValues(Tree tree) {
+    if (tree instanceof ConditionalExpressionTree) {
+      ConditionalExpressionTree cond = (ConditionalExpressionTree) tree;
+      String t = ASTHelpers.constValue(cond.getTrueExpression(), String.class);
+      String f = ASTHelpers.constValue(cond.getFalseExpression(), String.class);
+      if (t == null || f == null) {
+        return null;
+      }
+      return Stream.of(t, f);
+    }
+    String r = ASTHelpers.constValue(tree, String.class);
+    return r != null ? Stream.of(r) : null;
+  }
+
   @Nullable
   public static ValidationResult validate(
       Collection<? extends ExpressionTree> arguments, final VisitorState state) {
 
     Deque<ExpressionTree> args = new ArrayDeque<>(arguments);
 
-    String formatString = ASTHelpers.constValue(args.removeFirst(), String.class);
-    if (formatString == null) {
+    Stream<String> formatStrings = constValues(args.removeFirst());
+    if (formatStrings == null) {
       return null;
     }
 
@@ -109,7 +125,11 @@ public class FormatStringValidation {
               }
             });
 
-    return validate(formatString, instances);
+    return formatStrings
+        .map(formatString -> validate(formatString, instances))
+        .filter(x -> x != null)
+        .findFirst()
+        .orElse(null);
   }
 
   /**
