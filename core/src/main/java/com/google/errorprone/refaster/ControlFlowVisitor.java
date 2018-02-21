@@ -51,14 +51,14 @@ import javax.lang.model.element.Name;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
+public class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
   public static final ControlFlowVisitor INSTANCE = new ControlFlowVisitor();
 
   /**
    * The state of whether a sequence of statements may return, break out of the visited statements,
    * or neither.
    */
-  enum Result {
+  public enum Result {
     NEVER_EXITS {
       @Override
       Result or(Result other) {
