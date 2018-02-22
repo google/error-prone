@@ -66,6 +66,15 @@
                   <exclude>org.apache.ant:ant-launcher</exclude>
                 </excludes>
               </artifactSet>
+              <relocations>
+                <relocation>
+                  <pattern>com.google</pattern>
+                  <shadedPattern>shaded.com.google</shadedPattern>
+                  <excludes>
+                    <exclude>com.google.errorprone.**</exclude>
+                  </excludes>
+                </relocation>
+              </relocations>
             </configuration>
           </execution>
         </executions>
