@@ -25,15 +25,15 @@ public class Analyzer {
 
     private static final String REFACTOR_INFO = "RefactorInfo";
     public static Predicate<MutableValueGraph<Node, String>> PRE_CONDITION_1 = graph ->
-            !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Relationships.arg_passed))
+            !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Edges.ARG_PASSED))
                     .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.lambdaExpr)|| v.getKind().equals(PARAMETER) || v.getKind().equals(LOCAL_VARIABLE) || v.getKind().equals(FIELD)));
 
     public static Predicate<MutableValueGraph<Node, String>> PRE_CONDITION_2 = graph ->
-            !graph.edges().stream().filter(endpt -> (graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Relationships.assigned_as)||  graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Relationships.initialized_as)))
+            !graph.edges().stream().filter(endpt -> (graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Edges.ASSIGNED_AS)||  graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Edges.INITIALIZED_AS)))
                     .anyMatch(endpt -> (!endpt.nodeV().getKind().equals(Constants.lambdaExpr)));
 
     public static Predicate<MutableValueGraph<Node, String>> PRE_CONDITION_3 = graph ->
-            !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Relationships.passed_to_non_editable))
+            !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Edges.PASSED_TO_NON_EDITABLE))
                     .anyMatch(endpt -> (endpt.nodeV().getKind().equals(Constants.PARAMETER) || endpt.nodeU().getKind().equals(Constants.PARAMETER)));
 
     public static void main(String args[]) throws Exception {
@@ -64,7 +64,7 @@ public class Analyzer {
 
     private static Refactorable.Builder mapToRefactorObj(Node n, String refactorTo) {
         Refactorable.Builder ri = Refactorable.newBuilder();
-        return ri.setId(n.getId().getIdentification())
+        return ri.setId(n.getId())
                 .setRefactorTo(refactorTo);
     }
 

@@ -10,26 +10,25 @@ import com.google.errorprone.bugpatterns.refactoringexperiment.models.Identifica
  */
 public class Node {
 
-    private NodeID id;
+    private Identification id;
     private String refactorTo;
     private boolean visited;
     // only for var and methods
 
-    public Node(Identification id) {
-        this.id = new NodeID(id);
-    }
+    public Node(Identification id) {this.id = id;}
 
     public Node(Identification id, Identification owner) {
-        this.id = new NodeID(id,owner);
+        this.id = id.toBuilder().setOwner(owner).build();
     }
-
     public Node( Node n, String kind) {
-        this.id = new NodeID(n.id,kind);
+        this.id = n.getId().toBuilder().setKind(kind).build();
     }
 
     public Node(Identification id,String kind) {
-        this.id = new NodeID(id,kind);
+        this.id = id.toBuilder().setKind(kind).build();
     }
+
+    //public Node(Identification value, Identification owner) { this.id = new NodeID(value,owner); }
 
     @Override
     public boolean equals(Object o) {
@@ -41,26 +40,21 @@ public class Node {
     }
 
     public boolean isSameAs(Identification id) {
-        return this.id.isSameAs(id);
+        return this.id.equals(id);
     }
 
     public boolean isSameAs(Identification n, String kind) {
-        return this.id.isSameAs(n,kind);
+
+        return this.id.equals(new Node(n,kind));
     }
 
     public boolean isSameAs(Identification id, Identification owner) {
-        return this.id.isSameAs(id,owner);
+        return this.id.equals(new Node(id,owner));
     }
 
     public boolean isSameAs(Node n, String kind) {
-        return this.id.isSameAs(n.id,kind);
+        return this.id.equals(new Node(n,kind));
     }
-
-//    public boolean isSameAs(Identification id, String kind) {
-//        return this.kind.equals(kind) && this.owner.equals(id.getOwner())
-//                && this.name.equals(id.getName()) && this.type.equals(id.getType());
-//    }
-
 
     @Override
     public int hashCode() {
@@ -82,10 +76,10 @@ public class Node {
         return id.getName();
     }
 
-    public NodeID getId(){
+    public Identification getId(){
         return id;
     }
-    public NodeID getOwner() {
+    public Identification getOwner() {
         return id.getOwner();
     }
 

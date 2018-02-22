@@ -64,7 +64,7 @@ public class HierarchyUtil {
     private static MethodDeclaration getSuperMethodId(MethodDeclaration md, List<MethodDeclaration> mthDcl) {
         try {
             return mthDcl.stream().filter(m -> m.getId().getName().equals(md.getId().getName())
-                    && m.getId().getOwner().getId().getType().equals(md.getSuperMethodIn()) && m.getId().getKind().equals(md.getId().getKind())
+                    && m.getId().getOwner().getType().equals(md.getSuperMethodIn()) && m.getId().getKind().equals(md.getId().getKind())
                     && m.getId().getType().equals(md.getId().getType())).findFirst().map(Function.identity()).orElseThrow(() -> new Exception());
         } catch (Exception e) {
             return null;

@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
  */
 public class CreateGraph {
 
+
     public static MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
-    private static String COLUMN_SPERATOR = "|";
 
 
     public static MutableValueGraph<Node, String> create() throws Exception {
@@ -37,44 +37,53 @@ public class CreateGraph {
     }
 
 
-    // 1.populate graph with method declaration node, and parameters. Link the two with <parent_method,param_index+ index> relation
-    //              param_index+ index is a helper edge which will be removed when entire graph is constructed.
+    // 1.populate graph with method declaration node, and parameters. Link the two with <PARENT_METHOD,PARAM_INDEX+ index> relation
+    //              PARAM_INDEX+ index is a helper edge which will be removed when entire graph is constructed.
     // 2.create links between methods connected through hierarchy. At this step i am sure i have nodes for every method declaration.
     public static void populateFromMethodDeclarations() {
         List<MethodDeclaration> mthdDecls = QueryProtoBuffData.getAllMethdDecl();
         for (MethodDeclaration m : mthdDecls) {
             Node n = addNodeToGraph(m.getId());
             m.getParametersMap().entrySet().stream().map(param -> Maps.immutableEntry(param.getKey(), newNode(param.getValue())))
-                    .forEach(x -> createBiDerectionalRelation(x.getValue(), n, Relationships.parent_method, Relationships.param_index + x.getKey(), false));
+                        .forEach(x -> createBiDerectionalRelation(x.getValue(), n, Edges.PARENT_METHOD, Edges.PARAM_INDEX + x.getKey(), false));
+
         }
+
         for (MethodDeclaration m : mthdDecls)
             if (m.hasSuperMethodIn())
                 for (MethodDeclaration mh : methodsAffectedHierarchy(m.getId(), mthdDecls))
-                    createBiDerectionalRelation(getNode(m.getId()).get(), getNode(mh.getId()).get(), Relationships.affected_by_hierarchy, Relationships.affected_by_hierarchy, false);
+                    createBiDerectionalRelation(getNode(m.getId()).get(), getNode(mh.getId()).get(), Edges.AFFECTED_BY_HIERARCHY, Edges.AFFECTED_BY_HIERARCHY, false);
     }
+
+    // m (int x)    m - param index 0 -> x | x - parentmethod -> m
 
     //1. If local or field add node to graph
     //          manage initialiser if any, like rhs of assignment
     //2. If Parameter, the node already exists, so get the params connected by hierarchy. At this step i know i have all nodes for any parameter
+
     private static void populateFromVariables() throws Exception {
+        // local, field, param
         List<Variable> vars = QueryProtoBuffData.getAllVrbl();
         for (Variable v : vars) {
             Node n;
             if (!v.getId().getKind().equals(Constants.PARAMETER)) {
                 n = addNodeToGraph(v.getId());
-                if(v.hasInitializer()) {
-                    Node initializer = addNodeToGraphIfAbsent(v.getInitializer(), n);
-                    createBiDerectionalRelation(n, initializer, Relationships.initialized_as, Relationships.assigned_to, false);
+                if (v.hasInitializer()) {
+                    Node initializer = addNodeToGraphIfAbsent(v.getInitializer(), n.getId());
+                    createBiDerectionalRelation(n, initializer, Edges.INITIALIZED_AS, Edges.ASSIGNED_TO, false);
                 }
-            }
-            else {
+            } else {
                 n = getNode(v.getId()).orElseThrow(() -> new Exception());
                 for (Node p : paramsAffectedHierarchy(n))
-                    createBiDerectionalRelation(p, n, Relationships.affected_by_hierarchy, Relationships.affected_by_hierarchy, false);
+                    createBiDerectionalRelation(p, n, Edges.AFFECTED_BY_HIERARCHY, Edges.AFFECTED_BY_HIERARCHY, false);
             }
             n.setRefactorTo(Mapping.getMappedTypeFor(v.getFilteredType()));
         }
     }
+
+
+    // x = 1
+    // x intialised as 1 | 1 is assigned to x
 
 
     // We process newClass and method invocations together
@@ -83,13 +92,13 @@ public class CreateGraph {
     //                                  kind = mi.id.kind type = mi.id.type and name : mi.id.name
     //          else create node with m.id
     //    2.  Find parent method of the method invocation
-    //          if FOUND : establish relation between mi and md <parent_method,method_invocations>
-    //                      for each argument of mi, link it with corresponding parameter in md with  relation <passed_as_arg_to,arg_passed>
-    //          else if HAS RECEIVER: Establish relationship between receiver and mi. <method_invoked,reference>
+    //          if FOUND : establish relation between mi and md <PARENT_METHOD,METHOD_INVOCATION>
+    //                      for each argument of mi, link it with corresponding parameter in md with  relation <PASSED_AS_ARG_TO,ARG_PASSED>
+    //          else if HAS RECEIVER: Establish relationship between receiver and mi. <METHOD_INVOKED,REFERENCE>
     //                       Receivers could be of two types:  Function<I,I> f = lambda; f.apply (5); ...here type is variable
     //                                                         public Function<I,I> m1 { return lambda;}  mi().apply(5).....here type is method invocations
-    //    3. Else : we mark this method as non editable, and establish passed_to_non_editable relation between arg -> methodInvocation
-    //
+    //    3. Else : we mark this method as non editable, and establish PASSED_TO_NON_EDITABLE relation between arg -> methodInvocation
+
     private static void populate_methodInvc_newClass() throws Exception {
         List<MethodInvocation> mthInvc_newClass = QueryProtoBuffData.getAllMethdInvc();
         mthInvc_newClass.addAll(QueryProtoBuffData.getAllNewClass());
@@ -97,36 +106,35 @@ public class CreateGraph {
             Node n = addNodeToGraphIfAbsent(m);
             Optional<Node> md = getNode(m.getId(), Constants.METHOD);
             if (md.isPresent()) {
-                createBiDerectionalRelation(n, md.get(), Relationships.parent_method, Relationships.method_invocations, false);
+                createBiDerectionalRelation(n, md.get(), Edges.PARENT_METHOD, Edges.METHOD_INVOCATION, false);
                 for (Entry<Integer, Identification> argument : m.getArgumentsMap().entrySet()) {
-                    Node param = getAdjacentNodeWithOutgoingEdgeValue(md.get(), Relationships.param_index + argument.getKey());
-                    Node arg = addNodeToGraphIfAbsent(argument.getValue(), param);
-                    createBiDerectionalRelation(arg, param, Relationships.passed_as_arg_to, Relationships.arg_passed, true);
+                    Node param = getAdjacentNodeWithOutgoingEdgeValue(md.get(), Edges.PARAM_INDEX + argument.getKey());
+                    Node arg = addNodeToGraphIfAbsent(argument.getValue(), md.get().getId());
+                    createBiDerectionalRelation(arg, param, Edges.PASSED_AS_ARG_TO, Edges.ARG_PASSED, true);
                 }
             } else if (m.hasReceiver()) {
                 Node receiver = addNodeToGraphIfAbsent(m.getReceiver());
                 createBiDerectionalRelation(receiver, n,
-                        Relationships.method_invoked, Relationships.reference, false);
+                        Edges.METHOD_INVOKED, Edges.REFERENCE, false);
             } else {
                 for (Entry<Integer, Identification> arg : m.getArgumentsMap().entrySet()) {
                     Optional<Node> a = getNode(arg.getValue());
                     if (a.isPresent())
-                        g.putEdgeValue(a.get(), n, Relationships.passed_to_non_editable);
+                        g.putEdgeValue(a.get(), n, Edges.PASSED_TO_NON_EDITABLE);
                 }
             }
         }
     }
 
-
     //1. We get LHS. We have already created a node for it.
-    //2. Establish relation between node on RHS and LHS <assigned_as,assigned_to>
-
+    //2. Establish relation between node on RHS and LHS <ASSIGNED_AS,ASSIGNED_TO>
+    // v = lambda
     private static void populateFromAssignment() throws Exception {
         List<Assignment> assgns = QueryProtoBuffData.getAllAsgn();
         for (Assignment a : assgns) {
             Node lhs = getNode(a.getLhs()).map(x -> x).orElseThrow(() -> new Exception());
-            Node rhs = addNodeToGraphIfAbsent(a.getRhs(), lhs);
-            createBiDerectionalRelation(lhs, rhs, Relationships.assigned_as, Relationships.assigned_to, false);
+            Node rhs = addNodeToGraphIfAbsent(a.getRhs(), lhs.getId());
+            createBiDerectionalRelation(lhs, rhs, Edges.ASSIGNED_AS, Edges.ASSIGNED_TO, false);
         }
     }
 
@@ -144,13 +152,13 @@ public class CreateGraph {
     }
 
 
-    //We already have linked the method declarations by affected_by_hierarchy relationship.
+    //We already have linked the method declarations by AFFECTED_BY_HIERARCHY relationship.
     //To make things more precise,establish the relation between the corresponding parameter nodes of the method declaration
     public static List<Node> paramsAffectedHierarchy(Node n) {
-        Node parentMethod = getAdjacentNodeWithOutgoingEdgeValue(n, Relationships.parent_method);
-        int index = Integer.parseInt(g.edgeValue(parentMethod, n).replaceAll(Relationships.param_index, ""));
-        return getAdjacentNodesWithOutgoingEdgeValue(parentMethod, Relationships.affected_by_hierarchy).stream()
-                .map(h -> getAdjacentNodeWithOutgoingEdgeValue(h, Relationships.param_index + index))
+        Node parentMethod = getAdjacentNodeWithOutgoingEdgeValue(n, Edges.PARENT_METHOD);
+        int index = Integer.parseInt(g.edgeValue(parentMethod, n).replaceAll(Edges.PARAM_INDEX, ""));
+        return getAdjacentNodesWithOutgoingEdgeValue(parentMethod, Edges.AFFECTED_BY_HIERARCHY).stream()
+                .map(h -> getAdjacentNodeWithOutgoingEdgeValue(h, Edges.PARAM_INDEX + index))
                 .collect(Collectors.toList());
     }
 
@@ -162,36 +170,42 @@ public class CreateGraph {
                 n.get() : addNodeToGraph(id);
     }
 
-
-    private static Node addNodeToGraphIfAbsent(Identification value, Node param) {
-        if (!value.hasName()) {
-            Optional<Node> n = getNode(param, value.getKind());
-            return n.isPresent() ?
-                    n.get() : addNodeToGraph(param,value.getKind());
-        } else
-            return addNodeToGraphIfAbsent(value);
-
-    }
-
-
-    // This is helper method, creates/gets node for methodinvocation based on receiver if present.
-    private static Node addNodeToGraphIfAbsent(MethodInvocation mi) {
-        if (mi.hasReceiver()) {
-            Identification owner = mi.getReceiver();
-            // String owner = mi.getReceiver().getName() + COLUMN_SPERATOR + mi.getReceiver().getOwner();
-            Optional<Node> n = getNode(mi.getId(),owner);
-            return n.isPresent() ?
-                    n.get() : addNodeToGraph(mi.getId(), owner);
-        } else
-            return addNodeToGraphIfAbsent(mi.getId());
+    public static Node addNodeToGraph(Identification id) {
+        Node n = new Node(id);
+        g.addNode(n);
+        return n;
     }
 
     private static Optional<Node> getNode(Identification id) {
         return g.nodes().stream().filter(x -> x.isSameAs(id)).findFirst();
     }
 
+
+    private static Node addNodeToGraphIfAbsent(Identification value, Identification owner) {
+        if (!value.hasName()) {
+            Optional<Node> n = getNode(value, owner);
+            return n.isPresent() ?
+                    n.get() : addNodeToGraph(value, owner);
+        } else
+            return addNodeToGraphIfAbsent(value);
+
+    }
+
+    // This is helper method, creates/gets node for methodinvocation based on receiver if present.
+    private static Node addNodeToGraphIfAbsent(MethodInvocation mi) {
+        if (mi.hasReceiver()) {
+            Identification owner = mi.getReceiver();
+            // String owner = mi.getReceiver().getName() + COLUMN_SPERATOR + mi.getReceiver().getOwner();
+            Optional<Node> n = getNode(mi.getId(), owner);
+            return n.isPresent() ?
+                    n.get() : addNodeToGraph(mi.getId(), owner);
+        } else
+            return addNodeToGraphIfAbsent(mi.getId());
+    }
+
+
     // This is to search method invocations which has receiver
-    private static Optional<Node> getNode(Identification id,Identification owner) {
+    private static Optional<Node> getNode(Identification id, Identification owner) {
         return g.nodes().stream().filter(x -> x.isSameAs(owner, id)).findFirst();
     }
 
@@ -200,6 +214,7 @@ public class CreateGraph {
     private static Optional<Node> getNode(Node param, String kind) {
         return g.nodes().stream().filter(x -> x.isSameAs(param, kind)).findFirst();
     }
+
 
     // We need this to query for Parent method declaration of method invocation in context.
     // Since md and mi will be having the same name,type,owner.
@@ -217,16 +232,11 @@ public class CreateGraph {
             g.putEdgeValue(u, v, uTov);
             g.putEdgeValue(v, u, vTou);
         } else if ((u.equals(v) && allowSelfLoop)) {
-            g.putEdgeValue(u, v, Relationships.recurssive);
-            g.putEdgeValue(v, u, Relationships.recurssive);
+            g.putEdgeValue(u, v, Edges.RECURSSIVE);
+            g.putEdgeValue(v, u, Edges.RECURSSIVE);
         }
     }
 
-    public static Node addNodeToGraph(Identification id) {
-        Node n = new Node(id);
-        g.addNode(n);
-        return n;
-    }
 
     public static Node addNodeToGraph(Identification id, Identification owner) {
         Node n = new Node(id, owner);
@@ -234,14 +244,9 @@ public class CreateGraph {
         return n;
     }
 
-    public static Node addNodeToGraph(Node param,String kind) {
-        Node n = new Node(param,kind);
-        g.addNode(n);
-        return n;
-    }
 
     private static void removeEdges() {
-        g.edges().stream().filter(x -> g.edgeValue(x.nodeU(), x.nodeV()).contains(Relationships.param_index)).forEach(x -> g.removeEdge(x.nodeU(), x.nodeV()));
+        g.edges().stream().filter(x -> g.edgeValue(x.nodeU(), x.nodeV()).contains(Edges.PARAM_INDEX)).forEach(x -> g.removeEdge(x.nodeU(), x.nodeV()));
     }
 
 }

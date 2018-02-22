@@ -47,17 +47,17 @@ public final class IdentificationOuterClass {
         getTypeBytes();
 
     /**
-     * <code>optional .Models.Owner owner = 3;</code>
+     * <code>optional .Models.Identification owner = 3;</code>
      */
     boolean hasOwner();
     /**
-     * <code>optional .Models.Owner owner = 3;</code>
+     * <code>optional .Models.Identification owner = 3;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner getOwner();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getOwner();
     /**
-     * <code>optional .Models.Owner owner = 3;</code>
+     * <code>optional .Models.Identification owner = 3;</code>
      */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.OwnerOrBuilder getOwnerOrBuilder();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getOwnerOrBuilder();
 
     /**
      * <code>optional string kind = 4;</code>
@@ -135,11 +135,11 @@ public final class IdentificationOuterClass {
               break;
             }
             case 26: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.Builder subBuilder = null;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder subBuilder = null;
               if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 subBuilder = owner_.toBuilder();
               }
-              owner_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.PARSER, extensionRegistry);
+              owner_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(owner_);
                 owner_ = subBuilder.buildPartial();
@@ -263,24 +263,24 @@ public final class IdentificationOuterClass {
     }
 
     public static final int OWNER_FIELD_NUMBER = 3;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner owner_;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification owner_;
     /**
-     * <code>optional .Models.Owner owner = 3;</code>
+     * <code>optional .Models.Identification owner = 3;</code>
      */
     public boolean hasOwner() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional .Models.Owner owner = 3;</code>
+     * <code>optional .Models.Identification owner = 3;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner getOwner() {
-      return owner_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.getDefaultInstance() : owner_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getOwner() {
+      return owner_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : owner_;
     }
     /**
-     * <code>optional .Models.Owner owner = 3;</code>
+     * <code>optional .Models.Identification owner = 3;</code>
      */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.OwnerOrBuilder getOwnerOrBuilder() {
-      return owner_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.getDefaultInstance() : owner_;
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getOwnerOrBuilder() {
+      return owner_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : owner_;
     }
 
     public static final int KIND_FIELD_NUMBER = 4;
@@ -859,29 +859,29 @@ public final class IdentificationOuterClass {
         return this;
       }
 
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner owner_ = null;
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification owner_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.OwnerOrBuilder> ownerBuilder_;
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> ownerBuilder_;
       /**
-       * <code>optional .Models.Owner owner = 3;</code>
+       * <code>optional .Models.Identification owner = 3;</code>
        */
       public boolean hasOwner() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional .Models.Owner owner = 3;</code>
+       * <code>optional .Models.Identification owner = 3;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner getOwner() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getOwner() {
         if (ownerBuilder_ == null) {
-          return owner_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.getDefaultInstance() : owner_;
+          return owner_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : owner_;
         } else {
           return ownerBuilder_.getMessage();
         }
       }
       /**
-       * <code>optional .Models.Owner owner = 3;</code>
+       * <code>optional .Models.Identification owner = 3;</code>
        */
-      public Builder setOwner(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner value) {
+      public Builder setOwner(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (ownerBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -895,10 +895,10 @@ public final class IdentificationOuterClass {
         return this;
       }
       /**
-       * <code>optional .Models.Owner owner = 3;</code>
+       * <code>optional .Models.Identification owner = 3;</code>
        */
       public Builder setOwner(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.Builder builderForValue) {
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder builderForValue) {
         if (ownerBuilder_ == null) {
           owner_ = builderForValue.build();
           onChanged();
@@ -909,15 +909,15 @@ public final class IdentificationOuterClass {
         return this;
       }
       /**
-       * <code>optional .Models.Owner owner = 3;</code>
+       * <code>optional .Models.Identification owner = 3;</code>
        */
-      public Builder mergeOwner(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner value) {
+      public Builder mergeOwner(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
         if (ownerBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
               owner_ != null &&
-              owner_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.getDefaultInstance()) {
+              owner_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance()) {
             owner_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.newBuilder(owner_).mergeFrom(value).buildPartial();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.newBuilder(owner_).mergeFrom(value).buildPartial();
           } else {
             owner_ = value;
           }
@@ -929,7 +929,7 @@ public final class IdentificationOuterClass {
         return this;
       }
       /**
-       * <code>optional .Models.Owner owner = 3;</code>
+       * <code>optional .Models.Identification owner = 3;</code>
        */
       public Builder clearOwner() {
         if (ownerBuilder_ == null) {
@@ -942,33 +942,33 @@ public final class IdentificationOuterClass {
         return this;
       }
       /**
-       * <code>optional .Models.Owner owner = 3;</code>
+       * <code>optional .Models.Identification owner = 3;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.Builder getOwnerBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder getOwnerBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
         return getOwnerFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .Models.Owner owner = 3;</code>
+       * <code>optional .Models.Identification owner = 3;</code>
        */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.OwnerOrBuilder getOwnerOrBuilder() {
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getOwnerOrBuilder() {
         if (ownerBuilder_ != null) {
           return ownerBuilder_.getMessageOrBuilder();
         } else {
           return owner_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.getDefaultInstance() : owner_;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : owner_;
         }
       }
       /**
-       * <code>optional .Models.Owner owner = 3;</code>
+       * <code>optional .Models.Identification owner = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.OwnerOrBuilder> 
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> 
           getOwnerFieldBuilder() {
         if (ownerBuilder_ == null) {
           ownerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.OwnerOrBuilder>(
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder>(
                   getOwner(),
                   getParentForChildren(),
                   isClean());
@@ -1101,608 +1101,11 @@ public final class IdentificationOuterClass {
 
   }
 
-  public interface OwnerOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Models.Owner)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>optional .Models.Identification id = 1;</code>
-     */
-    boolean hasId();
-    /**
-     * <code>optional .Models.Identification id = 1;</code>
-     */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getId();
-    /**
-     * <code>optional .Models.Identification id = 1;</code>
-     */
-    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getIdOrBuilder();
-  }
-  /**
-   * Protobuf type {@code Models.Owner}
-   */
-  public  static final class Owner extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Models.Owner)
-      OwnerOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Owner.newBuilder() to construct.
-    private Owner(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private Owner() {
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Owner(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                subBuilder = id_.toBuilder();
-              }
-              id_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(id_);
-                id_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000001;
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Owner_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Owner_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.Builder.class);
-    }
-
-    private int bitField0_;
-    public static final int ID_FIELD_NUMBER = 1;
-    private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification id_;
-    /**
-     * <code>optional .Models.Identification id = 1;</code>
-     */
-    public boolean hasId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional .Models.Identification id = 1;</code>
-     */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getId() {
-      return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : id_;
-    }
-    /**
-     * <code>optional .Models.Identification id = 1;</code>
-     */
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getIdOrBuilder() {
-      return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : id_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getId());
-      }
-      unknownFields.writeTo(output);
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getId());
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner)) {
-        return super.equals(obj);
-      }
-      com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner other = (com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner) obj;
-
-      boolean result = true;
-      result = result && (hasId() == other.hasId());
-      if (hasId()) {
-        result = result && getId()
-            .equals(other.getId());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      if (hasId()) {
-        hash = (37 * hash) + ID_FIELD_NUMBER;
-        hash = (53 * hash) + getId().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code Models.Owner}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Models.Owner)
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.OwnerOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Owner_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Owner_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.class, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.Builder.class);
-      }
-
-      // Construct using com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getIdFieldBuilder();
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        if (idBuilder_ == null) {
-          id_ = null;
-        } else {
-          idBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.internal_static_Models_Owner_descriptor;
-      }
-
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner getDefaultInstanceForType() {
-        return com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.getDefaultInstance();
-      }
-
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner build() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner buildPartial() {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner result = new com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        if (idBuilder_ == null) {
-          result.id_ = id_;
-        } else {
-          result.id_ = idBuilder_.build();
-        }
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner) {
-          return mergeFrom((com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner other) {
-        if (other == com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner.getDefaultInstance()) return this;
-        if (other.hasId()) {
-          mergeId(other.getId());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification id_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> idBuilder_;
-      /**
-       * <code>optional .Models.Identification id = 1;</code>
-       */
-      public boolean hasId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional .Models.Identification id = 1;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getId() {
-        if (idBuilder_ == null) {
-          return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : id_;
-        } else {
-          return idBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .Models.Identification id = 1;</code>
-       */
-      public Builder setId(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
-        if (idBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          id_ = value;
-          onChanged();
-        } else {
-          idBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>optional .Models.Identification id = 1;</code>
-       */
-      public Builder setId(
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder builderForValue) {
-        if (idBuilder_ == null) {
-          id_ = builderForValue.build();
-          onChanged();
-        } else {
-          idBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>optional .Models.Identification id = 1;</code>
-       */
-      public Builder mergeId(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
-        if (idBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              id_ != null &&
-              id_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance()) {
-            id_ =
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.newBuilder(id_).mergeFrom(value).buildPartial();
-          } else {
-            id_ = value;
-          }
-          onChanged();
-        } else {
-          idBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>optional .Models.Identification id = 1;</code>
-       */
-      public Builder clearId() {
-        if (idBuilder_ == null) {
-          id_ = null;
-          onChanged();
-        } else {
-          idBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-      /**
-       * <code>optional .Models.Identification id = 1;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder getIdBuilder() {
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return getIdFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .Models.Identification id = 1;</code>
-       */
-      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getIdOrBuilder() {
-        if (idBuilder_ != null) {
-          return idBuilder_.getMessageOrBuilder();
-        } else {
-          return id_ == null ?
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : id_;
-        }
-      }
-      /**
-       * <code>optional .Models.Identification id = 1;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> 
-          getIdFieldBuilder() {
-        if (idBuilder_ == null) {
-          idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder>(
-                  getId(),
-                  getParentForChildren(),
-                  isClean());
-          id_ = null;
-        }
-        return idBuilder_;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:Models.Owner)
-    }
-
-    // @@protoc_insertion_point(class_scope:Models.Owner)
-    private static final com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner();
-    }
-
-    public static com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Owner>
-        PARSER = new com.google.protobuf.AbstractParser<Owner>() {
-      public Owner parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Owner(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Owner> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Owner> getParserForType() {
-      return PARSER;
-    }
-
-    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Models_Identification_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Models_Identification_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Models_Owner_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Models_Owner_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1712,12 +1115,11 @@ public final class IdentificationOuterClass {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\024Identification.proto\022\006Models\"X\n\016Identi" +
-      "fication\022\014\n\004name\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\022\034\n\005" +
-      "owner\030\003 \001(\0132\r.Models.Owner\022\014\n\004kind\030\004 \001(\t" +
-      "\"+\n\005Owner\022\"\n\002id\030\001 \001(\0132\026.Models.Identific" +
-      "ationB@\n>com.google.errorprone.bugpatter" +
-      "ns.refactoringexperiment.models"
+      "\n\024Identification.proto\022\006Models\"a\n\016Identi" +
+      "fication\022\014\n\004name\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\022%\n\005" +
+      "owner\030\003 \001(\0132\026.Models.Identification\022\014\n\004k" +
+      "ind\030\004 \001(\tB@\n>com.google.errorprone.bugpa" +
+      "tterns.refactoringexperiment.models"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1737,12 +1139,6 @@ public final class IdentificationOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_Identification_descriptor,
         new java.lang.String[] { "Name", "Type", "Owner", "Kind", });
-    internal_static_Models_Owner_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_Models_Owner_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Models_Owner_descriptor,
-        new java.lang.String[] { "Id", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
