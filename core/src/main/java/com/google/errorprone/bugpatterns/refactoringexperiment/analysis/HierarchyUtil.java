@@ -35,7 +35,6 @@ public class HierarchyUtil {
                 .map(y -> y.stream().filter(m -> !m.getId().equals(id)).collect(Collectors.toList())).findFirst().orElse(new ArrayList<>());
     }
 
-    //TODO: make this better
     private static void getMthdDclHierarchy(List<MethodDeclaration> mthdDecls) {
         List<Set<MethodDeclaration>> lists = new ArrayList<>();
         for (MethodDeclaration m : mthdDecls) {
@@ -60,7 +59,6 @@ public class HierarchyUtil {
         return lists.stream().filter(l -> l.contains(superMthd) || l.contains(mthd)).findFirst();
     }
 
-    //TODO Exception handling
     private static MethodDeclaration getSuperMethodId(MethodDeclaration md, List<MethodDeclaration> mthDcl) {
         try {
             return mthDcl.stream().filter(m -> m.getId().getName().equals(md.getId().getName())
