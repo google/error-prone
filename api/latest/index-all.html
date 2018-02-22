@@ -1527,6 +1527,15 @@
 <dd>
 <div class="block">Matches a <code>continue</code> statement.</div>
 </dd>
+<dt><a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster"><span class="typeNameLink">ControlFlowVisitor</span></a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
+<dd>
+<div class="block">Analyzes a series of statements to determine whether they don't, sometimes, or never return.</div>
+</dd>
+<dt><a href="com/google/errorprone/refaster/ControlFlowVisitor.Result.html" title="enum in com.google.errorprone.refaster"><span class="typeNameLink">ControlFlowVisitor.Result</span></a> - Enum in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
+<dd>
+<div class="block">The state of whether a sequence of statements may return, break out of the visited statements,
+ or neither.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/DocGenTool.TargetEnumConverter.html#convert-java.lang.String-">convert(String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/DocGenTool.TargetEnumConverter.html" title="class in com.google.errorprone">DocGenTool.TargetEnumConverter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UMemberSelect.html#CONVERT_TO_IDENT">CONVERT_TO_IDENT</a></span> - Static variable in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UMemberSelect.html" title="class in com.google.errorprone.refaster">UMemberSelect</a></dt>
@@ -1729,6 +1738,8 @@
 <div class="block">Returns the <code>Nullness</code> that corresponds to what you can deduce by knowing that some
  expression is not equal to another expression with this <code>Nullness</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#defaultAction-com.sun.source.tree.Tree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">defaultAction(Tree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UAnyOf.html#defaultAction-com.sun.source.tree.Tree-com.google.errorprone.refaster.Unifier-">defaultAction(Tree, Unifier)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UAnyOf.html" title="class in com.google.errorprone.refaster">UAnyOf</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UFreeIdent.html#defaultAction-com.sun.source.tree.Tree-com.google.errorprone.refaster.Unifier-">defaultAction(Tree, Unifier)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UFreeIdent.html" title="class in com.google.errorprone.refaster">UFreeIdent</a></dt>
@@ -3365,6 +3376,10 @@
 <dd>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.source.tree.Tree-java.lang.String-com.google.errorprone.VisitorState-">hasAnnotation(Tree, String, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.source.tree.Tree-java.lang.Class-com.google.errorprone.VisitorState-">hasAnnotation(Tree, Class&lt;? extends Annotation&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
@@ -3395,6 +3410,10 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html#hasCompileTimeConstantAnnotation-com.google.errorprone.VisitorState-com.sun.tools.javac.code.Symbol-">hasCompileTimeConstantAnnotation(VisitorState, Symbol)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html" title="class in com.google.errorprone.matchers">CompileTimeConstantExpressionMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#hasDirectAnnotationWithSimpleName-com.sun.tools.javac.code.Symbol-java.lang.String-">hasDirectAnnotationWithSimpleName(Symbol, String)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Check for the presence of an annotation with a specific simple name directly on this symbol.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#hasDirectAnnotationWithSimpleName-com.sun.source.tree.Tree-java.lang.String-">hasDirectAnnotationWithSimpleName(Tree, String)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Check for the presence of an annotation with a specific simple name directly on this symbol.</div>
 </dd>
@@ -3747,6 +3766,8 @@
 <dd>
 <div class="block">Retrieve an instance of <a href="com/google/errorprone/dataflow/nullnesspropagation/TrustingNullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation"><code>TrustingNullnessAnalysis</code></a> from the <code>context</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#INSTANCE">INSTANCE</a></span> - Static variable in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ImportPolicy.html#instance-com.sun.tools.javac.util.Context-">instance(Context)</a></span> - Static method in enum com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ImportPolicy.html" title="enum in com.google.errorprone.refaster">ImportPolicy</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InstanceMethod.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">InstanceMethod</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
@@ -5045,6 +5066,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionIncompatibleType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/IncompatibleArgumentType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/IncompatibleArgumentType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">IncompatibleArgumentType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/TruthIncompatibleType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/TruthIncompatibleType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">TruthIncompatibleType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CollectionToArraySafeParameter.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CollectionToArraySafeParameter.html" title="class in com.google.errorprone.bugpatterns">CollectionToArraySafeParameter</a></dt>
 <dd>&nbsp;</dd>
@@ -7291,6 +7314,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TruthConstantAsserts.html#TruthConstantAsserts--">TruthConstantAsserts()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TruthConstantAsserts.html" title="class in com.google.errorprone.bugpatterns">TruthConstantAsserts</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/TruthIncompatibleType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype"><span class="typeNameLink">TruthIncompatibleType</span></a> - Class in <a href="com/google/errorprone/bugpatterns/collectionincompatibletype/package-summary.html">com.google.errorprone.bugpatterns.collectionincompatibletype</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/TruthIncompatibleType.html#TruthIncompatibleType--">TruthIncompatibleType()</a></span> - Constructor for class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/TruthIncompatibleType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">TruthIncompatibleType</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TruthSelfEquals.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">TruthSelfEquals</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Points out if an object is tested for equality/inequality to itself using Truth Libraries.</div>
@@ -7724,6 +7751,10 @@
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.Result.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.Result.html" title="enum in com.google.errorprone.refaster">ControlFlowVisitor.Result</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this type with the specified name.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ImportPolicy.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ImportPolicy.html" title="enum in com.google.errorprone.refaster">ImportPolicy</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
@@ -7813,6 +7844,11 @@ the order they are declared.</div>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.Result.html#values--">values()</a></span> - Static method in enum com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.Result.html" title="enum in com.google.errorprone.refaster">ControlFlowVisitor.Result</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum type, in
+the order they are declared.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ImportPolicy.html#values--">values()</a></span> - Static method in enum com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ImportPolicy.html" title="enum in com.google.errorprone.refaster">ImportPolicy</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
@@ -7877,15 +7913,23 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitBinary-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">visitBinary(BinaryTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitBlock-com.sun.source.tree.BlockTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitBlock(BlockTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitBlock-com.sun.source.tree.BlockTree-java.lang.Void-">visitBlock(BlockTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitBlock-com.sun.source.tree.BlockTree-com.google.errorprone.VisitorState-">visitBlock(BlockTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitBreak-com.sun.source.tree.BreakTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitBreak(BreakTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitBreak-com.sun.source.tree.BreakTree-java.lang.Void-">visitBreak(BreakTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitBreak-com.sun.source.tree.BreakTree-com.google.errorprone.VisitorState-">visitBreak(BreakTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitCase-com.sun.source.tree.CaseTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitCase(CaseTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitCase-com.sun.source.tree.CaseTree-com.google.errorprone.VisitorState-">visitCase(CaseTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitCatch-com.sun.source.tree.CatchTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitCatch(CatchTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitCatch-com.sun.source.tree.CatchTree-java.lang.Void-">visitCatch(CatchTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
@@ -7909,9 +7953,13 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitConditionalExpression-com.sun.source.tree.ConditionalExpressionTree-com.google.errorprone.VisitorState-">visitConditionalExpression(ConditionalExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitContinue-com.sun.source.tree.ContinueTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitContinue(ContinueTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitContinue-com.sun.source.tree.ContinueTree-java.lang.Void-">visitContinue(ContinueTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitContinue-com.sun.source.tree.ContinueTree-com.google.errorprone.VisitorState-">visitContinue(ContinueTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitDoWhileLoop-com.sun.source.tree.DoWhileLoopTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitDoWhileLoop(DoWhileLoopTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitDoWhileLoop-com.sun.source.tree.DoWhileLoopTree-java.lang.Void-">visitDoWhileLoop(DoWhileLoopTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
@@ -7921,15 +7969,21 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitEmptyStatement-com.sun.source.tree.EmptyStatementTree-com.google.errorprone.VisitorState-">visitEmptyStatement(EmptyStatementTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitEnhancedForLoop-com.sun.source.tree.EnhancedForLoopTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitEnhancedForLoop(EnhancedForLoopTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitEnhancedForLoop-com.sun.source.tree.EnhancedForLoopTree-java.lang.Void-">visitEnhancedForLoop(EnhancedForLoopTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitEnhancedForLoop-com.sun.source.tree.EnhancedForLoopTree-com.google.errorprone.VisitorState-">visitEnhancedForLoop(EnhancedForLoopTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitExpressionStatement-com.sun.source.tree.ExpressionStatementTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitExpressionStatement(ExpressionStatementTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitExpressionStatement-com.sun.source.tree.ExpressionStatementTree-java.lang.Void-">visitExpressionStatement(ExpressionStatementTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitExpressionStatement-com.sun.source.tree.ExpressionStatementTree-com.google.errorprone.VisitorState-">visitExpressionStatement(ExpressionStatementTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UForAll.html#visitForAll-com.sun.tools.javac.code.Type.ForAll-com.google.errorprone.refaster.Unifier-">visitForAll(Type.ForAll, Unifier)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UForAll.html" title="class in com.google.errorprone.refaster">UForAll</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitForLoop-com.sun.source.tree.ForLoopTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitForLoop(ForLoopTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitForLoop-com.sun.source.tree.ForLoopTree-java.lang.Void-">visitForLoop(ForLoopTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
@@ -7945,6 +7999,8 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.VisitorState-">visitIdentifier(IdentifierTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitIf-com.sun.source.tree.IfTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitIf(IfTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitIf-com.sun.source.tree.IfTree-java.lang.Void-">visitIf(IfTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitIf-com.sun.source.tree.IfTree-com.google.errorprone.VisitorState-">visitIf(IfTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
@@ -7958,6 +8014,8 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitIntersectionType-com.sun.source.tree.IntersectionTypeTree-java.lang.Void-">visitIntersectionType(IntersectionTypeTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitIntersectionType-com.sun.source.tree.IntersectionTypeTree-com.google.errorprone.VisitorState-">visitIntersectionType(IntersectionTypeTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitLabeledStatement-com.sun.source.tree.LabeledStatementTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitLabeledStatement(LabeledStatementTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitLabeledStatement-com.sun.source.tree.LabeledStatementTree-java.lang.Void-">visitLabeledStatement(LabeledStatementTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
@@ -8033,6 +8091,8 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitReference-com.sun.tools.javac.tree.JCTree.JCMemberReference-">visitReference(JCTree.JCMemberReference)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitReturn-com.sun.source.tree.ReturnTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitReturn(ReturnTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UReturn.html#visitReturn-com.sun.source.tree.ReturnTree-com.google.errorprone.refaster.Unifier-">visitReturn(ReturnTree, Unifier)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UReturn.html" title="class in com.google.errorprone.refaster">UReturn</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitReturn-com.sun.source.tree.ReturnTree-java.lang.Void-">visitReturn(ReturnTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
@@ -8041,15 +8101,27 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitSelect-com.sun.tools.javac.tree.JCTree.JCFieldAccess-">visitSelect(JCTree.JCFieldAccess)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitStatement-com.sun.source.tree.StatementTree-">visitStatement(StatementTree)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitStatements-java.lang.Iterable-">visitStatements(Iterable&lt;? extends StatementTree&gt;)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitSwitch-com.sun.source.tree.SwitchTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitSwitch(SwitchTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitSwitch-com.sun.source.tree.SwitchTree-com.google.errorprone.VisitorState-">visitSwitch(SwitchTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitSynchronized-com.sun.source.tree.SynchronizedTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitSynchronized(SynchronizedTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitSynchronized-com.sun.source.tree.SynchronizedTree-java.lang.Void-">visitSynchronized(SynchronizedTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitSynchronized-com.sun.source.tree.SynchronizedTree-com.google.errorprone.VisitorState-">visitSynchronized(SynchronizedTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitThrow-com.sun.source.tree.ThrowTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitThrow(ThrowTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitThrow-com.sun.source.tree.ThrowTree-java.lang.Void-">visitThrow(ThrowTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitThrow-com.sun.source.tree.ThrowTree-com.google.errorprone.VisitorState-">visitThrow(ThrowTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitTry-com.sun.source.tree.TryTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitTry(TryTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitTry-com.sun.source.tree.TryTree-java.lang.Void-">visitTry(TryTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
@@ -8080,6 +8152,8 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UVariableDecl.html#visitVariable-com.sun.source.tree.VariableTree-com.google.errorprone.refaster.Unifier-">visitVariable(VariableTree, Unifier)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">visitVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitWhileLoop-com.sun.source.tree.WhileLoopTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitWhileLoop(WhileLoopTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitWhileLoop-com.sun.source.tree.WhileLoopTree-java.lang.Void-">visitWhileLoop(WhileLoopTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>

@@ -580,6 +580,9 @@ Three-letter time zone identifiers are deprecated, may be ambiguous, and might n
 __[TruthConstantAsserts](bugpattern/TruthConstantAsserts)__<br>
 Truth Library assert is called on a constant.
 
+__[TruthIncompatibleType](bugpattern/TruthIncompatibleType)__<br>
+Argument is not compatible with the subject&#39;s type.
+
 __[TypeParameterShadowing](bugpattern/TypeParameterShadowing)__<br>
 Type parameter declaration overrides another type parameter already declared
 
