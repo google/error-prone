@@ -13,7 +13,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDeclarationOuterClass.ClassDeclaration;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
-import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Owner;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocationOuterClass.MethodInvocation;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.VariableOuterClass.Variable;
@@ -207,18 +206,16 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         }
     }
 
-    private static Owner getOwner(Symbol symb) {
+    private static Identification getOwner(Symbol symb) {
 
         if (symb.owner.getKind().equals(ElementKind.PACKAGE)) {
             PackageSymbol pkgSymb = (PackageSymbol) symb.owner;
-            return Owner.newBuilder()
-                    .setId(Identification.newBuilder(Identification.newBuilder().setName(pkgSymb.fullname.toString())
-                            .setKind(ElementKind.PACKAGE.toString()).build())).build();
+            return Identification.newBuilder(Identification.newBuilder().setName(pkgSymb.fullname.toString())
+                            .setKind(ElementKind.PACKAGE.toString()).build()).build();
         }
 
-        return Owner.newBuilder()
-                .setId(Identification.newBuilder(infoFromSymbol(symb.owner).get()
-                        .build())).build();
+        return infoFromSymbol(symb.owner).get()
+                        .build();
     }
 
     private static Optional<String> getKindFromTree(Tree tree) {
