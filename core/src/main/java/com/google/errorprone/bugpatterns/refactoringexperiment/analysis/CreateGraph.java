@@ -77,7 +77,7 @@ public class CreateGraph {
                 for (Node p : paramsAffectedHierarchy(n))
                     createBiDerectionalRelation(p, n, Edges.AFFECTED_BY_HIERARCHY, Edges.AFFECTED_BY_HIERARCHY, false);
             }
-            n.setRefactorTo(Mapping.getMappedTypeFor(v.getFilteredType()));
+            n.setRefactorTo(Mapping.CLASS_MAPPING_FOR.get(v.getFilteredType().getInterfaceName()).apply(v.getFilteredType()));
         }
     }
 

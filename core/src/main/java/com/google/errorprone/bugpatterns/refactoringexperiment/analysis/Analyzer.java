@@ -51,14 +51,7 @@ public class Analyzer {
         subGraphs.stream().filter(PRE_CONDITION_1).filter(PRE_CONDITION_2).filter(PRE_CONDITION_3).forEach(g -> {
             List<String> refactorTo = g.nodes().stream().filter(x -> x.getKind().equals(PARAMETER) || x.getKind().equals(LOCAL_VARIABLE) || x.getKind().equals(FIELD))
                     .map(x -> x.refactorTo()).collect(Collectors.toList());
-
-//            boolean anyMappingInconsistency = refactorTo.stream().anyMatch(x -> !x.equals(refactorTo.get(0)));
-//            if(!anyMappingInconsistency) {
             g.nodes().stream().map(n -> mapToRefactorObj(n, refactorTo.get(0))).forEach(r -> ProtoBuffPersist.write(r, REFACTOR_INFO));
-//            g.nodes().stream().forEach(n -> System.out.println(n.toString()));
-//            }else {
-//                System.out.println("appingInconsistency");
-//            }
         });
     }
 
