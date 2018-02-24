@@ -30,7 +30,8 @@ public class SizeGreaterThanOrEqualsZeroTest {
   @Before
   public void setUp() throws Exception {
     compilationHelper =
-        CompilationTestHelper.newInstance(SizeGreaterThanOrEqualsZero.class, getClass());
+        CompilationTestHelper.newInstance(SizeGreaterThanOrEqualsZero.class, getClass())
+            .addSourceFile("proto/ProtoTest.java");
   }
 
   @Test
