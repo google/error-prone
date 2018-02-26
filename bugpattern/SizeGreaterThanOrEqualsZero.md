@@ -43,6 +43,7 @@ __SizeGreaterThanOrEqualsZeroPositiveCases.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.Iterables;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -149,6 +150,16 @@ public class SizeGreaterThanOrEqualsZeroPositiveCases {
     return foo;
   }
 
+  public void protoCount(TestProtoMessage msg) {
+    boolean foo;
+    // BUG: Diagnostic contains: SizeGreaterThanOrEqualsZero
+    foo = msg.getMultiFieldCount() >= 0;
+    // BUG: Diagnostic contains: SizeGreaterThanOrEqualsZero
+    foo = 0 <= msg.getMultiFieldCount();
+    // BUG: Diagnostic contains: SizeGreaterThanOrEqualsZero
+    foo = (((((msg))))).getMultiFieldCount() >= 0;
+  }
+
   private static class CollectionContainer {
     List<Integer> intList;
 
@@ -181,6 +192,7 @@ __SizeGreaterThanOrEqualsZeroNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -228,6 +240,18 @@ public class SizeGreaterThanOrEqualsZeroNegativeCases {
     foo = (((((twoDarray))))).length > zero;
 
     return foo;
+  }
+
+  public void protoCount(TestProtoMessage msg) {
+    int zero = 0;
+    boolean foo;
+    foo = msg.getMultiFieldCount() > 0;
+    foo = 0 < msg.getMultiFieldCount();
+    foo = 0 > msg.getMultiFieldCount();
+    foo = msg.getMultiFieldCount() >= 1;
+    foo = msg.getMultiFieldCount() >= -1;
+    foo = msg.getMultiFieldCount() < 0;
+    foo = (((((msg))))).getMultiFieldCount() > zero;
   }
 
   private static class CollectionContainer {
