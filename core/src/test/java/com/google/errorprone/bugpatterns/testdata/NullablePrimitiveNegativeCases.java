@@ -26,6 +26,6 @@ public class NullablePrimitiveNegativeCases {
 
   @Nullable
   public Integer method() {
-    return new Integer(0);
+    return Integer.valueOf(0);
   }
 }
