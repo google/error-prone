@@ -77,7 +77,7 @@ public class StaticQualifiedUsingExpressionPositiveCase1 {
 
   public void test2() {
     int i;
-    Integer integer = new Integer(1);
+    Integer integer = Integer.valueOf(1);
     // BUG: Diagnostic contains: variable MAX_VALUE
     // i = Integer.MAX_VALUE
     i = integer.MAX_VALUE;
