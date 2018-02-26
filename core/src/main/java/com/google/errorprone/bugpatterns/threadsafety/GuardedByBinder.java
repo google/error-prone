@@ -204,7 +204,7 @@ public class GuardedByBinder {
 
           String name = node.getIdentifier().toString();
 
-          if (name.equals("this")) {
+          if ("this".equals(name)) {
             Symbol base = context.resolver.resolveEnclosingClass(node.getExpression());
             if (context.thisClass == base) {
               return F.thisliteral();
@@ -212,7 +212,7 @@ public class GuardedByBinder {
             return F.qualifiedThis(context.names, context.thisClass, base);
           }
 
-          if (name.equals("class")) {
+          if ("class".equals(name)) {
             Symbol base = context.resolver.resolveTypeLiteral(node.getExpression());
             return F.classLiteral(base);
           }
