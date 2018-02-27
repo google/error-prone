@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** A collection of types with with known mutability. */
+/** A collection of types with known mutability. */
 public final class WellKnownMutability implements ThreadSafety.KnownTypes {
 
 
@@ -188,6 +188,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(java.util.Locale.class)
         .add(java.util.regex.Pattern.class)
         .add("android.net.Uri")
+        .add("java.util.AbstractMap.SimpleImmutableEntry", "K", "V")
         .add("java.util.Optional", "T")
         .add("java.util.OptionalDouble")
         .add("java.util.OptionalInt")
