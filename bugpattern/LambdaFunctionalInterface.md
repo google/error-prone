@@ -191,7 +191,7 @@ public class LambdaFunctionalInterfacePositiveCases {
 
     // BUG: Diagnostic contains: [LambdaFunctionalInterface]
     private <T> int sumAll(Function<T, Integer> sizeConv) {
-      return sizeConv.apply((T) new Integer(3));
+      return sizeConv.apply((T) Integer.valueOf(3));
     }
 
     public int getSumAll() {

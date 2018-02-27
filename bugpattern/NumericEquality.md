@@ -53,7 +53,7 @@ public class NumericEqualityPositiveCases {
 
     // BUG: Diagnostic contains: !Objects.equals(x, y)
     retVal = (x != y);
-    final Integer constValue = new Integer(1000);
+    final Integer constValue = Integer.valueOf(1000);
 
     // BUG: Diagnostic contains: Objects.equals(x, constValue)
     retVal = (x == constValue);
@@ -72,7 +72,7 @@ public class NumericEqualityPositiveCases {
 
     // BUG: Diagnostic contains: !Objects.equals(x, y)
     retVal = (x != y);
-    final Long constValue = new Long(1000L);
+    final Long constValue = Long.valueOf(1000L);
 
     // BUG: Diagnostic contains: Objects.equals(x, constValue)
     retVal = (x == constValue);
@@ -91,7 +91,7 @@ public class NumericEqualityPositiveCases {
 
     // BUG: Diagnostic contains: !Objects.equals(x, y)
     retVal = (x != y);
-    final Number constValue = new Long(1000L);
+    final Number constValue = Long.valueOf(1000L);
 
     // BUG: Diagnostic contains: Objects.equals(x, constValue)
     retVal = (x == constValue);
