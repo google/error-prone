@@ -39,6 +39,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
@@ -50,7 +51,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Finds instances where one uses {@code Collection#size() >= 0} or {@code T[].length > 0}. Those
@@ -153,16 +153,14 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   }
 
   private static Matcher<ExpressionTree> buildInstanceMethodMatcher() {
+    TypePredicate lengthMethodClass =
+        TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.LENGTH).keySet());
+    TypePredicate sizeMethodClass =
+        TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.SIZE).keySet());
+
     return anyOf(
-        instanceMethod()
-            .onClass(TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.SIZE).keySet()))
-            .named("size"),
-        instanceMethod()
-            .onClass(TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.LENGTH).keySet()))
-            .named("length"),
-        instanceMethod()
-            .onClass(TypePredicates.isDescendantOf("com.google.protobuf.GeneratedMessage"))
-            .withNameMatching(Pattern.compile("get.+Count")));
+        instanceMethod().onClass(sizeMethodClass).named("size"),
+        instanceMethod().onClass(lengthMethodClass).named("length"));
   }
 
   private static Matcher<ExpressionTree> buildStaticMethodMatcher() {

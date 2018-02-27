@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.Iterables;
-import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -122,16 +121,6 @@ public class SizeGreaterThanOrEqualsZeroPositiveCases {
     foo = (((((twoDarray))))).length >= 0;
 
     return foo;
-  }
-
-  public void protoCount(TestProtoMessage msg) {
-    boolean foo;
-    // BUG: Diagnostic contains: SizeGreaterThanOrEqualsZero
-    foo = msg.getMultiFieldCount() >= 0;
-    // BUG: Diagnostic contains: SizeGreaterThanOrEqualsZero
-    foo = 0 <= msg.getMultiFieldCount();
-    // BUG: Diagnostic contains: SizeGreaterThanOrEqualsZero
-    foo = (((((msg))))).getMultiFieldCount() >= 0;
   }
 
   private static class CollectionContainer {
