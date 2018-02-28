@@ -110,14 +110,11 @@ public class Analyzer {
 
     public static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_1 = graph ->
             !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Edges.ARG_PASSED))
+                    .filter(endpt -> !graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Edges.ASSIGNED_AS))
                     .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.LAMBDA_EXPRESSION)));
 
-    public static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_2 = graph ->
-            !graph.edges().stream().filter(endpt -> (graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(Edges.ASSIGNED_AS) || graph.edgeValue(endpt.nodeU(), endpt.nodeV()).equals(REFACTOR_INFO)))
-                    .anyMatch(endpt -> (!endpt.nodeV().getKind().equals(Constants.LAMBDA_EXPRESSION)));
-
     public static void main(String args[]) throws Exception {
-        induceSubgraphs(CreateGraph.create()).stream().map(POPULATE_MAPPING)//.filter(PRE_CONDITION_1)//.filter(PRE_CONDITION_2)
+        induceSubgraphs(CreateGraph.create()).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_1)//.filter(PRE_CONDITION_2)
                 .forEach(g -> {
                     g.nodes().forEach(n -> {
                         if (!n.getKind().equals(REFACTOR_INFO)) {
