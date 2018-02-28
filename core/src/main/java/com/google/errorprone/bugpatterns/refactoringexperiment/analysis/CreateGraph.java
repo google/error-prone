@@ -59,7 +59,7 @@ public class CreateGraph {
     };
 
     private static void variableAnalysis(MutableValueGraph<Node, String> gr, Node n) {
-        Optional<Node> temp = gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).equals(TYPE_INFO)).findFirst();
+        Optional<Node> temp = gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().equals(TYPE_INFO)).findFirst();
         if (temp.isPresent()) {
             Optional<Node> classDecl = getClassOfType(n, gr);
             if (classDecl.isPresent()) {
@@ -80,7 +80,7 @@ public class CreateGraph {
             gr.putEdgeValue(n, md, Edges.PARENT_METHOD);
             List<Node> foundParams = new ArrayList<>();
             for (Node param : getSuccessorWithEdge(md, gr, Edges.PARAM_INDEX)) {
-                int index = Character.getNumericValue(gr.edgeValue(md, param).charAt(gr.edgeValue(md, param).length()-1));
+                int index = Integer.parseInt(gr.edgeValue(md, param).get().replaceAll(Edges.PARAM_INDEX, ""));
                 List<Node> foundArgs = new ArrayList<>();
                 for (Node arg : getSuccessorWithEdge(n, gr, Edges.ARG_INDEX + index)) {
                     createBiDerectionalRelation(arg, param, Edges.PASSED_AS_ARG_TO, Edges.ARG_PASSED, true, gr);
@@ -99,14 +99,14 @@ public class CreateGraph {
     }
 
     public static Set<Node> getSuccessorWithEdge(Node n, MutableValueGraph<Node, String> gr, String edgeValue) {
-        return gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).startsWith(edgeValue)).collect(Collectors.toSet());
+        return gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().contains(edgeValue)).collect(Collectors.toSet());
     }
 
 
     public static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithCheck = (g1, g2) -> {
         MutableValueGraph<Node, String> graph = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
-        g1.edges().forEach(e -> graph.putEdgeValue(e.nodeU(), e.nodeV(), g1.edgeValue(e.nodeU(), e.nodeV())));
-        g2.edges().forEach(e -> graph.putEdgeValue(e.nodeU(), e.nodeV(), g2.edgeValue(e.nodeU(), e.nodeV())));
+        g1.edges().forEach(e -> graph.putEdgeValue(e.nodeU(), e.nodeV(), g1.edgeValue(e.nodeU(), e.nodeV()).get()));
+        g2.edges().forEach(e -> graph.putEdgeValue(e.nodeU(), e.nodeV(), g2.edgeValue(e.nodeU(), e.nodeV()).get()));
         g1.nodes().forEach(n -> graph.addNode(n));
         g2.nodes().forEach(n -> graph.addNode(n));
         return analyseAndEnrich.apply(ImmutableValueGraph.copyOf(graph));
