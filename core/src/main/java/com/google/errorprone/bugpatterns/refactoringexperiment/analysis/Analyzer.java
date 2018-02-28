@@ -13,7 +13,6 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.E
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.METHOD_MAPPING_FOR;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.SPECIALIZE_TO_PRIMITIVE;
 
-import com.google.common.base.Predicate;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
@@ -26,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -132,7 +132,7 @@ public class Analyzer {
     public static Set<ImmutableValueGraph<Node, String>> induceSubgraphs(ImmutableValueGraph<Node, String> gr) {
         Set<ImmutableValueGraph<Node, String>> subGraphs = new HashSet<>();
         MutableValueGraph<Node, String> graphOfGraphs = Graphs.copyOf(gr);
-        List<Node> params = graphOfGraphs.nodes().stream().filter(x -> varKind.apply(x)).collect(Collectors.toList());
+        List<Node> params = graphOfGraphs.nodes().stream().filter(x -> varKind.test(x)).collect(Collectors.toList());
         for (Node n : params)
             if (!n.isVisited()) {
                 Set<Node> reachables = Graphs.reachableNodes(graphOfGraphs.asGraph(), n).stream().collect(Collectors.toSet());
