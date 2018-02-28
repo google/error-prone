@@ -13,4 +13,7 @@ public class ProtoBuffPersist {
 
     public static void write(GeneratedMessageV3.Builder builder, String name) {
     }
+
+    public static void write(GeneratedMessageV3 builder, String name) {
+    }
 }

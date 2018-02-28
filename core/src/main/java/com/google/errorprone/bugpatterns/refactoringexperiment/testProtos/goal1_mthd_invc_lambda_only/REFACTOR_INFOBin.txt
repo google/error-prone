@@ -1,0 +1,13 @@
+
+ç
+f@java.util.function.Function<java.lang.Integer,java.lang.Integer>”
+testE(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int=
+	TestGoal1testcases.TestGoal1
+	testcases"PACKAGE"CLASS"METHOD"	PARAMETER#java.util.function.IntUnaryOperator
+Š
+apply(T)Rç
+f@java.util.function.Function<java.lang.Integer,java.lang.Integer>”
+testE(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int=
+	TestGoal1testcases.TestGoal1
+	testcases"PACKAGE"CLASS"METHOD"	PARAMETER"METHOD_INVOCATION
+applyAsInt

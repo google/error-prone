@@ -1,0 +1,7 @@
+
+ç
+f@java.util.function.Function<java.lang.Integer,java.lang.Integer>”
+testE(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int=
+	TestGoal1testcases.TestGoal1
+	testcases"PACKAGE"CLASS"METHOD"	PARAMETERC
+java.util.function.Functionjava.lang.Integerjava.lang.Integer

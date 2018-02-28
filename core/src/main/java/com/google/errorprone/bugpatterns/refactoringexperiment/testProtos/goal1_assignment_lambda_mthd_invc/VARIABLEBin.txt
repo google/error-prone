@@ -1,0 +1,18 @@
+
+“
+f@java.util.function.Function<java.lang.Integer,java.lang.Integer>E
+TestGoal1Failtestcases.TestGoal1Fail
+	testcases"PACKAGE"CLASS"FIELDC
+java.util.function.Functionjava.lang.Integerjava.lang.Integer
+ï
+f@java.util.function.Function<java.lang.Integer,java.lang.Integer>œ
+testE(java.util.function.Function<java.lang.Integer,java.lang.Integer>)intE
+TestGoal1Failtestcases.TestGoal1Fail
+	testcases"PACKAGE"CLASS"METHOD"	PARAMETERC
+java.util.function.Functionjava.lang.Integerjava.lang.Integer
+¶
+xjava.lang.Integer“
+LAMBDA_EXPRESSION0@java.util.function.Function<java.lang.Integer,java.lang.Integer>§
+testE(java.util.function.Function<java.lang.Integer,java.lang.Integer>)intE
+TestGoal1Failtestcases.TestGoal1Fail
+	testcases"PACKAGE"CLASS"METHOD_INVOCATION"LAMBDA_EXPRESSION"VARIABLE

@@ -58,6 +58,14 @@ public class CreateGraph {
         return ImmutableValueGraph.copyOf(gr);
     };
 
+
+    /**
+     *
+     * @param gr
+     * @param n
+     * This method searches for class declarations for the type of variable n.
+     * This method is only applicable for variables who's type is the subtype of functional interface.
+     */
     private static void variableAnalysis(MutableValueGraph<Node, String> gr, Node n) {
         Optional<Node> temp = gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().equals(TYPE_INFO)).findFirst();
         if (temp.isPresent()) {
@@ -73,6 +81,19 @@ public class CreateGraph {
         return gr.nodes().stream().filter(n -> n.getKind().equals(CLASS) || n.getKind().equals(INTERFACE))
                 .filter(n -> n.getType().equals(node.getType())).findFirst();
     }
+
+    /**
+     *
+     * @param gr
+     * @param n
+     *
+     * This method, searches for parent method of method invocation 'n'.
+     * To search, it induces the id of the parent by replacing its kind from METHOD_INVOCATION to METHOD
+     * After it has found the method declaration 'md',
+     * it creates PARENT_METHOD relation from 'n' -> 'md'
+     * it creates PASSED_AS_ARG_TO, ARG_PASSED relationship
+     *  between the method parameters and the arguments passed to the method declaration.
+     */
 
     private static void methodAnalysis(MutableValueGraph<Node, String> gr, Node n) {
         Node md = getNode(n.getId(), Constants.METHOD, gr).orElse(getNode(n.getId(), CONSTRUCTOR, gr).orElse(null));
@@ -102,26 +123,36 @@ public class CreateGraph {
         return gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().contains(edgeValue)).collect(Collectors.toSet());
     }
 
+    /**
+     * This binary operations merges two graphs.
+     * In order to merge graphs, it adds nodes and edges from both the graphs into
+     * the new graph.
+     *
+     * Guava graph library takes care of duplication.
+     *
+     * At end of merge we can analyse the data collected and establish new relationship.
+     */
 
-    public static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithCheck = (g1, g2) -> {
+    public static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithoutAnalysis = (g1, g2) -> {
         MutableValueGraph<Node, String> graph = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         g1.edges().forEach(e -> graph.putEdgeValue(e.nodeU(), e.nodeV(), g1.edgeValue(e.nodeU(), e.nodeV()).get()));
         g2.edges().forEach(e -> graph.putEdgeValue(e.nodeU(), e.nodeV(), g2.edgeValue(e.nodeU(), e.nodeV()).get()));
         g1.nodes().forEach(n -> graph.addNode(n));
         g2.nodes().forEach(n -> graph.addNode(n));
-        return analyseAndEnrich.apply(ImmutableValueGraph.copyOf(graph));
+        return ImmutableValueGraph.copyOf(graph);
     };
 
-    public static Function<Variable, ImmutableValueGraph<Node, String>> mapToVarDeclToGraph = v -> {
+    public static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithAnalysis = (g1, g2) ->
+         analyseAndEnrich.apply(mergeGraphWithoutAnalysis.apply(g1,g2));
+
+
+
+    public static Function<Variable, ImmutableValueGraph<Node, String>> mapVarDeclToGraph = v -> {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Node n = new Node(v.getId());
         g.addNode(n);
-//        if (v.getInitializerCount() > 0)
         if(v.hasInitializer())
-//            for (Identification init : v.getInitializerList()) {
-//                Node initializer = addNodeToGraph(init, n.getId(), g);
             createBiDerectionalRelation(n, addNodeToGraph(v.getInitializer(), n.getId(), g), ASSIGNED_AS, Edges.ASSIGNED_TO, false, g);
-//            }
         if (Mapping.CLASS_MAPPING_FOR.containsKey(v.getFilteredType().getInterfaceName()))
             if (v.getId().getType().startsWith(v.getFilteredType().getInterfaceName())) {
                 Node refactorInfo = new Node(n.getId().toBuilder().setKind(REFACTOR_INFO)
@@ -179,6 +210,12 @@ public class CreateGraph {
         return ImmutableValueGraph.copyOf(g);
     };
 
+
+//     if (Mapping.CLASS_MAPPING_FOR.containsKey(a.getSuperType().getInterfaceName())) {
+//        Node refactorInfo = new Node(n.getId().toBuilder().setKind(REFACTOR_INFO)
+//                .setType(Mapping.CLASS_MAPPING_FOR.get(a.getSuperType().getInterfaceName()).apply(a.getSuperType())).build());
+//        g.putEdgeValue(n, refactorInfo, REFACTOR_INFO);
+//    }
     public static Function<ClassDeclaration, ImmutableValueGraph<Node, String>> mapToClassDeclToGraph = a ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
@@ -192,60 +229,77 @@ public class CreateGraph {
         return ImmutableValueGraph.copyOf(g);
     };
 
-    public static ImmutableValueGraph<Node, String> methodDeclarationGraphs() {
-        List<MethodDeclaration> methodDeclarations = QueryProtoBuffData.getAllMethdDecl();
+    public static ImmutableValueGraph<Node, String> methodDeclarationGraphs(String folderName) {
+        List<MethodDeclaration> methodDeclarations = QueryProtoBuffData.getAllMethdDecl(folderName);
         ImmutableValueGraph<Node, String> methodParam = methodDeclarations.stream()
                 .map(x -> mapToMethodDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
-                        mergeGraphWithCheck);
+                        mergeGraphWithoutAnalysis);
         return methodParam;
     }
 
-    public static ImmutableValueGraph<Node, String> variableDeclarationGraphs() {
-        List<Variable> vars = QueryProtoBuffData.getAllVrbl();
+    public static ImmutableValueGraph<Node, String> variableDeclarationGraphs(String folderName) {
+        List<Variable> vars = QueryProtoBuffData.getAllVrbl(folderName);
         ImmutableValueGraph<Node, String> varGraph = vars.stream()
-                .map(x -> mapToVarDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
-                        mergeGraphWithCheck);
+                .map(x -> mapVarDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                        mergeGraphWithoutAnalysis);
         return varGraph;
     }
 
-    public static ImmutableValueGraph<Node, String> methodInvcGraphs() {
-        List<MethodInvocation> mthInvc_newClass = QueryProtoBuffData.getAllMethdInvc();
-        mthInvc_newClass.addAll(QueryProtoBuffData.getAllNewClass());
+    public static ImmutableValueGraph<Node, String> methodInvcGraphs(String folderName) {
+        List<MethodInvocation> mthInvc_newClass = QueryProtoBuffData.getAllMethdInvc(folderName);
+        mthInvc_newClass.addAll(QueryProtoBuffData.getAllNewClass(folderName));
         ImmutableValueGraph<Node, String> methodParam = mthInvc_newClass.stream()
                 .map(x -> mapToMethodInvcToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
-                        mergeGraphWithCheck);
+                        mergeGraphWithoutAnalysis);
         return methodParam;
     }
 
-    public static ImmutableValueGraph<Node, String> assgnmntGraphs() {
-        List<Assignment> assgns = QueryProtoBuffData.getAllAsgn();
+    public static ImmutableValueGraph<Node, String> assgnmntGraphs(String folderName) {
+        List<Assignment> assgns = QueryProtoBuffData.getAllAsgn(folderName);
         ImmutableValueGraph<Node, String> methodParam = assgns.stream()
                 .map(x -> mapToAssgnmntToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
-                        mergeGraphWithCheck);
+                        mergeGraphWithoutAnalysis);
         return methodParam;
     }
 
-    public static ImmutableValueGraph<Node, String> classDeclGraphs() {
-        List<ClassDeclaration> classDecl = QueryProtoBuffData.getAllClassDecl();
+    public static ImmutableValueGraph<Node, String> classDeclGraphs(String folderName) {
+        List<ClassDeclaration> classDecl = QueryProtoBuffData.getAllClassDecl(folderName);
         ImmutableValueGraph<Node, String> methodParam = classDecl.stream()
                 .map(x -> mapToClassDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
-                        mergeGraphWithCheck);
+                        mergeGraphWithoutAnalysis);
         return methodParam;
     }
 
-    public static ImmutableValueGraph<Node, String> interfaceDeclGraphs() {
-        List<ClassDeclaration> interfaceDecl = QueryProtoBuffData.getAllInterfaceDecl();
+    public static ImmutableValueGraph<Node, String> interfaceDeclGraphs(String folderName) {
+        List<ClassDeclaration> interfaceDecl = QueryProtoBuffData.getAllInterfaceDecl(folderName);
         ImmutableValueGraph<Node, String> methodParam = interfaceDecl.stream()
                 .map(x -> mapToClassDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
-                        mergeGraphWithCheck);
+                        mergeGraphWithoutAnalysis);
         return methodParam;
     }
 
-    public static ImmutableValueGraph<Node, String> create() throws Exception {
-        return Stream.of(methodDeclarationGraphs(), classDeclGraphs(), variableDeclarationGraphs(), methodInvcGraphs(),
-                assgnmntGraphs(), interfaceDeclGraphs())
+    /**
+     * methodDeclarationGraphs(), classDeclGraphs() ... other methods in the stream
+     *
+     * each these above methods do the following :
+     *  1. query protos from filesystem
+     *  2. map each proto to an individual graph
+     *      a. Each field in the proto is a node in the graph.(If fields is repeated then multiple nodes)
+     *      b. establish edges between the nodes of these individual graphs.(edge value is the relationship that the field has with the id of the proto)
+     *  3. reduce all individual graphs into one huge graph. This reduction requires no analysis, since we are going to
+     *      merge graphs which are generated from protos of same type.
+     *  4. Reduce the graphs obtained from step 3, with method and sub_type analysis
+     *
+     * @param folderName
+     * @return
+     * @throws Exception
+     */
+
+    public static ImmutableValueGraph<Node, String> create(String folderName) throws Exception {
+        return Stream.of(methodDeclarationGraphs(folderName), classDeclGraphs(folderName), variableDeclarationGraphs(folderName), methodInvcGraphs(folderName),
+                assgnmntGraphs(folderName), interfaceDeclGraphs(folderName))
                 .reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
-                        mergeGraphWithCheck);
+                        mergeGraphWithAnalysis);
     }
 
     //GRAPH HELPER METHODS
@@ -261,9 +315,25 @@ public class CreateGraph {
         }
     }
 
+    /**
+     * This method is for navigating from method inocation to method declaration
+     * @param id id [name : test, kind: method_invocation, type = (Function<Integer,Integer>)void, owner:Foo]
+     * @param kind [kind : method]
+     * @param g
+     * @return it returns a from the graph with id [name : test, kind: method, type = (Function<Integer,Integer>)void, owner:Foo]
+     *          ,if it exists.
+     */
+
     private static Optional<Node> getNode(Identification id, String kind, MutableValueGraph<Node, String> g) {
         return g.nodes().stream().filter(x -> x.isSameAs(id, kind)).findFirst();
     }
+
+    /**
+     * when we receive a f.apply(5), we identify apply by replacing owner of apply with id of 'f'
+     * @param mi
+     * @param g
+     * @return
+     */
 
     private static Node addNodeToGraph(MethodInvocation mi, MutableValueGraph<Node, String> g) {
         return mi.hasReceiver() ? addNodeToGraph(new Node(mi.getId(), mi.getReceiver()), g) : addNodeToGraph(mi.getId(), g);

@@ -1,0 +1,9 @@
+
+“
+f@java.util.function.Function<java.lang.Integer,java.lang.Integer>E
+TestGoal1Failtestcases.TestGoal1Fail
+	testcases"PACKAGE"CLASS"FIELDï
+f@java.util.function.Function<java.lang.Integer,java.lang.Integer>œ
+testE(java.util.function.Function<java.lang.Integer,java.lang.Integer>)intE
+TestGoal1Failtestcases.TestGoal1Fail
+	testcases"PACKAGE"CLASS"METHOD"	PARAMETER

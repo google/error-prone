@@ -20,6 +20,7 @@ import com.google.errorprone.bugpatterns.refactoringexperiment.Constants;
 import com.google.errorprone.bugpatterns.refactoringexperiment.ProtoBuffPersist;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -113,20 +114,30 @@ public class Analyzer {
                     .filter(endpt -> !graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS))
                     .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.LAMBDA_EXPRESSION)));
 
+    public static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_2 = graph ->
+            !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS));
+
+
+    private static String pckgName;
+
     public static void main(String args[]) throws Exception {
-        induceSubgraphs(CreateGraph.create()).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_1)//.filter(PRE_CONDITION_2)
+        induceAndMap(pckgName).forEach(r -> ProtoBuffPersist.write(r, REFACTOR_INFO));
+    }
+
+    public static List<Refactorable> induceAndMap(String fromFolder) throws Exception {
+        List<Refactorable> refactorables = new ArrayList<>();
+        induceSubgraphs(CreateGraph.create(fromFolder)).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_1).filter(PRE_CONDITION_2)
                 .forEach(g -> {
                     g.nodes().forEach(n -> {
                         if (!n.getKind().equals(REFACTOR_INFO)) {
-                            if (n.refactorTo() != null) {
-                                Refactorable.Builder r = Refactorable.newBuilder();
-                                r.setId(n.getId());
-                                r.setRefactorTo(n.refactorTo());
-                                ProtoBuffPersist.write(r, REFACTOR_INFO);
-                            }
+                            System.out.println(n.toString());
+                            if (n.refactorTo() != null)
+                                refactorables.add(Refactorable.newBuilder().setId(n.getId()).setRefactorTo(n.refactorTo()).build());
                         }
                     });
+                    System.out.println("**");
                 });
+        return refactorables;
     }
 
     public static Set<ImmutableValueGraph<Node, String>> induceSubgraphs(ImmutableValueGraph<Node, String> gr) {

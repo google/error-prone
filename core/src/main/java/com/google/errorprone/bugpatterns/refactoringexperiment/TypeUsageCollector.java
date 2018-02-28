@@ -61,7 +61,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             MethodDeclaration.Builder mthdDcl = manageMethodDecl(state, ASTHelpers.getSymbol(methodTree));
             if (returnMatter)
                 mthdDcl.setReturnType(DataFilter.getFilteredType(methodTree.getReturnType(), state));
-            
+
             ProtoBuffPersist.write(mthdDcl, "METHOD");
         }
         return null;
