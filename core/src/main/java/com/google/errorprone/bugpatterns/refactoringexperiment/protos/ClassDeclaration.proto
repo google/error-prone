@@ -1,5 +1,7 @@
 syntax = "proto2";
 import "Identification.proto";
+import "FilteredType.proto";
+//import "MethodDeclaration.proto";
 package Models;
 
 option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.models";
@@ -7,5 +9,6 @@ option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.m
 
 message ClassDeclaration {
     optional Identification id = 1;
-    repeated string super_type = 2;
+    optional FilteredType super_type = 2;
+    //optional MethodDeclaration overridenMethod = 3;
  }

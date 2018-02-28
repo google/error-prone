@@ -16,11 +16,17 @@ public class Constants {
     public static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
 
 
-    public static final String lambdaExpr = "LAMBDA_EXPRESSION";
+    public static final String LAMBDA_EXPRESSION = "LAMBDA_EXPRESSION";
     public static final String PARAMETER = "PARAMETER";
+    public static final String METHOD_INVOCATION = "METHOD_INVOCATION";
+    public static final String NEW_CLASS = "NEW_CLASS";
     public static final String LOCAL_VARIABLE = "LOCAL_VARIABLE";
     public static final String FIELD = "FIELD";
     public static final String METHOD = "METHOD";
-
+    public static final String CLASS = "CLASS";
+    public static final String INTERFACE = "INTERFACE";
+    public static final String CONSTRUCTOR= "CONSTRUCTOR";
+    public static final String INFERRED_CLASS = "INFERRED_CLASS";
+    public static final String REFACTOR_INFO = "RefactorInfo";
 
 }

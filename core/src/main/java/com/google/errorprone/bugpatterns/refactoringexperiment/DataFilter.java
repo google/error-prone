@@ -7,9 +7,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType;
 import com.google.errorprone.util.ASTHelpers;
 
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 
 import java.util.ArrayList;
@@ -59,10 +57,10 @@ public class DataFilter {
         return new ArrayList<>();
     }
 
-    public static FilteredType getFilteredType(VariableTree var, VisitorState state){
+    public static FilteredType getFilteredType(Tree tree, VisitorState state){
         FilteredType.Builder ft = FilteredType.newBuilder();
         ft.setInterfaceName(JAVA_UTIL_FUNCTION_FUNCTION); // because i know its always this for now.
-        Type t1 = ASTHelpers.getType(var);
+        Type t1 = ASTHelpers.getType(tree);
         List<String> args = t1.getTypeArguments().stream().map(x -> x.toString()).collect(Collectors.toList());
         if(args.size() == 0)
             args = state.getTypes().interfaces(t1).stream().filter(x ->ASTHelpers.isSameType(x,state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state)).findFirst()

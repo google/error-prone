@@ -32,23 +32,29 @@ public final class ClassDeclarationOuterClass {
     com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getIdOrBuilder();
 
     /**
-     * <code>repeated string super_type = 2;</code>
+     * <pre>
+     *optional MethodDeclaration overridenMethod = 3;
+     * </pre>
+     *
+     * <code>optional .Models.FilteredType super_type = 2;</code>
      */
-    java.util.List<java.lang.String>
-        getSuperTypeList();
+    boolean hasSuperType();
     /**
-     * <code>repeated string super_type = 2;</code>
+     * <pre>
+     *optional MethodDeclaration overridenMethod = 3;
+     * </pre>
+     *
+     * <code>optional .Models.FilteredType super_type = 2;</code>
      */
-    int getSuperTypeCount();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType getSuperType();
     /**
-     * <code>repeated string super_type = 2;</code>
+     * <pre>
+     *optional MethodDeclaration overridenMethod = 3;
+     * </pre>
+     *
+     * <code>optional .Models.FilteredType super_type = 2;</code>
      */
-    java.lang.String getSuperType(int index);
-    /**
-     * <code>repeated string super_type = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getSuperTypeBytes(int index);
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder getSuperTypeOrBuilder();
   }
   /**
    * Protobuf type {@code Models.ClassDeclaration}
@@ -63,7 +69,6 @@ public final class ClassDeclarationOuterClass {
       super(builder);
     }
     private ClassDeclaration() {
-      superType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
     @java.lang.Override
@@ -111,12 +116,16 @@ public final class ClassDeclarationOuterClass {
               break;
             }
             case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                superType_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000002;
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = superType_.toBuilder();
               }
-              superType_.add(bs);
+              superType_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(superType_);
+                superType_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
               break;
             }
           }
@@ -127,9 +136,6 @@ public final class ClassDeclarationOuterClass {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-          superType_ = superType_.getUnmodifiableView();
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -169,32 +175,36 @@ public final class ClassDeclarationOuterClass {
     }
 
     public static final int SUPER_TYPE_FIELD_NUMBER = 2;
-    private com.google.protobuf.LazyStringList superType_;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType superType_;
     /**
-     * <code>repeated string super_type = 2;</code>
+     * <pre>
+     *optional MethodDeclaration overridenMethod = 3;
+     * </pre>
+     *
+     * <code>optional .Models.FilteredType super_type = 2;</code>
      */
-    public com.google.protobuf.ProtocolStringList
-        getSuperTypeList() {
-      return superType_;
+    public boolean hasSuperType() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>repeated string super_type = 2;</code>
+     * <pre>
+     *optional MethodDeclaration overridenMethod = 3;
+     * </pre>
+     *
+     * <code>optional .Models.FilteredType super_type = 2;</code>
      */
-    public int getSuperTypeCount() {
-      return superType_.size();
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType getSuperType() {
+      return superType_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance() : superType_;
     }
     /**
-     * <code>repeated string super_type = 2;</code>
+     * <pre>
+     *optional MethodDeclaration overridenMethod = 3;
+     * </pre>
+     *
+     * <code>optional .Models.FilteredType super_type = 2;</code>
      */
-    public java.lang.String getSuperType(int index) {
-      return superType_.get(index);
-    }
-    /**
-     * <code>repeated string super_type = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSuperTypeBytes(int index) {
-      return superType_.getByteString(index);
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder getSuperTypeOrBuilder() {
+      return superType_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance() : superType_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -212,8 +222,8 @@ public final class ClassDeclarationOuterClass {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeMessage(1, getId());
       }
-      for (int i = 0; i < superType_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, superType_.getRaw(i));
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, getSuperType());
       }
       unknownFields.writeTo(output);
     }
@@ -227,13 +237,9 @@ public final class ClassDeclarationOuterClass {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, getId());
       }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < superType_.size(); i++) {
-          dataSize += computeStringSizeNoTag(superType_.getRaw(i));
-        }
-        size += dataSize;
-        size += 1 * getSuperTypeList().size();
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getSuperType());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -256,8 +262,11 @@ public final class ClassDeclarationOuterClass {
         result = result && getId()
             .equals(other.getId());
       }
-      result = result && getSuperTypeList()
-          .equals(other.getSuperTypeList());
+      result = result && (hasSuperType() == other.hasSuperType());
+      if (hasSuperType()) {
+        result = result && getSuperType()
+            .equals(other.getSuperType());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -273,9 +282,9 @@ public final class ClassDeclarationOuterClass {
         hash = (37 * hash) + ID_FIELD_NUMBER;
         hash = (53 * hash) + getId().hashCode();
       }
-      if (getSuperTypeCount() > 0) {
+      if (hasSuperType()) {
         hash = (37 * hash) + SUPER_TYPE_FIELD_NUMBER;
-        hash = (53 * hash) + getSuperTypeList().hashCode();
+        hash = (53 * hash) + getSuperType().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -403,6 +412,7 @@ public final class ClassDeclarationOuterClass {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getIdFieldBuilder();
+          getSuperTypeFieldBuilder();
         }
       }
       public Builder clear() {
@@ -413,7 +423,11 @@ public final class ClassDeclarationOuterClass {
           idBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
-        superType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        if (superTypeBuilder_ == null) {
+          superType_ = null;
+        } else {
+          superTypeBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
@@ -447,11 +461,14 @@ public final class ClassDeclarationOuterClass {
         } else {
           result.id_ = idBuilder_.build();
         }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          superType_ = superType_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000002);
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
         }
-        result.superType_ = superType_;
+        if (superTypeBuilder_ == null) {
+          result.superType_ = superType_;
+        } else {
+          result.superType_ = superTypeBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -497,15 +514,8 @@ public final class ClassDeclarationOuterClass {
         if (other.hasId()) {
           mergeId(other.getId());
         }
-        if (!other.superType_.isEmpty()) {
-          if (superType_.isEmpty()) {
-            superType_ = other.superType_;
-            bitField0_ = (bitField0_ & ~0x00000002);
-          } else {
-            ensureSuperTypeIsMutable();
-            superType_.addAll(other.superType_);
-          }
-          onChanged();
+        if (other.hasSuperType()) {
+          mergeSuperType(other.getSuperType());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -653,97 +663,158 @@ public final class ClassDeclarationOuterClass {
         return idBuilder_;
       }
 
-      private com.google.protobuf.LazyStringList superType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureSuperTypeIsMutable() {
-        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          superType_ = new com.google.protobuf.LazyStringArrayList(superType_);
-          bitField0_ |= 0x00000002;
-         }
-      }
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType superType_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder> superTypeBuilder_;
       /**
-       * <code>repeated string super_type = 2;</code>
+       * <pre>
+       *optional MethodDeclaration overridenMethod = 3;
+       * </pre>
+       *
+       * <code>optional .Models.FilteredType super_type = 2;</code>
        */
-      public com.google.protobuf.ProtocolStringList
-          getSuperTypeList() {
-        return superType_.getUnmodifiableView();
+      public boolean hasSuperType() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>repeated string super_type = 2;</code>
+       * <pre>
+       *optional MethodDeclaration overridenMethod = 3;
+       * </pre>
+       *
+       * <code>optional .Models.FilteredType super_type = 2;</code>
        */
-      public int getSuperTypeCount() {
-        return superType_.size();
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType getSuperType() {
+        if (superTypeBuilder_ == null) {
+          return superType_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance() : superType_;
+        } else {
+          return superTypeBuilder_.getMessage();
+        }
       }
       /**
-       * <code>repeated string super_type = 2;</code>
+       * <pre>
+       *optional MethodDeclaration overridenMethod = 3;
+       * </pre>
+       *
+       * <code>optional .Models.FilteredType super_type = 2;</code>
        */
-      public java.lang.String getSuperType(int index) {
-        return superType_.get(index);
+      public Builder setSuperType(com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType value) {
+        if (superTypeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          superType_ = value;
+          onChanged();
+        } else {
+          superTypeBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
       }
       /**
-       * <code>repeated string super_type = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getSuperTypeBytes(int index) {
-        return superType_.getByteString(index);
-      }
-      /**
-       * <code>repeated string super_type = 2;</code>
+       * <pre>
+       *optional MethodDeclaration overridenMethod = 3;
+       * </pre>
+       *
+       * <code>optional .Models.FilteredType super_type = 2;</code>
        */
       public Builder setSuperType(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSuperTypeIsMutable();
-        superType_.set(index, value);
-        onChanged();
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder builderForValue) {
+        if (superTypeBuilder_ == null) {
+          superType_ = builderForValue.build();
+          onChanged();
+        } else {
+          superTypeBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>repeated string super_type = 2;</code>
+       * <pre>
+       *optional MethodDeclaration overridenMethod = 3;
+       * </pre>
+       *
+       * <code>optional .Models.FilteredType super_type = 2;</code>
        */
-      public Builder addSuperType(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSuperTypeIsMutable();
-        superType_.add(value);
-        onChanged();
+      public Builder mergeSuperType(com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType value) {
+        if (superTypeBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              superType_ != null &&
+              superType_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance()) {
+            superType_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.newBuilder(superType_).mergeFrom(value).buildPartial();
+          } else {
+            superType_ = value;
+          }
+          onChanged();
+        } else {
+          superTypeBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>repeated string super_type = 2;</code>
-       */
-      public Builder addAllSuperType(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureSuperTypeIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, superType_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string super_type = 2;</code>
+       * <pre>
+       *optional MethodDeclaration overridenMethod = 3;
+       * </pre>
+       *
+       * <code>optional .Models.FilteredType super_type = 2;</code>
        */
       public Builder clearSuperType() {
-        superType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        if (superTypeBuilder_ == null) {
+          superType_ = null;
+          onChanged();
+        } else {
+          superTypeBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000002);
-        onChanged();
         return this;
       }
       /**
-       * <code>repeated string super_type = 2;</code>
+       * <pre>
+       *optional MethodDeclaration overridenMethod = 3;
+       * </pre>
+       *
+       * <code>optional .Models.FilteredType super_type = 2;</code>
        */
-      public Builder addSuperTypeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSuperTypeIsMutable();
-        superType_.add(value);
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder getSuperTypeBuilder() {
+        bitField0_ |= 0x00000002;
         onChanged();
-        return this;
+        return getSuperTypeFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       *optional MethodDeclaration overridenMethod = 3;
+       * </pre>
+       *
+       * <code>optional .Models.FilteredType super_type = 2;</code>
+       */
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder getSuperTypeOrBuilder() {
+        if (superTypeBuilder_ != null) {
+          return superTypeBuilder_.getMessageOrBuilder();
+        } else {
+          return superType_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.getDefaultInstance() : superType_;
+        }
+      }
+      /**
+       * <pre>
+       *optional MethodDeclaration overridenMethod = 3;
+       * </pre>
+       *
+       * <code>optional .Models.FilteredType super_type = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder> 
+          getSuperTypeFieldBuilder() {
+        if (superTypeBuilder_ == null) {
+          superTypeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredTypeOrBuilder>(
+                  getSuperType(),
+                  getParentForChildren(),
+                  isClean());
+          superType_ = null;
+        }
+        return superTypeBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -809,10 +880,11 @@ public final class ClassDeclarationOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\026ClassDeclaration.proto\022\006Models\032\024Identi" +
-      "fication.proto\"J\n\020ClassDeclaration\022\"\n\002id" +
-      "\030\001 \001(\0132\026.Models.Identification\022\022\n\nsuper_" +
-      "type\030\002 \003(\tB@\n>com.google.errorprone.bugp" +
-      "atterns.refactoringexperiment.models"
+      "fication.proto\032\022FilteredType.proto\"`\n\020Cl" +
+      "assDeclaration\022\"\n\002id\030\001 \001(\0132\026.Models.Iden" +
+      "tification\022(\n\nsuper_type\030\002 \001(\0132\024.Models." +
+      "FilteredTypeB@\n>com.google.errorprone.bu" +
+      "gpatterns.refactoringexperiment.models"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -826,6 +898,7 @@ public final class ClassDeclarationOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor(),
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.getDescriptor(),
         }, assigner);
     internal_static_Models_ClassDeclaration_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -834,6 +907,7 @@ public final class ClassDeclarationOuterClass {
         internal_static_Models_ClassDeclaration_descriptor,
         new java.lang.String[] { "Id", "SuperType", });
     com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.getDescriptor();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

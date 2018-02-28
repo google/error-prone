@@ -10,5 +10,5 @@ message MethodDeclaration {
   optional string return_type = 2;
   map<int32, Identification> parameters = 3; // index -> parameter
   repeated string modifier = 4;
-  optional string super_method_in = 5;
+  optional MethodDeclaration super_method = 5;
  }

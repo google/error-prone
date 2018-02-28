@@ -2,6 +2,7 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment;
+import com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDeclarationOuterClass.ClassDeclaration;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocationOuterClass.MethodInvocation;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.VariableOuterClass.Variable;
@@ -13,18 +14,19 @@ import java.util.List;
  */
 public class QueryProtoBuffData {
 
-    public static List<MethodInvocation> getAllMethdInvc() throws Exception{
+
+    public static List<MethodInvocation> getAllMethdInvc(){
 
         return null;
     }
 
 
-    public static List<MethodInvocation> getAllNewClass() throws Exception{
+    public static List<MethodInvocation> getAllNewClass() {
 
         return null;
     }
 
-    public static List<Assignment> getAllAsgn() throws Exception{
+    public static List<Assignment> getAllAsgn() {
 
         return null;
     }
@@ -35,8 +37,16 @@ public class QueryProtoBuffData {
 
     }
 
-    public static List<Variable> getAllVrbl() throws Exception {
+    public static List<Variable> getAllVrbl()  {
 
+        return null;
+    }
+
+    public static List<ClassDeclaration> getAllClassDecl() {
+        return null;
+    }
+
+    public static List<ClassDeclaration> getAllInterfaceDecl() {
         return null;
     }
 }

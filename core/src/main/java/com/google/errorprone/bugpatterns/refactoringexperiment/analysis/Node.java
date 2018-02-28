@@ -1,7 +1,6 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 
-import com.google.common.base.Objects;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
 
 
@@ -13,58 +12,61 @@ public class Node {
     private Identification id;
     private String refactorTo;
     private boolean visited;
-    // only for var and methods
 
-    public Node(Identification id) {this.id = id;}
+    public Node(Identification id) {
+        this.id = id;
+    }
 
     public Node(Identification id, Identification owner) {
         this.id = id.toBuilder().setOwner(owner).build();
     }
-    public Node( Node n, String kind) {
-        this.id = n.getId().toBuilder().setKind(kind).build();
-    }
 
-    public Node(Identification id,String kind) {
+    public Node(Identification id, String kind) {
         this.id = id.toBuilder().setKind(kind).build();
     }
 
-    //public Node(Identification value, Identification owner) { this.id = new NodeID(value,owner); }
-
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Node) {
-            Node n = (Node) o;
-            return this.id.equals(n.id);
-        }
+        if (o instanceof Node)
+            return sameID(this.id, ((Node) o).id);
         return false;
     }
 
-    public boolean isSameAs(Identification id) {
-        return this.id.equals(id);
+    public boolean sameID(Identification id1, Identification id2) {
+        if (!id1.getName().equals(id2.getName()) || !id1.getKind().equals(id2.getKind())
+                || !id1.getType().equals(id2.getType()) || id1.hasOwner() ^ id2.hasOwner())
+            return false;
+        if (id1.hasOwner() && !sameID(id1.getOwner(), id2.getOwner()))
+            return false;
+        return true;
     }
 
     public boolean isSameAs(Identification n, String kind) {
-
-        return this.id.equals(new Node(n,kind));
-    }
-
-    public boolean isSameAs(Identification id, Identification owner) {
-        return this.id.equals(new Node(id,owner));
-    }
-
-    public boolean isSameAs(Node n, String kind) {
-        return this.id.equals(new Node(n,kind));
+        return equals(new Node(n, kind));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.id);
+        return id.hashCode();
+    }
+
+    private String prettyPrintID(Identification id) {
+        StringBuilder x = new StringBuilder();
+        if (id.hasName())
+            x.append("|" + id.getName() + "|");
+        if (id.hasKind())
+            x.append(id.getKind() + "|");
+        if (id.hasType())
+            x.append(id.getType() + "|");
+        if (id.hasOwner())
+            x.append(prettyPrintID(id.getOwner()) + "|");
+        return x.toString();
     }
 
     @Override
     public String toString() {
-        return this.getName() + "|" + this.getKind() + "| " + this.getType() + "|" +
-                this.getOwner().getName()+ "| " + this.getOwner().getType()+ "| " + this.getOwner().getKind();
+        return prettyPrintID(this.id)
+                + "|" + refactorTo();
     }
 
     public String getKind() {
@@ -76,9 +78,10 @@ public class Node {
         return id.getName();
     }
 
-    public Identification getId(){
+    public Identification getId() {
         return id;
     }
+
     public Identification getOwner() {
         return id.getOwner();
     }
@@ -102,7 +105,7 @@ public class Node {
         this.visited = visited;
     }
 
-    public void setRefactorTo(String s){
+    public void setRefactorTo(String s) {
         this.refactorTo = s;
     }
 }

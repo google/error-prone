@@ -119,18 +119,17 @@ public final class MethodDeclarationOuterClass {
         getModifierBytes(int index);
 
     /**
-     * <code>optional string super_method_in = 5;</code>
+     * <code>optional .Models.MethodDeclaration super_method = 5;</code>
      */
-    boolean hasSuperMethodIn();
+    boolean hasSuperMethod();
     /**
-     * <code>optional string super_method_in = 5;</code>
+     * <code>optional .Models.MethodDeclaration super_method = 5;</code>
      */
-    java.lang.String getSuperMethodIn();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration getSuperMethod();
     /**
-     * <code>optional string super_method_in = 5;</code>
+     * <code>optional .Models.MethodDeclaration super_method = 5;</code>
      */
-    com.google.protobuf.ByteString
-        getSuperMethodInBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclarationOrBuilder getSuperMethodOrBuilder();
   }
   /**
    * Protobuf type {@code Models.MethodDeclaration}
@@ -147,7 +146,6 @@ public final class MethodDeclarationOuterClass {
     private MethodDeclaration() {
       returnType_ = "";
       modifier_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      superMethodIn_ = "";
     }
 
     @java.lang.Override
@@ -223,9 +221,16 @@ public final class MethodDeclarationOuterClass {
               break;
             }
             case 42: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = superMethod_.toBuilder();
+              }
+              superMethod_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(superMethod_);
+                superMethod_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000004;
-              superMethodIn_ = bs;
               break;
             }
           }
@@ -451,46 +456,25 @@ public final class MethodDeclarationOuterClass {
       return modifier_.getByteString(index);
     }
 
-    public static final int SUPER_METHOD_IN_FIELD_NUMBER = 5;
-    private volatile java.lang.Object superMethodIn_;
+    public static final int SUPER_METHOD_FIELD_NUMBER = 5;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration superMethod_;
     /**
-     * <code>optional string super_method_in = 5;</code>
+     * <code>optional .Models.MethodDeclaration super_method = 5;</code>
      */
-    public boolean hasSuperMethodIn() {
+    public boolean hasSuperMethod() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional string super_method_in = 5;</code>
+     * <code>optional .Models.MethodDeclaration super_method = 5;</code>
      */
-    public java.lang.String getSuperMethodIn() {
-      java.lang.Object ref = superMethodIn_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          superMethodIn_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration getSuperMethod() {
+      return superMethod_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.getDefaultInstance() : superMethod_;
     }
     /**
-     * <code>optional string super_method_in = 5;</code>
+     * <code>optional .Models.MethodDeclaration super_method = 5;</code>
      */
-    public com.google.protobuf.ByteString
-        getSuperMethodInBytes() {
-      java.lang.Object ref = superMethodIn_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        superMethodIn_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclarationOrBuilder getSuperMethodOrBuilder() {
+      return superMethod_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.getDefaultInstance() : superMethod_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -521,7 +505,7 @@ public final class MethodDeclarationOuterClass {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, modifier_.getRaw(i));
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, superMethodIn_);
+        output.writeMessage(5, getSuperMethod());
       }
       unknownFields.writeTo(output);
     }
@@ -557,7 +541,8 @@ public final class MethodDeclarationOuterClass {
         size += 1 * getModifierList().size();
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, superMethodIn_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getSuperMethod());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -589,10 +574,10 @@ public final class MethodDeclarationOuterClass {
           other.internalGetParameters());
       result = result && getModifierList()
           .equals(other.getModifierList());
-      result = result && (hasSuperMethodIn() == other.hasSuperMethodIn());
-      if (hasSuperMethodIn()) {
-        result = result && getSuperMethodIn()
-            .equals(other.getSuperMethodIn());
+      result = result && (hasSuperMethod() == other.hasSuperMethod());
+      if (hasSuperMethod()) {
+        result = result && getSuperMethod()
+            .equals(other.getSuperMethod());
       }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -621,9 +606,9 @@ public final class MethodDeclarationOuterClass {
         hash = (37 * hash) + MODIFIER_FIELD_NUMBER;
         hash = (53 * hash) + getModifierList().hashCode();
       }
-      if (hasSuperMethodIn()) {
-        hash = (37 * hash) + SUPER_METHOD_IN_FIELD_NUMBER;
-        hash = (53 * hash) + getSuperMethodIn().hashCode();
+      if (hasSuperMethod()) {
+        hash = (37 * hash) + SUPER_METHOD_FIELD_NUMBER;
+        hash = (53 * hash) + getSuperMethod().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -773,6 +758,7 @@ public final class MethodDeclarationOuterClass {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getIdFieldBuilder();
+          getSuperMethodFieldBuilder();
         }
       }
       public Builder clear() {
@@ -788,7 +774,11 @@ public final class MethodDeclarationOuterClass {
         internalGetMutableParameters().clear();
         modifier_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000008);
-        superMethodIn_ = "";
+        if (superMethodBuilder_ == null) {
+          superMethod_ = null;
+        } else {
+          superMethodBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
@@ -836,7 +826,11 @@ public final class MethodDeclarationOuterClass {
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.superMethodIn_ = superMethodIn_;
+        if (superMethodBuilder_ == null) {
+          result.superMethod_ = superMethod_;
+        } else {
+          result.superMethod_ = superMethodBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -899,10 +893,8 @@ public final class MethodDeclarationOuterClass {
           }
           onChanged();
         }
-        if (other.hasSuperMethodIn()) {
-          bitField0_ |= 0x00000010;
-          superMethodIn_ = other.superMethodIn_;
-          onChanged();
+        if (other.hasSuperMethod()) {
+          mergeSuperMethod(other.getSuperMethod());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1370,80 +1362,122 @@ public final class MethodDeclarationOuterClass {
         return this;
       }
 
-      private java.lang.Object superMethodIn_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration superMethod_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration, com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclarationOrBuilder> superMethodBuilder_;
       /**
-       * <code>optional string super_method_in = 5;</code>
+       * <code>optional .Models.MethodDeclaration super_method = 5;</code>
        */
-      public boolean hasSuperMethodIn() {
+      public boolean hasSuperMethod() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional string super_method_in = 5;</code>
+       * <code>optional .Models.MethodDeclaration super_method = 5;</code>
        */
-      public java.lang.String getSuperMethodIn() {
-        java.lang.Object ref = superMethodIn_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            superMethodIn_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration getSuperMethod() {
+        if (superMethodBuilder_ == null) {
+          return superMethod_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.getDefaultInstance() : superMethod_;
+        } else {
+          return superMethodBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.MethodDeclaration super_method = 5;</code>
+       */
+      public Builder setSuperMethod(com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration value) {
+        if (superMethodBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          superMethod_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          superMethodBuilder_.setMessage(value);
         }
-      }
-      /**
-       * <code>optional string super_method_in = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getSuperMethodInBytes() {
-        java.lang.Object ref = superMethodIn_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          superMethodIn_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string super_method_in = 5;</code>
-       */
-      public Builder setSuperMethodIn(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        superMethodIn_ = value;
-        onChanged();
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
-       * <code>optional string super_method_in = 5;</code>
+       * <code>optional .Models.MethodDeclaration super_method = 5;</code>
        */
-      public Builder clearSuperMethodIn() {
+      public Builder setSuperMethod(
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.Builder builderForValue) {
+        if (superMethodBuilder_ == null) {
+          superMethod_ = builderForValue.build();
+          onChanged();
+        } else {
+          superMethodBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .Models.MethodDeclaration super_method = 5;</code>
+       */
+      public Builder mergeSuperMethod(com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration value) {
+        if (superMethodBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+              superMethod_ != null &&
+              superMethod_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.getDefaultInstance()) {
+            superMethod_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.newBuilder(superMethod_).mergeFrom(value).buildPartial();
+          } else {
+            superMethod_ = value;
+          }
+          onChanged();
+        } else {
+          superMethodBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .Models.MethodDeclaration super_method = 5;</code>
+       */
+      public Builder clearSuperMethod() {
+        if (superMethodBuilder_ == null) {
+          superMethod_ = null;
+          onChanged();
+        } else {
+          superMethodBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000010);
-        superMethodIn_ = getDefaultInstance().getSuperMethodIn();
-        onChanged();
         return this;
       }
       /**
-       * <code>optional string super_method_in = 5;</code>
+       * <code>optional .Models.MethodDeclaration super_method = 5;</code>
        */
-      public Builder setSuperMethodInBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        superMethodIn_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.Builder getSuperMethodBuilder() {
+        bitField0_ |= 0x00000010;
         onChanged();
-        return this;
+        return getSuperMethodFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .Models.MethodDeclaration super_method = 5;</code>
+       */
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclarationOrBuilder getSuperMethodOrBuilder() {
+        if (superMethodBuilder_ != null) {
+          return superMethodBuilder_.getMessageOrBuilder();
+        } else {
+          return superMethod_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.getDefaultInstance() : superMethod_;
+        }
+      }
+      /**
+       * <code>optional .Models.MethodDeclaration super_method = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration, com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclarationOrBuilder> 
+          getSuperMethodFieldBuilder() {
+        if (superMethodBuilder_ == null) {
+          superMethodBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration, com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclarationOrBuilder>(
+                  getSuperMethod(),
+                  getParentForChildren(),
+                  isClean());
+          superMethod_ = null;
+        }
+        return superMethodBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1514,15 +1548,16 @@ public final class MethodDeclarationOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\027MethodDeclaration.proto\022\006Models\032\024Ident" +
-      "ification.proto\"\201\002\n\021MethodDeclaration\022\"\n" +
+      "ification.proto\"\231\002\n\021MethodDeclaration\022\"\n" +
       "\002id\030\001 \001(\0132\026.Models.Identification\022\023\n\013ret" +
       "urn_type\030\002 \001(\t\022=\n\nparameters\030\003 \003(\0132).Mod" +
       "els.MethodDeclaration.ParametersEntry\022\020\n" +
-      "\010modifier\030\004 \003(\t\022\027\n\017super_method_in\030\005 \001(\t" +
-      "\032I\n\017ParametersEntry\022\013\n\003key\030\001 \001(\005\022%\n\005valu" +
-      "e\030\002 \001(\0132\026.Models.Identification:\0028\001B@\n>c" +
-      "om.google.errorprone.bugpatterns.refacto" +
-      "ringexperiment.models"
+      "\010modifier\030\004 \003(\t\022/\n\014super_method\030\005 \001(\0132\031." +
+      "Models.MethodDeclaration\032I\n\017ParametersEn" +
+      "try\022\013\n\003key\030\001 \001(\005\022%\n\005value\030\002 \001(\0132\026.Models" +
+      ".Identification:\0028\001B@\n>com.google.errorp" +
+      "rone.bugpatterns.refactoringexperiment.m" +
+      "odels"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1542,7 +1577,7 @@ public final class MethodDeclarationOuterClass {
     internal_static_Models_MethodDeclaration_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_MethodDeclaration_descriptor,
-        new java.lang.String[] { "Id", "ReturnType", "Parameters", "Modifier", "SuperMethodIn", });
+        new java.lang.String[] { "Id", "ReturnType", "Parameters", "Modifier", "SuperMethod", });
     internal_static_Models_MethodDeclaration_ParametersEntry_descriptor =
       internal_static_Models_MethodDeclaration_descriptor.getNestedTypes().get(0);
     internal_static_Models_MethodDeclaration_ParametersEntry_fieldAccessorTable = new
