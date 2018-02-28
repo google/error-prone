@@ -7,7 +7,7 @@ option java_package = "com.google.errorprone.bugpatterns.refactoringexperiment.m
 
 message MethodDeclaration {
   optional Identification id = 1;
-  optional string return_type = 2;
+  optional Identification return_statement = 2;
   map<int32, Identification> parameters = 3; // index -> parameter
   repeated string modifier = 4;
   optional MethodDeclaration super_method = 5;

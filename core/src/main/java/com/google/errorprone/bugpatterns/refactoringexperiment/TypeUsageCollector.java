@@ -26,9 +26,13 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
@@ -56,6 +60,12 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         boolean returnMatter = DataFilter.apply(methodTree.getReturnType(), state);
         if (paramsMatter || returnMatter) {
             MethodDeclaration.Builder mthdDcl = manageMethodDecl(state, ASTHelpers.getSymbol(methodTree));
+            if (returnMatter && methodTree.getBody()!=null) {
+                for (StatementTree st : methodTree.getBody().getStatements()) {
+                    Identification ret = st.accept(returnVisitor, null);
+                    if (ret != null)
+                        mthdDcl.setReturnStatement(ret);
+                }
             ProtoBuffPersist.write(mthdDcl, "METHOD");
         }
         return null;
@@ -64,7 +74,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     private MethodDeclaration.Builder manageMethodDecl(VisitorState state, MethodSymbol symb) {
         MethodDeclaration.Builder mthdDcl = MethodDeclaration.newBuilder();
         infoFromSymbol(symb).map(mthdDcl::setId);
-//        mthdDcl.setReturnType(symb.getReturnType() != null ? symb.getReturnType().toString() : RTRN_TYPE_NOT_FOUND);
+
         java.util.Optional<MethodSymbol> y = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().findFirst();
         if (y.isPresent())
             mthdDcl.setSuperMethod(manageMethodDecl(state, y.get()));
@@ -237,6 +247,12 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         else
             return "";
     }
+    public static TreeVisitor<Identification, Void> returnVisitor = new TreeScanner<Identification, Void>() {
+        @Override
+        public Identification visitReturn(ReturnTree ret, Void v) {
+            return infoOfTree(ret.getExpression());
+        }
+    };
 
 
 }

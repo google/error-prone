@@ -32,18 +32,17 @@ public final class MethodDeclarationOuterClass {
     com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getIdOrBuilder();
 
     /**
-     * <code>optional string return_type = 2;</code>
+     * <code>optional .Models.Identification return_statement = 2;</code>
      */
-    boolean hasReturnType();
+    boolean hasReturnStatement();
     /**
-     * <code>optional string return_type = 2;</code>
+     * <code>optional .Models.Identification return_statement = 2;</code>
      */
-    java.lang.String getReturnType();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getReturnStatement();
     /**
-     * <code>optional string return_type = 2;</code>
+     * <code>optional .Models.Identification return_statement = 2;</code>
      */
-    com.google.protobuf.ByteString
-        getReturnTypeBytes();
+    com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getReturnStatementOrBuilder();
 
     /**
      * <pre>
@@ -144,7 +143,6 @@ public final class MethodDeclarationOuterClass {
       super(builder);
     }
     private MethodDeclaration() {
-      returnType_ = "";
       modifier_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
@@ -193,9 +191,16 @@ public final class MethodDeclarationOuterClass {
               break;
             }
             case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = returnStatement_.toBuilder();
+              }
+              returnStatement_ = input.readMessage(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(returnStatement_);
+                returnStatement_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000002;
-              returnType_ = bs;
               break;
             }
             case 26: {
@@ -293,46 +298,25 @@ public final class MethodDeclarationOuterClass {
       return id_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : id_;
     }
 
-    public static final int RETURN_TYPE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object returnType_;
+    public static final int RETURN_STATEMENT_FIELD_NUMBER = 2;
+    private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification returnStatement_;
     /**
-     * <code>optional string return_type = 2;</code>
+     * <code>optional .Models.Identification return_statement = 2;</code>
      */
-    public boolean hasReturnType() {
+    public boolean hasReturnStatement() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional string return_type = 2;</code>
+     * <code>optional .Models.Identification return_statement = 2;</code>
      */
-    public java.lang.String getReturnType() {
-      java.lang.Object ref = returnType_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          returnType_ = s;
-        }
-        return s;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getReturnStatement() {
+      return returnStatement_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : returnStatement_;
     }
     /**
-     * <code>optional string return_type = 2;</code>
+     * <code>optional .Models.Identification return_statement = 2;</code>
      */
-    public com.google.protobuf.ByteString
-        getReturnTypeBytes() {
-      java.lang.Object ref = returnType_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        returnType_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getReturnStatementOrBuilder() {
+      return returnStatement_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : returnStatement_;
     }
 
     public static final int PARAMETERS_FIELD_NUMBER = 3;
@@ -493,7 +477,7 @@ public final class MethodDeclarationOuterClass {
         output.writeMessage(1, getId());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, returnType_);
+        output.writeMessage(2, getReturnStatement());
       }
       com.google.protobuf.GeneratedMessageV3
         .serializeIntegerMapTo(
@@ -520,7 +504,8 @@ public final class MethodDeclarationOuterClass {
           .computeMessageSize(1, getId());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, returnType_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getReturnStatement());
       }
       for (java.util.Map.Entry<java.lang.Integer, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification> entry
            : internalGetParameters().getMap().entrySet()) {
@@ -565,10 +550,10 @@ public final class MethodDeclarationOuterClass {
         result = result && getId()
             .equals(other.getId());
       }
-      result = result && (hasReturnType() == other.hasReturnType());
-      if (hasReturnType()) {
-        result = result && getReturnType()
-            .equals(other.getReturnType());
+      result = result && (hasReturnStatement() == other.hasReturnStatement());
+      if (hasReturnStatement()) {
+        result = result && getReturnStatement()
+            .equals(other.getReturnStatement());
       }
       result = result && internalGetParameters().equals(
           other.internalGetParameters());
@@ -594,9 +579,9 @@ public final class MethodDeclarationOuterClass {
         hash = (37 * hash) + ID_FIELD_NUMBER;
         hash = (53 * hash) + getId().hashCode();
       }
-      if (hasReturnType()) {
-        hash = (37 * hash) + RETURN_TYPE_FIELD_NUMBER;
-        hash = (53 * hash) + getReturnType().hashCode();
+      if (hasReturnStatement()) {
+        hash = (37 * hash) + RETURN_STATEMENT_FIELD_NUMBER;
+        hash = (53 * hash) + getReturnStatement().hashCode();
       }
       if (!internalGetParameters().getMap().isEmpty()) {
         hash = (37 * hash) + PARAMETERS_FIELD_NUMBER;
@@ -758,6 +743,7 @@ public final class MethodDeclarationOuterClass {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getIdFieldBuilder();
+          getReturnStatementFieldBuilder();
           getSuperMethodFieldBuilder();
         }
       }
@@ -769,7 +755,11 @@ public final class MethodDeclarationOuterClass {
           idBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
-        returnType_ = "";
+        if (returnStatementBuilder_ == null) {
+          returnStatement_ = null;
+        } else {
+          returnStatementBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000002);
         internalGetMutableParameters().clear();
         modifier_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -815,7 +805,11 @@ public final class MethodDeclarationOuterClass {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.returnType_ = returnType_;
+        if (returnStatementBuilder_ == null) {
+          result.returnStatement_ = returnStatement_;
+        } else {
+          result.returnStatement_ = returnStatementBuilder_.build();
+        }
         result.parameters_ = internalGetParameters();
         result.parameters_.makeImmutable();
         if (((bitField0_ & 0x00000008) == 0x00000008)) {
@@ -876,10 +870,8 @@ public final class MethodDeclarationOuterClass {
         if (other.hasId()) {
           mergeId(other.getId());
         }
-        if (other.hasReturnType()) {
-          bitField0_ |= 0x00000002;
-          returnType_ = other.returnType_;
-          onChanged();
+        if (other.hasReturnStatement()) {
+          mergeReturnStatement(other.getReturnStatement());
         }
         internalGetMutableParameters().mergeFrom(
             other.internalGetParameters());
@@ -1042,80 +1034,122 @@ public final class MethodDeclarationOuterClass {
         return idBuilder_;
       }
 
-      private java.lang.Object returnType_ = "";
+      private com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification returnStatement_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> returnStatementBuilder_;
       /**
-       * <code>optional string return_type = 2;</code>
+       * <code>optional .Models.Identification return_statement = 2;</code>
        */
-      public boolean hasReturnType() {
+      public boolean hasReturnStatement() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional string return_type = 2;</code>
+       * <code>optional .Models.Identification return_statement = 2;</code>
        */
-      public java.lang.String getReturnType() {
-        java.lang.Object ref = returnType_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            returnType_ = s;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification getReturnStatement() {
+        if (returnStatementBuilder_ == null) {
+          return returnStatement_ == null ? com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : returnStatement_;
+        } else {
+          return returnStatementBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .Models.Identification return_statement = 2;</code>
+       */
+      public Builder setReturnStatement(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
+        if (returnStatementBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          returnStatement_ = value;
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          returnStatementBuilder_.setMessage(value);
         }
-      }
-      /**
-       * <code>optional string return_type = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getReturnTypeBytes() {
-        java.lang.Object ref = returnType_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          returnType_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string return_type = 2;</code>
-       */
-      public Builder setReturnType(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        returnType_ = value;
-        onChanged();
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>optional string return_type = 2;</code>
+       * <code>optional .Models.Identification return_statement = 2;</code>
        */
-      public Builder clearReturnType() {
+      public Builder setReturnStatement(
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder builderForValue) {
+        if (returnStatementBuilder_ == null) {
+          returnStatement_ = builderForValue.build();
+          onChanged();
+        } else {
+          returnStatementBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Identification return_statement = 2;</code>
+       */
+      public Builder mergeReturnStatement(com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification value) {
+        if (returnStatementBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              returnStatement_ != null &&
+              returnStatement_ != com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance()) {
+            returnStatement_ =
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.newBuilder(returnStatement_).mergeFrom(value).buildPartial();
+          } else {
+            returnStatement_ = value;
+          }
+          onChanged();
+        } else {
+          returnStatementBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>optional .Models.Identification return_statement = 2;</code>
+       */
+      public Builder clearReturnStatement() {
+        if (returnStatementBuilder_ == null) {
+          returnStatement_ = null;
+          onChanged();
+        } else {
+          returnStatementBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000002);
-        returnType_ = getDefaultInstance().getReturnType();
-        onChanged();
         return this;
       }
       /**
-       * <code>optional string return_type = 2;</code>
+       * <code>optional .Models.Identification return_statement = 2;</code>
        */
-      public Builder setReturnTypeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        returnType_ = value;
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder getReturnStatementBuilder() {
+        bitField0_ |= 0x00000002;
         onChanged();
-        return this;
+        return getReturnStatementFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .Models.Identification return_statement = 2;</code>
+       */
+      public com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder getReturnStatementOrBuilder() {
+        if (returnStatementBuilder_ != null) {
+          return returnStatementBuilder_.getMessageOrBuilder();
+        } else {
+          return returnStatement_ == null ?
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.getDefaultInstance() : returnStatement_;
+        }
+      }
+      /**
+       * <code>optional .Models.Identification return_statement = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder> 
+          getReturnStatementFieldBuilder() {
+        if (returnStatementBuilder_ == null) {
+          returnStatementBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder, com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.IdentificationOrBuilder>(
+                  getReturnStatement(),
+                  getParentForChildren(),
+                  isClean());
+          returnStatement_ = null;
+        }
+        return returnStatementBuilder_;
       }
 
       private com.google.protobuf.MapField<
@@ -1548,16 +1582,16 @@ public final class MethodDeclarationOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\027MethodDeclaration.proto\022\006Models\032\024Ident" +
-      "ification.proto\"\231\002\n\021MethodDeclaration\022\"\n" +
-      "\002id\030\001 \001(\0132\026.Models.Identification\022\023\n\013ret" +
-      "urn_type\030\002 \001(\t\022=\n\nparameters\030\003 \003(\0132).Mod" +
-      "els.MethodDeclaration.ParametersEntry\022\020\n" +
-      "\010modifier\030\004 \003(\t\022/\n\014super_method\030\005 \001(\0132\031." +
-      "Models.MethodDeclaration\032I\n\017ParametersEn" +
-      "try\022\013\n\003key\030\001 \001(\005\022%\n\005value\030\002 \001(\0132\026.Models" +
-      ".Identification:\0028\001B@\n>com.google.errorp" +
-      "rone.bugpatterns.refactoringexperiment.m" +
-      "odels"
+      "ification.proto\"\266\002\n\021MethodDeclaration\022\"\n" +
+      "\002id\030\001 \001(\0132\026.Models.Identification\0220\n\020ret" +
+      "urn_statement\030\002 \001(\0132\026.Models.Identificat" +
+      "ion\022=\n\nparameters\030\003 \003(\0132).Models.MethodD" +
+      "eclaration.ParametersEntry\022\020\n\010modifier\030\004" +
+      " \003(\t\022/\n\014super_method\030\005 \001(\0132\031.Models.Meth" +
+      "odDeclaration\032I\n\017ParametersEntry\022\013\n\003key\030" +
+      "\001 \001(\005\022%\n\005value\030\002 \001(\0132\026.Models.Identifica" +
+      "tion:\0028\001B@\n>com.google.errorprone.bugpat" +
+      "terns.refactoringexperiment.models"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1577,7 +1611,7 @@ public final class MethodDeclarationOuterClass {
     internal_static_Models_MethodDeclaration_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Models_MethodDeclaration_descriptor,
-        new java.lang.String[] { "Id", "ReturnType", "Parameters", "Modifier", "SuperMethod", });
+        new java.lang.String[] { "Id", "ReturnStatement", "Parameters", "Modifier", "SuperMethod", });
     internal_static_Models_MethodDeclaration_ParametersEntry_descriptor =
       internal_static_Models_MethodDeclaration_descriptor.getNestedTypes().get(0);
     internal_static_Models_MethodDeclaration_ParametersEntry_fieldAccessorTable = new
