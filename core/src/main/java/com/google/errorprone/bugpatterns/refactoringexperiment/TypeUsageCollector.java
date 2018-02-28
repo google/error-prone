@@ -27,7 +27,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TreeVisitor;
@@ -60,12 +59,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         boolean returnMatter = DataFilter.apply(methodTree.getReturnType(), state);
         if (paramsMatter || returnMatter) {
             MethodDeclaration.Builder mthdDcl = manageMethodDecl(state, ASTHelpers.getSymbol(methodTree));
-            if (returnMatter && methodTree.getBody()!=null) {
-                for (StatementTree st : methodTree.getBody().getStatements()) {
-                    Identification ret = st.accept(returnVisitor, null);
-                    if (ret != null)
-                        mthdDcl.setReturnStatement(ret);
-                }
+            if (returnMatter)
+                mthdDcl.setReturnType(DataFilter.getFilteredType(methodTree.getReturnType(), state));
+            
             ProtoBuffPersist.write(mthdDcl, "METHOD");
         }
         return null;
