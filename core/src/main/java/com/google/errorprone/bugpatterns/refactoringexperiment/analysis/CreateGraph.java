@@ -99,7 +99,7 @@ public class CreateGraph {
     }
 
     public static Set<Node> getSuccessorWithEdge(Node n, MutableValueGraph<Node, String> gr, String edgeValue) {
-        return gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).contains(edgeValue)).collect(Collectors.toSet());
+        return gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).startsWith(edgeValue)).collect(Collectors.toSet());
     }
 
 
