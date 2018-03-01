@@ -116,6 +116,7 @@ public class CreateGraph {
      * the new graph.
      * Guava graph library takes care of duplication.
      * At end of merge we can analyse the data collected and establish new relationship.
+     * This operation is used to merge graphs which belong to same type.
      */
     private static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithoutAnalysis = (g1, g2) -> {
         MutableValueGraph<Node, String> graph = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
@@ -126,6 +127,12 @@ public class CreateGraph {
         return ImmutableValueGraph.copyOf(graph);
     };
 
+    /**
+     * This operation merges graphs obtained after merging all MethodDeclaration graphs amongst
+     * themselves, method invocation graphs amongst themselves and so on for class declarations,
+     * interfaces, variables, and assignments.
+     * After merging all the graphs into one  graph, it performs analysis on this graph.
+     */
     private static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithAnalysis = (g1, g2) ->
             analyseAndEnrich.apply(mergeGraphWithoutAnalysis.apply(g1, g2));
 
