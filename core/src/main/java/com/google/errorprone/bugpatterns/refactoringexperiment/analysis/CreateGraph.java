@@ -167,12 +167,6 @@ public class CreateGraph {
                         mergeGraphWithoutAnalysis);
     }
 
-    private static ImmutableValueGraph<Node, String> interfaceDeclGraphs(ImmutableList<ClassDeclaration> interfaceDecl) {
-        return interfaceDecl.stream()
-                .map(x -> mapToClassDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
-                        mergeGraphWithoutAnalysis);
-    }
-
     /**
      * methodDeclarationGraphs(), classDeclGraphs() ... other methods in the stream
      * each these above methods do the following : 1. query protos from filesystem 2. map each proto
@@ -188,18 +182,16 @@ public class CreateGraph {
      * @param variableDeclarations :List of variable declaration protos from filesystem.
      * @param methodInvocations :List of Method invocations protos from filesystem.
      * @param assignments :List of assignments protos from filesystem.
-     * @param interfaces :List of interfaces protos from filesystem.
      */
     public static ImmutableValueGraph<Node, String> create(ImmutableList<MethodDeclaration> methdDeclarations, ImmutableList<ClassDeclaration> classDeclarations
             , ImmutableList<Variable> variableDeclarations, ImmutableList<MethodInvocation> methodInvocations
-            , ImmutableList<Assignment> assignments, ImmutableList<ClassDeclaration> interfaces) throws Exception {
+            , ImmutableList<Assignment> assignments) throws Exception {
 
         return Stream.of(methodDeclarationGraphs(methdDeclarations),
                 classDeclGraphs(classDeclarations),
                 variableDeclarationGraphs(variableDeclarations),
                 methodInvcGraphs(methodInvocations),
-                assgnmntGraphs(assignments),
-                interfaceDeclGraphs(interfaces))
+                assgnmntGraphs(assignments))
                 .reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithAnalysis);
     }

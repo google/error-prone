@@ -63,7 +63,7 @@ public class Analyzer {
         List<Refactorable> refactorables = new ArrayList<>();
         induceSubgraphs(CreateGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
                 , getVariables(fromFolder), getMethodInovcation_NewClass(fromFolder)
-                , getAssignments(fromFolder), getInterfaces(fromFolder))).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA).filter(PRE_CONDITION_NO_ASSIGNMENTS)
+                , getAssignments(fromFolder))).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA).filter(PRE_CONDITION_NO_ASSIGNMENTS)
                 .forEach(g ->
                         g.nodes().stream().filter(n -> !n.getKind().equals(REFACTOR_INFO) && n.refactorTo() != null).forEach(n ->
                                 refactorables.add(Refactorable.newBuilder().setId(n.getId()).setRefactorTo(n.refactorTo()).build())));
@@ -88,10 +88,6 @@ public class Analyzer {
 
     private static ImmutableList<Variable> getVariables(String folderName) {
         return ImmutableList.copyOf(QueryProtoBuffData.getAllVrbl(folderName));
-    }
-
-    private static ImmutableList<ClassDeclaration> getInterfaces(String folderName) {
-        return ImmutableList.copyOf(QueryProtoBuffData.getAllInterfaceDecl(folderName));
     }
 
     private static ImmutableList<ClassDeclaration> getClassDeclarations(String folderName) {
