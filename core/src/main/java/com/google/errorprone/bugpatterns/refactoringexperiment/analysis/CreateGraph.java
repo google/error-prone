@@ -73,6 +73,7 @@ public class CreateGraph {
             }
         }
     }
+
     /**
      * This method tries to search for method declaration of the method invocation in the graph.
      *
@@ -109,8 +110,6 @@ public class CreateGraph {
     }
 
 
-
-
     /**
      * This binary operations returns a graph obtained by merging two graphs g1 and g2.
      * In order to merge graphs, it adds nodes and edges from both the graphs into
@@ -132,7 +131,7 @@ public class CreateGraph {
 
 
     private static ImmutableValueGraph<Node, String> methodDeclarationGraphs(ImmutableList<MethodDeclaration> methodDeclarations) {
-            return methodDeclarations.stream()
+        return methodDeclarations.stream()
                 .map(x -> mapToMethodDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
@@ -161,7 +160,7 @@ public class CreateGraph {
                         mergeGraphWithoutAnalysis);
     }
 
-    private static ImmutableValueGraph<Node, String> interfaceDeclGraphs(ImmutableList<ClassDeclaration> interfaceDecl ) {
+    private static ImmutableValueGraph<Node, String> interfaceDeclGraphs(ImmutableList<ClassDeclaration> interfaceDecl) {
         return interfaceDecl.stream()
                 .map(x -> mapToClassDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
@@ -176,6 +175,7 @@ public class CreateGraph {
      * all individual graphs into one huge graph. This reduction requires no analysis, since we are
      * going to merge graphs which are generated from protos of same type. 4. Reduce the graphs
      * obtained from step 3, with method and sub_type analysis
+     *
      * @param methdDeclarations :List of method declaration protos from filesystem.
      * @param classDeclarations :List of class declaration protos from filesystem.
      * @param variableDeclarations :List of variable declaration protos from filesystem.
@@ -183,8 +183,8 @@ public class CreateGraph {
      * @param assignments :List of assignments protos from filesystem.
      * @param interfaces :List of interfaces protos from filesystem.
      */
-    public static ImmutableValueGraph<Node, String> create(ImmutableList<MethodDeclaration> methdDeclarations,ImmutableList<ClassDeclaration> classDeclarations
-            ,ImmutableList<Variable> variableDeclarations, ImmutableList<MethodInvocation> methodInvocations
+    public static ImmutableValueGraph<Node, String> create(ImmutableList<MethodDeclaration> methdDeclarations, ImmutableList<ClassDeclaration> classDeclarations
+            , ImmutableList<Variable> variableDeclarations, ImmutableList<MethodInvocation> methodInvocations
             , ImmutableList<Assignment> assignments, ImmutableList<ClassDeclaration> interfaces) throws Exception {
 
         return Stream.of(methodDeclarationGraphs(methdDeclarations),

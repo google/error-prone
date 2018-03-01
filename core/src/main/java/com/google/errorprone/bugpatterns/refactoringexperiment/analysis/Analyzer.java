@@ -33,16 +33,17 @@ public class Analyzer {
 
     private static String pckgName;
     /**
-     *This precondition makes sure that ,for this subgraph 'graph' all the method invocations pass lambda expressions only.
-     * For this we make sure, that every v node of edge uv with value ARG_PASSED is of kind LAMBDA_EXPRESSION
+     * This precondition makes sure that ,for this subgraph 'graph' all the method invocations pass
+     * lambda expressions only. For this we make sure, that every v node of edge uv with value
+     * ARG_PASSED is of kind LAMBDA_EXPRESSION
      */
     private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA = graph ->
             !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ARG_PASSED))
                     .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.LAMBDA_EXPRESSION)));
     /**
-     *This precondition makes sure that,for this subgraph 'graph' there are no assignment operations.
-     * For Goal1, we do not want to perform refactorings which propagate across assignment operations.
-     * Thus, we filter a;; edges of a graph based on edge value: ASSIGNED_AS
+     * This precondition makes sure that,for this subgraph 'graph' there are no assignment
+     * operations. For Goal1, we do not want to perform refactorings which propagate across
+     * assignment operations. Thus, we filter a;; edges of a graph based on edge value: ASSIGNED_AS
      */
     private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
             !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS));
@@ -52,24 +53,19 @@ public class Analyzer {
     }
 
     /**
-     *
-     * @param fromFolder
      * @return list of refactorables
-     * @throws Exception
-     *
-     * This method , creates graph from the protos in the fromFolder.
-     * Then, it induces refactoring groups.
-     * It maps each refactring group as a seperate subgraph, passes them through preconditions
-     * and then maps the nodes of this subgraph into Refactorable proto objects.
-     *
+     * @throws Exception This method , creates graph from the protos in the fromFolder. Then, it
+     * induces refactoring groups. It maps each refactring group as a seperate subgraph, passes them
+     * through preconditions and then maps the nodes of this subgraph into Refactorable proto
+     * objects.
      */
     public static ImmutableList<Refactorable> induceAndMap(String fromFolder) throws Exception {
         List<Refactorable> refactorables = new ArrayList<>();
         induceSubgraphs(CreateGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
-                , getVariables(fromFolder),getMethodInovcation_NewClass(fromFolder)
+                , getVariables(fromFolder), getMethodInovcation_NewClass(fromFolder)
                 , getAssignments(fromFolder), getInterfaces(fromFolder))).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA).filter(PRE_CONDITION_NO_ASSIGNMENTS)
                 .forEach(g ->
-                    g.nodes().stream().filter(n ->!n.getKind().equals(REFACTOR_INFO) && n.refactorTo() != null ).forEach(n ->
+                        g.nodes().stream().filter(n -> !n.getKind().equals(REFACTOR_INFO) && n.refactorTo() != null).forEach(n ->
                                 refactorables.add(Refactorable.newBuilder().setId(n.getId()).setRefactorTo(n.refactorTo()).build())));
         return ImmutableList.copyOf(refactorables);
     }
@@ -90,29 +86,31 @@ public class Analyzer {
 
     // IO Suppliers
 
-    private static ImmutableList<Variable> getVariables(String folderName){
+    private static ImmutableList<Variable> getVariables(String folderName) {
         return ImmutableList.copyOf(QueryProtoBuffData.getAllVrbl(folderName));
     }
 
-    private static ImmutableList<ClassDeclaration> getInterfaces(String folderName){
+    private static ImmutableList<ClassDeclaration> getInterfaces(String folderName) {
         return ImmutableList.copyOf(QueryProtoBuffData.getAllInterfaceDecl(folderName));
     }
-    private static ImmutableList<ClassDeclaration> getClassDeclarations(String folderName){
+
+    private static ImmutableList<ClassDeclaration> getClassDeclarations(String folderName) {
         return ImmutableList.copyOf(QueryProtoBuffData.getAllClassDecl(folderName));
     }
-    private static ImmutableList<MethodDeclaration> getMethodDeclarations(String folderName){
+
+    private static ImmutableList<MethodDeclaration> getMethodDeclarations(String folderName) {
         return ImmutableList.copyOf(QueryProtoBuffData.getAllMethdDecl(folderName));
     }
-    private static ImmutableList<MethodInvocation> getMethodInovcation_NewClass(String folderName){
+
+    private static ImmutableList<MethodInvocation> getMethodInovcation_NewClass(String folderName) {
         List<MethodInvocation> allMethdInvc = QueryProtoBuffData.getAllMethdInvc(folderName);
         allMethdInvc.addAll(QueryProtoBuffData.getAllNewClass(folderName));
         return ImmutableList.copyOf(allMethdInvc);
     }
-    private static ImmutableList<Assignment> getAssignments(String folderName){
+
+    private static ImmutableList<Assignment> getAssignments(String folderName) {
         return ImmutableList.copyOf(QueryProtoBuffData.getAllAsgn(folderName));
     }
-
-
 
 
 }
