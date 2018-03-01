@@ -4,8 +4,8 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.MappingUtil.POPULATE_MAPPING;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.MappingUtil.varKind;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.POPULATE_MAPPING;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.varKind;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.graph.Graphs;

@@ -5,8 +5,8 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INTERFACE;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.NEW_CLASS;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Edges.TYPE_INFO;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.MappingUtil.mthdKind;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.MappingUtil.varKind;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.mthdKind;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.varKind;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.createBiDerectionalRelation;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.getNode;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.getSuccessorWithEdge;

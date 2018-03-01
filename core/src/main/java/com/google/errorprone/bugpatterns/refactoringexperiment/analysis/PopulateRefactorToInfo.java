@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 /**
  * Created by ameya on 2/28/18.
  */
-public class MappingUtil {
+public class PopulateRefactorToInfo {
 
 
     public static Predicate<Node> varKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE)
