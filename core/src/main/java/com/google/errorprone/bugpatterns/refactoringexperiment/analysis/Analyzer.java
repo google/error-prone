@@ -111,7 +111,7 @@ public class Analyzer {
     /**
      *This precondition makes sure that ,for this subgraph 'graph' all the method invocations pass lambda expressions only.
      */
-    private static Predicate<ImmutableValueGraph<Node, String>> METHOD_INVC_LAMBDA = graph ->
+    private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA = graph ->
             !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ARG_PASSED))
                     .filter(endpt -> !graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS))
                     .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.LAMBDA_EXPRESSION)));
@@ -119,9 +119,8 @@ public class Analyzer {
     /**
      *This precondition makes sure that,for this subgraph 'graph' there are no assignment operations.
      */
-    private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_2 = graph ->
+    private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
             !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS));
-
 
     private static String pckgName;
 
@@ -144,7 +143,7 @@ public class Analyzer {
 
     public static List<Refactorable> induceAndMap(String fromFolder) throws Exception {
         List<Refactorable> refactorables = new ArrayList<>();
-        induceSubgraphs(CreateGraph.create(fromFolder)).stream().map(POPULATE_MAPPING).filter(METHOD_INVC_LAMBDA).filter(PRE_CONDITION_2)
+        induceSubgraphs(CreateGraph.create(fromFolder)).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA).filter(PRE_CONDITION_NO_ASSIGNMENTS)
                 .forEach(g -> {
                     g.nodes().forEach(n -> {
                         if (!n.getKind().equals(REFACTOR_INFO)) {
