@@ -2,7 +2,6 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_CLASS;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LAMBDA_EXPRESSION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Edges.ASSIGNED_AS;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Edges.TYPE_INFO;
@@ -28,6 +27,25 @@ import java.util.function.Function;
  */
 public class ProtoToGraphMapper {
 
+    /**
+     * This function maps a variable  proto to a independent graph.
+     * @param v: a variable proto to be mapped to graph.
+     * Mapping works as follows:
+     * 1. Create node from id of the variable proto and add it to graph.
+     * 2. If proto has an initializer:
+     *      a. Create a new node for the initializer from its Id.
+     *      b. Add it to the graph.
+     *      c. establish edge : Variable node <---ASSIGNED_AS--ASSIGNED_TO---> Initializer node.
+     * 3. If proto has Filtered Type:
+     *      a.Create a new node with name, owner same as variable id, kind REFACTOR_INFO
+     *              and type as the mapped type from filtered type.
+     *      b.Add this node to graph.
+     *      c.establish edge : Variable node --- REFACTOR_INFO ---> RefactorInfo node.
+     *   Else(this means that variable type is sub_type of functional interface)
+     *      a.Create a temporary node, with type = varriable type and kind = INFERRED_CLASS.
+     *      b. establish edge : variable node --- TYPE_INFO ---> InferredClass node.
+     */
+
     public static Function<Variable, ImmutableValueGraph<Node, String>> mapVarDeclToGraph = v -> {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Node n = new Node(v.getId());
@@ -46,14 +64,26 @@ public class ProtoToGraphMapper {
         return ImmutableValueGraph.copyOf(g);
     };
 
+    /**
+     * This function maps a method declaration proto to a independent graph.
+     * @param m: a method declaration proto to be mapped to graph
+     * Mapping works as follows:
+     * 1. Create node from id of the method declaration proto and add it to graph
+     * 2. If proto has parameters:
+     *      a.Create a new node with parameter ID
+     *      b.Add this node to graph
+     *      c.establish edge : method declaration node --- PARAM_INDEX : {index} ---> RefactorInfo node
+     * 3. If proto has a super method:
+     *      a.Create a node for the super method declaration
+     *      b.establish edge : Method Declaration <--- AFFECTED_BY_HIERARCHY--- AFFECTED_BY_HIERARCHY ---> Super method declaration
+     *      c.establish a similar bidirectional relationship between the parameters of the
+     *          method declaration and super method declaration.
+     */
+
     public static Function<MethodDeclaration, ImmutableValueGraph<Node, String>> mapToMethodDeclToGraph = m ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Node n = addNodeToGraph(m.getId(), g);
-        if (m.getId().getKind().equals(LAMBDA_EXPRESSION))
-            m.getParametersMap().entrySet().stream().map(param -> Maps.immutableEntry(param.getKey(), addNodeToGraph(param.getValue(), g)))
-                    .forEach(x -> createBiDerectionalRelation(x.getValue(), n, Edges.PARENT_LAMBDA, Edges.PARAM_LAMBDA + x.getKey(), false, g));
-        else
             m.getParametersMap().entrySet().stream().map(param -> Maps.immutableEntry(param.getKey(), addNodeToGraph(param.getValue(), g)))
                     .forEach(x -> g.putEdgeValue(n, x.getValue(), Edges.PARAM_INDEX + x.getKey()));
 
@@ -68,6 +98,22 @@ public class ProtoToGraphMapper {
         return ImmutableValueGraph.copyOf(g);
     };
 
+    /**
+     * This function maps a method invocation proto to a independent graph.
+     * @param m: a method invocation proto to be mapped to graph
+     * Mapping works as follows:
+     * 1. Create a node from method invocation
+     *         if method invocation proto has a receiver
+     *              a.create a node from id of method invocation replacing the owner of with id of the receiver.
+     *                  and add to graph
+     *              b.create a node from id of the receiver and add to graph
+     *              c.establish edge :method invocation node <--- METHOD_INVOKED--- REFERENCE ---> receiver node
+     *        else create a node from the id of the method invocation
+     * 2. If proto has arguments:
+     *      a.Create a new node with arguments ID
+     *      b.Add this node to graph
+     *      c.establish edge : method declaration node --- ARG_INDEX : {index} ---> RefactorInfo node
+     */
     public static Function<MethodInvocation, ImmutableValueGraph<Node, String>> mapToMethodInvcToGraph = m ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
@@ -82,7 +128,13 @@ public class ProtoToGraphMapper {
         return ImmutableValueGraph.copyOf(g);
     };
 
-
+    /**
+     * This function maps a assignment proto to a independent graph.
+     * @param a: an assignment proto to be mapped to graph.
+     * Mapping works as follows:
+     * 1. create a node for RHS and LHS of the assignment operations from their Id and add to graph.
+     * 2. establish edge: RHS <--- ASSIGNED_AS--- ASSIGNED_TO ---> LHS
+     */
     public static Function<Assignment, ImmutableValueGraph<Node, String>> mapToAssgnmntToGraph = a ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
@@ -90,20 +142,41 @@ public class ProtoToGraphMapper {
         return ImmutableValueGraph.copyOf(g);
     };
 
-
-    public static Function<ClassDeclaration, ImmutableValueGraph<Node, String>> mapToClassDeclToGraph = a ->
+    /**
+     * This function maps a class declaration proto to a independent graph.
+     * @param c: an class declaration proto to be mapped to graph.
+     * Mapping works as follows:
+     * 1. create a node from class declaration id and add to graph.
+     * 2. Create a new node with name, owner same as class declaration id, kind REFACTOR_INFO
+     *              and type as the mapped type from filtered type.
+     *      b.Add this node to graph.
+     *      c.establish edge : class declaration node --- REFACTOR_INFO ---> RefactorInfo node.
+     */
+    public static Function<ClassDeclaration, ImmutableValueGraph<Node, String>> mapToClassDeclToGraph = c ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
-        Node n = new Node(a.getId());
+        Node n = new Node(c.getId());
         g.addNode(n);
-        if (Mapping.CLASS_MAPPING_FOR.containsKey(a.getSuperType().getInterfaceName())) {
+        if (Mapping.CLASS_MAPPING_FOR.containsKey(c.getSuperType().getInterfaceName())) {
             Node refactorInfo = new Node(n.getId().toBuilder().setKind(REFACTOR_INFO)
-                    .setType(Mapping.CLASS_MAPPING_FOR.get(a.getSuperType().getInterfaceName()).apply(a.getSuperType())).build());
+                    .setType(Mapping.CLASS_MAPPING_FOR.get(c.getSuperType().getInterfaceName()).apply(c.getSuperType())).build());
             g.putEdgeValue(n, refactorInfo, REFACTOR_INFO);
         }
         return ImmutableValueGraph.copyOf(g);
     };
 
+
+    /**
+     * This method establishes edges : Node u <---vTou---uTo--->Node v
+     * @param u
+     * @param v
+     * @param uTov : edge value for edge from u to v,
+     * @param vTou : edge value for edge from v to u.
+     * @param allowSelfLoop :
+     * @param g : Graph in which the relationship needs to be established,
+     * We might have recursive function, where the parameter is passed back to itself as an argument.
+     * We identify such relations with edge value RECURSIVE.
+     */
     public static void createBiDerectionalRelation(Node u, Node v, String uTov, String vTou, boolean allowSelfLoop
             , MutableValueGraph<Node, String> g) {
         if ((!u.equals(v))) {

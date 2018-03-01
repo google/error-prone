@@ -34,13 +34,15 @@ public class Analyzer {
     private static String pckgName;
     /**
      *This precondition makes sure that ,for this subgraph 'graph' all the method invocations pass lambda expressions only.
+     * For this we make sure, that every v node of edge uv with value ARG_PASSED is of kind LAMBDA_EXPRESSION
      */
     private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA = graph ->
             !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ARG_PASSED))
-                    .filter(endpt -> !graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS))
                     .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.LAMBDA_EXPRESSION)));
     /**
      *This precondition makes sure that,for this subgraph 'graph' there are no assignment operations.
+     * For Goal1, we do not want to perform refactorings which propagate across assignment operations.
+     * Thus, we filter a;; edges of a graph based on edge value: ASSIGNED_AS
      */
     private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
             !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS));
