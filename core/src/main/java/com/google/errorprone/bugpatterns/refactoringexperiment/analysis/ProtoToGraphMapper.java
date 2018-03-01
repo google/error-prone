@@ -26,7 +26,7 @@ import java.util.function.Function;
 /**
  * Created by ameya on 2/28/18.
  */
-public class ProtoToNodeMapper {
+public class ProtoToGraphMapper {
 
     public static Function<Variable, ImmutableValueGraph<Node, String>> mapVarDeclToGraph = v -> {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();

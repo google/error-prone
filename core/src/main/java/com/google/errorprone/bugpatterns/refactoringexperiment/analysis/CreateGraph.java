@@ -7,14 +7,14 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Edges.TYPE_INFO;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.MappingUtil.mthdKind;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.MappingUtil.varKind;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToNodeMapper.createBiDerectionalRelation;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToNodeMapper.getNode;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToNodeMapper.getSuccessorWithEdge;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToNodeMapper.mapToAssgnmntToGraph;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToNodeMapper.mapToClassDeclToGraph;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToNodeMapper.mapToMethodDeclToGraph;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToNodeMapper.mapToMethodInvcToGraph;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToNodeMapper.mapVarDeclToGraph;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.createBiDerectionalRelation;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.getNode;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.getSuccessorWithEdge;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapToAssgnmntToGraph;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapToClassDeclToGraph;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapToMethodDeclToGraph;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapToMethodInvcToGraph;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapVarDeclToGraph;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.graph.Graphs;
