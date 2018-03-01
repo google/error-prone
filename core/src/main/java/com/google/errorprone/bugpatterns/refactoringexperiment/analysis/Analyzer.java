@@ -35,14 +35,14 @@ import java.util.stream.Collectors;
 public class Analyzer {
 
 
-    public static Predicate<Node> varKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE)
+    private static Predicate<Node> varKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE)
             || n.getKind().equals(FIELD);
 
-    public static Predicate<Node> mthdKind = n -> n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
+    private static Predicate<Node> mthdKind = n -> n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
 
-    public static Predicate<Node> typeKind = n -> n.getKind().equals(CLASS) || n.getKind().equals(INTERFACE);
+    private static Predicate<Node> typeKind = n -> n.getKind().equals(CLASS) || n.getKind().equals(INTERFACE);
 
-    public static BiPredicate<Node, ImmutableValueGraph<Node, String>> mthdRet = (n, g) ->
+    private static BiPredicate<Node, ImmutableValueGraph<Node, String>> mthdRet = (n, g) ->
             n.getKind().equals("METHOD") &&
                     g.successors(n).stream().anyMatch(a -> g.edgeValue(n, a).get().equals(Edges.RETURNS));
 
@@ -108,13 +108,18 @@ public class Analyzer {
     private static final Function<ImmutableValueGraph<Node, String>, ImmutableValueGraph<Node, String>> POPULATE_MAPPING =
             POPULATE_OBJ_REF.compose(POPULATE_SUB_TYPE).compose(POPULATE_MTHD_RET);
 
-
-    public static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_1 = graph ->
+    /**
+     *This precondition makes sure that ,for this subgraph 'graph' all the method invocations pass lambda expressions only.
+     */
+    private static Predicate<ImmutableValueGraph<Node, String>> METHOD_INVC_LAMBDA = graph ->
             !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ARG_PASSED))
                     .filter(endpt -> !graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS))
                     .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.LAMBDA_EXPRESSION)));
 
-    public static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_2 = graph ->
+    /**
+     *This precondition makes sure that,for this subgraph 'graph' there are no assignment operations.
+     */
+    private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_2 = graph ->
             !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS));
 
 
@@ -124,9 +129,22 @@ public class Analyzer {
         induceAndMap(pckgName).forEach(r -> ProtoBuffPersist.write(r, REFACTOR_INFO));
     }
 
+    /**
+     *
+     * @param fromFolder
+     * @return list of refactorables
+     * @throws Exception
+     *
+     * This method , creates graph from the protos in the fromFolder.
+     * Then, it induces refactoring groups.
+     * It maps each refactring group as a seperate subgraph, passes them through preconditions
+     * and then maps the nodes of this subgraph into Refactorable proto objects.
+     *
+     */
+
     public static List<Refactorable> induceAndMap(String fromFolder) throws Exception {
         List<Refactorable> refactorables = new ArrayList<>();
-        induceSubgraphs(CreateGraph.create(fromFolder)).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_1).filter(PRE_CONDITION_2)
+        induceSubgraphs(CreateGraph.create(fromFolder)).stream().map(POPULATE_MAPPING).filter(METHOD_INVC_LAMBDA).filter(PRE_CONDITION_2)
                 .forEach(g -> {
                     g.nodes().forEach(n -> {
                         if (!n.getKind().equals(REFACTOR_INFO)) {
@@ -140,7 +158,7 @@ public class Analyzer {
         return refactorables;
     }
 
-    public static Set<ImmutableValueGraph<Node, String>> induceSubgraphs(ImmutableValueGraph<Node, String> gr) {
+    private static Set<ImmutableValueGraph<Node, String>> induceSubgraphs(ImmutableValueGraph<Node, String> gr) {
         Set<ImmutableValueGraph<Node, String>> subGraphs = new HashSet<>();
         MutableValueGraph<Node, String> graphOfGraphs = Graphs.copyOf(gr);
         List<Node> params = graphOfGraphs.nodes().stream().filter(x -> varKind.test(x)).collect(Collectors.toList());

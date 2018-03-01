@@ -44,9 +44,9 @@ import java.util.stream.Stream;
 public class CreateGraph {
 
 
-    public static Predicate<Node> isMethodKind = n ->  n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
+    private static Predicate<Node> isMethodKind = n ->  n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
 
-    public static Predicate<Node> varKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE) || n.getKind().equals(FIELD);
+    private static Predicate<Node> varKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE) || n.getKind().equals(FIELD);
 
     private static Function<ImmutableValueGraph<Node, String>, ImmutableValueGraph<Node, String>> analyseAndEnrich = graph -> {
         MutableValueGraph<Node, String> gr = Graphs.copyOf(graph);
@@ -119,7 +119,7 @@ public class CreateGraph {
         }
     }
 
-    public static Set<Node> getSuccessorWithEdge(Node n, MutableValueGraph<Node, String> gr, String edgeValue) {
+    private static Set<Node> getSuccessorWithEdge(Node n, MutableValueGraph<Node, String> gr, String edgeValue) {
         return gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().contains(edgeValue)).collect(Collectors.toSet());
     }
 
@@ -133,7 +133,7 @@ public class CreateGraph {
      * At end of merge we can analyse the data collected and establish new relationship.
      */
 
-    public static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithoutAnalysis = (g1, g2) -> {
+    private static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithoutAnalysis = (g1, g2) -> {
         MutableValueGraph<Node, String> graph = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         g1.edges().forEach(e -> graph.putEdgeValue(e.nodeU(), e.nodeV(), g1.edgeValue(e.nodeU(), e.nodeV()).get()));
         g2.edges().forEach(e -> graph.putEdgeValue(e.nodeU(), e.nodeV(), g2.edgeValue(e.nodeU(), e.nodeV()).get()));
@@ -142,12 +142,12 @@ public class CreateGraph {
         return ImmutableValueGraph.copyOf(graph);
     };
 
-    public static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithAnalysis = (g1, g2) ->
+    private static BinaryOperator<ImmutableValueGraph<Node, String>> mergeGraphWithAnalysis = (g1, g2) ->
          analyseAndEnrich.apply(mergeGraphWithoutAnalysis.apply(g1,g2));
 
 
 
-    public static Function<Variable, ImmutableValueGraph<Node, String>> mapVarDeclToGraph = v -> {
+    private static Function<Variable, ImmutableValueGraph<Node, String>> mapVarDeclToGraph = v -> {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Node n = new Node(v.getId());
         g.addNode(n);
@@ -165,7 +165,7 @@ public class CreateGraph {
         return ImmutableValueGraph.copyOf(g);
     };
 
-    public static Function<MethodDeclaration, ImmutableValueGraph<Node, String>> mapToMethodDeclToGraph = m ->
+    private static Function<MethodDeclaration, ImmutableValueGraph<Node, String>> mapToMethodDeclToGraph = m ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Node n = addNodeToGraph(m.getId(), g);
@@ -187,7 +187,7 @@ public class CreateGraph {
         return ImmutableValueGraph.copyOf(g);
     };
 
-    public static Function<MethodInvocation, ImmutableValueGraph<Node, String>> mapToMethodInvcToGraph = m ->
+    private static Function<MethodInvocation, ImmutableValueGraph<Node, String>> mapToMethodInvcToGraph = m ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Node n = addNodeToGraph(m, g);
@@ -202,7 +202,7 @@ public class CreateGraph {
     };
 
 
-    public static Function<Assignment, ImmutableValueGraph<Node, String>> mapToAssgnmntToGraph = a ->
+    private static Function<Assignment, ImmutableValueGraph<Node, String>> mapToAssgnmntToGraph = a ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
 //        for (Identification rhs : a.getRhsList())
@@ -216,7 +216,7 @@ public class CreateGraph {
 //                .setType(Mapping.CLASS_MAPPING_FOR.get(a.getSuperType().getInterfaceName()).apply(a.getSuperType())).build());
 //        g.putEdgeValue(n, refactorInfo, REFACTOR_INFO);
 //    }
-    public static Function<ClassDeclaration, ImmutableValueGraph<Node, String>> mapToClassDeclToGraph = a ->
+private static Function<ClassDeclaration, ImmutableValueGraph<Node, String>> mapToClassDeclToGraph = a ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Node n = new Node(a.getId());
@@ -229,7 +229,7 @@ public class CreateGraph {
         return ImmutableValueGraph.copyOf(g);
     };
 
-    public static ImmutableValueGraph<Node, String> methodDeclarationGraphs(String folderName) {
+    private static ImmutableValueGraph<Node, String> methodDeclarationGraphs(String folderName) {
         List<MethodDeclaration> methodDeclarations = QueryProtoBuffData.getAllMethdDecl(folderName);
         ImmutableValueGraph<Node, String> methodParam = methodDeclarations.stream()
                 .map(x -> mapToMethodDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
@@ -237,7 +237,7 @@ public class CreateGraph {
         return methodParam;
     }
 
-    public static ImmutableValueGraph<Node, String> variableDeclarationGraphs(String folderName) {
+    private static ImmutableValueGraph<Node, String> variableDeclarationGraphs(String folderName) {
         List<Variable> vars = QueryProtoBuffData.getAllVrbl(folderName);
         ImmutableValueGraph<Node, String> varGraph = vars.stream()
                 .map(x -> mapVarDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
@@ -245,7 +245,7 @@ public class CreateGraph {
         return varGraph;
     }
 
-    public static ImmutableValueGraph<Node, String> methodInvcGraphs(String folderName) {
+    private static ImmutableValueGraph<Node, String> methodInvcGraphs(String folderName) {
         List<MethodInvocation> mthInvc_newClass = QueryProtoBuffData.getAllMethdInvc(folderName);
         mthInvc_newClass.addAll(QueryProtoBuffData.getAllNewClass(folderName));
         ImmutableValueGraph<Node, String> methodParam = mthInvc_newClass.stream()
@@ -254,7 +254,7 @@ public class CreateGraph {
         return methodParam;
     }
 
-    public static ImmutableValueGraph<Node, String> assgnmntGraphs(String folderName) {
+    private static ImmutableValueGraph<Node, String> assgnmntGraphs(String folderName) {
         List<Assignment> assgns = QueryProtoBuffData.getAllAsgn(folderName);
         ImmutableValueGraph<Node, String> methodParam = assgns.stream()
                 .map(x -> mapToAssgnmntToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
@@ -262,7 +262,7 @@ public class CreateGraph {
         return methodParam;
     }
 
-    public static ImmutableValueGraph<Node, String> classDeclGraphs(String folderName) {
+    private static ImmutableValueGraph<Node, String> classDeclGraphs(String folderName) {
         List<ClassDeclaration> classDecl = QueryProtoBuffData.getAllClassDecl(folderName);
         ImmutableValueGraph<Node, String> methodParam = classDecl.stream()
                 .map(x -> mapToClassDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
@@ -270,7 +270,7 @@ public class CreateGraph {
         return methodParam;
     }
 
-    public static ImmutableValueGraph<Node, String> interfaceDeclGraphs(String folderName) {
+    private static ImmutableValueGraph<Node, String> interfaceDeclGraphs(String folderName) {
         List<ClassDeclaration> interfaceDecl = QueryProtoBuffData.getAllInterfaceDecl(folderName);
         ImmutableValueGraph<Node, String> methodParam = interfaceDecl.stream()
                 .map(x -> mapToClassDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
