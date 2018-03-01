@@ -25,6 +25,7 @@ import java.util.function.Predicate;
  */
 public class MappingUtil {
 
+
     public static Predicate<Node> varKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE)
             || n.getKind().equals(FIELD);
 
@@ -80,7 +81,7 @@ public class MappingUtil {
         return ImmutableValueGraph.copyOf(gr);
     };
 
-    public static final Function<ImmutableValueGraph<Node, String>, ImmutableValueGraph<Node, String>> POPULATE_MTHD_RET = graph -> {
+    private static final Function<ImmutableValueGraph<Node, String>, ImmutableValueGraph<Node, String>> POPULATE_MTHD_RET = graph -> {
         MutableValueGraph<Node, String> gr = Graphs.copyOf(graph);
         gr.nodes().stream().filter(x -> mthdRet.test(x, graph)).forEach(n ->
                 n.setRefactorTo(gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(REFACTOR_INFO)).findFirst().map(x -> x.getType()).orElse("")));
@@ -95,6 +96,7 @@ public class MappingUtil {
         return ImmutableValueGraph.copyOf(gr);
     };
 
+    // populates the object references and sub_types with their dependents
     public static final Function<ImmutableValueGraph<Node, String>, ImmutableValueGraph<Node, String>> POPULATE_MAPPING =
             POPULATE_OBJ_REF.compose(POPULATE_SUB_TYPE).compose(POPULATE_MTHD_RET);
 

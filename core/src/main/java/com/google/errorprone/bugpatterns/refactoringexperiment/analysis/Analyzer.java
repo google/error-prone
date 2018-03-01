@@ -61,7 +61,6 @@ public class Analyzer {
      * and then maps the nodes of this subgraph into Refactorable proto objects.
      *
      */
-
     public static ImmutableList<Refactorable> induceAndMap(String fromFolder) throws Exception {
         List<Refactorable> refactorables = new ArrayList<>();
         induceSubgraphs(CreateGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
