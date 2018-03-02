@@ -4,6 +4,7 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.NO_MAPPING;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.POPULATE_MAPPING;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.varKind;
 
@@ -48,6 +49,14 @@ public class Analyzer {
     private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
             !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS));
 
+    /**
+     * This precondition makes sure that, the subgraph does not go through if any of the nodes are
+     * mapped to NO MAPPING
+     */
+    private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_MAPPING_PRESENT = graph ->
+            !graph.nodes().stream().anyMatch(n -> n.refactorTo().equals(NO_MAPPING));
+
+
     public static void main(String args[]) throws Exception {
         induceAndMap(pckgName).forEach(r -> ProtoBuffPersist.write(r, REFACTOR_INFO));
     }
@@ -63,10 +72,12 @@ public class Analyzer {
         List<Refactorable> refactorables = new ArrayList<>();
         induceSubgraphs(CreateGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
                 , getVariables(fromFolder), getMethodInovcation_NewClass(fromFolder)
-                , getAssignments(fromFolder))).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA).filter(PRE_CONDITION_NO_ASSIGNMENTS)
+                , getAssignments(fromFolder))).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA)
+                .filter(PRE_CONDITION_NO_ASSIGNMENTS).filter(PRE_CONDITION_MAPPING_PRESENT)
                 .forEach(g ->
-                        g.nodes().stream().filter(n -> !n.getKind().equals(REFACTOR_INFO) && n.refactorTo() != null).forEach(n ->
-                                refactorables.add(Refactorable.newBuilder().setId(n.getId()).setRefactorTo(n.refactorTo()).build())));
+                        g.nodes().stream().filter(n -> !n.getKind().equals(REFACTOR_INFO) && n.refactorTo() != null && !n.refactorTo().equals(""))
+                                .forEach(n ->
+                                        refactorables.add(Refactorable.newBuilder().setId(n.getId()).setRefactorTo(n.refactorTo()).build())));
         return ImmutableList.copyOf(refactorables);
     }
 

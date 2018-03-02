@@ -230,23 +230,30 @@ public class Mapping {
     public static ImmutableMap<String, ImmutableMap<String, String>> METHOD_MAPPING_FOR =
             ImmutableMap.<String, ImmutableMap<String, String>>builder()
                     .put(INT_UNARY_OPERATOR, INT_UNARY_OPERATOR_METHOD_MAPPING)
-                    .put(DOUBLE_TO_INT_FUNCTION, DOUBLE_TO_INT_FUNCTION_METHOD_MAPPING)
-                    .put(LONG_TO_INT_FUNCTION, LONG_TO_INT_FUNCTION_METHOD_MAPPING)
-                    .put(INT_TO_DOUBLE_FUNCTION, INT_TO_DOUBLE_METHOD_MAPPING)
                     .put(DOUBLE_UNARY_OPERATOR, DOUBLE_UNARY_OPERATOR_METHOD_MAPPING)
-                    .put(LONG_TO_DOUBLE_FUNCTION, LONG_TO_DOUBLE_METHOD_MAPPING)
-                    .put(INT_TO_LONG_FUNCTION, INT_TO_LONG_METHOD_MAPPING)
-                    .put(DOUBLE_TO_LONG_FUNCTION, DOUBLE_TO_LONG_METHOD_MAPPING)
                     .put(LONG_UNARY_OPERATOR, LONG_UNARY_OPERATOR_METHOD_MAPPING)
+
+                    .put(INT_TO_DOUBLE_FUNCTION, INT_TO_DOUBLE_METHOD_MAPPING)
+                    .put(INT_TO_LONG_FUNCTION, INT_TO_LONG_METHOD_MAPPING)
                     .put(INT_PREDICATE, INT_PREDICATE_MAPPING)
+                    .put(INT_FUNCTION, INT_FUNCTION_METHOD_MAPPING)
+
+                    .put(DOUBLE_TO_INT_FUNCTION, DOUBLE_TO_INT_FUNCTION_METHOD_MAPPING)
+                    .put(DOUBLE_TO_LONG_FUNCTION, DOUBLE_TO_LONG_METHOD_MAPPING)
                     .put(DOUBLE_PREDICATE, DOUBLE_PREDICATE_MAPPING)
+                    .put(DOUBLE_FUNCTION, DOUBLE_FUNCTION_METHOD_MAPPING)
+
+                    .put(LONG_TO_INT_FUNCTION, LONG_TO_INT_FUNCTION_METHOD_MAPPING)
+                    .put(LONG_TO_DOUBLE_FUNCTION, LONG_TO_DOUBLE_METHOD_MAPPING)
                     .put(LONG_PREDICATE, LONG_PREDICATE_MAPPING)
+                    .put(LONG_FUNCTION,LONG_FUNCTION_METHOD_MAPPING)
+
                     .put(TO_INT_FUNCTION, TO_INT_FUNCTION_METHOD_MAPPING)
                     .put(TO_DOUBLE_FUNCTION, TO_DOUBLE_FUNCTION_METHOD_MAPPING)
                     .put(TO_LONG_FUNCTION, TO_LONG_FUNCTION_METHOD_MAPPING)
                     .put(PREDICATE, PREDICATE_MAPPING)
-                    .put(INT_FUNCTION, INT_FUNCTION_METHOD_MAPPING)
-                    .put(DOUBLE_FUNCTION, DOUBLE_FUNCTION_METHOD_MAPPING)
+
+
                     .build();
 
 

@@ -66,7 +66,7 @@ public class PopulateRefactorToInfo {
         MutableValueGraph<Node, String> gr = Graphs.copyOf(graph);
         gr.nodes().stream().filter(typeKind).forEach(n ->
                 n.setRefactorTo(gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(REFACTOR_INFO)).findFirst().map(x -> x.getType()).orElse("")));
-        gr.nodes().stream().filter(typeKind).forEach(n ->{
+        gr.nodes().stream().filter(typeKind).filter(t -> !t.refactorTo().equals("")).forEach(n ->{
             if (!n.refactorTo().equals("")) {
                 gr.nodes().stream().filter(mthdKind).filter(x -> x.getOwner().getType().equals(n.getType()))
                         .forEach(m -> m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName())));
