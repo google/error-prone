@@ -213,12 +213,13 @@ public class Mapping {
                     .put(IDENTITY, NO_MAPPING).build();
 
     private static Function<FilteredType, String> mapJavaUtilFunctionToType = ft -> {
-        if (JAVA_UTIL_FUNCTION_FUNCTION_IO_SPECIALIZE.containsKey(ft.getTypeParameter(0) + ft.getTypeParameter(1)))
+        if (JAVA_UTIL_FUNCTION_FUNCTION_IO_SPECIALIZE.containsKey(ft.getTypeParameter(0) + ft.getTypeParameter(1))) {
             return JAVA_UTIL_FUNCTION_FUNCTION_IO_SPECIALIZE.get(ft.getTypeParameter(0) + ft.getTypeParameter(1));
-        if (JAVA_UTIL_FUNCTION_FUNCTION_I_SPECIALIZE.containsKey(ft.getTypeParameter(0)))
+        } else if (JAVA_UTIL_FUNCTION_FUNCTION_I_SPECIALIZE.containsKey(ft.getTypeParameter(0))){
             return JAVA_UTIL_FUNCTION_FUNCTION_I_SPECIALIZE.get(ft.getTypeParameter(0)) + preserveType(ft.getTypeParameter(1));
-        if (JAVA_UTIL_FUNCTION_FUNCTION_O_SPECIALIZE.containsKey(ft.getTypeParameter(1)))
+        }else if (JAVA_UTIL_FUNCTION_FUNCTION_O_SPECIALIZE.containsKey(ft.getTypeParameter(1))) {
             return JAVA_UTIL_FUNCTION_FUNCTION_O_SPECIALIZE.get(ft.getTypeParameter(1)) + preserveType(ft.getTypeParameter(0));
+        }
         return NO_MAPPING;
     };
 
@@ -228,10 +229,11 @@ public class Mapping {
 
 
     public static String getMethodMappingFor(String className,String methodName){
-        if(!NO_MAPPING.equals(className))
-            if(METHOD_MAPPING_FOR.containsKey(className))
+        if(!NO_MAPPING.equals(className)) {
+            if (METHOD_MAPPING_FOR.containsKey(className) && METHOD_MAPPING_FOR.get(className).containsKey(methodName)) {
                 return METHOD_MAPPING_FOR.get(className).get(methodName);
-
+            }
+        }
         return NO_MAPPING;
         }
 
