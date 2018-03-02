@@ -1,11 +1,7 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.BOOLEAN;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.DOUBLE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INTEGER;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.JAVA_UTIL_FUNCTION_FUNCTION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LONG;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType;
@@ -17,22 +13,22 @@ import java.util.function.Function;
  */
 public class Mapping {
 
-    public static final String LANG_INTEGER = "java.lang.Integer";
-    public static final String LANG_BOOLEAN = "java.lang.Boolean";
-    public static final String LANG_LONG = "java.lang.Long";
-    public static final String LANG_DOUBLE = "java.lang.Double";
-    public static final String INT_UNARY_OPERATOR = "java.util.function.IntUnaryOperator";
-    public static final String INT_FUNCTION = "java.util.function.IntFunction";
-    public static final String TO_INT_FUNCTION = "java.util.function.ToIntFunction";
-    public static final String INT_PREDICATE = "java.util.function.IntPredicate";
+    public static final String INTEGER = "java.lang.Integer";
+    public static final String BOOLEAN = "java.lang.Boolean";
+    public static final String LONG = "java.lang.Long";
+    public static final String DOUBLE = "java.lang.Double";
     public static final String LONG_PRIMITIVE = "long";
     public static final String INTEGER_PRIMITIVE = "int";
     public static final String DOUBLE_PRIMITIVE = "double";
     public static final String BOOLEAN_PRIMITIVE = "boolean";
 
+
+    public static final String INT_UNARY_OPERATOR = "java.util.function.IntUnaryOperator";
+    public static final String INT_FUNCTION = "java.util.function.IntFunction";
+    public static final String INT_PREDICATE = "java.util.function.IntPredicate";
     public static final String INT_TO_LONG_FUNCTION = "java.util.function.IntToLongFunction";
     public static final String INT_TO_DOUBLE_FUNCTION = "java.util.function.IntToDoubleFunction";
-
+    public static final String TO_INT_FUNCTION = "java.util.function.ToIntFunction";
     //Double Functions
     public static final String DOUBLE_UNARY_OPERATOR = "java.util.function.DoubleUnaryOperator";
     public static final String DOUBLE_FUNCTION = "java.util.function.DoubleFunction";
@@ -44,10 +40,13 @@ public class Mapping {
     //Long Functions
     public static final String LONG_UNARY_OPERATOR = "java.util.function.LongUnaryOperator";
     public static final String LONG_FUNCTION = "java.util.function.LongFunction";
-    public static final String TO_LONG_FUNCTION = "java.util.function.TolongFunction";
+    public static final String TO_LONG_FUNCTION = "java.util.function.ToLongFunction";
     public static final String LONG_PREDICATE = "java.util.function.LongPredicate";
     public static final String LONG_TO_DOUBLE_FUNCTION = "java.util.function.LongToDoubleFunction";
     public static final String LONG_TO_INT_FUNCTION = "java.util.function.LongToIntFunction";
+
+
+
     public static final String PREDICATE = "java.util.function.Predicate";
 
 
@@ -64,33 +63,33 @@ public class Mapping {
 
     private static final ImmutableMap<String, String> JAVA_UTIL_FUNCTION_FUNCTION_IO_SPECIALIZE =
             ImmutableMap.<String, String>builder()
-                    .put(LANG_INTEGER + LANG_INTEGER, INT_UNARY_OPERATOR)
-                    .put(LANG_INTEGER + LANG_BOOLEAN, INT_PREDICATE)
-                    .put(LANG_INTEGER + LANG_DOUBLE, INT_TO_DOUBLE_FUNCTION)
-                    .put(LANG_INTEGER + LANG_LONG, INT_TO_LONG_FUNCTION)
+                    .put(INTEGER + INTEGER, INT_UNARY_OPERATOR)
+                    .put(INTEGER + BOOLEAN, INT_PREDICATE)
+                    .put(INTEGER + DOUBLE, INT_TO_DOUBLE_FUNCTION)
+                    .put(INTEGER + LONG, INT_TO_LONG_FUNCTION)
 
-                    .put(LANG_LONG + LANG_LONG, LONG_UNARY_OPERATOR)
-                    .put(LANG_LONG + LANG_INTEGER, LONG_TO_INT_FUNCTION)
-                    .put(LANG_LONG + LANG_DOUBLE, LONG_TO_DOUBLE_FUNCTION)
-                    .put(LANG_LONG + LANG_BOOLEAN, LONG_PREDICATE)
+                    .put(LONG + LONG, LONG_UNARY_OPERATOR)
+                    .put(LONG + INTEGER, LONG_TO_INT_FUNCTION)
+                    .put(LONG + DOUBLE, LONG_TO_DOUBLE_FUNCTION)
+                    .put(LONG + BOOLEAN, LONG_PREDICATE)
 
-                    .put(LANG_DOUBLE + LANG_DOUBLE, DOUBLE_UNARY_OPERATOR)
-                    .put(LANG_DOUBLE + LANG_INTEGER, DOUBLE_TO_INT_FUNCTION)
-                    .put(LANG_DOUBLE + LANG_LONG, DOUBLE_TO_LONG_FUNCTION)
-                    .put(LANG_DOUBLE + LANG_BOOLEAN, DOUBLE_PREDICATE)
+                    .put(DOUBLE + DOUBLE, DOUBLE_UNARY_OPERATOR)
+                    .put(DOUBLE + INTEGER, DOUBLE_TO_INT_FUNCTION)
+                    .put(DOUBLE + LONG, DOUBLE_TO_LONG_FUNCTION)
+                    .put(DOUBLE + BOOLEAN, DOUBLE_PREDICATE)
                     .build();
     private static final ImmutableMap<String, String> JAVA_UTIL_FUNCTION_FUNCTION_I_SPECIALIZE =
             ImmutableMap.<String, String>builder()
-                    .put(LANG_INTEGER, INT_FUNCTION)
-                    .put(LANG_LONG + LANG_BOOLEAN, LONG_FUNCTION)
-                    .put(LANG_DOUBLE + LANG_DOUBLE, DOUBLE_FUNCTION)
+                    .put(INTEGER, INT_FUNCTION)
+                    .put(LONG + BOOLEAN, LONG_FUNCTION)
+                    .put(DOUBLE + DOUBLE, DOUBLE_FUNCTION)
                     .build();
     private static final ImmutableMap<String, String> JAVA_UTIL_FUNCTION_FUNCTION_O_SPECIALIZE =
             ImmutableMap.<String, String>builder()
-                    .put(LANG_INTEGER, TO_INT_FUNCTION)
-                    .put(LANG_LONG, TO_LONG_FUNCTION)
-                    .put(LANG_DOUBLE, TO_DOUBLE_FUNCTION)
-                    .put(LANG_BOOLEAN, PREDICATE)
+                    .put(INTEGER, TO_INT_FUNCTION)
+                    .put(LONG, TO_LONG_FUNCTION)
+                    .put(DOUBLE, TO_DOUBLE_FUNCTION)
+                    .put(BOOLEAN, PREDICATE)
                     .build();
 
 
@@ -227,7 +226,16 @@ public class Mapping {
         return "<" + typeParameter + ">";
     }
 
-    public static ImmutableMap<String, ImmutableMap<String, String>> METHOD_MAPPING_FOR =
+
+    public static String getMethodMappingFor(String className,String methodName){
+        if(!NO_MAPPING.equals(className))
+            if(METHOD_MAPPING_FOR.containsKey(className))
+                return METHOD_MAPPING_FOR.get(className).get(methodName);
+
+        return NO_MAPPING;
+        }
+
+    private static ImmutableMap<String, ImmutableMap<String, String>> METHOD_MAPPING_FOR =
             ImmutableMap.<String, ImmutableMap<String, String>>builder()
                     .put(INT_UNARY_OPERATOR, INT_UNARY_OPERATOR_METHOD_MAPPING)
                     .put(DOUBLE_UNARY_OPERATOR, DOUBLE_UNARY_OPERATOR_METHOD_MAPPING)
@@ -251,6 +259,7 @@ public class Mapping {
                     .put(TO_INT_FUNCTION, TO_INT_FUNCTION_METHOD_MAPPING)
                     .put(TO_DOUBLE_FUNCTION, TO_DOUBLE_FUNCTION_METHOD_MAPPING)
                     .put(TO_LONG_FUNCTION, TO_LONG_FUNCTION_METHOD_MAPPING)
+
                     .put(PREDICATE, PREDICATE_MAPPING)
 
 
@@ -269,18 +278,6 @@ public class Mapping {
                     .put(BOOLEAN, BOOLEAN_PRIMITIVE)
                     .build();
 
-    public static boolean specialiseReturnType(String s) {
-        return s.equals(INT_UNARY_OPERATOR) || s.equals(DOUBLE_TO_INT_FUNCTION) ||
-                s.equals(LONG_TO_INT_FUNCTION) || s.equals(INT_TO_DOUBLE_FUNCTION) ||
-                s.equals(DOUBLE_UNARY_OPERATOR) || s.equals(LONG_TO_DOUBLE_FUNCTION) ||
-                s.equals(INT_TO_LONG_FUNCTION) || s.equals(DOUBLE_TO_LONG_FUNCTION) ||
-                s.equals(LONG_UNARY_OPERATOR) || s.equals(INT_PREDICATE) ||
-                s.equals(DOUBLE_PREDICATE) || s.equals(LONG_PREDICATE) ||
-                s.equals(TO_INT_FUNCTION) || s.equals(TO_DOUBLE_FUNCTION) ||
-                s.equals(TO_LONG_FUNCTION) || s.equals(PREDICATE);
-
-
-    }
 
 }
 

@@ -9,8 +9,8 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PARAMETER;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Edges.PARAM_LAMBDA;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.METHOD_MAPPING_FOR;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.SPECIALIZE_TO_PRIMITIVE;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.getMethodMappingFor;
 
 import com.google.common.graph.Graphs;
 import com.google.common.graph.ImmutableValueGraph;
@@ -45,7 +45,7 @@ public class PopulateRefactorToInfo {
         gr.nodes().stream().filter(varKind).forEach(n -> {
             if (!n.refactorTo().equals("")) {
                 gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(Edges.METHOD_INVOKED))
-                        .forEach(m -> m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName())));
+                        .forEach(m -> m.setRefactorTo(getMethodMappingFor(getClassName(n.refactorTo()),m.getName())));
                 gr.successors(n).stream().filter(x -> !x.getKind().equals(REFACTOR_INFO))
                         .filter(x -> gr.edgeValue(n, x).get().equals(Edges.ASSIGNED_AS))
                         .forEach(m -> {
@@ -74,16 +74,10 @@ public class PopulateRefactorToInfo {
         gr.nodes().stream().filter(typeKind).filter(t -> !t.refactorTo().equals("")).forEach(n -> {
             if (!n.refactorTo().equals("")) {
                 gr.nodes().stream().filter(mthdKind).filter(x -> x.getOwner().getType().equals(n.getType()))
-                        .forEach(m -> {
-                            if (METHOD_MAPPING_FOR.containsKey(getClassName(n.refactorTo())))
-                                m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName()));
-                            else{
-                                //log n.toString() && log m.toString()
-                            }
-                        });
+                        .forEach(m -> m.setRefactorTo(getMethodMappingFor(getClassName(n.refactorTo()),m.getName())) );
                 gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals("OVERRIDES"))
                         .forEach(m -> {
-                            m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName()));
+                            m.setRefactorTo(getMethodMappingFor(getClassName(n.refactorTo()),m.getName()));
                             gr.successors(m).stream().filter(x -> gr.edgeValue(m, x).get().contains(PARAM_LAMBDA)).forEach(
                                     i -> i.setRefactorTo(SPECIALIZE_TO_PRIMITIVE.get(i.getType())));
                         });
@@ -92,24 +86,9 @@ public class PopulateRefactorToInfo {
         return ImmutableValueGraph.copyOf(gr);
     };
 
-    private static final Function<ImmutableValueGraph<Node, String>, ImmutableValueGraph<Node, String>> POPULATE_MTHD_RET = graph -> {
-        MutableValueGraph<Node, String> gr = Graphs.copyOf(graph);
-        gr.nodes().stream().filter(x -> mthdRet.test(x, graph)).forEach(n ->
-                n.setRefactorTo(gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(REFACTOR_INFO)).findFirst().map(x -> x.getType()).orElse("")));
-        gr.nodes().stream().filter(x -> mthdRet.test(x, graph)).forEach(n -> {
-            if (!n.refactorTo().equals("")) {
-                gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(Edges.METHOD_INVOKED))
-                        .forEach(m -> m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName())));
-                gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(Edges.ASSIGNED_TO) || gr.edgeValue(n, x).get().equals(Edges.PASSED_AS_ARG_TO))
-                        .forEach(m -> m.setRefactorTo(n.refactorTo()));
-            }
-        });
-        return ImmutableValueGraph.copyOf(gr);
-    };
-
     // populates the object references and sub_types with their dependents
     public static final Function<ImmutableValueGraph<Node, String>, ImmutableValueGraph<Node, String>> POPULATE_MAPPING =
-            POPULATE_OBJ_REF.compose(POPULATE_SUB_TYPE).compose(POPULATE_MTHD_RET);
+            POPULATE_OBJ_REF.compose(POPULATE_SUB_TYPE);
 
     private static String getClassName(String refactorTo) {
         return refactorTo.contains("<") ? refactorTo.substring(0, refactorTo.indexOf("<"))
