@@ -1,6 +1,5 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
-
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
@@ -54,7 +53,7 @@ public class Analyzer {
      * mapped to NO MAPPING
      */
     private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_MAPPING_PRESENT = graph ->
-            !graph.nodes().stream().anyMatch(n -> n.refactorTo().equals(NO_MAPPING));
+            !graph.nodes().stream().anyMatch(n -> !n.refactorTo().equals(null) && n.refactorTo().equals(NO_MAPPING));
 
 
     public static void main(String args[]) throws Exception {
@@ -63,7 +62,8 @@ public class Analyzer {
 
     /**
      * @return list of refactorables
-     * @throws Exception This method , creates graph from the protos in the fromFolder. Then, it
+     * @throws Exception
+     * This method , creates graph from the protos in the fromFolder. Then, it
      * induces refactoring groups. It maps each refactring group as a seperate subgraph, passes them
      * through preconditions and then maps the nodes of this subgraph into Refactorable proto
      * objects.
@@ -72,8 +72,8 @@ public class Analyzer {
         List<Refactorable> refactorables = new ArrayList<>();
         induceSubgraphs(CreateGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
                 , getVariables(fromFolder), getMethodInovcation_NewClass(fromFolder)
-                , getAssignments(fromFolder))).stream().map(POPULATE_MAPPING).filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA)
-                .filter(PRE_CONDITION_NO_ASSIGNMENTS).filter(PRE_CONDITION_MAPPING_PRESENT)
+                , getAssignments(fromFolder))).stream().filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA)
+                .filter(PRE_CONDITION_NO_ASSIGNMENTS).map(POPULATE_MAPPING).filter(PRE_CONDITION_MAPPING_PRESENT)
                 .forEach(g ->
                         g.nodes().stream().filter(n -> !n.getKind().equals(REFACTOR_INFO) && n.refactorTo() != null && !n.refactorTo().equals(""))
                                 .forEach(n ->
