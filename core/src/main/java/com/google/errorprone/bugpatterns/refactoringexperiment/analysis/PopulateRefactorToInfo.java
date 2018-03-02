@@ -38,25 +38,30 @@ public class PopulateRefactorToInfo {
                     g.successors(n).stream().anyMatch(a -> g.edgeValue(n, a).get().equals(Edges.RETURNS));
 
 
-
     private static final Function<ImmutableValueGraph<Node, String>, ImmutableValueGraph<Node, String>> POPULATE_OBJ_REF = graph -> {
         MutableValueGraph<Node, String> gr = Graphs.copyOf(graph);
         gr.nodes().stream().filter(varKind).forEach(n ->
                 n.setRefactorTo(gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(REFACTOR_INFO)).findFirst().map(x -> x.getType()).orElse("")));
-        gr.nodes().stream().filter(varKind).forEach(n ->{
+        gr.nodes().stream().filter(varKind).forEach(n -> {
             if (!n.refactorTo().equals("")) {
                 gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(Edges.METHOD_INVOKED))
                         .forEach(m -> m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName())));
                 gr.successors(n).stream().filter(x -> !x.getKind().equals(REFACTOR_INFO))
                         .filter(x -> gr.edgeValue(n, x).get().equals(Edges.ASSIGNED_AS))
-                        .forEach(m -> {if(m.refactorTo()==null) m.setRefactorTo(n.refactorTo());});
+                        .forEach(m -> {
+                            if (m.refactorTo() == null) m.setRefactorTo(n.refactorTo());
+                        });
                 gr.predecessors(n).stream().filter(x -> !x.getKind().equals(REFACTOR_INFO))
                         .filter(x -> gr.edgeValue(x, n).get().equals(Edges.ARG_PASSED))
-                        .filter(x -> !gr.successors(x).stream().anyMatch(y -> gr.edgeValue(x,y).get().equals(Edges.OF_TYPE)))
-                        .forEach(m -> {if(m.refactorTo()==null) m.setRefactorTo(n.refactorTo());});
+                        .filter(x -> !gr.successors(x).stream().anyMatch(y -> gr.edgeValue(x, y).get().equals(Edges.OF_TYPE)))
+                        .forEach(m -> {
+                            if (m.refactorTo() == null) m.setRefactorTo(n.refactorTo());
+                        });
                 gr.predecessors(n).stream().filter(x -> !x.getKind().equals(REFACTOR_INFO))
-                        .filter(x -> gr.edgeValue(x, n).get().equals(Edges.ASSIGNED_TO) )
-                        .forEach(m -> {if(m.refactorTo()==null) m.setRefactorTo(n.refactorTo());});
+                        .filter(x -> gr.edgeValue(x, n).get().equals(Edges.ASSIGNED_TO))
+                        .forEach(m -> {
+                            if (m.refactorTo() == null) m.setRefactorTo(n.refactorTo());
+                        });
             }
         });
         return ImmutableValueGraph.copyOf(gr);
@@ -66,12 +71,18 @@ public class PopulateRefactorToInfo {
         MutableValueGraph<Node, String> gr = Graphs.copyOf(graph);
         gr.nodes().stream().filter(typeKind).forEach(n ->
                 n.setRefactorTo(gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(REFACTOR_INFO)).findFirst().map(x -> x.getType()).orElse("")));
-        gr.nodes().stream().filter(typeKind).filter(t -> !t.refactorTo().equals("")).forEach(n ->{
+        gr.nodes().stream().filter(typeKind).filter(t -> !t.refactorTo().equals("")).forEach(n -> {
             if (!n.refactorTo().equals("")) {
                 gr.nodes().stream().filter(mthdKind).filter(x -> x.getOwner().getType().equals(n.getType()))
-                        .forEach(m -> m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName())));
+                        .forEach(m -> {
+                            if (METHOD_MAPPING_FOR.containsKey(getClassName(n.refactorTo())))
+                                m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName()));
+                            else{
+                                //log n.toString() && log m.toString()
+                            }
+                        });
                 gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals("OVERRIDES"))
-                        .forEach(m ->{
+                        .forEach(m -> {
                             m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName()));
                             gr.successors(m).stream().filter(x -> gr.edgeValue(m, x).get().contains(PARAM_LAMBDA)).forEach(
                                     i -> i.setRefactorTo(SPECIALIZE_TO_PRIMITIVE.get(i.getType())));
@@ -85,7 +96,7 @@ public class PopulateRefactorToInfo {
         MutableValueGraph<Node, String> gr = Graphs.copyOf(graph);
         gr.nodes().stream().filter(x -> mthdRet.test(x, graph)).forEach(n ->
                 n.setRefactorTo(gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(REFACTOR_INFO)).findFirst().map(x -> x.getType()).orElse("")));
-        gr.nodes().stream().filter(x -> mthdRet.test(x, graph)).forEach(n ->{
+        gr.nodes().stream().filter(x -> mthdRet.test(x, graph)).forEach(n -> {
             if (!n.refactorTo().equals("")) {
                 gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(Edges.METHOD_INVOKED))
                         .forEach(m -> m.setRefactorTo(METHOD_MAPPING_FOR.get(getClassName(n.refactorTo())).get(m.getName())));
