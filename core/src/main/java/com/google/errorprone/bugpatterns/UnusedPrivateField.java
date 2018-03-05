@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
+import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -28,34 +30,29 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
-
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-
 import javax.lang.model.element.ElementKind;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-
 @BugPattern(
-    name = "UnusedPrivateField",
-    summary = "Unused private field",
-    category = JDK,
-    severity = SUGGESTION
+  name = "UnusedPrivateField",
+  summary = "Unused private field",
+  category = JDK,
+  severity = SUGGESTION
 )
-public class UnusedPrivateField extends BugChecker implements BugChecker.MemberSelectTreeMatcher,
-    BugChecker.VariableTreeMatcher, BugChecker
-        .CompilationUnitTreeEndMatcher, BugChecker.IdentifierTreeMatcher {
+public class UnusedPrivateField extends BugChecker
+    implements BugChecker.MemberSelectTreeMatcher,
+        BugChecker.VariableTreeMatcher,
+        BugChecker.CompilationUnitTreeEndMatcher,
+        BugChecker.IdentifierTreeMatcher {
 
   private final Set<VariableTree> declaredFields = new LinkedHashSet<>();
   private final Set<Symbol> usedFields = new LinkedHashSet<>();
 
   @Override
-  public Set<Description> endCompilationUnit(
-      CompilationUnitTree tree, VisitorState state) {
+  public Set<Description> endCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableSet.Builder<Description> builder = ImmutableSet.builder();
-    for (VariableTree decl: declaredFields) {
+    for (VariableTree decl : declaredFields) {
       Symbol s = ASTHelpers.getSymbol(decl);
       if (!usedFields.contains(s)) {
         builder.add(describeMatch(decl));
@@ -67,20 +64,17 @@ public class UnusedPrivateField extends BugChecker implements BugChecker.MemberS
   }
 
   @Override
-  public Description matchMemberSelect(
-      MemberSelectTree tree, VisitorState state) {
+  public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
     return handlePossibleFieldRead(tree);
   }
 
   @Override
-  public Description matchIdentifier(
-      IdentifierTree tree, VisitorState state) {
+  public Description matchIdentifier(IdentifierTree tree, VisitorState state) {
     return handlePossibleFieldRead(tree);
   }
 
   @Override
-  public Description matchVariable(
-      VariableTree tree, VisitorState state) {
+  public Description matchVariable(VariableTree tree, VisitorState state) {
     Symbol s = ASTHelpers.getSymbol(tree);
     if (isPrivateField(s)) {
       declaredFields.add(tree);
@@ -99,5 +93,4 @@ public class UnusedPrivateField extends BugChecker implements BugChecker.MemberS
   private boolean isPrivateField(Symbol s) {
     return s.getKind().equals(ElementKind.FIELD) && s.isPrivate();
   }
-
 }

@@ -17,13 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link MissingOverride}Test */
+/** {@link UnusedPrivateField}Test */
 @RunWith(JUnit4.class)
 public class UnusedPrivateFieldTest {
 
@@ -57,7 +56,6 @@ public class UnusedPrivateFieldTest {
             "}")
         .doTest();
   }
-
 
   @Test
   public void usedFromOuter() {
