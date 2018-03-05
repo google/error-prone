@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 /**
  * Created by ameya on 1/31/18.
  */
-public class CreateGraph {
+public class ConstructGraph {
 
     private static Function<ImmutableValueGraph<Node, String>, ImmutableValueGraph<Node, String>> analyseAndEnrich = graph -> {
         MutableValueGraph<Node, String> gr = Graphs.copyOf(graph);

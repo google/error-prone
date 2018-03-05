@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 /**
  * Created by ameya on 1/26/18.
  */
-public class Analyzer {
+public class GraphAnalyzer {
 
     private static String pckgName;
     /**
@@ -70,7 +70,7 @@ public class Analyzer {
      */
     public static ImmutableList<Refactorable> induceAndMap(String fromFolder) throws Exception {
         List<Refactorable> refactorables = new ArrayList<>();
-        induceSubgraphs(CreateGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
+        induceSubgraphs(ConstructGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
                 , getVariables(fromFolder), getMethodInovcation_NewClass(fromFolder)
                 , getAssignments(fromFolder))).stream().filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA)
                 .filter(PRE_CONDITION_NO_ASSIGNMENTS).map(POPULATE_MAPPING).filter(PRE_CONDITION_MAPPING_PRESENT)
