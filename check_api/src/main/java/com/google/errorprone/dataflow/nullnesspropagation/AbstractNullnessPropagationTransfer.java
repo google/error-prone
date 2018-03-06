@@ -66,6 +66,7 @@ import org.checkerframework.dataflow.cfg.node.InstanceOfNode;
 import org.checkerframework.dataflow.cfg.node.IntegerDivisionNode;
 import org.checkerframework.dataflow.cfg.node.IntegerLiteralNode;
 import org.checkerframework.dataflow.cfg.node.IntegerRemainderNode;
+import org.checkerframework.dataflow.cfg.node.LambdaResultExpressionNode;
 import org.checkerframework.dataflow.cfg.node.LeftShiftNode;
 import org.checkerframework.dataflow.cfg.node.LessThanNode;
 import org.checkerframework.dataflow.cfg.node.LessThanOrEqualNode;
@@ -808,6 +809,17 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   Nullness visitReturn() {
+    return NULLABLE;
+  }
+
+  @Override
+  public final TransferResult<Nullness, LocalStore<Nullness>> visitLambdaResultExpression(
+      LambdaResultExpressionNode node, TransferInput<Nullness, LocalStore<Nullness>> input) {
+    Nullness value = visitLambdaResultExpression();
+    return noStoreChanges(value, input);
+  }
+
+  Nullness visitLambdaResultExpression() {
     return NULLABLE;
   }
 
