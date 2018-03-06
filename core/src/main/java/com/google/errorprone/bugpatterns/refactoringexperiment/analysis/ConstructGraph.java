@@ -65,8 +65,8 @@ public class ConstructGraph {
     private static void variableAnalysis(MutableValueGraph<Node, String> gr, Node n) {
         Optional<Node> temp = gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().equals(TYPE_INFO)).findFirst();
         if (temp.isPresent()) {
-            Optional<Node> classDecl = gr.nodes().stream().filter(x -> x.getKind().equals(CLASS) || x.getKind().equals(INTERFACE))
-                    .filter(x -> x.getType().equals(n.getType())).findFirst();
+            Optional<Node> classDecl = gr.nodes().stream().filter(x -> x.getId().getKind().equals(CLASS) || x.getId().getKind().equals(INTERFACE))
+                    .filter(x -> x.getId().getType().equals(n.getId().getType())).findFirst();
             if (classDecl.isPresent()) {
                 gr.putEdgeValue(n, classDecl.get(), Edges.OF_TYPE);
                 gr.removeEdge(n, temp.get());// remove TYPE_INFO edge
@@ -102,8 +102,8 @@ public class ConstructGraph {
             }
             foundParams.forEach(x -> gr.removeEdge(md, x));// remove PARAM_INDEX edge
         }
-        if (n.getKind().equals(NEW_CLASS)) {
-            Optional<Node> typeNode = gr.nodes().stream().filter(x -> x.getId().equals(n.getOwner())).findFirst();
+        if (n.getId().getKind().equals(NEW_CLASS)) {
+            Optional<Node> typeNode = gr.nodes().stream().filter(x -> x.getId().equals(n.getId().getOwner())).findFirst();
             if (typeNode.isPresent())
                 gr.putEdgeValue(n, typeNode.get(), Edges.OF_TYPE);
         }

@@ -48,17 +48,17 @@ public class ProtoToGraphMapper {
 
     public static Function<Variable, ImmutableValueGraph<Node, String>> mapVarDeclToGraph = v -> {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
-        Node n = new Node(v.getId());
+        Node n = Node.create(v.getId());
         g.addNode(n);
         if(v.hasInitializer())
             createBiDerectionalRelation(n, addNodeToGraph(v.getInitializer(), n.getId(), g), ASSIGNED_AS, Edges.ASSIGNED_TO, false, g);
         if (Mapping.CLASS_MAPPING_FOR.containsKey(v.getFilteredType().getInterfaceName()))
             if (v.getId().getType().startsWith(v.getFilteredType().getInterfaceName())) {
-                Node refactorInfo = new Node(n.getId().toBuilder().setKind(REFACTOR_INFO)
+                Node refactorInfo = Node.create(n.getId().toBuilder().setKind(REFACTOR_INFO)
                         .setType(Mapping.CLASS_MAPPING_FOR.get(v.getFilteredType().getInterfaceName()).apply(v.getFilteredType())).build());
                 g.putEdgeValue(n, refactorInfo, REFACTOR_INFO);
             } else {
-                Node n1 = new Node(Identification.newBuilder().setType(v.getId().getType()).setKind(INFERRED_CLASS).build());
+                Node n1 = Node.create(Identification.newBuilder().setType(v.getId().getType()).setKind(INFERRED_CLASS).build());
                 g.putEdgeValue(n, n1, TYPE_INFO);
             }
         return ImmutableValueGraph.copyOf(g);
@@ -88,10 +88,10 @@ public class ProtoToGraphMapper {
                     .forEach(x -> g.putEdgeValue(n, x.getValue(), Edges.PARAM_INDEX + x.getKey()));
 
         if (m.hasSuperMethod()) {
-            Node superMethod = new Node(m.getSuperMethod().getId());
+            Node superMethod = Node.create(m.getSuperMethod().getId());
             createBiDerectionalRelation(n, superMethod, Edges.AFFECTED_BY_HIERARCHY, Edges.AFFECTED_BY_HIERARCHY, false, g);
             for (Entry<Integer, Identification> e : m.getSuperMethod().getParametersMap().entrySet()) {
-                createBiDerectionalRelation(new Node(e.getValue()), addNodeToGraph(m.getParametersMap().get(e.getKey()), g),
+                createBiDerectionalRelation(Node.create(e.getValue()), addNodeToGraph(m.getParametersMap().get(e.getKey()), g),
                         Edges.AFFECTED_BY_HIERARCHY, Edges.AFFECTED_BY_HIERARCHY, false, g);
             }
         }
@@ -120,7 +120,7 @@ public class ProtoToGraphMapper {
         Node n = addNodeToGraph(m, g);
         g.addNode(n);
         if (m.hasReceiver())
-            createBiDerectionalRelation(new Node(m.getReceiver()), n, Edges.METHOD_INVOKED, Edges.REFERENCE, false, g);
+            createBiDerectionalRelation(Node.create(m.getReceiver()), n, Edges.METHOD_INVOKED, Edges.REFERENCE, false, g);
 
         if (m.getArgumentsCount() > 0)
             for (Entry<Integer, Identification> e : m.getArgumentsMap().entrySet())
@@ -155,10 +155,10 @@ public class ProtoToGraphMapper {
     public static Function<ClassDeclaration, ImmutableValueGraph<Node, String>> mapToClassDeclToGraph = c ->
     {
         MutableValueGraph<Node, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
-        Node n = new Node(c.getId());
+        Node n = Node.create(c.getId());
         g.addNode(n);
         if (Mapping.CLASS_MAPPING_FOR.containsKey(c.getSuperType().getInterfaceName())) {
-            Node refactorInfo = new Node(n.getId().toBuilder().setKind(REFACTOR_INFO)
+            Node refactorInfo = Node.create(n.getId().toBuilder().setKind(REFACTOR_INFO)
                     .setType(Mapping.CLASS_MAPPING_FOR.get(c.getSuperType().getInterfaceName()).apply(c.getSuperType())).build());
             g.putEdgeValue(n, refactorInfo, REFACTOR_INFO);
         }
@@ -198,7 +198,7 @@ public class ProtoToGraphMapper {
      *          ,if it exists.
      */
     public static Optional<Node> getNode(Identification id, String kind, MutableValueGraph<Node, String> g) {
-        return g.nodes().stream().filter(x -> x.isSameAs(id, kind)).findFirst();
+        return g.nodes().stream().filter(x -> x.equals(Node.create(id.toBuilder().setKind(kind).build()))).findFirst();
     }
 
     /**
@@ -213,11 +213,11 @@ public class ProtoToGraphMapper {
      */
 
     private static Node addNodeToGraph(MethodInvocation mi, MutableValueGraph<Node, String> g) {
-        return mi.hasReceiver() ? addNodeToGraph(new Node(mi.getId(), mi.getReceiver()), g) : addNodeToGraph(mi.getId(), g);
+        return mi.hasReceiver() ? addNodeToGraph(Node.create(mi.getId().toBuilder().setOwner(mi.getReceiver()).build()), g) : addNodeToGraph(mi.getId(), g);
     }
 
     private static Node addNodeToGraph(Identification id, MutableValueGraph<Node, String> g) {
-        return !id.hasName() ? addNodeToGraph(new Node(id.toBuilder().setName(id.getKind()).build()), g) : addNodeToGraph(new Node(id), g);
+        return !id.hasName() ? addNodeToGraph(Node.create(id.toBuilder().setName(id.getKind()).build()), g) : addNodeToGraph(Node.create(id), g);
     }
 
     private static Node addNodeToGraph(Node n1, MutableValueGraph<Node, String> g) {
@@ -227,11 +227,11 @@ public class ProtoToGraphMapper {
     }
 
     private static Node addNodeToGraph(Identification id, Identification owner, MutableValueGraph<Node, String> g) {
-        return addNodeToGraph(!id.hasName() ? new Node(id.toBuilder().setName(id.getKind()).build(), owner) : new Node(id), g);
+        return addNodeToGraph(!id.hasName() ? Node.create(id.toBuilder().setName(id.getKind()).setOwner(owner).build()) : Node.create(id), g);
     }
 
     private static Node addNodeToGraph(Identification id, Identification owner, MutableValueGraph<Node, String> g, Integer key) {
-        return addNodeToGraph(!id.hasName() ? new Node(id.toBuilder().setName(id.getKind() + key).build(), owner) : new Node(id), g);
+        return addNodeToGraph(!id.hasName() ? Node.create(id.toBuilder().setName(id.getKind() + key).setOwner(owner).build()) : Node.create(id), g);
     }
 
     /**
