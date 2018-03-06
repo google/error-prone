@@ -124,7 +124,7 @@
       <!-- GPLv2 with Classpath Exception -->
       <groupId>org.checkerframework</groupId>
       <artifactId>dataflow</artifactId>
-      <version>2.2.2</version>
+      <version>${dataflow.version}</version>
     </dependency>
     <dependency>
       <!-- GPLv2 with Classpath Exception -->
