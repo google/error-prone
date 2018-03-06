@@ -74,7 +74,7 @@ public class GraphAnalyzer {
                 .filter(PRE_CONDITION_NO_ASSIGNMENTS).collect(Collectors.toList());
         subGraphs.forEach(g -> {
             Map<Identification, String> mappings = getMapping(g);
-            if(!mappings.values().contains(NO_MAPPING)) {
+            if(!mappings.values().contains(NO_MAPPING) && !mappings.values().contains("") ) {
                 g.nodes().stream().filter(n -> !n.getKind().equals(REFACTOR_INFO) && mappings.containsKey(n))
                         .forEach(n ->
                                 refactorables.add(Refactorable.newBuilder().setId(n).setRefactorTo(mappings.get(n)).build()));
