@@ -141,9 +141,9 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
           String className = sym.owner.getQualifiedName().toString();
           // TODO(cpovirk): Look for literal "throw new AssertionError()," etc.
           return (methodName.startsWith("assert") || methodName.startsWith("fail"))
-              && (className.equals("org.junit.Assert")
-                  || className.equals("junit.framework.Assert")
-                  || className.equals("junit.framework.TestCase")
+              && ("org.junit.Assert".equals(className)
+                  || "junit.framework.Assert".equals(className)
+                  || "junit.framework.TestCase".equals(className)
                   || className.endsWith("MoreAsserts"));
         }
       };

@@ -374,21 +374,21 @@ public class VisitorState {
    * Given a string that represents a primitive type (e.g., "int"), return the corresponding Type.
    */
   private Type getPrimitiveType(String typeStr) {
-    if (typeStr.equals("byte")) {
+    if ("byte".equals(typeStr)) {
       return getSymtab().byteType;
-    } else if (typeStr.equals("short")) {
+    } else if ("short".equals(typeStr)) {
       return getSymtab().shortType;
-    } else if (typeStr.equals("int")) {
+    } else if ("int".equals(typeStr)) {
       return getSymtab().intType;
-    } else if (typeStr.equals("long")) {
+    } else if ("long".equals(typeStr)) {
       return getSymtab().longType;
-    } else if (typeStr.equals("float")) {
+    } else if ("float".equals(typeStr)) {
       return getSymtab().floatType;
-    } else if (typeStr.equals("double")) {
+    } else if ("double".equals(typeStr)) {
       return getSymtab().doubleType;
-    } else if (typeStr.equals("boolean")) {
+    } else if ("boolean".equals(typeStr)) {
       return getSymtab().booleanType;
-    } else if (typeStr.equals("char")) {
+    } else if ("char".equals(typeStr)) {
       return getSymtab().charType;
     } else {
       throw new IllegalStateException("Type string " + typeStr + " expected to be primitive");
@@ -400,14 +400,14 @@ public class VisitorState {
   }
 
   private static boolean isPrimitiveType(String typeStr) {
-    return typeStr.equals("byte")
-        || typeStr.equals("short")
-        || typeStr.equals("int")
-        || typeStr.equals("long")
-        || typeStr.equals("float")
-        || typeStr.equals("double")
-        || typeStr.equals("boolean")
-        || typeStr.equals("char");
+    return "byte".equals(typeStr)
+        || "short".equals(typeStr)
+        || "int".equals(typeStr)
+        || "long".equals(typeStr)
+        || "float".equals(typeStr)
+        || "double".equals(typeStr)
+        || "boolean".equals(typeStr)
+        || "char".equals(typeStr);
   }
 
   private static boolean isVoidType(String typeStr) {
