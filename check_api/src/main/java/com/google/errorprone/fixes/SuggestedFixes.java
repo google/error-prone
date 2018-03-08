@@ -367,7 +367,9 @@ public class SuggestedFixes {
   public static SuggestedFix renameVariable(
       VariableTree tree, final String replacement, VisitorState state) {
     String name = tree.getName().toString();
-    int typeLength = state.getSourceForNode(tree.getType()).length();
+    // For a lambda parameter without explicit type, it will return null.
+    String source = state.getSourceForNode(tree.getType());
+    int typeLength = source == null ? 0 : source.length();
     int pos =
         ((JCTree) tree).getStartPosition() + state.getSourceForNode(tree).indexOf(name, typeLength);
     final SuggestedFix.Builder fix =
