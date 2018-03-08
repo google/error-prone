@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Verify;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteStreams;
 import com.google.errorprone.BugPattern;
@@ -595,6 +596,10 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
+  /**
+   * Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() does require the
+   * annotation symbol to be on the classpath.
+   */
   @BugPattern(
     name = "HasDirectAnnotationWithSimpleNameChecker",
     category = Category.ONE_OFF,
@@ -806,6 +811,132 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  /** Scanner to find the list of super classes the class with the given name. */
+  private static class SuperClassScanner extends TestScanner {
+
+    private final String className;
+    private final ImmutableList<String> expectedHierarchy;
+
+    private SuperClassScanner(String className, ImmutableList<String> expectedHierarchy) {
+      this.className = className;
+      this.expectedHierarchy = expectedHierarchy;
+    }
+
+    @Override
+    public Void visitClass(ClassTree tree, VisitorState unused) {
+      if (tree.getSimpleName().length() > 0 && !tree.getSimpleName().contentEquals(className)) {
+        return super.visitClass(tree, unused);
+      }
+      assertThat(ASTHelpers.listSuperClasses(tree))
+          .containsExactlyElementsIn(expectedHierarchy)
+          .inOrder();
+      setAssertionsComplete();
+      return null;
+    }
+  }
+
+  @Test
+  public void listSuperClasses_classWithParent() {
+    writeFile("A.java", "package test;", "public class A {}");
+    writeFile("B.java", "package test;", "public class B extends A {}");
+    TestScanner scanner = new SuperClassScanner("B", ImmutableList.of("test.A"));
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_classWithMultipleSuperClasses() {
+    writeFile("A.java", "package test;", "public class A {}");
+    writeFile("B.java", "package test;", "public class B extends A {}");
+    writeFile("C.java", "package test;", "public class C extends B {}");
+    TestScanner scanner = new SuperClassScanner("C", ImmutableList.of("test.B", "test.A"));
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_classWithoutParent() {
+    writeFile("A.java", "package test;", "public class A {}");
+    TestScanner scanner = new SuperClassScanner("A", ImmutableList.of());
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_classWithTypeParameters() {
+    writeFile("A.java", "package test;", "public class A<T> {}");
+    writeFile("B.java", "package test;", "public class B<T> extends A<T> {}");
+    TestScanner scanner = new SuperClassScanner("B", ImmutableList.of("test.A"));
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_innerClass() {
+    writeFile(
+        "A.java",
+        "package test;",
+        "public class A {",
+        "  private static class B extends A {",
+        "    private static class C extends B {}",
+        "  }",
+        "}");
+    TestScanner scanner = new SuperClassScanner("C", ImmutableList.of("test.A$B", "test.A"));
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_anonymousInnerClass() {
+    writeFile(
+        "A.java",
+        "package test;",
+        "public class A {",
+        "  AutoCloseable f() {",
+        "    return new AutoCloseable() {",
+        "      public void close() throws Exception {}",
+        "    };",
+        "  }",
+        "}");
+    TestScanner scanner = new SuperClassScanner("AutoCloseable", ImmutableList.of());
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_classWithInterface() {
+    writeFile("I.java", "package test;", "public interface I {}");
+    writeFile("A.java", "package test;", "public class A implements I {}");
+    TestScanner scanner = new SuperClassScanner("A", ImmutableList.of());
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_interfaceWithParent() {
+    writeFile("I.java", "package test;", "public interface I {}");
+    writeFile("J.java", "package test;", "public interface J extends I {}");
+    TestScanner scanner = new SuperClassScanner("J", ImmutableList.of());
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_enum() {
+    writeFile("E.java", "package test;", "public enum E {}");
+    TestScanner scanner = new SuperClassScanner("E", ImmutableList.of());
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_annotation() {
+    writeFile("A.java", "package test;", "@interface A {}");
+    TestScanner scanner = new SuperClassScanner("A", ImmutableList.of());
+    tests.add(scanner);
+    assertCompiles(scanner);
   }
 
   /** A {@link BugChecker} that prints the result type of the first argument in method calls. */

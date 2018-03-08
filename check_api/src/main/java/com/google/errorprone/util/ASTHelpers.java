@@ -25,6 +25,7 @@ import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
@@ -1032,6 +1033,35 @@ public class ASTHelpers {
             },
             null);
     return suppressions.build();
+  }
+
+  /**
+   * Lists all the super classes of a given class ignoring java.lang.Object and java.lang.Enum.
+   * Thus, it will return an empty list for anonymous classes, interfaces, enums and annotations.
+   */
+  public static ImmutableList<String> listSuperClasses(ClassTree classTree) {
+    ImmutableList.Builder<String> superClassesBuilder = ImmutableList.builder();
+    ClassType classType = getSuperType((ClassType) ((JCClassDecl) classTree).sym.asType());
+    String flatName = getFlatName(classType);
+    while (flatName != null
+        && !flatName.equals("java.lang.Object")
+        && !flatName.equals("java.lang.Enum")) {
+      superClassesBuilder.add(flatName);
+      classType = getSuperType(classType);
+      flatName = getFlatName(classType);
+    }
+    return superClassesBuilder.build();
+  }
+
+  /** Gets the flat name for the class type. */
+  @Nullable
+  private static String getFlatName(@Nullable Type type) {
+    return type == null ? null : type.tsym.flatName().toString();
+  }
+
+  /** Gets the super-type for the class. */
+  private static ClassType getSuperType(ClassType classType) {
+    return (ClassType) classType.supertype_field;
   }
 
   /** An expression's target type, see {@link #targetType}. */
