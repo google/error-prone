@@ -204,6 +204,29 @@ public class StreamResourceLeakTest {
   }
 
   @Test
+  public void returnFromMustBeClosedMethodWithChaining() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.MustBeClosed;",
+            "import java.io.IOException;",
+            "import java.nio.file.Files;",
+            "import java.nio.file.Path;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  @MustBeClosed",
+            "  Stream<String> f(Path p) throws IOException {",
+            "    return Files.list(p).map(Path::toString); // OK due to @MustBeClosed",
+            "  }",
+            "  Stream<String> g(Path p) throws IOException {",
+            "    // BUG: Diagnostic contains: should be closed",
+            "    return Files.list(p).map(Path::toString);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void moreRefactorings() throws IOException {
     BugCheckerRefactoringTestHelper.newInstance(new StreamResourceLeak(), getClass())
         .addInputLines(
