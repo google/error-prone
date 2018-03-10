@@ -10,11 +10,6 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.P
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.createBiDerectionalRelation;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.getNode;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.getSuccessorWithEdge;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapToAssgnmntToGraph;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapToClassDeclToGraph;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapToMethodDeclToGraph;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapToMethodInvcToGraph;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.mapVarDeclToGraph;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.graph.Graphs;
@@ -140,31 +135,31 @@ public class ConstructGraph {
 
     private static ImmutableValueGraph<Identification, String> methodDeclarationGraphs(ImmutableList<MethodDeclaration> methodDeclarations) {
         return methodDeclarations.stream()
-                .map(x -> mapToMethodDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapToMethodDeclToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 
     private static ImmutableValueGraph<Identification, String> variableDeclarationGraphs(ImmutableList<Variable> vars) {
         return vars.stream()
-                .map(x -> mapVarDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapVarDeclToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 
     private static ImmutableValueGraph<Identification, String> methodInvcGraphs(ImmutableList<MethodInvocation> mthInvc_newClass) {
         return mthInvc_newClass.stream()
-                .map(x -> mapToMethodInvcToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapToMethodInvcToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 
     private static ImmutableValueGraph<Identification, String> assgnmntGraphs(ImmutableList<Assignment> assgns) {
         return assgns.stream()
-                .map(x -> mapToAssgnmntToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapToAssgnmntToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 
     private static ImmutableValueGraph<Identification, String> classDeclGraphs(ImmutableList<ClassDeclaration> classDecl) {
         return classDecl.stream()
-                .map(x -> mapToClassDeclToGraph.apply(x)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapToClassDeclToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 

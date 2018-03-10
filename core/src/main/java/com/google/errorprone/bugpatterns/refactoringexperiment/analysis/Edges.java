@@ -8,7 +8,6 @@ public class Edges {
     public static final String AFFECTED_BY_HIERARCHY = "AFFECTED_BY_HIERARCHY";
     public static final String PARAM_INDEX = "PARAMETER_INDEX:";
     public static final String ARG_INDEX = "ARGUMENT_INDEX:";
-    public static final String PARENT_LAMBDA = "PARENT_LAMBDA";
     public static final String PARAM_LAMBDA = "PARAMETER_LAMBDA:";
     public static final String PASSED_AS_ARG_TO = "PASSED_AS_ARG_TO";
     public static final String ARG_PASSED = "ARG_PASSED";
@@ -21,6 +20,4 @@ public class Edges {
     public static final String OF_TYPE  = "OF_TYPE";
     public static final String PARENT_METHOD = "PARENT_METHOD";
     public static final String RETURNS = "RETURNS";
-    public static final String RETURNED_BY  = "RETURNED_BY";
-
 }
