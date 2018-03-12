@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -36,7 +35,7 @@ import java.util.stream.Stream;
  */
 public class ConstructGraph {
 
-    private static Function<ImmutableValueGraph<Identification, String>, ImmutableValueGraph<Identification, String>> analyseAndEnrich = graph -> {
+    private static ImmutableValueGraph<Identification, String> analyseAndEnrich(ImmutableValueGraph<Identification, String> graph){
         MutableValueGraph<Identification, String> gr = Graphs.copyOf(graph);
         for (Identification n : gr.nodes())
             if (mthdKind.test(n))
@@ -130,7 +129,7 @@ public class ConstructGraph {
      * After merging all the graphs into one  graph, it performs analysis on this graph.
      */
     private static BinaryOperator<ImmutableValueGraph<Identification, String>> mergeGraphWithAnalysis = (g1, g2) ->
-            analyseAndEnrich.apply(mergeGraphWithoutAnalysis.apply(g1, g2));
+            analyseAndEnrich(mergeGraphWithoutAnalysis.apply(g1, g2));
 
 
     private static ImmutableValueGraph<Identification, String> methodDeclarationGraphs(ImmutableList<MethodDeclaration> methodDeclarations) {
