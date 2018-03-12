@@ -1,5 +1,7 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_PASSED;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ASSIGNED_AS;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.NO_MAPPING;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.getMapping;
@@ -36,18 +38,18 @@ public class GraphAnalyzer {
     /**
      * This precondition makes sure that ,for this subgraph 'graph' all the method invocations pass
      * lambda expressions only. For this we make sure, that every v node of edge uv with value
-     * ARG_PASSED is of kind LAMBDA_EXPRESSION
+     * EDGE_ARG_PASSED is of kind LAMBDA_EXPRESSION
      */
     private static Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA = graph ->
-            !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ARG_PASSED))
+            !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ARG_PASSED))
                     .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.LAMBDA_EXPRESSION)));
     /**
      * This precondition makes sure that,for this subgraph 'graph' there are no assignment
      * operations. For Goal1, we do not want to perform refactorings which propagate across
-     * assignment operations. Thus, we filter a;; edges of a graph based on edge value: ASSIGNED_AS
+     * assignment operations. Thus, we filter a;; edges of a graph based on edge value: EDGE_ASSIGNED_AS
      */
     private static Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
-            !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(Edges.ASSIGNED_AS));
+            !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ASSIGNED_AS));
 
     /**
      * This precondition makes sure that, the subgraph does not go through if any of the nodes are

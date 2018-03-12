@@ -1,11 +1,6 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.CLASS;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.CONSTRUCTOR;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INTERFACE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.NEW_CLASS;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Edges.TYPE_INFO;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.mthdKind;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.*;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.varKind;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.createBiDerectionalRelation;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.getNode;
@@ -28,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -35,15 +31,18 @@ import java.util.stream.Stream;
  */
 public class ConstructGraph {
 
-    private static ImmutableValueGraph<Identification, String> analyseAndEnrich(ImmutableValueGraph<Identification, String> graph){
+    public static Predicate<Identification> isMethodKind = n -> n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
+
+    private static ImmutableValueGraph<Identification, String> analyseAndEnrich(ImmutableValueGraph<Identification, String> graph) {
         MutableValueGraph<Identification, String> gr = Graphs.copyOf(graph);
         for (Identification n : gr.nodes())
-            if (mthdKind.test(n))
+            if (isMethodKind.test(n)) {
                 methodAnalysis(gr, n);
-            else if (varKind.test(n))
+            } else if (varKind.test(n)) {
                 variableAnalysis(gr, n);
+            }
         return ImmutableValueGraph.copyOf(gr);
-    };
+    }
 
 
     /**
@@ -58,13 +57,13 @@ public class ConstructGraph {
      * interface.
      */
     private static void variableAnalysis(MutableValueGraph<Identification, String> gr, Identification n) {
-        Optional<Identification> temp = gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().equals(TYPE_INFO)).findFirst();
+        Optional<Identification> temp = gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().equals(EDGE_TYPE_INFO)).findFirst();
         if (temp.isPresent()) {
             Optional<Identification> classDecl = gr.nodes().stream().filter(x -> x.getKind().equals(CLASS) || x.getKind().equals(INTERFACE))
                     .filter(x -> x.getType().equals(n.getType())).findFirst();
             if (classDecl.isPresent()) {
-                gr.putEdgeValue(n, classDecl.get(), Edges.OF_TYPE);
-                gr.removeEdge(n, temp.get());// remove TYPE_INFO edge
+                gr.putEdgeValue(n, classDecl.get(), EDGE_OF_TYPE);
+                gr.removeEdge(n, temp.get());// remove EDGE_TYPE_INFO edge
             }
         }
     }
@@ -76,31 +75,32 @@ public class ConstructGraph {
      * @param n : Method invocation for which method declarations has to be searched.
      *
      * To search, it induces the id of the parent by replacing its kind from METHOD_INVOCATION to
-     * METHOD. After it has found the method declaration 'md' : 1. it creates PARENT_METHOD relation
-     * from 'n' -> 'md' 2. it creates PASSED_AS_ARG_TO, ARG_PASSED relationship between the method
+     * METHOD. After it has found the method declaration 'md' : 1. it creates EDGE_PARENT_METHOD relation
+     * from 'n' -> 'md' 2. it creates EDGE_PASSED_AS_ARG_TO, EDGE_ARG_PASSED relationship between the method
      * parameters and the arguments passed to the method declaration.
      */
     private static void methodAnalysis(MutableValueGraph<Identification, String> gr, Identification n) {
         Identification md = getNode(n, Constants.METHOD, gr).orElse(getNode(n, CONSTRUCTOR, gr).orElse(null));
         if (md != null) {
-            gr.putEdgeValue(n, md, Edges.PARENT_METHOD);
+            gr.putEdgeValue(n, md, EDGE_PARENT_METHOD);
             List<Identification> foundParams = new ArrayList<>();
-            for (Identification param : getSuccessorWithEdge(md, gr, Edges.PARAM_INDEX)) {
-                int index = Integer.parseInt(gr.edgeValue(md, param).get().replaceAll(Edges.PARAM_INDEX, ""));
+            for (Identification param : getSuccessorWithEdge(md, gr, EDGE_PARAM_INDEX)) {
+                int index = Integer.parseInt(gr.edgeValue(md, param).get().replaceAll(EDGE_PARAM_INDEX, ""));
                 List<Identification> foundArgs = new ArrayList<>();
-                for (Identification arg : getSuccessorWithEdge(n, gr, Edges.ARG_INDEX + index)) {
-                    createBiDerectionalRelation(arg, param, Edges.PASSED_AS_ARG_TO, Edges.ARG_PASSED, true, gr);
+                for (Identification arg : getSuccessorWithEdge(n, gr, EDGE_ARG_INDEX + index)) {
+                    createBiDerectionalRelation(arg, param, EDGE_PASSED_AS_ARG_TO, EDGE_ARG_PASSED, true, gr);
                     foundParams.add(param);
                     foundArgs.add(arg);
                 }
-                foundArgs.forEach(x -> gr.removeEdge(n, x)); // remove ARG_INDEX edge
+                foundArgs.forEach(x -> gr.removeEdge(n, x)); // remove EDGE_ARG_INDEX edge
             }
-            foundParams.forEach(x -> gr.removeEdge(md, x));// remove PARAM_INDEX edge
+            foundParams.forEach(x -> gr.removeEdge(md, x));// remove EDGE_PARAM_INDEX edge
         }
         if (n.getKind().equals(NEW_CLASS)) {
             Optional<Identification> typeNode = gr.nodes().stream().filter(x -> x.equals(n.getOwner())).findFirst();
-            if (typeNode.isPresent())
-                gr.putEdgeValue(n, typeNode.get(), Edges.OF_TYPE);
+            if (typeNode.isPresent()) {
+                gr.putEdgeValue(n, typeNode.get(), EDGE_OF_TYPE);
+            }
         }
     }
 

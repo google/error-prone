@@ -1,13 +1,6 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.CLASS;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.FIELD;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INTERFACE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LOCAL_VARIABLE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PARAMETER;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Edges.PARAM_LAMBDA;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.*;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.SPECIALIZE_TO_PRIMITIVE;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.getMethodMappingFor;
 import static java.util.stream.Collectors.collectingAndThen;
@@ -31,17 +24,14 @@ import java.util.function.Predicate;
 public class PopulateRefactorToInfo {
 
 
+
     public static Predicate<Identification> varKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE)
             || n.getKind().equals(FIELD);
 
     private static Predicate<Identification> typeKind = n -> n.getKind().equals(CLASS) || n.getKind().equals(INTERFACE);
 
-    public static BiPredicate<Identification, ImmutableValueGraph<Identification, String>> mthdRet = (n, g) ->
-            n.getKind().equals("METHOD") &&
-                    g.successors(n).stream().anyMatch(a -> g.edgeValue(n, a).get().equals(Edges.RETURNS));
-
     public static BiPredicate<Identification, ImmutableValueGraph<Identification, String>> isSubType = (n, gr) ->
-            !gr.successors(n).stream().anyMatch(y -> gr.edgeValue(n, y).get().equals(Edges.OF_TYPE));
+            !gr.successors(n).stream().anyMatch(y -> gr.edgeValue(n, y).get().equals(EDGE_OF_TYPE));
 
     private static Optional<Identification> getRefactorInfo(Identification n, ImmutableValueGraph<Identification, String> gr) {
         return gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(REFACTOR_INFO)).findFirst();
@@ -83,21 +73,21 @@ public class PopulateRefactorToInfo {
             //successors
             if (gr.edgeValue(n, adj).isPresent()) {
                 switch (gr.edgeValue(n, adj).get()) {
-                    case Edges.METHOD_INVOKED:
+                    case EDGE_METHOD_INVOKED:
                         graphToMapping.putIfAbsent(adj, getMethodMappingFor(getClassName(graphToMapping.get(n)), adj.getName()));
                         break;
-                    case Edges.ASSIGNED_AS:
+                    case EDGE_ASSIGNED_AS:
                         graphToMapping.putIfAbsent(adj, graphToMapping.get(n));
                         break;
-                    case Edges.ASSIGNED_TO:
+                    case EDGE_ASSIGNED_TO:
                         graphToMapping.putIfAbsent(adj, graphToMapping.get(n));
                         break;
-                    case Edges.PASSED_AS_ARG_TO:
+                    case EDGE_PASSED_AS_ARG_TO:
                         graphToMapping.putIfAbsent(adj, graphToMapping.get(n));
                         break;
-                    case Edges.OVERRIDES:
+                    case EDGE_OVERRIDES:
                         graphToMapping.putIfAbsent(adj, getMethodMappingFor(getClassName(graphToMapping.get(n)), adj.getName()));
-                        gr.successors(adj).stream().filter(x -> gr.edgeValue(adj, x).get().contains(PARAM_LAMBDA)).forEach(
+                        gr.successors(adj).stream().filter(x -> gr.edgeValue(adj, x).get().contains(EDGE_PARAM_LAMBDA)).forEach(
                                 i -> graphToMapping.putIfAbsent(i, SPECIALIZE_TO_PRIMITIVE.get(i.getType())));
                         break;
                     default: {
@@ -108,11 +98,12 @@ public class PopulateRefactorToInfo {
             //predecessor
             else {
                 switch (gr.edgeValue(adj, n).get()) {
-                    case Edges.ARG_PASSED:
-                        if (!isSubType.test(adj, gr))
+                    case EDGE_ARG_PASSED:
+                        if (!isSubType.test(adj, gr)) {
                             graphToMapping.putIfAbsent(adj, graphToMapping.get(n));
+                        }
                         break;
-                    case Edges.ASSIGNED_TO:
+                    case EDGE_ASSIGNED_TO:
                         graphToMapping.putIfAbsent(adj, graphToMapping.get(n));
                         break;
                 }

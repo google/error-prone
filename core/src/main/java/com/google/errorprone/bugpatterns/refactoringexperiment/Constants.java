@@ -29,4 +29,22 @@ public class Constants {
     public static final String INFERRED_CLASS = "INFERRED_CLASS";
     public static final String REFACTOR_INFO = "RefactorInfo";
 
+
+    public static final String EDGE_AFFECTED_BY_HIERARCHY ="EDGE_AFFECTED_BY_HIERARCHY";
+    public static final String EDGE_PARAM_INDEX = "EDGE_PARAM_INDEX";
+    public static final String EDGE_ARG_INDEX = "EDGE_ARG_INDEX";
+    public static final String EDGE_PARAM_LAMBDA = "EDGE_PARAM_LAMBDA";
+    public static final String EDGE_PASSED_AS_ARG_TO = "EDGE_PASSED_AS_ARG_TO";
+    public static final String EDGE_ARG_PASSED = "EDGE_ARG_PASSED";
+    public static final String EDGE_ASSIGNED_TO = "EDGE_ASSIGNED_TO";
+    public static final String EDGE_ASSIGNED_AS = "EDGE_ASSIGNED_AS";
+    public static final String EDGE_RECURSIVE = "EDGE_RECURSIVE";
+    public static final String EDGE_METHOD_INVOKED = "EDGE_METHOD_INVOKED";
+    public static final String EDGE_REFERENCE = "EDGE_REFERENCE";
+    public static final String EDGE_TYPE_INFO = "EDGE_TYPE_INFO";
+    public static final String EDGE_OF_TYPE = "EDGE_OF_TYPE";
+    public static final String EDGE_PARENT_METHOD = "EDGE_PARENT_METHOD";
+    public static final String EDGE_RETURNS = "EDGE_RETURNS";
+    public static final String EDGE_OVERRIDES = "EDGE_OVERRIDES";
+
 }

@@ -1,10 +1,7 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_CLASS;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Edges.ASSIGNED_AS;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Edges.TYPE_INFO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.*;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
@@ -32,29 +29,32 @@ public class ProtoToGraphMapper {
      * @param v: a variable proto to be mapped to graph. Mapping works as follows: 1. Create node
      * from id of the variable proto and add it to graph. 2. If proto has an initializer: a. Create
      * a new node for the initializer from its Id. b. Add it to the graph. c. establish edge :
-     * Variable node <---ASSIGNED_AS--ASSIGNED_TO---> Initializer node. 3. If proto has Filtered
-     * Type: a.Create a new node with name, owner same as variable id, kind REFACTOR_INFO and type
-     * as the mapped type from filtered type. b.Add this node to graph. c.establish edge : Variable
-     * node --- REFACTOR_INFO ---> RefactorInfo node. Else(this means that variable type is sub_type
-     * of functional interface) a.Create a temporary node, with type = varriable type and kind =
-     * INFERRED_CLASS. b. establish edge : variable node --- TYPE_INFO ---> InferredClass node.
+     * Variable node <---EDGE_ASSIGNED_AS--EDGE_ASSIGNED_TO---> Initializer node. 3. If proto has
+     * Filtered Type: a.Create a new node with name, owner same as variable id, kind REFACTOR_INFO
+     * and type as the mapped type from filtered type. b.Add this node to graph. c.establish edge :
+     * Variable node --- REFACTOR_INFO ---> RefactorInfo node. Else(this means that variable type is
+     * sub_type of functional interface) a.Create a temporary node, with type = varriable type and
+     * kind = INFERRED_CLASS. b. establish edge : variable node --- EDGE_TYPE_INFO --->
+     * InferredClass node.
      */
 
     public static ImmutableValueGraph<Identification, String> mapVarDeclToGraph(Variable v) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Identification n = v.getId();
         g.addNode(n);
-        if (v.hasInitializer())
-            createBiDerectionalRelation(n, addNodeToGraph(v.getInitializer(), n, g), ASSIGNED_AS, Edges.ASSIGNED_TO, false, g);
-        if (Mapping.CLASS_MAPPING_FOR.containsKey(v.getFilteredType().getInterfaceName()))
+        if (v.hasInitializer()) {
+            createBiDerectionalRelation(n, addNodeToGraph(v.getInitializer(), n, g), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
+        }
+        if (Mapping.CLASS_MAPPING_FOR.containsKey(v.getFilteredType().getInterfaceName())) {
             if (v.getId().getType().startsWith(v.getFilteredType().getInterfaceName())) {
                 Identification refactorInfo = n.toBuilder().setKind(REFACTOR_INFO)
                         .setType(Mapping.CLASS_MAPPING_FOR.get(v.getFilteredType().getInterfaceName()).apply(v.getFilteredType())).build();
                 g.putEdgeValue(n, refactorInfo, REFACTOR_INFO);
             } else {
                 Identification n1 = Identification.newBuilder().setType(v.getId().getType()).setKind(INFERRED_CLASS).build();
-                g.putEdgeValue(n, n1, TYPE_INFO);
+                g.putEdgeValue(n, n1, EDGE_TYPE_INFO);
             }
+        }
         return ImmutableValueGraph.copyOf(g);
     }
 
@@ -64,25 +64,25 @@ public class ProtoToGraphMapper {
      * @param m: a method declaration proto to be mapped to graph Mapping works as follows: 1.
      * Create node from id of the method declaration proto and add it to graph 2. If proto has
      * parameters: a.Create a new node with parameter ID b.Add this node to graph c.establish edge :
-     * method declaration node --- PARAM_INDEX : {index} ---> RefactorInfo node 3. If proto has a
-     * super method: a.Create a node for the super method declaration b.establish edge : Method
-     * Declaration <--- AFFECTED_BY_HIERARCHY--- AFFECTED_BY_HIERARCHY ---> Super method declaration
-     * c.establish a similar bidirectional relationship between the parameters of the method
-     * declaration and super method declaration.
+     * method declaration node --- EDGE_PARAM_INDEX : {index} ---> RefactorInfo node 3. If proto has
+     * a super method: a.Create a node for the super method declaration b.establish edge : Method
+     * Declaration <--- EDGE_AFFECTED_BY_HIERARCHY--- EDGE_AFFECTED_BY_HIERARCHY ---> Super method
+     * declaration c.establish a similar bidirectional relationship between the parameters of the
+     * method declaration and super method declaration.
      */
 
     public static ImmutableValueGraph<Identification, String> mapToMethodDeclToGraph(MethodDeclaration m) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Identification n = addNodeToGraph(m.getId(), g);
         m.getParametersMap().entrySet().stream().map(param -> Maps.immutableEntry(param.getKey(), addNodeToGraph(param.getValue(), g)))
-                .forEach(x -> g.putEdgeValue(n, x.getValue(), Edges.PARAM_INDEX + x.getKey()));
+                .forEach(x -> g.putEdgeValue(n, x.getValue(), EDGE_PARAM_INDEX + x.getKey()));
 
         if (m.hasSuperMethod()) {
             Identification superMethod = m.getSuperMethod().getId();
-            createBiDerectionalRelation(n, superMethod, Edges.AFFECTED_BY_HIERARCHY, Edges.AFFECTED_BY_HIERARCHY, false, g);
+            createBiDerectionalRelation(n, superMethod, EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
             for (Entry<Integer, Identification> e : m.getSuperMethod().getParametersMap().entrySet()) {
                 createBiDerectionalRelation(e.getValue(), addNodeToGraph(m.getParametersMap().get(e.getKey()), g),
-                        Edges.AFFECTED_BY_HIERARCHY, Edges.AFFECTED_BY_HIERARCHY, false, g);
+                        EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
             }
         }
         return ImmutableValueGraph.copyOf(g);
@@ -95,36 +95,38 @@ public class ProtoToGraphMapper {
      * a node from method invocation if method invocation proto has a receiver a.create a node from
      * id of method invocation replacing the owner of with id of the receiver. and add to graph
      * b.create a node from id of the receiver and add to graph c.establish edge :method invocation
-     * node <--- METHOD_INVOKED--- REFERENCE ---> receiver node else create a node from the id of
-     * the method invocation 2. If proto has arguments: a.Create a new node with arguments ID b.Add
-     * this node to graph c.establish edge : method declaration node --- ARG_INDEX : {index} --->
-     * RefactorInfo node
+     * node <--- EDGE_METHOD_INVOKED--- EDGE_REFERENCE ---> receiver node else create a node from
+     * the id of the method invocation 2. If proto has arguments: a.Create a new node with arguments
+     * ID b.Add this node to graph c.establish edge : method declaration node --- EDGE_ARG_INDEX :
+     * {index} ---> RefactorInfo node
      */
-    public static ImmutableValueGraph<Identification, String> mapToMethodInvcToGraph (MethodInvocation m )
-    {
+    public static ImmutableValueGraph<Identification, String> mapToMethodInvcToGraph(MethodInvocation m) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Identification n = addNodeToGraph(m, g);
         g.addNode(n);
-        if (m.hasReceiver())
-            createBiDerectionalRelation(m.getReceiver(), n, Edges.METHOD_INVOKED, Edges.REFERENCE, false, g);
-
-        if (m.getArgumentsCount() > 0)
-            for (Entry<Integer, Identification> e : m.getArgumentsMap().entrySet())
-                g.putEdgeValue(n, addNodeToGraph(e.getValue(), m.getId(), g, e.getKey()), Edges.ARG_INDEX + e.getKey());
+        if (m.hasReceiver()) {
+            createBiDerectionalRelation(m.getReceiver(), n, EDGE_METHOD_INVOKED, EDGE_REFERENCE, false, g);
+        }
+        if (m.getArgumentsCount() > 0) {
+            for (Entry<Integer, Identification> e : m.getArgumentsMap().entrySet()) {
+                g.putEdgeValue(n, addNodeToGraph(e.getValue(), m.getId(), g, e.getKey()), EDGE_ARG_INDEX + e.getKey());
+            }
+        }
         return ImmutableValueGraph.copyOf(g);
-    };
+    }
+
+    ;
 
     /**
      * This function maps a assignment proto to a independent graph.
      *
      * @param a: an assignment proto to be mapped to graph. Mapping works as follows: 1. create a
      * node for RHS and LHS of the assignment operations from their Id and add to graph. 2.
-     * establish edge: RHS <--- ASSIGNED_AS--- ASSIGNED_TO ---> LHS
+     * establish edge: RHS <--- EDGE_ASSIGNED_AS--- EDGE_ASSIGNED_TO ---> LHS
      */
-    public static ImmutableValueGraph<Identification, String> mapToAssgnmntToGraph (Assignment a)
-    {
+    public static ImmutableValueGraph<Identification, String> mapToAssgnmntToGraph(Assignment a) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
-        createBiDerectionalRelation(addNodeToGraph(a.getLhs(), g), addNodeToGraph(a.getRhs(), a.getLhs(), g), ASSIGNED_AS, Edges.ASSIGNED_TO, false, g);
+        createBiDerectionalRelation(addNodeToGraph(a.getLhs(), g), addNodeToGraph(a.getRhs(), a.getLhs(), g), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
         return ImmutableValueGraph.copyOf(g);
     }
 
@@ -137,8 +139,7 @@ public class ProtoToGraphMapper {
      * filtered type. b.Add this node to graph. c.establish edge : class declaration node ---
      * REFACTOR_INFO ---> RefactorInfo node.
      */
-    public static ImmutableValueGraph<Identification, String> mapToClassDeclToGraph(ClassDeclaration c)
-    {
+    public static ImmutableValueGraph<Identification, String> mapToClassDeclToGraph(ClassDeclaration c) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Identification n = c.getId();
         g.addNode(n);
@@ -148,7 +149,9 @@ public class ProtoToGraphMapper {
             g.putEdgeValue(n, refactorInfo, REFACTOR_INFO);
         }
         return ImmutableValueGraph.copyOf(g);
-    };
+    }
+
+    ;
 
 
     /**
@@ -159,7 +162,7 @@ public class ProtoToGraphMapper {
      * @param allowSelfLoop :
      * @param g : Graph in which the relationship needs to be established, We might have recursive
      * function, where the parameter is passed back to itself as an argument. We identify such
-     * relations with edge value RECURSIVE.
+     * relations with edge value EDGE_RECURSIVE.
      */
     public static void createBiDerectionalRelation(Identification u, Identification v, String uTov, String vTou, boolean allowSelfLoop
             , MutableValueGraph<Identification, String> g) {
@@ -167,8 +170,8 @@ public class ProtoToGraphMapper {
             g.putEdgeValue(u, v, uTov);
             g.putEdgeValue(v, u, vTou);
         } else if ((u.equals(v) && allowSelfLoop)) {
-            g.putEdgeValue(u, v, Edges.RECURSIVE);
-            g.putEdgeValue(v, u, Edges.RECURSIVE);
+            g.putEdgeValue(u, v, EDGE_RECURSIVE);
+            g.putEdgeValue(v, u, EDGE_RECURSIVE);
         }
     }
 
