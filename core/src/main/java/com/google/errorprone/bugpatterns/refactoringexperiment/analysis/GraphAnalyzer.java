@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public final class GraphAnalyzer {
 
-    private static String pckgName;
+    public static String pckgName;
     /**
      * This precondition makes sure that ,for this subgraph 'graph' all the method invocations pass
      * lambda expressions only. For this we make sure, that every v node of edge uv with value

@@ -6,6 +6,8 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -280,6 +282,13 @@ public class Mapping {
                     .put(BOOLEAN, BOOLEAN_PRIMITIVE)
                     .build();
 
-
+    public static ImmutableMap<String,List<Integer>> preserveArg = ImmutableMap.<String,List<Integer>>builder()
+            .put(DOUBLE_FUNCTION, Arrays.asList(1))
+            .put(INT_FUNCTION, Arrays.asList(1))
+            .put(LONG_FUNCTION, Arrays.asList(1))
+            .put(TO_INT_FUNCTION, Arrays.asList(0))
+            .put(TO_LONG_FUNCTION, Arrays.asList(0))
+            .put(PREDICATE,Arrays.asList(0))
+            .put(TO_DOUBLE_FUNCTION, Arrays.asList(0)).build();
 }
 

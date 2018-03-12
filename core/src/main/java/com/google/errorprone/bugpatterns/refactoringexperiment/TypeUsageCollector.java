@@ -3,6 +3,9 @@ package com.google.errorprone.bugpatterns.refactoringexperiment;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.IdentificationExtractionUtil.infoFromSymbol;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.IdentificationExtractionUtil.infoFromTree;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.IdentificationExtractionUtil.infoOfTree;
 import static java.util.stream.Collectors.collectingAndThen;
 
 import com.google.auto.service.AutoService;
@@ -11,8 +14,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDeclarationOuterClass.ClassDeclaration;
-import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
-import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocationOuterClass.MethodInvocation;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.VariableOuterClass.Variable;
@@ -22,24 +23,16 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.PackageSymbol;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
-
-import javax.lang.model.element.ElementKind;
 
 @AutoService(BugChecker.class)
 @BugPattern(
@@ -98,10 +91,10 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         if (paramLT || ofLT || returnMatter) {
             MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
             infoFromTree(tree).ifPresent(id -> mthdInvc.setId(id));
-            for(ExpressionTree arg : tree.getArguments())
-                if(DataFilter.apply(arg,state))
+            for (ExpressionTree arg : tree.getArguments())
+                if (DataFilter.apply(arg, state))
 //                    mthdInvc.putArguments(tree.getArguments().indexOf(arg),Identifications.newBuilder().addAllId(infoOfTree(arg)).build());
-                    mthdInvc.putArguments(tree.getArguments().indexOf(arg),infoOfTree(arg)).build();
+                    mthdInvc.putArguments(tree.getArguments().indexOf(arg), infoOfTree(arg)).build();
             if (ofLT)
                 infoFromTree(ASTHelpers.getReceiver(tree)).ifPresent(id -> mthdInvc.setReceiver(id));
             ProtoBuffPersist.write(mthdInvc, tree.getKind().toString());
@@ -118,16 +111,14 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         if (paramMatters) {
             MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
             infoFromTree(var1).ifPresent(id -> mthdInvc.setId(id));
-            for(ExpressionTree arg : var1.getArguments())
-                if(DataFilter.apply(arg,state))
+            for (ExpressionTree arg : var1.getArguments())
+                if (DataFilter.apply(arg, state))
                     // mthdInvc.putArguments(var1.getArguments().indexOf(arg),Identifications.newBuilder().addAllId(infoOfTree(arg)).build());
-                    mthdInvc.putArguments(var1.getArguments().indexOf(arg),infoOfTree(arg)).build();
+                    mthdInvc.putArguments(var1.getArguments().indexOf(arg), infoOfTree(arg)).build();
             ProtoBuffPersist.write(mthdInvc, var1.getKind().toString());
         }
         return null;
     }
-
-
 
 
     @Override
@@ -171,84 +162,6 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         }
         return null;
     }
-
-    public static Identification infoOfTree(Tree tree) {
-        Builder infor = infoFromTree(tree).orElse(null);
-        if (infor == null)
-            if (tree.getKind().equals(Tree.Kind.LAMBDA_EXPRESSION))
-                infor = checksInsideLambda(tree);
-            else
-                infor = Identification.newBuilder().setKind(tree.getKind().toString());
-
-        return infor.build();
-    }
-
-    private static Identification.Builder checksInsideLambda(Tree tree) {
-        LambdaExpressionTree lambda = (LambdaExpressionTree) tree;
-        Identification.Builder id = Identification.newBuilder();
-        id.setKind(tree.getKind().toString())
-                .setType(ASTHelpers.getType(lambda).toString());
-        return id;
-    }
-
-    public static java.util.Optional<Builder> infoFromTree(Tree tree) {
-        try {
-            Symbol symb = ASTHelpers.getSymbol(tree);
-            Identification.Builder id = Identification.newBuilder();
-            id.setName(getName(symb))
-                    .setKind(getKindFromTree(tree).orElse(symb.getKind().toString()))
-                    .setOwner(getASTOwner(symb))
-                    .setType(symb.type.toString());
-            return java.util.Optional.of(id);
-        } catch (Exception e) {
-            return java.util.Optional.empty();
-        }
-    }
-
-    public static java.util.Optional<Builder> infoFromSymbol(Symbol symb) {
-        try {
-            Identification.Builder id = Identification.newBuilder();
-            id.setName(getName(symb))
-                    .setKind((symb.getKind().toString()))
-                    .setOwner(getASTOwner(symb))
-                    .setType(symb.type.toString());
-            return java.util.Optional.of(id);
-        } catch (Exception e) {
-            return java.util.Optional.empty();
-        }
-    }
-
-    public static Identification getASTOwner(Symbol symb) {
-
-        if (symb.owner.getKind().equals(ElementKind.PACKAGE)) {
-            PackageSymbol pkgSymb = (PackageSymbol) symb.owner;
-            return Identification.newBuilder().setName(pkgSymb.fullname.toString())
-                    .setKind(ElementKind.PACKAGE.toString()).build();
-        }
-
-        return infoFromSymbol(symb.owner).get()
-                .build();
-    }
-
-    public static java.util.Optional<String> getKindFromTree(Tree tree) {
-        if (tree.getKind().equals(Kind.METHOD_INVOCATION) || tree.getKind().equals(Kind.NEW_CLASS))
-            return java.util.Optional.of(tree.getKind().toString());
-        return java.util.Optional.empty();
-    }
-
-
-    public static String getName(Symbol symb) {
-        if (symb.name != null)
-            return symb.isConstructor() ? symb.enclClass().toString() : symb.name.toString();
-        else
-            return "";
-    }
-    public static TreeVisitor<Identification, Void> returnVisitor = new TreeScanner<Identification, Void>() {
-        @Override
-        public Identification visitReturn(ReturnTree ret, Void v) {
-            return infoOfTree(ret.getExpression());
-        }
-    };
 
 
 }
