@@ -1,7 +1,6 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
-import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.LambdaExpressionTree;
@@ -26,14 +25,12 @@ public class IdentificationExtractionUtil {
      * This method is used to get Identification for any ASTElement.
      */
     public static Identification infoOfTree(Tree tree) {
-        Builder infor = infoFromTree(tree).orElse(null);
-        if (infor == null)
-            if (tree.getKind().equals(Tree.Kind.LAMBDA_EXPRESSION))
-                infor = checksInsideLambda(tree);
-            else
-                infor = Identification.newBuilder().setKind(tree.getKind().toString());
-
-        return infor.build();
+        Identification infor = infoFromTree(tree).orElse(null);
+        if (infor == null) {
+            infor =  tree.getKind().equals(Tree.Kind.LAMBDA_EXPRESSION)?
+               checksInsideLambda(tree) : Identification.newBuilder().setKind(tree.getKind().toString()).build();
+        }
+        return infor;
     }
 
     /**
@@ -45,7 +42,7 @@ public class IdentificationExtractionUtil {
      *
      */
 
-    public static Optional<Identification.Builder> infoFromTree(Tree tree) {
+    public static Optional<Identification> infoFromTree(Tree tree) {
         try {
             Symbol symb = ASTHelpers.getSymbol(tree);
             Identification.Builder id = Identification.newBuilder();
@@ -53,7 +50,7 @@ public class IdentificationExtractionUtil {
                     .setKind(getKindFromTree(tree).orElse(symb.getKind().toString()))
                     .setOwner(getASTOwner(symb))
                     .setType(symb.type.toString());
-            return java.util.Optional.of(id);
+            return java.util.Optional.of(id.build());
         } catch (Exception e) {
             return java.util.Optional.empty();
         }
@@ -65,51 +62,44 @@ public class IdentificationExtractionUtil {
      * @return Identification for the tree.
      */
 
-    public static Optional<Identification.Builder> infoFromSymbol(Symbol symb) {
+    public static Optional<Identification> infoFromSymbol(Symbol symb) {
         try {
             Identification.Builder id = Identification.newBuilder();
             id.setName(getName(symb))
                     .setKind((symb.getKind().toString()))
                     .setOwner(getASTOwner(symb))
                     .setType(symb.type.toString());
-            return java.util.Optional.of(id);
+            return java.util.Optional.of(id.build());
         } catch (Exception e) {
             return java.util.Optional.empty();
         }
     }
 
-    private static Identification.Builder checksInsideLambda(Tree tree) {
+    private static Identification checksInsideLambda(Tree tree) {
         LambdaExpressionTree lambda = (LambdaExpressionTree) tree;
         Identification.Builder id = Identification.newBuilder();
         id.setKind(tree.getKind().toString())
                 .setType(ASTHelpers.getType(lambda).toString());
-        return id;
+        return id.build();
     }
 
     private static Identification getASTOwner(Symbol symb) {
-
-        if (symb.owner.getKind().equals(ElementKind.PACKAGE)) {
-            PackageSymbol pkgSymb = (PackageSymbol) symb.owner;
-            return Identification.newBuilder().setName(pkgSymb.fullname.toString())
-                    .setKind(ElementKind.PACKAGE.toString()).build();
-        }
-
-        return infoFromSymbol(symb.owner).get()
-                .build();
+        return symb.owner.getKind().equals(ElementKind.PACKAGE) ?
+             Identification.newBuilder().setName(((PackageSymbol) symb.owner).fullname.toString())
+                    .setKind(ElementKind.PACKAGE.toString()).build():infoFromSymbol(symb.owner).get();
     }
 
     private static java.util.Optional<String> getKindFromTree(Tree tree) {
-        if (tree.getKind().equals(Kind.METHOD_INVOCATION) || tree.getKind().equals(Kind.NEW_CLASS))
+        if (tree.getKind().equals(Kind.METHOD_INVOCATION) || tree.getKind().equals(Kind.NEW_CLASS)) {
             return java.util.Optional.of(tree.getKind().toString());
+        }
         return java.util.Optional.empty();
     }
 
 
     private static String getName(Symbol symb) {
-        if (symb.name != null)
-            return symb.isConstructor() ? symb.enclClass().toString() : symb.name.toString();
-        else
-            return "";
+        return symb.name != null ?
+                symb.isConstructor() ? symb.enclClass().toString() : symb.name.toString() :"";
     }
 
 }

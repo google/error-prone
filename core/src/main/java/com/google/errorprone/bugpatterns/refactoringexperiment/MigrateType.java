@@ -15,7 +15,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping;
 import com.google.errorprone.bugpatterns.refactoringexperiment.analysis.QueryProtoBuffData;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
-import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification.Builder;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -65,10 +64,9 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
         boolean ofLT = DataFilter.apply(ASTHelpers.getReceiverType(tree), state);
         if (ofLT) {
             Optional<Refactorable> rec = getRefactorInfo(ASTHelpers.getReceiver(tree));
-            Optional<Builder> mid = infoFromTree(tree);
+            Optional<Identification> mid = infoFromTree(tree);
             if (rec.isPresent() && mid.isPresent()) {
-                mid.get().setOwner(rec.get().getId());
-                Optional<Refactorable> mi = getRefactorInfo(mid.get().build());
+                Optional<Refactorable> mi = getRefactorInfo(mid.get().toBuilder().setOwner(rec.get().getId()).build());
                 if (mi.isPresent()) {
                     Symbol receiverSym = ASTHelpers.getSymbol(ASTHelpers.getReceiver(tree));
                     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
@@ -101,8 +99,8 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
 
 
     private static Optional<Refactorable> getRefactorInfo(Tree tree) {
-        Optional<Builder> id = infoFromTree(tree);
-        return id.isPresent() ? getRefactorInfo(id.get().build()) : Optional.empty();
+        Optional<Identification> id = infoFromTree(tree);
+        return id.isPresent() ? getRefactorInfo(id.get()) : Optional.empty();
 
     }
 
