@@ -1,17 +1,18 @@
-package com.google.errorprone.bugpatterns.refactoringexperiment;
+package com.google.errorprone.bugpatterns.refactoringexperiment.refactor;
 
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.GraphAnalyzer.pckgName;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.IdentificationExtractionUtil.infoFromTree;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoFromTree;
 
 import com.google.auto.service.AutoService;
 import com.google.common.base.Strings;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.refactoringexperiment.DataFilter;
 import com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping;
 import com.google.errorprone.bugpatterns.refactoringexperiment.analysis.QueryProtoBuffData;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
@@ -109,7 +110,6 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
             List<Refactorable> refactorInfo = QueryProtoBuffData.getAllRefactorInfo(pckgName);
             return refactorInfo.stream().filter(x -> x.getId().equals(id)).findFirst();
         } catch (Exception e) {
-            System.out.println(e.toString());
             return Optional.empty();
         }
     }

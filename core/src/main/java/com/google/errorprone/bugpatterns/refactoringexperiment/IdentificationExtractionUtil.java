@@ -1,4 +1,4 @@
-package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
+package com.google.errorprone.bugpatterns.refactoringexperiment;
 
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
 import com.google.errorprone.util.ASTHelpers;

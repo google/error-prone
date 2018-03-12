@@ -1,17 +1,19 @@
-package com.google.errorprone.bugpatterns.refactoringexperiment;
+package com.google.errorprone.bugpatterns.refactoringexperiment.collect;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.IdentificationExtractionUtil.infoFromSymbol;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.IdentificationExtractionUtil.infoFromTree;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.IdentificationExtractionUtil.infoOfTree;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoFromSymbol;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoFromTree;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoOfTree;
 import static java.util.stream.Collectors.collectingAndThen;
 
 import com.google.auto.service.AutoService;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.refactoringexperiment.DataFilter;
+import com.google.errorprone.bugpatterns.refactoringexperiment.ProtoBuffPersist;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDeclarationOuterClass.ClassDeclaration;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration;
