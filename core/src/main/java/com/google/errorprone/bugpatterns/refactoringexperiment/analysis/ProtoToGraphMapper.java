@@ -43,7 +43,7 @@ public final class ProtoToGraphMapper {
         Identification n = v.getId();
         g.addNode(n);
         if (v.hasInitializer()) {
-            createBiDerectionalRelation(n, addNodeToGraph(v.getInitializer(), n, g), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
+            createBiDirectionalRelation(n, addNodeToGraph(v.getInitializer(), n, g), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
         }
         if (Mapping.CLASS_MAPPING_FOR.containsKey(v.getFilteredType().getInterfaceName())) {
             if (v.getId().getType().startsWith(v.getFilteredType().getInterfaceName())) {
@@ -71,7 +71,7 @@ public final class ProtoToGraphMapper {
      * method declaration and super method declaration.
      */
 
-    public static ImmutableValueGraph<Identification, String> mapToMethodDeclToGraph(MethodDeclaration m) {
+    public static ImmutableValueGraph<Identification, String> mapMethodDeclToGraph(MethodDeclaration m) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Identification n = addNodeToGraph(m.getId(), g);
         m.getParametersMap().entrySet().stream().map(param -> Maps.immutableEntry(param.getKey(), addNodeToGraph(param.getValue(), g)))
@@ -79,9 +79,9 @@ public final class ProtoToGraphMapper {
 
         if (m.hasSuperMethod()) {
             Identification superMethod = m.getSuperMethod().getId();
-            createBiDerectionalRelation(n, superMethod, EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
+            createBiDirectionalRelation(n, superMethod, EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
             for (Entry<Integer, Identification> e : m.getSuperMethod().getParametersMap().entrySet()) {
-                createBiDerectionalRelation(e.getValue(), addNodeToGraph(m.getParametersMap().get(e.getKey()), g),
+                createBiDirectionalRelation(e.getValue(), addNodeToGraph(m.getParametersMap().get(e.getKey()), g),
                         EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
             }
         }
@@ -100,12 +100,12 @@ public final class ProtoToGraphMapper {
      * ID b.Add this node to graph c.establish edge : method declaration node --- EDGE_ARG_INDEX :
      * {index} ---> RefactorInfo node
      */
-    public static ImmutableValueGraph<Identification, String> mapToMethodInvcToGraph(MethodInvocation m) {
+    public static ImmutableValueGraph<Identification, String> mapMethodInvcToGraph(MethodInvocation m) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Identification n = addNodeToGraph(m, g);
         g.addNode(n);
         if (m.hasReceiver()) {
-            createBiDerectionalRelation(m.getReceiver(), n, EDGE_METHOD_INVOKED, EDGE_REFERENCE, false, g);
+            createBiDirectionalRelation(m.getReceiver(), n, EDGE_METHOD_INVOKED, EDGE_REFERENCE, false, g);
         }
         if (m.getArgumentsCount() > 0) {
             for (Entry<Integer, Identification> e : m.getArgumentsMap().entrySet()) {
@@ -124,9 +124,9 @@ public final class ProtoToGraphMapper {
      * node for RHS and LHS of the assignment operations from their Id and add to graph. 2.
      * establish edge: RHS <--- EDGE_ASSIGNED_AS--- EDGE_ASSIGNED_TO ---> LHS
      */
-    public static ImmutableValueGraph<Identification, String> mapToAssgnmntToGraph(Assignment a) {
+    public static ImmutableValueGraph<Identification, String> mapAssgnmntToGraph(Assignment a) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
-        createBiDerectionalRelation(addNodeToGraph(a.getLhs(), g), addNodeToGraph(a.getRhs(), a.getLhs(), g), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
+        createBiDirectionalRelation(addNodeToGraph(a.getLhs(), g), addNodeToGraph(a.getRhs(), a.getLhs(), g), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
         return ImmutableValueGraph.copyOf(g);
     }
 
@@ -139,7 +139,7 @@ public final class ProtoToGraphMapper {
      * filtered type. b.Add this node to graph. c.establish edge : class declaration node ---
      * REFACTOR_INFO ---> RefactorInfo node.
      */
-    public static ImmutableValueGraph<Identification, String> mapToClassDeclToGraph(ClassDeclaration c) {
+    public static ImmutableValueGraph<Identification, String> mapClassDeclToGraph(ClassDeclaration c) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Identification n = c.getId();
         g.addNode(n);
@@ -164,7 +164,7 @@ public final class ProtoToGraphMapper {
      * function, where the parameter is passed back to itself as an argument. We identify such
      * relations with edge value EDGE_RECURSIVE.
      */
-    public static void createBiDerectionalRelation(Identification u, Identification v, String uTov, String vTou, boolean allowSelfLoop
+    public static void createBiDirectionalRelation(Identification u, Identification v, String uTov, String vTou, boolean allowSelfLoop
             , MutableValueGraph<Identification, String> g) {
         if ((!u.equals(v))) {
             g.putEdgeValue(u, v, uTov);
