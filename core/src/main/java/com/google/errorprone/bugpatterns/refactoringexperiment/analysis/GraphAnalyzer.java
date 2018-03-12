@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Created by ameya on 1/26/18.
  */
-public class GraphAnalyzer {
+public final class GraphAnalyzer {
 
     private static String pckgName;
     /**
@@ -40,7 +40,7 @@ public class GraphAnalyzer {
      * lambda expressions only. For this we make sure, that every v node of edge uv with value
      * EDGE_ARG_PASSED is of kind LAMBDA_EXPRESSION
      */
-    private static Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA = graph ->
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA = graph ->
             !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ARG_PASSED))
                     .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.LAMBDA_EXPRESSION)));
     /**
@@ -48,7 +48,7 @@ public class GraphAnalyzer {
      * operations. For Goal1, we do not want to perform refactorings which propagate across
      * assignment operations. Thus, we filter a;; edges of a graph based on edge value: EDGE_ASSIGNED_AS
      */
-    private static Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
             !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ASSIGNED_AS));
 
     /**

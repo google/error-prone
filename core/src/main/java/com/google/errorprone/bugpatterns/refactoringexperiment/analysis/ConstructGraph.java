@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 /**
  * Created by ameya on 1/31/18.
  */
-public class ConstructGraph {
+public final class ConstructGraph {
 
     private static final Predicate<Identification> isMethodKind = n -> n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
 
@@ -190,8 +190,4 @@ public class ConstructGraph {
                 .reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithAnalysis);
     }
-
-    //GRAPH HELPER METHODS
-
-
 }

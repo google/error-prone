@@ -21,36 +21,36 @@ import java.util.function.Predicate;
 /**
  * Created by ameya on 2/28/18.
  */
-public class PopulateRefactorToInfo {
+public final class PopulateRefactorToInfo {
 
 
 
-    public static Predicate<Identification> varKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE)
+    public static final Predicate<Identification> varKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE)
             || n.getKind().equals(FIELD);
 
-    private static Predicate<Identification> typeKind = n -> n.getKind().equals(CLASS) || n.getKind().equals(INTERFACE);
+    private static final Predicate<Identification> typeKind = n -> n.getKind().equals(CLASS) || n.getKind().equals(INTERFACE);
 
-    public static BiPredicate<Identification, ImmutableValueGraph<Identification, String>> isSubType = (n, gr) ->
+    public static final BiPredicate<Identification, ImmutableValueGraph<Identification, String>> isSubType = (n, gr) ->
             !gr.successors(n).stream().anyMatch(y -> gr.edgeValue(n, y).get().equals(EDGE_OF_TYPE));
 
-    private static Optional<Identification> getRefactorInfo(Identification n, ImmutableValueGraph<Identification, String> gr) {
+    private static final Optional<Identification> getRefactorInfo(Identification n, ImmutableValueGraph<Identification, String> gr) {
         return gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(REFACTOR_INFO)).findFirst();
     }
 
-    public static final Map<Identification, String> getMapping(ImmutableValueGraph<Identification, String> gr) {
+    public static Map<Identification, String> getMapping(ImmutableValueGraph<Identification, String> gr) {
         Map<Identification, String> graphToMapping = new HashMap<>();
         populateObjeRef(gr,graphToMapping);
         populateSubType(gr,graphToMapping);
         return graphToMapping;
     }
 
-    public static final Map<Identification, String> populateObjeRef(ImmutableValueGraph<Identification, String> gr, Map<Identification, String> graphToMapping) {
+    private static final Map<Identification, String> populateObjeRef(ImmutableValueGraph<Identification, String> gr, Map<Identification, String> graphToMapping) {
         gr.nodes().stream().filter(varKind).forEach(n -> graphToMapping.put(n, getRefactorInfo(n, gr).map(x -> x.getType()).orElse("")));
         gr.nodes().stream().filter(varKind).filter(x -> !Strings.isNullOrEmpty(graphToMapping.get(x))).forEach(n -> propogateRefactorInfo(gr, graphToMapping, n));
         return graphToMapping;
     }
 
-    public static Map<Identification, String> populateSubType(ImmutableValueGraph<Identification, String> gr, Map<Identification, String> graphToMapping) {
+    private static Map<Identification, String> populateSubType(ImmutableValueGraph<Identification, String> gr, Map<Identification, String> graphToMapping) {
         gr.nodes().stream().filter(typeKind).forEach(n -> graphToMapping.put(n, getRefactorInfo(n, gr).map(x -> x.getType()).orElse("")));
         gr.nodes().stream().filter(typeKind).filter(x -> !Strings.isNullOrEmpty(graphToMapping.get(x))).forEach(n -> {
             propogateRefactorInfo(gr, graphToMapping, n);

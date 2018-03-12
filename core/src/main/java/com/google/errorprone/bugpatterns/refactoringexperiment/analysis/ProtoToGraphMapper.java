@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * Created by ameya on 2/28/18.
  */
-public class ProtoToGraphMapper {
+public final class ProtoToGraphMapper {
 
     /**
      * This function maps a variable  proto to a independent graph.
