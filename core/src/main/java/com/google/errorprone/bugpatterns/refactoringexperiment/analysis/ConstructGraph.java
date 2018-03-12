@@ -31,7 +31,7 @@ import java.util.stream.Stream;
  */
 public class ConstructGraph {
 
-    public static Predicate<Identification> isMethodKind = n -> n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
+    private static final Predicate<Identification> isMethodKind = n -> n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
 
     private static ImmutableValueGraph<Identification, String> analyseAndEnrich(ImmutableValueGraph<Identification, String> graph) {
         MutableValueGraph<Identification, String> gr = Graphs.copyOf(graph);
