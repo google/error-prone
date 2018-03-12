@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -44,6 +45,13 @@ public class PopulateRefactorToInfo {
 
     private static Optional<Identification> getRefactorInfo(Identification n, ImmutableValueGraph<Identification, String> gr) {
         return gr.successors(n).stream().filter(x -> gr.edgeValue(n, x).get().equals(REFACTOR_INFO)).findFirst();
+    }
+
+    public static final Map<Identification, String> getMapping(ImmutableValueGraph<Identification, String> gr) {
+        Map<Identification, String> graphToMapping = new HashMap<>();
+        populateObjeRef(gr,graphToMapping);
+        populateSubType(gr,graphToMapping);
+        return graphToMapping;
     }
 
     public static final Map<Identification, String> populateObjeRef(ImmutableValueGraph<Identification, String> gr, Map<Identification, String> graphToMapping) {
