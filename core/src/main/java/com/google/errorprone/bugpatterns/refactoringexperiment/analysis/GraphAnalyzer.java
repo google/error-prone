@@ -2,6 +2,7 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_PASSED;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ASSIGNED_AS;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PARAMETER;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.NO_MAPPING;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.getMapping;
@@ -52,11 +53,14 @@ public final class GraphAnalyzer {
             !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ASSIGNED_AS));
 
     /**
-     * This precondition makes sure that, the subgraph does not go through if any of the nodes are
-     * mapped to NO MAPPING
+     * This precondition makes sure that, the subgraph does not go through if any of the method invocations
+     * have not found its parent method declaration
+     *
      */
-//    private static Predicate<ImmutableValueGraph<Node, String>> PRE_CONDITION_MAPPING_PRESENT = graph ->
-//            !graph.nodes().stream().anyMatch(n -> !n.refactorTo().equals(null) && n.refactorTo().equals(NO_MAPPING));
+    public static Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ORPHAN_MTHD_INVC = graph ->
+            graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
+                    .anyMatch(x -> graph.successors(x).stream().anyMatch(y->graph.edgeValue(x,y).get().equals(EDGE_ARG_PASSED)));
+
     public static void main(String args[]) throws Exception {
         induceAndMap(pckgName).forEach(r -> ProtoBuffPersist.write(r, REFACTOR_INFO));
     }
@@ -73,6 +77,7 @@ public final class GraphAnalyzer {
         List<ImmutableValueGraph<Identification, String>> subGraphs = induceSubgraphs(ConstructGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
                 , getVariables(fromFolder), getMethodInovcation_NewClass(fromFolder)
                 , getAssignments(fromFolder))).stream().filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA)
+                .filter(PRE_CONDITION_NO_ORPHAN_MTHD_INVC)
                 .filter(PRE_CONDITION_NO_ASSIGNMENTS).collect(Collectors.toList());
         subGraphs.forEach(g -> {
             Map<Identification, String> mappings = getMapping(g);
