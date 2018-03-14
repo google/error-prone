@@ -49,7 +49,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 
 /** Analyzes types for deep immutability. */
-class ImmutableAnalysis {
+public class ImmutableAnalysis {
 
   private final BugChecker bugChecker;
   private final VisitorState state;
@@ -72,7 +72,7 @@ class ImmutableAnalysis {
             .build(state);
   }
 
-  ImmutableAnalysis(
+  public ImmutableAnalysis(
       BugChecker bugChecker, VisitorState state, WellKnownMutability wellKnownMutability) {
     this(
         bugChecker,
@@ -100,8 +100,9 @@ class ImmutableAnalysis {
     return threadSafety.checkInvocation(methodType, symbol);
   }
 
+  /** Accepts {@link Violation violations} that are found during the analysis. */
   @FunctionalInterface
-  interface ViolationReporter {
+  public interface ViolationReporter {
     Description.Builder describe(Tree tree, Violation info);
 
     @CheckReturnValue
@@ -124,7 +125,7 @@ class ImmutableAnalysis {
    *
    * requiring supertypes to be annotated immutable would be too restrictive.
    */
-  Violation checkForImmutability(
+  public Violation checkForImmutability(
       Optional<ClassTree> tree,
       ImmutableSet<String> immutableTyParams,
       ClassType type,
