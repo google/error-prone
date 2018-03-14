@@ -21,7 +21,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import org.junit.Ignore;
+
 /** @author flx@google.com (Felix Berger) */
+@Ignore("b/74365407 test proto sources are broken")
 @RunWith(JUnit4.class)
 public class ProtoFieldNullComparisonTest {
 
@@ -30,8 +33,7 @@ public class ProtoFieldNullComparisonTest {
   @Before
   public void setUp() throws Exception {
     compilationHelper =
-        CompilationTestHelper.newInstance(ProtoFieldNullComparison.class, getClass())
-            .addSourceFile("proto/ProtoTest.java");
+        CompilationTestHelper.newInstance(ProtoFieldNullComparison.class, getClass());
   }
 
   @Test
@@ -46,8 +48,7 @@ public class ProtoFieldNullComparisonTest {
 
   @Test
   public void testProto3() {
-    CompilationTestHelper.newInstance(ProtoFieldNullComparison.class, getClass())
-        .addSourceFile("proto/Proto3Test.java")
+    compilationHelper
         .addSourceLines(
             "TestProto3.java",
             "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;",
