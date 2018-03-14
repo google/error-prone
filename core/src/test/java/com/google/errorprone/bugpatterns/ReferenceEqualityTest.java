@@ -32,6 +32,8 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import org.junit.Ignore;
+
 /** {@link ReferenceEquality}Test */
 @RunWith(JUnit4.class)
 public class ReferenceEqualityTest {
@@ -43,28 +45,19 @@ public class ReferenceEqualityTest {
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(new ReferenceEquality(), getClass());
 
+  @Ignore("b/74365407 test proto sources are broken")
   @Test
   public void protoGetter_nonnull() throws Exception {
-    refactoringTestHelper
-        .addInput("proto/ProtoTest.java")
-        .expectUnchanged()
-        .addInputLines(
+    compilationHelper
+        .addSourceLines(
             "in/Foo.java",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "class Foo {",
             "  void something(TestProtoMessage f1, TestProtoMessage f2) {",
+            "     // BUG: Diagnostic contains: boolean b = Objects.equals(f1, f2);",
             "     boolean b = f1 == f2;",
+            "     // BUG: Diagnostic contains: b = f1.getMessage().equals(f2.getMessage())",
             "     b = f1.getMessage() == f2.getMessage();",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Foo.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "import java.util.Objects;",
-            "class Foo {",
-            "  void something(TestProtoMessage f1, TestProtoMessage f2) {",
-            "     boolean b = Objects.equals(f1, f2);",
-            "     b = f1.getMessage().equals(f2.getMessage());",
             "  }",
             "}")
         .doTest();

@@ -22,11 +22,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import org.junit.Ignore;
+
 /**
  * Tests for {@link ProtocolBufferOrdinal}.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
+@Ignore("b/74365407 test proto sources are broken")
 @RunWith(JUnit4.class)
 public class ProtocolBufferOrdinalTest {
 
@@ -34,9 +37,7 @@ public class ProtocolBufferOrdinalTest {
 
   @Before
   public void setUp() throws Exception {
-    compilationHelper =
-        CompilationTestHelper.newInstance(ProtocolBufferOrdinal.class, getClass())
-            .addSourceFile("proto/TestEnum.java");
+    compilationHelper = CompilationTestHelper.newInstance(ProtocolBufferOrdinal.class, getClass());
   }
 
   @Test
