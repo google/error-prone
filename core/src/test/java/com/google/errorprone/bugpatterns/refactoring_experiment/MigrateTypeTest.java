@@ -4,6 +4,7 @@ import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEX
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.bugpatterns.CanonicalDuration;
+import com.google.errorprone.bugpatterns.refactoringexperiment.refactor.MigrateType;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -14,7 +15,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class MigrateTypeTest {
     public void migrateTypeTestGoal1_positive() throws Exception {
-        BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+        BugCheckerRefactoringTestHelper.newInstance(new MigrateType(), getClass())
                 .addInputLines(
                         "TestGoal1.java",
                         "import java.util.function.Function;",
