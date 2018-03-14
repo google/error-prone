@@ -4,7 +4,6 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.refactor;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.GraphAnalyzer.pckgName;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoFromTree;
 
 import com.google.auto.service.AutoService;
@@ -62,8 +61,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
     }
 
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-        boolean ofLT = DataFilter.apply(ASTHelpers.getReceiverType(tree), state);
-        if (ofLT) {
+        if (DataFilter.apply(ASTHelpers.getReceiverType(tree), state)) {
             Optional<Refactorable> rec = getRefactorInfo(ASTHelpers.getReceiver(tree));
             Optional<Identification> mid = infoFromTree(tree);
             if (rec.isPresent() && mid.isPresent()) {
@@ -107,7 +105,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
 
     private static Optional<Refactorable> getRefactorInfo(Identification id) {
         try {
-            List<Refactorable> refactorInfo = QueryProtoBuffData.getAllRefactorInfo(pckgName);
+            List<Refactorable> refactorInfo = QueryProtoBuffData.getAllRefactorInfo("../testProtos/");
             return refactorInfo.stream().filter(x -> x.getId().equals(id)).findFirst();
         } catch (Exception e) {
             return Optional.empty();
@@ -121,7 +119,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
         for (String s : typeParameter) {
             if (counter > 0) {
                 preserveType.append("," + s);
-            }else{
+            } else {
                 preserveType.append(s);
             }
             counter += 1;
