@@ -17,12 +17,14 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.Iterables;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /** @author glorioso@google.com (Nick Glorioso) */
@@ -121,6 +123,24 @@ public class SizeGreaterThanOrEqualsZeroPositiveCases {
     foo = (((((twoDarray))))).length >= 0;
 
     return foo;
+  }
+
+  public void protoCount(TestProtoMessage msg) {
+    boolean foo;
+    // BUG: Diagnostic contains: foo = !msg.getMultiFieldList().isEmpty();
+    foo = msg.getMultiFieldCount() >= 0;
+    // BUG: Diagnostic contains: foo = !msg.getMultiFieldList().isEmpty();
+    foo = 0 <= msg.getMultiFieldCount();
+    // BUG: Diagnostic contains: foo = !(((((msg))))).getMultiFieldList().isEmpty();
+    foo = (((((msg))))).getMultiFieldCount() >= 0;
+    // BUG: Diagnostic contains: if (!this.getMsg(msg).get().getMultiFieldList().isEmpty()) {
+    if (this.getMsg(msg).get().getMultiFieldCount() >= 0) {
+      foo = true;
+    }
+  }
+
+  private Optional<TestProtoMessage> getMsg(TestProtoMessage msg) {
+    return Optional.of(msg);
   }
 
   private static class CollectionContainer {
