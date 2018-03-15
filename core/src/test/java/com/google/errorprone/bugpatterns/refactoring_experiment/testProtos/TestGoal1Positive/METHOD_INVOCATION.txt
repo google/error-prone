@@ -1,0 +1,75 @@
+id {
+  name: "apply"
+  type: "(T)R"
+  owner {
+    name: "Function"
+    type: "java.util.function.Function<T,R>"
+    owner {
+      name: "java.util.function"
+      kind: "PACKAGE"
+    }
+    kind: "INTERFACE"
+  }
+  kind: "METHOD_INVOCATION"
+}
+receiver {
+  name: "f"
+  type: "java.util.function.Function<java.lang.Integer,java.lang.Integer>"
+  owner {
+    name: "test"
+    type: "(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int"
+    owner {
+      name: "TestGoal1"
+      type: "TestGoal1"
+      owner {
+        name: ""
+        kind: "PACKAGE"
+      }
+      kind: "CLASS"
+    }
+    kind: "METHOD"
+  }
+  kind: "PARAMETER"
+}
+id {
+  name: "test"
+  type: "(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int"
+  owner {
+    name: "TestGoal1"
+    type: "TestGoal1"
+    owner {
+      name: ""
+      kind: "PACKAGE"
+    }
+    kind: "CLASS"
+  }
+  kind: "METHOD_INVOCATION"
+}
+arguments {
+  key: 0
+  value {
+    type: "java.util.function.Function<java.lang.Integer,java.lang.Integer>"
+    kind: "LAMBDA_EXPRESSION"
+  }
+}
+id {
+  name: "test"
+  type: "(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int"
+  owner {
+    name: "TestGoal1"
+    type: "TestGoal1"
+    owner {
+      name: ""
+      kind: "PACKAGE"
+    }
+    kind: "CLASS"
+  }
+  kind: "METHOD_INVOCATION"
+}
+arguments {
+  key: 0
+  value {
+    type: "java.util.function.Function<java.lang.Integer,java.lang.Integer>"
+    kind: "LAMBDA_EXPRESSION"
+  }
+}

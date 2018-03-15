@@ -1,0 +1,72 @@
+id {
+  name: "f"
+  type: "java.util.function.Function<java.lang.Integer,java.lang.Integer>"
+  owner {
+    name: "test"
+    type: "(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int"
+    owner {
+      name: "TestGoal1"
+      type: "TestGoal1"
+      owner {
+        name: ""
+        kind: "PACKAGE"
+      }
+      kind: "CLASS"
+    }
+    kind: "METHOD"
+  }
+  kind: "PARAMETER"
+}
+filtered_type {
+  interfaceName: "java.util.function.Function"
+  typeParameter: "java.lang.Integer"
+  typeParameter: "java.lang.Integer"
+}
+id {
+  name: "x"
+  type: "java.lang.Integer"
+  owner {
+    name: "LAMBDA_EXPRESSION0"
+    type: "java.util.function.Function<java.lang.Integer,java.lang.Integer>"
+    owner {
+      name: "test"
+      type: "(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int"
+      owner {
+        name: "TestGoal1"
+        type: "TestGoal1"
+        owner {
+          name: ""
+          kind: "PACKAGE"
+        }
+        kind: "CLASS"
+      }
+      kind: "METHOD_INVOCATION"
+    }
+    kind: "LAMBDA_EXPRESSION"
+  }
+  kind: "VARIABLE"
+}
+id {
+  name: "x"
+  type: "java.lang.Integer"
+  owner {
+    name: "LAMBDA_EXPRESSION0"
+    type: "java.util.function.Function<java.lang.Integer,java.lang.Integer>"
+    owner {
+      name: "test"
+      type: "(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int"
+      owner {
+        name: "TestGoal1"
+        type: "TestGoal1"
+        owner {
+          name: ""
+          kind: "PACKAGE"
+        }
+        kind: "CLASS"
+      }
+      kind: "METHOD_INVOCATION"
+    }
+    kind: "LAMBDA_EXPRESSION"
+  }
+  kind: "VARIABLE"
+}

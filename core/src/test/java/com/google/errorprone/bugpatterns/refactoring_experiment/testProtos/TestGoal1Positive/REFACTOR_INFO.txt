@@ -1,0 +1,45 @@
+id {
+  name: "apply"
+  type: "(T)R"
+  owner {
+    name: "f"
+    type: "java.util.function.Function<java.lang.Integer,java.lang.Integer>"
+    owner {
+      name: "test"
+      type: "(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int"
+      owner {
+        name: "TestGoal1"
+        type: "TestGoal1"
+        owner {
+          name: ""
+          kind: "PACKAGE"
+        }
+        kind: "CLASS"
+      }
+      kind: "METHOD"
+    }
+    kind: "PARAMETER"
+  }
+  kind: "METHOD_INVOCATION"
+}
+refactor_to: "applyAsInt"
+id {
+  name: "f"
+  type: "java.util.function.Function<java.lang.Integer,java.lang.Integer>"
+  owner {
+    name: "test"
+    type: "(java.util.function.Function<java.lang.Integer,java.lang.Integer>)int"
+    owner {
+      name: "TestGoal1"
+      type: "TestGoal1"
+      owner {
+        name: ""
+        kind: "PACKAGE"
+      }
+      kind: "CLASS"
+    }
+    kind: "METHOD"
+  }
+  kind: "PARAMETER"
+}
+refactor_to: "java.util.function.IntUnaryOperator"
