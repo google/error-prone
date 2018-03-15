@@ -839,26 +839,56 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void listSuperClasses_classWithParent() {
-    writeFile("A.java", "package test;", "public class A {}");
-    writeFile("B.java", "package test;", "public class B extends A {}");
-    TestScanner scanner = new SuperClassScanner("B", ImmutableList.of("test.A"));
+    writeFile(
+        "A.java", //
+        "public class A {}");
+    writeFile(
+        "B.java", //
+        "public class B extends A {}");
+    TestScanner scanner = new SuperClassScanner("B", ImmutableList.of("A"));
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void listSuperClasses_classInPackage() {
+    writeFile(
+        "A.java", //
+        "package test;",
+        "public class A {}");
+    writeFile(
+        "B.java", //
+        "import test.A;",
+        "public class B extends A {}");
+    writeFile(
+        "C.java", //
+        "public class C extends B {}");
+    TestScanner scanner = new SuperClassScanner("C", ImmutableList.of("B", "test.A"));
     tests.add(scanner);
     assertCompiles(scanner);
   }
 
   @Test
   public void listSuperClasses_classWithMultipleSuperClasses() {
-    writeFile("A.java", "package test;", "public class A {}");
-    writeFile("B.java", "package test;", "public class B extends A {}");
-    writeFile("C.java", "package test;", "public class C extends B {}");
-    TestScanner scanner = new SuperClassScanner("C", ImmutableList.of("test.B", "test.A"));
+    writeFile(
+        "A.java", //
+        "public class A {}");
+    writeFile(
+        "B.java", //
+        "public class B extends A {}");
+    writeFile(
+        "C.java", //
+        "public class C extends B {}");
+    TestScanner scanner = new SuperClassScanner("C", ImmutableList.of("B", "A"));
     tests.add(scanner);
     assertCompiles(scanner);
   }
 
   @Test
   public void listSuperClasses_classWithoutParent() {
-    writeFile("A.java", "package test;", "public class A {}");
+    writeFile(
+        "A.java", //
+        "public class A {}");
     TestScanner scanner = new SuperClassScanner("A", ImmutableList.of());
     tests.add(scanner);
     assertCompiles(scanner);
@@ -866,9 +896,13 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void listSuperClasses_classWithTypeParameters() {
-    writeFile("A.java", "package test;", "public class A<T> {}");
-    writeFile("B.java", "package test;", "public class B<T> extends A<T> {}");
-    TestScanner scanner = new SuperClassScanner("B", ImmutableList.of("test.A"));
+    writeFile(
+        "A.java", //
+        "public class A<T> {}");
+    writeFile(
+        "B.java", //
+        "public class B<T> extends A<T> {}");
+    TestScanner scanner = new SuperClassScanner("B", ImmutableList.of("A"));
     tests.add(scanner);
     assertCompiles(scanner);
   }
@@ -876,14 +910,13 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @Test
   public void listSuperClasses_innerClass() {
     writeFile(
-        "A.java",
-        "package test;",
+        "A.java", //
         "public class A {",
         "  private static class B extends A {",
         "    private static class C extends B {}",
         "  }",
         "}");
-    TestScanner scanner = new SuperClassScanner("C", ImmutableList.of("test.A$B", "test.A"));
+    TestScanner scanner = new SuperClassScanner("C", ImmutableList.of("A$B", "A"));
     tests.add(scanner);
     assertCompiles(scanner);
   }
@@ -891,8 +924,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @Test
   public void listSuperClasses_anonymousInnerClass() {
     writeFile(
-        "A.java",
-        "package test;",
+        "A.java", //
         "public class A {",
         "  AutoCloseable f() {",
         "    return new AutoCloseable() {",
@@ -907,8 +939,12 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void listSuperClasses_classWithInterface() {
-    writeFile("I.java", "package test;", "public interface I {}");
-    writeFile("A.java", "package test;", "public class A implements I {}");
+    writeFile(
+        "I.java", //
+        "public interface I {}");
+    writeFile(
+        "A.java", //
+        "public class A implements I {}");
     TestScanner scanner = new SuperClassScanner("A", ImmutableList.of());
     tests.add(scanner);
     assertCompiles(scanner);
@@ -916,8 +952,12 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void listSuperClasses_interfaceWithParent() {
-    writeFile("I.java", "package test;", "public interface I {}");
-    writeFile("J.java", "package test;", "public interface J extends I {}");
+    writeFile(
+        "I.java", //
+        "public interface I {}");
+    writeFile(
+        "J.java", //
+        "public interface J extends I {}");
     TestScanner scanner = new SuperClassScanner("J", ImmutableList.of());
     tests.add(scanner);
     assertCompiles(scanner);
@@ -925,7 +965,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void listSuperClasses_enum() {
-    writeFile("E.java", "package test;", "public enum E {}");
+    writeFile(
+        "E.java", //
+        "public enum E {}");
     TestScanner scanner = new SuperClassScanner("E", ImmutableList.of());
     tests.add(scanner);
     assertCompiles(scanner);
@@ -933,7 +975,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void listSuperClasses_annotation() {
-    writeFile("A.java", "package test;", "@interface A {}");
+    writeFile(
+        "A.java", //
+        "@interface A {}");
     TestScanner scanner = new SuperClassScanner("A", ImmutableList.of());
     tests.add(scanner);
     assertCompiles(scanner);
