@@ -3,10 +3,10 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.JAVA_UTIL_FUNCTION_FUNCTION;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.FilteredTypeOuterClass.FilteredType;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -282,13 +282,23 @@ public class Mapping {
                     .put(BOOLEAN, BOOLEAN_PRIMITIVE)
                     .build();
 
-    public static ImmutableMap<String,List<Integer>> preserveArg = ImmutableMap.<String,List<Integer>>builder()
-            .put(DOUBLE_FUNCTION, Arrays.asList(1))
-            .put(INT_FUNCTION, Arrays.asList(1))
-            .put(LONG_FUNCTION, Arrays.asList(1))
-            .put(TO_INT_FUNCTION, Arrays.asList(0))
-            .put(TO_LONG_FUNCTION, Arrays.asList(0))
-            .put(PREDICATE,Arrays.asList(0))
-            .put(TO_DOUBLE_FUNCTION, Arrays.asList(0)).build();
+    /**
+     * This map, takes specialised functional interfaces as key,
+     * and stores the indicses of the type argument to be preserved after migration
+     * as the value.
+     * Eg.
+     * When we attempt to migrate a type from Function<Foo,Integer> to IntFunction<Foo>,
+     * we need to preserve the first type argument of Function<Foo,Integer>
+     * Similarly Function<Integer,Bar> -> IntFunction<Bar>, where we preserve the second
+     * type arguement of the type.
+     */
+    public static ImmutableMap<String,List<Integer>> PRESERVE_ARG = ImmutableMap.<String,List<Integer>>builder()
+            .put(DOUBLE_FUNCTION, ImmutableList.of(1))
+            .put(INT_FUNCTION, ImmutableList.of(1))
+            .put(LONG_FUNCTION, ImmutableList.of(1))
+            .put(TO_INT_FUNCTION, ImmutableList.of(0))
+            .put(TO_LONG_FUNCTION, ImmutableList.of(0))
+            .put(PREDICATE,ImmutableList.of(0))
+            .put(TO_DOUBLE_FUNCTION, ImmutableList.of(0)).build();
 }
 

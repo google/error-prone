@@ -87,8 +87,8 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
         String preservedTypeParam = "";
         if (type.getKind().equals(Kind.PARAMETERIZED_TYPE)) {
             List<? extends Tree> typeArg = ((ParameterizedTypeTree) type).getTypeArguments();
-            if (Mapping.preserveArg.containsKey(refactorTo)) {
-                preservedTypeParam = preserveType(Mapping.preserveArg.get(refactorTo).stream()
+            if (Mapping.PRESERVE_ARG.containsKey(refactorTo)) {
+                preservedTypeParam = preserveType(Mapping.PRESERVE_ARG.get(refactorTo).stream()
                         .map(x -> typeArg.get(x).toString()).collect(Collectors.toList()));
             }
         }
