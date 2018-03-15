@@ -24,8 +24,8 @@ public class MigrateTypeTest {
                         "public int boo5(){",
                         "return test(x->x + 5);",
                         "}",
-                        "public int boo5(){",
-                        "return test(x->x + 5);",
+                        "public int boo6(){",
+                        "return test(x->x + 6);",
                         "}",
                         "}")
                 .addOutputLines(
@@ -39,8 +39,8 @@ public class MigrateTypeTest {
                         "public int boo5(){",
                         "return test(x->x + 5);",
                         "}",
-                        "public int boo5(){",
-                        "return test(x->x + 5);",
+                        "public int boo6(){",
+                        "return test(x->x + 6);",
                         "}",
                         "}")
                 .doTest(TEXT_MATCH);
@@ -60,8 +60,8 @@ public class MigrateTypeTest {
                         "public int boo5(){",
                         "return test(x->x + 5);",
                         "}",
-                        "public int boo5(){",
-                        "return test(x->x + 5);",
+                        "public int boo6(){",
+                        "return test(x->x + 6);",
                         "}",
                         "}")
                 .addOutputLines(
@@ -76,8 +76,8 @@ public class MigrateTypeTest {
                         "public int boo5(){",
                         "return test(x->x + 5);",
                         "}",
-                        "public int boo5(){",
-                        "return test(x->x + 5);",
+                        "public int boo6(){",
+                        "return test(x->x + 6);",
                         "}",
                         "}")
                 .doTest(TEXT_MATCH);
@@ -101,8 +101,8 @@ public class MigrateTypeTest {
                         "public int boo5(){",
                         "return test(x->x + 5);",
                         "}",
-                        "public int boo5(){",
-                        "return test(x->x + 5);",
+                        "public int boo6(){",
+                        "return test(x->x + 6);",
                         "}",
                         "}")
                 .addOutputLines(
@@ -123,8 +123,8 @@ public class MigrateTypeTest {
                         "public int boo5(){",
                         "return test(x->x + 5);",
                         "}",
-                        "public int boo5(){",
-                        "return test(x->x + 5);",
+                        "public int boo6(){",
+                        "return test(x->x + 6);",
                         "}",
                         "}")
                 .doTest(TEXT_MATCH);
@@ -148,8 +148,8 @@ public class MigrateTypeTest {
                         "public int boo5(){",
                         "return test(x->x + 5);",
                         "}",
-                        "public int boo5(){",
-                        "return test(x->x + 5);",
+                        "public int boo6(){",
+                        "return test(x->x + 6);",
                         "}",
                         "}")
                 .addOutputLines(
@@ -168,8 +168,8 @@ public class MigrateTypeTest {
                         "public int boo5(){",
                         "return test(x->x + 5);",
                         "}",
-                        "public int boo5(){",
-                        "return test(x->x + 5);",
+                        "public int boo6(){",
+                        "return test(x->x + 6);",
                         "}",
                         "}")
                 .doTest(TEXT_MATCH);
