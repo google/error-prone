@@ -61,7 +61,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
     }
 
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-        if (DataFilter.apply(ASTHelpers.getReceiverType(tree), state)) {
+        if (DataFilter.apply(tree, state)) {
             Optional<Refactorable> rec = getRefactorInfo(ASTHelpers.getReceiver(tree));
             Optional<Identification> mid = infoFromTree(tree);
             if (rec.isPresent() && mid.isPresent()) {
