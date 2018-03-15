@@ -656,6 +656,11 @@ public class ASTHelpers {
   /**
    * Retrieve an annotation, considering annotation inheritance.
    *
+   * <p>Note: if {@code annotationClass} contains a member that is a {@code Class} or an array of
+   * them, attempting to access that member from the Error Prone checker code will result in a
+   * runtime exception. If the annotation has class members, you may need to operate on {@code
+   * ASTHelpers.getSymbol(sym).getAnnotationMirrors()} to meta-syntactically inspect the annotation.
+   *
    * @return the annotation of given type on the tree's symbol, or null.
    */
   public static <T extends Annotation> T getAnnotation(Tree tree, Class<T> annotationClass) {
@@ -665,6 +670,11 @@ public class ASTHelpers {
 
   /**
    * Retrieve an annotation, considering annotation inheritance.
+   *
+   * <p>Note: if {@code annotationClass} contains a member that is a {@code Class} or an array of
+   * them, attempting to access that member from the Error Prone checker code will result in a
+   * runtime exception. If the annotation has class members, you may need to operate on {@code
+   * sym.getAnnotationMirrors()} to meta-syntactically inspect the annotation.
    *
    * @return the annotation of given type on the symbol, or null.
    */
