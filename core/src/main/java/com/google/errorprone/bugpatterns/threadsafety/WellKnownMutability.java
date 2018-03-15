@@ -145,6 +145,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(com.google.common.base.Joiner.class)
         .add(com.google.common.base.Optional.class, "T")
         .add(com.google.common.base.Splitter.class)
+        .add(com.google.common.collect.ContiguousSet.class, "C")
         .add(com.google.common.collect.ImmutableBiMap.class, "K", "V")
         .add(com.google.common.collect.ImmutableCollection.class, "E")
         .add(com.google.common.collect.ImmutableList.class, "E")
