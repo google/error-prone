@@ -22,7 +22,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import org.junit.Ignore;
+
 /** Unit tests for {@link com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero} */
+@Ignore("b/74365407 test proto sources are broken")
 @RunWith(JUnit4.class)
 public class SizeGreaterThanOrEqualsZeroTest {
   CompilationTestHelper compilationHelper;
