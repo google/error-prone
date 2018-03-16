@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,16 +26,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class InconsistentCapitalizationTest {
 
-  private CompilationTestHelper compilationHelper;
-  private BugCheckerRefactoringTestHelper refactoringHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(InconsistentCapitalization.class, getClass());
-    refactoringHelper =
-        BugCheckerRefactoringTestHelper.newInstance(new InconsistentCapitalization(), getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(InconsistentCapitalization.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new InconsistentCapitalization(), getClass());
 
   @Test
   public void testNegativeCases() {
