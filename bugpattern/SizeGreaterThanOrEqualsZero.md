@@ -43,12 +43,14 @@ __SizeGreaterThanOrEqualsZeroPositiveCases.java__
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.Iterables;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /** @author glorioso@google.com (Nick Glorioso) */
@@ -149,6 +151,24 @@ public class SizeGreaterThanOrEqualsZeroPositiveCases {
     return foo;
   }
 
+  public void protoCount(TestProtoMessage msg) {
+    boolean foo;
+    // BUG: Diagnostic contains: foo = !msg.getMultiFieldList().isEmpty();
+    foo = msg.getMultiFieldCount() >= 0;
+    // BUG: Diagnostic contains: foo = !msg.getMultiFieldList().isEmpty();
+    foo = 0 <= msg.getMultiFieldCount();
+    // BUG: Diagnostic contains: foo = !(((((msg))))).getMultiFieldList().isEmpty();
+    foo = (((((msg))))).getMultiFieldCount() >= 0;
+    // BUG: Diagnostic contains: if (!this.getMsg(msg).get().getMultiFieldList().isEmpty()) {
+    if (this.getMsg(msg).get().getMultiFieldCount() >= 0) {
+      foo = true;
+    }
+  }
+
+  private Optional<TestProtoMessage> getMsg(TestProtoMessage msg) {
+    return Optional.of(msg);
+  }
+
   private static class CollectionContainer {
     List<Integer> intList;
 
@@ -181,6 +201,7 @@ __SizeGreaterThanOrEqualsZeroNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -228,6 +249,19 @@ public class SizeGreaterThanOrEqualsZeroNegativeCases {
     foo = (((((twoDarray))))).length > zero;
 
     return foo;
+  }
+
+  public void protoCount(TestProtoMessage msg) {
+    int zero = 0;
+    boolean foo;
+    foo = msg.getMultiFieldCount() > 0;
+    foo = 0 < msg.getMultiFieldCount();
+    foo = 0 > msg.getMultiFieldCount();
+    foo = msg.getMultiFieldCount() >= 1;
+    foo = msg.getMultiFieldCount() >= -1;
+    foo = msg.getMultiFieldCount() < 0;
+    foo = (((((msg))))).getMultiFieldCount() > zero;
+    foo = msg.getTestFieldNamedCount() >= 0; // Not a repeated field, just name ending in `count`
   }
 
   private static class CollectionContainer {

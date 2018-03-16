@@ -1026,7 +1026,11 @@ public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;findSuperMe
 <h4>getAnnotation</h4>
 <pre>public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;T&nbsp;getAnnotation(com.sun.source.tree.Tree&nbsp;tree,
                                                      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;annotationClass)</pre>
-<div class="block">Retrieve an annotation, considering annotation inheritance.</div>
+<div class="block">Retrieve an annotation, considering annotation inheritance.
+
+ <p>Note: if <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
+ them, attempting to access that member from the Error Prone checker code will result in a
+ runtime exception. If the annotation has class members, you may need to operate on <code>ASTHelpers.getSymbol(sym).getAnnotationMirrors()</code> to meta-syntactically inspect the annotation.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the annotation of given type on the tree's symbol, or null.</dd>
@@ -1041,7 +1045,11 @@ public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;findSuperMe
 <h4>getAnnotation</h4>
 <pre>public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;T&nbsp;getAnnotation(com.sun.tools.javac.code.Symbol&nbsp;sym,
                                                      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;annotationClass)</pre>
-<div class="block">Retrieve an annotation, considering annotation inheritance.</div>
+<div class="block">Retrieve an annotation, considering annotation inheritance.
+
+ <p>Note: if <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
+ them, attempting to access that member from the Error Prone checker code will result in a
+ runtime exception. If the annotation has class members, you may need to operate on <code>sym.getAnnotationMirrors()</code> to meta-syntactically inspect the annotation.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the annotation of given type on the symbol, or null.</dd>

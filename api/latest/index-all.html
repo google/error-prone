@@ -1085,6 +1085,16 @@
 <dd>
 <div class="block">The fully-qualified name of the checker that this example belongs to.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html#checkForImmutability-java.util.Optional-com.google.common.collect.ImmutableSet-com.sun.tools.javac.code.Type.ClassType-com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.ViolationReporter-">checkForImmutability(Optional&lt;ClassTree&gt;, ImmutableSet&lt;String&gt;, Type.ClassType, ImmutableAnalysis.ViolationReporter)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis</a></dt>
+<dd>
+<div class="block">Check that an <code>@Immutable</code>-annotated class:
+
+ 
+   does not declare or inherit any mutable fields,
+   any immutable supertypes are instantiated with immutable type arguments as required by
+       their containerOf spec, and
+   any enclosing instances are immutable.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html#checkGuardedAccess-com.sun.source.tree.Tree-com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression-com.google.errorprone.bugpatterns.threadsafety.HeldLockSet-com.google.errorprone.VisitorState-">checkGuardedAccess(Tree, GuardedByExpression, HeldLockSet, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/IllegalGuardedBy.html#checkGuardedBy-boolean-java.lang.String-">checkGuardedBy(boolean, String)</a></span> - Static method in exception com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/IllegalGuardedBy.html" title="class in com.google.errorprone.bugpatterns.threadsafety">IllegalGuardedBy</a></dt>
@@ -1099,6 +1109,8 @@
 <dd>
 <div class="block">Checks that any thread-safe type parameters are instantiated with thread-safe types.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html#checkInvocation-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Symbol-">checkInvocation(Type, Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkInvocation-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Symbol-">checkInvocation(Type, Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
 <div class="block">Checks the instantiation of any thread-safe type parameters in the current invocation.</div>
@@ -1821,6 +1833,8 @@
  we substitute the argument for the method call.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describe(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html" title="class in com.google.errorprone.bugpatterns">PreconditionsInvalidPlaceholder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html#describe-com.sun.source.tree.Tree-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation-">describe(Tree, ThreadSafety.Violation)</a></span> - Method in interface com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis.ViolationReporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WrongParameterPackage.html#describe-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">describe(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WrongParameterPackage.html" title="class in com.google.errorprone.bugpatterns">WrongParameterPackage</a></dt>
 <dd>&nbsp;</dd>
@@ -3525,6 +3539,16 @@
 <dd>
 <div class="block">The class to which this annotation is applied is immutable.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">ImmutableAnalysis</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
+<dd>
+<div class="block">Analyzes types for deep immutability.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html#ImmutableAnalysis-com.google.errorprone.bugpatterns.BugChecker-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability-">ImmutableAnalysis(BugChecker, VisitorState, WellKnownMutability)</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html" title="interface in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">ImmutableAnalysis.ViolationReporter</span></a> - Interface in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
+<dd>
+<div class="block">Accepts <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>violations</code></a> that are found during the analysis.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">ImmutableAnnotationChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationChecker.html#ImmutableAnnotationChecker--">ImmutableAnnotationChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnnotationChecker</a></dt>
@@ -3631,6 +3655,12 @@
 <dt><a href="com/google/errorprone/bugpatterns/IncompatibleModifiersChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">IncompatibleModifiersChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/IncompatibleModifiersChecker.html#IncompatibleModifiersChecker--">IncompatibleModifiersChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IncompatibleModifiersChecker.html" title="class in com.google.errorprone.bugpatterns">IncompatibleModifiersChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/InconsistentCapitalization.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">InconsistentCapitalization</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Checker for variables under the same scope that only differ in capitalization.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/InconsistentCapitalization.html#InconsistentCapitalization--">InconsistentCapitalization()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InconsistentCapitalization.html" title="class in com.google.errorprone.bugpatterns">InconsistentCapitalization</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/overloading/InconsistentOverloads.html" title="class in com.google.errorprone.bugpatterns.overloading"><span class="typeNameLink">InconsistentOverloads</span></a> - Class in <a href="com/google/errorprone/bugpatterns/overloading/package-summary.html">com.google.errorprone.bugpatterns.overloading</a></dt>
 <dd>
@@ -4614,6 +4644,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceClash</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/HidingField.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/HidingField.html" title="class in com.google.errorprone.bugpatterns">HidingField</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/InconsistentCapitalization.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InconsistentCapitalization.html" title="class in com.google.errorprone.bugpatterns">InconsistentCapitalization</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnConstructors.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnConstructors.html" title="class in com.google.errorprone.bugpatterns.inject">AssistedInjectAndInjectOnConstructors</a></dt>
 <dd>&nbsp;</dd>
@@ -6557,6 +6589,8 @@
 <div class="block">The source text to appear in the output.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html#report-com.google.errorprone.scanner.ScannerSupplier-">report(ScannerSupplier)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html" title="class in com.google.errorprone">BaseErrorProneCompiler.Builder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html#report-com.sun.source.tree.Tree-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation-java.util.Optional-">report(Tree, ThreadSafety.Violation, Optional&lt;SuggestedFix&gt;)</a></span> - Method in interface com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis.ViolationReporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#report-com.google.errorprone.scanner.ScannerSupplier-">report(ScannerSupplier)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></dt>
 <dd>&nbsp;</dd>

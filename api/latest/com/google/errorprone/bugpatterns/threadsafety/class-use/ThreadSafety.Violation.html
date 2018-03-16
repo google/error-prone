@@ -110,10 +110,30 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
+<td class="colLast"><span class="typeNameLabel">ImmutableAnalysis.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html#checkForImmutability-java.util.Optional-com.google.common.collect.ImmutableSet-com.sun.tools.javac.code.Type.ClassType-com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.ViolationReporter-">checkForImmutability</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;com.sun.source.tree.ClassTree&gt;&nbsp;tree,
+                    com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;immutableTyParams,
+                    com.sun.tools.javac.code.Type.ClassType&nbsp;type,
+                    <a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis.ViolationReporter</a>&nbsp;reporter)</code>
+<div class="block">Check that an <code>@Immutable</code>-annotated class:
+
+ 
+   does not declare or inherit any mutable fields,
+   any immutable supertypes are instantiated with immutable type arguments as required by
+       their containerOf spec, and
+   any enclosing instances are immutable.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <td class="colLast"><span class="typeNameLabel">ThreadSafety.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkInstantiation-java.util.Collection-java.util.Collection-">checkInstantiation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol&gt;&nbsp;typeParameters,
                   <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeArguments)</code>
 <div class="block">Checks that any thread-safe type parameters are instantiated with thread-safe types.</div>
 </td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
+<td class="colLast"><span class="typeNameLabel">ImmutableAnalysis.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html#checkInvocation-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Symbol-">checkInvocation</a></span>(com.sun.tools.javac.code.Type&nbsp;methodType,
+               com.sun.tools.javac.code.Symbol&nbsp;symbol)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
@@ -174,6 +194,26 @@
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
  type arguments where required by its annotation's containerOf element.</div>
 </td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> with parameters of type <a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../../com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
+<td class="colLast"><span class="typeNameLabel">ImmutableAnalysis.ViolationReporter.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html#describe-com.sun.source.tree.Tree-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation-">describe</a></span>(com.sun.source.tree.Tree&nbsp;tree,
+        <a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;info)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>default <a href="../../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><span class="typeNameLabel">ImmutableAnalysis.ViolationReporter.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html#report-com.sun.source.tree.Tree-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation-java.util.Optional-">report</a></span>(com.sun.source.tree.Tree&nbsp;tree,
+      <a href="../../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;info,
+      <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestedFix)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

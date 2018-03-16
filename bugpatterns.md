@@ -439,6 +439,9 @@ Enums should always be immutable
 __[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
 This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
 
+__[InconsistentCapitalization](bugpattern/InconsistentCapitalization)__<br>
+It is confusing to have a field and a parameter under the same scope that differ only in capitalization.
+
 __[IncrementInForLoopAndHeader](bugpattern/IncrementInForLoopAndHeader)__<br>
 This for loop increments the same variable in the header and in the body
 
