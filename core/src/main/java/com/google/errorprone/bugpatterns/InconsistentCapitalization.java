@@ -85,7 +85,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
 
       if (parameterPath.getParentPath() != null) {
         String qualifiedName =
-            getExplicitQualification(parameterPath, tree) + field.getSimpleName();
+            getExplicitQualification(parameterPath, tree, state) + field.getSimpleName();
         // If the field was accessed in a non-qualified way, by renaming the parameter this may
         // cause clashes with it. Thus, it is required to qualify all uses of the field within the
         // parameter's scope just in case.
@@ -121,14 +121,14 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
    * Returns the qualification to access a field of the given class node from within the given tree
    * path (which MUST be within the class node scope).
    */
-  private static String getExplicitQualification(TreePath path, ClassTree tree) {
+  private static String getExplicitQualification(
+      TreePath path, ClassTree tree, VisitorState state) {
     for (Tree node : path) {
       if (node.equals(tree)) {
         break;
       }
       if (node instanceof ClassTree) {
-        if (ASTHelpers.listSuperClasses((ClassTree) node)
-            .contains(ASTHelpers.getSymbol(tree).flatName().toString())) {
+        if (ASTHelpers.getSymbol(node).isSubClass(ASTHelpers.getSymbol(tree), state.getTypes())) {
           return "super.";
         }
         return tree.getSimpleName() + ".this.";
