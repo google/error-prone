@@ -75,12 +75,12 @@ public final class ConstructGraph {
      * @param n : Method invocation for which method declarations has to be searched.
      *
      * To search, it induces the id of the parent by replacing its kind from METHOD_INVOCATION to
-     * METHOD. After it has found the method declaration 'md' : 1. it creates EDGE_PARENT_METHOD relation
-     * from 'n' -> 'md' 2. it creates EDGE_PASSED_AS_ARG_TO, EDGE_ARG_PASSED relationship between the method
-     * parameters and the arguments passed to the method declaration.
+     * METHOD. After it has found the method declaration 'md' : 1. it creates EDGE_PARENT_METHOD
+     * relation from 'n' -> 'md' 2. it creates EDGE_PASSED_AS_ARG_TO, EDGE_ARG_PASSED relationship
+     * between the method parameters and the arguments passed to the method declaration.
      */
     private static void methodAnalysis(MutableValueGraph<Identification, String> gr, Identification n) {
-        if(n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS)) {
+        if (n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS)) {
             Identification md = getNode(n, Constants.METHOD, gr).orElse(getNode(n, CONSTRUCTOR, gr).orElse(null));
             if (md != null) {
                 gr.putEdgeValue(n, md, EDGE_PARENT_METHOD);
@@ -96,8 +96,14 @@ public final class ConstructGraph {
                     foundArgs.forEach(x -> gr.removeEdge(x, n));
                     foundArgs.forEach(x -> gr.removeEdge(n, x));// remove ARG_INDEX edge
                 }
-                foundParams.forEach(x -> gr.removeEdge(x,md));
+                foundParams.forEach(x -> gr.removeEdge(x, md));
                 foundParams.forEach(x -> gr.removeEdge(md, x));// remove PARAM_INDEX edge
+            }
+            if (n.getKind().equals(NEW_CLASS)) {
+                Optional<Identification> typeNode = gr.nodes().stream().filter(x -> x.equals(n.getOwner())).findFirst();
+                if (typeNode.isPresent()) {
+                    gr.putEdgeValue(n, typeNode.get(), EDGE_OF_TYPE);
+                }
             }
         }
 
