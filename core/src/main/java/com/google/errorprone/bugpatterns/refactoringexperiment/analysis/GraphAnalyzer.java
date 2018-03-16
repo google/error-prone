@@ -58,7 +58,7 @@ public final class GraphAnalyzer {
      * have not found its parent method declaration
      *
      */
-    public static Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ORPHAN_MTHD_INVC = graph ->
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ORPHAN_MTHD_INVC = graph ->
             graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
                     .anyMatch(x -> graph.successors(x).stream().anyMatch(y->graph.edgeValue(x,y).get().equals(EDGE_ARG_PASSED)));
 
@@ -66,7 +66,7 @@ public final class GraphAnalyzer {
      * This precondition makes sure that we do not refactor a instance ,if a var is being passed to
      * a generic method or a 3rd party library.
      */
-    public static Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_GENERIC = graph ->
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_GENERIC = graph ->
             graph.nodes().stream().anyMatch(x -> x.getKind().equals(PARAMETER)) ?
                     graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
                             .anyMatch(x -> graph.predecessors(x).stream().anyMatch(y->graph.edgeValue(y,x).get().contains(EDGE_ARG_INDEX)))
