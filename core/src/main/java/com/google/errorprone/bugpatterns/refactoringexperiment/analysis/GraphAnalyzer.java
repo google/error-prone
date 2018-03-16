@@ -68,7 +68,7 @@ public final class GraphAnalyzer {
      */
     private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_GENERIC = graph ->
             graph.nodes().stream().anyMatch(x -> x.getKind().equals(PARAMETER)) ?
-                    graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
+                    !graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
                             .anyMatch(x -> graph.predecessors(x).stream().anyMatch(y->graph.edgeValue(y,x).get().contains(EDGE_ARG_INDEX)))
                     :true;
 
