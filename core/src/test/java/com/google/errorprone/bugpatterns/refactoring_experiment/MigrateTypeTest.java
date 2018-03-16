@@ -46,6 +46,74 @@ public class MigrateTypeTest {
                 .doTest(TEXT_MATCH);
     }
 
+    public void testFuncBooleanInt_ToInt_positive() throws Exception {
+        BugCheckerRefactoringTestHelper.newInstance(new MigrateType(), getClass())
+                .addInputLines(
+                        "TestGoal1.java",
+                        "import java.util.function.Function;",
+                        "class TestGoal1 {",
+                        "public int test(Function<Boolean,Integer> f){",
+                        "return f.apply(false);",
+                        "}",
+                        "public int boo5(){",
+                        "return test(x->1);",
+                        "}",
+                        "public int boo6(){",
+                        "return test(x->2);",
+                        "}",
+                        "}")
+                .addOutputLines(
+                        "TestGoal1.java",
+                        "import java.util.function.Function;",
+                        "import java.util.function.ToIntFunction;",
+                        "class TestGoal1 {",
+                        "public int test(ToIntFunction<Boolean> f){",
+                        "return f.applyAsInt(false);",
+                        "}",
+                        "public int boo5(){",
+                        "return test(x->1);",
+                        "}",
+                        "public int boo6(){",
+                        "return test(x->2);",
+                        "}",
+                        "}")
+                .doTest(TEXT_MATCH);
+    }
+
+    public void testFuncIntString_IntFunc_positive() throws Exception {
+        BugCheckerRefactoringTestHelper.newInstance(new MigrateType(), getClass())
+                .addInputLines(
+                        "TestGoal1.java",
+                        "import java.util.function.Function;",
+                        "class TestGoal1 {",
+                        "public String test(Function<Integer,String> f){",
+                        "return f.apply(5);",
+                        "}",
+                        "public int boo5(){",
+                        "return test(x->\"foo\");",
+                        "}",
+                        "public int boo6(){",
+                        "return test(x->\"boo\");",
+                        "}",
+                        "}")
+                .addOutputLines(
+                        "TestGoal1.java",
+                        "import java.util.function.Function;",
+                        "import java.util.function.IntFunction;",
+                        "class TestGoal1 {",
+                        "public int test(IntFunction<String> f){",
+                        "return f.apply(5);",
+                        "}",
+                        "public int boo5(){",
+                        "return test(x->\"foo\");",
+                        "}",
+                        "public int boo6(){",
+                        "return test(x->\"boo\");",
+                        "}",
+                        "}")
+                .doTest(TEXT_MATCH);
+    }
+
     public void testFuncIntInt_IntUnary_negative() throws Exception {
         BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
                 .addInputLines(

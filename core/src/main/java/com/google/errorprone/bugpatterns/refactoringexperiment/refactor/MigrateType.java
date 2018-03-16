@@ -53,7 +53,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
             if (info.isPresent() && !Strings.isNullOrEmpty(info.get().getRefactorTo())) {
                 SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
                 fixBuilder.addImport(getImportName(info.get().getRefactorTo()));
-                fixBuilder.replace(tree.getType(), getClassName(info.get().getRefactorTo(), tree.getType()));
+                fixBuilder.replace(tree.getType(), getClassName(getImportName(info.get().getRefactorTo()), tree.getType()));
                 return describeMatch(tree, fixBuilder.build());
             }
         }
