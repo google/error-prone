@@ -80,28 +80,27 @@ public final class ConstructGraph {
      * parameters and the arguments passed to the method declaration.
      */
     private static void methodAnalysis(MutableValueGraph<Identification, String> gr, Identification n) {
-        Identification md = getNode(n, Constants.METHOD, gr).orElse(getNode(n, CONSTRUCTOR, gr).orElse(null));
-        if (md != null) {
-            gr.putEdgeValue(n, md, EDGE_PARENT_METHOD);
-            List<Identification> foundParams = new ArrayList<>();
-            for (Identification param : getSuccessorWithEdge(md, gr, EDGE_PARAM_INDEX)) {
-                int index = Integer.parseInt(gr.edgeValue(md, param).get().replaceAll(EDGE_PARAM_INDEX, ""));
-                List<Identification> foundArgs = new ArrayList<>();
-                for (Identification arg : getSuccessorWithEdge(n, gr, EDGE_ARG_INDEX + index)) {
-                    createBiDirectionalRelation(arg, param, EDGE_PASSED_AS_ARG_TO, EDGE_ARG_PASSED, true, gr);
-                    foundParams.add(param);
-                    foundArgs.add(arg);
+        if(n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS)) {
+            Identification md = getNode(n, Constants.METHOD, gr).orElse(getNode(n, CONSTRUCTOR, gr).orElse(null));
+            if (md != null) {
+                gr.putEdgeValue(n, md, EDGE_PARENT_METHOD);
+                List<Identification> foundParams = new ArrayList<>();
+                for (Identification param : getSuccessorWithEdge(md, gr, EDGE_PARAM_INDEX)) {
+                    int index = Integer.parseInt(gr.edgeValue(md, param).get().replaceAll(EDGE_PARAM_INDEX, ""));
+                    List<Identification> foundArgs = new ArrayList<>();
+                    for (Identification arg : getSuccessorWithEdge(n, gr, EDGE_ARG_INDEX + index)) {
+                        createBiDirectionalRelation(arg, param, EDGE_PASSED_AS_ARG_TO, EDGE_ARG_PASSED, true, gr);
+                        foundParams.add(param);
+                        foundArgs.add(arg);
+                    }
+                    foundArgs.forEach(x -> gr.removeEdge(x, n));
+                    foundArgs.forEach(x -> gr.removeEdge(n, x));// remove ARG_INDEX edge
                 }
-                foundArgs.forEach(x -> gr.removeEdge(n, x)); // remove EDGE_ARG_INDEX edge
-            }
-            foundParams.forEach(x -> gr.removeEdge(md, x));// remove EDGE_PARAM_INDEX edge
-        }
-        if (n.getKind().equals(NEW_CLASS)) {
-            Optional<Identification> typeNode = gr.nodes().stream().filter(x -> x.equals(n.getOwner())).findFirst();
-            if (typeNode.isPresent()) {
-                gr.putEdgeValue(n, typeNode.get(), EDGE_OF_TYPE);
+                foundParams.forEach(x -> gr.removeEdge(x,md));
+                foundParams.forEach(x -> gr.removeEdge(md, x));// remove PARAM_INDEX edge
             }
         }
+
     }
 
 
@@ -109,7 +108,7 @@ public final class ConstructGraph {
      * This binary operations returns a graph obtained by merging two graphs g1 and g2.
      * In order to merge graphs, it adds nodes and edges from both the graphs into
      * the new graph.
-     * Guava graph library takes care of duplication.
+     * Gsuava graph library takes care of duplication.
      * At end of merge we can analyse the data collected and establish new relationship.
      * This operation is used to merge graphs which belong to same type.
      */

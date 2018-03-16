@@ -1,8 +1,10 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_INDEX;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_PASSED;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ASSIGNED_AS;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PASSED_AS_ARG_TO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.NEW_CLASS;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PARAMETER;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.NO_MAPPING;
@@ -66,11 +68,10 @@ public final class GraphAnalyzer {
      * This precondition makes sure that we do not refactor a instance ,if a var is being passed to
      * a generic method or a 3rd party library.
      */
-    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_GENERIC = graph ->
-            graph.nodes().stream().anyMatch(x -> x.getKind().equals(PARAMETER)) ?
-                    !graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
-                            .anyMatch(x -> graph.predecessors(x).stream().anyMatch(y->graph.edgeValue(y,x).get().contains(EDGE_ARG_INDEX)))
-                    :true;
+    private static final com.google.common.base.Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_GENERIC = graph ->
+            !graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
+                    .anyMatch(x -> graph.successors(x).stream().filter(y -> y.getKind().equals(METHOD_INVOCATION) ||y.getKind().equals(NEW_CLASS))
+                            .anyMatch(y->graph.edgeValue(x,y).get().contains(EDGE_PASSED_AS_ARG_TO)));
 
 
     public static void main(String args[]) throws Exception {

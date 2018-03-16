@@ -75,7 +75,7 @@ public final class ProtoToGraphMapper {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
         Identification n = addNodeToGraph(m.getId(), g);
         m.getParametersMap().entrySet().stream().map(param -> Maps.immutableEntry(param.getKey(), addNodeToGraph(param.getValue(), g)))
-                .forEach(x -> g.putEdgeValue(n, x.getValue(), EDGE_PARAM_INDEX + x.getKey()));
+                .forEach(x -> createBiDirectionalRelation(n, x.getValue(), EDGE_PARAM_INDEX + x.getKey(),EDGE_PARENT_METHOD,false,g));
 
         if (m.hasSuperMethod()) {
             Identification superMethod = m.getSuperMethod().getId();
@@ -109,7 +109,7 @@ public final class ProtoToGraphMapper {
         }
         if (m.getArgumentsCount() > 0) {
             for (Entry<Integer, Identification> e : m.getArgumentsMap().entrySet()) {
-                g.putEdgeValue(n, addNodeToGraph(e.getValue(), m.getId(), g, e.getKey()), EDGE_ARG_INDEX + e.getKey());
+                createBiDirectionalRelation(n, addNodeToGraph( e.getValue(), m.getId(), g, e.getKey()), EDGE_ARG_INDEX + e.getKey(),EDGE_PASSED_AS_ARG_TO, false,g);
             }
         }
         return ImmutableValueGraph.copyOf(g);
