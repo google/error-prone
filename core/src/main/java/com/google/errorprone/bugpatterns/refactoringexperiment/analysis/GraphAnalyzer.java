@@ -1,5 +1,6 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_INDEX;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_PASSED;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ASSIGNED_AS;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PARAMETER;
@@ -61,6 +62,17 @@ public final class GraphAnalyzer {
             graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
                     .anyMatch(x -> graph.successors(x).stream().anyMatch(y->graph.edgeValue(x,y).get().equals(EDGE_ARG_PASSED)));
 
+    /**
+     * This precondition makes sure that we do not refactor a instance ,if a var is being passed to
+     * a generic method or a 3rd party library.
+     */
+    public static Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_GENERIC = graph ->
+            graph.nodes().stream().anyMatch(x -> x.getKind().equals(PARAMETER)) ?
+                    graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
+                            .anyMatch(x -> graph.predecessors(x).stream().anyMatch(y->graph.edgeValue(y,x).get().contains(EDGE_ARG_INDEX)))
+                    :true;
+
+
     public static void main(String args[]) throws Exception {
         induceAndMap(pckgName).forEach(r -> ProtoBuffPersist.write(r, REFACTOR_INFO));
     }
@@ -78,6 +90,7 @@ public final class GraphAnalyzer {
                 , getVariables(fromFolder), getMethodInovcation_NewClass(fromFolder)
                 , getAssignments(fromFolder))).stream().filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA)
                 .filter(PRE_CONDITION_NO_ORPHAN_MTHD_INVC)
+                .filter(PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_GENERIC)
                 .filter(PRE_CONDITION_NO_ASSIGNMENTS).collect(Collectors.toList());
         subGraphs.forEach(g -> {
             Map<Identification, String> mappings = getMapping(g);

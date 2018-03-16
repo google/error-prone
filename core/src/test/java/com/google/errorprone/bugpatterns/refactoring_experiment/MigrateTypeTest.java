@@ -242,4 +242,43 @@ public class MigrateTypeTest {
                         "}")
                 .doTest(TEXT_MATCH);
     }
+
+    public void testFuncIntInt_passed_to_generic_negative() throws Exception {
+        BugCheckerRefactoringTestHelper.newInstance(new MigrateType(), getClass())
+                .addInputLines(
+                        "TestExternal.java",
+                        "import java.util.function.Function;",
+                        "import java.util.Arrays;",
+                        "import java.util.List;",
+                        "interface TestExternal {",
+                        "public int test(Function<Integer,Integer> ext){",
+                        "List<Function<Integer,Integer>> list = Arrays.asList(ext);",
+                        "return ext.apply(5);",
+                        "}",
+                        "public int test1(Function<Integer,Integer> ext1){",
+                        "return identity(ext1).apply(5);",
+                        "}",
+                        "public <T> T identity(T t){",
+                        "return  t;",
+                        "}",
+                        "}")
+                .addOutputLines(
+                        "TestExternal.java",
+                        "import java.util.function.Function;",
+                        "import java.util.Arrays;",
+                        "import java.util.List;",
+                        "interface TestExternal {",
+                        "public int test(Function<Integer,Integer> ext){",
+                        "List<Function<Integer,Integer>> list = Arrays.asList(ext);",
+                        "return ext.apply(5);",
+                        "}",
+                        "public int test1(Function<Integer,Integer> ext1){",
+                        "return identity(ext1).apply(5);",
+                        "}",
+                        "public <T> T identity(T t){",
+                        "return  t;",
+                        "}",
+                        "}")
+                .doTest(TEXT_MATCH);
+    }
 }
