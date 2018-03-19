@@ -59,7 +59,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
         <dependency>
           <groupId>org.codehaus.plexus</groupId>
           <artifactId>plexus-compiler-javac-errorprone</artifactId>
-          <version>2.8</version>
+          <version>2.8.3</version>
         </dependency>
         <!-- override plexus-compiler-javac-errorprone's dependency on
              Error Prone with the latest version -->
