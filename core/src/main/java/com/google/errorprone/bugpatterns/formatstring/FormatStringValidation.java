@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.formatstring;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -143,13 +145,18 @@ public class FormatStringValidation {
       return value;
     }
     Type type = ASTHelpers.getType(tree);
+    return getInstance(type, state);
+  }
+
+  private static Object getInstance(Type type, VisitorState state) {
     Types types = state.getTypes();
     if (type.getKind() == TypeKind.NULL) {
       return null;
     }
     // normalize boxed primitives
-    type = types.unboxedTypeOrType(types.erasure(type));
-    if (type.isPrimitive()) {
+    Type unboxedType = types.unboxedTypeOrType(types.erasure(type));
+    if (unboxedType.isPrimitive()) {
+      type = unboxedType;
       switch (type.getKind()) {
         case BOOLEAN:
           return false;
@@ -175,7 +182,7 @@ public class FormatStringValidation {
         case ARRAY:
           return new Object[0];
         default:
-          break;
+          throw new AssertionError(type.getKind());
       }
     }
     if (types.isSubtype(type, state.getSymtab().stringType)) {
