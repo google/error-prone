@@ -118,6 +118,11 @@ public class FutureReturnValueIgnoredNegativeCases {
     cf.addListener((ChannelFuture f) -> {});
   }
 
+  void ignoreScheduledExecutorServiceAtFixedRate(ScheduledExecutorService e) {
+    e.scheduleAtFixedRate(null, 0, 0, null);
+    e.scheduleWithFixedDelay(null, 0, 0, null);
+  }
+
   void ignoreChannelFutureAddListeners(ChannelFuture cf) {
     cf.addListeners((ChannelFuture f) -> {}, (ChannelFuture f) -> {});
   }

@@ -64,6 +64,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.regex.Pattern;
 import javax.lang.model.type.TypeKind;
 
@@ -110,6 +111,11 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
           instanceMethod()
               .onDescendantOf("io.netty.channel.ChannelFuture")
               .withNameMatching(Pattern.compile("addListeners?")),
+          // ScheduledExecutorService.scheduleAtFixedRate represents a series of tasks where it
+          // doesn't make sense to check for the return value
+          instanceMethod()
+              .onDescendantOf(ScheduledExecutorService.class.getName())
+              .withNameMatching(Pattern.compile("schedule(At|With)Fixed(Rate|Delay)")),
           instanceMethod()
               .onExactClass("java.util.concurrent.CompletableFuture")
               .withNameMatching(Pattern.compile("completeAsync|orTimeout|completeOnTimeout")));
