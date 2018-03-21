@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,7 +29,7 @@ import org.junit.runners.JUnit4;
 public class CanonicalDurationTest {
 
   @Test
-  public void refactoring() throws Exception {
+  public void refactoringJavaTime() throws Exception {
     BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -93,5 +94,84 @@ public class CanonicalDurationTest {
             "  }",
             "}")
         .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void refactoringJavaTimeStaticImport() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+        .addInputLines(
+            "in/A.java", //
+            "package a;",
+            "import static java.time.Duration.ofSeconds;",
+            "import java.time.Duration;",
+            "public class A {",
+            "  {",
+            "    ofSeconds(86400);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java", //
+            "package a;",
+            "",
+            "import static java.time.Duration.ofDays;",
+            "import static java.time.Duration.ofSeconds;",
+            "",
+            "import java.time.Duration;",
+            "",
+            "public class A {",
+            "  {",
+            "    ofDays(1);",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void refactoringJodaStaticImport() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+        .addInputLines(
+            "in/A.java", //
+            "package a;",
+            "import static org.joda.time.Duration.standardSeconds;",
+            "public class A {",
+            "  {",
+            "    standardSeconds(86400);",
+            "    standardSeconds(0).getStandardSeconds();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java", //
+            "package a;",
+            "import static org.joda.time.Duration.standardDays;",
+            "import static org.joda.time.Duration.standardSeconds;",
+            "",
+            "import org.joda.time.Duration;",
+            "public class A {",
+            "  {",
+            "    standardDays(1);",
+            "    Duration.ZERO.getStandardSeconds();",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void blacklist() throws Exception {
+    CompilationTestHelper.newInstance(CanonicalDuration.class, getClass())
+        .addSourceLines(
+            "A.java",
+            "package a;",
+            "import java.time.Duration;",
+            "public class A {",
+            "  static final int S = 60;",
+            "  static final int M = 60;",
+            "  static final int H = 24;",
+            "  {",
+            "    Duration.ofSeconds(S);",
+            "    Duration.ofMinutes(H);",
+            "    Duration.ofHours(24);",
+            "  }",
+            "}")
+        .doTest();
   }
 }

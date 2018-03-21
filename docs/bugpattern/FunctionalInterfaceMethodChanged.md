@@ -18,7 +18,8 @@ interface A {
 @FunctionalInterface
 interface B extends A {
   Foo qux();
-  default void bar() {
+  @Override
+  default Foo bar() {
     // anything here but exactly `return qux();` or perhaps `return (SomeType) qux();`
   }
 }

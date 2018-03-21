@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,6 +67,30 @@ public class CheckReturnValueTest {
             "  public void doIt() {",
             "    // BUG: Diagnostic contains:",
             "    getString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testCustomCanIgnoreReturnValueAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "foo/bar/CanIgnoreReturnValue.java",
+            "package foo.bar;",
+            "public @interface CanIgnoreReturnValue {}")
+        .addSourceLines(
+            "test/TestCustomCanIgnoreReturnValueAnnotation.java",
+            "package test;",
+            "import foo.bar.CanIgnoreReturnValue;",
+            "@javax.annotation.CheckReturnValue",
+            "public class TestCustomCanIgnoreReturnValueAnnotation {",
+            "  @CanIgnoreReturnValue",
+            "  public String ignored() {",
+            "    return null;",
+            "  }",
+            "  public void doIt() {",
+            "    ignored();",
             "  }",
             "}")
         .doTest();

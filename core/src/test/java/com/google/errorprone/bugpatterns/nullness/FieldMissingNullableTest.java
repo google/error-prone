@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -250,6 +250,26 @@ public class FieldMissingNullableTest {
   }
 
   @Test
+  public void testNegativeCases_lambdaInitializer() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import java.util.function.Predicate;",
+            "import java.util.function.Function;",
+            "public class FieldMissingNullTest {",
+            "  private Runnable runnable = () -> {};",
+            "  private Predicate<?> predicate1 = p -> true;",
+            "  private Predicate<?> predicate2 = (p -> true);",
+            "  private Predicate<?> predicate3 = (String p) -> { return false; };",
+            "  private Function<?, ?> function1 = p -> null;",
+            "  private Function<?, ?> function2 = (p -> null);",
+            "  private Function<?, ?> function3 = (String p) -> { return null; };",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCases_nonNullMethod() throws Exception {
     createCompilationTestHelper()
         .addSourceLines(
@@ -344,7 +364,6 @@ public class FieldMissingNullableTest {
 
   // regression test for https://github.com/google/error-prone/issues/708
   @Test
-  @Ignore
   public void i708() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -357,7 +376,49 @@ public class FieldMissingNullableTest {
         .doTest();
   }
 
+  @Test
+  public void testSuggestNonJsr305Nullable() throws Exception {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "class T {",
+            "  @Nullable private final Object obj1 = null;",
+            "  private final Object obj2 = null;",
+            "  @interface Nullable {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class T {",
+            "  @Nullable private final Object obj1 = null;",
+            "  @Nullable private final Object obj2 = null;",
+            "  @interface Nullable {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNonAnnotationNullable() throws Exception {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "class T {",
+            "  private final Object obj2 = null;",
+            "  class Nullable {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class T {",
+            "  @javax.annotation.Nullable private final Object obj2 = null;",
+            "  class Nullable {}",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(FieldMissingNullable.class, getClass());
+  }
+
+  private BugCheckerRefactoringTestHelper createRefactoringTestHelper() {
+    return BugCheckerRefactoringTestHelper.newInstance(new FieldMissingNullable(), getClass());
   }
 }

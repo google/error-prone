@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import com.google.common.base.Preconditions;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
@@ -86,8 +86,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
-import javax.annotation.CheckReturnValue;
 
 /**
  * A base class for implementing bug checkers. The {@code BugChecker} supplies a Scanner
@@ -115,6 +115,12 @@ public abstract class BugChecker implements Suppressible, Serializable {
   @CheckReturnValue
   protected Description describeMatch(Tree node) {
     return buildDescription(node).build();
+  }
+
+  /** Helper to create a Description for the common case where there is an {@link Optional} fix. */
+  @CheckReturnValue
+  protected Description describeMatch(Tree node, Optional<? extends Fix> fix) {
+    return buildDescription(node).addFix(fix).build();
   }
 
   /**
@@ -169,8 +175,8 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   @Override
-  public Suppressibility suppressibility() {
-    return info.suppressibility();
+  public boolean supportsSuppressWarnings() {
+    return info.supportsSuppressWarnings();
   }
 
   @Override
@@ -198,212 +204,212 @@ public abstract class BugChecker implements Suppressible, Serializable {
         && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
   }
 
-  public static interface AnnotationTreeMatcher extends Suppressible {
+  public interface AnnotationTreeMatcher extends Suppressible {
     Description matchAnnotation(AnnotationTree tree, VisitorState state);
   }
 
-  public static interface AnnotatedTypeTreeMatcher extends Suppressible {
+  public interface AnnotatedTypeTreeMatcher extends Suppressible {
     Description matchAnnotatedType(AnnotatedTypeTree tree, VisitorState state);
   }
 
-  public static interface ArrayAccessTreeMatcher extends Suppressible {
+  public interface ArrayAccessTreeMatcher extends Suppressible {
     Description matchArrayAccess(ArrayAccessTree tree, VisitorState state);
   }
 
-  public static interface ArrayTypeTreeMatcher extends Suppressible {
+  public interface ArrayTypeTreeMatcher extends Suppressible {
     Description matchArrayType(ArrayTypeTree tree, VisitorState state);
   }
 
-  public static interface AssertTreeMatcher extends Suppressible {
+  public interface AssertTreeMatcher extends Suppressible {
     Description matchAssert(AssertTree tree, VisitorState state);
   }
 
-  public static interface AssignmentTreeMatcher extends Suppressible {
+  public interface AssignmentTreeMatcher extends Suppressible {
     Description matchAssignment(AssignmentTree tree, VisitorState state);
   }
 
-  public static interface BinaryTreeMatcher extends Suppressible {
+  public interface BinaryTreeMatcher extends Suppressible {
     Description matchBinary(BinaryTree tree, VisitorState state);
   }
 
-  public static interface BlockTreeMatcher extends Suppressible {
+  public interface BlockTreeMatcher extends Suppressible {
     Description matchBlock(BlockTree tree, VisitorState state);
   }
 
-  public static interface BreakTreeMatcher extends Suppressible {
+  public interface BreakTreeMatcher extends Suppressible {
     Description matchBreak(BreakTree tree, VisitorState state);
   }
 
-  public static interface CaseTreeMatcher extends Suppressible {
+  public interface CaseTreeMatcher extends Suppressible {
     Description matchCase(CaseTree tree, VisitorState state);
   }
 
-  public static interface CatchTreeMatcher extends Suppressible {
+  public interface CatchTreeMatcher extends Suppressible {
     Description matchCatch(CatchTree tree, VisitorState state);
   }
 
-  public static interface ClassTreeMatcher extends Suppressible {
+  public interface ClassTreeMatcher extends Suppressible {
     Description matchClass(ClassTree tree, VisitorState state);
   }
 
-  public static interface CompilationUnitTreeMatcher extends Suppressible {
+  public interface CompilationUnitTreeMatcher extends Suppressible {
     Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state);
   }
 
-  public static interface CompoundAssignmentTreeMatcher extends Suppressible {
+  public interface CompoundAssignmentTreeMatcher extends Suppressible {
     Description matchCompoundAssignment(CompoundAssignmentTree tree, VisitorState state);
   }
 
-  public static interface ConditionalExpressionTreeMatcher extends Suppressible {
+  public interface ConditionalExpressionTreeMatcher extends Suppressible {
     Description matchConditionalExpression(ConditionalExpressionTree tree, VisitorState state);
   }
 
-  public static interface ContinueTreeMatcher extends Suppressible {
+  public interface ContinueTreeMatcher extends Suppressible {
     Description matchContinue(ContinueTree tree, VisitorState state);
   }
 
-  public static interface DoWhileLoopTreeMatcher extends Suppressible {
+  public interface DoWhileLoopTreeMatcher extends Suppressible {
     Description matchDoWhileLoop(DoWhileLoopTree tree, VisitorState state);
   }
 
-  public static interface EmptyStatementTreeMatcher extends Suppressible {
+  public interface EmptyStatementTreeMatcher extends Suppressible {
     Description matchEmptyStatement(EmptyStatementTree tree, VisitorState state);
   }
 
-  public static interface EnhancedForLoopTreeMatcher extends Suppressible {
+  public interface EnhancedForLoopTreeMatcher extends Suppressible {
     Description matchEnhancedForLoop(EnhancedForLoopTree tree, VisitorState state);
   }
 
   // Intentionally skip ErroneousTreeMatcher -- we don't analyze malformed expressions.
 
-  public static interface ExpressionStatementTreeMatcher extends Suppressible {
+  public interface ExpressionStatementTreeMatcher extends Suppressible {
     Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state);
   }
 
-  public static interface ForLoopTreeMatcher extends Suppressible {
+  public interface ForLoopTreeMatcher extends Suppressible {
     Description matchForLoop(ForLoopTree tree, VisitorState state);
   }
 
-  public static interface IdentifierTreeMatcher extends Suppressible {
+  public interface IdentifierTreeMatcher extends Suppressible {
     Description matchIdentifier(IdentifierTree tree, VisitorState state);
   }
 
-  public static interface IfTreeMatcher extends Suppressible {
+  public interface IfTreeMatcher extends Suppressible {
     Description matchIf(IfTree tree, VisitorState state);
   }
 
-  public static interface ImportTreeMatcher extends Suppressible {
+  public interface ImportTreeMatcher extends Suppressible {
     Description matchImport(ImportTree tree, VisitorState state);
   }
 
-  public static interface InstanceOfTreeMatcher extends Suppressible {
+  public interface InstanceOfTreeMatcher extends Suppressible {
     Description matchInstanceOf(InstanceOfTree tree, VisitorState state);
   }
 
-  public static interface IntersectionTypeTreeMatcher extends Suppressible {
+  public interface IntersectionTypeTreeMatcher extends Suppressible {
     Description matchIntersectionType(IntersectionTypeTree tree, VisitorState state);
   }
 
-  public static interface LabeledStatementTreeMatcher extends Suppressible {
+  public interface LabeledStatementTreeMatcher extends Suppressible {
     Description matchLabeledStatement(LabeledStatementTree tree, VisitorState state);
   }
 
-  public static interface LambdaExpressionTreeMatcher extends Suppressible {
+  public interface LambdaExpressionTreeMatcher extends Suppressible {
     Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state);
   }
 
-  public static interface LiteralTreeMatcher extends Suppressible {
+  public interface LiteralTreeMatcher extends Suppressible {
     Description matchLiteral(LiteralTree tree, VisitorState state);
   }
 
-  public static interface MemberReferenceTreeMatcher extends Suppressible {
+  public interface MemberReferenceTreeMatcher extends Suppressible {
     Description matchMemberReference(MemberReferenceTree tree, VisitorState state);
   }
 
-  public static interface MemberSelectTreeMatcher extends Suppressible {
+  public interface MemberSelectTreeMatcher extends Suppressible {
     Description matchMemberSelect(MemberSelectTree tree, VisitorState state);
   }
 
-  public static interface MethodTreeMatcher extends Suppressible {
+  public interface MethodTreeMatcher extends Suppressible {
     Description matchMethod(MethodTree tree, VisitorState state);
   }
 
-  public static interface MethodInvocationTreeMatcher extends Suppressible {
+  public interface MethodInvocationTreeMatcher extends Suppressible {
     Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state);
   }
 
-  public static interface ModifiersTreeMatcher extends Suppressible {
+  public interface ModifiersTreeMatcher extends Suppressible {
     Description matchModifiers(ModifiersTree tree, VisitorState state);
   }
 
-  public static interface NewArrayTreeMatcher extends Suppressible {
+  public interface NewArrayTreeMatcher extends Suppressible {
     Description matchNewArray(NewArrayTree tree, VisitorState state);
   }
 
-  public static interface NewClassTreeMatcher extends Suppressible {
+  public interface NewClassTreeMatcher extends Suppressible {
     Description matchNewClass(NewClassTree tree, VisitorState state);
   }
 
   // Intentionally skip OtherTreeMatcher. It seems to be used only for let expressions, which are
   // generated by javac to implement autoboxing. We are only interested in source-level constructs.
 
-  public static interface ParameterizedTypeTreeMatcher extends Suppressible {
+  public interface ParameterizedTypeTreeMatcher extends Suppressible {
     Description matchParameterizedType(ParameterizedTypeTree tree, VisitorState state);
   }
 
-  public static interface ParenthesizedTreeMatcher extends Suppressible {
+  public interface ParenthesizedTreeMatcher extends Suppressible {
     Description matchParenthesized(ParenthesizedTree tree, VisitorState state);
   }
 
-  public static interface PrimitiveTypeTreeMatcher extends Suppressible {
+  public interface PrimitiveTypeTreeMatcher extends Suppressible {
     Description matchPrimitiveType(PrimitiveTypeTree tree, VisitorState state);
   }
 
-  public static interface ReturnTreeMatcher extends Suppressible {
+  public interface ReturnTreeMatcher extends Suppressible {
     Description matchReturn(ReturnTree tree, VisitorState state);
   }
 
-  public static interface SwitchTreeMatcher extends Suppressible {
+  public interface SwitchTreeMatcher extends Suppressible {
     Description matchSwitch(SwitchTree tree, VisitorState state);
   }
 
-  public static interface SynchronizedTreeMatcher extends Suppressible {
+  public interface SynchronizedTreeMatcher extends Suppressible {
     Description matchSynchronized(SynchronizedTree tree, VisitorState state);
   }
 
-  public static interface ThrowTreeMatcher extends Suppressible {
+  public interface ThrowTreeMatcher extends Suppressible {
     Description matchThrow(ThrowTree tree, VisitorState state);
   }
 
-  public static interface TryTreeMatcher extends Suppressible {
+  public interface TryTreeMatcher extends Suppressible {
     Description matchTry(TryTree tree, VisitorState state);
   }
 
-  public static interface TypeCastTreeMatcher extends Suppressible {
+  public interface TypeCastTreeMatcher extends Suppressible {
     Description matchTypeCast(TypeCastTree tree, VisitorState state);
   }
 
-  public static interface TypeParameterTreeMatcher extends Suppressible {
+  public interface TypeParameterTreeMatcher extends Suppressible {
     Description matchTypeParameter(TypeParameterTree tree, VisitorState state);
   }
 
-  public static interface UnaryTreeMatcher extends Suppressible {
+  public interface UnaryTreeMatcher extends Suppressible {
     Description matchUnary(UnaryTree tree, VisitorState state);
   }
 
-  public static interface UnionTypeTreeMatcher extends Suppressible {
+  public interface UnionTypeTreeMatcher extends Suppressible {
     Description matchUnionType(UnionTypeTree tree, VisitorState state);
   }
 
-  public static interface VariableTreeMatcher extends Suppressible {
+  public interface VariableTreeMatcher extends Suppressible {
     Description matchVariable(VariableTree tree, VisitorState state);
   }
 
-  public static interface WhileLoopTreeMatcher extends Suppressible {
+  public interface WhileLoopTreeMatcher extends Suppressible {
     Description matchWhileLoop(WhileLoopTree tree, VisitorState state);
   }
 
-  public static interface WildcardTreeMatcher extends Suppressible {
+  public interface WildcardTreeMatcher extends Suppressible {
     Description matchWildcard(WildcardTree tree, VisitorState state);
   }
 
@@ -415,11 +421,16 @@ public abstract class BugChecker implements Suppressible, Serializable {
     BugChecker that = (BugChecker) obj;
     return this.canonicalName().equals(that.canonicalName())
         && this.defaultSeverity().equals(that.defaultSeverity())
-        && this.suppressibility().equals(that.suppressibility());
+        && this.supportsSuppressWarnings() == that.supportsSuppressWarnings()
+        && this.customSuppressionAnnotations().equals(that.customSuppressionAnnotations());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(canonicalName(), defaultSeverity(), suppressibility());
+    return Objects.hash(
+        canonicalName(),
+        defaultSeverity(),
+        supportsSuppressWarnings(),
+        customSuppressionAnnotations());
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2011 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -222,6 +222,9 @@ public class VisitorState {
       }
       return type;
     } catch (CompletionFailure failure) {
+      // Ignoring completion error is problematic in general, but in this case we're ignoring a
+      // completion error for a type that was directly requested, not one that was discovered
+      // during the compilation.
       return null;
     }
   }
@@ -240,7 +243,9 @@ public class VisitorState {
         return result;
       }
     } catch (CompletionFailure failure) {
-      // ignored
+      // Ignoring completion error is problematic in general, but in this case we're ignoring a
+      // completion error for a type that was directly requested, not one that was discovered
+      // during the compilation.
     }
     return null;
   }

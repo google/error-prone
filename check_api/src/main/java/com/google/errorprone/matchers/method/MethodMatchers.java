@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class MethodMatchers {
   // Language definition for fluent method matchers.
 
   public interface InstanceMethodMatcher extends Matcher<ExpressionTree> {
-    /** Match on types with satisfy the given predicate. */
+    /** Match on types that satisfy the given predicate. */
     MethodClassMatcher onClass(TypePredicate predicate);
 
     /** Match on types with the given fully-qualified name. (e.g. java.lang.String) */
@@ -54,7 +54,7 @@ public class MethodMatchers {
   }
 
   public interface StaticMethodMatcher extends Matcher<ExpressionTree> {
-    /** Match on types with satisfy the given predicate. */
+    /** Match on types that satisfy the given predicate. */
     MethodClassMatcher onClass(TypePredicate predicate);
 
     /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String} */
@@ -112,6 +112,9 @@ public class MethodMatchers {
   }
 
   public interface ConstructorMatcher extends Matcher<ExpressionTree> {
+    /** Match on types that satisfy the given predicate. */
+    ConstructorClassMatcher forClass(TypePredicate predicate);
+
     /** Match on the given type exactly. */
     ConstructorClassMatcher forClass(String className);
 

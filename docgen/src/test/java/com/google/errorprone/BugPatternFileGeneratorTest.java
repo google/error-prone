@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.google.common.io.CharStreams;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.gson.Gson;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -68,9 +67,7 @@ public class BugPatternFileGeneratorTest {
     instance.altNames = new String[] {"ThrowableInstanceNeverThrown"};
     instance.tags = new String[] {"LikelyError"};
     instance.severity = SeverityLevel.ERROR;
-    instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
-    instance.customSuppressionAnnotations =
-        new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};
+    instance.suppressionAnnotations = new String[] {"java.lang.SuppressWarnings.class"};
     instance.providesFix = ProvidesFix.NO_FIX;
     return instance;
   }
@@ -155,9 +152,7 @@ public class BugPatternFileGeneratorTest {
     instance.altNames = new String[0];
     instance.tags = new String[] {"LikelyError"};
     instance.severity = SeverityLevel.ERROR;
-    instance.suppressibility = Suppressibility.SUPPRESS_WARNINGS;
-    instance.customSuppressionAnnotations =
-        new String[] {"com.google.errorprone.BugPattern.NoCustomSuppression.class"};
+    instance.suppressionAnnotations = new String[] {"java.lang.SuppressWarnings.class"};
     instance.providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 
     // Write markdown file

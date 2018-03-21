@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ public class MaskedClassLoader extends ClassLoader {
   static class MaskedFileManager extends JavacFileManager {
 
     public MaskedFileManager(Context context) {
-      super(context, true, UTF_8);
+      super(context, /* register= */ true, UTF_8);
     }
 
     public MaskedFileManager() {

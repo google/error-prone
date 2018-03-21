@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,11 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 /** @author hanuszczak@google.com (Łukasz Hanuszczak) */
-// BUG: Diagnostic contains: Overloaded methods ("bar", "baz") of this class are not grouped
-// together
 public class UngroupedOverloadsPositiveCasesInterleaved {
 
   private int foo;
 
+  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar(int x, String z, int y) {
     System.out.println(String.format("z: %s, x: %d, y: %d", z, x, y));
   }
@@ -31,20 +30,24 @@ public class UngroupedOverloadsPositiveCasesInterleaved {
     this.foo = foo;
   }
 
+  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar(int x) {
     bar(foo, x);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'baz' are not grouped together
   public void baz(String x) {
     baz(x, FOO);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar(int x, int y) {
     bar(y, FOO, x);
   }
 
   public static final String FOO = "foo";
 
+  // BUG: Diagnostic contains: Overloads of 'baz' are not grouped together
   public void baz(String x, String y) {
     bar(foo, x + y, foo);
   }

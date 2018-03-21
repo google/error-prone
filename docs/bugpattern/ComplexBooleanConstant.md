@@ -35,5 +35,5 @@ for (int i = 0; i < 100; i++) {
   System.out.println("Is " + i + " greater than 50?: " + (1 > 50));
 }
 
-// Prints "... true" 100 times, since i > 50 is mistyped as 1 > 50
+// Prints "... false" 100 times, since i > 50 is mistyped as 1 > 50
 ```

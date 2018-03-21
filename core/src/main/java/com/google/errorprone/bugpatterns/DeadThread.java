@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -35,7 +36,8 @@ import com.sun.source.tree.Tree.Kind;
   name = "DeadThread",
   summary = "Thread created but not started",
   explanation = "The Thread is created with new, but is never started, and the reference is lost.",
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class DeadThread extends BugChecker implements NewClassTreeMatcher {
 

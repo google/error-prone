@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -336,6 +336,24 @@ public class ArgumentSelectionDefectCheckerTest {
             "  void test() {",
             "     // BUG: Diagnostic contains: true",
             "     CompilationTestHelper.newInstance((Class<BugChecker>)null, getClass());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void description() {
+    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second);",
+            "  void test(Object first, Object second) {",
+            "     // BUG: Diagnostic contains: The following arguments may have been swapped:"
+                + " 'second' for formal parameter 'first', 'first' for formal parameter 'second'."
+                + " Either add clarifying `/* paramName= */` comments, or swap the arguments if"
+                + " that is what was intended",
+            "     target(second, first);",
             "  }",
             "}")
         .doTest();

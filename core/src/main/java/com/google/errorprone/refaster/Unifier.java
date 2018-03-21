@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All rights reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -122,7 +122,7 @@ public final class Unifier {
 
   public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
       @Nullable final List<U> toUnify, @Nullable final List<? extends T> targets) {
-    return unifications(toUnify, targets, false);
+    return unifications(toUnify, targets, /* allowVarargs= */ false);
   }
 
   public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
@@ -138,7 +138,7 @@ public final class Unifier {
    */
   public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(
       Unifier unifier, @Nullable List<U> toUnify, @Nullable final List<? extends T> targets) {
-    return unifyList(unifier, toUnify, targets, false);
+    return unifyList(unifier, toUnify, targets, /* allowVarargs= */ false);
   }
 
   /**

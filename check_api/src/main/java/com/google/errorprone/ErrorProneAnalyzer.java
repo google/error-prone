@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TaskEvent;
@@ -40,6 +41,8 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.PropagatedException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
+import javax.tools.JavaFileObject;
 
 /** A {@link TaskListener} that runs Error Prone over attributed compilation units. */
 @Trusted
@@ -133,7 +136,11 @@ public class ErrorProneAnalyzer implements TaskListener {
     JCCompilationUnit compilation = (JCCompilationUnit) path.getCompilationUnit();
     DescriptionListener descriptionListener =
         descriptionListenerFactory.getDescriptionListener(log, compilation);
+    JavaFileObject originalSource = log.useSource(compilation.getSourceFile());
     try {
+      if (shouldExcludeSourceFile(compilation.getSourceFile())) {
+        return;
+      }
       if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
         // We only get TaskEvents for compilation units if they contain no package declarations
         // (e.g. package-info.java files).  In this case it's safe to analyze the
@@ -157,7 +164,16 @@ public class ErrorProneAnalyzer implements TaskListener {
       // then a normal compilation would have succeeded, and no diagnostics will have been
       // reported yet, but we don't want to crash javac.
       log.error("proc.cant.access", e.sym, e.getDetailValue(), Throwables.getStackTraceAsString(e));
+    } finally {
+      log.useSource(originalSource);
     }
+  }
+
+  /** Returns true if the given source file should be excluded from analysis. */
+  private boolean shouldExcludeSourceFile(JavaFileObject sourceFile) {
+    Pattern excludedPattern = errorProneOptions.getExcludedPattern();
+    return excludedPattern != null
+        && excludedPattern.matcher(ASTHelpers.getFileNameFromUri(sourceFile.toUri())).matches();
   }
 
   /** Returns true if all declarations inside the given compilation unit have been visited. */

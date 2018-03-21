@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,16 +35,10 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
@@ -243,33 +237,10 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     }
     // primitive widening conversions can't be combined with autoboxing, so add a
     // explicit widening cast unless we're sure the expression doesn't get autoboxed
-    Tree parent = state.getPath().getParentPath().getLeaf();
-    // TODO(cushon): de-dupe with UnnecessaryCast
-    Type targetType =
-        parent.accept(
-            new TreeScanner<Type, Void>() {
-              @Override
-              public Type visitAssignment(AssignmentTree node, Void unused) {
-                return getType(node.getVariable());
-              }
-
-              @Override
-              public Type visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
-                return getType(node.getVariable());
-              }
-
-              @Override
-              public Type visitReturn(ReturnTree node, Void unused) {
-                return getType(state.findEnclosing(MethodTree.class).getReturnType());
-              }
-
-              @Override
-              public Type visitVariable(VariableTree node, Void unused) {
-                return getType(node.getType());
-              }
-            },
-            null);
-    if (!isSameType(type, argType, state) && !isSameType(targetType, type, state)) {
+    ASTHelpers.TargetType targetType = ASTHelpers.targetType(state);
+    if (targetType != null
+        && !isSameType(type, argType, state)
+        && !isSameType(targetType.type(), type, state)) {
       return String.format("(%s) ", type);
     }
     return "";
@@ -303,6 +274,9 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
         return false;
       case MEMBER_SELECT:
         // can't select members on primitives (e.g. `theInteger.toString()`)
+        return false;
+      case TYPE_CAST:
+        // can't combine autoboxing and casts to reference types
         return false;
       default:
         return true;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,49 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.Violation;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.TypeParameterTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.ViolationReporter;
+import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Description.Builder;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Type;
-import java.util.HashSet;
+import com.sun.tools.javac.tree.JCTree.JCMemberReference;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -49,9 +66,15 @@ import java.util.Set;
   summary = "Type declaration annotated with @Immutable is not immutable",
   category = JDK,
   severity = ERROR,
-  documentSuppression = false
+  documentSuppression = false,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
-public class ImmutableChecker extends BugChecker implements BugChecker.ClassTreeMatcher {
+public class ImmutableChecker extends BugChecker
+    implements ClassTreeMatcher,
+        NewClassTreeMatcher,
+        TypeParameterTreeMatcher,
+        MethodInvocationTreeMatcher,
+        MemberReferenceTreeMatcher {
 
   private final WellKnownMutability wellKnownMutability;
 
@@ -64,15 +87,75 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
   }
 
+  // check instantiations of `@ImmutableTypeParameter`s in method references
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    return checkInvocation(
+        tree, ((JCMemberReference) tree).referentType, state, ASTHelpers.getSymbol(tree));
+  }
+
+  // check instantiations of `@ImmutableTypeParameter`s in method invocations
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    return checkInvocation(
+        tree, ASTHelpers.getType(tree.getMethodSelect()), state, ASTHelpers.getSymbol(tree));
+  }
+
+  @Override
+  public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    // check instantiations of `@ImmutableTypeParameter`s in generic constructor invocations
+    checkInvocation(
+        tree, ((JCNewClass) tree).constructorType, state, ((JCNewClass) tree).constructor);
+    // check instantiations of `@ImmutableTypeParameter`s in class constructor invocations
+    ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
+    Violation info =
+        analysis.checkInstantiation(
+            ASTHelpers.getSymbol(tree.getIdentifier()).getTypeParameters(),
+            ASTHelpers.getType(tree).getTypeArguments());
+    if (info.isPresent()) {
+      state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
+    }
+    return NO_MATCH;
+  }
+
+  private Description checkInvocation(
+      Tree tree, Type methodType, VisitorState state, Symbol symbol) {
+    ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
+    Violation info = analysis.checkInvocation(methodType, symbol);
+    if (info.isPresent()) {
+      state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
+    }
+    return NO_MATCH;
+  }
+
+  @Override
+  public Description matchTypeParameter(TypeParameterTree tree, VisitorState state) {
+    Symbol sym = ASTHelpers.getSymbol(tree);
+    if (sym == null) {
+      return NO_MATCH;
+    }
+    ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
+    if (!analysis.isImmutableTypeParameter((TypeVariableSymbol) sym)) {
+      return NO_MATCH;
+    }
+    switch (sym.owner.getKind()) {
+      case METHOD:
+      case CONSTRUCTOR:
+        return NO_MATCH;
+      default: // fall out
+    }
+    AnnotationInfo info = analysis.getImmutableAnnotation(sym.owner, state);
+    if (info == null) {
+      return buildDescription(tree)
+          .setMessage("@Immutable is only supported on immutable classes")
+          .build();
+    }
+    return NO_MATCH;
+  }
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    ImmutableAnalysis analysis =
-        new ImmutableAnalysis(
-            this,
-            state,
-            wellKnownMutability,
-            "@Immutable classes cannot have non-final fields",
-            "@Immutable class has mutable field");
+    ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
     if (tree.getSimpleName().length() == 0) {
       // anonymous classes have empty names
       // TODO(cushon): once Java 8 happens, require @Immutable on anonymous classes
@@ -89,21 +172,41 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // Special-case visiting declarations of known-immutable types; these uses
     // of the annotation are "trusted".
     if (wellKnownMutability.getKnownImmutableClasses().containsValue(annotation)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     // Check that the types in containerOf actually exist
-    Set<String> typarams = new HashSet<>();
+    Map<String, TypeVariableSymbol> typarams = new HashMap<>();
     for (TypeParameterTree typaram : tree.getTypeParameters()) {
-      typarams.add(typaram.getName().toString());
+      typarams.put(
+          typaram.getName().toString(), (TypeVariableSymbol) ASTHelpers.getSymbol(typaram));
     }
-    SetView<String> difference = Sets.difference(annotation.containerOf(), typarams);
+    SetView<String> difference = Sets.difference(annotation.containerOf(), typarams.keySet());
     if (!difference.isEmpty()) {
-      String message =
-          String.format(
-              "could not find type(s) referenced by containerOf: %s",
-              Joiner.on("', '").join(difference));
-      return buildDescription(tree).setMessage(message).build();
+      return buildDescription(tree)
+          .setMessage(
+              String.format(
+                  "could not find type(s) referenced by containerOf: %s",
+                  Joiner.on("', '").join(difference)))
+          .build();
+    }
+    ImmutableSet<String> immutableAndContainer =
+        typarams
+            .entrySet()
+            .stream()
+            .filter(
+                e ->
+                    annotation.containerOf().contains(e.getKey())
+                        && analysis.isImmutableTypeParameter(e.getValue()))
+            .map(Entry::getKey)
+            .collect(toImmutableSet());
+    if (!immutableAndContainer.isEmpty()) {
+      return buildDescription(tree)
+          .setMessage(
+              String.format(
+                  "using both @ImmutableTypeParameter and containerOf is redundant: %s",
+                  Joiner.on("', '").join(immutableAndContainer)))
+          .build();
     }
 
     // Main path for @Immutable-annotated types:
@@ -111,19 +214,35 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // Check that the fields (including inherited fields) are immutable, and
     // validate the type hierarchy superclass.
 
+    ClassSymbol sym = ASTHelpers.getSymbol(tree);
+
     Violation info =
         analysis.checkForImmutability(
             Optional.of(tree),
             immutableTypeParametersInScope(ASTHelpers.getSymbol(tree), state, analysis),
-            ASTHelpers.getType(tree));
+            ASTHelpers.getType(tree),
+            (Tree matched, Violation violation) ->
+                describeClass(matched, sym, annotation, violation));
 
     if (!info.isPresent()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
-    String message =
-        "type annotated with @Immutable could not be proven immutable: " + info.message();
-    return buildDescription(tree).setMessage(message).build();
+    return describeClass(tree, sym, annotation, info).build();
+  }
+
+  private Description.Builder describeClass(
+      Tree tree, ClassSymbol sym, AnnotationInfo annotation, Violation info) {
+    String message;
+    if (sym.getQualifiedName().contentEquals(annotation.typeName())) {
+      message = "type annotated with @Immutable could not be proven immutable: " + info.message();
+    } else {
+      message =
+          String.format(
+              "Class extends @Immutable type %s, but is not immutable: %s",
+              annotation.typeName(), info.message());
+    }
+    return buildDescription(tree).setMessage(message);
   }
 
   // Anonymous classes
@@ -133,11 +252,11 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
       ClassTree tree, VisitorState state, ImmutableAnalysis analysis) {
     ClassSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     Type superType = immutableSupertype(sym, state);
     if (superType == null) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     // We don't need to check that the superclass has an immutable instantiation.
     // The anonymous instance can only be referred to using a superclass type, so
@@ -151,15 +270,28 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
     // }
     ImmutableSet<String> typarams = immutableTypeParametersInScope(sym, state, analysis);
     Violation info =
-        analysis.areFieldsImmutable(Optional.of(tree), typarams, ASTHelpers.getType(tree));
+        analysis.areFieldsImmutable(
+            Optional.of(tree),
+            typarams,
+            ASTHelpers.getType(tree),
+            new ViolationReporter() {
+              @Override
+              public Builder describe(Tree tree, Violation info) {
+                return describeAnonymous(tree, superType, info);
+              }
+            });
     if (!info.isPresent()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
-    String reason = Joiner.on(", ").join(info.path());
+    return describeAnonymous(tree, superType, info).build();
+  }
+
+  private Description.Builder describeAnonymous(Tree tree, Type superType, Violation info) {
     String message =
         String.format(
-            "Class extends @Immutable type %s, but is not immutable: %s", superType, reason);
-    return buildDescription(tree).setMessage(message).build();
+            "Class extends @Immutable type %s, but is not immutable: %s",
+            superType, info.message());
+    return buildDescription(tree).setMessage(message);
   }
 
   // Strong behavioural subtyping
@@ -168,11 +300,11 @@ public class ImmutableChecker extends BugChecker implements BugChecker.ClassTree
   private Description checkSubtype(ClassTree tree, VisitorState state) {
     ClassSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     Type superType = immutableSupertype(sym, state);
     if (superType == null) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     String message =
         String.format(

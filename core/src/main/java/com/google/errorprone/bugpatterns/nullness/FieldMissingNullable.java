@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
@@ -26,7 +27,6 @@ import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.TrustingNullnessAnalysis;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
@@ -53,11 +53,11 @@ import javax.lang.model.element.ElementKind;
   name = "FieldMissingNullable",
   summary = "Fields that can be null should be annotated @Nullable",
   category = JDK,
-  severity = SUGGESTION
+  severity = SUGGESTION,
+  providesFix = REQUIRES_HUMAN_ATTENTION
 )
 public class FieldMissingNullable extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
-
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     Symbol assigned = ASTHelpers.getSymbol(tree);
@@ -79,7 +79,7 @@ public class FieldMissingNullable extends BugChecker
 
     // Don't need dataflow to tell us that null is nullable
     if (expression.getKind() == Tree.Kind.NULL_LITERAL) {
-      return makeFix(tree, tree, "Initializing field with null literal");
+      return makeFix(state, tree, tree, "Initializing field with null literal");
     }
 
     // OK let's see what dataflow says
@@ -92,9 +92,9 @@ public class FieldMissingNullable extends BugChecker
       case NONNULL:
         return Description.NO_MATCH;
       case NULL:
-        return makeFix(tree, tree, "Initializing field with null");
+        return makeFix(state, tree, tree, "Initializing field with null");
       case NULLABLE:
-        return makeFix(tree, tree, "May initialize field with null");
+        return makeFix(state, tree, tree, "May initialize field with null");
       default:
         throw new AssertionError("Impossible: " + nullness);
     }
@@ -128,7 +128,7 @@ public class FieldMissingNullable extends BugChecker
 
     // Don't need dataflow to tell us that null is nullable
     if (expression.getKind() == Tree.Kind.NULL_LITERAL) {
-      return makeFix(fieldDecl, tree, "Assigning null literal to field");
+      return makeFix(state, fieldDecl, tree, "Assigning null literal to field");
     }
 
     // OK let's see what dataflow says
@@ -136,8 +136,8 @@ public class FieldMissingNullable extends BugChecker
         TrustingNullnessAnalysis.instance(state.context)
             .getNullness(new TreePath(state.getPath(), expression), state.context);
     if (nullness == null) {
-      // This can currently happen if the assignment is inside a lambda expression
-      // TODO(kmb): Make dataflow work for lambda expressions
+      // This can currently happen if the assignment is inside a finally block after a return.
+      // TODO(b/69154806): Make dataflow work for that case.
       return Description.NO_MATCH;
     }
     switch (nullness) {
@@ -145,9 +145,9 @@ public class FieldMissingNullable extends BugChecker
       case NONNULL:
         return Description.NO_MATCH;
       case NULL:
-        return makeFix(fieldDecl, tree, "Assigning null to field");
+        return makeFix(state, fieldDecl, tree, "Assigning null to field");
       case NULLABLE:
-        return makeFix(fieldDecl, tree, "May assign null to field");
+        return makeFix(state, fieldDecl, tree, "May assign null to field");
       default:
         throw new AssertionError("Impossible: " + nullness);
     }
@@ -166,14 +166,11 @@ public class FieldMissingNullable extends BugChecker
     return null;
   }
 
-  private Description makeFix(VariableTree declaration, Tree matchedTree, String message) {
+  private Description makeFix(
+      VisitorState state, VariableTree declaration, Tree matchedTree, String message) {
     return buildDescription(matchedTree)
         .setMessage(message)
-        .addFix(
-            SuggestedFix.builder()
-                .addImport("javax.annotation.Nullable")
-                .prefixWith(declaration, "@Nullable ")
-                .build())
+        .addFix(NullnessFixes.makeFix(state, declaration))
         .build();
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,7 +148,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return isThrowingFunctionalInterface(state, ASTHelpers.getType(tree));
   }
 
-  private static boolean isThrowingFunctionalInterface(VisitorState state, Type clazzType) {
+  static boolean isThrowingFunctionalInterface(VisitorState state, Type clazzType) {
     return CLASSES_CONSIDERED_THROWING
         .stream()
         .anyMatch(t -> ASTHelpers.isSubtype(clazzType, state.getTypeFromString(t), state));

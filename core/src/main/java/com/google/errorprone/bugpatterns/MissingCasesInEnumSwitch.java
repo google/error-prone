@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -40,7 +40,7 @@ import javax.lang.model.element.ElementKind;
   name = "MissingCasesInEnumSwitch",
   summary = "Switches on enum types should either handle all values, or have a default case.",
   category = JDK,
-  severity = ERROR
+  severity = WARNING
 )
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 

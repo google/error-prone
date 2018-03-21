@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
-import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.common.base.Optional;
@@ -52,9 +51,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
 
   private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
+  private static final String CAN_IGNORE_RETURN_VALUE = "CanIgnoreReturnValue";
 
   private static Optional<Boolean> shouldCheckReturnValue(Symbol sym, VisitorState state) {
-    if (hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
+    if (hasDirectAnnotationWithSimpleName(sym, CAN_IGNORE_RETURN_VALUE)) {
       return Optional.of(false);
     }
     if (hasDirectAnnotationWithSimpleName(sym, CHECK_RETURN_VALUE)) {
@@ -120,8 +120,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       "@CheckReturnValue and @CanIgnoreReturnValue cannot both be applied to the same %s";
 
   /**
-   * Validate {@link javax.annotation.CheckReturnValue} and {@link CanIgnoreReturnValue} usage on
-   * methods.
+   * Validate {@code @CheckReturnValue} and {@link CanIgnoreReturnValue} usage on methods.
    *
    * <p>The annotations should not both be appled to the same method.
    *
@@ -133,7 +132,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     MethodSymbol method = ASTHelpers.getSymbol(tree);
 
     boolean checkReturn = hasDirectAnnotationWithSimpleName(method, CHECK_RETURN_VALUE);
-    boolean canIgnore = hasAnnotation(method, CanIgnoreReturnValue.class, state);
+    boolean canIgnore = hasDirectAnnotationWithSimpleName(method, CAN_IGNORE_RETURN_VALUE);
 
     if (checkReturn && canIgnore) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "method")).build();
@@ -160,13 +159,13 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   }
 
   /**
-   * Validate that at most one of {@link javax.annotation.CheckReturnValue} and {@link
-   * CanIgnoreReturnValue} are applied to a class (or interface or enum).
+   * Validate that at most one of {@code CheckReturnValue} and {@code CanIgnoreReturnValue} are
+   * applied to a class (or interface or enum).
    */
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (hasDirectAnnotationWithSimpleName(ASTHelpers.getSymbol(tree), CHECK_RETURN_VALUE)
-        && hasAnnotation(tree, CanIgnoreReturnValue.class, state)) {
+        && hasDirectAnnotationWithSimpleName(ASTHelpers.getSymbol(tree), CAN_IGNORE_RETURN_VALUE)) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "class")).build();
     }
     return Description.NO_MATCH;

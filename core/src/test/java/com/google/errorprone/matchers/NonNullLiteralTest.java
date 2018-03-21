@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "    return \"test string\";",
         "  }",
         "}");
-    assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
+    assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ true, Matchers.nonNullLiteral()));
   }
 
   @Test
@@ -73,7 +73,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "    Type klass = String.class;",
         "  }",
         "}");
-    assertCompiles(nonNullLiteralMatches(true, Matchers.nonNullLiteral()));
+    assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ true, Matchers.nonNullLiteral()));
   }
 
   @Test
@@ -86,7 +86,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "    }",
         "  }",
         "}");
-    assertCompiles(nonNullLiteralMatches(false, Matchers.nonNullLiteral()));
+    assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ false, Matchers.nonNullLiteral()));
   }
 
   @Test
@@ -110,7 +110,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
         "    foo.stringVar = new String();",
         "  }",
         "}");
-    assertCompiles(nonNullLiteralMatches(false, Matchers.nonNullLiteral()));
+    assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ false, Matchers.nonNullLiteral()));
   }
 
   private Scanner nonNullLiteralMatches(

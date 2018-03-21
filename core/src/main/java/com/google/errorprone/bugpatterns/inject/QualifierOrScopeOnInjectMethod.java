@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -51,7 +52,8 @@ import java.util.List;
   summary =
       "Qualifiers/Scope annotations on @Inject methods don't have any effect."
           + " Move the qualifier annotation to the binding location.",
-  severity = SeverityLevel.ERROR,
+  severity = SeverityLevel.WARNING,
+  tags = StandardTags.LIKELY_ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class QualifierOrScopeOnInjectMethod extends BugChecker implements MethodTreeMatcher {

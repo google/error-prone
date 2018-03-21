@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.BugPattern.Suppressibility.CUSTOM_ANNOTATION;
 
 import com.google.common.base.CharMatcher;
 import com.google.errorprone.BugPattern;
@@ -36,9 +35,8 @@ import com.sun.source.tree.CompilationUnitTree;
   summary = "Package names should match the directory they are declared in",
   category = JDK,
   severity = SUGGESTION,
-  suppressibility = CUSTOM_ANNOTATION,
   documentSuppression = false,
-  customSuppressionAnnotations = SuppressPackageLocation.class,
+  suppressionAnnotations = SuppressPackageLocation.class,
   tags = StandardTags.STYLE
 )
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
@@ -47,12 +45,6 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    // Android projects often put different configurations (e.g. dev vs. prod) of a class at paths
-    // with a {dev, prod} prefix.  Opt them out of this check.
-    if (state.isAndroidCompatible()) {
-      return Description.NO_MATCH;
-    }
-
     if (tree.getPackageName() == null) {
       return Description.NO_MATCH;
     }

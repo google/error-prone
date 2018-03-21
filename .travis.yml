@@ -1,7 +1,16 @@
 language: java
 
-jdk:
-  - oraclejdk8
+
+matrix:
+  allow_failures:
+    - jdk: oraclejdk9
+  include:
+# JDK 8
+    - jdk: oraclejdk8
+      env: JDK_RELEASE='8'
+# JDK 9
+    - jdk: oraclejdk9
+      env: JDK_RELEASE='9'
 
 # use travis-ci docker based infrastructure
 sudo: false

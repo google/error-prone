@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Map;
+import java.util.Objects;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -57,11 +58,26 @@ import java.util.Map;
 )
 public class CanonicalDuration extends BugChecker implements MethodInvocationTreeMatcher {
 
+  enum Api {
+    JAVA("java.time.Duration"),
+    JODA("org.joda.time.Duration");
+
+    private final String durationFullyQualifiedName;
+
+    private Api(String durationFullyQualifiedName) {
+      this.durationFullyQualifiedName = durationFullyQualifiedName;
+    }
+
+    String getDurationFullyQualifiedName() {
+      return durationFullyQualifiedName;
+    }
+  }
+
   private static final Matcher<ExpressionTree> JAVA_TIME_MATCHER =
-      staticMethod().onClass("java.time.Duration");
+      staticMethod().onClass(Api.JAVA.getDurationFullyQualifiedName());
 
   private static final Matcher<ExpressionTree> JODA_MATCHER =
-      staticMethod().onClass("org.joda.time.Duration");
+      staticMethod().onClass(Api.JODA.getDurationFullyQualifiedName());
 
   private static final ImmutableTable<Api, ChronoUnit, String> FACTORIES =
       ImmutableTable.<Api, ChronoUnit, String>builder()
@@ -95,10 +111,13 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
           .put(ChronoUnit.NANOS, Converter.from(Duration::toNanos, Duration::ofNanos))
           .build();
 
-  enum Api {
-    JAVA,
-    JODA
-  }
+  // Represent a single day/hour/minute as hours/minutes/seconds is sometimes used to allow a block
+  // of durations to have consistent units.
+  private static final ImmutableMap<TemporalUnit, Long> BLACKLIST =
+      ImmutableMap.of(
+          ChronoUnit.HOURS, 24L,
+          ChronoUnit.MINUTES, 60L,
+          ChronoUnit.SECONDS, 60L);
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -126,10 +145,23 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
     if (value.intValue() == 0) {
       switch (api) {
         case JODA:
-          return describeMatch(
-              tree,
-              SuggestedFix.replace(
-                  state.getEndPosition(getReceiver(tree)), state.getEndPosition(tree), ".ZERO"));
+          ExpressionTree receiver = getReceiver(tree);
+          SuggestedFix fix;
+          if (receiver == null) { // static import of the method
+            fix =
+                SuggestedFix.builder()
+                    .addImport(api.getDurationFullyQualifiedName())
+                    .replace(tree, "Duration.ZERO")
+                    .build();
+          } else {
+            fix =
+                SuggestedFix.replace(
+                    state.getEndPosition(getReceiver(tree)), state.getEndPosition(tree), ".ZERO");
+          }
+          return buildDescription(tree)
+              .setMessage("Duration can be expressed more clearly without units, as Duration.ZERO")
+              .addFix(fix)
+              .build();
         case JAVA:
           // don't rewrite e.g. `ofMillis(0)` to `ofDays(0)`
           return NO_MATCH;
@@ -141,6 +173,9 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
       return NO_MATCH;
     }
     TemporalUnit unit = METHOD_NAME_TO_UNIT.get(sym.getSimpleName().toString());
+    if (Objects.equals(BLACKLIST.get(unit), value.longValue())) {
+      return NO_MATCH;
+    }
     Duration duration = Duration.of(value.longValue(), unit);
     // Iterate over all possible units from largest to smallest (days to nanos) until we find the
     // largest unit that can be used to exactly express the duration.
@@ -151,18 +186,27 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
         break;
       }
       Converter<Duration, Long> converter = entry.getValue();
-      Long nextValue = converter.convert(duration);
+      long nextValue = converter.convert(duration);
       if (converter.reverse().convert(nextValue).equals(duration)) {
         // We reached a larger than original unit that precisely expresses the duration, rewrite to
         // use it instead.
         String name = FACTORIES.get(api, nextUnit);
         String replacement =
-            String.format(
-                ".%s(%d%s)", name, nextValue, nextValue == nextValue.intValue() ? "" : "L");
-        return describeMatch(
-            tree,
-            SuggestedFix.replace(
-                state.getEndPosition(getReceiver(tree)), state.getEndPosition(tree), replacement));
+            String.format("%s(%d%s)", name, nextValue, nextValue == ((int) nextValue) ? "" : "L");
+        ExpressionTree receiver = getReceiver(tree);
+        if (receiver == null) { // static import of the method
+          SuggestedFix fix =
+              SuggestedFix.builder()
+                  .addStaticImport(api.getDurationFullyQualifiedName() + "." + name)
+                  .replace(tree, replacement)
+                  .build();
+          return describeMatch(tree, fix);
+        } else {
+          return describeMatch(
+              tree,
+              SuggestedFix.replace(
+                  state.getEndPosition(receiver), state.getEndPosition(tree), "." + replacement));
+        }
       }
     }
     return NO_MATCH;

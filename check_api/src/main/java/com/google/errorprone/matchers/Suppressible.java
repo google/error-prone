@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.errorprone.BugPattern;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
@@ -31,11 +30,8 @@ public interface Suppressible {
   /** The canonical name of the check. */
   String canonicalName();
 
-  /**
-   * Returns how this checker can be suppressed (e.g., via {@code @SuppressWarnings} or a custom
-   * suppression annotation.
-   */
-  BugPattern.Suppressibility suppressibility();
+  /** Returns true if this checker can be suppressed using {@code @SuppressWarnings}. */
+  boolean supportsSuppressWarnings();
 
   /** Returns the custom suppression annotations for this checker, if custom suppression is used. */
   Set<Class<? extends Annotation>> customSuppressionAnnotations();

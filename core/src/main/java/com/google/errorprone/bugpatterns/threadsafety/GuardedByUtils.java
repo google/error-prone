@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
@@ -27,40 +30,71 @@ import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 public class GuardedByUtils {
-  static String getGuardValue(Tree tree, VisitorState state) {
+  public static ImmutableSet<String> getGuardValues(Symbol sym) {
+    return getAnnotationValueAsStrings(sym, "GuardedBy");
+  }
+
+  static ImmutableSet<String> getGuardValues(Tree tree, VisitorState state) {
     Symbol sym = getSymbol(tree);
     if (sym == null) {
       return null;
     }
-    return sym.getRawAttributes()
-        .stream()
-        .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals("GuardedBy"))
-        .findFirst()
-        .flatMap(
-            a -> Optional.ofNullable(a.member(state.getName("value"))).flatMap(v -> asString(v)))
-        .orElse(null);
+    return getAnnotationValueAsStrings(sym, "GuardedBy");
   }
 
-  private static Optional<String> asString(Attribute v) {
-    return Optional.ofNullable(
+  private static ImmutableSet<String> getAnnotationValueAsStrings(Symbol sym, String guardedBy) {
+    return sym.getRawAttributes()
+        .stream()
+        .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals(guardedBy))
+        .flatMap(
+            a ->
+                a.getElementValues()
+                    .entrySet()
+                    .stream()
+                    .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
+                    .map(Map.Entry::getValue)
+                    .findFirst()
+                    .map(v -> asStrings(v))
+                    .orElse(Stream.empty()))
+        .collect(toImmutableSet());
+  }
+
+  private static Stream<String> asStrings(Attribute v) {
+    return MoreObjects.firstNonNull(
         v.accept(
-            new SimpleAnnotationValueVisitor8<String, Void>() {
+            new SimpleAnnotationValueVisitor8<Stream<String>, Void>() {
               @Override
-              public String visitString(String s, Void aVoid) {
-                return s;
+              public Stream<String> visitString(String s, Void aVoid) {
+                return Stream.of(s);
+              }
+
+              @Override
+              public Stream<String> visitArray(List<? extends AnnotationValue> list, Void aVoid) {
+                return list.stream().flatMap(a -> a.accept(this, null)).filter(x -> x != null);
               }
             },
-            null));
+            null),
+        Stream.empty());
   }
 
   public static JCTree.JCExpression parseString(String guardedByString, Context context) {
     JavacParser parser =
-        ParserFactory.instance(context).newParser(guardedByString, false, true, false);
+        ParserFactory.instance(context)
+            .newParser(
+                guardedByString,
+                /* keepDocComments= */ false,
+                /* keepEndPos= */ true,
+                /* keepLineMap= */ false);
     JCTree.JCExpression exp;
     try {
       exp = parser.parseExpression();
@@ -90,15 +124,19 @@ public class GuardedByUtils {
   }
 
   public static GuardedByValidationResult isGuardedByValid(Tree tree, VisitorState state) {
-    String guard = GuardedByUtils.getGuardValue(tree, state);
-    if (guard == null) {
+    ImmutableSet<String> guards = GuardedByUtils.getGuardValues(tree, state);
+    if (guards.isEmpty()) {
       return GuardedByValidationResult.ok();
     }
 
-    Optional<GuardedByExpression> boundGuard =
-        GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state));
-    if (!boundGuard.isPresent()) {
-      return GuardedByValidationResult.invalid("could not resolve guard");
+    List<GuardedByExpression> boundGuards = new ArrayList<>();
+    for (String guard : guards) {
+      Optional<GuardedByExpression> boundGuard =
+          GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state));
+      if (!boundGuard.isPresent()) {
+        return GuardedByValidationResult.invalid("could not resolve guard");
+      }
+      boundGuards.add(boundGuard.get());
     }
 
     Symbol treeSym = getSymbol(tree);
@@ -107,11 +145,13 @@ public class GuardedByUtils {
       return GuardedByValidationResult.ok();
     }
 
-    boolean staticGuard =
-        boundGuard.get().kind() == GuardedByExpression.Kind.CLASS_LITERAL
-            || (boundGuard.get().sym() != null && boundGuard.get().sym().isStatic());
-    if (treeSym.isStatic() && !staticGuard) {
-      return GuardedByValidationResult.invalid("static member guarded by instance");
+    for (GuardedByExpression boundGuard : boundGuards) {
+      boolean staticGuard =
+          boundGuard.kind() == GuardedByExpression.Kind.CLASS_LITERAL
+              || (boundGuard.sym() != null && boundGuard.sym().isStatic());
+      if (treeSym.isStatic() && !staticGuard) {
+        return GuardedByValidationResult.invalid("static member guarded by instance");
+      }
     }
 
     return GuardedByValidationResult.ok();

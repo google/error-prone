@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,6 +106,20 @@ public class SynchronizeOnNonFinalFieldTest {
             "import com.google.errorprone.annotations.concurrent.LazyInit;",
             "class Test {",
             "  @LazyInit transient Object lock = new Object();",
+            "  void m() {",
+            "    synchronized (lock) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_Writer() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.io.Writer;",
+            "abstract class Test extends Writer {",
             "  void m() {",
             "    synchronized (lock) {}",
             "  }",

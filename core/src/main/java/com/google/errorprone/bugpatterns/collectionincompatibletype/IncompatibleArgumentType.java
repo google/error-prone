@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,11 @@ import static com.google.errorprone.bugpatterns.collectionincompatibletype.Abstr
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.CompatibleWith;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
@@ -40,7 +42,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
@@ -68,10 +69,19 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
+    // example:
+    // class Foo<A> {
+    //   <B> void bar(@CompatibleWith("A") Object o, @CompatibleWith("B") Object o2) {}
+    // }
+    // new Foo<Integer>().<String>bar(1, "a');
+
+    // A Type substitution capturing <Integer> on Foo and <String> on bar(Object,Object);
     Type calledMethodType = ASTHelpers.getType(methodInvocationTree.getMethodSelect());
+    // A Type substitution capturing <Integer> on Foo
     Type calledClazzType = ASTHelpers.getReceiverType(methodInvocationTree);
 
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
+    // The unbound MethodSymbol for bar(), with type parameters <A> and <B>
     MethodSymbol declaredMethod = ASTHelpers.getSymbol(methodInvocationTree);
     if (arguments.isEmpty() || declaredMethod == null) {
       return null;
@@ -100,21 +110,23 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
 
   private void reportAnyViolations(
       List<? extends ExpressionTree> arguments,
-      List<RequiredType> requiredTypesAtCallSite,
+      List<RequiredType> requiredArgumentTypes,
       VisitorState state) {
     Types types = state.getTypes();
-    for (int i = 0; i < requiredTypesAtCallSite.size(); i++) {
-      RequiredType requiredType = requiredTypesAtCallSite.get(i);
+    for (int i = 0; i < requiredArgumentTypes.size(); i++) {
+      RequiredType requiredType = requiredArgumentTypes.get(i);
       if (requiredType == null) {
         continue;
       }
       ExpressionTree argument = arguments.get(i);
       Type argType = ASTHelpers.getType(argument);
-      if (requiredType.type() != null
-          && !types.isCastable(
-              argType, types.erasure(ASTHelpers.getUpperBound(requiredType.type(), types)))) {
+      if (requiredType.type() != null) {
         // Report a violation for this type
-        state.reportMatch(describeViolation(argument, argType, requiredType.type(), types));
+        EqualsIncompatibleType.TypeCompatibilityReport report =
+            EqualsIncompatibleType.compatibilityOfTypes(requiredType.type(), argType, state);
+        if (!report.compatible()) {
+          state.reportMatch(describeViolation(argument, argType, requiredType.type(), types));
+        }
       }
     }
   }
@@ -139,26 +151,22 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     return buildDescription(argument).setMessage(msg).build();
   }
 
+  // Return whether this method contains any @CompatibleWith annotations. If there are none, the
+  // caller should explore super-methods.
   @CheckReturnValue
   private boolean populateTypesToEnforce(
       MethodSymbol declaredMethod,
       Type calledMethodType,
       Type calledReceiverType,
-      List<RequiredType> requiredTypesAtCallSite,
+      List<RequiredType> argumentTypeRequirements,
       VisitorState state) {
-    // We'll only search the first method in the hierarchy with an annotation.
-    boolean found = false;
-    com.sun.tools.javac.util.List<VarSymbol> params = declaredMethod.params();
+    boolean foundAnyTypeToEnforce = false;
+    List<VarSymbol> params = declaredMethod.params();
     for (int i = 0; i < params.size(); i++) {
       VarSymbol varSymbol = params.get(i);
       CompatibleWith anno = ASTHelpers.getAnnotation(varSymbol, CompatibleWith.class);
       if (anno != null) {
-        found = true;
-        if (requiredTypesAtCallSite.size() <= i) {
-          // varargs method with 0 args passed from the caller side
-          // void foo(String...); foo();
-          break;
-        }
+        foundAnyTypeToEnforce = true;
 
         // Now we try and resolve the generic type argument in the annotation against the current
         // method call's projection of this generic type.
@@ -166,14 +174,30 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
             resolveRequiredTypeForThisCall(
                 state, calledMethodType, calledReceiverType, declaredMethod, anno.value());
 
-        requiredTypesAtCallSite.set(i, requiredType);
+        // @CW is on the varags parameter
+        if (declaredMethod.isVarArgs() && i == params.size() - 1) {
+          if (i >= argumentTypeRequirements.size()) {
+            // varargs method with 0 args passed from the caller side, no arguments to enforce
+            // void foo(String...); foo();
+            break;
+          } else {
+            // Set this required type for all of the arguments in the varargs position.
+            for (int j = i; j < argumentTypeRequirements.size(); j++) {
+              argumentTypeRequirements.set(j, requiredType);
+            }
+          }
+        } else {
+          argumentTypeRequirements.set(i, requiredType);
+        }
       }
     }
 
-    return found;
+    return foundAnyTypeToEnforce;
   }
 
   @Nullable
+  @CheckReturnValue
+  // From calledReceiverType
   private RequiredType resolveRequiredTypeForThisCall(
       VisitorState state,
       Type calledMethodType,
@@ -194,10 +218,9 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
   private RequiredType resolveTypeFromGenericMethod(
       Type calledMethodType, MethodSymbol declaredMethod, String typeArgName) {
     int tyargIndex = findTypeArgInList(declaredMethod, typeArgName);
-    if (tyargIndex != -1) {
-      return RequiredType.create(getTypeFromTypeMapping(calledMethodType, typeArgName));
-    }
-    return null;
+    return tyargIndex == -1
+        ? null
+        : RequiredType.create(getTypeFromTypeMapping(calledMethodType, typeArgName));
   }
 
   @SuppressWarnings("unchecked")
@@ -214,7 +237,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
       fromField.setAccessible(true);
       toField.setAccessible(true);
 
-      // Search for named in from, and return the parallel instance in to.
+      // Search for `namedTypeArg` in `from`, and return the parallel instance in `to`.
       List<Type> types = (List<Type>) fromField.get(subst);
       List<Type> calledTypes = (List<Type>) toField.get(subst);
       for (int i = 0; i < types.size(); i++) {

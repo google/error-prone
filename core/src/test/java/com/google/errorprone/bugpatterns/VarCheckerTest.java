@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -318,6 +318,19 @@ public class VarCheckerTest {
             "    try (InputStream is = null) {",
             "    } catch (Exception e) {",
             "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void receiverParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public void f(Test this, int x) {",
+            "    this.toString();",
             "  }",
             "}")
         .doTest();

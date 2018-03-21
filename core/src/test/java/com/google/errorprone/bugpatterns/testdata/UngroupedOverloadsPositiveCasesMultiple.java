@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,11 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 /** @author hanuszczak@google.com (Łukasz Hanuszczak) */
-// BUG: Diagnostic contains: Overloaded methods ("bar", "norf", "quux") of this class are not
-// grouped together
 public class UngroupedOverloadsPositiveCasesMultiple {
 
   private int foo;
 
+  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar(int x, String z, int y) {
     System.out.println(String.format("z: %s, x: %d, y: %d", z, x, y));
   }
@@ -31,6 +30,7 @@ public class UngroupedOverloadsPositiveCasesMultiple {
     this.foo = foo;
   }
 
+  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar(int x) {
     bar(foo, x);
   }
@@ -39,36 +39,43 @@ public class UngroupedOverloadsPositiveCasesMultiple {
     bar(42, x, 42);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar(int x, int y) {
     bar(y, FOO, x);
   }
 
   public static final String FOO = "foo";
 
+  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar(int x, int y, int z) {
     bar(x, String.valueOf(y), z);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'quux' are not grouped together
   public int quux() {
     return quux(quux);
   }
 
   public int quux = 42;
 
+  // BUG: Diagnostic contains: Overloads of 'quux' are not grouped together
   public int quux(int x) {
     return x + quux;
   }
 
   private static class Quux {}
 
+  // BUG: Diagnostic contains: Overloads of 'quux' are not grouped together
   public int quux(int x, int y) {
     return quux(x + y);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'norf' are not grouped together
   public int norf(int x) {
     return quux(x, x);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'norf' are not grouped together
   public int norf(int x, int y) {
     return norf(x + y);
   }
@@ -77,6 +84,7 @@ public class UngroupedOverloadsPositiveCasesMultiple {
     System.out.println("foo");
   }
 
+  // BUG: Diagnostic contains: Overloads of 'norf' are not grouped together
   public void norf(int x, int y, int w) {
     norf(x + w, y + w);
   }

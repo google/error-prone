@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -198,14 +198,14 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.expectThrows;",
+            "import static org.junit.Assert.assertThrows;",
             "import org.junit.runner.RunWith;",
             "import org.junit.runners.JUnit4;",
             "@RunWith(JUnit4.class)",
             "public class Test {",
             "  // BUG: Diagnostic contains: @Test",
             "  public void shouldDoSomething() {",
-            "    expectThrows(null, null);",
+            "    assertThrows(null, null);",
             "  }",
             "}")
         .doTest();
@@ -223,7 +223,7 @@ public class JUnit4TestNotRunTest {
             "public class Test {",
             "  // BUG: Diagnostic contains: @Test",
             "  public void shouldDoSomething() {",
-            "    Assert.expectThrows(null, null);",
+            "    Assert.assertThrows(null, null);",
             "  }",
             "}")
         .doTest();
@@ -507,6 +507,22 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceFile("JUnit4TestNotRunBaseClass.java")
         .addSourceFile("JUnit4TestNotRunNegativeCase5.java")
+        .doTest();
+  }
+
+  @Test
+  public void junit3TestWithIgnore() {
+    compilationHelper
+        .addSourceLines(
+            "TestStuff.java",
+            "import org.junit.Ignore;",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestStuff {",
+            "  @Ignore",
+            "  public void testMethod() {}",
+            "}")
         .doTest();
   }
 }

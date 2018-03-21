@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,24 +19,28 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.Violation;
+import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import java.util.Collections;
 import java.util.Optional;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -46,12 +50,19 @@ import java.util.Optional;
   category = JDK,
   summary = "Annotations should always be immutable",
   severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR
+  tags = StandardTags.LIKELY_ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeMatcher {
 
   public static final String ANNOTATED_ANNOTATION_MESSAGE =
-      "annotations are immutable by default; annotating them with @Immutable is unnecessary";
+      "annotations are immutable by default; annotating them with"
+          + " @com.google.errorprone.annotations.Immutable is unnecessary";
+
+  private static final ImmutableSet<String> PROCESSOR_BLACKLIST =
+      ImmutableSet.of(
+          "com.google.auto.value.processor.AutoAnnotationProcessor"
+          );
 
   private final WellKnownMutability wellKnownMutability;
 
@@ -70,6 +81,9 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
     if (symbol == null
         || symbol.isAnnotationType()
         || !WellKnownMutability.isAnnotation(state, symbol.type)) {
+      return NO_MATCH;
+    }
+    if (!Collections.disjoint(getGeneratedBy(symbol, state), PROCESSOR_BLACKLIST)) {
       return NO_MATCH;
     }
 
@@ -92,15 +106,20 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
                 this,
                 state,
                 wellKnownMutability,
-                "annotations should be immutable, and cannot have non-final fields",
-                "annotations should be immutable")
-            .checkForImmutability(Optional.of(tree), ImmutableSet.of(), getType(tree));
+                ImmutableSet.of(
+                    Immutable.class.getName(),
+                    javax.annotation.concurrent.Immutable.class.getName()))
+            .checkForImmutability(
+                Optional.of(tree), ImmutableSet.of(), getType(tree), this::describeClass);
 
     if (!info.isPresent()) {
       return NO_MATCH;
     }
+    return describeClass(tree, info).build();
+  }
 
+  Description.Builder describeClass(Tree tree, Violation info) {
     String message = "annotations should be immutable: " + info.message();
-    return buildDescription(tree).setMessage(message).build();
+    return buildDescription(tree).setMessage(message);
   }
 }

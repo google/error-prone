@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,9 @@ import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.MustBeClosed;
@@ -30,7 +33,9 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -41,13 +46,15 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import java.util.Objects;
+import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 
 /**
- * An abstract check for resources that must be closed; used by {@link FilesLinesLeak} and {@link
- * MustBeClosedChecker}.
+ * An abstract check for resources that must be closed; used by {@link StreamResourceLeak} and
+ * {@link MustBeClosedChecker}.
  */
 public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
@@ -65,7 +72,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    * Check that constructors and methods annotated with {@link MustBeClosed} occur within the
    * resource variable initializer of a try-with-resources statement.
    */
-  protected Description matchNewClassOrMethodInvocation(Tree tree, VisitorState state) {
+  protected Description matchNewClassOrMethodInvocation(ExpressionTree tree, VisitorState state) {
     Description description = checkClosed(tree, state);
     if (description == NO_MATCH) {
       return NO_MATCH;
@@ -77,38 +84,76 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     return description;
   }
 
-  private Description checkClosed(Tree tree, VisitorState state) {
+  private Description checkClosed(ExpressionTree tree, VisitorState state) {
     MethodTree callerMethodTree = enclosingMethod(state);
-    if (state.getPath().getParentPath().getLeaf().getKind() == Tree.Kind.RETURN
-        && callerMethodTree != null) {
-      // The invocation occurs within a return statement of a method, instead of a lambda
-      // expression or anonymous class.
-
-      if (HAS_MUST_BE_CLOSED_ANNOTATION.matches(callerMethodTree, state)) {
-        // Ignore invocations of annotated methods and constructors that occur in the return
-        // statement of an annotated caller method, since invocations of the caller are enforced.
-        return NO_MATCH;
+    TreePath path = state.getPath();
+    OUTER:
+    while (true) {
+      TreePath prev = path;
+      path = path.getParentPath();
+      switch (path.getLeaf().getKind()) {
+        case RETURN:
+          if (callerMethodTree != null) {
+            // The invocation occurs within a return statement of a method, instead of a lambda
+            // expression or anonymous class.
+            if (HAS_MUST_BE_CLOSED_ANNOTATION.matches(callerMethodTree, state)) {
+              // Ignore invocations of annotated methods and constructors that occur in the return
+              // statement of an annotated caller method, since invocations of the caller are
+              // enforced.
+              return NO_MATCH;
+            }
+            // The caller method is not annotated, so the closing of the returned resource is not
+            // enforced. Suggest fixing this by annotating the caller method.
+            return buildDescription(tree)
+                .addFix(
+                    SuggestedFix.builder()
+                        .prefixWith(callerMethodTree, "@MustBeClosed\n")
+                        .addImport(MustBeClosed.class.getCanonicalName())
+                        .build())
+                .build();
+          }
+          break;
+        case CONDITIONAL_EXPRESSION:
+          ConditionalExpressionTree conditionalExpressionTree =
+              (ConditionalExpressionTree) path.getLeaf();
+          if (conditionalExpressionTree.getTrueExpression().equals(prev.getLeaf())
+              || conditionalExpressionTree.getFalseExpression().equals(prev.getLeaf())) {
+            continue OUTER;
+          }
+          break;
+        case MEMBER_SELECT:
+          MemberSelectTree memberSelectTree = (MemberSelectTree) path.getLeaf();
+          if (memberSelectTree.getExpression().equals(prev.getLeaf())) {
+            Type type = getType(memberSelectTree);
+            Symbol sym = getSymbol(memberSelectTree);
+            Type streamType = state.getTypeFromString(Stream.class.getName());
+            if (isSubtype(sym.enclClass().asType(), streamType, state)
+                && isSameType(type.getReturnType(), streamType, state)) {
+              // skip enclosing method invocation
+              path = path.getParentPath();
+              continue OUTER;
+            }
+          }
+          break;
+        case VARIABLE:
+          Symbol sym = getSymbol(path.getLeaf());
+          if (sym instanceof VarSymbol) {
+            VarSymbol var = (VarSymbol) sym;
+            if (var.getKind() == ElementKind.RESOURCE_VARIABLE
+                || tryFinallyClose(var, path, state)) {
+              return NO_MATCH;
+            }
+          }
+          break;
+        default:
+          break;
       }
-
-      // The caller method is not annotated, so the closing of the returned resource is not
-      // enforced. Suggest fixing this by annotating the caller method.
-      return buildDescription(tree)
-          .addFix(
-              SuggestedFix.builder()
-                  .prefixWith(callerMethodTree, "@MustBeClosed\n")
-                  .addImport(MustBeClosed.class.getCanonicalName())
-                  .build())
-          .build();
-    }
-
-    if (!inTWR(state)) {
       // The constructor or method invocation does not occur within the resource variable
       // initializer of a try-with-resources statement.
       Description.Builder description = buildDescription(tree);
       addFix(description, tree, state);
       return description.build();
     }
-    return NO_MATCH;
   }
 
   /**
@@ -129,24 +174,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       }
     }
     return null;
-  }
-
-  /**
-   * Returns whether an invocation occurs within the resource variable initializer of a
-   * try-with-resources statement.
-   */
-  // TODO(cushon): This method has been copied from FilesLinesLeak. Move it to a shared class.
-  private boolean inTWR(VisitorState state) {
-    TreePath path = state.getPath().getParentPath();
-    while (path.getLeaf().getKind() == Tree.Kind.CONDITIONAL_EXPRESSION) {
-      path = path.getParentPath();
-    }
-    Symbol sym = getSymbol(path.getLeaf());
-    if (!(sym instanceof VarSymbol)) {
-      return false;
-    }
-    VarSymbol var = (VarSymbol) sym;
-    return var.getKind() == ElementKind.RESOURCE_VARIABLE || tryFinallyClose(var, path, state);
   }
 
   private boolean tryFinallyClose(VarSymbol var, TreePath path, VisitorState state) {
@@ -188,5 +215,5 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     return closed[0];
   }
 
-  protected void addFix(Description.Builder description, Tree tree, VisitorState state) {}
+  protected void addFix(Description.Builder description, ExpressionTree tree, VisitorState state) {}
 }

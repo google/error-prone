@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public class PredicateIncompatibleTypeTest {
             "import java.util.stream.Stream;",
             "class Test {",
             "  Stream<ArrayList<String>> f(List<ArrayList<String>> a, LinkedList<String> b) {",
-            "    return a.stream().filter(a::equals);",
+            "    return a.stream().filter(b::equals);",
             "  }",
             "}")
         .doTest();

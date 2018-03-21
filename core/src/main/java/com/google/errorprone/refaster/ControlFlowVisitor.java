@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All rights reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,14 +51,14 @@ import javax.lang.model.element.Name;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
+public class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
   public static final ControlFlowVisitor INSTANCE = new ControlFlowVisitor();
 
   /**
    * The state of whether a sequence of statements may return, break out of the visited statements,
    * or neither.
    */
-  enum Result {
+  public enum Result {
     NEVER_EXITS {
       @Override
       Result or(Result other) {

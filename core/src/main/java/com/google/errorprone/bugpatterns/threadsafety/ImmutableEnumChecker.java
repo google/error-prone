@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,17 +25,19 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.Violation;
+import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -46,12 +48,14 @@ import java.util.stream.Stream;
   altNames = "Immutable",
   category = JDK,
   summary = "Enums should always be immutable",
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher {
 
   public static final String ANNOTATED_ENUM_MESSAGE =
-      "enums are immutable by default; annotating them with @Immutable is unnecessary";
+      "enums are immutable by default; annotating them with"
+          + " @com.google.errorprone.annotations.Immutable is unnecessary";
 
   private final WellKnownMutability wellKnownMutability;
 
@@ -91,16 +95,22 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
                 this,
                 state,
                 wellKnownMutability,
-                "enums should be immutable, and cannot have non-final fields",
-                "enums should only have immutable fields")
-            .checkForImmutability(Optional.of(tree), ImmutableSet.of(), getType(tree));
+                ImmutableSet.of(
+                    Immutable.class.getName(),
+                    javax.annotation.concurrent.Immutable.class.getName()))
+            .checkForImmutability(
+                Optional.of(tree), ImmutableSet.of(), getType(tree), this::describe);
 
     if (!info.isPresent()) {
       return NO_MATCH;
     }
 
+    return describe(tree, info).build();
+  }
+
+  private Description.Builder describe(Tree tree, Violation info) {
     String message = "enums should be immutable: " + info.message();
-    return buildDescription(tree).setMessage(message).build();
+    return buildDescription(tree).setMessage(message);
   }
 
   private static boolean implementsImmutableInterface(ClassSymbol symbol) {

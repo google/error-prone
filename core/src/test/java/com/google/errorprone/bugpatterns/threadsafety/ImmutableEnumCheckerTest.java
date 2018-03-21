@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,8 +70,8 @@ public class ImmutableEnumCheckerTest {
             "import java.util.Set;",
             "enum Enum {",
             "  ONE(1), TWO(2);",
-            "  // BUG: Diagnostic contains: "
-                + "enums should only have immutable fields, 'Set' is mutable",
+            "  // BUG: Diagnostic contains:  enums should be immutable: 'Enum' has field 'xs' of"
+                + " type 'java.util.Set<java.lang.Integer>', 'Set' is mutable",
             "  final Set<Integer> xs;",
             "  private Enum(Integer... xs) {",
             "    this.xs = new HashSet<>(Arrays.asList(xs));",
@@ -141,7 +141,8 @@ public class ImmutableEnumCheckerTest {
             "enum Enum {",
             "  ONE(new Foo()), TWO(new Foo());",
             "  // BUG: Diagnostic contains:"
-                + " the declaration of type 'Foo' is not annotated @Immutable",
+                + " the declaration of type 'Foo' is not annotated with"
+                + " @com.google.errorprone.annotations.Immutable",
             "  final Foo f;",
             "  private Enum(Foo f) {",
             "    this.f = f;",
@@ -160,6 +161,60 @@ public class ImmutableEnumCheckerTest {
             "  ONE;",
             "  @SuppressWarnings(\"Immutable\")",
             "  final int[] xs = {1};",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumInstanceSuperMutable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "enum Test {",
+            "  ONE {",
+            "    int incr() {",
+            "      return x++;",
+            "    }",
+            "  };",
+            "  abstract int incr();",
+            "  // BUG: Diagnostic contains: non-final",
+            "  int x;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumInstanceMutable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "enum Test {",
+            "  ONE {",
+            "    // BUG: Diagnostic contains: non-final",
+            "    int x;",
+            "    int incr() {",
+            "      return x++;",
+            "    }",
+            "  };",
+            "  abstract int incr();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void jucImmutable() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java", //
+            "import javax.annotation.concurrent.Immutable;",
+            "@Immutable",
+            "class Lib {",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "enum Test {",
+            "  ONE;",
+            "  final Lib l = new Lib();",
             "}")
         .doTest();
   }

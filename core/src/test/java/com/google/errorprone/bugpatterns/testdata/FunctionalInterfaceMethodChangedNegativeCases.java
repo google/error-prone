@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package com.google.errorprone.bugpatterns.testdata;
+
+import java.util.concurrent.Callable;
 
 public class FunctionalInterfaceMethodChangedNegativeCases {
   @FunctionalInterface
@@ -64,6 +66,19 @@ public class FunctionalInterfaceMethodChangedNegativeCases {
     @Override
     default String superSam() {
       return subSam();
+    }
+  }
+
+  // Regression test for b/68075767
+  @FunctionalInterface
+  public interface VoidCallable extends Callable<Void> {
+
+    void voidCall() throws Exception;
+
+    @Override
+    default Void call() throws Exception {
+      voidCall();
+      return null;
     }
   }
 }

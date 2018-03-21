@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class InputStreamSlowMultibyteReadTest {
   }
 
   @Test
-  public void basic() throws Exception {
+  public void basic() {
     compilationHelper
         .addSourceLines(
             "TestClass.java",
@@ -55,6 +55,30 @@ public class InputStreamSlowMultibyteReadTest {
             "  byte[] buf = new byte[42];",
             "  // BUG: Diagnostic contains:",
             "  public int read() { return buf[0]; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void abstractOverride() {
+    compilationHelper
+        .addSourceLines(
+            "TestClass.java",
+            "abstract class TestClass extends java.io.InputStream {",
+            "  // BUG: Diagnostic contains:",
+            "  public abstract int read();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nativeOverride() {
+    compilationHelper
+        .addSourceLines(
+            "TestClass.java",
+            "abstract class TestClass extends java.io.InputStream {",
+            "  // BUG: Diagnostic contains:",
+            "  public native int read();",
             "}")
         .doTest();
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,6 +93,31 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testNullableDeclMethodCall() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/anno/my/NullableDecl.java",
+            "package com.google.anno.my;",
+            "public @interface NullableDecl {}")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/NullableDeclMethodCallTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import com.google.anno.my.NullableDecl;",
+            "public class NullableDeclMethodCallTest {",
+            "  public String getMessage(int x) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return toSignString(x);",
+            "  }",
+            "",
+            "  @NullableDecl",
+            "  private String toSignString(int x) {",
+            "    return x < 0 ? \"negative\" : \"positive\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNullableMethodCall_alternativeAnnotation() throws Exception {
     createCompilationTestHelper()
         .addSourceLines(
@@ -157,6 +183,26 @@ public class ReturnMissingNullableTest {
             "import javax.annotation.Nullable;",
             "public class LiteralNullReturnTest {",
             "  @Nullable",
+            "  public String getMessage() {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_alreadyAnnotatedNullableDecl() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/anno/my/NullableDecl.java",
+            "package com.google.anno.my;",
+            "public @interface NullableDecl {}")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import com.google.anno.my.NullableDecl;",
+            "public class LiteralNullReturnTest {",
+            "  @NullableDecl",
             "  public String getMessage() {",
             "    return null;",
             "  }",
@@ -328,13 +374,70 @@ public class ReturnMissingNullableTest {
             "import javax.annotation.Nullable;",
             "public class MissingNullableReturnTest {",
             "  public static java.util.function.Function<String, String> identity() {",
+            "    return s -> s;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_returnParenthesizedLambda() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "public class MissingNullableReturnTest {",
+            "  public static java.util.function.Function<String, String> identity() {",
             "    return (s -> s);",
             "  }",
             "}")
         .doTest();
   }
 
+  @Test
+  public void testSuggestNonJsr305Nullable() throws Exception {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "class T {",
+            "  @Nullable private final Object obj1 = null;",
+            "  private final Object method() { return null; }",
+            "  @interface Nullable {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class T {",
+            "  @Nullable private final Object obj1 = null;",
+            "  @Nullable private final Object method() { return null; }",
+            "  @interface Nullable {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNonAnnotationNullable() throws Exception {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "class T {",
+            "  private final Object method() { return null; }",
+            "  class Nullable {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class T {",
+            "  @javax.annotation.Nullable private final Object method() { return null; }",
+            "  class Nullable {}",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(ReturnMissingNullable.class, getClass());
+  }
+
+  private BugCheckerRefactoringTestHelper createRefactoringTestHelper() {
+    return BugCheckerRefactoringTestHelper.newInstance(new ReturnMissingNullable(), getClass());
   }
 }

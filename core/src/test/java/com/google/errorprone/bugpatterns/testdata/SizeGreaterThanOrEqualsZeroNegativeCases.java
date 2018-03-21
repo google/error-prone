@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -63,6 +64,19 @@ public class SizeGreaterThanOrEqualsZeroNegativeCases {
     foo = (((((twoDarray))))).length > zero;
 
     return foo;
+  }
+
+  public void protoCount(TestProtoMessage msg) {
+    int zero = 0;
+    boolean foo;
+    foo = msg.getMultiFieldCount() > 0;
+    foo = 0 < msg.getMultiFieldCount();
+    foo = 0 > msg.getMultiFieldCount();
+    foo = msg.getMultiFieldCount() >= 1;
+    foo = msg.getMultiFieldCount() >= -1;
+    foo = msg.getMultiFieldCount() < 0;
+    foo = (((((msg))))).getMultiFieldCount() > zero;
+    foo = msg.getTestFieldNamedCount() >= 0; // Not a repeated field, just name ending in `count`
   }
 
   private static class CollectionContainer {

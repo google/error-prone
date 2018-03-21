@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,19 +45,19 @@ public class MethodReturnsTest extends CompilerBasedAbstractTest {
   @Test
   public void returnsString() {
     writeFile("A.java", "public class A {", "  static String foo() { return null; }", "}");
-    assertCompiles(fooReturnsType(true, "java.lang.String"));
+    assertCompiles(fooReturnsType(/* shouldMatch= */ true, "java.lang.String"));
   }
 
   @Test
   public void notReturnsString() {
     writeFile("A.java", "public class A {", "  static int foo() { return 0; }", "}");
-    assertCompiles(fooReturnsType(false, "java.lang.String"));
+    assertCompiles(fooReturnsType(/* shouldMatch= */ false, "java.lang.String"));
   }
 
   @Test
   public void returnsInt() {
     writeFile("A.java", "public class A {", "  static int foo() { return 0; }", "}");
-    assertCompiles(fooReturnsType(true, "int"));
+    assertCompiles(fooReturnsType(/* shouldMatch= */ true, "int"));
   }
 
   private abstract static class ScannerTest extends Scanner {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@
  */
 
 package com.google.errorprone.bugpatterns.testdata;
-
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 public class OverridesNegativeCase2 {

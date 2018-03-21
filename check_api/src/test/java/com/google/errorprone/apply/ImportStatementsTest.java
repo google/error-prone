@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All rights reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 package com.google.errorprone.apply;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.expectThrows;
 
 import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.TreeVisitor;
@@ -99,7 +99,7 @@ public class ImportStatementsTest {
      * @return a new JCImport stub
      */
     StubImportBuilder addImport(String typeName) {
-      return addImport(typeName, false);
+      return addImport(typeName, /* isStatic= */ false);
     }
 
     /**
@@ -109,7 +109,7 @@ public class ImportStatementsTest {
      * @return a new JCImport stub
      */
     StubImportBuilder addStaticImport(String typeName) {
-      return addImport(typeName, true);
+      return addImport(typeName, /* isStatic= */ true);
     }
 
     /**
@@ -135,7 +135,7 @@ public class ImportStatementsTest {
 
       // TODO(b/67738557): consolidate helpers for creating fake trees
       JCImport result =
-          new JCImport(/* qualid= */ null, /* static= */ isStatic) {
+          new JCImport(/* qualid= */ null, /* importStatic= */ isStatic) {
             @Override
             public int getStartPosition() {
               return curStartPos;
@@ -518,7 +518,7 @@ public class ImportStatementsTest {
             });
 
     imports.add("import java.util.List");
-    IllegalStateException exception = expectThrows(IllegalStateException.class, imports::toString);
+    IllegalStateException exception = assertThrows(IllegalStateException.class, imports::toString);
     assertEquals(
         "Expected 1 import(s) in the organized imports but it contained 0", exception.getMessage());
   }

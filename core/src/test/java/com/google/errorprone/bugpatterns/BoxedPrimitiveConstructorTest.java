@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -301,6 +301,20 @@ public class BoxedPrimitiveConstructorTest {
             "    Double d = new Double(f);",
             "    // BUG: Diagnostic contains: (short) (byte) 0;",
             "    Short s = new Short((byte) 0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void autoboxGenerics() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  <T> T f(Object o) {",
+            "    // BUG: Diagnostic contains: return (T) Integer.valueOf(o.hashCode());",
+            "    return (T) new Integer(o.hashCode());",
             "  }",
             "}")
         .doTest();

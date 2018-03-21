@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,11 @@ public class JUnit4TearDownNotRunTest {
   @Test
   public void testPositiveCase_customAnnotation() throws Exception {
     compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCaseCustomAfter.java").doTest();
+  }
+
+  @Test
+  public void testPositiveCase_customAnnotationDifferentName() throws Exception {
+    compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCaseCustomAfter2.java").doTest();
   }
 
   @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,19 +124,24 @@ public final class DataFlow {
   // TODO(user), remove once we merge jdk8 specific's with core
   private static <T> TreePath findEnclosingMethodOrLambdaOrInitializer(TreePath path) {
     while (path != null) {
-      if (path.getLeaf() instanceof MethodTree || path.getLeaf() instanceof LambdaExpressionTree) {
+      if (path.getLeaf() instanceof MethodTree) {
         return path;
       }
       TreePath parent = path.getParentPath();
-      if (parent != null && parent.getLeaf() instanceof ClassTree) {
-        if (path.getLeaf() instanceof BlockTree) {
-          // this is a class or instance initializer block
-          return path;
+      if (parent != null) {
+        if (parent.getLeaf() instanceof ClassTree) {
+          if (path.getLeaf() instanceof BlockTree) {
+            // this is a class or instance initializer block
+            return path;
+          }
+          if (path.getLeaf() instanceof VariableTree
+              && ((VariableTree) path.getLeaf()).getInitializer() != null) {
+            // this is a field with an inline initializer
+            return path;
+          }
         }
-        if (path.getLeaf() instanceof VariableTree
-            && ((VariableTree) path.getLeaf()).getInitializer() != null) {
-          // this is a field with an inline initializer
-          return path;
+        if (parent.getLeaf() instanceof LambdaExpressionTree) {
+          return parent;
         }
       }
       path = parent;

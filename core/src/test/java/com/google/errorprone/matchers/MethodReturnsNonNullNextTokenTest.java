@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,8 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
         "    st.nextToken();",
         "  }",
         "}");
-    assertCompiles(methodInvocationMatches(true, Matchers.methodReturnsNonNull()));
+    assertCompiles(
+        methodInvocationMatches(/* shouldMatch= */ true, Matchers.methodReturnsNonNull()));
   }
 
   @Test
@@ -55,7 +56,8 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
         "    st.hasMoreTokens();",
         "  }",
         "}");
-    assertCompiles(methodInvocationMatches(false, Matchers.methodReturnsNonNull()));
+    assertCompiles(
+        methodInvocationMatches(/* shouldMatch= */ false, Matchers.methodReturnsNonNull()));
   }
 
   @Test
@@ -75,7 +77,8 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
         "    nextToken();",
         "  }",
         "}");
-    assertCompiles(methodInvocationMatches(false, Matchers.methodReturnsNonNull()));
+    assertCompiles(
+        methodInvocationMatches(/* shouldMatch= */ false, Matchers.methodReturnsNonNull()));
   }
 
   private Scanner methodInvocationMatches(

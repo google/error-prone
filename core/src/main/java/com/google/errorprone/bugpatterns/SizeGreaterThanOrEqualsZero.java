@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,20 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Streams;
 import com.google.common.collect.Table.Cell;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -39,7 +39,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
@@ -47,10 +47,11 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.code.Scope;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Finds instances where one uses {@code Collection#size() >= 0} or {@code T[].length > 0}. Those
@@ -88,6 +89,18 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   // isEmpty() method
   private static final ImmutableTable<String, MethodName, Boolean> CLASSES =
       ImmutableTable.<String, MethodName, Boolean>builder()
+          .put("android.util.LongSparseArray", MethodName.SIZE, false)
+          .put("android.util.LruCache", MethodName.SIZE, false)
+          .put("android.util.SparseArray", MethodName.SIZE, false)
+          .put("android.util.SparseBooleanArray", MethodName.SIZE, false)
+          .put("android.util.SparseIntArray", MethodName.SIZE, false)
+          .put("android.util.SparseLongArray", MethodName.SIZE, false)
+          .put("android.support.v4.util.CircularArray", MethodName.SIZE, true)
+          .put("android.support.v4.util.CircularIntArray", MethodName.SIZE, true)
+          .put("android.support.v4.util.LongSparseArray", MethodName.SIZE, false)
+          .put("android.support.v4.util.LruCache", MethodName.SIZE, false)
+          .put("android.support.v4.util.SimpleArrayMap", MethodName.SIZE, true)
+          .put("android.support.v4.util.SparseArrayCompat", MethodName.SIZE, false)
           .put("com.google.common.collect.FluentIterable", MethodName.SIZE, true)
           .put("com.google.common.collect.Multimap", MethodName.SIZE, true)
           .put("java.io.ByteArrayOutputStream", MethodName.SIZE, false)
@@ -106,10 +119,38 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
           .put("com.google.common.collect.Iterables", MethodName.SIZE, true)
           .build();
 
-  private static final Matcher<ExpressionTree> INSTANCE_METHOD_MATCHER =
-      buildInstanceMethodMatcher();
-  private static final Matcher<ExpressionTree> STATIC_METHOD_MATCHER = buildStaticMethodMatcher();
-  private static final Matcher<MemberSelectTree> ARRAY_LENGTH_MATCHER = arrayLengthMatcher();
+  private static final Matcher<ExpressionTree> SIZE_OR_LENGTH_INSTANCE_METHOD =
+      anyOf(
+          instanceMethod()
+              .onClass(TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.SIZE).keySet()))
+              .named("size"),
+          instanceMethod()
+              .onClass(TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.LENGTH).keySet()))
+              .named("length"));
+  private static final Pattern PROTO_COUNT_METHOD_PATTERN = Pattern.compile("get(.+)Count");
+  private static final ParameterMatcher PROTO_METHOD_NAMED_GET_COUNT =
+      instanceMethod()
+          .onClass(TypePredicates.isDescendantOf("com.google.protobuf.GeneratedMessage"))
+          .withNameMatching(PROTO_COUNT_METHOD_PATTERN)
+          .withParameters();
+  private static final Matcher<ExpressionTree> PROTO_REPEATED_FIELD_COUNT_METHOD =
+      SizeGreaterThanOrEqualsZero::isProtoRepeatedFieldCountMethod;
+  private static final Matcher<ExpressionTree> SIZE_OR_LENGTH_STATIC_METHOD =
+      anyOf(
+          Streams.concat(
+                  STATIC_CLASSES
+                      .column(MethodName.SIZE)
+                      .keySet()
+                      .stream()
+                      .map(className -> staticMethod().onClass(className).named("size")),
+                  STATIC_CLASSES
+                      .column(MethodName.LENGTH)
+                      .keySet()
+                      .stream()
+                      .map(className -> staticMethod().onClass(className).named("length")))
+              .collect(toImmutableList()));
+  private static final Matcher<MemberSelectTree> ARRAY_LENGTH_MATCHER =
+      (tree, state) -> ASTHelpers.getSymbol(tree) == state.getSymtab().lengthVar;
   private static final Matcher<ExpressionTree> HAS_EMPTY_METHOD = classHasIsEmptyFunction();
 
   @Override
@@ -126,62 +167,41 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
             : tree.getRightOperand();
     if (operand instanceof MethodInvocationTree) {
       MethodInvocationTree callToSize = (MethodInvocationTree) operand;
-      if (INSTANCE_METHOD_MATCHER.matches(callToSize, state)) {
-        return provideReplacementForMethodInvocation(tree, callToSize, state, expressionType);
-      } else if (STATIC_METHOD_MATCHER.matches(callToSize, state)) {
+      if (SIZE_OR_LENGTH_INSTANCE_METHOD.matches(callToSize, state)) {
+        return provideReplacementForInstanceMethodInvocation(
+            tree, callToSize, state, expressionType);
+      } else if (SIZE_OR_LENGTH_STATIC_METHOD.matches(callToSize, state)) {
         return provideReplacementForStaticMethodInvocation(tree, callToSize, state, expressionType);
+      } else if (PROTO_REPEATED_FIELD_COUNT_METHOD.matches(callToSize, state)) {
+        return provideReplacementForProtoMethodInvocation(tree, callToSize, state);
       }
     } else if (operand instanceof MemberSelectTree) {
       if (ARRAY_LENGTH_MATCHER.matches((MemberSelectTree) operand, state)) {
         return removeEqualsFromComparison(tree, state, expressionType);
       }
     }
-
     return Description.NO_MATCH;
   }
 
-  private static Matcher<ExpressionTree> buildInstanceMethodMatcher() {
-    TypePredicate lengthMethodClass =
-        TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.LENGTH).keySet());
-    TypePredicate sizeMethodClass =
-        TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.SIZE).keySet());
-
-    return anyOf(
-        instanceMethod().onClass(sizeMethodClass).named("size"),
-        instanceMethod().onClass(lengthMethodClass).named("length"));
-  }
-
-  private static Matcher<ExpressionTree> buildStaticMethodMatcher() {
-    Iterable<Matcher<ExpressionTree>> sizeStaticMethods =
-        staticMethodMatcher(STATIC_CLASSES.column(MethodName.SIZE).keySet(), "size");
-    Iterable<Matcher<ExpressionTree>> lengthStaticMethods =
-        staticMethodMatcher(STATIC_CLASSES.column(MethodName.LENGTH).keySet(), "length");
-
-    return anyOfIterable(concat(sizeStaticMethods, lengthStaticMethods));
-  }
-
-  private static Iterable<Matcher<ExpressionTree>> staticMethodMatcher(
-      Iterable<String> sizeMethodClassNames, final String methodName) {
-    return Iterables.transform(
-        sizeMethodClassNames,
-        new Function<String, Matcher<ExpressionTree>>() {
-          @Override
-          public Matcher<ExpressionTree> apply(String className) {
-            return staticMethod().onClass(className).named(methodName);
-          }
-        });
-  }
-
-  private static Matcher<ExpressionTree> isSubtypeOfAny(Iterable<String> classes) {
-    return anyOfIterable(
-        transform(
-            classes,
-            new Function<String, Matcher<ExpressionTree>>() {
-              @Override
-              public Matcher<ExpressionTree> apply(String clazzName) {
-                return Matchers.isSubtypeOf(clazzName);
-              }
-            }));
+  private static boolean isProtoRepeatedFieldCountMethod(ExpressionTree tree, VisitorState state) {
+    // Instance method, on proto class, named `get<Field>Count`.
+    if (!PROTO_METHOD_NAMED_GET_COUNT.matches(tree, state)) {
+      return false;
+    }
+    // Make sure it's the count method for a repeated field, not the get method for a non-repeated
+    // field named <something>_count, by checking for other methods on the repeated field.
+    MethodSymbol methodCallSym = getSymbol((MethodInvocationTree) tree);
+    if (methodCallSym == null) {
+      return false;
+    }
+    Scope protoClassMembers = methodCallSym.owner.members();
+    java.util.regex.Matcher getCountRegexMatcher =
+        PROTO_COUNT_METHOD_PATTERN.matcher(methodCallSym.getSimpleName().toString());
+    if (!getCountRegexMatcher.matches()) {
+      return false;
+    }
+    String fieldName = getCountRegexMatcher.group(1);
+    return protoClassMembers.findFirst(state.getName("get" + fieldName + "List")) != null;
   }
 
   // From the defined classes above, return a matcher that will match an expression if its type
@@ -190,36 +210,24 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     ImmutableList.Builder<String> classNames = ImmutableList.builder();
     for (Cell<String, MethodName, Boolean> methodInformation :
         Iterables.concat(CLASSES.cellSet(), STATIC_CLASSES.cellSet())) {
-      if (!methodInformation.getValue()) {
-        continue;
+      if (methodInformation.getValue()) {
+        classNames.add(methodInformation.getRowKey());
       }
-      classNames.add(methodInformation.getRowKey());
     }
-
-    return isSubtypeOfAny(classNames.build());
+    return anyOf(classNames.build().stream().map(Matchers::isSubtypeOf).collect(toImmutableList()));
   }
 
-  private static Matcher<MemberSelectTree> arrayLengthMatcher() {
-    return new Matcher<MemberSelectTree>() {
-      @Override
-      public boolean matches(MemberSelectTree tree, VisitorState state) {
-        return ASTHelpers.getSymbol(tree) == state.getSymtab().lengthVar;
-      }
-    };
-  }
-
-  private Description provideReplacementForMethodInvocation(
+  private Description provideReplacementForInstanceMethodInvocation(
       BinaryTree tree,
       MethodInvocationTree leftOperand,
       VisitorState state,
       ExpressionType expressionType) {
-    ExpressionTree collection = ASTHelpers.getReceiver(leftOperand);
+    ExpressionTree collection = getReceiver(leftOperand);
 
     if (HAS_EMPTY_METHOD.matches(collection, state)) {
       return describeMatch(
           tree,
-          SuggestedFix.replace(
-              tree, "!" + state.getSourceForNode((JCTree) collection) + ".isEmpty()"));
+          SuggestedFix.replace(tree, "!" + state.getSourceForNode(collection) + ".isEmpty()"));
     } else {
       return removeEqualsFromComparison(tree, state, expressionType);
     }
@@ -230,40 +238,48 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
       MethodInvocationTree callToSize,
       final VisitorState state,
       ExpressionType expressionType) {
-    ExpressionTree classToken = ASTHelpers.getReceiver(callToSize);
+    ExpressionTree classToken = getReceiver(callToSize);
 
     if (HAS_EMPTY_METHOD.matches(classToken, state)) {
       List<CharSequence> argumentSourceValues =
-          Lists.transform(
-              callToSize.getArguments(),
-              new Function<ExpressionTree, CharSequence>() {
-                @Override
-                public CharSequence apply(ExpressionTree expressionTree) {
-                  return state.getSourceForNode((JCTree) expressionTree);
-                }
-              });
+          callToSize
+              .getArguments()
+              .stream()
+              .map(state::getSourceForNode)
+              .collect(toImmutableList());
       String argumentString = Joiner.on(',').join(argumentSourceValues);
 
       return describeMatch(
           tree,
           SuggestedFix.replace(
-              tree,
-              "!"
-                  + state.getSourceForNode((JCTree) classToken)
-                  + ".isEmpty("
-                  + argumentString
-                  + ")"));
+              tree, "!" + state.getSourceForNode(classToken) + ".isEmpty(" + argumentString + ")"));
     } else {
       return removeEqualsFromComparison(tree, state, expressionType);
     }
+  }
+
+  private Description provideReplacementForProtoMethodInvocation(
+      BinaryTree tree, MethodInvocationTree protoGetSize, VisitorState state) {
+    String expSrc = state.getSourceForNode(protoGetSize);
+    java.util.regex.Matcher protoGetCountMatcher = PROTO_COUNT_METHOD_PATTERN.matcher(expSrc);
+    if (!protoGetCountMatcher.find()) {
+      throw new AssertionError(protoGetSize + " does not contain a get<RepeatedField>Count method");
+    }
+    return describeMatch(
+        tree,
+        SuggestedFix.replace(
+            tree,
+            "!"
+                + protoGetCountMatcher.replaceFirst("get" + protoGetCountMatcher.group(1) + "List")
+                + ".isEmpty()"));
   }
 
   private Description removeEqualsFromComparison(
       BinaryTree tree, VisitorState state, ExpressionType expressionType) {
     String replacement =
         expressionType == ExpressionType.GREATER_THAN_EQUAL
-            ? state.getSourceForNode((JCTree) tree.getLeftOperand()) + " > 0"
-            : "0 < " + state.getSourceForNode((JCTree) tree.getRightOperand());
+            ? state.getSourceForNode(tree.getLeftOperand()) + " > 0"
+            : "0 < " + state.getSourceForNode(tree.getRightOperand());
     return describeMatch(tree, SuggestedFix.replace(tree, replacement));
   }
 
@@ -292,20 +308,5 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     }
 
     return returnType;
-  }
-
-  private static <T extends Tree> Matcher<T> anyOfIterable(Iterable<Matcher<T>> matchers) {
-    final ImmutableList<Matcher<T>> copyOfMatchers = ImmutableList.copyOf(matchers);
-    return new Matcher<T>() {
-      @Override
-      public boolean matches(T t, VisitorState state) {
-        for (Matcher<? super T> matcher : copyOfMatchers) {
-          if (matcher.matches(t, state)) {
-            return true;
-          }
-        }
-        return false;
-      }
-    };
   }
 }

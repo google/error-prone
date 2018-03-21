@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,6 +114,20 @@ public class FormatStringTest {
   }
 
   @Test
+  public void testConditionalExpression() throws Exception {
+    testFormat(
+        "missing argument for format specifier '%s'", "String.format(true ? \"\" : \"%s\");");
+    testFormat(
+        "missing argument for format specifier '%s'", "String.format(true ? \"%s\" : \"\");");
+    testFormat(
+        "extra format arguments: used 1, provided 2",
+        "String.format(true ? \"%s\" : \"%s\", 1, 2);");
+    testFormat(
+        "extra format arguments: used 1, provided 2",
+        "String.format(true ? \"%s\" : \"%s\", 1, 2);");
+  }
+
+  @Test
   public void missingArguments() throws Exception {
     compilationHelper
         .addSourceLines(
@@ -155,7 +169,7 @@ public class FormatStringTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  void f() {",
+            "  void f(boolean b) {",
             "    String.format(\"%d\", 42);",
             "    String.format(\"%d\", 42L);",
             "    String.format(\"%f\", 42.0f);",
@@ -165,6 +179,7 @@ public class FormatStringTest {
             "    String.format(\"%s\", (Object) null);",
             "    String.format(\"%s\", new Object());",
             "    String.format(\"%c\", 'c');",
+            "    String.format(b ? \"%s\" : \"%d\", 42);",
             "  }",
             "}")
         .doTest();

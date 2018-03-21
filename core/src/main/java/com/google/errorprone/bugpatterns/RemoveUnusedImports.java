@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -39,18 +40,11 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.code.Types.SimpleVisitor;
 import com.sun.tools.javac.tree.DCTree.DCReference;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -175,36 +169,21 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
       @Override
       public Void visitReference(ReferenceTree referenceTree, SymbolSink sink) {
         // do this first, it attributes the referenceTree as a side-effect
-        Symbol symbolForReference = (Symbol) trees.getElement(getCurrentPath());
-        JCTree base = ((DCReference) referenceTree).qualifierExpression;
-        // Only the base type in a qualified name needs to be imported.
-        // e.g. `Map.Entry` is a use of `Map`, `java.util.List` does not require an import
-        while (base instanceof JCFieldAccess) {
-          base = ((JCFieldAccess) base).selected;
-        }
-        if (base instanceof JCIdent) {
-          sink.accept(((JCIdent) base).sym);
-        }
-        // Record uses inside method parameters.
-        if (symbolForReference instanceof MethodSymbol) {
-          for (VarSymbol parameter : ((MethodSymbol) symbolForReference).getParameters()) {
-            parameter.type.accept(
-                new SimpleVisitor<Void, Void>() {
-                  @Override
-                  public Void visitArrayType(ArrayType type, Void unused) {
-                    type.getComponentType().accept(this, null);
-                    return null;
-                  }
-
-                  @Override
-                  public Void visitType(Type type, Void unused) {
-                    sink.accept(types.erasure(type).tsym);
-                    return null;
-                  }
-                },
-                null);
-          }
-        }
+        trees.getElement(getCurrentPath());
+        TreeScanner<Void, SymbolSink> nonRecursiveScanner =
+            new TreeScanner<Void, SymbolSink>() {
+              @Override
+              public Void visitIdentifier(IdentifierTree tree, SymbolSink sink) {
+                Symbol sym = ASTHelpers.getSymbol(tree);
+                if (sym != null) {
+                  sink.accept(sym);
+                }
+                return null;
+              }
+            };
+        DCReference reference = (DCReference) referenceTree;
+        nonRecursiveScanner.scan(reference.qualifierExpression, sink);
+        nonRecursiveScanner.scan(reference.paramTypes, sink);
         return null;
       }
     }

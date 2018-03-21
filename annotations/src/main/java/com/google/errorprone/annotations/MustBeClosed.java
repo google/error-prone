@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.google.errorprone.annotations;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.METHOD;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.Target;
 
 /**
@@ -33,5 +34,6 @@ import java.lang.annotation.Target;
  * <p>Note that Android SDK versions prior to 19 do not support try-with-resources, so the
  * annotation should be avoided on APIs that may be used on Android.
  */
+@Documented
 @Target({CONSTRUCTOR, METHOD})
 public @interface MustBeClosed {}

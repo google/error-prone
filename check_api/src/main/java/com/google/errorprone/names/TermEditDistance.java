@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,8 @@ public class TermEditDistance {
 
   public TermEditDistance() {
     this(
-        (s, t) -> (double) LevenshteinEditDistance.getEditDistance(s, t, /*isCaseSensitive*/ false),
+        (s, t) ->
+            (double) LevenshteinEditDistance.getEditDistance(s, t, /* caseSensitive= */ false),
         (s, t) -> (double) LevenshteinEditDistance.getWorstCaseEditDistance(s, t));
   }
 

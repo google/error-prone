@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Google Inc. All Rights Reserved.
+ * Copyright 2011 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -207,36 +207,19 @@ public @interface BugPattern {
     SUGGESTION
   }
 
-  /** Whether this checker should be suppressible, and if so, by what means. */
-  Suppressibility suppressibility() default Suppressibility.SUPPRESS_WARNINGS;
-
-  public enum Suppressibility {
-    /**
-     * Can be suppressed using the standard {@code SuppressWarnings("foo")} mechanism. This setting
-     * should be used unless there is a good reason otherwise, e.g. security.
-     */
-    SUPPRESS_WARNINGS(true),
-    /** Can be suppressed with a custom annotation on a parent AST node. */
-    CUSTOM_ANNOTATION(false),
-    /** Cannot be suppressed. */
-    UNSUPPRESSIBLE(false);
-
-    private final boolean disableable;
-
-    Suppressibility(boolean disableable) {
-      this.disableable = disableable;
-    }
-
-    public boolean disableable() {
-      return disableable;
-    }
-  }
+  /** True if the check can be disabled using command-line flags. */
+  boolean disableable() default true;
 
   /**
-   * A set of custom suppression annotation types to use if suppressibility is
-   * Suppressibility.CUSTOM_ANNOTATION.
+   * A set of annotation types that can be used to suppress the check.
+   *
+   * <p>Includes only {@link SuppressWarnings} by default.
+   *
+   * <p>To make a check unsuppressible, set {@code suppressionAnnotations} to empty. Note that
+   * unsuppressible checks may still be disabled using command line flags (see {@link
+   * #disableable}).
    */
-  Class<? extends Annotation>[] customSuppressionAnnotations() default {};
+  Class<? extends Annotation>[] suppressionAnnotations() default SuppressWarnings.class;
 
   /**
    * Generate an explanation of how to suppress the check.

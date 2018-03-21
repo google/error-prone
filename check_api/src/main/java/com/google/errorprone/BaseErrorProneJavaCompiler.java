@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.lang.model.SourceVersion;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
@@ -157,27 +158,40 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
   }
 
   /**
+   * Throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy} flag is set to an
+   * unsupported value
+   */
+  static void checkCompilePolicy(@Nullable String compilePolicy) {
+    if (compilePolicy == null) {
+      throw new InvalidCommandLineOptionException(
+          "The default compilation policy (by-todo) is not supported by Error Prone,"
+              + " pass -XDcompilePolicy=byfile instead");
+    }
+    switch (compilePolicy) {
+      case "byfile":
+      case "simple":
+        break;
+      default:
+        throw new InvalidCommandLineOptionException(
+            String.format(
+                "-XDcompilePolicy=%s is not supported by Error Prone,"
+                    + " pass -XDcompilePolicy=byfile instead",
+                compilePolicy));
+    }
+  }
+
+  /**
    * Sets javac's {@code -XDcompilePolicy} flag to ensure that all classes in a file are attributed
    * before any of them are lowered. Error Prone depends on this behavior when analyzing files that
    * contain multiple top-level classes.
    *
-   * @throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy} flag is passed in the
-   *     existing arguments with an unsupported value
    */
   private static ImmutableList<String> setCompilePolicyToByFile(ImmutableList<String> args) {
     for (String arg : args) {
       if (arg.startsWith("-XDcompilePolicy")) {
         String value = arg.substring(arg.indexOf('=') + 1);
-        switch (value) {
-          case "byfile":
-          case "simple":
-            break;
-          default:
-            throw new InvalidCommandLineOptionException(
-                String.format("-XDcompilePolicy=%s is not supported by Error Prone", value));
-        }
-        // don't do anything if a valid policy is already set
-        return args;
+        checkCompilePolicy(value);
+        return args; // don't do anything if a valid policy is already set
       }
     }
     return ImmutableList.<String>builder().addAll(args).add("-XDcompilePolicy=byfile").build();

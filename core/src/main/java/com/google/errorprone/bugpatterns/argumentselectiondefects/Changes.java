@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.tree.JCTree;
+import java.util.stream.Collectors;
 
 /**
  * Value class for holding suggested changes to method call arguments.
@@ -82,5 +83,21 @@ abstract class Changes {
           info.state().getSourceForNode(info.actualParameters().get(pair.actual().index())));
     }
     return permuteArgumentsFixBuilder.build();
+  }
+
+  public String describe(InvocationInfo info) {
+    return "The following arguments may have been swapped: "
+        + changedPairs()
+            .stream()
+            .map(
+                p ->
+                    String.format(
+                        "'%s' for formal parameter '%s'",
+                        info.state()
+                            .getSourceForNode(info.actualParameters().get(p.formal().index())),
+                        p.formal().name()))
+            .collect(Collectors.joining(", "))
+        + ". Either add clarifying `/* paramName= */` comments, or swap the arguments if that is"
+        + " what was intended";
   }
 }

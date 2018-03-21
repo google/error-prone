@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All rights reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,9 @@ public abstract class UMethodInvocation extends UExpression implements MethodInv
       MethodInvocationTree methodInvocation, @Nullable Unifier unifier) {
     return getMethodSelect()
         .unify(methodInvocation.getMethodSelect(), unifier)
-        .thenChoose(unifications(getArguments(), methodInvocation.getArguments(), true));
+        .thenChoose(
+            unifications(
+                getArguments(), methodInvocation.getArguments(), /* allowVarargs= */ true));
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,5 +96,14 @@ public class ConstructorLeaksThisNegativeCases {
   static class Inner {
     @SuppressWarnings("ConstructorLeaksThis")
     final FixtureController that = new FixtureController(this);
+  }
+
+  static final class WithTwoConstructors {
+    public WithTwoConstructors() {
+      // 'this' references another constructor, not an object
+      this(0);
+    }
+
+    public WithTwoConstructors(int i) {}
   }
 }

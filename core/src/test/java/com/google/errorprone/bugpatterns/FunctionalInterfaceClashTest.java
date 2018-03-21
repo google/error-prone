@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -172,37 +164,6 @@ public class FunctionalInterfaceClashTest {
         .doTest();
   }
 
-  public static class Other {}
-
-  public static class Super {
-    public void f(Other o) {}
-  }
-
-  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
-    String entryPath = clazz.getName().replace('.', '/') + ".class";
-    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
-      jos.putNextEntry(new JarEntry(entryPath));
-      ByteStreams.copy(is, jos);
-    }
-  }
-
-  @Test
-  public void incompleteClasspath() throws Exception {
-    File libJar = tempFolder.newFile("lib.jar");
-    try (FileOutputStream fis = new FileOutputStream(libJar);
-        JarOutputStream jos = new JarOutputStream(fis)) {
-      addClassToJar(jos, getClass());
-      addClassToJar(jos, Super.class);
-    }
-    testHelper
-        .addSourceLines(
-            "Test.java",
-            "import " + Super.class.getCanonicalName() + ";",
-            "class Test extends Super {}")
-        .setArgs(Arrays.asList("-cp", libJar.toString()))
-        .doTest();
-  }
-
   // TODO(b/38460312): Fix and enable test
   @Test
   @Ignore
@@ -259,6 +220,127 @@ public class FunctionalInterfaceClashTest {
             "      }",
             "    };",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_multipleClashingOverriddenMethods() {
+    testHelper
+        .addSourceLines(
+            "pkg2/BaseClass.java",
+            "package pkg2;",
+            "import java.util.function.Function;",
+            "import java.util.function.Consumer;",
+            "public abstract class BaseClass {",
+            "  // BUG: Diagnostic contains: When passing lambda arguments to this function",
+            " abstract void baz(Consumer<String> c);",
+            " abstract void baz(Function<String, Integer> f);",
+            "}")
+        .addSourceLines(
+            "pkg2/DerivedClass.java",
+            "package pkg2;",
+            "import java.util.function.Function;",
+            "import java.util.function.Consumer;",
+            "public class DerivedClass extends BaseClass {",
+            "  @Override void baz(Consumer<String> c) {}",
+            "  @Override void baz(Function<String, Integer> f) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_singleClashingOverriddenMethods() {
+    testHelper
+        .addSourceLines(
+            "pkg2/BaseClass.java",
+            "package pkg2;",
+            "import java.util.function.Function;",
+            "import java.util.function.Consumer;",
+            "public abstract class BaseClass {",
+            " abstract void bar(Consumer<String> c);",
+            "}")
+        .addSourceLines(
+            "pkg2/DerivedClass.java",
+            "package pkg2;",
+            "import java.util.function.Function;",
+            "import java.util.function.Consumer;",
+            "public class DerivedClass extends BaseClass {",
+            "  @Override void bar(Consumer<String> c) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_overriddenAndNewClashingMethod() {
+    testHelper
+        .addSourceLines(
+            "pkg2/BaseClass.java",
+            "package pkg2;",
+            "import java.util.function.Function;",
+            "import java.util.function.Consumer;",
+            "public class BaseClass {",
+            " void conduct(Consumer<String> c) {}",
+            "}")
+        .addSourceLines(
+            "pkg2/ConductClass.java",
+            "package pkg2;",
+            "import java.util.function.Function;",
+            "import java.util.function.Consumer;",
+            "public class ConductClass extends BaseClass {",
+            "  // BUG: Diagnostic contains: disambiguate with:",
+            "  @Override void conduct(Consumer<String> c) {}",
+            "  void conduct(Function<String, Integer> f) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_overriddenMethod() {
+    testHelper
+        .addSourceLines(
+            "pkg2/BaseClass.java",
+            "package pkg2;",
+            "import java.util.function.Function;",
+            "import java.util.function.Consumer;",
+            "public class BaseClass {",
+            " void conduct(Consumer<String> c) {}",
+            "}")
+        .addSourceLines(
+            "pkg2/ConductClass.java",
+            "package pkg2;",
+            "import java.util.function.Function;",
+            "import java.util.function.Consumer;",
+            "public class ConductClass extends BaseClass {",
+            "  @Override void conduct(Consumer<String> c) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_overriddenInClassAndNewClashingMethod() {
+    testHelper
+        .addSourceLines(
+            "pkg2/Super.java",
+            "package pkg2;",
+            "import java.util.function.Consumer;",
+            "public abstract class Super {",
+            "  void barr(Consumer<String> c) {}",
+            "}")
+        .addSourceLines(
+            "pkg2/BaseClass.java",
+            "package pkg2;",
+            "import java.util.function.Consumer;",
+            "public abstract class BaseClass extends Super {",
+            " void barr(Consumer<String> c) {}",
+            "}")
+        .addSourceLines(
+            "pkg2/MyDerivedClass.java",
+            "package pkg2;",
+            "import java.util.function.Function;",
+            "public class MyDerivedClass extends BaseClass {",
+            "  // BUG: Diagnostic contains: disambiguate with:",
+            "  void barr(Function<String, Integer> f) {}",
             "}")
         .doTest();
   }

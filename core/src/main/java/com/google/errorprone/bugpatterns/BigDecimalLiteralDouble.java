@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public class BigDecimalLiteralDouble extends BugChecker
 
     // Don't suggest an integral replacement in this case as it may change the scale of the
     // resulting BigDecimal.
-    return createDescription(tree, arg, state, false);
+    return createDescription(tree, arg, state, /* suggestIntegral= */ false);
   }
 
   @Override
@@ -104,7 +104,7 @@ public class BigDecimalLiteralDouble extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return createDescription(tree, arg, state, true);
+    return createDescription(tree, arg, state, /* suggestIntegral= */ true);
   }
 
   public Description createDescription(

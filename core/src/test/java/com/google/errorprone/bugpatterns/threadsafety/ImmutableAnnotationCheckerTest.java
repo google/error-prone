@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
+import java.lang.reflect.Method;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -85,7 +86,8 @@ public class ImmutableAnnotationCheckerTest {
             "import java.util.Set;",
             "class Test implements Deprecated {",
             "  public Class<? extends Annotation> annotationType() { return Deprecated.class; }",
-            "  // BUG: Diagnostic contains: annotations should be immutable, 'Set' is mutable",
+            "  // BUG: Diagnostic contains: annotations should be immutable: 'Test' has field 'xs'"
+                + " of type 'java.util.Set<java.lang.Integer>', 'Set' is mutable",
             "  final Set<Integer> xs;",
             "  private Test(Integer... xs) {",
             "    this.xs = new HashSet<>(Arrays.asList(xs));",
@@ -134,7 +136,8 @@ public class ImmutableAnnotationCheckerTest {
             "class Test implements Deprecated {",
             "  public Class<? extends Annotation> annotationType() { return Deprecated.class; }",
             "  // BUG: Diagnostic contains:"
-                + " the declaration of type 'Foo' is not annotated @Immutable",
+                + " the declaration of type 'Foo' is not annotated with"
+                + " @com.google.errorprone.annotations.Immutable",
             "  final Foo f;",
             "  private Test(Foo f) {",
             "    this.f = f;",
@@ -305,5 +308,63 @@ public class ImmutableAnnotationCheckerTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void jucImmutable() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java", //
+            "import javax.annotation.concurrent.Immutable;",
+            "@Immutable",
+            "class Lib {",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "import java.lang.annotation.Annotation;",
+            "class MyAnno implements Annotation {",
+            "  final Lib l = new Lib();",
+            "  public Class<? extends Annotation> annotationType() {",
+            "    return Deprecated.class;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void generated() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.annotation.Annotation;",
+            (isJdk8OrEarlier()
+                ? "import javax.annotation.Generated;"
+                : "import javax.annotation.processing.Generated;"),
+            "@Generated(\"com.google.auto.value.processor.AutoAnnotationProcessor\")",
+            "class Test implements Deprecated {",
+            "  public Class<? extends Annotation> annotationType() { return Deprecated.class; }",
+            "  int x;",
+            "  private Test(int x) {",
+            "    this.x = x;",
+            "  }",
+            "  public boolean forRemoval() {",
+            "    return false;",
+            "  }",
+            "  public String since() {",
+            "    return \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  static boolean isJdk8OrEarlier() {
+    try {
+      Method versionMethod = Runtime.class.getMethod("version");
+      Object version = versionMethod.invoke(null);
+      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
+      return majorVersion <= 8;
+    } catch (ReflectiveOperationException e) {
+      return true;
+    }
   }
 }

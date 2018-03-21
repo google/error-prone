@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,6 +55,19 @@ public class AssertionFailureIgnoredTest {
             "      Assert.fail();",
             "    } catch (NoSuchFieldException | NoSuchMethodException | AssertionError t) {",
             "    }",
+            "    AssertionError e = null;",
+            "    try {",
+            "      // BUG: Diagnostic contains:",
+            "      Assert.fail();",
+            "    } catch (AssertionError t) {",
+            "      throw e;",
+            "    }",
+            "    try {",
+            "      // BUG: Diagnostic contains:",
+            "      Assert.fail();",
+            "    } catch (AssertionError t) {",
+            "      throw new AssertionError(e);",
+            "    }",
             "  }",
             "}")
         .doTest();
@@ -87,6 +100,16 @@ public class AssertionFailureIgnoredTest {
             "    try {",
             "    } catch (Throwable t) {",
             "      Assert.fail();",
+            "    }",
+            "    try {",
+            "      Assert.fail();",
+            "    } catch (AssertionError t) {",
+            "      throw t;",
+            "    }",
+            "    try {",
+            "      Assert.fail();",
+            "    } catch (AssertionError t) {",
+            "      throw new AssertionError(t);",
             "    }",
             "  }",
             "}")
@@ -132,12 +155,11 @@ public class AssertionFailureIgnoredTest {
             "out/Test.java", //
             "import static com.google.common.truth.Truth.assertThat;",
             "import static org.junit.Assert.assertThrows;",
-            "import static org.junit.Assert.expectThrows;",
             "import java.io.IOException;",
             "import org.junit.Assert;",
             "class Test {",
             "  void f() {",
-            "    AssertionError t = expectThrows(AssertionError.class, () -> ",
+            "    AssertionError t = assertThrows(AssertionError.class, () -> ",
             "      System.err.println());",
             "    assertThat(t).isInstanceOf(AssertionError.class);",
             "    assertThrows(AssertionError.class, () -> ",
@@ -193,12 +215,11 @@ public class AssertionFailureIgnoredTest {
             "out/Test.java", //
             "import static com.google.common.truth.Truth.assertThat;",
             "import static org.junit.Assert.assertThrows;",
-            "import static org.junit.Assert.expectThrows;",
             "import java.io.IOException;",
             "import org.junit.Assert;",
             "class Test {",
             "  void f() {",
-            "    AssertionError t = expectThrows(AssertionError.class, () -> {",
+            "    AssertionError t = assertThrows(AssertionError.class, () -> {",
             "      System.err.println();",
             "      System.err.println();",
             "    });",
@@ -234,3 +255,4 @@ public class AssertionFailureIgnoredTest {
         .doTest();
   }
 }
+

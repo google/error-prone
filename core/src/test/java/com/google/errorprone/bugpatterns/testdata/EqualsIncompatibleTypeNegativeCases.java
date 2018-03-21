@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 
 package com.google.errorprone.bugpatterns.testdata;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import java.util.List;
+import java.util.Set;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 public class EqualsIncompatibleTypeNegativeCases {
@@ -131,7 +136,8 @@ public class EqualsIncompatibleTypeNegativeCases {
 
   class E3 extends E2 {}
 
-  void checkEqualsIE1E2E3(I e, E1 e1, E2 e2, E3 e3) {
+  void checkEqualsIE1E2E3(
+      I e, E1 e1, E2 e2, E3 e3, List<I> eList, List<E1> e1List, List<E2> e2List) {
     e.equals(e);
     e.equals(e1);
     e.equals(e2);
@@ -155,6 +161,32 @@ public class EqualsIncompatibleTypeNegativeCases {
     e3.equals(e2);
     e3.equals(e3);
     e3.equals(null);
+
+    eList.equals(e1List);
+    eList.equals(e2List);
+    eList.equals(null);
+
+    e1List.equals(eList);
+    e1List.equals(e2List);
+    e1List.equals(null);
+
+    e2List.equals(eList);
+    e2List.equals(e1List);
+    e2List.equals(null);
+  }
+
+  void collectionStuff(
+      List rawList,
+      List<String> stringList,
+      Set<String> stringSet,
+      ImmutableSet<String> immutableStringSet,
+      ImmutableList<String> immutableStringList) {
+
+    // With raw types, we can't be sure. So... /shrug
+    rawList.equals(stringList);
+
+    stringSet.equals(immutableStringSet);
+    stringList.equals(immutableStringList);
   }
 
   interface J {}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,12 +147,13 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
    * <p>Only method trees that belong to the {@code classTree} are returned, so methods declared in
    * nested classes are not going to be considered.
    */
-  private static ImmutableList<MethodTree> getClassTreeMethods(ClassTree classTree) {
+  private ImmutableList<MethodTree> getClassTreeMethods(ClassTree classTree) {
     List<? extends Tree> members = classTree.getMembers();
     return members
         .stream()
-        .filter((member) -> member instanceof MethodTree)
-        .map((member) -> (MethodTree) member)
+        .filter(MethodTree.class::isInstance)
+        .map(MethodTree.class::cast)
+        .filter(m -> !isSuppressed(m))
         .collect(toImmutableList());
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class LevenshteinEditDistance {
    * @see #getEditDistance(String, String, boolean)
    */
   public static int getEditDistance(String source, String target) {
-    return getEditDistance(source, target, true);
+    return getEditDistance(source, target, /* caseSensitive= */ true);
   }
 
   /**

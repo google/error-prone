@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
@@ -48,7 +49,8 @@ import javax.lang.model.element.ElementKind;
           + "Avoid these string resources and prefer ones whose names *do* match their content. If "
           + "you need \"Yes\" or \"No\" you must create your own string resources.",
   category = ANDROID,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class MislabeledAndroidString extends BugChecker implements MemberSelectTreeMatcher {
 

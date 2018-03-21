@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class Contains implements Matcher<Tree> {
   @Override
   public boolean matches(Tree tree, VisitorState state) {
     FirstMatchingScanner scanner = new FirstMatchingScanner(state);
-    Boolean matchFound = tree.accept(scanner, false);
+    Boolean matchFound = tree.accept(scanner, /* data= */ false);
     return matchFound != null && matchFound;
   }
 

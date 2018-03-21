@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -31,7 +32,8 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
   name = "ComplexBooleanConstant",
   summary = "Non-trivial compile time constant boolean expressions shouldn't be used.",
   category = Category.JDK,
-  severity = SeverityLevel.ERROR
+  severity = SeverityLevel.ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatcher {
 

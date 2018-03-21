@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,9 @@ import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATI
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_CLASS_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4BeforeAnnotations;
 import static com.google.errorprone.matchers.JUnitMatchers.looksLikeJUnit3SetUp;
+import static com.google.errorprone.matchers.JUnitMatchers.looksLikeJUnit4Before;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
@@ -34,13 +36,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Checks for the existence of a JUnit3 style setUp() method in a JUnit4 test class.
+ * Checks for the existence of a JUnit3 style setUp() method in a JUnit4 test class or methods
+ * annotated with a non-JUnit4 @Before annotation.
  *
  * @author glorioso@google.com (Nick Glorioso)
  */
 @BugPattern(
   name = "JUnit4SetUpNotRun",
-  summary = "setUp() method will not be run; Please add a @Before annotation",
+  summary = "setUp() method will not be run; please add JUnit's @Before annotation",
   explanation =
       "JUnit 3 provides the method setUp(), to be overridden by subclasses"
           + " when the test needs to perform some pre-test initialization. In JUnit 4, this"
@@ -61,7 +64,8 @@ import java.util.List;
 public class JUnit4SetUpNotRun extends AbstractJUnit4InitMethodNotRun {
   @Override
   protected Matcher<MethodTree> methodMatcher() {
-    return allOf(looksLikeJUnit3SetUp, not(hasJUnit4BeforeAnnotations));
+    return allOf(
+        anyOf(looksLikeJUnit3SetUp, looksLikeJUnit4Before), not(hasJUnit4BeforeAnnotations));
   }
 
   @Override

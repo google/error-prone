@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
@@ -27,6 +28,7 @@ import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static com.sun.source.tree.Tree.Kind.VARIABLE;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import com.google.common.base.Preconditions;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -35,6 +37,7 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.names.LevenshteinEditDistance;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
@@ -70,10 +73,14 @@ import java.util.Objects;
 )
 public class SelfAssignment extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
+  private static final Matcher<MethodInvocationTree> NON_NULL_MATCHER =
+      anyOf(
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
+          staticMethod().onClass("java.util.Objects").named("requireNonNull"));
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
-    ExpressionTree expression = stripCheckNotNull(tree.getExpression(), state);
+    ExpressionTree expression = stripNullCheck(tree.getExpression(), state);
     if (ASTHelpers.sameVariable(tree.getVariable(), expression)) {
       return describeForAssignment(tree, state);
     }
@@ -82,7 +89,7 @@ public class SelfAssignment extends BugChecker
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    ExpressionTree initializer = stripCheckNotNull(tree.getInitializer(), state);
+    ExpressionTree initializer = stripNullCheck(tree.getInitializer(), state);
     Tree parent = state.getPath().getParentPath().getLeaf();
 
     // must be a static class variable with member select initializer
@@ -106,19 +113,15 @@ public class SelfAssignment extends BugChecker
   }
 
   /**
-   * If the given expression is a call to checkNotNull(x), returns x. Otherwise, returns the given
-   * expression.
-   *
-   * <p>TODO(eaftan): Also match calls to Java 7's Objects.requireNonNull() method.
+   * If the given expression is a call to a method checking the nullity of its first parameter, and
+   * otherwise returns that parameter.
    */
-  private ExpressionTree stripCheckNotNull(ExpressionTree expression, VisitorState state) {
-    if (expression != null
-        && expression.getKind() == METHOD_INVOCATION
-        && staticMethod()
-            .onClass("com.google.common.base.Preconditions")
-            .named("checkNotNull")
-            .matches(expression, state)) {
-      return ((MethodInvocationTree) expression).getArguments().get(0);
+  private static ExpressionTree stripNullCheck(ExpressionTree expression, VisitorState state) {
+    if (expression != null && expression.getKind() == METHOD_INVOCATION) {
+      MethodInvocationTree methodInvocation = (MethodInvocationTree) expression;
+      if (NON_NULL_MATCHER.matches(methodInvocation, state)) {
+        return methodInvocation.getArguments().get(0);
+      }
     }
     return expression;
   }
@@ -167,7 +170,7 @@ public class SelfAssignment extends BugChecker
       // change the default fix to be "checkNotNull(x)" instead of "x = checkNotNull(x)"
       fix = SuggestedFix.replace(assignmentTree, rhs.toString());
       // new rhs is first argument to checkNotNull()
-      rhs = stripCheckNotNull(rhs, state);
+      rhs = stripNullCheck(rhs, state);
     }
 
     if (lhs.getKind() == MEMBER_SELECT) {
@@ -175,7 +178,7 @@ public class SelfAssignment extends BugChecker
       // as the rhs
 
       // rhs should be either identifier or field access
-      assert (rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
+      Preconditions.checkState(rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
 
       // get current name of rhs
       String rhsName = null;
@@ -212,7 +215,7 @@ public class SelfAssignment extends BugChecker
       // find a field of the same type and similar name and suggest it as the lhs
 
       // lhs should be identifier
-      assert (lhs.getKind() == IDENTIFIER);
+      Preconditions.checkState(lhs.getKind() == IDENTIFIER);
 
       // get current name of lhs
       String lhsName = ((JCIdent) rhs).name.toString();
@@ -232,7 +235,9 @@ public class SelfAssignment extends BugChecker
       for (JCTree member : klass.getMembers()) {
         if (member.getKind() == VARIABLE) {
           JCVariableDecl var = (JCVariableDecl) member;
-          if (!Flags.isStatic(var.sym) && Objects.equals(var.type, type)) {
+          if (!Flags.isStatic(var.sym)
+              && (var.sym.flags() & Flags.FINAL) == 0
+              && Objects.equals(var.type, type)) {
             int editDistance =
                 LevenshteinEditDistance.getEditDistance(lhsName, var.name.toString());
             if (editDistance < minEditDistance) {

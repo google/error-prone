@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -183,6 +183,27 @@ public class CompileTimeConstantExpressionMatcherTest {
   public void testCompileTimeConstantAnnotationOnlyAllowedOnParameter() throws Exception {
     Truth.assertThat(CompileTimeConstant.class.getAnnotation(Target.class).value())
         .isEqualTo(new ElementType[] {ElementType.PARAMETER});
+  }
+
+  @Test
+  public void conditionalExpression() throws Exception {
+    String[] lines = {
+      "package test;",
+      "abstract class CompileTimeConstantExpressionMatcherTestCase {",
+      "  abstract boolean g();",
+      "  public void m(boolean flag) { ",
+      "    boolean bool1; bool1 = flag ? true : g();",
+      "    boolean bool2; bool2 = flag ? g() : false;",
+      "    boolean bool3; bool3 = flag ? true : false;",
+      "  }",
+      "}"
+    };
+
+    Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
+    expectedMatches.put("bool1", false);
+    expectedMatches.put("bool2", false);
+    expectedMatches.put("bool3", true);
+    assertCompilerMatchesOnAssignment(expectedMatches, lines);
   }
 
   // Helper methods.

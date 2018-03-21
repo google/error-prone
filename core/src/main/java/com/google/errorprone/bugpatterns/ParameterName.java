@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.BLOCK;
 
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -54,7 +55,8 @@ import java.util.regex.Matcher;
   summary =
       "Detects `/* name= */`-style comments on actual parameters where the name doesn't match the"
           + " formal parameter",
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ParameterName extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
@@ -138,7 +140,7 @@ public class ParameterName extends BugChecker
           buildDescription(actual)
               .setMessage(
                   String.format(
-                      "%s does not match parameter name '%s'",
+                      "`%s` does not match formal parameter name `%s`",
                       match.getText(), formal.getSimpleName()))
               .addFix(
                   SuggestedFix.replace(

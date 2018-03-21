@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package com.google.errorprone;
 import com.google.common.base.Preconditions;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.BugPattern.Suppressibility;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +38,7 @@ public final class BugPatternInstance {
   public String category;
   public String[] tags;
   public SeverityLevel severity;
-  public Suppressibility suppressibility;
-  public String[] customSuppressionAnnotations;
+  public String[] suppressionAnnotations;
   public boolean documentSuppression = true;
   public boolean generateExamplesFromTestCases = true;
   public ProvidesFix providesFix;
@@ -54,25 +52,23 @@ public final class BugPatternInstance {
     instance.altNames = annotation.altNames();
     instance.tags = annotation.tags();
     instance.severity = annotation.severity();
-    instance.suppressibility = annotation.suppressibility();
     instance.summary = annotation.summary();
     instance.explanation = annotation.explanation();
     instance.documentSuppression = annotation.documentSuppression();
     instance.providesFix = annotation.providesFix();
 
     Map<String, Object> keyValues = getAnnotation(element, BugPattern.class.getName());
-    Object result = keyValues.get("customSuppressionAnnotations");
-    if (result == null) {
-      instance.customSuppressionAnnotations = new String[0];
+    Object suppression = keyValues.get("suppressionAnnotations");
+    if (suppression == null) {
+      instance.suppressionAnnotations = new String[] {SuppressWarnings.class.getName()};
     } else {
-      Preconditions.checkState(result instanceof List);
-      // The doc for AnnotationValue says that if the value is an array, then
-      // AnnotationValue#getValue() will return a List<? extends AnnotationValue>.
-      @SuppressWarnings("unchecked")
-      List<? extends AnnotationValue> resultList = (List<? extends AnnotationValue>) result;
-      instance.customSuppressionAnnotations =
+      Preconditions.checkState(suppression instanceof List);
+      @SuppressWarnings("unchecked") // Always List<? extends AnnotationValue>, see above.
+      List<? extends AnnotationValue> resultList = (List<? extends AnnotationValue>) suppression;
+      instance.suppressionAnnotations =
           resultList.stream().map(AnnotationValue::toString).toArray(String[]::new);
     }
+
     instance.generateExamplesFromTestCases =
         !keyValues.containsKey("generateExamplesFromTestCases")
             || (boolean) keyValues.get("generateExamplesFromTestCases");

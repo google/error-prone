@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -40,7 +41,8 @@ import javax.lang.model.element.Modifier;
   summary = "method overrides method in supertype; expected @Override",
   category = JDK,
   severity = WARNING,
-  tags = StandardTags.STYLE
+  tags = StandardTags.STYLE,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class MissingOverride extends BugChecker implements MethodTreeMatcher {
 
@@ -94,7 +96,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
         if (msym.isStatic()) {
           continue;
         }
-        if (sym.overrides(msym, owner, types, /*checkReturn*/ false)) {
+        if (sym.overrides(msym, owner, types, /* checkResult= */ false)) {
           return msym;
         }
       }

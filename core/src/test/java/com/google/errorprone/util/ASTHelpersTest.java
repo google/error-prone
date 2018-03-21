@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,9 @@ import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.scanner.Scanner;
+import com.google.errorprone.util.ASTHelpers.TargetType;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -66,6 +68,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
+import java.util.regex.Pattern;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -592,6 +595,10 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
+  /**
+   * Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() does require the
+   * annotation symbol to be on the classpath.
+   */
   @BugPattern(
     name = "HasDirectAnnotationWithSimpleNameChecker",
     category = Category.ONE_OFF,
@@ -802,6 +809,36 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "    target(new GenericTest<String>());",
             "  }",
             "}")
+        .doTest();
+  }
+
+  /** A {@link BugChecker} that prints the result type of the first argument in method calls. */
+  @BugPattern(
+    name = "TargetTypeChecker",
+    category = Category.ONE_OFF,
+    severity = SeverityLevel.ERROR,
+    summary = "Prints the target type"
+  )
+  public static class TargetTypeChecker extends BugChecker implements MethodInvocationTreeMatcher {
+    private static final Matcher<ExpressionTree> METHOD_MATCHER =
+        MethodMatchers.staticMethod().anyClass().withNameMatching(Pattern.compile("^detect.*"));
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (!METHOD_MATCHER.matches(tree, state)) {
+        return Description.NO_MATCH;
+      }
+      TargetType targetType = ASTHelpers.targetType(state);
+      return buildDescription(tree)
+          .setMessage(String.valueOf(targetType != null ? targetType.type() : null))
+          .build();
+    }
+  }
+
+  @Test
+  public void targetType() {
+    CompilationTestHelper.newInstance(TargetTypeChecker.class, getClass())
+        .addSourceFile("TargetTypeTest.java")
         .doTest();
   }
 }

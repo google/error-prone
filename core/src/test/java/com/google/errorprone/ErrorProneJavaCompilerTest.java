@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package com.google.errorprone;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.BugPattern.Suppressibility.UNSUPPRESSIBLE;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.Matchers.containsString;
@@ -242,7 +241,7 @@ public class ErrorProneJavaCompilerTest {
     explanation = "",
     category = JDK,
     severity = ERROR,
-    suppressibility = UNSUPPRESSIBLE
+    disableable = false
   )
   public static class UnsuppressibleArrayEquals extends ArrayEquals {}
 
@@ -372,7 +371,7 @@ public class ErrorProneJavaCompilerTest {
     explanation = "",
     category = JDK,
     severity = ERROR,
-    suppressibility = UNSUPPRESSIBLE
+    disableable = false
   )
   public static class DeleteMethod extends BugChecker implements ClassTreeMatcher {
     @Override
@@ -396,6 +395,31 @@ public class ErrorProneJavaCompilerTest {
             Iterables.getOnlyElement(result.diagnosticHelper.getDiagnostics())
                 .getMessage(Locale.ENGLISH))
         .contains("AssertionError: Cannot edit synthetic AST nodes");
+  }
+
+  @Test
+  public void testWithExcludedPaths() throws Exception {
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
+
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-XepExcludedPaths:.*/bugpatterns/.*"),
+            Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isTrue();
+
+    // ensure regexp must match the full path
+    result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-XepExcludedPaths:bugpatterns"),
+            Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.succeeded).isFalse();
   }
 
   private static class CompilationResult {

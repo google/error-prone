@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,8 @@ public class DoNotCallCheckerTest {
             "    // BUG: Diagnostic contains:",
             "    // This method should not be called, see its documentation for details",
             "    g();",
+            "    // BUG: Diagnostic contains:",
+            "    Runnable r = this::g;",
             "  }",
             "}")
         .doTest();
@@ -139,6 +141,19 @@ public class DoNotCallCheckerTest {
             "import com.google.errorprone.annotations.DoNotCall;",
             "public final class Test {",
             "  @DoNotCall public void f() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void privateMethod() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "public final class Test {",
+            "  // BUG: Diagnostic contains: private method",
+            "  @DoNotCall private void f() {}",
             "}")
         .doTest();
   }

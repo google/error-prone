@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,8 +74,9 @@ import java.util.Scanner;
   name = "DefaultCharset",
   category = JDK,
   summary =
-      "Implicit use of the platform default charset, which can result in e.g. non-ASCII"
-          + " characters being silently replaced with '?' in many environments",
+      "Implicit use of the platform default charset, which can result in differing behavior between"
+          + " JVM executions or incorrect behavior if the encoding of the data source doesn't match"
+          + " expectations.",
   severity = WARNING,
   tags = StandardTags.FRAGILE_CODE,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
@@ -193,7 +194,7 @@ public class DefaultCharset extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (state.isAndroidCompatible()) {
+    if (state.isAndroidCompatible()) { // Android's default platform Charset is always UTF-8
       return NO_MATCH;
     }
     if (STRING_GET_BYTES.matches(tree, state)) {

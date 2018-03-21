@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.Category.DAGGER;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -50,7 +51,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
           + "If you believe the `return null` path can never be taken, please throw a "
           + "`RuntimeException` instead. Otherwise, please annotate the method with `@Nullable`.",
   category = DAGGER,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
 

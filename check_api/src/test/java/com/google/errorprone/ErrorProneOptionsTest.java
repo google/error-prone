@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.expectThrows;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.ErrorProneOptions.Severity;
@@ -26,6 +25,7 @@ import com.google.errorprone.apply.ImportOrganizer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -56,7 +56,7 @@ public class ErrorProneOptionsTest {
     badArgs.forEach(
         arg -> {
           InvalidCommandLineOptionException expected =
-              expectThrows(
+              assertThrows(
                   InvalidCommandLineOptionException.class,
                   () -> ErrorProneOptions.processArgs(Arrays.asList(arg)));
           assertThat(expected.getMessage()).contains("invalid flag");
@@ -168,6 +168,21 @@ public class ErrorProneOptionsTest {
     ErrorProneOptions options =
             ErrorProneOptions.processArgs(new String[] {"-XepDisableAllWarnings"});
     assertThat(options.isDisableAllWarnings()).isTrue();
+  }
+
+  @Test
+  public void recognizesExcludedPaths() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(
+            new String[] {"-XepExcludedPaths:(.*/)?(build/generated|other_output)/.*\\.java"});
+    Pattern excludedPattern = options.getExcludedPattern();
+    assertThat(excludedPattern).isNotNull();
+    assertThat(excludedPattern.matcher("fizz/build/generated/Gen.java").matches()).isTrue();
+    assertThat(excludedPattern.matcher("fizz/bazz/generated/Gen.java").matches()).isFalse();
+    assertThat(excludedPattern.matcher("fizz/abuild/generated/Gen.java").matches()).isFalse();
+    assertThat(excludedPattern.matcher("other_output/Gen.java").matches()).isTrue();
+    assertThat(excludedPattern.matcher("foo/other_output/subdir/Gen.java").matches()).isTrue();
+    assertThat(excludedPattern.matcher("foo/other_output/subdir/Gen.cpp").matches()).isFalse();
   }
 
   @Test

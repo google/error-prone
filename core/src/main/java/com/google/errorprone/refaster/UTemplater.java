@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All rights reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -592,11 +592,11 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
       UExpression ident = UFreeIdent.create(tree.getName());
       Matches matches = ASTHelpers.getAnnotation(symbol, Matches.class);
       if (matches != null) {
-        ident = UMatches.create(getValue(matches), true, ident);
+        ident = UMatches.create(getValue(matches), /* positive= */ true, ident);
       }
       NotMatches notMatches = ASTHelpers.getAnnotation(symbol, NotMatches.class);
       if (notMatches != null) {
-        ident = UMatches.create(getValue(notMatches), false, ident);
+        ident = UMatches.create(getValue(notMatches), /* positive= */ false, ident);
       }
       OfKind hasKind = ASTHelpers.getAnnotation(symbol, OfKind.class);
       if (hasKind != null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ public class ForOverrideChecker extends BugChecker
         if (currentMethod.getName().equals(method.name)) {
           MethodSymbol currentMethodSymbol = ASTHelpers.getSymbol(currentMethod);
           if (currentMethodSymbol.overrides(
-              method, (TypeSymbol) method.owner, state.getTypes(), true)) {
+              method, (TypeSymbol) method.owner, state.getTypes(), /* checkResult= */ true)) {
             return Description.NO_MATCH;
           }
         }
@@ -217,7 +217,8 @@ public class ForOverrideChecker extends BugChecker
       if (!hasAnnotation(FOR_OVERRIDE, member)
           // Note that MethodSymbol.overrides() ignores static-ness, but that's OK since we've
           // already checked that this method is not static.
-          || !method.overrides(member, (TypeSymbol) member.owner, state.getTypes(), true)) {
+          || !method.overrides(
+              member, (TypeSymbol) member.owner, state.getTypes(), /* checkResult= */ true)) {
         iter.remove();
       }
     }

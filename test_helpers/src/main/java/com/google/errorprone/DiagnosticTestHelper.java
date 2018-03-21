@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
@@ -328,8 +329,8 @@ public class DiagnosticTestHelper {
                   + lineNumber
                   + " matching "
                   + predicate
-                  + ". All errors:\n"
-                  + diagnostics,
+                  + ". "
+                  + allErrors(diagnostics),
               patternMatcher.matches(diagnostics));
         }
 
@@ -344,8 +345,8 @@ public class DiagnosticTestHelper {
                   + lineNumber
                   + " containing ["
                   + checkName
-                  + "]. All errors:\n"
-                  + diagnostics,
+                  + "]. "
+                  + allErrors(diagnostics),
               checkNameMatcher.matches(diagnostics));
         }
 
@@ -354,11 +355,16 @@ public class DiagnosticTestHelper {
         Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
             hasItem(diagnosticOnLine(source.toUri(), lineNumber));
         if (matcher.matches(diagnostics)) {
-          fail("Saw unexpected error on line " + lineNumber + ". All errors:\n" + diagnostics);
+          fail("Saw unexpected error on line " + lineNumber + ". " + allErrors(diagnostics));
         }
       }
     } while (true);
     reader.close();
+  }
+
+  private static String allErrors(List<Diagnostic<? extends JavaFileObject>> diagnostics) {
+    return "All errors:\n"
+        + diagnostics.stream().map(Object::toString).collect(Collectors.joining("\n\n"));
   }
 
   /** Returns the lookup keys that weren't used. */

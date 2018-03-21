@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -51,8 +51,6 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.ImportTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.NewArrayTree;
@@ -64,9 +62,11 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.main.Arguments;
 import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
@@ -85,6 +85,7 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -139,12 +140,12 @@ public class SuggestedFixes {
     }
   }
 
-  /** Add modifiers to the given class, method, or field declaration. */
-  @Nullable
-  public static SuggestedFix addModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
+  /** Adds modifiers to the given class, method, or field declaration. */
+  public static Optional<SuggestedFix> addModifiers(
+      Tree tree, VisitorState state, Modifier... modifiers) {
     ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
-      return null;
+      return Optional.empty();
     }
     Set<Modifier> toAdd =
         Sets.difference(new TreeSet<>(Arrays.asList(modifiers)), originalModifiers.getFlags());
@@ -154,7 +155,7 @@ public class SuggestedFixes {
               ? state.getEndPosition(originalModifiers) + 1
               : ((JCTree) tree).getStartPosition();
       int base = ((JCTree) tree).getStartPosition();
-      java.util.Optional<Integer> insert =
+      Optional<Integer> insert =
           state
               .getTokensForNode(tree)
               .stream()
@@ -162,7 +163,8 @@ public class SuggestedFixes {
               .filter(thisPos -> thisPos >= pos)
               .findFirst();
       int insertPos = insert.orElse(pos); // shouldn't ever be able to get to the else
-      return SuggestedFix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
+      return Optional.of(
+          SuggestedFix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " "));
     }
     // a map from modifiers to modifier position (or -1 if the modifier is being added)
     // modifiers are sorted in Google Java Style order
@@ -194,16 +196,16 @@ public class SuggestedFixes {
     if (!modifiersToWrite.isEmpty()) {
       fix.postfixWith(originalModifiers, " " + Joiner.on(' ').join(modifiersToWrite));
     }
-    return fix.build();
+    return Optional.of(fix.build());
   }
 
   /** Remove modifiers from the given class, method, or field declaration. */
-  @Nullable
-  public static SuggestedFix removeModifiers(Tree tree, VisitorState state, Modifier... modifiers) {
+  public static Optional<SuggestedFix> removeModifiers(
+      Tree tree, VisitorState state, Modifier... modifiers) {
     Set<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
     ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
-      return null;
+      return Optional.empty();
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     List<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
@@ -218,9 +220,9 @@ public class SuggestedFixes {
       }
     }
     if (empty) {
-      return null;
+      return Optional.empty();
     }
-    return fix.build();
+    return Optional.of(fix.build());
   }
 
   /**
@@ -245,28 +247,17 @@ public class SuggestedFixes {
         break;
       }
       if (curr.owner != null && curr.owner.getKind() == ElementKind.PACKAGE) {
-        if (importClash(state, curr)) {
+        // If the owner of curr is a package, we can't do anything except import or fully-qualify
+        // the type name.
+        if (found != null) {
           names.addFirst(curr.owner.getQualifiedName().toString());
-          break;
         } else {
           fix.addImport(curr.getQualifiedName().toString());
-          break;
         }
+        break;
       }
     }
     return Joiner.on('.').join(names);
-  }
-
-  private static boolean importClash(VisitorState state, Symbol sym) {
-    for (ImportTree importTree : state.getPath().getCompilationUnit().getImports()) {
-      if (((MemberSelectTree) importTree.getQualifiedIdentifier())
-              .getIdentifier()
-              .contentEquals(sym.getSimpleName())
-          && !sym.equals(ASTHelpers.getSymbol(importTree.getQualifiedIdentifier()))) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /** Returns a human-friendly name of the given type for use in fixes. */
@@ -376,7 +367,9 @@ public class SuggestedFixes {
   public static SuggestedFix renameVariable(
       VariableTree tree, final String replacement, VisitorState state) {
     String name = tree.getName().toString();
-    int typeLength = state.getSourceForNode(tree.getType()).length();
+    // For a lambda parameter without explicit type, it will return null.
+    String source = state.getSourceForNode(tree.getType());
+    int typeLength = source == null ? 0 : source.length();
     int pos =
         ((JCTree) tree).getStartPosition() + state.getSourceForNode(tree).indexOf(name, typeLength);
     final SuggestedFix.Builder fix =
@@ -459,6 +452,18 @@ public class SuggestedFixes {
    * Returns a fix that adds a {@code @SuppressWarnings(warningToSuppress)} to the closest
    * suppressible element to the node pointed at by {@code state.getPath()}.
    *
+   * @see #addSuppressWarnings(VisitorState, String, String)
+   */
+  @Nullable
+  public static Fix addSuppressWarnings(VisitorState state, String warningToSuppress) {
+    return addSuppressWarnings(state, warningToSuppress, null);
+  }
+
+  /**
+   * Returns a fix that adds a {@code @SuppressWarnings(warningToSuppress)} to the closest
+   * suppressible element to the node pointed at by {@code state.getPath()}, optionally suffixing
+   * the suppression with a comment suffix (e.g. a reason for the suppression).
+   *
    * <p>If the closest suppressible element already has a @SuppressWarning annotation,
    * warningToSuppress will be added to the value in {@code @SuppressWarnings} instead.
    *
@@ -468,9 +473,10 @@ public class SuggestedFixes {
    * warningToSuppress}, this method will return null.
    */
   @Nullable
-  public static Fix addSuppressWarnings(VisitorState state, String warningToSuppress) {
+  public static Fix addSuppressWarnings(
+      VisitorState state, String warningToSuppress, @Nullable String lineComment) {
     Builder fixBuilder = SuggestedFix.builder();
-    addSuppressWarnings(fixBuilder, state, warningToSuppress);
+    addSuppressWarnings(fixBuilder, state, warningToSuppress, lineComment);
     return fixBuilder.isEmpty() ? null : fixBuilder.build();
   }
 
@@ -479,10 +485,31 @@ public class SuggestedFixes {
    * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
    * {@code SuppressWarnings} annotation there.
    *
-   * @see #addSuppressWarnings(VisitorState, String)
+   * @see #addSuppressWarnings(VisitorState, String, String)
    */
   public static void addSuppressWarnings(
       Builder fixBuilder, VisitorState state, String warningToSuppress) {
+    addSuppressWarnings(fixBuilder, state, warningToSuppress, null);
+  }
+
+  /**
+   * Modifies {@code fixBuilder} to either create a new {@code @SuppressWarnings} element on the
+   * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
+   * {@code SuppressWarnings} annotation there.
+   *
+   * @param fixBuilder
+   * @param state
+   * @param warningToSuppress the warning to be suppressed, without the surrounding annotation. For
+   *     example, to produce {@code @SuppressWarnings("Foo")}, pass {@code Foo}.
+   * @param lineComment if non-null, the {@code @SuppressWarnings} will be prefixed by a line
+   *     comment containing this text. Do not pass leading {@code //} or include any line breaks.
+   * @see #addSuppressWarnings(VisitorState, String, String)
+   */
+  public static void addSuppressWarnings(
+      Builder fixBuilder,
+      VisitorState state,
+      String warningToSuppress,
+      @Nullable String lineComment) {
     // Find the nearest tree to add @SuppressWarnings to.
     Tree suppressibleNode = suppressibleNode(state.getPath());
     if (suppressibleNode == null) {
@@ -490,6 +517,12 @@ public class SuggestedFixes {
     }
 
     SuppressWarnings existingAnnotation = getAnnotation(suppressibleNode, SuppressWarnings.class);
+    String suppression = state.getTreeMaker().Literal(CLASS, warningToSuppress).toString();
+
+    // Line comment to add, if it is present.
+    Optional<String> formattedLineComment =
+        Optional.ofNullable(lineComment).map(s -> "// " + s + "\n");
+
     // If we have an existing @SuppressWarnings on the element, extend its value
     if (existingAnnotation != null) {
       // Add warning to the existing annotation
@@ -508,13 +541,14 @@ public class SuggestedFixes {
 
       fixBuilder.merge(
           addValuesToAnnotationArgument(
-              suppressAnnotationTree,
-              "value",
-              ImmutableList.of(state.getTreeMaker().Literal(CLASS, warningToSuppress).toString()),
-              state));
+              suppressAnnotationTree, "value", ImmutableList.of(suppression), state));
+      formattedLineComment.ifPresent(lc -> fixBuilder.prefixWith(suppressAnnotationTree, lc));
     } else {
       // Otherwise, add a suppress annotation to the element
-      fixBuilder.prefixWith(suppressibleNode, "@SuppressWarnings(\"" + warningToSuppress + "\")\n");
+      String replacement =
+          formattedLineComment.orElse("") + "@SuppressWarnings(" + suppression + ") ";
+
+      fixBuilder.prefixWith(suppressibleNode, replacement);
     }
   }
 
@@ -580,6 +614,35 @@ public class SuggestedFixes {
     }
   }
 
+  /**
+   * Returns a fix that updates {@code newValues} to the {@code parameterName} argument for {@code
+   * annotation}, regardless of whether there is already an argument.
+   *
+   * <p>N.B.: {@code newValues} are source-code strings, not string literal values.
+   */
+  public static Builder updateAnnotationArgumentValues(
+      AnnotationTree annotation, String parameterName, Collection<String> newValues) {
+    if (annotation.getArguments().isEmpty()) {
+      String parameterPrefix = parameterName.equals("value") ? "" : (parameterName + " = ");
+      return SuggestedFix.builder()
+          .replace(
+              annotation,
+              annotation
+                  .toString()
+                  .replaceFirst("\\(\\)", "(" + parameterPrefix + newArgument(newValues) + ")"));
+    }
+    Optional<ExpressionTree> maybeExistingArgument = findArgument(annotation, parameterName);
+    if (!maybeExistingArgument.isPresent()) {
+      return SuggestedFix.builder()
+          .prefixWith(
+              annotation.getArguments().get(0),
+              parameterName + " = " + newArgument(newValues) + ", ");
+    }
+
+    ExpressionTree existingArgument = maybeExistingArgument.get();
+    return SuggestedFix.builder().replace(existingArgument, newArgument(newValues));
+  }
+
   private static String newArgument(String existingParameters, Collection<String> initializers) {
     return newArgument(
         ImmutableList.<String>builder().add(existingParameters).addAll(initializers).build());
@@ -607,7 +670,7 @@ public class SuggestedFixes {
         }
       }
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   /**
@@ -682,5 +745,61 @@ public class SuggestedFixes {
         .stream()
         .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
         .count();
+  }
+
+  /**
+   * Pretty-prints a Type for use in fixes, qualifying any enclosed type names using {@link
+   * #qualifyType}}.
+   */
+  public static String prettyType(
+      @Nullable VisitorState state, @Nullable SuggestedFix.Builder fix, Type type) {
+    return type.accept(
+        new DefaultTypeVisitor<String, Void>() {
+          @Override
+          public String visitWildcardType(Type.WildcardType t, Void unused) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(t.kind);
+            if (t.kind != BoundKind.UNBOUND) {
+              sb.append(t.type.accept(this, null));
+            }
+            return sb.toString();
+          }
+
+          @Override
+          public String visitClassType(Type.ClassType t, Void unused) {
+            StringBuilder sb = new StringBuilder();
+            if (state == null || fix == null) {
+              sb.append(t.tsym.getSimpleName());
+            } else {
+              sb.append(qualifyType(state, fix, t.tsym));
+            }
+            if (t.getTypeArguments().nonEmpty()) {
+              sb.append('<');
+              sb.append(
+                  t.getTypeArguments()
+                      .stream()
+                      .map(a -> a.accept(this, null))
+                      .collect(joining(", ")));
+              sb.append(">");
+            }
+            return sb.toString();
+          }
+
+          @Override
+          public String visitCapturedType(Type.CapturedType t, Void unused) {
+            return t.wildcard.accept(this, null);
+          }
+
+          @Override
+          public String visitArrayType(Type.ArrayType t, Void unused) {
+            return t.elemtype.accept(this, null) + "[]";
+          }
+
+          @Override
+          public String visitType(Type t, Void unused) {
+            return t.toString();
+          }
+        },
+        null);
   }
 }
