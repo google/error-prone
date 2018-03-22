@@ -189,7 +189,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(java.util.Locale.class)
         .add(java.util.regex.Pattern.class)
         .add("android.net.Uri")
-        .add("java.util.AbstractMap.SimpleImmutableEntry", "K", "V")
+        .add("java.util.AbstractMap$SimpleImmutableEntry", "K", "V")
         .add("java.util.Optional", "T")
         .add("java.util.OptionalDouble")
         .add("java.util.OptionalInt")
