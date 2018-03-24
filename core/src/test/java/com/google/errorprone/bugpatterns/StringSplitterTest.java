@@ -34,14 +34,14 @@ public class StringSplitterTest {
   public void positive() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    for (String s : \"\".split(\":\")) {}",
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "class Test {",
             "  void f() {",
@@ -55,7 +55,7 @@ public class StringSplitterTest {
   public void varLoop() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    String[] pieces = \"\".split(\":\");",
@@ -63,7 +63,7 @@ public class StringSplitterTest {
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "class Test {",
             "  void f() {",
@@ -78,7 +78,7 @@ public class StringSplitterTest {
   public void varLoopLength() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    String[] pieces = \"\".split(\":\");",
@@ -86,7 +86,7 @@ public class StringSplitterTest {
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "import java.util.List;",
             "class Test {",
@@ -102,7 +102,7 @@ public class StringSplitterTest {
   public void varList() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    String[] pieces = \"\".split(\":\");",
@@ -111,7 +111,7 @@ public class StringSplitterTest {
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "import java.util.List;",
             "class Test {",
@@ -128,14 +128,14 @@ public class StringSplitterTest {
   public void positiveRegex() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    for (String s : \"\".split(\".*foo\\\\t\")) {}",
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "class Test {",
             "  void f() {",
@@ -149,7 +149,7 @@ public class StringSplitterTest {
   public void character() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    for (String s : \"\".split(\"c\")) {}",
@@ -157,7 +157,7 @@ public class StringSplitterTest {
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "class Test {",
             "  void f() {",
@@ -186,7 +186,7 @@ public class StringSplitterTest {
   public void mutation() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    String[] xs = \"\".split(\"c\");",
@@ -195,7 +195,7 @@ public class StringSplitterTest {
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "import java.util.ArrayList;",
             "import java.util.List;",
@@ -214,7 +214,7 @@ public class StringSplitterTest {
   public void b72088500() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f(String input) {",
             "    String[] lines = input.split(\"\\\\r?\\\\n\");",
@@ -222,7 +222,7 @@ public class StringSplitterTest {
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "import java.util.List;",
             "class Test {",
@@ -238,14 +238,14 @@ public class StringSplitterTest {
   public void escape() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    String[] pieces = \"\".split(\"\\n\\t\\r\\f\");",
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "class Test {",
             "  void f() {",
@@ -259,7 +259,7 @@ public class StringSplitterTest {
   public void immediateArrayAccess() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    String x = \"\".split(\"c\")[0];",
@@ -267,7 +267,7 @@ public class StringSplitterTest {
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "import com.google.common.base.Splitter;",
             "import com.google.common.collect.Iterables;",
             "class Test {",
@@ -297,14 +297,14 @@ public class StringSplitterTest {
   public void noSplitterOnClassPath() throws IOException {
     testHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    for (String s : \"\".split(\":\")) {}",
             "  }",
             "}")
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             "class Test {",
             "  void f() {",
             "    for (String s : \"\".split(\":\", -1)) {}",
