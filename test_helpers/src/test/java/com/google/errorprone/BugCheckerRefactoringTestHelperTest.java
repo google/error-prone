@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -33,7 +34,6 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -194,7 +194,8 @@ public class BugCheckerRefactoringTestHelperTest {
     summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
     explanation = "For test purposes only.",
     category = JDK,
-    severity = SUGGESTION
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
   )
   public static class ReturnNullRefactoring extends BugChecker implements ReturnTreeMatcher {
     @Override
@@ -219,19 +220,6 @@ public class BugCheckerRefactoringTestHelperTest {
         return describeMatch(tree, SuggestedFix.replace(tree, ""));
       }
       return Description.NO_MATCH;
-    }
-  }
-
-  @Test
-  public void testFileAlreadyExists() throws IOException {
-    try {
-      helper
-          .addInputLines("Test.java", "public class Test {}")
-          .addOutputLines("Test.java", "public class Test {}")
-          .doTest();
-      fail();
-    } catch (FileAlreadyExistsException e) {
-      assertThat(e).hasMessage("Test.java");
     }
   }
 
@@ -270,7 +258,8 @@ public class BugCheckerRefactoringTestHelperTest {
     summary = "Mock refactoring that imports an ArrayList",
     explanation = "For test purposes only.",
     category = JDK,
-    severity = SUGGESTION
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
   )
   public static class ImportArrayList extends BugChecker implements CompilationUnitTreeMatcher {
 
