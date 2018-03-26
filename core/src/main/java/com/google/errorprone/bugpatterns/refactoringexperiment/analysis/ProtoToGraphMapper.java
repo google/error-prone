@@ -52,7 +52,8 @@ public final class ProtoToGraphMapper {
                 g.putEdgeValue(n, refactorInfo, REFACTOR_INFO);
             } else {
                 Identification n1 = Identification.newBuilder().setType(v.getId().getType()).setKind(INFERRED_CLASS).build();
-                g.putEdgeValue(n, n1, EDGE_TYPE_INFO);
+                //g.putEdgeValue(n, n1, EDGE_TYPE_INFO);
+                g.putEdgeValue(n,n1,EDGE_OF_TYPE);
             }
         }
         return ImmutableValueGraph.copyOf(g);
@@ -73,17 +74,33 @@ public final class ProtoToGraphMapper {
 
     public static ImmutableValueGraph<Identification, String> mapMethodDeclToGraph(MethodDeclaration m) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
+
         Identification n = addNodeToGraph(m.getId(), g);
+
         m.getParametersMap().entrySet().stream().map(param -> Maps.immutableEntry(param.getKey(), addNodeToGraph(param.getValue(), g)))
                 .forEach(x -> createBiDirectionalRelation(n, x.getValue(), EDGE_PARAM_INDEX + x.getKey(),EDGE_PARENT_METHOD,false,g));
 
         if (m.hasSuperMethod()) {
-            Identification superMethod = m.getSuperMethod().getId();
-            createBiDirectionalRelation(n, superMethod, EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
-            for (Entry<Integer, Identification> e : m.getSuperMethod().getParametersMap().entrySet()) {
-                createBiDirectionalRelation(e.getValue(), addNodeToGraph(m.getParametersMap().get(e.getKey()), g),
-                        EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
+            if ((m.getSuperMethod().hasReturnType() || m.getSuperMethod().getParametersCount()>0)) {
+                Identification superMethod = m.getSuperMethod().getId();
+                createBiDirectionalRelation(n, superMethod, EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
+                for (Entry<Integer, Identification> e : m.getSuperMethod().getParametersMap().entrySet()) {
+                    createBiDirectionalRelation(e.getValue(), addNodeToGraph(m.getParametersMap().get(e.getKey()), g),
+                            EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
+                }
             }
+            else {
+                Identification superMethod = m.getSuperMethod().getId().toBuilder().setKind(INFERRED_METHOD).build();
+                createBiDirectionalRelation(n, superMethod, EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
+                for (Entry<Integer, Identification> e : m.getParametersMap().entrySet()) {
+                    createBiDirectionalRelation(e.getValue(), addNodeToGraph(m.getParametersMap()
+                                    .get(e.getKey()).toBuilder().setKind(INFERRED_VAR).build(), g),
+                            EDGE_AFFECTED_BY_HIERARCHY, EDGE_AFFECTED_BY_HIERARCHY, false, g);
+                }
+            }
+
+
+
         }
         return ImmutableValueGraph.copyOf(g);
     }
@@ -205,7 +222,7 @@ public final class ProtoToGraphMapper {
     }
 
     private static Identification addNodeToGraph(Identification id, MutableValueGraph<Identification, String> g) {
-        return !id.hasName() ? addToGraph(id.toBuilder().setName(id.getKind()).build(), g) : addToGraph(id, g);
+        return !id.hasName() ? addToGraph(id, g) : addToGraph(id, g);
     }
 
     private static Identification addToGraph(Identification n1, MutableValueGraph<Identification, String> g) {
@@ -215,11 +232,11 @@ public final class ProtoToGraphMapper {
     }
 
     private static Identification addNodeToGraph(Identification id, Identification owner, MutableValueGraph<Identification, String> g) {
-        return addNodeToGraph(!id.hasName() ? id.toBuilder().setName(id.getKind()).setOwner(owner).build() : id, g);
+        return addNodeToGraph(!id.hasName() ? id.toBuilder().setOwner(owner).build() : id, g);
     }
 
     private static Identification addNodeToGraph(Identification id, Identification owner, MutableValueGraph<Identification, String> g, Integer key) {
-        return addNodeToGraph(!id.hasName() ? id.toBuilder().setName(id.getKind() + key).setOwner(owner).build() : id, g);
+        return addNodeToGraph(!id.hasName() ? id.toBuilder().setOwner(owner).build() : id, g);
     }
 
     /**

@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.Name;
 
 /**
- * A simple wrapper to view a {@code String} as a {@code Name}.
+ * A simple isWrapper to view a {@code String} as a {@code Name}.
  *
  * @author lowasser@google.com (Louis Wasserman)
  */

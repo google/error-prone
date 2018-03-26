@@ -27,7 +27,11 @@ public class Constants {
     public static final String INTERFACE = "INTERFACE";
     public static final String CONSTRUCTOR= "CONSTRUCTOR";
     public static final String INFERRED_CLASS = "INFERRED_CLASS";
+    public static final String INFERRED_METHOD= "INFERRED_METHOD";
+    public static final String INFERRED_VAR= "INFERRED_VAR";
+    public static final String INFERRED = "INFERRED";
     public static final String REFACTOR_INFO = "RefactorInfo";
+    public static final String PRIMITIVE_WRAPPER = "PRIMITIVE_WRAPPER";
 
 
     public static final String EDGE_AFFECTED_BY_HIERARCHY ="EDGE_AFFECTED_BY_HIERARCHY";
@@ -41,10 +45,8 @@ public class Constants {
     public static final String EDGE_RECURSIVE = "EDGE_RECURSIVE";
     public static final String EDGE_METHOD_INVOKED = "EDGE_METHOD_INVOKED";
     public static final String EDGE_REFERENCE = "EDGE_REFERENCE";
-    public static final String EDGE_TYPE_INFO = "EDGE_TYPE_INFO";
     public static final String EDGE_OF_TYPE = "EDGE_OF_TYPE";
     public static final String EDGE_PARENT_METHOD = "EDGE_PARENT_METHOD";
-    public static final String EDGE_RETURNS = "EDGE_RETURNS";
     public static final String EDGE_OVERRIDES = "EDGE_OVERRIDES";
-
+    public static final String EDGES_INVOKED_IN = "EDGES_INVOKED_IN";
 }

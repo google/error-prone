@@ -1,21 +1,24 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGES_INVOKED_IN;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_PASSED;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ASSIGNED_AS;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PASSED_AS_ARG_TO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_CLASS;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_METHOD;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_VAR;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LAMBDA_EXPRESSION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.NEW_CLASS;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PARAMETER;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ConstructGraph.isVarKind;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.NO_MAPPING;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.getMapping;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.varKind;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
-import com.google.errorprone.bugpatterns.refactoringexperiment.Constants;
 import com.google.errorprone.bugpatterns.refactoringexperiment.ProtoBuffPersist;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDeclarationOuterClass.ClassDeclaration;
@@ -42,36 +45,46 @@ public final class GraphAnalyzer {
     /**
      * This precondition makes sure that ,for this subgraph 'graph' all the method invocations pass
      * lambda expressions only. For this we make sure, that every v node of edge uv with value
-     * EDGE_ARG_PASSED is of kind LAMBDA_EXPRESSION
+     * EDGE_ARG_PASSED is of kind LAMBDA_EXPRESSION or VARIABLE
      */
     private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA = graph ->
             !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ARG_PASSED))
-                    .map(endpt -> endpt.nodeV()).anyMatch(v -> !(v.getKind().equals(Constants.LAMBDA_EXPRESSION)));
+                    .map(endpt -> endpt.nodeV()).anyMatch(v -> ! (v.getKind().equals(LAMBDA_EXPRESSION) ||isVarKind.test(v)));
     /**
      * This precondition makes sure that,for this subgraph 'graph' there are no assignment
      * operations. For Goal1, we do not want to perform refactorings which propagate across
-     * assignment operations. Thus, we filter a;; edges of a graph based on edge value: EDGE_ASSIGNED_AS
+     * assignment operations. Thus, we filter all edges of a graph based on edge value: EDGE_ASSIGNED_AS
      */
     private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
             !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ASSIGNED_AS));
 
     /**
-     * This precondition makes sure that, the subgraph does not go through if any of the method invocations
-     * have not found its parent method declaration
-     *
-     */
-    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ORPHAN_MTHD_INVC = graph ->
-            graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
-                    .anyMatch(x -> graph.successors(x).stream().anyMatch(y->graph.edgeValue(x,y).get().equals(EDGE_ARG_PASSED)));
-
-    /**
      * This precondition makes sure that we do not refactor a instance ,if a var is being passed to
      * a generic method or a 3rd party library.
      */
-    private static final com.google.common.base.Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_GENERIC = graph ->
-            !graph.nodes().stream().filter(x -> x.getKind().equals(PARAMETER))
-                    .anyMatch(x -> graph.successors(x).stream().filter(y -> y.getKind().equals(METHOD_INVOCATION) ||y.getKind().equals(NEW_CLASS))
-                            .anyMatch(y->graph.edgeValue(x,y).get().contains(EDGE_PASSED_AS_ARG_TO)));
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_ORPHAN_METHOD_INVOCATION =
+            graph ->
+                    !graph.nodes().stream().filter(isVarKind)
+                            .anyMatch(x -> graph.successors(x).stream().filter(y -> y.getKind().equals(METHOD_INVOCATION) ||y.getKind().equals(NEW_CLASS))
+                                    .anyMatch(y->graph.edgeValue(x,y).get().contains(EDGE_PASSED_AS_ARG_TO)));
+
+    /**
+     * This precondition makes sure that we do not have any inferred identifications in the
+     * output subgraph
+     */
+
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_INFERRED = graph ->
+            !graph.nodes().stream().anyMatch(x -> x.getKind().equals(INFERRED_CLASS) || x.getKind().equals(INFERRED_METHOD)
+                    || x.getKind().equals(INFERRED_VAR));
+
+    /**
+     *This pre-condition makes sure that no wrapper methods are used in lambda exp when we try to specialise
+     * Dunctional interfaces
+     */
+
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_WRAPPER = graph ->
+            !graph.nodes().stream().filter(x -> x.getKind().equals(LAMBDA_EXPRESSION))
+                    .anyMatch(x -> graph.successors(x).stream().anyMatch(y->graph.edgeValue(x,y).get().equals(EDGES_INVOKED_IN)));
 
 
     public static void main(String args[]) throws Exception {
@@ -89,25 +102,30 @@ public final class GraphAnalyzer {
         List<Refactorable> refactorables = new ArrayList<>();
         List<ImmutableValueGraph<Identification, String>> subGraphs = induceSubgraphs(ConstructGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
                 , getVariables(fromFolder), getMethodInovcation_NewClass(fromFolder)
-                , getAssignments(fromFolder))).stream().filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA)
-                .filter(PRE_CONDITION_NO_ORPHAN_MTHD_INVC)
-                .filter(PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_GENERIC)
-                .filter(PRE_CONDITION_NO_ASSIGNMENTS).collect(Collectors.toList());
+                , getAssignments(fromFolder))).stream().filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA).filter(PRE_CONDITION_NO_ASSIGNMENTS)
+                .filter(PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_ORPHAN_METHOD_INVOCATION)
+                .filter(PRE_CONDITION_NO_INFERRED)
+                .filter(PRE_CONDITION_NO_WRAPPER)
+                .collect(Collectors.toList());
         subGraphs.forEach(g -> {
             Map<Identification, String> mappings = getMapping(g);
-            if(!mappings.values().contains(NO_MAPPING) && !mappings.values().contains("") ) {
+            if(!mappings.values().contains(NO_MAPPING)) {
                 g.nodes().stream().filter(n -> !n.getKind().equals(REFACTOR_INFO) && mappings.containsKey(n))
-                        .forEach(n ->
-                                refactorables.add(Refactorable.newBuilder().setId(n).setRefactorTo(mappings.get(n)).build()));
+                        .forEach(n -> {
+                            Refactorable refactorable = Refactorable.newBuilder().setId(n).setRefactorTo(mappings.get(n)).build();
+                            refactorables.add(refactorable);
+                            System.out.println(refactorable);
+                        });
             }
         });
+        System.out.println(refactorables.size());
         return ImmutableList.copyOf(refactorables);
     }
 
     public static Set<ImmutableValueGraph<Identification, String>> induceSubgraphs(ImmutableValueGraph<Identification, String> gr) {
         Set<ImmutableValueGraph<Identification, String>> subGraphs = new HashSet<>();
         MutableValueGraph<Identification, String> graphOfGraphs = Graphs.copyOf(gr);
-        List<Identification> params = graphOfGraphs.nodes().stream().filter(x -> varKind.test(x)).collect(Collectors.toList());
+        List<Identification> params = graphOfGraphs.nodes().stream().filter(x -> isVarKind.test(x)).collect(Collectors.toList());
         HashSet<Identification> visitedNodes = new HashSet<>();
         for (Identification n : params)
             if (!visitedNodes.contains(n)) {
@@ -115,7 +133,6 @@ public final class GraphAnalyzer {
                 visitedNodes.addAll(reachables);
                 subGraphs.add(ImmutableValueGraph.copyOf(Graphs.inducedSubgraph(graphOfGraphs, reachables)));
             }
-
         return subGraphs;
     }
 

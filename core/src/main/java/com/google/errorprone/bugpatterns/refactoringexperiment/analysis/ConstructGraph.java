@@ -1,7 +1,23 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.*;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.varKind;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.CLASS;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.CONSTRUCTOR;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGES_INVOKED_IN;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_INDEX;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_PASSED;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PARAM_INDEX;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PARENT_METHOD;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PASSED_AS_ARG_TO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.FIELD;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_CLASS;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INTERFACE;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LAMBDA_EXPRESSION;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LOCAL_VARIABLE;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.NEW_CLASS;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PARAMETER;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PRIMITIVE_WRAPPER;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.createBiDirectionalRelation;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.getNode;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ProtoToGraphMapper.getSuccessorWithEdge;
@@ -31,41 +47,61 @@ import java.util.stream.Stream;
  */
 public final class ConstructGraph {
 
-    private static final Predicate<Identification> isMethodKind = n -> n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
+    // Predicates for testing if Identification Kinds.
+    public static final Predicate<Identification> isMethodKind = n -> n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS);
+    public static final Predicate<Identification> isVarKind = n -> n.getKind().equals(PARAMETER) || n.getKind().equals(LOCAL_VARIABLE) || n.getKind().equals(FIELD);
+    public static final Predicate<Identification> isTypeKind = n -> n.getKind().equals(CLASS) || n.getKind().equals(INTERFACE);
+    public static final Predicate<Identification> isInferredKind = n -> n.getKind().startsWith(INFERRED);
+    public static final Predicate<Identification> isWrapper = n -> n.getType().equals(PRIMITIVE_WRAPPER);
+
 
     private static ImmutableValueGraph<Identification, String> analyseAndEnrich(ImmutableValueGraph<Identification, String> graph) {
         MutableValueGraph<Identification, String> gr = Graphs.copyOf(graph);
+        List<Identification> removeNodes = new ArrayList<>();
         for (Identification n : gr.nodes())
-            if (isMethodKind.test(n)) {
+            if (isWrapper.test(n)) {
+                wrapperAnalysis(gr, n);
+            } else if (isMethodKind.test(n)) {
                 methodAnalysis(gr, n);
-            } else if (varKind.test(n)) {
-                variableAnalysis(gr, n);
+            } else if (isInferredKind.test(n)) {
+                removeNodes.addAll(inferredAnalysis(gr, n));
             }
+        removeNodes.forEach(x -> gr.removeNode(x));
         return ImmutableValueGraph.copyOf(gr);
     }
 
+    /**
+     * This method associates lambda expressions to the wrapper method usage inside
+     * of them.
+     * @param gr : Graph oon which analysis is to be performed.
+     * @param n :  a possible lambda expression which might be using wrapper
+     */
+
+    private static void wrapperAnalysis(MutableValueGraph<Identification, String> gr, Identification n) {
+        Optional<Identification> temp = gr.nodes().stream().filter(x -> x.getKind().equals(LAMBDA_EXPRESSION))
+                .filter(x -> x.equals(n.getOwner())).findFirst();
+        if (temp.isPresent())
+            gr.putEdgeValue(temp.get(), n, EDGES_INVOKED_IN);
+    }
 
     /**
-     * This method searches for class declarations for the type of variable n.
-     * eg. It searches for Class/interface declaration of MyFunction, for a variable.
-     * declared as MyFunction f;
-     *
-     * @param gr : Graph on which analysis needs to be performed.
-     * @param n : Method invocation for which method declarations has to be searched.
-     *
-     * This analysis is only applicable for variables who's type is the subtype of functional
-     * interface.
+     * This method tries to replace inferred class with a non-inferred one.
+     * @param gr : Graph on which analysis is to be performed.
+     * @param n :  Inferred class identification
+     * @return : List of inferred classes which have been resolved
      */
-    private static void variableAnalysis(MutableValueGraph<Identification, String> gr, Identification n) {
-        Optional<Identification> temp = gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().equals(EDGE_TYPE_INFO)).findFirst();
-        if (temp.isPresent()) {
-            Optional<Identification> classDecl = gr.nodes().stream().filter(x -> x.getKind().equals(CLASS) || x.getKind().equals(INTERFACE))
-                    .filter(x -> x.getType().equals(n.getType())).findFirst();
-            if (classDecl.isPresent()) {
-                gr.putEdgeValue(n, classDecl.get(), EDGE_OF_TYPE);
-                gr.removeEdge(n, temp.get());// remove EDGE_TYPE_INFO edge
+
+    private static List<Identification> inferredAnalysis(MutableValueGraph<Identification, String> gr, Identification n) {
+        List<Identification> removeNodes = new ArrayList<>();
+        if (n.getKind().equals(INFERRED_CLASS)) {
+            Identification inferredCLass = gr.nodes().stream().filter(isTypeKind).filter(x -> x.getType().equals(n.getType())).findFirst().orElse(null);
+            if (inferredCLass != null) {
+                gr.predecessors(n).forEach(p -> gr.putEdgeValue(p, inferredCLass, gr.edgeValue(p, n).get()));
+                gr.successors(n).forEach(s -> gr.putEdgeValue(inferredCLass, s, gr.edgeValue(n, s).get()));
+                removeNodes.add(n);
             }
         }
+        return removeNodes;
     }
 
     /**
@@ -99,14 +135,7 @@ public final class ConstructGraph {
                 foundParams.forEach(x -> gr.removeEdge(x, md));
                 foundParams.forEach(x -> gr.removeEdge(md, x));// remove PARAM_INDEX edge
             }
-            if (n.getKind().equals(NEW_CLASS)) {
-                Optional<Identification> typeNode = gr.nodes().stream().filter(x -> x.equals(n.getOwner())).findFirst();
-                if (typeNode.isPresent()) {
-                    gr.putEdgeValue(n, typeNode.get(), EDGE_OF_TYPE);
-                }
-            }
         }
-
     }
 
 

@@ -68,6 +68,17 @@ public class DataFilter {
         return  ft.addAllTypeParameter(args).build();
     }
 
+    public static boolean isPrimitiveWrapperType(Tree tree) {
+        try {
+            Type t = ASTHelpers.getSymbol(tree).type;
+            if (t == null)
+                return false;
+            return WRAPPER_CLASSES.contains(t.toString());
+        }catch (Exception e){
+            return  false;
+        }
+    }
+
 
 }
 

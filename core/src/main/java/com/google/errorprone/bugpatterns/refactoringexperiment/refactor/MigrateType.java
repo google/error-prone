@@ -4,7 +4,9 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.refactor;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoFromTree;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ConstructGraph.isTypeKind;
 
 import com.google.auto.service.AutoService;
 import com.google.common.base.Strings;
@@ -20,6 +22,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
@@ -44,7 +48,8 @@ import java.util.stream.Collectors;
 /**
  * Created by ameya on 2/9/18.
  */
-public class MigrateType extends BugChecker implements BugChecker.VariableTreeMatcher, BugChecker.MethodInvocationTreeMatcher {
+public class MigrateType extends BugChecker implements BugChecker.VariableTreeMatcher, BugChecker.MethodInvocationTreeMatcher,BugChecker.ClassTreeMatcher,
+        BugChecker.MemberReferenceTreeMatcher {
 
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -60,21 +65,87 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
         return null;
     }
 
+    @Override
+    public Description matchClass(ClassTree classTree, VisitorState state) {
+        boolean implementsLt = classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state)).count() > 0;
+        boolean isLT = DataFilter.apply(classTree, state);
+        if (implementsLt || isLT) {
+            SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+            changeImplementClauseForClass(classTree, state, fixBuilder);
+            return describeMatch(classTree, fixBuilder.build());
+        }
+
+        return null;
+    }
+
+    @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
         if (DataFilter.apply(ASTHelpers.getReceiver(tree), state)) {
             Optional<Refactorable> rec = getRefactorInfo(ASTHelpers.getReceiver(tree));
             Optional<Identification> mid = infoFromTree(tree);
             if (rec.isPresent() && mid.isPresent()) {
                 Optional<Refactorable> mi = getRefactorInfo(mid.get().toBuilder().setOwner(rec.get().getId()).build());
-                if (mi.isPresent()) {
-                    Symbol receiverSym = ASTHelpers.getSymbol(ASTHelpers.getReceiver(tree));
-                    SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-                    fixBuilder.replace(tree.getMethodSelect(), receiverSym.name + "." + mi.get().getRefactorTo());
-                    return describeMatch(tree, fixBuilder.build());
+                return changeNameMethodInvocation(tree, mi);
+            }else{
+                rec = getRefactorInfoOfType(infoFromTree(ASTHelpers.getReceiver(tree)).get());
+                if (rec.isPresent() && mid.isPresent()) {
+                    Optional<Refactorable> mi = getRefactorInfo(mid.get().toBuilder().setOwner(infoFromTree(ASTHelpers.getReceiver(tree)).get()).build());
+                    return changeNameMethodInvocation(tree, mi);
                 }
             }
         }
         return null;
+    }
+
+
+    @Override
+    public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+        if(DataFilter.apply(tree.getQualifierExpression(),state)){
+            Optional<Refactorable> rec = getRefactorInfo(tree.getQualifierExpression());
+            Optional<Identification> mid = infoFromTree(tree).map(x ->x.toBuilder().setKind(METHOD_INVOCATION).build());
+            Optional<Refactorable> mi = getRefactorInfo(mid.get().toBuilder().setOwner(infoFromTree(tree.getQualifierExpression()).get()).build());
+            if (rec.isPresent() && mid.isPresent()) {
+                return changeNameMemberReference(tree, mi);
+            }else{
+                rec = getRefactorInfoOfType(infoFromTree(tree.getQualifierExpression()).get());
+                if (rec.isPresent() && mid.isPresent()) {
+                    return changeNameMemberReference(tree, mi);
+                }
+            }
+        }
+        return null;
+    }
+
+    private Description changeNameMemberReference(MemberReferenceTree tree, Optional<Refactorable> mi) {
+        if (mi.isPresent()) {
+            System.out.println(mi.get().getRefactorTo());
+            SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+            fixBuilder.replace(tree,tree.getQualifierExpression() + "::" + mi.get().getRefactorTo() );
+            return describeMatch(tree, fixBuilder.build());
+        }
+        return null;
+    }
+
+
+    private Description changeNameMethodInvocation(MethodInvocationTree tree, Optional<Refactorable> mi) {
+
+        if (mi.isPresent()) {
+            Symbol receiverSym = ASTHelpers.getSymbol(ASTHelpers.getReceiver(tree));
+            SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+            fixBuilder.replace(tree.getMethodSelect(), receiverSym.name + "." + mi.get().getRefactorTo());
+            return describeMatch(tree, fixBuilder.build());
+        }
+        return null;
+    }
+
+    private void changeImplementClauseForClass(ClassTree classTree, VisitorState state, SuggestedFix.Builder fixBuilder) {
+        Optional<Refactorable> info = getRefactorInfo(classTree);
+        if (info.isPresent()) {
+            Tree clauseToEdit = classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state)).findFirst().map(x -> (Tree) x)
+                    .orElse(DataFilter.apply(classTree.getExtendsClause(), state) ? classTree.getExtendsClause() : null);
+            fixBuilder.addImport(getImportName(info.get().getRefactorTo()));
+            fixBuilder.replace(clauseToEdit, getClassName(getImportName(info.get().getRefactorTo()), clauseToEdit));
+        }
     }
 
     private String getImportName(String refactorTo) {
@@ -103,9 +174,19 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
 
     }
 
+    private static Optional<Refactorable> getRefactorInfoOfType(Identification id) {
+        try {
+            List<Refactorable> refactorInfo = QueryProtoBuffData.getAllRefactorInfo("");
+            return refactorInfo.stream().filter(x -> isTypeKind.test(x.getId())).filter(x -> x.getId().getType().equals(id.getType())).findFirst();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+
+    }
+
     private static Optional<Refactorable> getRefactorInfo(Identification id) {
         try {
-            List<Refactorable> refactorInfo = QueryProtoBuffData.getAllRefactorInfo("../testProtos/");
+            List<Refactorable> refactorInfo = QueryProtoBuffData.getAllRefactorInfo("");
             return refactorInfo.stream().filter(x -> x.getId().equals(id)).findFirst();
         } catch (Exception e) {
             return Optional.empty();
@@ -126,5 +207,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
         }
         return preserveType.append(">").toString();
     }
+
+
 
 }
