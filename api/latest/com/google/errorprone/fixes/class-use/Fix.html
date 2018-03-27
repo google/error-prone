@@ -201,6 +201,24 @@
         <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static com.google.common.collect.ImmutableList&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">ReplacementVariableFinder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ReplacementVariableFinder.html#fixesByReplacingExpressionWithLocallyDeclaredField-com.sun.source.tree.ExpressionTree-java.util.function.Predicate-com.google.errorprone.VisitorState-">fixesByReplacingExpressionWithLocallyDeclaredField</a></span>(com.sun.source.tree.ExpressionTree&nbsp;input,
+                                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function">Predicate</a>&lt;com.sun.tools.javac.tree.JCTree.JCVariableDecl&gt;&nbsp;validFieldPredicate,
+                                                  <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Suggest replacing <code>input</code> with a qualified reference to a locally declared field with a
+ similar or the same name as the <code>input</code> expression.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static com.google.common.collect.ImmutableList&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">ReplacementVariableFinder.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ReplacementVariableFinder.html#fixesByReplacingExpressionWithMethodParameter-com.sun.source.tree.ExpressionTree-java.util.function.Predicate-com.google.errorprone.VisitorState-">fixesByReplacingExpressionWithMethodParameter</a></span>(com.sun.source.tree.ExpressionTree&nbsp;input,
+                                             <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function">Predicate</a>&lt;com.sun.tools.javac.tree.JCTree.JCVariableDecl&gt;&nbsp;validParameterPredicate,
+                                             <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Suggest replacing <code>input</code> with a reference to a method parameter in the nearest enclosing
+ method declaration with a similar or the same name as the <code>input</code> expression.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected com.google.common.base.Optional&lt;<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">StreamToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/StreamToString.html#implicitToStringFix-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">implicitToStringFix</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree,
                    <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>

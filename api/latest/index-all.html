@@ -2487,6 +2487,16 @@
 <dd>
 <div class="block">A list of fixes to suggest in an error message or use in automated refactoring.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ReplacementVariableFinder.html#fixesByReplacingExpressionWithLocallyDeclaredField-com.sun.source.tree.ExpressionTree-java.util.function.Predicate-com.google.errorprone.VisitorState-">fixesByReplacingExpressionWithLocallyDeclaredField(ExpressionTree, Predicate&lt;JCTree.JCVariableDecl&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReplacementVariableFinder.html" title="class in com.google.errorprone.bugpatterns">ReplacementVariableFinder</a></dt>
+<dd>
+<div class="block">Suggest replacing <code>input</code> with a qualified reference to a locally declared field with a
+ similar or the same name as the <code>input</code> expression.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ReplacementVariableFinder.html#fixesByReplacingExpressionWithMethodParameter-com.sun.source.tree.ExpressionTree-java.util.function.Predicate-com.google.errorprone.VisitorState-">fixesByReplacingExpressionWithMethodParameter(ExpressionTree, Predicate&lt;JCTree.JCVariableDecl&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReplacementVariableFinder.html" title="class in com.google.errorprone.bugpatterns">ReplacementVariableFinder</a></dt>
+<dd>
+<div class="block">Suggest replacing <code>input</code> with a reference to a method parameter in the nearest enclosing
+ method declaration with a similar or the same name as the <code>input</code> expression.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/FloatCast.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">FloatCast</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FloatCast.html#FloatCast--">FloatCast()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FloatCast.html" title="class in com.google.errorprone.bugpatterns">FloatCast</a></dt>
@@ -6580,6 +6590,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/Replacements.html#Replacements--">Replacements()</a></span> - Constructor for class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Replacements.html" title="class in com.google.errorprone.fixes">Replacements</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ReplacementVariableFinder.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ReplacementVariableFinder</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Utility methods to find replacement variables with similar names.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/Replacement.html#replaceWith--">replaceWith()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a></dt>
 <dd>
 <div class="block">The source text to appear in the output.</div>
