@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,10 @@ public class IncompatibleArgumentTypeGenericMethod {
     <C> C remove(@CompatibleWith("B") Object b, @CompatibleWith("C") Object c) {
       return null;
     }
+
+    <C> C varargs(@CompatibleWith("B") Object b, @CompatibleWith("C") Object... cs) {
+      return (C) cs[0];
+    }
   }
 
   class C extends A<String> {}
@@ -45,5 +49,16 @@ public class IncompatibleArgumentTypeGenericMethod {
 
     // BUG: Diagnostic contains: float is not compatible with the required type: Double
     c.<Double>remove(123, 123.0f);
+  }
+
+  void testVarargs(A<String> stringA) {
+    // OK, all varargs elements compatible with Integer
+    Integer first = stringA.varargs("hi", 2, 3, 4);
+
+    // BUG: Diagnostic contains: long is not compatible with the required type: Integer
+    first = stringA.varargs("foo", 2, 3L);
+
+    // OK, everything compatible w/ Object
+    Object o = stringA.varargs("foo", 2L, 1.0d, "a");
   }
 }

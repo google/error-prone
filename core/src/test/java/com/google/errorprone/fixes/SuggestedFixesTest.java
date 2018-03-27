@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.isSameType;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.common.base.Verify;
@@ -66,18 +67,21 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SuggestedFixesTest {
 
+  /** Edit modifiers type. */
   @Retention(RUNTIME)
   public @interface EditModifiers {
     String value() default "";
 
     EditKind kind() default EditKind.ADD;
 
+    /** Kind of edit. */
     enum EditKind {
       ADD,
       REMOVE
     }
   }
 
+  /** Test checker that adds or removes modifiers. */
   @BugPattern(
     name = "EditModifiers",
     category = ONE_OFF,
@@ -232,6 +236,7 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
+  /** Test checker that casts returned expression. */
   @BugPattern(
     category = ONE_OFF,
     name = "CastReturn",
@@ -256,6 +261,7 @@ public class SuggestedFixesTest {
     }
   }
 
+  /** Test checker that casts returned expression. */
   @BugPattern(
     category = ONE_OFF,
     name = "CastReturn",
@@ -746,6 +752,100 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
+  @BugPattern(
+    name = "SuppressMeWithComment",
+    category = ONE_OFF,
+    summary = "",
+    severity = ERROR,
+    providesFix = REQUIRES_HUMAN_ATTENTION
+  )
+  static final class SuppressMeWithComment extends BugChecker implements LiteralTreeMatcher {
+    private final String lineComment;
+
+    SuppressMeWithComment(String lineComment) {
+      this.lineComment = lineComment;
+    }
+
+    @Override
+    public Description matchLiteral(LiteralTree tree, VisitorState state) {
+      Fix potentialFix = SuggestedFixes.addSuppressWarnings(state, "SuppressMe", lineComment);
+      return describeMatch(tree, potentialFix);
+    }
+  }
+
+  @Test
+  public void testSuppressWarningsWithCommentFix() throws IOException {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(
+            new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  int BEST_NUMBER = 42;",
+            "  @SuppressWarnings(\"x\") int BEST = 42;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  // b/XXXX: fix me!",
+            "  @SuppressWarnings(\"SuppressMe\") int BEST_NUMBER = 42;",
+            "  // b/XXXX: fix me!",
+            "  @SuppressWarnings({\"x\", \"SuppressMe\"}) int BEST = 42;",
+            "}")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void testSuppressWarningsWithCommentFix_existingComment() throws IOException {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(
+            new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  // This comment was here already.",
+            "  int BEST_NUMBER = 42;",
+            "",
+            "  // As was this one.",
+            "  @SuppressWarnings(\"x\") int BEST = 42;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  // This comment was here already.",
+            "  // b/XXXX: fix me!",
+            "  @SuppressWarnings(\"SuppressMe\") int BEST_NUMBER = 42;",
+            "",
+            "  // As was this one.",
+            "  // b/XXXX: fix me!",
+            "  @SuppressWarnings({\"x\", \"SuppressMe\"}) int BEST = 42;",
+            "}")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void testSuppressWarningsWithCommentFix_commentHasToBeLineWrapped() throws IOException {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(
+            new SuppressMeWithComment(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                    + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
+            getClass());
+    refactorTestHelper
+        .addInputLines("in/Test.java", "public class Test {", "  int BEST = 42;", "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  // Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
+                + "incididunt ut",
+            "  // labore et dolore magna aliqua.",
+            "  @SuppressWarnings(\"SuppressMe\") int BEST = 42;",
+            "}")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
   /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
   @BugPattern(
     name = "CompilesWithFixChecker",
@@ -887,6 +987,210 @@ public class SuggestedFixesTest {
             "package com.example;",
             "// BUG: Diagnostic contains: Did you mean to remove this line?",
             "import java.util.Map;")
+        .doTest();
+  }
+
+  /** Test checker that renames variables. */
+  @BugPattern(
+    name = "RenamesVariableChecker",
+    category = JDK,
+    summary = "",
+    severity = ERROR,
+    providesFix = REQUIRES_HUMAN_ATTENTION
+  )
+  public static class RenamesVariableChecker extends BugChecker implements VariableTreeMatcher {
+
+    private final String toReplace;
+    private final String replacement;
+    private final Class<?> typeClass;
+
+    RenamesVariableChecker(String toReplace, String replacement, Class<?> typeClass) {
+      this.toReplace = toReplace;
+      this.replacement = replacement;
+      this.typeClass = typeClass;
+    }
+
+    @Override
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      if (!tree.getName().contentEquals(toReplace) || !isSameType(typeClass).matches(tree, state)) {
+        return Description.NO_MATCH;
+      }
+      return describeMatch(tree, SuggestedFixes.renameVariable(tree, replacement, state));
+    }
+  }
+
+  @Test
+  public void renameVariable_renamesLocalVariable_withNestedScope() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void m() {",
+            "    Integer replace = 0;",
+            "    Integer b = replace;",
+            "    if (true) {",
+            "      Integer c = replace;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void m() {",
+            "    Integer renamed = 0;",
+            "    Integer b = renamed;",
+            "    if (true) {",
+            "      Integer c = renamed;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void renameVariable_ignoresMatchingNames_whenNotInScopeOfReplacement() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void m() {",
+            "    if (true) {",
+            "      Integer replace = 0;",
+            "      Integer c = replace;",
+            "    }",
+            "    Object replace = null;",
+            "    Object c = replace;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void m() {",
+            "    if (true) {",
+            "      Integer renamed = 0;",
+            "      Integer c = renamed;",
+            "    }",
+            "    Object replace = null;",
+            "    Object c = replace;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void renameVariable_renamesMethodParameter() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void m(Integer replace) {",
+            "    Integer b = replace;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void m(Integer renamed) {",
+            "    Integer b = renamed;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void renameVariable_renamesTryWithResourcesParameter() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new RenamesVariableChecker("replace", "renamed", AutoCloseable.class), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "abstract class Test {",
+            "  abstract AutoCloseable open();",
+            "  void m() {",
+            "    try (AutoCloseable replace = open()) {",
+            "      Object o = replace;",
+            "    } catch (Exception e) {",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "abstract class Test {",
+            "  abstract AutoCloseable open();",
+            "  void m() {",
+            "    try (AutoCloseable renamed = open()) {",
+            "      Object o = renamed;",
+            "    } catch (Exception e) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void renameVariable_renamesLambdaParameter_explicitlyTyped() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  Function<Integer, Integer> f = (Integer replace) -> replace;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  Function<Integer, Integer> f = (Integer renamed) -> renamed;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void renameVariable_renamesLambdaParameter_notExplicitlyTyped() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  Function<Integer, Integer> f = (replace) -> replace;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  Function<Integer, Integer> f = (renamed) -> renamed;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void renameVariable_renamesCatchParameter() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new RenamesVariableChecker("replace", "renamed", Throwable.class), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void m() {",
+            "    try {",
+            "    } catch (Throwable replace) {",
+            "      replace.toString();",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void m() {",
+            "    try {",
+            "    } catch (Throwable renamed) {",
+            "      renamed.toString();",
+            "    }",
+            "  }",
+            "}")
         .doTest();
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
@@ -39,6 +40,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import java.util.Collections;
 import java.util.Optional;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -57,6 +59,11 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
       "annotations are immutable by default; annotating them with"
           + " @com.google.errorprone.annotations.Immutable is unnecessary";
 
+  private static final ImmutableSet<String> PROCESSOR_BLACKLIST =
+      ImmutableSet.of(
+          "com.google.auto.value.processor.AutoAnnotationProcessor"
+          );
+
   private final WellKnownMutability wellKnownMutability;
 
   @Deprecated // Used reflectively, but you should pass in ErrorProneFlags to get custom mutability
@@ -74,6 +81,9 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
     if (symbol == null
         || symbol.isAnnotationType()
         || !WellKnownMutability.isAnnotation(state, symbol.type)) {
+      return NO_MATCH;
+    }
+    if (!Collections.disjoint(getGeneratedBy(symbol, state), PROCESSOR_BLACKLIST)) {
       return NO_MATCH;
     }
 

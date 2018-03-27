@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,15 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
-import static org.junit.Assert.expectThrows;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertThrows;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.jimfs.Jimfs;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
 import com.google.errorprone.BugCheckerInfo;
@@ -48,9 +52,23 @@ import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StringEquality;
+import com.sun.source.util.JavacTask;
+import com.sun.tools.javac.api.JavacTool;
+import com.sun.tools.javac.file.JavacFileManager;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
+import javax.tools.JavaFileObject.Kind;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.StandardLocation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -96,16 +114,126 @@ public class ScannerSupplierTest {
             PreconditionsCheckNotNull.class);
   }
 
+  // Allow different instances of classes to be merged, provided they have the same name.
+  // This allows e.g. seeing the same check built in to Error Prone and loaded on the
+  // processorpath.
   @Test
-  public void plusDoesntAllowDuplicateChecks() {
-    ScannerSupplier ss1 =
-        ScannerSupplier.fromBugCheckerClasses(
-            ArrayEquals.class, StaticQualifiedUsingExpression.class);
-    ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class);
+  public void plusAllowsDuplicateClassLoading() throws Exception {
+    FileSystem fileSystem = Jimfs.newFileSystem();
 
-    IllegalArgumentException expected =
-        expectThrows(IllegalArgumentException.class, () -> ss1.plus(ss2));
-    assertThat(expected.getMessage()).contains("ArrayEquals");
+    Class<? extends BugChecker> class1 =
+        compileAndLoadChecker(
+            fileSystem,
+            "com.google.errorprone.bugpatterns.TestChecker",
+            "package com.google.errorprone.bugpatterns;",
+            "import com.google.errorprone.BugPattern;",
+            "@BugPattern(name = \"TestChecker\", summary = \"\","
+                + " severity = BugPattern.SeverityLevel.WARNING)",
+            "public class TestChecker extends BugChecker {}");
+
+    Class<? extends BugChecker> class2 =
+        compileAndLoadChecker(
+            fileSystem,
+            "com.google.errorprone.bugpatterns.TestChecker",
+            "package com.google.errorprone.bugpatterns;",
+            "import com.google.errorprone.BugPattern;",
+            "@BugPattern(name = \"TestChecker\", summary = \"\","
+                + " severity = BugPattern.SeverityLevel.WARNING)",
+            "public class TestChecker extends BugChecker {}");
+
+    ScannerSupplier ss1 = ScannerSupplier.fromBugCheckerClasses(class1);
+    ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(class2);
+
+    assertThat(class1).isNotEqualTo(class2);
+    ScannerSupplier ss = ss1.plus(ss2);
+    assertThat(ss.getAllChecks()).hasSize(1);
+    assertThat(Iterables.getOnlyElement(ss.getAllChecks().values()).checkerClass())
+        .isEqualTo(class1);
+  }
+
+  /** Another check with the canonical name ArrayEquals, for testing. */
+  @BugPattern(name = "ArrayEquals", summary = "", severity = ERROR)
+  public static class OtherArrayEquals extends BugChecker {}
+
+  @Test
+  public void plusDisallowsDuplicates() throws Exception {
+    ScannerSupplier ss1 = ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class);
+    ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(OtherArrayEquals.class);
+
+    IllegalArgumentException thrown =
+        assertThrows(IllegalArgumentException.class, () -> ss1.plus(ss2));
+    assertThat(thrown)
+        .hasMessageThat()
+        .contains(
+            "different implementations of 'ArrayEquals':"
+                + " com.google.errorprone.scanner.ScannerSupplierTest$OtherArrayEquals,"
+                + " com.google.errorprone.bugpatterns.ArrayEquals");
+  }
+
+  @Test
+  public void plusDisallowsDifferentSeverities() throws Exception {
+    FileSystem fileSystem = Jimfs.newFileSystem();
+
+    Class<? extends BugChecker> class1 =
+        compileAndLoadChecker(
+            fileSystem,
+            "com.google.errorprone.bugpatterns.TestChecker",
+            "package com.google.errorprone.bugpatterns;",
+            "import com.google.errorprone.BugPattern;",
+            "@BugPattern(name = \"TestChecker\", summary = \"\","
+                + " severity = BugPattern.SeverityLevel.ERROR)",
+            "public class TestChecker extends BugChecker {}");
+
+    Class<? extends BugChecker> class2 =
+        compileAndLoadChecker(
+            fileSystem,
+            "com.google.errorprone.bugpatterns.TestChecker",
+            "package com.google.errorprone.bugpatterns;",
+            "import com.google.errorprone.BugPattern;",
+            "@BugPattern(name = \"TestChecker\", summary = \"\","
+                + " severity = BugPattern.SeverityLevel.WARNING)",
+            "public class TestChecker extends BugChecker {}");
+
+    ScannerSupplier ss1 = ScannerSupplier.fromBugCheckerClasses(class1);
+    ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(class2);
+
+    IllegalArgumentException thrown =
+        assertThrows(IllegalArgumentException.class, () -> ss1.plus(ss2));
+
+    assertThat(class1).isNotEqualTo(class2);
+    assertThat(thrown)
+        .hasMessageThat()
+        .contains("different severities for 'TestChecker': WARNING, ERROR");
+  }
+
+  static Class<? extends BugChecker> compileAndLoadChecker(
+      FileSystem fileSystem, String name, String... lines)
+      throws IOException, ClassNotFoundException {
+    JavacTool javacTool = JavacTool.create();
+    JavacFileManager fileManager =
+        javacTool.getStandardFileManager(null, Locale.getDefault(), UTF_8);
+    Path tmp = fileSystem.getPath("tmp");
+    Files.createDirectories(tmp);
+    Path output = Files.createTempDirectory(tmp, "output");
+    fileManager.setLocationFromPaths(StandardLocation.CLASS_OUTPUT, ImmutableList.of(output));
+    JavacTask task =
+        javacTool.getTask(
+            null,
+            fileManager,
+            null,
+            Collections.emptyList(),
+            null,
+            Collections.singletonList(
+                new SimpleJavaFileObject(
+                    URI.create(name.replace('.', '/') + ".java"), Kind.SOURCE) {
+                  @Override
+                  public CharSequence getCharContent(boolean b) throws IOException {
+                    return Joiner.on('\n').join(lines);
+                  }
+                }));
+    assertThat(task.call()).isTrue();
+    return Class.forName(name, true, new URLClassLoader(new URL[] {output.toUri().toURL()}))
+        .asSubclass(BugChecker.class);
   }
 
   @Test
@@ -340,7 +468,7 @@ public class ScannerSupplierTest {
         ErrorProneOptions.processArgs(ImmutableList.of("-Xep:ArrayEquals:OFF"));
 
     InvalidCommandLineOptionException exception =
-        expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
+        assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
     assertThat(exception.getMessage()).contains("may not be disabled");
   }
 
@@ -353,7 +481,7 @@ public class ScannerSupplierTest {
         ErrorProneOptions.processArgs(ImmutableList.of("-Xep:ArrayEquals:WARN"));
 
     InvalidCommandLineOptionException exception =
-        expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
+        assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
     assertThat(exception.getMessage()).contains("may not be demoted to a warning");
   }
 
@@ -474,7 +602,7 @@ public class ScannerSupplierTest {
     category = JDK,
     severity = ERROR,
     suppressionAnnotations = {},
-    disableable = true
+    disableable = false
   )
   public static class UnsuppressiblePackageLocation extends PackageLocation {}
 
@@ -485,7 +613,7 @@ public class ScannerSupplierTest {
         ErrorProneOptions.processArgs(ImmutableList.of("-Xep:PackageLocation:OFF"));
 
     InvalidCommandLineOptionException exception =
-        expectThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
+        assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
     assertThat(exception.getMessage()).contains("may not be disabled");
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,8 +14,6 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This tests the case where there is a chain of method overrides where the varargs constraint is

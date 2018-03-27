@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** A collection of types with with known mutability. */
+/** A collection of types with known mutability. */
 public final class WellKnownMutability implements ThreadSafety.KnownTypes {
 
 
@@ -133,6 +133,10 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("com.google.protobuf.Descriptors$ServiceDescriptor")
         .add("com.google.protobuf.Extension")
         .add("com.google.protobuf.ExtensionRegistry$ExtensionInfo")
+        // NOTE: GeneratedMessage is included here for external tests that use this class for
+        // checking whether classes are immutable. Within error prone, protos are verified
+        // using isProto2MessageClass from this class.
+        .add("com.google.protobuf.GeneratedMessage")
         .add("com.google.re2j.Pattern")
         .add("com.google.inject.TypeLiteral")
         .add("com.google.inject.Key")
@@ -141,6 +145,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(com.google.common.base.Joiner.class)
         .add(com.google.common.base.Optional.class, "T")
         .add(com.google.common.base.Splitter.class)
+        .add(com.google.common.collect.ContiguousSet.class, "C")
         .add(com.google.common.collect.ImmutableBiMap.class, "K", "V")
         .add(com.google.common.collect.ImmutableCollection.class, "E")
         .add(com.google.common.collect.ImmutableList.class, "E")
@@ -160,11 +165,14 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(com.google.common.graph.ImmutableGraph.class, "N")
         .add(com.google.common.graph.ImmutableNetwork.class, "N", "E")
         .add(com.google.common.graph.ImmutableValueGraph.class, "N", "V")
+        .add("com.google.common.hash.AbstractHashFunction") // package-private
         .add(com.google.common.hash.HashCode.class)
         .add(com.google.common.io.BaseEncoding.class)
         .add(com.google.common.net.MediaType.class)
         .add(com.google.common.primitives.UnsignedInteger.class)
         .add(com.google.common.primitives.UnsignedLong.class)
+        .add("com.ibm.icu.number.LocalizedNumberFormatter")
+        .add("com.ibm.icu.number.UnlocalizedNumberFormatter")
         .add(java.lang.Class.class)
         .add(java.lang.String.class)
         .add(java.lang.annotation.Annotation.class)
@@ -181,6 +189,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(java.util.Locale.class)
         .add(java.util.regex.Pattern.class)
         .add("android.net.Uri")
+        .add("java.util.AbstractMap$SimpleImmutableEntry", "K", "V")
         .add("java.util.Optional", "T")
         .add("java.util.OptionalDouble")
         .add("java.util.OptionalInt")

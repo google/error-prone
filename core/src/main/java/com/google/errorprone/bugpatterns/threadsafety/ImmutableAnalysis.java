@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
@@ -32,14 +33,17 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.util.Filter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
@@ -52,7 +56,7 @@ public class ImmutableAnalysis {
   private final WellKnownMutability wellKnownMutability;
   private final ThreadSafety threadSafety;
 
-  public ImmutableAnalysis(
+  ImmutableAnalysis(
       BugChecker bugChecker,
       VisitorState state,
       WellKnownMutability wellKnownMutability,
@@ -61,8 +65,11 @@ public class ImmutableAnalysis {
     this.state = state;
     this.wellKnownMutability = wellKnownMutability;
     this.threadSafety =
-        new ThreadSafety(
-            state, wellKnownMutability, immutableAnnotations, ImmutableSet.of(), null, null);
+        ThreadSafety.builder()
+            .knownTypes(wellKnownMutability)
+            .markerAnnotations(immutableAnnotations)
+            .typeParameterAnnotation(ImmutableTypeParameter.class)
+            .build(state);
   }
 
   public ImmutableAnalysis(
@@ -74,8 +81,28 @@ public class ImmutableAnalysis {
         ImmutableSet.of(Immutable.class.getName()));
   }
 
+  Violation isThreadSafeType(
+      boolean allowContainerTypeParameters, Set<String> containerTypeParameters, Type type) {
+    return threadSafety.isThreadSafeType(
+        allowContainerTypeParameters, containerTypeParameters, type);
+  }
+
+  boolean isImmutableTypeParameter(TypeVariableSymbol sym) {
+    return threadSafety.isThreadSafeTypeParameter(sym);
+  }
+
+  Violation checkInstantiation(
+      Collection<TypeVariableSymbol> classTypeParameters, Collection<Type> typeArguments) {
+    return threadSafety.checkInstantiation(classTypeParameters, typeArguments);
+  }
+
+  public Violation checkInvocation(Type methodType, Symbol symbol) {
+    return threadSafety.checkInvocation(methodType, symbol);
+  }
+
+  /** Accepts {@link Violation violations} that are found during the analysis. */
   @FunctionalInterface
-  interface ViolationReporter {
+  public interface ViolationReporter {
     Description.Builder describe(Tree tree, Violation info);
 
     @CheckReturnValue
@@ -98,7 +125,7 @@ public class ImmutableAnalysis {
    *
    * requiring supertypes to be annotated immutable would be too restrictive.
    */
-  Violation checkForImmutability(
+  public Violation checkForImmutability(
       Optional<ClassTree> tree,
       ImmutableSet<String> immutableTyParams,
       ClassType type,
@@ -114,7 +141,7 @@ public class ImmutableAnalysis {
         continue;
       }
       info =
-          threadSafety.threadSafeInstantiation(
+          threadSafety.checkSuperInstantiation(
               immutableTyParams, interfaceAnnotation, interfaceType);
       if (info.isPresent()) {
         return info.plus(
@@ -162,7 +189,7 @@ public class ImmutableAnalysis {
       // If the superclass does happen to be immutable, we don't need to recursively
       // inspect it. We just have to check that it's instantiated correctly:
       Violation info =
-          threadSafety.threadSafeInstantiation(immutableTyParams, superannotation, superType);
+          threadSafety.checkSuperInstantiation(immutableTyParams, superannotation, superType);
       if (!info.isPresent()) {
         return Violation.absent();
       }
@@ -246,10 +273,8 @@ public class ImmutableAnalysis {
     if (bugChecker.isSuppressed(var)) {
       return Violation.absent();
     }
-    if (ASTHelpers.hasAnnotation(var, LazyInit.class, state)) {
-      return Violation.absent();
-    }
-    if (!var.getModifiers().contains(Modifier.FINAL)) {
+    if (!var.getModifiers().contains(Modifier.FINAL)
+        && !ASTHelpers.hasAnnotation(var, LazyInit.class, state)) {
 
       Violation info =
           Violation.of(
@@ -267,7 +292,9 @@ public class ImmutableAnalysis {
       return info;
     }
     Type varType = state.getTypes().memberType(classType, var);
-    Violation info = threadSafety.isThreadSafeType(immutableTyParams, varType);
+    Violation info =
+        threadSafety.isThreadSafeType(
+            /* allowContainerTypeParameters= */ true, immutableTyParams, varType);
     if (info.isPresent()) {
       info =
           info.plus(

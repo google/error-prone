@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,5 +111,29 @@ public class ParameterCommentTest {
             "}")
         .expectUnchanged()
         .doTest();
+  }
+
+  @Test
+  public void positiveConstructor() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  Test (int x, int y) {}",
+            "  {",
+            "    new Test(0/*x*/, 1/*y=*/);",
+            "    new Test(0/*x*/, 1); // y",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  Test (int x, int y) {}",
+            "  {",
+            "    new Test(/* x= */ 0, /* y= */ 1);",
+            "    new Test(/* x= */ 0, /* y= */ 1); ",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
   }
 }

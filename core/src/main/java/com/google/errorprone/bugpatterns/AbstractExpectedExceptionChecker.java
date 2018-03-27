@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -241,14 +241,12 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
         return baseFix;
       }
       SuggestedFix.Builder fix = SuggestedFix.builder().merge(baseFix);
+      fix.addStaticImport("org.junit.Assert.assertThrows");
       StringBuilder fixPrefix = new StringBuilder();
-      if (newAsserts.isEmpty()) {
-        fix.addStaticImport("org.junit.Assert.assertThrows");
-        fixPrefix.append("assertThrows");
-      } else {
-        fix.addStaticImport("org.junit.Assert.expectThrows");
-        fixPrefix.append(String.format("%s thrown = expectThrows", exceptionClass));
+      if (!newAsserts.isEmpty()) {
+        fixPrefix.append(String.format("%s thrown = ", exceptionClass));
       }
+      fixPrefix.append("assertThrows");
       fixPrefix.append(String.format("(%s.class, () -> ", exceptionClass));
       boolean useExpressionLambda =
           throwingStatements.size() == 1

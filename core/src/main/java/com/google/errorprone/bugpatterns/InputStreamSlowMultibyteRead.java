@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,12 +111,15 @@ public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTre
   private Description maybeMatchReadByte(MethodTree readByteMethod, VisitorState state) {
     // Methods that return a constant expression are likely to be 'dummy streams', for which
     // the multibyte read is OK.
-    List<? extends StatementTree> statements = readByteMethod.getBody().getStatements();
-    if (statements.size() == 1) {
-      Tree tree = statements.get(0);
-      if (tree.getKind() == Kind.RETURN
-          && ASTHelpers.constValue(((ReturnTree) tree).getExpression()) != null) {
-        return Description.NO_MATCH;
+
+    if (readByteMethod.getBody() != null) { // Null-check for native/abstract overrides of read()
+      List<? extends StatementTree> statements = readByteMethod.getBody().getStatements();
+      if (statements.size() == 1) {
+        Tree tree = statements.get(0);
+        if (tree.getKind() == Kind.RETURN
+            && ASTHelpers.constValue(((ReturnTree) tree).getExpression()) != null) {
+          return Description.NO_MATCH;
+        }
       }
     }
 

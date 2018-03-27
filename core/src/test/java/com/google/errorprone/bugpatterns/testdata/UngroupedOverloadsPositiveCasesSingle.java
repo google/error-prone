@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,12 @@ public class UngroupedOverloadsPositiveCasesSingle {
     foo();
   }
 
-  // BUG: Diagnostic contains: Overloaded versions of this method are not grouped together
+  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
   public void foo() {
     foo(42);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
   public void foo(int x) {
     foo(x, x);
   }
@@ -40,6 +41,7 @@ public class UngroupedOverloadsPositiveCasesSingle {
     foo(x);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
   public void foo(int x, int y) {
     System.out.println(x + y);
   }

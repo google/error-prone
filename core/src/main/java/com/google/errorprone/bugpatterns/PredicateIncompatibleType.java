@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ public class PredicateIncompatibleType extends BugChecker implements MemberRefer
     }
     Type predicateType = predicateType(ASTHelpers.getType(tree), state);
     Type receiverType = getReceiverType(tree);
-    if (!EqualsIncompatibleType.incompatibleTypes(receiverType, predicateType, state)) {
+    if (EqualsIncompatibleType.compatibilityOfTypes(receiverType, predicateType, state)
+        .compatible()) {
       return NO_MATCH;
     }
     return buildDescription(tree)

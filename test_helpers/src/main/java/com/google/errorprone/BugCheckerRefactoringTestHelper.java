@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,8 +151,9 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   public BugCheckerRefactoringTestHelper.ExpectOutput addInputLines(String path, String... input) {
-    assertThat(fileManager.exists(path)).isFalse();
-    return new ExpectOutput(fileManager.forSourceLines(path, input));
+    String inputPath = getPath("in/", path);
+    assertThat(fileManager.exists(inputPath)).isFalse();
+    return new ExpectOutput(fileManager.forSourceLines(inputPath, input));
   }
 
   public BugCheckerRefactoringTestHelper setFixChooser(FixChooser chooser) {
@@ -285,10 +286,11 @@ public class BugCheckerRefactoringTestHelper {
 
     public BugCheckerRefactoringTestHelper addOutputLines(String path, String... output)
         throws IOException {
-      if (fileManager.exists(path)) {
-        throw new FileAlreadyExistsException(path);
+      String outputPath = getPath("out/", path);
+      if (fileManager.exists(outputPath)) {
+        throw new FileAlreadyExistsException(outputPath);
       }
-      return addInputAndOutput(input, fileManager.forSourceLines(path, output));
+      return addInputAndOutput(input, fileManager.forSourceLines(outputPath, output));
     }
 
     public BugCheckerRefactoringTestHelper addOutput(String outputFilename) {
@@ -298,5 +300,12 @@ public class BugCheckerRefactoringTestHelper {
     public BugCheckerRefactoringTestHelper expectUnchanged() {
       return addInputAndOutput(input, input);
     }
+  }
+
+  private String getPath(String prefix, String path) {
+    // return prefix + path;
+    int insertAt = path.lastIndexOf('/');
+    insertAt = insertAt == -1 ? 0 : insertAt + 1;
+    return new StringBuilder(path).insert(insertAt, prefix + "/").toString();
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,13 +49,22 @@ public class MultipleTopLevelClassesTest {
   @Test
   public void packageInfo() throws Exception {
     compilationHelper
-        .addSourceLines("a/package-info.java", "/** Documentation for our package */", "package a;")
+        .addSourceLines(
+            "a/package-info.java", //
+            "/** Documentation for our package */",
+            "package a;")
         .doTest();
   }
 
   @Test
   public void defaultPackage() throws Exception {
-    compilationHelper.addSourceLines("a/A.java", "class A {}", "class B {}").doTest();
+    compilationHelper
+        .addSourceLines(
+            "a/A.java", //
+            "// BUG: Diagnostic contains:",
+            "class A {}",
+            "class B {}")
+        .doTest();
   }
 
   @Test

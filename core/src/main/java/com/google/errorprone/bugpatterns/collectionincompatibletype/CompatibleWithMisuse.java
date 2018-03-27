@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
@@ -71,13 +70,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
     // TODO(glorioso): Once annotation is TYPE_USE, make sure that the node is actually a method
     // parameter
     MethodTree methodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
-    VariableTree paramTree = ASTHelpers.findEnclosingNode(state.getPath(), VariableTree.class);
     MethodSymbol declaredMethod = ASTHelpers.getSymbol(methodTree);
-
-    // We're disallowing tags on varargs methods for now, but we may revisit it in the future.
-    if (declaredMethod.isVarArgs() && Iterables.getLast(methodTree.getParameters()) == paramTree) {
-      return describeWithMessage(annoTree, "@CompatibleWith can't be used on a varargs parameter");
-    }
 
     // If this method overrides other methods, ensure that none of them have @CompatibleWith.
     // This restriction may need to be removed to allow more complex declaration hierarchies.

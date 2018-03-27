@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -156,17 +156,17 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
         }
       }
     }
-    if (classSymbol.owner != null
-        && classSymbol != classSymbol.owner
-        && classSymbol.owner instanceof Symbol.ClassSymbol) {
-      T sym = getMember(type, kind, classSymbol.owner, name);
+    if (classSymbol.hasOuterInstance()) {
+      T sym = getMember(type, kind, classSymbol.type.getEnclosingType().asElement(), name);
       if (sym != null) {
         return sym;
       }
     }
-    if (classSymbol.hasOuterInstance()) {
-      T sym = getMember(type, kind, classSymbol.type.getEnclosingType().asElement(), name);
-      if (sym != null) {
+    if (classSymbol.owner != null
+        && classSymbol != classSymbol.owner
+        && classSymbol.owner instanceof Symbol.ClassSymbol) {
+      T sym = getMember(type, kind, classSymbol.owner, name);
+      if (sym != null && sym.isStatic()) {
         return sym;
       }
     }

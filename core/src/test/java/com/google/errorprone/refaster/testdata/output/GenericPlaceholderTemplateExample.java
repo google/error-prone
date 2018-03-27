@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All rights reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,7 +15,6 @@
 package com.google.errorprone.refaster.testdata;
 
 import com.google.common.base.Joiner;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

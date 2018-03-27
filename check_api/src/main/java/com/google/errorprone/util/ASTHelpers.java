@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
 
 package com.google.errorprone.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
@@ -28,10 +33,18 @@ import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ArrayAccessTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompoundAssignmentTree;
+import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.IfTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -41,11 +54,18 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
@@ -63,6 +83,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Resolve;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCAnnotatedType;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -86,6 +107,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -96,8 +118,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** This class contains utility methods to work with the javac AST. */
 public class ASTHelpers {
@@ -142,8 +166,8 @@ public class ASTHelpers {
   }
 
   /**
-   * Gets the symbol declared by a tree. Returns null if this tree does not declare a symbol, if
-   * {@code tree} is null.
+   * Gets the symbol declared by a tree. Returns null if {@code tree} does not declare a symbol or
+   * is null.
    */
   public static Symbol getDeclaredSymbol(Tree tree) {
     if (tree instanceof AnnotationTree) {
@@ -192,6 +216,9 @@ public class ASTHelpers {
     }
     if (tree instanceof MemberReferenceTree) {
       return ((JCMemberReference) tree).sym;
+    }
+    if (tree instanceof JCAnnotatedType) {
+      return getSymbol(((JCAnnotatedType) tree).underlyingType);
     }
 
     return getDeclaredSymbol(tree);
@@ -336,6 +363,8 @@ public class ASTHelpers {
       return methodCall.type.getReturnType();
     } else if (expressionTree instanceof JCMethodInvocation) {
       return getReturnType(((JCMethodInvocation) expressionTree).getMethodSelect());
+    } else if (expressionTree instanceof JCMemberReference) {
+      return ((JCMemberReference) expressionTree).sym.type.getReturnType();
     }
     throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
   }
@@ -529,6 +558,7 @@ public class ASTHelpers {
    *
    * @param annotationClass the binary class name of the annotation (e.g.
    *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
+   * @return true if the symbol is annotated with given type.
    */
   public static boolean hasAnnotation(Symbol sym, String annotationClass, VisitorState state) {
     Name annotationName = state.getName(annotationClass);
@@ -574,12 +604,23 @@ public class ASTHelpers {
   /**
    * Check for the presence of an annotation, considering annotation inheritance.
    *
-   * @return the annotation of given type on the tree's symbol, or null.
+   * @param annotationClass the binary class name of the annotation (e.g.
+   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
+   * @return true if the tree is annotated with given type.
+   */
+  public static boolean hasAnnotation(Tree tree, String annotationClass, VisitorState state) {
+    Symbol sym = getDeclaredSymbol(tree);
+    return hasAnnotation(sym, annotationClass, state);
+  }
+
+  /**
+   * Check for the presence of an annotation, considering annotation inheritance.
+   *
+   * @return true if the tree is annotated with given type.
    */
   public static boolean hasAnnotation(
       Tree tree, Class<? extends Annotation> annotationClass, VisitorState state) {
-    Symbol sym = getDeclaredSymbol(tree);
-    return hasAnnotation(sym, annotationClass.getName(), state);
+    return hasAnnotation(tree, annotationClass.getName(), state);
   }
 
   /**
@@ -600,7 +641,24 @@ public class ASTHelpers {
   }
 
   /**
+   * Check for the presence of an annotation with a specific simple name directly on this symbol.
+   * Does *not* consider annotation inheritance.
+   *
+   * @param tree the tree to check for the presence of the annotation
+   * @param simpleName the simple name of the annotation to look for, e.g. "Nullable" or
+   *     "CheckReturnValue"
+   */
+  public static boolean hasDirectAnnotationWithSimpleName(Tree tree, String simpleName) {
+    return hasDirectAnnotationWithSimpleName(getDeclaredSymbol(tree), simpleName);
+  }
+
+  /**
    * Retrieve an annotation, considering annotation inheritance.
+   *
+   * <p>Note: if {@code annotationClass} contains a member that is a {@code Class} or an array of
+   * them, attempting to access that member from the Error Prone checker code will result in a
+   * runtime exception. If the annotation has class members, you may need to operate on {@code
+   * ASTHelpers.getSymbol(sym).getAnnotationMirrors()} to meta-syntactically inspect the annotation.
    *
    * @return the annotation of given type on the tree's symbol, or null.
    */
@@ -611,6 +669,11 @@ public class ASTHelpers {
 
   /**
    * Retrieve an annotation, considering annotation inheritance.
+   *
+   * <p>Note: if {@code annotationClass} contains a member that is a {@code Class} or an array of
+   * them, attempting to access that member from the Error Prone checker code will result in a
+   * runtime exception. If the annotation has class members, you may need to operate on {@code
+   * sym.getAnnotationMirrors()} to meta-syntactically inspect the annotation.
    *
    * @return the annotation of given type on the symbol, or null.
    */
@@ -828,17 +891,6 @@ public class ASTHelpers {
     return false;
   }
 
-  /**
-   * Finds a declaration with the given name that is in scope at the current location.
-   *
-   * @deprecated Use {@link FindIdentifiers#findIdent} instead.
-   */
-  // TODO(eaftan): migrate plugin callers and delete this
-  @Deprecated
-  public static Symbol findIdent(String name, VisitorState state) {
-    return FindIdentifiers.findIdent(name, state);
-  }
-
   /** Returns an {@link AnnotationTree} with the given simple name, or {@code null}. */
   public static AnnotationTree getAnnotationWithSimpleName(
       List<? extends AnnotationTree> annotations, String name) {
@@ -941,6 +993,366 @@ public class ASTHelpers {
           com.sun.tools.javac.util.List.from(tyargTypes));
     } finally {
       log.popDiagnosticHandler(handler);
+    }
+  }
+
+  /**
+   * Returns the values of the given symbol's {@code javax.annotation.Generated} or {@code
+   * javax.annotation.processing.Generated} annotation, if present.
+   */
+  public static ImmutableSet<String> getGeneratedBy(ClassSymbol symbol, VisitorState state) {
+    checkNotNull(symbol);
+    Optional<Compound> c =
+        Stream.of("javax.annotation.Generated", "javax.annotation.processing.Generated")
+            .map(state::getSymbolFromString)
+            .filter(a -> a != null)
+            .map(symbol::attribute)
+            .filter(a -> a != null)
+            .findFirst();
+    if (!c.isPresent()) {
+      return ImmutableSet.of();
+    }
+    Optional<Attribute> values =
+        c.get()
+            .getElementValues()
+            .entrySet()
+            .stream()
+            .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
+            .map(e -> e.getValue())
+            .findAny();
+    if (!values.isPresent()) {
+      return ImmutableSet.of();
+    }
+    ImmutableSet.Builder<String> suppressions = ImmutableSet.builder();
+    values
+        .get()
+        .accept(
+            new SimpleAnnotationValueVisitor8<Void, Void>() {
+              @Override
+              public Void visitString(String s, Void aVoid) {
+                suppressions.add(s);
+                return super.visitString(s, aVoid);
+              }
+
+              @Override
+              public Void visitArray(List<? extends AnnotationValue> vals, Void aVoid) {
+                vals.stream().forEachOrdered(v -> v.accept(this, null));
+                return super.visitArray(vals, aVoid);
+              }
+            },
+            null);
+    return suppressions.build();
+  }
+
+  /** An expression's target type, see {@link #targetType}. */
+  @AutoValue
+  public abstract static class TargetType {
+    public abstract Type type();
+
+    public abstract TreePath path();
+
+    static TargetType create(Type type, TreePath path) {
+      return new AutoValue_ASTHelpers_TargetType(type, path);
+    }
+  }
+
+  /**
+   * Implementation of unary numeric promotion rules.
+   *
+   * <p><a href="https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.1">JLS
+   * §5.6.1</a>
+   */
+  @Nullable
+  private static Type unaryNumericPromotion(Type type, VisitorState state) {
+    Type unboxed = unboxAndEnsureNumeric(type, state);
+    switch (unboxed.getTag()) {
+      case BYTE:
+      case SHORT:
+      case CHAR:
+        return state.getSymtab().intType;
+      case INT:
+      case LONG:
+      case FLOAT:
+      case DOUBLE:
+        return unboxed;
+      default:
+        throw new AssertionError("Should not reach here: " + type);
+    }
+  }
+
+  /**
+   * Implementation of binary numeric promotion rules.
+   *
+   * <p><a href="https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.2">JLS
+   * §5.6.2</a>
+   */
+  @Nullable
+  private static Type binaryNumericPromotion(Type leftType, Type rightType, VisitorState state) {
+    Type unboxedLeft = unboxAndEnsureNumeric(leftType, state);
+    Type unboxedRight = unboxAndEnsureNumeric(rightType, state);
+    Set<TypeTag> tags = EnumSet.of(unboxedLeft.getTag(), unboxedRight.getTag());
+    if (tags.contains(TypeTag.DOUBLE)) {
+      return state.getSymtab().doubleType;
+    } else if (tags.contains(TypeTag.FLOAT)) {
+      return state.getSymtab().floatType;
+    } else if (tags.contains(TypeTag.LONG)) {
+      return state.getSymtab().longType;
+    } else {
+      return state.getSymtab().intType;
+    }
+  }
+
+  private static Type unboxAndEnsureNumeric(Type type, VisitorState state) {
+    Type unboxed = state.getTypes().unboxedTypeOrType(type);
+    checkArgument(unboxed.isNumeric(), "[%s] is not numeric", type);
+    return unboxed;
+  }
+
+  /**
+   * Returns the target type of the tree at the given {@link VisitorState}'s path, or else {@code
+   * null}.
+   *
+   * <p>For example, the target type of an assignment expression is the variable's type, and the
+   * target type of a return statement is the enclosing method's type.
+   */
+  @Nullable
+  public static TargetType targetType(VisitorState state) {
+    if (!(state.getPath().getLeaf() instanceof ExpressionTree)) {
+      return null;
+    }
+    TreePath parent = state.getPath();
+    ExpressionTree current;
+    do {
+      current = (ExpressionTree) parent.getLeaf();
+      parent = parent.getParentPath();
+    } while (parent != null && parent.getLeaf().getKind() == Kind.PARENTHESIZED);
+    if (parent == null) {
+      return null;
+    }
+    Type type = new TargetTypeScanner(current, state, parent).scan(parent.getLeaf(), null);
+    if (type == null) {
+      return null;
+    }
+    return TargetType.create(type, parent);
+  }
+
+  private static class TargetTypeScanner extends TreeScanner<Type, Void> {
+    private final VisitorState state;
+    private final TreePath parent;
+    private final ExpressionTree current;
+
+    private TargetTypeScanner(ExpressionTree current, VisitorState state, TreePath parent) {
+      this.current = current;
+      this.state = state;
+      this.parent = parent;
+    }
+
+    @Override
+    public Type visitArrayAccess(ArrayAccessTree node, Void aVoid) {
+      if (current.equals(node.getIndex())) {
+        return state.getSymtab().intType;
+      } else {
+        return getType(node.getExpression());
+      }
+    }
+
+    @Override
+    public Type visitAssignment(AssignmentTree tree, Void unused) {
+      return getType(tree.getVariable());
+    }
+
+    @Override
+    public Type visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
+      switch (tree.getKind()) {
+        case LEFT_SHIFT_ASSIGNMENT:
+        case RIGHT_SHIFT_ASSIGNMENT:
+        case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
+          // Shift operators perform *unary* numeric promotion on the operands, separately.
+          if (tree.getExpression().equals(current)) {
+            return unaryNumericPromotion(ASTHelpers.getType(current), state);
+          }
+          // Fall through.
+        default:
+          return getType(tree.getVariable());
+      }
+    }
+
+    @Override
+    public Type visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree, Void unused) {
+      return state.getTypes().findDescriptorType(getType(lambdaExpressionTree)).getReturnType();
+    }
+
+    @Override
+    public Type visitReturn(ReturnTree tree, Void unused) {
+      for (TreePath path = parent; path != null; path = path.getParentPath()) {
+        Tree enclosing = path.getLeaf();
+        switch (enclosing.getKind()) {
+          case METHOD:
+            return getType(((MethodTree) enclosing).getReturnType());
+          case LAMBDA_EXPRESSION:
+            return visitLambdaExpression((LambdaExpressionTree) enclosing, null);
+          default: // fall out
+        }
+      }
+      throw new AssertionError("return not enclosed by method or lambda");
+    }
+
+    @Override
+    public Type visitVariable(VariableTree tree, Void unused) {
+      return getType(tree.getType());
+    }
+
+    @Override
+    public Type visitUnary(UnaryTree tree, Void unused) {
+      return getType(tree);
+    }
+
+    @Override
+    public Type visitBinary(BinaryTree tree, Void unused) {
+      Type leftType = checkNotNull(getType(tree.getLeftOperand()));
+      Type rightType = checkNotNull(getType(tree.getRightOperand()));
+      switch (tree.getKind()) {
+          // The addition and subtraction operators for numeric types + and - (§15.18.2)
+        case PLUS:
+          // If either operand is of string type, string concatenation is performed.
+          Type stringType = state.getSymtab().stringType;
+          if (isSameType(stringType, leftType, state) || isSameType(stringType, rightType, state)) {
+            return stringType;
+          }
+          // Fall through.
+        case MINUS:
+          // The multiplicative operators *, /, and % (§15.17)
+        case MULTIPLY:
+        case DIVIDE:
+        case REMAINDER:
+          // The numerical comparison operators <, <=, >, and >= (§15.20.1)
+        case LESS_THAN:
+        case LESS_THAN_EQUAL:
+        case GREATER_THAN:
+        case GREATER_THAN_EQUAL:
+          // The integer bitwise operators &, ^, and |
+        case AND:
+        case XOR:
+        case OR:
+          if (typeIsBoolean(state.getTypes().unboxedTypeOrType(leftType))
+              && typeIsBoolean(state.getTypes().unboxedTypeOrType(rightType))) {
+            return state.getSymtab().booleanType;
+          }
+          return binaryNumericPromotion(leftType, rightType, state);
+        case EQUAL_TO:
+        case NOT_EQUAL_TO:
+          return handleEqualityOperator(tree, leftType, rightType);
+        case LEFT_SHIFT:
+        case RIGHT_SHIFT:
+        case UNSIGNED_RIGHT_SHIFT:
+          // Shift operators perform *unary* numeric promotion on the operands, separately.
+          return unaryNumericPromotion(getType(current), state);
+        default:
+          return getType(tree);
+      }
+    }
+
+    private Type handleEqualityOperator(BinaryTree tree, Type leftType, Type rightType) {
+      Type unboxedLeft = checkNotNull(state.getTypes().unboxedTypeOrType(leftType));
+      Type unboxedRight = checkNotNull(state.getTypes().unboxedTypeOrType(rightType));
+
+      // If the operands of an equality operator are both of numeric type, or one is of numeric
+      // type and the other is convertible (§5.1.8) to numeric type, binary numeric promotion is
+      // performed on the operands (§5.6.2).
+      if ((leftType.isNumeric() && rightType.isNumeric())
+          || (leftType.isNumeric() != rightType.isNumeric()
+              && (unboxedLeft.isNumeric() || unboxedRight.isNumeric()))) {
+        // https://docs.oracle.com/javase/specs/jls/se9/html/jls-15.html#jls-15.21.1
+        // Numerical equality.
+        return binaryNumericPromotion(unboxedLeft, unboxedRight, state);
+      }
+
+      // If the operands of an equality operator are both of type boolean, or if one operand is
+      // of type boolean and the other is of type Boolean, then the operation is boolean
+      // equality.
+      boolean leftIsBoolean = typeIsBoolean(leftType);
+      boolean rightIsBoolean = typeIsBoolean(rightType);
+      if ((leftIsBoolean && rightIsBoolean)
+          || (leftIsBoolean != rightIsBoolean
+              && (typeIsBoolean(unboxedLeft) || typeIsBoolean(unboxedRight)))) {
+        return state.getSymtab().booleanType;
+      }
+
+      // If the operands of an equality operator are both of either reference type or the null
+      // type, then the operation is object equality.
+      return tree.getLeftOperand().equals(current) ? leftType : rightType;
+    }
+
+    private static boolean typeIsBoolean(Type type) {
+      return type.getTag() == TypeTag.BOOLEAN;
+    }
+
+    @Override
+    public Type visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
+      return tree.getCondition().equals(current) ? state.getSymtab().booleanType : getType(tree);
+    }
+
+    @Override
+    public Type visitNewClass(NewClassTree tree, Void unused) {
+      return visitMethodInvocationOrNewClass(tree.getArguments(), ASTHelpers.getSymbol(tree));
+    }
+
+    @Override
+    public Type visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+      return visitMethodInvocationOrNewClass(tree.getArguments(), ASTHelpers.getSymbol(tree));
+    }
+
+    private Type visitMethodInvocationOrNewClass(
+        List<? extends ExpressionTree> arguments, MethodSymbol sym) {
+      int idx = arguments.indexOf(current);
+      if (idx == -1) {
+        return null;
+      }
+      if (sym.getParameters().size() <= idx) {
+        checkState(sym.isVarArgs());
+        idx = sym.getParameters().size() - 1;
+      }
+      Type type = sym.getParameters().get(idx).asType();
+      if (sym.isVarArgs() && idx == sym.getParameters().size() - 1) {
+        type = state.getTypes().elemtype(type);
+      }
+      return type;
+    }
+
+    @Override
+    public Type visitIf(IfTree tree, Void unused) {
+      return getConditionType(tree.getCondition());
+    }
+
+    @Override
+    public Type visitWhileLoop(WhileLoopTree tree, Void unused) {
+      return getConditionType(tree.getCondition());
+    }
+
+    @Override
+    public Type visitDoWhileLoop(DoWhileLoopTree tree, Void unused) {
+      return getConditionType(tree.getCondition());
+    }
+
+    @Override
+    public Type visitForLoop(ForLoopTree tree, Void unused) {
+      return getConditionType(tree.getCondition());
+    }
+
+    @Override
+    public Type visitSwitch(SwitchTree node, Void unused) {
+      if (current == node.getExpression()) {
+        return state.getTypes().unboxedTypeOrType(getType(current));
+      } else {
+        return null;
+      }
+    }
+
+    private Type getConditionType(Tree condition) {
+      if (condition != null && condition.equals(current)) {
+        return state.getSymtab().booleanType;
+      }
+      return null;
     }
   }
 }

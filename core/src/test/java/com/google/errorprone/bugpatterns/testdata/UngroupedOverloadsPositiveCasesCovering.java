@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 /** @author hanuszczak@google.com (Łukasz Hanuszczak) */
-// BUG: Diagnostic contains: Overloaded methods ("bar", "foo", "quux") of this class are not grouped
-// together
 public class UngroupedOverloadsPositiveCasesCovering {
 
+  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
   public void foo(int x) {
     System.out.println(x);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar() {
     foo();
   }
@@ -33,10 +33,12 @@ public class UngroupedOverloadsPositiveCasesCovering {
     bar();
   }
 
+  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar(int x) {
     foo(x);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'quux' are not grouped together
   private void quux() {
     norf();
   }
@@ -45,10 +47,12 @@ public class UngroupedOverloadsPositiveCasesCovering {
     quux();
   }
 
+  // BUG: Diagnostic contains: Overloads of 'quux' are not grouped together
   public void quux(int x) {
     bar(x);
   }
 
+  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
   public void foo() {
     foo(42);
   }

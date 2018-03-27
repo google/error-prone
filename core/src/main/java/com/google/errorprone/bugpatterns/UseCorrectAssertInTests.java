@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -51,8 +52,15 @@ import com.sun.tools.javac.tree.TreeInfo;
 @BugPattern(
   name = "UseCorrectAssertInTests",
   summary = "Java assert is used in test. For testing purposes Assert.* matchers should be used.",
+  explanation =
+      "Java assert statements may or may not be evaluated depending on runtime flags to the JVM "
+          + "invocation. When used in tests, this means that the test assertions may not be "
+          + "checked, and a test may pass when it should actually fail.  To avoid this, use one of "
+          + "the assertion libraries that are always enabled, such as JUnit's `org.junit.Assert` "
+          + " or Google's Truth library.",
   category = JDK,
-  severity = SeverityLevel.WARNING
+  severity = SeverityLevel.WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMatcher {
 

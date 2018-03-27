@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -55,8 +56,8 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
   name = "JUnit4TestNotRun",
   summary =
-      "This looks like a test method but is not run; please add @Test or @Ignore, or, if this is a "
-          + "helper method, reduce its visibility.",
+      "This looks like a test method but is not run; please add @Test and @Ignore, or, if this is "
+          + "a helper method, reduce its visibility.",
   explanation =
       "Unlike in JUnit 3, JUnit 4 tests will not be run unless annotated with @Test. "
           + "The test method that triggered this error looks like it was meant to be a test, but "
@@ -65,7 +66,8 @@ import javax.lang.model.element.Modifier;
           + "are purposely disabling it. If this is a helper method and not a test, consider "
           + "reducing its visibility to non-public, if possible.",
   category = JUNIT,
-  severity = ERROR
+  severity = ERROR,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 

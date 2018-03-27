@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class ErrorProneAntCompilerAdapter extends DefaultCompilerAdapter {
     if (originalLoader instanceof URLClassLoader) {
       urls = ((URLClassLoader) originalLoader).getURLs();
     } else if (originalLoader instanceof AntClassLoader) {
-      String[] pieces = ((AntClassLoader) originalLoader).getClasspath().split(":");
+      String[] pieces = ((AntClassLoader) originalLoader).getClasspath().split(":", -1);
       urls = new URL[pieces.length];
       for (int i = 0; i < pieces.length; ++i) {
         try {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.google.errorprone.scanner;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -30,13 +31,14 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.InvalidCommandLineOptionException;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.CheckReturnValue;
 
 /**
  * Supplies {@link Scanner}s and provides access to the backing sets of all {@link BugChecker}s and
@@ -229,19 +231,42 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   @CheckReturnValue
   public ScannerSupplier plus(ScannerSupplier other) {
-    ImmutableBiMap<String, BugCheckerInfo> combinedAllChecks =
-        ImmutableBiMap.<String, BugCheckerInfo>builder()
-            .putAll(this.getAllChecks())
-            .putAll(other.getAllChecks())
-            .build();
-    ImmutableMap<String, SeverityLevel> combinedSeverities =
-        ImmutableMap.<String, SeverityLevel>builder()
-            .putAll(severities())
-            .putAll(other.severities())
-            .build();
+    HashBiMap<String, BugCheckerInfo> combinedAllChecks = HashBiMap.create(this.getAllChecks());
+    other
+        .getAllChecks()
+        .forEach(
+            (k, v) -> {
+              BugCheckerInfo existing = combinedAllChecks.putIfAbsent(k, v);
+              if (existing != null
+                  && !existing.checkerClass().getName().contentEquals(v.checkerClass().getName())) {
+                throw new IllegalArgumentException(
+                    String.format(
+                        "Cannot combine scanner suppliers with different implementations of"
+                            + " '%s': %s, %s",
+                        k, v.checkerClass().getName(), existing.checkerClass().getName()));
+              }
+            });
+    HashMap<String, SeverityLevel> combinedSeverities = new LinkedHashMap<>(this.severities());
+    other
+        .severities()
+        .forEach(
+            (k, v) -> {
+              SeverityLevel existing = combinedSeverities.putIfAbsent(k, v);
+              if (existing != null && !existing.equals(v)) {
+                throw new IllegalArgumentException(
+                    String.format(
+                        "Cannot combine scanner suppliers with different severities for"
+                            + " '%s': %s, %s",
+                        k, v, existing));
+              }
+            });
     ImmutableSet<String> disabled = ImmutableSet.copyOf(Sets.union(disabled(), other.disabled()));
     ErrorProneFlags combinedFlags = this.getFlags().plus(other.getFlags());
-    return new ScannerSupplierImpl(combinedAllChecks, combinedSeverities, disabled, combinedFlags);
+    return new ScannerSupplierImpl(
+        ImmutableBiMap.copyOf(combinedAllChecks),
+        ImmutableMap.copyOf(combinedSeverities),
+        disabled,
+        combinedFlags);
   }
 
   /**

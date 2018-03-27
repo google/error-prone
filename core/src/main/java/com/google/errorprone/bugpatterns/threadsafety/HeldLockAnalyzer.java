@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,8 +142,7 @@ public class HeldLockAnalyzer {
 
       // @GuardedBy annotations on methods are trusted for declarations, and checked
       // for invocations.
-      String guard = GuardedByUtils.getGuardValue(tree, visitorState);
-      if (guard != null) {
+      for (String guard : GuardedByUtils.getGuardValues(tree, visitorState)) {
         Optional<GuardedByExpression> bound =
             GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
         if (bound.isPresent()) {
@@ -221,26 +220,22 @@ public class HeldLockAnalyzer {
     }
 
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
-      String guardString = GuardedByUtils.getGuardValue(tree, visitorState);
-      if (guardString == null) {
-        return;
+      for (String guardString : GuardedByUtils.getGuardValues(tree, visitorState)) {
+        GuardedByBinder.bindString(guardString, GuardedBySymbolResolver.from(tree, visitorState))
+            .ifPresent(
+                guard -> {
+                  Optional<GuardedByExpression> boundGuard =
+                      ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard, visitorState);
+                  if (!boundGuard.isPresent()) {
+                    // We couldn't resolve a guarded by expression in the current scope, so we can't
+                    // guarantee the access is protected and must report an error to be safe.
+                    listener.handleGuardedAccess(
+                        tree, new GuardedByExpression.Factory().error(guardString), locks);
+                    return;
+                  }
+                  listener.handleGuardedAccess(tree, boundGuard.get(), locks);
+                });
       }
-
-      Optional<GuardedByExpression> guard =
-          GuardedByBinder.bindString(guardString, GuardedBySymbolResolver.from(tree, visitorState));
-      if (!guard.isPresent()) {
-        return;
-      }
-      Optional<GuardedByExpression> boundGuard =
-          ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard.get(), visitorState);
-      if (!boundGuard.isPresent()) {
-        // We couldn't resolve a guarded by expression in the current scope, so we can't
-        // guarantee the access is protected and must report an error to be safe.
-        listener.handleGuardedAccess(
-            tree, new GuardedByExpression.Factory().error(guardString), locks);
-        return;
-      }
-      listener.handleGuardedAccess(tree, boundGuard.get(), locks);
     }
   }
 

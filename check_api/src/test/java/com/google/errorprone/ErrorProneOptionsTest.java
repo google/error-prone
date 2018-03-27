@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.expectThrows;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.ErrorProneOptions.Severity;
@@ -57,7 +56,7 @@ public class ErrorProneOptionsTest {
     badArgs.forEach(
         arg -> {
           InvalidCommandLineOptionException expected =
-              expectThrows(
+              assertThrows(
                   InvalidCommandLineOptionException.class,
                   () -> ErrorProneOptions.processArgs(Arrays.asList(arg)));
           assertThat(expected.getMessage()).contains("invalid flag");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -285,5 +285,75 @@ public class RemoveUnusedImportsTest {
             "package com.example;",
             "") // The package statement's trailing newline is retained
         .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void b69984547() throws IOException {
+    testHelper
+        .addInputLines(
+            "android/app/PendingIntent.java",
+            "package android.app;",
+            "public class PendingIntent {",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "android/app/AlarmManager.java",
+            "package android.app;",
+            "public class AlarmManager {",
+            "  public void set(int type, long triggerAtMillis, PendingIntent operation) {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Test.java",
+            "import android.app.PendingIntent;",
+            "/** {@link android.app.AlarmManager#containsAll(int, long, PendingIntent)}  */",
+            "public class Test {}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void b70690930() throws IOException {
+    testHelper
+        .addInputLines(
+            "a/One.java", //
+            "package a;",
+            "public class One {}")
+        .expectUnchanged()
+        .addInputLines(
+            "a/Two.java", //
+            "package a;",
+            "public class Two {}")
+        .expectUnchanged()
+        .addInputLines(
+            "p/Lib.java",
+            "package p;",
+            "import a.One;",
+            "import a.Two;",
+            "public class Lib {",
+            "  private static class I {",
+            "    public void f(One a) {}",
+            "  }",
+            "  public static class J {",
+            "    public void f(Two a) {}",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "p/Test.java", //
+            "package p;",
+            "import a.One;",
+            "import a.Two;",
+            "/** {@link Lib.I#f(One)} {@link Lib.J#f(Two)} */",
+            "public class Test {",
+            "}")
+        .addOutputLines(
+            "out/p/Test.java", //
+            "package p;",
+            "import a.Two;",
+            "/** {@link Lib.I#f(One)} {@link Lib.J#f(Two)} */",
+            "public class Test {",
+            "}")
+        .doTest();
   }
 }

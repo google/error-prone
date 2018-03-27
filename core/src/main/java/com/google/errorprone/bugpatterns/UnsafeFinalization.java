@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -80,16 +81,29 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
     // Check if any arguments of the static native method are members (e.g. fields) of the enclosing
     // class. We're only looking for cases where the static native uses state of the enclosing class
     // that may become invalid after finalization.
-    if (tree.getArguments()
+    ImmutableList<Symbol> arguments =
+        tree.getArguments()
+            .stream()
+            .map(ASTHelpers::getSymbol)
+            .filter(x -> x != null)
+            .collect(toImmutableList());
+    if (arguments
         .stream()
-        .map(ASTHelpers::getSymbol)
-        .filter(x -> x != null)
         .filter(
             x ->
                 EnumSet.of(TypeKind.INT, TypeKind.LONG)
                     .contains(state.getTypes().unboxedTypeOrType(x.asType()).getKind()))
         .noneMatch(arg -> arg.isMemberOf(enclosing.enclClass(), state.getTypes()))) {
       // no instance state is passed to the native method
+      return NO_MATCH;
+    }
+    if (arguments
+        .stream()
+        .anyMatch(
+            arg ->
+                arg.getSimpleName().contentEquals("this")
+                    && arg.isMemberOf(enclosing.enclClass(), state.getTypes()))) {
+      // the instance is passed to the native method
       return NO_MATCH;
     }
     Symbol finalizeSym = getFinalizer(state, enclosing.enclClass());

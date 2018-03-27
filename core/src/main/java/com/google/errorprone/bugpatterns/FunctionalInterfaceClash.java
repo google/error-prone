@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,6 +117,16 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
       }
 
       if (!clash.isEmpty()) {
+
+        // ignore if there are overridden clashing methods in class
+        if (ASTHelpers.findSuperMethod(msym, types).isPresent()
+            && clash
+                .stream()
+                .anyMatch(
+                    methodSymbol -> ASTHelpers.findSuperMethod(methodSymbol, types).isPresent())) {
+          return NO_MATCH;
+        }
+
         String message =
             "When passing lambda arguments to this function, callers will need a cast to"
                 + " disambiguate with: "

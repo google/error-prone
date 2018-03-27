@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2016 Google Inc. All Rights Reserved.
+  Copyright 2016 The Error Prone Authors.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@
   <parent>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_parent</artifactId>
-    <version>2.1.4-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
 
   <name>error-prone test helpers</name>
@@ -69,7 +69,7 @@
       <!-- GPLv2 with Classpath Exception -->
       <groupId>org.checkerframework</groupId>
       <artifactId>dataflow</artifactId>
-      <version>2.1.14</version>
+      <version>${dataflow.version}</version>
     </dependency>
     <dependency>
       <!-- GPLv2 with Classpath Exception -->
@@ -139,13 +139,13 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.jimfs</groupId>
       <artifactId>jimfs</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.testing.compile</groupId>
       <artifactId>compile-testing</artifactId>
-      <version>0.9</version>
+      <version>0.15</version>
     </dependency>
   </dependencies>
 

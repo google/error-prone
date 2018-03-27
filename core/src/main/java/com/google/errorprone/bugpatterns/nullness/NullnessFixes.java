@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ class NullnessFixes {
   }
 
   private static String getQualifiedName(VisitorState state, SuggestedFix.Builder builder) {
+    // TODO(cpovirk): Suggest @NullableDecl if the code uses that.
     Symbol sym = FindIdentifiers.findIdent("Nullable", state, KindSelector.VAL_TYP);
     String defaultType =
         state.isAndroidCompatible()

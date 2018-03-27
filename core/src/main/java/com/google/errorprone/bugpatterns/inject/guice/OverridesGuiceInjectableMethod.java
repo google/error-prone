@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.InjectMatchers.JAVAX_INJECT_ANNOTAT
 import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -54,7 +55,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
           + "annotated with `@Inject`. Because of this difference, it is recommended that you "
           + "annotate this method explicitly.",
   category = GUICE,
-  severity = WARNING
+  severity = WARNING,
+  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class OverridesGuiceInjectableMethod extends BugChecker implements MethodTreeMatcher {
 

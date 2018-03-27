@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,12 @@ package com.google.errorprone;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Pair;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
@@ -122,8 +120,7 @@ public class SuppressionHelper {
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
       if ((attr.type.tsym == suppressWarningsType.tsym)
           || attr.type.tsym.getQualifiedName().contentEquals("android.annotation.SuppressLint")) {
-        for (List<Pair<MethodSymbol, Attribute>> v = attr.values; v.nonEmpty(); v = v.tail) {
-          Pair<MethodSymbol, Attribute> value = v.head;
+        for (Pair<MethodSymbol, Attribute> value : attr.values) {
           if (value.fst.name.contentEquals("value"))
             if (value.snd
                 instanceof Attribute.Array) { // SuppressWarnings/SuppressLint take an array
@@ -164,21 +161,15 @@ public class SuppressionHelper {
       SeverityLevel severityLevel,
       boolean inGeneratedCode,
       boolean disableWarningsInGeneratedCode) {
-    if (suppressible.suppressibility() == Suppressibility.UNSUPPRESSIBLE) {
-      return false;
-    }
     if (inGeneratedCode && disableWarningsInGeneratedCode && severityLevel != SeverityLevel.ERROR) {
       return true;
     }
-    switch (suppressible.suppressibility()) {
-      case CUSTOM_ANNOTATION:
-        return !Collections.disjoint(
-            suppressible.customSuppressionAnnotations(), customSuppressionsOnCurrentPath);
-      case SUPPRESS_WARNINGS:
-        return !Collections.disjoint(suppressible.allNames(), suppressionsOnCurrentPath);
-      default:
-        throw new IllegalStateException("No case for: " + suppressible.suppressibility());
+    if (suppressible.supportsSuppressWarnings()
+        && !Collections.disjoint(suppressible.allNames(), suppressionsOnCurrentPath)) {
+      return true;
     }
+    return !Collections.disjoint(
+        suppressible.customSuppressionAnnotations(), customSuppressionsOnCurrentPath);
   }
 
   private static boolean isGenerated(Symbol sym, VisitorState state) {

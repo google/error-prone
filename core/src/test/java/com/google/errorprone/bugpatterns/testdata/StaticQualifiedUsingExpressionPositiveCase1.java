@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ public class StaticQualifiedUsingExpressionPositiveCase1 {
 
   public void test2() {
     int i;
-    Integer integer = new Integer(1);
+    Integer integer = Integer.valueOf(1);
     // BUG: Diagnostic contains: variable MAX_VALUE
     // i = Integer.MAX_VALUE
     i = integer.MAX_VALUE;

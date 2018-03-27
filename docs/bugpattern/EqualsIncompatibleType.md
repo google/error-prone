@@ -75,7 +75,7 @@ coordinates), this generally means that the equals method will only return true
 if the other object has the exact same class, and each of the components is
 equal to the corresponding component in the other object. Here, there are
 numerous tools in the Java ecosystem to generate the appropriate `equals` and
-`hashCode` method implementations, including Guava's [AutoValue][av].
+`hashCode` method implementations, including [AutoValue][av].
 
 Another pattern often seen is to declare a common supertype with a defined
 `equals` method (like `List`, which defines equality by having equal elements in

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
-import static com.sun.source.tree.Tree.Kind.METHOD;
 import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
-import static com.sun.source.tree.Tree.Kind.VARIABLE;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -37,7 +37,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.names.LevenshteinEditDistance;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
@@ -45,17 +44,9 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import java.util.Objects;
 
 /**
  * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
@@ -172,87 +163,38 @@ public class SelfAssignment extends BugChecker
       rhs = stripNullCheck(rhs, state);
     }
 
+    ImmutableList<Fix> exploratoryFieldFixes = ImmutableList.of();
     if (lhs.getKind() == MEMBER_SELECT) {
       // find a method parameter of the same type and similar name and suggest it
       // as the rhs
 
       // rhs should be either identifier or field access
-      assert (rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
+      Preconditions.checkState(rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
 
-      // get current name of rhs
-      String rhsName = null;
-      if (rhs.getKind() == IDENTIFIER) {
-        rhsName = ((JCIdent) rhs).name.toString();
-      } else if (rhs.getKind() == MEMBER_SELECT) {
-        rhsName = ((JCFieldAccess) rhs).name.toString();
-      }
-
-      // find method parameters of the same type
-      Type type = ((JCFieldAccess) lhs).type;
-      TreePath path = state.getPath();
-      while (path != null && path.getLeaf().getKind() != METHOD) {
-        path = path.getParentPath();
-      }
-      JCMethodDecl method = (JCMethodDecl) path.getLeaf();
-      int minEditDistance = Integer.MAX_VALUE;
-      String replacement = null;
-      for (JCVariableDecl var : method.params) {
-        if (Objects.equals(var.type, type)) {
-          int editDistance = LevenshteinEditDistance.getEditDistance(rhsName, var.name.toString());
-          if (editDistance < minEditDistance) {
-            // pick one with minimum edit distance
-            minEditDistance = editDistance;
-            replacement = var.name.toString();
-          }
-        }
-      }
-      if (replacement != null) {
-        // suggest replacing rhs with the parameter
-        fix = SuggestedFix.replace(rhs, replacement);
-      }
+      Type rhsType = ASTHelpers.getType(rhs);
+      exploratoryFieldFixes =
+          ReplacementVariableFinder.fixesByReplacingExpressionWithMethodParameter(
+              rhs, varDecl -> ASTHelpers.isSameType(rhsType, varDecl.type, state), state);
     } else if (rhs.getKind() == IDENTIFIER) {
       // find a field of the same type and similar name and suggest it as the lhs
-
       // lhs should be identifier
-      assert (lhs.getKind() == IDENTIFIER);
+      Preconditions.checkState(lhs.getKind() == IDENTIFIER);
 
-      // get current name of lhs
-      String lhsName = ((JCIdent) rhs).name.toString();
-
-      // find class instance fields of the same type
-      Type type = ((JCIdent) lhs).type;
-      TreePath path = state.getPath();
-      while (path != null && !(path.getLeaf() instanceof JCClassDecl)) {
-        path = path.getParentPath();
-      }
-      if (path == null) {
-        throw new IllegalStateException("Expected to find an enclosing class declaration");
-      }
-      JCClassDecl klass = (JCClassDecl) path.getLeaf();
-      int minEditDistance = Integer.MAX_VALUE;
-      String replacement = null;
-      for (JCTree member : klass.getMembers()) {
-        if (member.getKind() == VARIABLE) {
-          JCVariableDecl var = (JCVariableDecl) member;
-          if (!Flags.isStatic(var.sym)
-              && (var.sym.flags() & Flags.FINAL) == 0
-              && Objects.equals(var.type, type)) {
-            int editDistance =
-                LevenshteinEditDistance.getEditDistance(lhsName, var.name.toString());
-            if (editDistance < minEditDistance) {
-              // pick one with minimum edit distance
-              minEditDistance = editDistance;
-              replacement = var.name.toString();
-            }
-          }
-        }
-      }
-      if (replacement != null) {
-        // suggest replacing lhs with the field
-        fix = SuggestedFix.replace(lhs, "this." + replacement);
-      }
+      Type lhsType = ASTHelpers.getType(lhs);
+      exploratoryFieldFixes =
+          ReplacementVariableFinder.fixesByReplacingExpressionWithLocallyDeclaredField(
+              lhs,
+              var ->
+                  !Flags.isStatic(var.sym)
+                      && (var.sym.flags() & Flags.FINAL) == 0
+                      && ASTHelpers.isSameType(lhsType, var.type, state),
+              state);
     }
 
-    return describeMatch(assignmentTree, fix);
+    if (exploratoryFieldFixes.isEmpty()) {
+      return describeMatch(assignmentTree, fix);
+    }
+
+    return buildDescription(assignmentTree).addAllFixes(exploratoryFieldFixes).build();
   }
 }

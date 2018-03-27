@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import com.google.common.base.Preconditions;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.BugPattern.Suppressibility;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
@@ -88,7 +88,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.CheckReturnValue;
 
 /**
  * A base class for implementing bug checkers. The {@code BugChecker} supplies a Scanner
@@ -176,8 +175,8 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   @Override
-  public Suppressibility suppressibility() {
-    return info.suppressibility();
+  public boolean supportsSuppressWarnings() {
+    return info.supportsSuppressWarnings();
   }
 
   @Override
@@ -422,11 +421,16 @@ public abstract class BugChecker implements Suppressible, Serializable {
     BugChecker that = (BugChecker) obj;
     return this.canonicalName().equals(that.canonicalName())
         && this.defaultSeverity().equals(that.defaultSeverity())
-        && this.suppressibility().equals(that.suppressibility());
+        && this.supportsSuppressWarnings() == that.supportsSuppressWarnings()
+        && this.customSuppressionAnnotations().equals(that.customSuppressionAnnotations());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(canonicalName(), defaultSeverity(), suppressibility());
+    return Objects.hash(
+        canonicalName(),
+        defaultSeverity(),
+        supportsSuppressWarnings(),
+        customSuppressionAnnotations());
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ import javax.lang.model.type.TypeKind;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
   name = "FloatCast",
-  summary = "Use parenthesis to make the precedence explicit",
+  summary = "Use parentheses to make the precedence explicit",
   severity = WARNING,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )

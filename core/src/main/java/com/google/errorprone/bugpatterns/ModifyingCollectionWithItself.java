@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.ReplacementVariableFinder.fixesByReplacingExpressionWithLocallyDeclaredField;
+import static com.google.errorprone.bugpatterns.ReplacementVariableFinder.fixesByReplacingExpressionWithMethodParameter;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -27,12 +29,8 @@ import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -41,19 +39,14 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.names.LevenshteinEditDistance;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 
 /** @author scottjohnson@google.com (Scott Johnson) */
@@ -141,16 +134,20 @@ public class ModifyingCollectionWithItself extends BugChecker
     if (receiver.getKind() == MEMBER_SELECT) {
       // Only inspect method parameters, unlikely to want to this.a.addAll(b), where b is another
       // field.
-      fixes = fixesFromMethodParameters(state, argument);
+      fixes =
+          fixesByReplacingExpressionWithMethodParameter(
+              argument, isCollectionVariable(state), state);
     } else {
       // a.addAll(...)
-      assert (receiver.getKind() == IDENTIFIER);
+      Preconditions.checkState(receiver.getKind() == IDENTIFIER, "receiver.getKind is identifier");
 
       boolean lhsIsField = ASTHelpers.getSymbol(receiver).getKind() == ElementKind.FIELD;
       fixes =
           lhsIsField
-              ? fixesFromMethodParameters(state, argument)
-              : fixesFromFields(state, receiver);
+              ? fixesByReplacingExpressionWithMethodParameter(
+                  argument, isCollectionVariable(state), state)
+              : fixesByReplacingExpressionWithLocallyDeclaredField(
+                  receiver, isCollectionVariable(state), state);
     }
 
     if (fixes.isEmpty()) {
@@ -159,98 +156,11 @@ public class ModifyingCollectionWithItself extends BugChecker
     return fixes;
   }
 
-  private List<Fix> fixesFromFields(VisitorState state, final ExpressionTree receiver) {
-    FluentIterable<JCVariableDecl> collectionFields =
-        FluentIterable.from(
-                ASTHelpers.findEnclosingNode(state.getPath(), JCClassDecl.class).getMembers())
-            .filter(JCVariableDecl.class)
-            .filter(isCollectionVariable(state));
-
-    Multimap<Integer, JCVariableDecl> potentialReplacements =
-        partitionByEditDistance(simpleNameOfIdentifierOrMemberAccess(receiver), collectionFields);
-
-    return buildValidReplacements(
-        potentialReplacements,
-        new Function<JCVariableDecl, Fix>() {
-          @Override
-          public Fix apply(JCVariableDecl var) {
-            return SuggestedFix.replace(receiver, "this." + var.sym.toString());
-          }
-        });
+  private static Predicate<JCVariableDecl> isCollectionVariable(final VisitorState state) {
+    return var -> variableType(isSubtypeOf("java.util.Collection")).matches(var, state);
   }
 
-  private List<Fix> buildValidReplacements(
-      Multimap<Integer, JCVariableDecl> potentialReplacements,
-      Function<JCVariableDecl, Fix> replacementFunction) {
-    if (potentialReplacements.isEmpty()) {
-      return ImmutableList.of();
-    }
-
-    // Take all of the potential edit-distance replacements with the same minimum distance,
-    // then suggest them as individual fixes.
-    return FluentIterable.from(
-            potentialReplacements.get(Collections.min(potentialReplacements.keySet())))
-        .transform(replacementFunction)
-        .toList();
-  }
-
-  private Predicate<JCVariableDecl> isCollectionVariable(final VisitorState state) {
-    return new Predicate<JCVariableDecl>() {
-      @Override
-      public boolean apply(JCVariableDecl var) {
-        return variableType(isSubtypeOf("java.util.Collection")).matches(var, state);
-      }
-    };
-  }
-
-  private List<Fix> fixesFromMethodParameters(VisitorState state, final ExpressionTree argument) {
-    // find a method parameter of the same type and similar name and suggest it
-    // as the new argument
-
-    assert (argument.getKind() == IDENTIFIER || argument.getKind() == MEMBER_SELECT);
-
-    FluentIterable<JCVariableDecl> collectionParams =
-        FluentIterable.from(
-                ASTHelpers.findEnclosingNode(state.getPath(), JCMethodDecl.class).getParameters())
-            .filter(isCollectionVariable(state));
-
-    Multimap<Integer, JCVariableDecl> potentialReplacements =
-        partitionByEditDistance(simpleNameOfIdentifierOrMemberAccess(argument), collectionParams);
-
-    return buildValidReplacements(
-        potentialReplacements,
-        new Function<JCVariableDecl, Fix>() {
-          @Override
-          public Fix apply(JCVariableDecl var) {
-            return SuggestedFix.replace(argument, var.sym.toString());
-          }
-        });
-  }
-
-  private Multimap<Integer, JCVariableDecl> partitionByEditDistance(
-      final String baseName, Iterable<JCVariableDecl> candidates) {
-    return Multimaps.index(
-        candidates,
-        new Function<JCVariableDecl, Integer>() {
-          @Override
-          public Integer apply(JCVariableDecl jcVariableDecl) {
-            return LevenshteinEditDistance.getEditDistance(
-                baseName, jcVariableDecl.name.toString());
-          }
-        });
-  }
-
-  private String simpleNameOfIdentifierOrMemberAccess(ExpressionTree tree) {
-    String name = null;
-    if (tree.getKind() == IDENTIFIER) {
-      name = ((JCIdent) tree).name.toString();
-    } else if (tree.getKind() == MEMBER_SELECT) {
-      name = ((JCFieldAccess) tree).name.toString();
-    }
-    return name;
-  }
-
-  private List<Fix> literalReplacement(
+  private static ImmutableList<Fix> literalReplacement(
       MethodInvocationTree methodInvocationTree, VisitorState state, ExpressionTree lhs) {
 
     Tree parent = state.getPath().getParentPath().getLeaf();

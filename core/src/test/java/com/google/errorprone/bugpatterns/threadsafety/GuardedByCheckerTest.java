@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1552,6 +1552,85 @@ public class GuardedByCheckerTest {
             "      // BUG: Diagnostic contains: should be guarded by 'this',",
             "      x++;",
             "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void multipleLocks() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "GuardedBy.java", //
+            "@interface GuardedBy {",
+            "  String[] value() default {};",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  private final Object mu = new Object();",
+            "  @GuardedBy({\"this\", \"mu\"}) int x;",
+            "  void f() {",
+            "    synchronized (this) {",
+            "      synchronized (mu) {",
+            "        x++;",
+            "      }",
+            "    }",
+            "    synchronized (this) {",
+            "      // BUG: Diagnostic contains: should be guarded by 'this.mu'",
+            "      x++;",
+            "    }",
+            "    synchronized (mu) {",
+            "      // BUG: Diagnostic contains: should be guarded by 'this'",
+            "      x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // Ensure sure outer instance handling doesn't accidentally include enclosing classes of
+  // static member classes.
+  @Test
+  public void testStaticMemberClass_enclosingInstanceLock() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  final Object mu = new Object();",
+            "  private static final class Baz {",
+            "    // BUG: Diagnostic contains: could not resolve guard",
+            "    @GuardedBy(\"mu\") int x;",
+            "  }",
+            "  public void m(Baz b) {",
+            "    synchronized (mu) {",
+            "      b.x++;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // Ensure sure outer instance handling doesn't accidentally include enclosing classes of
+  // static member classes.
+  @Test
+  public void testStaticMemberClass_staticOuterClassLock() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  static final Object mu = new Object();",
+            "  private static final class Baz {",
+            "    @GuardedBy(\"mu\") int x;",
+            "  }",
+            "  public void m(Baz b) {",
+            "    synchronized (mu) {",
+            "      b.x++;",
+            "    }",
             "  }",
             "}")
         .doTest();

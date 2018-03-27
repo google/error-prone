@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All rights reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,6 +16,7 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -49,7 +50,7 @@ final class PlaceholderVerificationVisitor extends TreeScanner<Boolean, Unifier>
       Collection<? extends UExpression> required, Collection<? extends UExpression> allowed) {
     this.unmatched = new LinkedList<>(required);
     this.allowed = ImmutableList.copyOf(allowed);
-    assert this.allowed.containsAll(unmatched);
+    Preconditions.checkArgument(this.allowed.containsAll(unmatched), "allowed");
   }
 
   public boolean allRequiredMatched() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.AnnotationTree;
@@ -69,10 +71,15 @@ public final class RestrictToEnforcer extends BugChecker
         NewClassTreeMatcher,
         IdentifierTreeMatcher {
 
+  private static final Matcher<Tree> COMPILING_SUPPORT_LIBRARY_MATCHER =
+      Matchers.anyOf(
+          Matchers.packageStartsWith("android.support"),
+          Matchers.packageStartsWith("android.arch"));
+
   @Override
   public final Description matchAnnotation(AnnotationTree tree, VisitorState state) {
     Symbol symbol = ASTHelpers.getSymbol(tree);
-    if (!compilingSupportLibrary(state)
+    if (!COMPILING_SUPPORT_LIBRARY_MATCHER.matches(tree, state)
         && symbol.flatName().contentEquals("android.support.annotation.RestrictTo")) {
       return buildDescription(tree)
           .setMessage("@RestrictTo cannot be used outside the support library")
@@ -83,7 +90,7 @@ public final class RestrictToEnforcer extends BugChecker
 
   @Override
   public final Description matchIdentifier(IdentifierTree tree, VisitorState state) {
-    if (compilingSupportLibrary(state)) {
+    if (COMPILING_SUPPORT_LIBRARY_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
     Symbol symbol = ASTHelpers.getSymbol(tree);
@@ -98,7 +105,7 @@ public final class RestrictToEnforcer extends BugChecker
 
   @Override
   public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
-    if (compilingSupportLibrary(state)) {
+    if (COMPILING_SUPPORT_LIBRARY_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
     Type lambdaType = ASTHelpers.getUpperBound(ASTHelpers.getType(tree), state.getTypes());
@@ -111,7 +118,7 @@ public final class RestrictToEnforcer extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (compilingSupportLibrary(state)) {
+    if (COMPILING_SUPPORT_LIBRARY_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
     MethodSymbol method = ASTHelpers.getSymbol(tree);
@@ -122,7 +129,7 @@ public final class RestrictToEnforcer extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (compilingSupportLibrary(state)) {
+    if (COMPILING_SUPPORT_LIBRARY_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
@@ -133,7 +140,7 @@ public final class RestrictToEnforcer extends BugChecker
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    if (compilingSupportLibrary(state)) {
+    if (COMPILING_SUPPORT_LIBRARY_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
@@ -183,7 +190,7 @@ public final class RestrictToEnforcer extends BugChecker
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (compilingSupportLibrary(state)) {
+    if (COMPILING_SUPPORT_LIBRARY_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
     MethodSymbol method = ASTHelpers.getSymbol(tree);
@@ -238,13 +245,6 @@ public final class RestrictToEnforcer extends BugChecker
         .getQualifiedName()
         .toString()
         .startsWith("android.support");
-  }
-
-  private static boolean compilingSupportLibrary(VisitorState state) {
-    ExpressionTree tree = state.getPath().getCompilationUnit().getPackageName();
-    return tree != null
-        && (tree.toString().startsWith("android.support")
-            || tree.toString().startsWith("android.arch"));
   }
 
   private static boolean checkEnclosingTypes(Type type, VisitorState state) {

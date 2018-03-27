@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -21,13 +21,13 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLAB
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTransfer.tryGetMethodSymbol;
 import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.dataflow.LocalStore;
 import com.google.errorprone.dataflow.LocalVariableValues;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.annotation.CheckReturnValue;
 import javax.lang.model.element.Element;
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
 import org.checkerframework.dataflow.analysis.RegularTransferResult;
@@ -66,6 +66,7 @@ import org.checkerframework.dataflow.cfg.node.InstanceOfNode;
 import org.checkerframework.dataflow.cfg.node.IntegerDivisionNode;
 import org.checkerframework.dataflow.cfg.node.IntegerLiteralNode;
 import org.checkerframework.dataflow.cfg.node.IntegerRemainderNode;
+import org.checkerframework.dataflow.cfg.node.LambdaResultExpressionNode;
 import org.checkerframework.dataflow.cfg.node.LeftShiftNode;
 import org.checkerframework.dataflow.cfg.node.LessThanNode;
 import org.checkerframework.dataflow.cfg.node.LessThanOrEqualNode;
@@ -808,6 +809,17 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   Nullness visitReturn() {
+    return NULLABLE;
+  }
+
+  @Override
+  public final TransferResult<Nullness, LocalStore<Nullness>> visitLambdaResultExpression(
+      LambdaResultExpressionNode node, TransferInput<Nullness, LocalStore<Nullness>> input) {
+    Nullness value = visitLambdaResultExpression();
+    return noStoreChanges(value, input);
+  }
+
+  Nullness visitLambdaResultExpression() {
     return NULLABLE;
   }
 

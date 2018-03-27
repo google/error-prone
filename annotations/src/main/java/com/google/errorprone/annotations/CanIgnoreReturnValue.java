@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2015 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,8 @@ import java.lang.annotation.Target;
 /**
  * Indicates that the return value of the annotated method can be safely ignored.
  *
- * <p>This is the opposite of {@code javax.annotation.CheckReturnValue}. It can be used inside
- * classes or packages annotated with {@code @CheckReturnValue} to exempt specific methods from the
- * default.
+ * <p>This is the opposite of {@link CheckReturnValue}. It can be used inside classes or packages
+ * annotated with {@code @CheckReturnValue} to exempt specific methods from the default.
  */
 @Documented
 @Target({METHOD, TYPE})

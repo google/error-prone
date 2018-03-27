@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc. All Rights Reserved.
+ * Copyright 2016 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 
 package com.google.errorprone.bugpatterns.inject.dagger;
-
-import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import dagger.Module;
@@ -102,37 +100,6 @@ public class UseBindsTest {
             "}")
         .addOutputLines(
             "out/Test.java",
-            "import dagger.Binds;",
-            "import dagger.multibindings.IntoSet;",
-            "import java.security.SecureRandom;",
-            "import java.util.Random;",
-            "@" + moduleAnnotation,
-            "abstract class Test {",
-            "  @Binds @IntoSet abstract Random provideRandom(SecureRandom impl);",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void typeEqualsSetMethod() throws IOException {
-    // Don't check @Produces.type -- it has been removed
-    assumeTrue(!bindingMethodAnnotation.equals(Produces.class.getCanonicalName()));
-    testHelper
-        .addInputLines(
-            "in/Test.java",
-            "import static dagger.Provides.Type.SET;",
-            "import java.security.SecureRandom;",
-            "import java.util.Random;",
-            "@" + moduleAnnotation,
-            "class Test {",
-            "  @" + bindingMethodAnnotation + "(type = " + bindingMethodAnnotation + ".Type.SET)",
-            "  static Random provideRandom(SecureRandom impl) {",
-            "    return impl;",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Test.java",
-            "import static dagger.Provides.Type.SET;",
             "import dagger.Binds;",
             "import dagger.multibindings.IntoSet;",
             "import java.security.SecureRandom;",

@@ -1,6 +1,6 @@
 maven_jar(
     name = "error_prone",
-    artifact = "com.google.errorprone:error_prone_ant:2.1.2-SNAPSHOT",
+    artifact = "com.google.errorprone:error_prone_ant:2.2.1-SNAPSHOT",
     repository = "https://oss.sonatype.org/content/repositories/snapshots",
 )
 
@@ -11,7 +11,7 @@ maven_jar(
 
 maven_jar(
     name = "auto_common",
-    artifact = "com.google.auto:auto-common:0.3",
+    artifact = "com.google.auto:auto-common:0.9",
 )
 
 maven_jar(

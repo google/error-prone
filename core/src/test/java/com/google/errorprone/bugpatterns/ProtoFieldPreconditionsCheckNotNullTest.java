@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2013 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -20,7 +20,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import org.junit.Ignore;
+
 /** @author awturner@google.com (Andy Turner) */
+@Ignore("b/74365407 test proto sources are broken")
 @RunWith(JUnit4.class)
 public class ProtoFieldPreconditionsCheckNotNullTest {
 
@@ -29,8 +32,7 @@ public class ProtoFieldPreconditionsCheckNotNullTest {
   @Before
   public void setUp() throws Exception {
     compilationHelper =
-        CompilationTestHelper.newInstance(ProtoFieldPreconditionsCheckNotNull.class, getClass())
-            .addSourceFile("proto/ProtoTest.java");
+        CompilationTestHelper.newInstance(ProtoFieldPreconditionsCheckNotNull.class, getClass());
   }
 
   @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,6 +114,25 @@ public class ReturnValueIgnoredTest {
             "    // BUG: Diagnostic contains:",
             "    \"\".codePoints().count();",
             "    \"\".codePoints().forEach(i -> {});",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void issue876() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.nio.file.Path;",
+            "abstract class Test {",
+            "  void test(Path p) {",
+            "    // BUG: Diagnostic contains:",
+            "    E e = p::toRealPath;",
+            "  }",
+            "  abstract <T> void a(T t);",
+            "  public interface E {",
+            "    void run() throws Exception;",
             "  }",
             "}")
         .doTest();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc. All Rights Reserved.
+ * Copyright 2012 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import static com.google.common.util.concurrent.Futures.immediateFuture;
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
@@ -28,7 +29,7 @@ public class FutureReturnValueIgnoredPositiveCases {
 
   IntValue intValue = new IntValue(0);
 
-  private Future<Integer> increment(int bar) {
+  private static Future<Integer> increment(int bar) {
     return null;
   }
 
@@ -90,5 +91,128 @@ public class FutureReturnValueIgnoredPositiveCases {
       // BUG: Diagnostic contains: Future must be checked
       increment();
     }
+  }
+
+  static <I, N extends Q, Q> ListenableFuture<Q> transform(
+      ListenableFuture<I> input, Function<? super I, ? extends N> function, Executor executor) {
+    return null;
+  }
+
+  static ListenableFuture<Integer> futureReturningMethod() {
+    return null;
+  }
+
+  static ListenableFuture<Integer> futureReturningMethod(Object unused) {
+    return null;
+  }
+
+  static void consumesFuture(Future<Object> future) {}
+
+  static void testIgnoredFuture() throws Exception {
+    ListenableFuture<String> input = null;
+    // BUG: Diagnostic contains: nested type
+    Future<?> output = transform(input, foo -> futureReturningMethod(), runnable -> runnable.run());
+
+    Future<?> otherOutput =
+        // BUG: Diagnostic contains: nested type
+        transform(
+            input,
+            new Function<String, ListenableFuture<Integer>>() {
+              @Override
+              public ListenableFuture<Integer> apply(String string) {
+                return futureReturningMethod();
+              }
+            },
+            runnable -> runnable.run());
+
+    // BUG: Diagnostic contains: nested type
+    transform(
+            input,
+            new Function<String, ListenableFuture<Integer>>() {
+              @Override
+              public ListenableFuture<Integer> apply(String string) {
+                return futureReturningMethod();
+              }
+            },
+            runnable -> runnable.run())
+        .get();
+
+    consumesFuture(
+        // BUG: Diagnostic contains: nested type
+        transform(
+            input,
+            new Function<String, ListenableFuture<Integer>>() {
+              @Override
+              public ListenableFuture<Integer> apply(String string) {
+                System.out.println("First generics");
+                return futureReturningMethod();
+              }
+            },
+            runnable -> runnable.run()));
+
+    consumesFuture(
+        transform(
+            input,
+            new Function<String, Object>() {
+              @Override
+              public Object apply(String string) {
+                // BUG: Diagnostic contains: returned future may be ignored
+                return futureReturningMethod();
+              }
+            },
+            runnable -> runnable.run()));
+    consumesFuture(
+        transform(
+            input,
+            new Function<String, Object>() {
+              @Override
+              public Object apply(String string) {
+                Future<?> result = futureReturningMethod();
+                // BUG: Diagnostic contains: returned future may be ignored
+                return result;
+              }
+            },
+            runnable -> runnable.run()));
+
+    consumesFuture(
+        // BUG: Diagnostic contains: nested type
+        transform(input, foo -> futureReturningMethod(), runnable -> runnable.run()));
+
+    consumesFuture(
+        // BUG: Diagnostic contains: nested type
+        transform(
+            input,
+            foo -> {
+              return futureReturningMethod();
+            },
+            runnable -> runnable.run()));
+
+    consumesFuture(
+        // BUG: Diagnostic contains: nested type
+        transform(
+            input,
+            FutureReturnValueIgnoredPositiveCases::futureReturningMethod,
+            runnable -> runnable.run()));
+
+    ListenableFuture<Object> done =
+        // BUG: Diagnostic contains: nested type
+        transform(
+            // BUG: Diagnostic contains: nested type
+            transform(
+                input,
+                new Function<String, ListenableFuture<Integer>>() {
+                  @Override
+                  public ListenableFuture<Integer> apply(String string) {
+                    return futureReturningMethod();
+                  }
+                },
+                runnable -> runnable.run()),
+            new Function<Object, Object>() {
+              @Override
+              public Object apply(Object string) {
+                return new Object();
+              }
+            },
+            runnable -> runnable.run());
   }
 }

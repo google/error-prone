@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All rights reserved.
+ * Copyright 2014 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.google.errorprone.refaster.testdata;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.primitives.Ints;
-
 
 /**
  * Test input for {@code TryTemplate}.
