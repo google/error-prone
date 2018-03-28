@@ -64,6 +64,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Flags;
@@ -476,6 +477,24 @@ public class ASTHelpers {
       return Arrays.asList(rightOperand, leftOperand);
     }
     return null;
+  }
+
+  /**
+   * Returns the method tree that matches the given symbol within the compilation unit, or null if
+   * none was found.
+   */
+  @Nullable
+  public static MethodTree findMethod(MethodSymbol symbol, VisitorState state) {
+    return JavacTrees.instance(state.context).getTree(symbol);
+  }
+
+  /**
+   * Returns the class tree that matches the given symbol within the compilation unit, or null if
+   * none was found.
+   */
+  @Nullable
+  public static ClassTree findClass(ClassSymbol symbol, VisitorState state) {
+    return JavacTrees.instance(state.context).getTree(symbol);
   }
 
   @Nullable
