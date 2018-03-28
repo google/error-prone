@@ -37,6 +37,7 @@ import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
 import com.google.errorprone.bugpatterns.BooleanParameter;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.ByteBufferBackingArray;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
 import com.google.errorprone.bugpatterns.CanonicalDuration;
 import com.google.errorprone.bugpatterns.CatchAndPrintStackTrace;
@@ -457,6 +458,7 @@ public class BuiltInCheckerSuppliers {
           BadAnnotationImplementation.class,
           BadComparable.class,
           BoxedPrimitiveConstructor.class,
+          ByteBufferBackingArray.class,
           CannotMockFinalClass.class,
           CanonicalDuration.class,
           CatchAndPrintStackTrace.class,
