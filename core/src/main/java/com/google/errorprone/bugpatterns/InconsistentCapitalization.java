@@ -107,9 +107,10 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
       state.reportMatch(
           buildDescription(parameterPath.getLeaf())
               .setMessage(
-                  "Found a field with the same name as a parameter but with different "
-                      + "capitalization: "
-                      + fieldName)
+                  String.format(
+                      "Found the field '%s' with the same name as the parameter '%s' but with "
+                          + "different capitalization.",
+                      fieldName, ((VariableTree) parameterPath.getLeaf()).getName()))
               .addFix(fix.build())
               .build());
     }
