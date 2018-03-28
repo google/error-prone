@@ -43,7 +43,7 @@ import com.sun.source.tree.Tree;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
-  name = "PrivateConstructorForNoninstantiableModuleTest",
+  name = "PrivateConstructorForNoninstantiableModule",
   summary = "Add a private constructor to modules that will not be instantiated by Dagger.",
   explanation =
       "Modules that contain abstract binding methods (@Binds, @Multibinds) or only static"
