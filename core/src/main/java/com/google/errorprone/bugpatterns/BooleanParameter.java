@@ -61,7 +61,7 @@ public class BooleanParameter extends BugChecker implements MethodInvocationTree
       // single-argument methods are often self-documentating
       return NO_MATCH;
     }
-    if (arguments.stream().noneMatch(a -> a.getKind() == Kind.BOOLEAN_LITERAL)) {
+    if (arguments.stream().noneMatch(BooleanParameter::isBooleanLiteral)) {
       return NO_MATCH;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
@@ -88,7 +88,7 @@ public class BooleanParameter extends BugChecker implements MethodInvocationTree
       int start,
       Deque<ErrorProneToken> tokens,
       VisitorState state) {
-    if (a.getKind() != Kind.BOOLEAN_LITERAL) {
+    if (!isBooleanLiteral(a)) {
       return;
     }
     String name = paramSym.getSimpleName().toString();
@@ -129,5 +129,9 @@ public class BooleanParameter extends BugChecker implements MethodInvocationTree
                 NamedParameterComment.PARAMETER_COMMENT_PATTERN
                     .matcher(Comments.getTextFromComment(c))
                     .matches());
+  }
+
+  private static boolean isBooleanLiteral(ExpressionTree a) {
+    return a.getKind() == Kind.BOOLEAN_LITERAL;
   }
 }
