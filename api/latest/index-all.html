@@ -1012,6 +1012,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/suppliers/Suppliers.html#BYTE_TYPE">BYTE_TYPE</a></span> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ByteBufferBackingArray.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ByteBufferBackingArray</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Checks when ByteBuffer.array() is used without calling .arrayOffset() to know the offset of the
+ array, or when the buffer wasn't initialized using ByteBuffer.wrap() or ByteBuffer.allocate().</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ByteBufferBackingArray.html#ByteBufferBackingArray--">ByteBufferBackingArray()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ByteBufferBackingArray.html" title="class in com.google.errorprone.bugpatterns">ByteBufferBackingArray</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:C">
 <!--   -->
@@ -2413,6 +2420,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/MaskedClassLoader.html#findClass-java.lang.String-">findClass(String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/MaskedClassLoader.html" title="class in com.google.errorprone">MaskedClassLoader</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#findClass-com.sun.tools.javac.code.Symbol.ClassSymbol-com.google.errorprone.VisitorState-">findClass(Symbol.ClassSymbol, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the class tree that matches the given symbol within the compilation unit, or null if
+ none was found.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/Comments.html#findCommentsForArguments-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">findCommentsForArguments(NewClassTree, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Comments.html" title="class in com.google.errorprone.util">Comments</a></dt>
 <dd>
 <div class="block">Attach comments to nodes on arguments of constructor calls.</div>
@@ -2445,6 +2457,11 @@
 <dd>
 <div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
  match the given <code>predicate</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#findMethod-com.sun.tools.javac.code.Symbol.MethodSymbol-com.google.errorprone.VisitorState-">findMethod(Symbol.MethodSymbol, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the method tree that matches the given symbol within the compilation unit, or null if
+ none was found.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#findPathFromEnclosingNodeToTopLevel-com.sun.source.util.TreePath-java.lang.Class-">findPathFromEnclosingNodeToTopLevel(TreePath, Class&lt;T&gt;)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -5096,6 +5113,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BooleanParameter.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BooleanParameter.html" title="class in com.google.errorprone.bugpatterns">BooleanParameter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ByteBufferBackingArray.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ByteBufferBackingArray.html" title="class in com.google.errorprone.bugpatterns">ByteBufferBackingArray</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CannotMockFinalClass.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns">CannotMockFinalClass</a></dt>
 <dd>&nbsp;</dd>

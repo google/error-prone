@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9,"i44":9,"i45":9,"i46":9,"i47":9,"i48":9,"i49":9,"i50":9,"i51":9,"i52":9,"i53":9,"i54":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9,"i44":9,"i45":9,"i46":9,"i47":9,"i48":9,"i49":9,"i50":9,"i51":9,"i52":9,"i53":9,"i54":9,"i55":9,"i56":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -198,13 +198,21 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#enumValues-com.sun.tools.javac.code.Symbol.TypeSymbol-">enumValues</a></span>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;enumType)</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code>static com.sun.source.tree.ClassTree</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#findClass-com.sun.tools.javac.code.Symbol.ClassSymbol-com.google.errorprone.VisitorState-">findClass</a></span>(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;symbol,
+         <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Returns the class tree that matches the given symbol within the compilation unit, or null if
+ none was found.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#findEnclosingNode-com.sun.source.util.TreePath-java.lang.Class-">findEnclosingNode</a></span>(com.sun.source.util.TreePath&nbsp;path,
                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;klass)</code>
 <div class="block">Given a TreePath, walks up the tree until it finds a node of the given type.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#findMatchingMethods-com.sun.tools.javac.util.Name-com.google.common.base.Predicate-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Types-">findMatchingMethods</a></span>(com.sun.tools.javac.util.Name&nbsp;name,
                    com.google.common.base.Predicate&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;predicate,
@@ -214,7 +222,15 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  match the given <code>predicate</code>.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>static com.sun.source.tree.MethodTree</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#findMethod-com.sun.tools.javac.code.Symbol.MethodSymbol-com.google.errorprone.VisitorState-">findMethod</a></span>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;symbol,
+          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Returns the method tree that matches the given symbol within the compilation unit, or null if
+ none was found.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;com.sun.source.util.TreePath</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#findPathFromEnclosingNodeToTopLevel-com.sun.source.util.TreePath-java.lang.Class-">findPathFromEnclosingNodeToTopLevel</a></span>(com.sun.source.util.TreePath&nbsp;path,
                                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;klass)</code>
@@ -222,81 +238,81 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  the enclosing node to the top-level <code>CompilationUnitTree</code>.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#findSuperMethod-com.sun.tools.javac.code.Symbol.MethodSymbol-com.sun.tools.javac.code.Types-">findSuperMethod</a></span>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol,
                com.sun.tools.javac.code.Types&nbsp;types)</code>
 <div class="block">Finds (if it exists) first (in the class hierarchy) non-interface super method of given <code>method</code>.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#findSuperMethodInType-com.sun.tools.javac.code.Symbol.MethodSymbol-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Types-">findSuperMethodInType</a></span>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol,
                      com.sun.tools.javac.code.Type&nbsp;superType,
                      com.sun.tools.javac.code.Types&nbsp;types)</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#findSuperMethods-com.sun.tools.javac.code.Symbol.MethodSymbol-com.sun.tools.javac.code.Types-">findSuperMethods</a></span>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol,
                 com.sun.tools.javac.code.Types&nbsp;types)</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static &lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;<br>T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-">getAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;annotationClass)</code>
 <div class="block">Retrieve an annotation, considering annotation inheritance.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static &lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;<br>T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getAnnotation-com.sun.source.tree.Tree-java.lang.Class-">getAnnotation</a></span>(com.sun.source.tree.Tree&nbsp;tree,
              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;annotationClass)</code>
 <div class="block">Retrieve an annotation, considering annotation inheritance.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getAnnotationName-com.sun.source.tree.AnnotationTree-">getAnnotationName</a></span>(com.sun.source.tree.AnnotationTree&nbsp;tree)</code>&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>static com.sun.source.tree.AnnotationTree</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getAnnotationWithSimpleName-java.util.List-java.lang.String-">getAnnotationWithSimpleName</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;? extends com.sun.source.tree.AnnotationTree&gt;&nbsp;annotations,
                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</code>
 <div class="block">Returns an <code>AnnotationTree</code> with the given simple name, or <code>null</code>.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getConstructors-com.sun.source.tree.ClassTree-">getConstructors</a></span>(com.sun.source.tree.ClassTree&nbsp;classTree)</code>
 <div class="block">Returns the list of all constructors defined in the class (including generated ones).</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getDeclaredSymbol-com.sun.source.tree.Tree-">getDeclaredSymbol</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Gets the symbol declared by a tree.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getFileNameFromUri-java.net.URI-">getFileNameFromUri</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net">URI</a>&nbsp;uri)</code>
 <div class="block">Extract the filename from the URI, with special handling for jar files.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>static com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getGeneratedBy-com.sun.tools.javac.code.Symbol.ClassSymbol-com.google.errorprone.VisitorState-">getGeneratedBy</a></span>(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;symbol,
               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Returns the values of the given symbol's <code>javax.annotation.Generated</code> or <code>javax.annotation.processing.Generated</code> annotation, if present.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>static com.sun.source.tree.ModifiersTree</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getModifiers-com.sun.source.tree.Tree-">getModifiers</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Returns the modifiers tree of the given class, method, or variable declaration.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getNullnessValue-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis-">getNullnessValue</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expr,
                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -304,106 +320,106 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Returns the <a href="../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> for an expression as determined by the nullness dataflow analysis.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>static com.sun.source.tree.ExpressionTree</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getReceiver-com.sun.source.tree.ExpressionTree-">getReceiver</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code>
 <div class="block">Returns the receiver of an expression.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getReceiverType-com.sun.source.tree.ExpressionTree-">getReceiverType</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code>
 <div class="block">Returns the type of a receiver of a method call expression.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getResultType-com.sun.source.tree.ExpressionTree-">getResultType</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code>
 <div class="block">Returns the type that this expression tree will evaluate to.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getReturnType-com.sun.source.tree.ExpressionTree-">getReturnType</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code>
 <div class="block">Gives the return type of an ExpressionTree that represents a method select.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>static com.sun.source.tree.ExpressionTree</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getRootAssignable-com.sun.source.tree.MethodInvocationTree-">getRootAssignable</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree)</code>
 <div class="block">Find the root assignable expression of a chain of field accesses.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.ClassSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol-com.sun.source.tree.ClassTree-">getSymbol</a></span>(com.sun.source.tree.ClassTree&nbsp;tree)</code>
 <div class="block">Gets the symbol for a class.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol-com.sun.source.tree.MemberReferenceTree-">getSymbol</a></span>(com.sun.source.tree.MemberReferenceTree&nbsp;tree)</code>
 <div class="block">Gets the symbol for a member reference.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol-com.sun.source.tree.MethodInvocationTree-">getSymbol</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;tree)</code>
 <div class="block">Gets the symbol for a method invocation.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol-com.sun.source.tree.MethodTree-">getSymbol</a></span>(com.sun.source.tree.MethodTree&nbsp;tree)</code>
 <div class="block">Gets the symbol for a method.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol-com.sun.source.tree.NewClassTree-">getSymbol</a></span>(com.sun.source.tree.NewClassTree&nbsp;tree)</code>
 <div class="block">Gets the method symbol for a new class.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.PackageSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol-com.sun.source.tree.PackageTree-">getSymbol</a></span>(com.sun.source.tree.PackageTree&nbsp;tree)</code>
 <div class="block">Gets the symbol for a package.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol-com.sun.source.tree.Tree-">getSymbol</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Gets the symbol for a tree.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.VarSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getSymbol-com.sun.source.tree.VariableTree-">getSymbol</a></span>(com.sun.source.tree.VariableTree&nbsp;tree)</code>
 <div class="block">Gets the symbol for a variable.</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Type.ClassType</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getType-com.sun.source.tree.ClassTree-">getType</a></span>(com.sun.source.tree.ClassTree&nbsp;tree)</code>
 <div class="block">Returns the <code>ClassType</code> for the given type <code>ClassTree</code> or <code>null</code> if the type
  could not be determined.</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getType-com.sun.source.tree.Tree-">getType</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Returns the <code>Type</code> of the given tree, or <code>null</code> if the type could not be
  determined.</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i38" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#getUpperBound-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Types-">getUpperBound</a></span>(com.sun.tools.javac.code.Type&nbsp;type,
              com.sun.tools.javac.code.Types&nbsp;types)</code>
 <div class="block">Returns the upper bound of a type if it has one, or the type itself if not.</div>
 </td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i39" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-com.google.errorprone.VisitorState-">hasAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationClass,
@@ -411,7 +427,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i40" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.tools.javac.code.Symbol-java.lang.String-com.google.errorprone.VisitorState-">hasAnnotation</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationClass,
@@ -419,7 +435,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i41" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.source.tree.Tree-java.lang.Class-com.google.errorprone.VisitorState-">hasAnnotation</a></span>(com.sun.source.tree.Tree&nbsp;tree,
              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotationClass,
@@ -427,7 +443,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </td>
 </tr>
-<tr id="i40" class="altColor">
+<tr id="i42" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasAnnotation-com.sun.source.tree.Tree-java.lang.String-com.google.errorprone.VisitorState-">hasAnnotation</a></span>(com.sun.source.tree.Tree&nbsp;tree,
              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;annotationClass,
@@ -435,21 +451,21 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </td>
 </tr>
-<tr id="i41" class="rowColor">
+<tr id="i43" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasDirectAnnotationWithSimpleName-com.sun.tools.javac.code.Symbol-java.lang.String-">hasDirectAnnotationWithSimpleName</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;simpleName)</code>
 <div class="block">Check for the presence of an annotation with a specific simple name directly on this symbol.</div>
 </td>
 </tr>
-<tr id="i42" class="altColor">
+<tr id="i44" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#hasDirectAnnotationWithSimpleName-com.sun.source.tree.Tree-java.lang.String-">hasDirectAnnotationWithSimpleName</a></span>(com.sun.source.tree.Tree&nbsp;tree,
                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;simpleName)</code>
 <div class="block">Check for the presence of an annotation with a specific simple name directly on this symbol.</div>
 </td>
 </tr>
-<tr id="i43" class="rowColor">
+<tr id="i45" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isCastable-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">isCastable</a></span>(com.sun.tools.javac.code.Type&nbsp;s,
           com.sun.tools.javac.code.Type&nbsp;t,
@@ -457,20 +473,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Returns true if <code>erasure(s)</code> is castable to <code>erasure(t)</code>.</div>
 </td>
 </tr>
-<tr id="i44" class="altColor">
+<tr id="i46" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isGeneratedConstructor-com.sun.source.tree.MethodTree-">isGeneratedConstructor</a></span>(com.sun.source.tree.MethodTree&nbsp;tree)</code>
 <div class="block">Returns true if the given tree is a generated constructor.</div>
 </td>
 </tr>
-<tr id="i45" class="rowColor">
+<tr id="i47" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isJUnitTestCode-com.google.errorprone.VisitorState-">isJUnitTestCode</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Returns true if the leaf node in the <code>TreePath</code> from <code>state</code> sits somewhere
  underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
 </td>
 </tr>
-<tr id="i46" class="altColor">
+<tr id="i48" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isSameType-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">isSameType</a></span>(com.sun.tools.javac.code.Type&nbsp;s,
           com.sun.tools.javac.code.Type&nbsp;t,
@@ -478,7 +494,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
 </td>
 </tr>
-<tr id="i47" class="rowColor">
+<tr id="i49" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isSubtype-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">isSubtype</a></span>(com.sun.tools.javac.code.Type&nbsp;s,
          com.sun.tools.javac.code.Type&nbsp;t,
@@ -486,14 +502,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
 </td>
 </tr>
-<tr id="i48" class="altColor">
+<tr id="i50" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#isVoidType-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">isVoidType</a></span>(com.sun.tools.javac.code.Type&nbsp;type,
           <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Return true if the given type is 'void' or 'Void'.</div>
 </td>
 </tr>
-<tr id="i49" class="rowColor">
+<tr id="i51" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#matchBinaryTree-com.sun.source.tree.BinaryTree-java.util.List-com.google.errorprone.VisitorState-">matchBinaryTree</a></span>(com.sun.source.tree.BinaryTree&nbsp;tree,
                <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;&nbsp;matchers,
@@ -502,7 +518,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  operands in both orders.</div>
 </td>
 </tr>
-<tr id="i50" class="altColor">
+<tr id="i52" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#resolveExistingMethod-com.google.errorprone.VisitorState-com.sun.tools.javac.code.Symbol.TypeSymbol-com.sun.tools.javac.util.Name-java.lang.Iterable-java.lang.Iterable-">resolveExistingMethod</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
                      com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;base,
@@ -512,26 +528,26 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Given a Type (<code>base</code>), find the method named <code>name</code>, with the appropriate <code>argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
 </td>
 </tr>
-<tr id="i51" class="rowColor">
+<tr id="i53" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#sameVariable-com.sun.source.tree.ExpressionTree-com.sun.source.tree.ExpressionTree-">sameVariable</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expr1,
             com.sun.source.tree.ExpressionTree&nbsp;expr2)</code>
 <div class="block">Determines whether two expressions refer to the same variable.</div>
 </td>
 </tr>
-<tr id="i52" class="altColor">
+<tr id="i54" class="altColor">
 <td class="colFirst"><code>static com.sun.source.tree.ExpressionTree</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#stripParentheses-com.sun.source.tree.ExpressionTree-">stripParentheses</a></span>(com.sun.source.tree.ExpressionTree&nbsp;tree)</code>
 <div class="block">Given an ExpressionTree, removes any enclosing parentheses.</div>
 </td>
 </tr>
-<tr id="i53" class="rowColor">
+<tr id="i55" class="rowColor">
 <td class="colFirst"><code>static com.sun.source.tree.Tree</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#stripParentheses-com.sun.source.tree.Tree-">stripParentheses</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Removes any enclosing parentheses from the tree.</div>
 </td>
 </tr>
-<tr id="i54" class="altColor">
+<tr id="i56" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/ASTHelpers.html#targetType-com.google.errorprone.VisitorState-">targetType</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Returns the target type of the tree at the given <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>null</code>.</div>
@@ -851,6 +867,32 @@ public static&nbsp;com.sun.source.tree.ExpressionTree&nbsp;getReceiver(com.sun.s
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a list of matched operands, or null if at least one did not match</dd>
 </dl>
+</li>
+</ul>
+<a name="findMethod-com.sun.tools.javac.code.Symbol.MethodSymbol-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>findMethod</h4>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.source.tree.MethodTree&nbsp;findMethod(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;symbol,
+                                                                  <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block">Returns the method tree that matches the given symbol within the compilation unit, or null if
+ none was found.</div>
+</li>
+</ul>
+<a name="findClass-com.sun.tools.javac.code.Symbol.ClassSymbol-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>findClass</h4>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.source.tree.ClassTree&nbsp;findClass(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;symbol,
+                                                                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block">Returns the class tree that matches the given symbol within the compilation unit, or null if
+ none was found.</div>
 </li>
 </ul>
 <a name="findSuperMethodInType-com.sun.tools.javac.code.Symbol.MethodSymbol-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Types-">

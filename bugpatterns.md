@@ -358,6 +358,9 @@ Possible sign flip from narrowing conversion
 __[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
 valueOf or autoboxing provides better time and space performance
 
+__[ByteBufferBackingArray](bugpattern/ByteBufferBackingArray)__<br>
+ByteBuffer.array() shouldn&#39;t be called unless ByteBuffer.arrayOffset() is used or if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
+
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
 
@@ -805,7 +808,7 @@ Non-standard parameter comment; prefer `/*paramName=*/ arg`
 __[ParameterNotNullable](bugpattern/ParameterNotNullable)__<br>
 Method parameters that aren&#39;t checked for null shouldn&#39;t be annotated @Nullable
 
-__[PrivateConstructorForNoninstantiableModuleTest](bugpattern/PrivateConstructorForNoninstantiableModuleTest)__<br>
+__[PrivateConstructorForNoninstantiableModule](bugpattern/PrivateConstructorForNoninstantiableModule)__<br>
 Add a private constructor to modules that will not be instantiated by Dagger.
 
 __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>

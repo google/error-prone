@@ -211,7 +211,12 @@ public class HidingFieldNegativeCases {
 
   // subclass with initialized member variable of different name
   static class ClassC extends ClassB {
+    // publicly-visible static members in superclasses are pretty uncommon, and generally
+    // referred to by qualification, so this 'override' is OK
     private String varFour = "Test";
+
+    // The supertype's visibility is private, so this redeclaration is OK.
+    private int varThree;
 
     // warning suppressed when overshadowing variable in parent
     @SuppressWarnings("HidingField")
