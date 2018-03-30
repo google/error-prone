@@ -1656,4 +1656,26 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
+  @Ignore("b/77333859")
+  @Test
+  public void immutableInterfaceImplementationCapturesMutableState() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable interface I {",
+            "  int f();",
+            "}",
+            "class Test {",
+            "  int x;",
+            "  I one = new I() {",
+            "    public int f() {",
+            "      return x++;",
+            "    }",
+            "  };",
+            "  I two = () -> x++;",
+            "}")
+        .doTest();
+  }
 }
