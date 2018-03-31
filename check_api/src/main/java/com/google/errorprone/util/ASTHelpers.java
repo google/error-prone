@@ -50,6 +50,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
@@ -1145,9 +1146,11 @@ public class ASTHelpers {
       current = (ExpressionTree) parent.getLeaf();
       parent = parent.getParentPath();
     } while (parent != null && parent.getLeaf().getKind() == Kind.PARENTHESIZED);
+
     if (parent == null) {
       return null;
     }
+
     Type type = new TargetTypeScanner(current, state, parent).scan(parent.getLeaf(), null);
     if (type == null) {
       return null;
@@ -1365,6 +1368,25 @@ public class ASTHelpers {
       } else {
         return null;
       }
+    }
+
+    @Override
+    public Type visitNewArray(NewArrayTree node, Void aVoid) {
+      if (node.getDimensions().contains(current)) {
+        return state.getSymtab().intType;
+      }
+      if (node.getInitializers().contains(current)) {
+        return state.getTypes().elemtype(ASTHelpers.getType(node));
+      }
+      return null;
+    }
+
+    @Override
+    public Type visitMemberSelect(MemberSelectTree node, Void aVoid) {
+      if (current.equals(node.getExpression())) {
+        return ASTHelpers.getType(node.getExpression());
+      }
+      return null;
     }
 
     private Type getConditionType(Tree condition) {
