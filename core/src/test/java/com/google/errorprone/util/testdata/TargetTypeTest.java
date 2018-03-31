@@ -16,6 +16,8 @@
 
 package com.google.errorprone.util.testdata;
 
+import java.io.Serializable;
+
 class TargetTypeTest {
   void unary() {
     System.out.println(
@@ -198,6 +200,121 @@ class TargetTypeTest {
     // BUG: Diagnostic contains: com.google.errorprone.util.testdata.TargetTypeTest.ThisEnum
     switch (detectThisEnum()) {
     }
+  }
+
+  int[] array_intInPrimitiveIntArray() {
+    // BUG: Diagnostic contains: int
+    int[] array = {detectPrimitiveInt()};
+    // BUG: Diagnostic contains: int
+    return new int[] {detectPrimitiveInt()};
+  }
+
+  int[][] array_intInPrimitiveIntArray2D() {
+    // BUG: Diagnostic contains: int
+    int[][] array = {{detectPrimitiveInt()}};
+    // BUG: Diagnostic contains: int
+    return new int[][] {{detectPrimitiveInt()}};
+  }
+
+  int[][][] array_byteInPrimitiveIntArray3D() {
+    // BUG: Diagnostic contains: int
+    int[][][] array = {{{detectPrimitiveByte()}}};
+    // BUG: Diagnostic contains: int
+    return new int[][][] {{{detectPrimitiveByte()}}};
+  }
+
+  int[] array_byteInPrimitiveIntArray() {
+    // BUG: Diagnostic contains: int
+    int[] array = {detectPrimitiveByte()};
+    // BUG: Diagnostic contains: int
+    return new int[] {detectPrimitiveByte()};
+  }
+
+  Integer[] array_intInWrappedIntegerArray() {
+    // BUG: Diagnostic contains: java.lang.Integer
+    Integer[] array = {detectPrimitiveInt()};
+    // BUG: Diagnostic contains: java.lang.Integer
+    return new Integer[] {detectPrimitiveInt()};
+  }
+
+  Integer[] array_integerInWrappedIntegerArray() {
+    // BUG: Diagnostic contains: java.lang.Integer
+    Integer[] array = {detectWrappedInteger()};
+    // BUG: Diagnostic contains: java.lang.Integer
+    return new Integer[] {detectWrappedInteger()};
+  }
+
+  int[] array_integerInPrimitiveIntArray() {
+    // BUG: Diagnostic contains: int
+    int[] array = {detectWrappedInteger()};
+    // BUG: Diagnostic contains: int
+    return new int[] {detectWrappedInteger()};
+  }
+
+  Integer[][] array_integerInWrappedIntegerArray2D() {
+    // BUG: Diagnostic contains: java.lang.Integer
+    Integer[][] array = {{detectWrappedInteger()}};
+    // BUG: Diagnostic contains: java.lang.Integer
+    return new Integer[][] {{detectWrappedInteger()}};
+  }
+
+  Integer[][][] array_integerInWrappedIntegerArray3D() {
+    // BUG: Diagnostic contains: java.lang.Integer
+    Integer[][][] array = {{{detectWrappedInteger()}}};
+    // BUG: Diagnostic contains: java.lang.Integer
+    return new Integer[][][] {{{detectWrappedInteger()}}};
+  }
+
+  Serializable[] array_integerInSerializableArray() {
+    // BUG: Diagnostic contains: java.io.Serializable
+    Serializable[] array = {detectWrappedInteger()};
+    // BUG: Diagnostic contains: java.io.Serializable
+    return new Serializable[] {detectWrappedInteger()};
+  }
+
+  Object[][][] array_integerInObjectArray3D() {
+    // BUG: Diagnostic contains: java.lang.Object
+    Object[][][] array = {{{detectWrappedInteger()}}};
+    // BUG: Diagnostic contains: java.lang.Object
+    return new Object[][][] {{{detectWrappedInteger()}}};
+  }
+
+  Object[][] array_integerArrayInObjectArray() {
+    // BUG: Diagnostic contains: java.lang.Integer
+    Object[][] array = {new Integer[] {detectPrimitiveInt()}};
+    // BUG: Diagnostic contains: java.lang.Integer
+    return new Object[][] {new Integer[] {detectPrimitiveInt()}};
+  }
+
+  Object[][] array_arrayHiddenInsideObjectArray() {
+    // BUG: Diagnostic contains: java.lang.Integer
+    Object[][] array = {{new Integer[] {detectPrimitiveInt()}}};
+    // BUG: Diagnostic contains: java.lang.Integer
+    return new Object[][] {{new Integer[] {detectPrimitiveInt()}}};
+  }
+
+  Integer[][] array_primitiveByteInDimensions() {
+    // BUG: Diagnostic contains: int
+    return new Integer[detectPrimitiveByte()][];
+  }
+
+  String[][] array_wrappedIntegerInDimensions() {
+    // BUG: Diagnostic contains: int
+    return new String[detectWrappedInteger()][];
+  }
+
+  String[][] array_initializeWithArray() {
+    // BUG: Diagnostic contains: java.lang.String[]
+    String[][] s = {detectStringArray()};
+    return s;
+  }
+
+  String methodChain() {
+    // BUG: Diagnostic contains: java.lang.Boolean
+    Boolean b = TargetTypeTest.detectWrappedBoolean();
+
+    // BUG: Diagnostic contains: java.lang.Integer
+    return detectWrappedInteger().toString();
   }
 
   // Helper methods that we can search for.
