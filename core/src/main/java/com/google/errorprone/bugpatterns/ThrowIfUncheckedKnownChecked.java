@@ -43,9 +43,6 @@ import javax.lang.model.type.UnionType;
 @BugPattern(
   name = "ThrowIfUncheckedKnownChecked",
   summary = "throwIfUnchecked(knownCheckedException) is a no-op.",
-  explanation =
-      "`throwIfUnchecked(knownCheckedException)` is a no-op (aside from performing a null check). "
-          + "`propagateIfPossible(knownCheckedException)` is a complete no-op.",
   category = GUAVA,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

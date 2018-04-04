@@ -36,10 +36,6 @@ import com.sun.source.tree.AnnotationTree;
 @BugPattern(
   name = "ProvidesMethodOutsideOfModule",
   summary = "@Provides methods need to be declared in a Module to have any effect.",
-  explanation =
-      "Guice `@Provides` methods annotate methods that are used as a means of declaring"
-          + " bindings. However, this is only helpful inside of a module. Methods outside of these"
-          + " modules are not used for binding declaration.",
   category = GUICE,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

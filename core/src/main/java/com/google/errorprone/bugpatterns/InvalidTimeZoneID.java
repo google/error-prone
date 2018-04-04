@@ -41,9 +41,6 @@ import java.util.regex.Pattern;
   summary =
       "Invalid time zone identifier. TimeZone.getTimeZone(String) will silently return GMT instead "
           + "of the time zone you intended.",
-  explanation =
-      "TimeZone.getTimeZone(String) silently returns GMT when an invalid time zone identifier is "
-          + "passed in.",
   category = JDK,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

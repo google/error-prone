@@ -26,10 +26,6 @@ import com.google.errorprone.BugPattern;
 @BugPattern(
   name = "AsyncCallableReturnsNull",
   summary = "AsyncCallable should not return a null Future, only a Future whose result is null.",
-  explanation =
-      "Methods like Futures.whenAllComplete(...).callAsync(...) will throw a "
-          + "NullPointerException if the provided AsyncCallable returns a null Future. To produce "
-          + "a Future with an output of null, instead return immediateFuture(null).",
   category = GUAVA,
   severity = ERROR
 )

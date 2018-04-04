@@ -38,10 +38,6 @@ import com.sun.source.tree.ClassTree;
   name = "AssistedInjectAndInjectOnConstructors",
   summary =
       "@AssistedInject and @Inject should not be used on different constructors in the same class.",
-  explanation =
-      "Mixing @Inject and @AssistedInject leads to confusing code and the "
-          + "documentation specifies not to do it. See "
-          + "https://google.github.io/guice/api-docs/latest/javadoc/com/google/inject/assistedinject/AssistedInject.html",
   category = INJECT,
   severity = WARNING
 )

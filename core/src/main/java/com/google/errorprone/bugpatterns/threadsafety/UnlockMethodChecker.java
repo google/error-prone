@@ -33,10 +33,6 @@ import java.util.Set;
   name = "UnlockMethod",
   altNames = {"GuardedBy"},
   summary = "This method does not acquire the locks specified by its @UnlockMethod annotation",
-  explanation =
-      "Methods with the @UnlockMethod annotation are expected to release one or more"
-          + " locks. The caller must hold the locks when the function is entered, and will not hold"
-          + " them when it completes.",
   category = JDK,
   severity = ERROR
 )

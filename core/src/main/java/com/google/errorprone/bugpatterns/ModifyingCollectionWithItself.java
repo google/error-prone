@@ -53,14 +53,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
   name = "ModifyingCollectionWithItself",
   summary = "Using a collection function with itself as the argument.",
-  explanation =
-      "Invoking a collection method with the same collection as the argument is likely"
-          + " incorrect.\n\n"
-          + "* `collection.addAll(collection)` may cause an infinite loop, duplicate the elements,"
-          + " or do nothing, depending on the type of Collection and implementation class.\n"
-          + "* `collection.retainAll(collection)` is a no-op.\n"
-          + "* `collection.removeAll(collection)` is the same as `collection.clear()`.\n"
-          + "* `collection.containsAll(collection)` is always true.",
   category = JDK,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

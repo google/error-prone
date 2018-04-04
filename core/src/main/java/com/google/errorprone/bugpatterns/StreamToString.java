@@ -33,9 +33,6 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(
   name = "StreamToString",
   summary = "Calling toString on a Stream does not provide useful information",
-  explanation =
-      "The `toString` method on a `Stream` will print its identity, such as "
-          + "`java.util.stream.ReferencePipeline$Head@6d06d69c`. This is rarely what was intended.",
   category = JDK,
   severity = ERROR
 )
