@@ -56,10 +56,6 @@ import java.util.List;
 @BugPattern(
   name = "FuturesGetCheckedIllegalExceptionType",
   summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
-  explanation =
-      "The passed exception type must not be a RuntimeException, and it must expose a "
-          + "public constructor whose only parameters are of type String or Throwable. getChecked "
-          + "will reject any other type with an IllegalArgumentException.",
   category = GUAVA,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

@@ -36,14 +36,6 @@ import com.sun.source.tree.Tree.Kind;
 @BugPattern(
   name = "RandomModInteger",
   summary = "Use Random.nextInt(int).  Random.nextInt() % n can have negative results",
-  explanation =
-      "`Random.nextInt() % n` has \n\n"
-          + "* a 1/n chance of being 0\n"
-          + "* a 1/2n chance of being each number from `1` to `n-1` inclusive\n"
-          + "* a 1/2n chance of being each number from `-1` to `-(n-1)` inclusive\n\n"
-          + "Many users expect a uniformly distributed random integer between `0` and `n-1` "
-          + "inclusive, but you must use random.nextInt(n) to get that behavior.  If the original "
-          + "behavior is truly desired, use `(random.nextBoolean() ? 1 : -1) * random.nextInt(n)`.",
   severity = SeverityLevel.ERROR,
   category = Category.JDK,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

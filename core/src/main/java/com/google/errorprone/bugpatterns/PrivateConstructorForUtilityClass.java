@@ -46,11 +46,6 @@ import com.sun.source.util.TreePath;
   summary =
       "Utility classes (only static members) are not designed to be instantiated and should"
           + " be made noninstantiable with a default constructor.",
-  explanation =
-      "Classes that only include static members have no behavior particular to any given instance,"
-          + " so instantiating them is nonsense. To prevent users from mistakenly creating"
-          + " instances, the class should include a private constructor.  See Effective Java,"
-          + " Second Edition - Item 4.",
   category = JDK,
   severity = SUGGESTION,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

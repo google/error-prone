@@ -42,9 +42,6 @@ import com.sun.source.tree.MethodTree;
 @BugPattern(
   name = "FuzzyEqualsShouldNotBeUsedInEqualsMethod",
   summary = "DoubleMath.fuzzyEquals should never be used in an Object.equals() method",
-  explanation =
-      "From documentation: DoubleMath.fuzzyEquals is not transitive, so it is not suitable for use "
-          + "in Object#equals implementations.",
   category = GUAVA,
   severity = ERROR
 )

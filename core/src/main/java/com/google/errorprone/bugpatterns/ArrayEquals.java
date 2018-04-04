@@ -43,15 +43,6 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 @BugPattern(
   name = "ArrayEquals",
   summary = "Reference equality used to compare arrays",
-  explanation =
-      "Generally when comparing arrays for equality, the programmer intends to check that the "
-          + "the contents of the arrays are equal rather than that they are actually the same "
-          + "object.  But many commonly used equals methods compare arrays for reference equality "
-          + "rather than content equality. These include the instance .equals() method, Guava's "
-          + "com.google.common.base.Objects#equal(), JDK's java.util.Objects#equals(), and "
-          + "Android's android.support.v4.util.ObjectsCompat#equals.\n\n"
-          + "If reference equality is needed, == should be used instead for clarity. Otherwise, "
-          + "use java.util.Arrays#equals() to compare the contents of the arrays.",
   category = JDK,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

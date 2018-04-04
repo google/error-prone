@@ -61,16 +61,6 @@ import java.util.Set;
 @BugPattern(
   name = "ComparisonContractViolated",
   summary = "This comparison method violates the contract",
-  explanation =
-      "The comparison contract states that `sgn(compare(x, y)) == -sgn(compare(y, x))`."
-          + " (An immediate corollary is that `compare(x, x) == 0`.)  This comparison "
-          + "implementation either a) cannot return 0, b) cannot return a negative value but may "
-          + "return a positive value, or c) cannot return a positive value but may return a "
-          + "negative value.\n\n"
-          + "The results of violating this contract can include `TreeSet.contains` never"
-          + " returning true or `Collections.sort` failing with an IllegalArgumentException"
-          + " arbitrarily."
-  ,
   severity = SeverityLevel.ERROR,
   category = Category.JDK,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
