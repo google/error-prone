@@ -33,6 +33,7 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ParameterizedTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Description;
@@ -41,6 +42,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.util.ASTHelpers.TargetType;
+import com.google.errorprone.util.ASTHelpers.TargetTypeVisitor;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -49,12 +51,14 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.TypeVar;
+import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.io.File;
@@ -63,12 +67,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -812,7 +819,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints the result type of the first argument in method calls. */
+  /** A {@link BugChecker} that prints the target type of matched method invocations. */
   @BugPattern(
     name = "TargetTypeChecker",
     category = Category.ONE_OFF,
@@ -839,6 +846,50 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   public void targetType() {
     CompilationTestHelper.newInstance(TargetTypeChecker.class, getClass())
         .addSourceFile("TargetTypeTest.java")
+        .doTest();
+  }
+
+  /** A {@link BugChecker} that prints the target type of a parameterized type. */
+  @BugPattern(
+    name = "TargetTypeCheckerParentTypeNotMatched",
+    category = Category.ONE_OFF,
+    severity = SeverityLevel.ERROR,
+    summary = "Prints the target type for ParameterizedTypeTree, which is not handled explicitly."
+  )
+  public static class TargetTypeCheckerParentTypeNotMatched extends BugChecker
+      implements ParameterizedTypeTreeMatcher {
+
+    @Override
+    public Description matchParameterizedType(ParameterizedTypeTree tree, VisitorState state) {
+      TargetType targetType = ASTHelpers.targetType(state);
+      return buildDescription(tree)
+          .setMessage(
+              "Target type of " + tree + " is " + (targetType != null ? targetType.type() : null))
+          .build();
+    }
+  }
+
+  @Test
+  public void targetType_parentTypeNotMatched() {
+    // Make sure that the method isn't implemented in the visitor; that would make this test
+    // meaningless.
+    List<String> methodNames =
+        Stream.of(TargetTypeVisitor.class.getDeclaredMethods())
+            .map(Method::getName)
+            .collect(Collectors.toList());
+    assertThat(methodNames).doesNotContain("visitParameterizedType");
+
+    CompilationTestHelper.newInstance(TargetTypeCheckerParentTypeNotMatched.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "class Foo {",
+            "  // BUG: Diagnostic contains: Target type of ArrayList<Integer> is null",
+            "  Object obj = new ArrayList<Integer>() {",
+            "    int foo() { return 0; }",
+            "  };",
+            "}")
+        .expectResult(Result.ERROR)
         .doTest();
   }
 }

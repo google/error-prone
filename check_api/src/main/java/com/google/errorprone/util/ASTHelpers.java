@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOT
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
@@ -63,8 +64,8 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
@@ -1151,19 +1152,20 @@ public class ASTHelpers {
       return null;
     }
 
-    Type type = new TargetTypeScanner(current, state, parent).scan(parent.getLeaf(), null);
+    Type type = new TargetTypeVisitor(current, state, parent).visit(parent.getLeaf(), null);
     if (type == null) {
       return null;
     }
     return TargetType.create(type, parent);
   }
 
-  private static class TargetTypeScanner extends TreeScanner<Type, Void> {
+  @VisibleForTesting
+  static class TargetTypeVisitor extends SimpleTreeVisitor<Type, Void> {
     private final VisitorState state;
     private final TreePath parent;
     private final ExpressionTree current;
 
-    private TargetTypeScanner(ExpressionTree current, VisitorState state, TreePath parent) {
+    private TargetTypeVisitor(ExpressionTree current, VisitorState state, TreePath parent) {
       this.current = current;
       this.state = state;
       this.parent = parent;
