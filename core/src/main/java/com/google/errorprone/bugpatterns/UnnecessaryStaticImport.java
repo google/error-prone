@@ -33,9 +33,6 @@ import com.sun.source.tree.ImportTree;
 @BugPattern(
   name = "UnnecessaryStaticImport",
   summary = "Using static imports for types is unnecessary",
-  explanation =
-      "Using static imports for types is unnecessary, since they can always be"
-          + " replaced by equivalent non-static imports.",
   category = JDK,
   severity = SUGGESTION,
   documentSuppression = false,

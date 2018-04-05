@@ -44,12 +44,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 @BugPattern(
   name = "DaggerProvidesNull",
   summary = "Dagger @Provides methods may not return null unless annotated with @Nullable",
-  explanation =
-      "Dagger `@Provides` methods may not return null unless annotated with `@Nullable`. "
-          + "Such a method will cause a `NullPointerException` at runtime if the `return null` "
-          + "path is ever taken.\n\n"
-          + "If you believe the `return null` path can never be taken, please throw a "
-          + "`RuntimeException` instead. Otherwise, please annotate the method with `@Nullable`.",
   category = DAGGER,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

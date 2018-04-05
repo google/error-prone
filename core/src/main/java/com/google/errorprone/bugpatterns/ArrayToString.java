@@ -39,9 +39,6 @@ import com.sun.source.tree.Tree;
 @BugPattern(
   name = "ArrayToString",
   summary = "Calling toString on an array does not provide useful information",
-  explanation =
-      "The `toString` method on an array will print its identity, such as `[I@4488aabb`. This "
-          + "is almost never needed. Use `Arrays.toString` to print a human-readable summary.",
   category = JDK,
   severity = ERROR
 )

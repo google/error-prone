@@ -33,9 +33,6 @@ import java.util.Set;
   name = "LockMethodChecker",
   altNames = {"GuardedBy"},
   summary = "This method does not acquire the locks specified by its @LockMethod annotation",
-  explanation =
-      "Methods with the @LockMethod annotation are expected to acquire one or more"
-          + " locks. The caller will hold the locks when the function finishes execution.",
   category = JDK,
   severity = ERROR
 )

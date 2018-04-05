@@ -34,11 +34,6 @@ import java.util.stream.Collectors;
 @BugPattern(
   name = "MultipleUnaryOperatorsInMethodCall",
   summary = "Avoid having multiple unary operators acting on the same variable in a method call",
-  explanation =
-      "Increment operators in method calls are dubious and while argument lists "
-          + "are evaluated left-to-right, documentation suggests that code not rely on this "
-          + "specification. In addition, code is clearer when each expression contains at "
-          + "most one side effect.",
   category = JDK,
   severity = SUGGESTION
 )

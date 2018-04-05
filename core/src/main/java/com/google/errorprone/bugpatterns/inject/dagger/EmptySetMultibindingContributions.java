@@ -70,7 +70,6 @@ import java.util.TreeSet;
   summary =
       "@Multibinds is a more efficient and declarative mechanism for ensuring that a set"
           + " multibinding is present in the graph.",
-  explanation = "",
   category = DAGGER,
   severity = SUGGESTION,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

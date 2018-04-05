@@ -53,7 +53,6 @@ import com.sun.source.tree.Tree;
   name = "DeadException",
   altNames = "ThrowableInstanceNeverThrown",
   summary = "Exception created but not thrown",
-  explanation = "The exception is created with new, but is not thrown, and the reference is lost.",
   category = JDK,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

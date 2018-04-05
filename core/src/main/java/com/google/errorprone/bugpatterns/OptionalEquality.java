@@ -30,9 +30,6 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(
   name = "OptionalEquality",
   summary = "Comparison using reference equality instead of value equality",
-  explanation =
-      "Optionals should be compared for value equality using `.equals()`, and not for reference "
-          + "equality using `==` and `!=`.",
   category = GUAVA,
   severity = ERROR
 )

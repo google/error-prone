@@ -43,10 +43,6 @@ import com.sun.source.tree.MethodTree;
 @BugPattern(
   name = "InjectedConstructorAnnotations",
   summary = "Injected constructors cannot be optional nor have binding annotations",
-  explanation =
-      "The constructor is annotated with @Inject(optional=true), or it is annotated "
-          + "with @Inject and a binding annotation. This will cause a Guice runtime error.\n\n"
-          + "See [https://code.google.com/p/google-guice/wiki/InjectionPoints] for details.",
   category = INJECT,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

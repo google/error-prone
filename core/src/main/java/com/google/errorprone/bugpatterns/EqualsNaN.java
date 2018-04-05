@@ -37,9 +37,6 @@ import javax.annotation.Nullable;
 @BugPattern(
   name = "EqualsNaN",
   summary = "== NaN always returns false; use the isNaN methods instead",
-  explanation =
-      "As per JLS 15.21.1, == NaN comparisons always return false, even NaN == NaN. "
-          + "Instead, use the isNaN methods to check for NaN.",
   category = JDK,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

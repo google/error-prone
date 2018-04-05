@@ -62,11 +62,6 @@ import java.util.Iterator;
   summary =
       "Non-compile-time constant expression passed to parameter with "
           + "@CompileTimeConstant type annotation.",
-  explanation =
-      "A method or constructor with one or more parameters whose declaration is "
-          + "annotated with the @CompileTimeConstant type annotation must only be invoked "
-          + "with corresponding actual parameters that are computed as compile-time constant "
-          + "expressions, such as a literal or static final constant.",
   linkType = NONE,
   category = GUAVA,
   severity = ERROR,

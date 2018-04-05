@@ -46,7 +46,6 @@ import com.sun.source.tree.Tree.Kind;
   name = "DivZero",
   altNames = "divzero",
   summary = "Division by integer literal zero",
-  explanation = "This code will cause a runtime arithmetic exception if it is executed.",
   category = JDK,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

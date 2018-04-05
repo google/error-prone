@@ -64,8 +64,6 @@ import javax.lang.model.element.TypeElement;
   summary =
       "A constructor cannot have two @Assisted parameters of the same type unless they are "
           + "disambiguated with named @Assisted annotations.",
-  explanation =
-      "See https://google.github.io/guice/api-docs/latest/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html",
   category = GUICE,
   severity = ERROR
 )

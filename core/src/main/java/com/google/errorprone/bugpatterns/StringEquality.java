@@ -28,9 +28,6 @@ import com.sun.source.tree.ExpressionTree;
 @BugPattern(
   name = "StringEquality",
   summary = "String comparison using reference equality instead of value equality",
-  explanation =
-      "Strings are compared for reference equality/inequality using == or !="
-          + "instead of for value equality using .equals()",
   category = JDK,
   severity = WARNING
 )

@@ -47,9 +47,6 @@ import java.util.List;
   name = "InjectMoreThanOneScopeAnnotationOnClass",
   altNames = "MoreThanOneScopeAnnotationOnClass",
   summary = "A class can be annotated with at most one scope annotation.",
-  explanation =
-      "Annotating a class with more than one scope annotation is "
-          + "invalid according to the JSR-330 specification. ",
   category = INJECT,
   severity = ERROR
 )

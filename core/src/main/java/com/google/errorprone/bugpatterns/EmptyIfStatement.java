@@ -47,9 +47,6 @@ import com.sun.source.tree.Tree;
   name = "EmptyIf",
   altNames = {"empty"},
   summary = "Empty statement after if",
-  explanation =
-      "An if statement contains an empty statement as the then clause. A semicolon may "
-          + "have been inserted by accident.",
   category = JDK,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

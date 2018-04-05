@@ -43,7 +43,6 @@ import com.sun.tools.javac.code.Flags;
 @BugPattern(
   name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
   summary = "Scope annotation on an interface or abstact class is not allowed",
-  explanation = "Scoping annotations are not allowed on abstract types.",
   category = INJECT,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

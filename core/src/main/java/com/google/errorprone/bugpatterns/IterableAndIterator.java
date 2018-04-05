@@ -37,12 +37,6 @@ import java.util.List;
 @BugPattern(
   name = "IterableAndIterator",
   summary = "Class should not implement both `Iterable` and `Iterator`",
-  explanation =
-      "An `Iterator` is a *state-ful* instance that enables you to check "
-          + "whether it has more elements (via `hasNext()`) "
-          + "and moves to the next one if any (via `next()`), "
-          + "while an `Iterable` is a representation of literally iterable elements. "
-          + "An `Iterable` can generate multiple valid `Iterator`s, though.",
   category = JDK,
   severity = WARNING,
   tags = StandardTags.FRAGILE_CODE

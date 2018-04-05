@@ -51,9 +51,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
   name = "CannotMockFinalClass",
   summary = "Mockito cannot mock final classes",
-  explanation =
-      "Mockito cannot mock final classes. See "
-          + "https://github.com/mockito/mockito/wiki/FAQ for details.",
   category = Category.MOCKITO,
   severity = SeverityLevel.WARNING
 )

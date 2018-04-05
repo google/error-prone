@@ -45,11 +45,6 @@ import com.sun.source.tree.Tree;
   summary =
       "This class has more than one @Inject-annotated constructor. Please remove the @Inject"
           + " annotation from all but one of them.",
-  explanation =
-      "Injection frameworks may use `@Inject` to determine how to construct an object"
-          + " in the absence of other instructions. Annotating `@Inject` on a constructor tells"
-          + " the injection framework to use that constructor. However, if multiple `@Inject`"
-          + " constructors exist, injection frameworks can't reliably choose between them.",
   category = INJECT,
   severity = ERROR,
   altNames = {"inject-constructors", "InjectMultipleAtInjectConstructors"}

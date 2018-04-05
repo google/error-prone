@@ -48,10 +48,6 @@ import java.util.Objects;
   summary =
       "Thread.join needs to be surrounded by a loop until it succeeds, "
           + "as in Uninterruptibles.joinUninterruptibly.",
-  explanation =
-      "Thread.join() can be interrupted, and so requires users to catch "
-          + "InterruptedException. Most users should be looping "
-          + "until the join() actually succeeds.",
   category = JDK,
   severity = SeverityLevel.WARNING,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

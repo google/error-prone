@@ -46,10 +46,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
   name = "AssertEqualsArgumentOrderChecker",
   summary = "Arguments are swapped in assertEquals-like call",
-  explanation =
-      "JUnit's assertEquals (and similar) are defined to take the expected value first and the "
-          + "actual value second. Getting these the wrong way round will cause a confusing error "
-          + "message if the assertion fails.",
   category = JUNIT,
   severity = WARNING,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

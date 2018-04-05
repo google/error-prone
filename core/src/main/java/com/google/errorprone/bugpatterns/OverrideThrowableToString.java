@@ -43,9 +43,6 @@ import java.util.Optional;
   summary =
       "To return a custom message with a Throwable class, one should "
           + "override getMessage() instead of toString() for Throwable.",
-  explanation =
-      "Many logging tools build a string representation out of getMessage() "
-          + "and ignores toString() completely.",
   category = JDK,
   severity = WARNING,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
