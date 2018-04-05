@@ -55,11 +55,6 @@ import javax.lang.model.element.Modifier;
   summary =
       "Method annotated @ForOverride must be protected or package-private and only invoked from "
           + "declaring class, or from an override of the method",
-  explanation =
-      "A method that overrides a @ForOverride method should not be invoked directly. Instead, it"
-          + " should be invoked only from the class in which it was declared. For example, if"
-          + " overriding Converter.doForward, you should invoke it through Converter.convert."
-          + " For testing, factor out the code you want to run to a separate method.",
   category = GUAVA,
   severity = ERROR
 )

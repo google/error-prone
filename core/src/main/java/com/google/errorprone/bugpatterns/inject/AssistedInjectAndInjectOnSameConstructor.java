@@ -43,8 +43,6 @@ import com.sun.source.tree.Tree;
 @BugPattern(
   name = "AssistedInjectAndInjectOnSameConstructor",
   summary = "@AssistedInject and @Inject cannot be used on the same constructor.",
-  explanation =
-      "Using @AssistedInject and @Inject on the same constructor is a runtime" + "error in Guice.",
   category = INJECT,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

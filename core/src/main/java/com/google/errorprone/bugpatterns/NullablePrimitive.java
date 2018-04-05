@@ -43,7 +43,6 @@ import java.util.List;
 @BugPattern(
   name = "NullablePrimitive",
   summary = "@Nullable should not be used for primitive types since they cannot be null",
-  explanation = "Primitives can never be null.",
   category = JDK,
   severity = WARNING,
   tags = StandardTags.STYLE,

@@ -43,9 +43,6 @@ import java.util.function.Function;
 @BugPattern(
   name = "AutoValueConstructorOrderChecker",
   summary = "Arguments to AutoValue constructor are in the wrong order",
-  explanation =
-      "AutoValue constructors are synthesized with their parameters in the same order as the "
-          + "abstract accessor methods. Calls to the constructor need to match this ordering.",
   category = GUAVA,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

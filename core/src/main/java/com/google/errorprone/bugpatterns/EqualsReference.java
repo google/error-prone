@@ -50,7 +50,6 @@ import java.util.Objects;
   summary =
       "== must be used in equals method to check equality to itself"
           + " or an infinite loop will occur.",
-  explanation = ".equals() to the same object will result in infinite recursion",
   category = JDK,
   severity = ERROR
 )

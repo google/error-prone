@@ -50,9 +50,6 @@ import java.util.Objects;
 @BugPattern(
   name = "CanonicalDuration",
   summary = "Duration can be expressed more clearly with different units",
-  explanation =
-      "Prefer to express durations using the largest possible unit, e.g. `Duration.ofDays(1)`"
-          + " instead of `Duration.ofSeconds(86400)`.",
   severity = WARNING,
   providesFix = REQUIRES_HUMAN_ATTENTION
 )

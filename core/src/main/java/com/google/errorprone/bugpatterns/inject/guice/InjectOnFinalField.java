@@ -39,7 +39,6 @@ import com.sun.source.tree.VariableTree;
   summary =
       "Although Guice allows injecting final fields, doing so is disallowed because the injected "
           + "value may not be visible to other threads.",
-  explanation = "See https://github.com/google/guice/wiki/InjectionPoints#how-guice-injects",
   category = GUICE,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

@@ -35,9 +35,6 @@ import com.sun.source.tree.AnnotationTree;
 @BugPattern(
   name = "JavaxInjectOnFinalField",
   summary = "@javax.inject.Inject cannot be put on a final field.",
-  explanation =
-      "According to the JSR-330 spec, the @javax.inject.Inject annotation "
-          + "cannot go on final fields.",
   category = INJECT,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

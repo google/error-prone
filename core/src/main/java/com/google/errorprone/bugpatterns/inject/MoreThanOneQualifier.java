@@ -39,7 +39,6 @@ import java.util.List;
 @BugPattern(
   name = "InjectMoreThanOneQualifier",
   summary = "Using more than one qualifier annotation on the same element is not allowed.",
-  explanation = "An element can be qualified by at most one qualifier.",
   category = INJECT,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

@@ -52,9 +52,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 @BugPattern(
   name = "IsLoggableTagLength",
   summary = "Log tag too long, cannot exceed 23 characters.",
-  explanation =
-      "`Log.isLoggable(tag, level)` throws an `IllegalArgumentException` if its tag argument is"
-          + " more than 23 characters long.",
   category = ANDROID,
   severity = ERROR
 )

@@ -47,11 +47,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
   name = "MissingSuperCall",
   summary = "Overriding method is missing a call to overridden super method",
-  explanation =
-      "API providers may annotate a method with an annotation like "
-          + "`android.support.annotation.CallSuper` or "
-          + "`javax.annotation.OverridingMethodsMustInvokeSuper` to require that overriding "
-          + " methods invoke the super method.  This check enforces those annotations.",
   severity = ERROR,
   providesFix = ProvidesFix.NO_FIX
 )

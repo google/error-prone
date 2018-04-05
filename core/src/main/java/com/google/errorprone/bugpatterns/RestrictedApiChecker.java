@@ -47,9 +47,6 @@ import javax.lang.model.type.TypeMirror;
 @BugPattern(
   name = "RestrictedApiChecker",
   summary = " Check for non-whitelisted callers to RestrictedApiChecker.",
-  explanation =
-      "Calls to APIs marked @RestrictedApi are prohibited without a corresponding whitelist"
-          + " annotation.",
   category = Category.ONE_OFF,
   severity = SeverityLevel.ERROR,
   suppressionAnnotations = {},

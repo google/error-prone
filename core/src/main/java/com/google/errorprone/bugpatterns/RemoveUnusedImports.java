@@ -53,7 +53,6 @@ import javax.annotation.Nullable;
 @BugPattern(
   name = "RemoveUnusedImports",
   summary = "Unused imports",
-  explanation = "This import is unused.",
   category = JDK,
   severity = SUGGESTION,
   documentSuppression = false,

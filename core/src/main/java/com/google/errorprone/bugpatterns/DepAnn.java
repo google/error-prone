@@ -44,10 +44,6 @@ import com.sun.tools.javac.code.Symbol;
   name = "DepAnn",
   altNames = "dep-ann",
   summary = "Deprecated item is not annotated with @Deprecated",
-  explanation =
-      "A declaration has the `@deprecated` Javadoc tag but no `@Deprecated` annotation. "
-          + "Please add an `@Deprecated` annotation to this declaration in addition to the "
-          + "`@deprecated` tag in the Javadoc.",
   category = JDK,
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

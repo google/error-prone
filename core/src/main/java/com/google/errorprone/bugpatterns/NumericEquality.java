@@ -28,9 +28,6 @@ import com.sun.tools.javac.code.Symbol;
 @BugPattern(
   name = "NumericEquality",
   summary = "Numeric comparison using reference equality instead of value equality",
-  explanation =
-      "Numbers are compared for reference equality/inequality using == or != "
-          + "instead of for value equality using .equals()",
   category = JDK,
   severity = ERROR
 )

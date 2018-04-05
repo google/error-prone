@@ -35,7 +35,6 @@ import com.sun.source.tree.Tree.Kind;
 @BugPattern(
   name = "DeadThread",
   summary = "Thread created but not started",
-  explanation = "The Thread is created with new, but is never started, and the reference is lost.",
   severity = ERROR,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )

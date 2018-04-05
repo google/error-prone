@@ -46,10 +46,6 @@ import javax.lang.model.element.TypeElement;
   summary =
       "This annotation has incompatible modifiers as specified by its "
           + "@IncompatibleModifiers annotation",
-  explanation =
-      "The @IncompatibleModifiers annotation declares that the target annotation "
-          + "is incompatible with a set of provided modifiers. This check ensures that all "
-          + "annotations respect their @IncompatibleModifiers specifications.",
   linkType = NONE,
   category = JDK,
   severity = WARNING,

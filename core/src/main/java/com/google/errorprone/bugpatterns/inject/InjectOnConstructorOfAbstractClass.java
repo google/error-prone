@@ -49,12 +49,6 @@ import com.sun.source.tree.MethodTree;
   summary =
       "Constructors on abstract classes are never directly @Injected, only the constructors"
           + " of their subclasses can be @Inject'ed.",
-  explanation =
-      "When dependency injection frameworks call constructors, they can only do so on"
-          + " constructors of concrete classes, which can delegate to superclass constructors. In"
-          + " the case of abstract classes, their constructors are only called by their"
-          + " concrete subclasses, not directly by injection frameworks, so the `@Inject`"
-          + " annotation has no effect.",
   category = INJECT,
   severity = WARNING,
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

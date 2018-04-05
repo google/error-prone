@@ -39,9 +39,6 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(
   name = "NonRuntimeAnnotation",
   summary = "Calling getAnnotation on an annotation that is not retained at runtime.",
-  explanation =
-      "Calling getAnnotation on an annotation that does not have its Retention set to "
-          + "RetentionPolicy.RUNTIME will always return null.",
   category = JDK,
   severity = ERROR
 )
