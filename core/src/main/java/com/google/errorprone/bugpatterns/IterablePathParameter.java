@@ -30,11 +30,14 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeTag;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
+import com.sun.tools.javac.tree.JCTree.JCLambda.ParameterKind;
 import java.nio.file.Path;
 import javax.lang.model.element.ElementKind;
 
@@ -70,7 +73,10 @@ public class IterablePathParameter extends BugChecker implements VariableTreeMat
       return NO_MATCH;
     }
     Description.Builder description = buildDescription(tree);
-    if (tree.getType() instanceof ParameterizedTypeTree) {
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    if (tree.getType() instanceof ParameterizedTypeTree
+        && (!(parent instanceof JCLambda)
+            || ((JCLambda) parent).paramKind == ParameterKind.EXPLICIT)) {
       description.addFix(
           SuggestedFix.builder()
               .addImport("java.util.Collection")
