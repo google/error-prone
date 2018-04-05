@@ -34,7 +34,12 @@ public abstract class Replacement {
    * @param replaceWith the replacement text
    */
   public static Replacement create(int startPosition, int endPosition, String replaceWith) {
-    checkArgument(startPosition >= 0, "invalid startPosition: %s", startPosition);
+    checkArgument(
+        startPosition >= 0 && startPosition <= endPosition,
+        "invalid replacement: [%s, %s) (%s)",
+        startPosition,
+        endPosition,
+        replaceWith);
     return new AutoValue_Replacement(Range.closedOpen(startPosition, endPosition), replaceWith);
   }
 

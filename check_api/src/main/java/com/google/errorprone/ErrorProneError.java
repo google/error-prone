@@ -52,7 +52,8 @@ public class ErrorProneError extends Error {
     JavaFileObject prev = log.currentSourceFile();
     try {
       log.useSource(source);
-      log.error(pos, "error.prone.crash", Throwables.getStackTraceAsString(cause), version);
+      log.error(
+          pos, "error.prone.crash", Throwables.getStackTraceAsString(cause), version, checkName);
     } finally {
       log.useSource(prev);
     }
