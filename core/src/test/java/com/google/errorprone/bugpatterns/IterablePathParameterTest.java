@@ -63,4 +63,18 @@ public class IterablePathParameterTest {
         .addSourceLines("Test.java", "class Test {", "  void f(Iterable xs) {}", "}")
         .doTest();
   }
+
+  @Test
+  public void implicitLambda() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.nio.file.Path;",
+            "import java.util.function.Consumer;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  Consumer<Iterable<Path>> c = (paths) -> {};",
+            "}")
+        .doTest();
+  }
 }
