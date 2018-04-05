@@ -13,7 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-TimeZone.getTimeZone(String) silently returns GMT when an invalid time zone identifier is passed in.
+TimeZone.getTimeZone(String) silently returns GMT when an invalid time zone
+identifier is passed in.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InvalidTimeZoneID")` to the enclosing element.

@@ -13,9 +13,13 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Dagger `@Provides` methods may not return null unless annotated with `@Nullable`. Such a method will cause a `NullPointerException` at runtime if the `return null` path is ever taken.
+Dagger `@Provides` methods may not return null unless annotated with
+`@Nullable`. Such a method will cause a `NullPointerException` at runtime if the
+`return null` path is ever taken.
 
-If you believe the `return null` path can never be taken, please throw a `RuntimeException` instead. Otherwise, please annotate the method with `@Nullable`.
+If you believe the `return null` path can never be taken, please throw a
+`RuntimeException` instead. Otherwise, please annotate the method with
+`@Nullable`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DaggerProvidesNull")` to the enclosing element.

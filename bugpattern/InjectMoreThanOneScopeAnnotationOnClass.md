@@ -15,7 +15,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: MoreThanOneScopeAnnotationOnClass_
 
 ## The problem
-Annotating a class with more than one scope annotation is invalid according to the JSR-330 specification.
+Annotating a class with more than one scope annotation is invalid according to
+the JSR-330 specification.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectMoreThanOneScopeAnnotationOnClass")` to the enclosing element.

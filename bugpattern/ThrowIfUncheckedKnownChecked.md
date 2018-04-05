@@ -13,7 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-`throwIfUnchecked(knownCheckedException)` is a no-op (aside from performing a null check). `propagateIfPossible(knownCheckedException)` is a complete no-op.
+`throwIfUnchecked(knownCheckedException)` is a no-op (aside from performing a
+null check). `propagateIfPossible(knownCheckedException)` is a complete no-op.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThrowIfUncheckedKnownChecked")` to the enclosing element.

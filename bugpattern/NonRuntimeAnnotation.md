@@ -13,7 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Calling getAnnotation on an annotation that does not have its Retention set to RetentionPolicy.RUNTIME will always return null.
+Calling getAnnotation on an annotation that does not have its Retention set to
+RetentionPolicy.RUNTIME will always return null.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonRuntimeAnnotation")` to the enclosing element.

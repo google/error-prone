@@ -13,7 +13,11 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-When dependency injection frameworks call constructors, they can only do so on constructors of concrete classes, which can delegate to superclass constructors. In the case of abstract classes, their constructors are only called by their concrete subclasses, not directly by injection frameworks, so the `@Inject` annotation has no effect.
+When dependency injection frameworks call constructors, they can only do so on
+constructors of concrete classes, which can delegate to superclass constructors.
+In the case of abstract classes, their constructors are only called by their
+concrete subclasses, not directly by injection frameworks, so the `@Inject`
+annotation has no effect.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectOnConstructorOfAbstractClass")` to the enclosing element.

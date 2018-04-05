@@ -13,7 +13,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Members injection should always be called as early as possible to avoid uninitialized @Inject members. This is also crucial to protect against bugs during configuration changes and reattached Fragments to make sure that each framework type is injected in the appropriate order.
+Members injection should always be called as early as possible to avoid
+uninitialized @Inject members. This is also crucial to protect against bugs
+during configuration changes and reattached Fragments to make sure that each
+framework type is injected in the appropriate order.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AndroidInjectionBeforeSuper")` to the enclosing element.

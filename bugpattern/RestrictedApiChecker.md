@@ -13,7 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Calls to APIs marked @RestrictedApi are prohibited without a corresponding whitelist annotation.
+Calls to APIs marked @RestrictedApi are prohibited without a corresponding
+whitelist annotation.
 
 ## Suppression
 This check may not be suppressed.

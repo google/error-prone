@@ -13,7 +13,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-API providers may annotate a method with an annotation like `android.support.annotation.CallSuper` or `javax.annotation.OverridingMethodsMustInvokeSuper` to require that overriding  methods invoke the super method.  This check enforces those annotations.
+API providers may annotate a method with an annotation like
+`android.support.annotation.CallSuper` or
+`javax.annotation.OverridingMethodsMustInvokeSuper` to require that overriding
+methods invoke the super method. This check enforces those annotations.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingSuperCall")` to the enclosing element.

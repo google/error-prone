@@ -13,7 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Prefer to express durations using the largest possible unit, e.g. `Duration.ofDays(1)` instead of `Duration.ofSeconds(86400)`.
+Prefer to express durations using the largest possible unit, e.g.
+`Duration.ofDays(1)` instead of `Duration.ofSeconds(86400)`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CanonicalDuration")` to the enclosing element.

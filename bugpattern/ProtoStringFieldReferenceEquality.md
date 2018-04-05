@@ -13,7 +13,9 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Comparing strings with == is almost always an error, but it is an error 100% of the time when one of the strings is a protobuf field.  Additionally, protobuf fields cannot be null, so Object.equals(Object) is always more correct.
+Comparing strings with == is almost always an error, but it is an error 100% of
+the time when one of the strings is a protobuf field. Additionally, protobuf
+fields cannot be null, so Object.equals(Object) is always more correct.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoStringFieldReferenceEquality")` to the enclosing element.

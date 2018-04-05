@@ -15,7 +15,9 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: GuardedBy_
 
 ## The problem
-Methods with the @UnlockMethod annotation are expected to release one or more locks. The caller must hold the locks when the function is entered, and will not hold them when it completes.
+Methods with the @UnlockMethod annotation are expected to release one or more
+locks. The caller must hold the locks when the function is entered, and will not
+hold them when it completes.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnlockMethod")` to the enclosing element.

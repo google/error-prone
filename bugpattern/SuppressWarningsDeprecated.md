@@ -14,9 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 ## The problem
 To suppress warnings to deprecated methods, you should add the annotation
-`@SuppressWarnings("deprecation")`
-and not
-`@SuppressWarnings("deprecated")`
+`@SuppressWarnings("deprecation")` and not `@SuppressWarnings("deprecated")`
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SuppressWarningsDeprecated")` to the enclosing element.

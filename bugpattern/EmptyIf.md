@@ -15,7 +15,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: empty_
 
 ## The problem
-An if statement contains an empty statement as the then clause. A semicolon may have been inserted by accident.
+An if statement contains an empty statement as the then clause. A semicolon may
+have been inserted by accident.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EmptyIf")` to the enclosing element.

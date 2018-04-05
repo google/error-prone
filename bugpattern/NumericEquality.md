@@ -13,7 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Numbers are compared for reference equality/inequality using == or != instead of for value equality using .equals()
+Numbers are compared for reference equality/inequality using == or != instead of
+for value equality using .equals()
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NumericEquality")` to the enclosing element.
