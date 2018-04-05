@@ -49,6 +49,10 @@ public class ImportStatements {
   /** A copy of the original imports, used to check for any actual changes to the imports. */
   private final ImmutableSet<String> originalImports;
 
+  public static ImportStatements create(JCCompilationUnit compilationUnit) {
+    return create(compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
+  }
+
   public static ImportStatements create(
       JCCompilationUnit compilationUnit, ImportOrganizer importOrganizer) {
     return new ImportStatements(
@@ -56,13 +60,6 @@ public class ImportStatements {
         compilationUnit.getImports(),
         compilationUnit.endPositions,
         importOrganizer);
-  }
-
-  /** @deprecated Use {@link ImportStatements#create(JCCompilationUnit, ImportOrganizer)} instead */
-  @Deprecated
-  public ImportStatements(
-      JCExpression packageTree, List<JCImport> importTrees, EndPosTable endPositions) {
-    this(packageTree, importTrees, endPositions, ImportOrganizer.STATIC_FIRST_ORGANIZER);
   }
 
   ImportStatements(
