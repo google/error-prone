@@ -36,15 +36,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @BugPattern(
-  name = "TypeParameterUnusedInFormals",
-  summary =
-      "Declaring a type parameter that is only used in the return type is a misuse of"
-          + " generics: operations on the type parameter are unchecked, it hides unsafe casts at"
-          + " invocations of the method, and it interacts badly with method overload resolution.",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
-)
+    name = "TypeParameterUnusedInFormals",
+    summary =
+        "Declaring a type parameter that is only used in the return type is a misuse of"
+            + " generics: operations on the type parameter are unchecked, it hides unsafe casts at"
+            + " invocations of the method, and it interacts badly with method overload resolution.",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE)
 public class TypeParameterUnusedInFormals extends BugChecker implements MethodTreeMatcher {
 
   @Override

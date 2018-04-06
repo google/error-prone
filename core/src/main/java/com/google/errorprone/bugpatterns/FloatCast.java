@@ -45,11 +45,10 @@ import javax.lang.model.type.TypeKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "FloatCast",
-  summary = "Use parentheses to make the precedence explicit",
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "FloatCast",
+    summary = "Use parentheses to make the precedence explicit",
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
 
   static final Set<TypeKind> FLOATING_POINT = EnumSet.of(TypeKind.FLOAT, TypeKind.DOUBLE);

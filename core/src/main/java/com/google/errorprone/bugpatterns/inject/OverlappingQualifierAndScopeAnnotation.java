@@ -38,13 +38,12 @@ import com.sun.source.tree.ClassTree;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "OverlappingQualifierAndScopeAnnotation",
-  summary =
-      "Annotations cannot be both Scope annotations and Qualifier annotations: this causes "
-          + "confusion when trying to use them.",
-  category = INJECT,
-  severity = ERROR
-)
+    name = "OverlappingQualifierAndScopeAnnotation",
+    summary =
+        "Annotations cannot be both Scope annotations and Qualifier annotations: this causes "
+            + "confusion when trying to use them.",
+    category = INJECT,
+    severity = ERROR)
 public class OverlappingQualifierAndScopeAnnotation extends BugChecker implements ClassTreeMatcher {
   private static final Matcher<ClassTree> ANNOTATION_WITH_BOTH_TYPES =
       allOf(

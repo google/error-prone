@@ -42,13 +42,12 @@ import java.util.Objects;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
-  name = "OptionalNotPresent",
-  category = JDK,
-  summary =
-      "One should not call optional.get() inside an if statement that checks "
-          + "!optional.isPresent",
-  severity = WARNING
-)
+    name = "OptionalNotPresent",
+    category = JDK,
+    summary =
+        "One should not call optional.get() inside an if statement that checks "
+            + "!optional.isPresent",
+    severity = WARNING)
 public class OptionalNotPresent extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final MethodNameMatcher GOOGLE_OPTIONAL_PRESENT =

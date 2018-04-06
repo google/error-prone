@@ -60,13 +60,12 @@ import javax.lang.model.element.TypeElement;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "GuiceAssistedParameters",
-  summary =
-      "A constructor cannot have two @Assisted parameters of the same type unless they are "
-          + "disambiguated with named @Assisted annotations.",
-  category = GUICE,
-  severity = ERROR
-)
+    name = "GuiceAssistedParameters",
+    summary =
+        "A constructor cannot have two @Assisted parameters of the same type unless they are "
+            + "disambiguated with named @Assisted annotations.",
+    category = GUICE,
+    severity = ERROR)
 public class AssistedParameters extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<MethodTree> IS_CONSTRUCTOR_WITH_INJECT_OR_ASSISTED =

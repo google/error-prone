@@ -62,13 +62,12 @@ import java.util.Optional;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "Immutable",
-  summary = "Type declaration annotated with @Immutable is not immutable",
-  category = JDK,
-  severity = ERROR,
-  documentSuppression = false,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "Immutable",
+    summary = "Type declaration annotated with @Immutable is not immutable",
+    category = JDK,
+    severity = ERROR,
+    documentSuppression = false,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ImmutableChecker extends BugChecker
     implements ClassTreeMatcher,
         NewClassTreeMatcher,

@@ -39,12 +39,11 @@ import java.util.regex.PatternSyntaxException;
 
 /** @author mdempsky@google.com (Matthew Dempsky) */
 @BugPattern(
-  name = "InvalidPatternSyntax",
-  summary = "Invalid syntax used for a regular expression",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "InvalidPatternSyntax",
+    summary = "Invalid syntax used for a regular expression",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InvalidPatternSyntax extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String MESSAGE_BASE = "Invalid syntax used for a regular expression: ";

@@ -597,13 +597,12 @@ public class ScannerSupplierTest {
 
   /** An unsuppressible version of {@link PackageLocation}. */
   @BugPattern(
-    name = "PackageLocation",
-    summary = "",
-    category = JDK,
-    severity = ERROR,
-    suppressionAnnotations = {},
-    disableable = false
-  )
+      name = "PackageLocation",
+      summary = "",
+      category = JDK,
+      severity = ERROR,
+      suppressionAnnotations = {},
+      disableable = false)
   public static class UnsuppressiblePackageLocation extends PackageLocation {}
 
   @Test

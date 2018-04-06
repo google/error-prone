@@ -44,12 +44,11 @@ import java.util.List;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(
-  name = "InjectMoreThanOneScopeAnnotationOnClass",
-  altNames = "MoreThanOneScopeAnnotationOnClass",
-  summary = "A class can be annotated with at most one scope annotation.",
-  category = INJECT,
-  severity = ERROR
-)
+    name = "InjectMoreThanOneScopeAnnotationOnClass",
+    altNames = "MoreThanOneScopeAnnotationOnClass",
+    summary = "A class can be annotated with at most one scope annotation.",
+    category = INJECT,
+    severity = ERROR)
 public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements ClassTreeMatcher {
 
   private static final MultiMatcher<Tree, AnnotationTree> SCOPE_ANNOTATION_MATCHER =

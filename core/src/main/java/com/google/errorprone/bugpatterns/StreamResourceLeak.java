@@ -49,15 +49,14 @@ import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "StreamResourceLeak",
-  altNames = "FilesLinesLeak",
-  category = JDK,
-  summary =
-      "Streams that encapsulate a closeable resource should be closed using"
-          + " try-with-resources",
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "StreamResourceLeak",
+    altNames = "FilesLinesLeak",
+    category = JDK,
+    summary =
+        "Streams that encapsulate a closeable resource should be closed using"
+            + " try-with-resources",
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class StreamResourceLeak extends AbstractMustBeClosedChecker
     implements MethodInvocationTreeMatcher {
 

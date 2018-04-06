@@ -74,11 +74,7 @@ public class ImmutableAnalysis {
 
   public ImmutableAnalysis(
       BugChecker bugChecker, VisitorState state, WellKnownMutability wellKnownMutability) {
-    this(
-        bugChecker,
-        state,
-        wellKnownMutability,
-        ImmutableSet.of(Immutable.class.getName()));
+    this(bugChecker, state, wellKnownMutability, ImmutableSet.of(Immutable.class.getName()));
   }
 
   Violation isThreadSafeType(

@@ -42,12 +42,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "HashtableContains",
-  summary = "contains() is a legacy method that is equivalent to containsValue()",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "HashtableContains",
+    summary = "contains() is a legacy method that is equivalent to containsValue()",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class HashtableContains extends BugChecker implements MethodInvocationTreeMatcher {
 
   static final Matcher<ExpressionTree> CONTAINS_MATCHER =

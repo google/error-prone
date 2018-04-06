@@ -39,12 +39,11 @@ import java.util.regex.Pattern;
  * @author Simon Nickerson (sjnickerson@google.com)
  */
 @BugPattern(
-  name = "LongLiteralLowerCaseSuffix",
-  summary = "Prefer 'L' to 'l' for the suffix to long literals",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "LongLiteralLowerCaseSuffix",
+    summary = "Prefer 'L' to 'l' for the suffix to long literals",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {
 
   private static final Matcher<LiteralTree> matcher =

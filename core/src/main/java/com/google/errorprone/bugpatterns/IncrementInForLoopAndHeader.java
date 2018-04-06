@@ -41,11 +41,10 @@ import java.util.stream.Collectors;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
-  name = "IncrementInForLoopAndHeader",
-  summary = "This for loop increments the same variable in the header and in the body",
-  category = JDK,
-  severity = WARNING
-)
+    name = "IncrementInForLoopAndHeader",
+    summary = "This for loop increments the same variable in the header and in the body",
+    category = JDK,
+    severity = WARNING)
 public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTreeMatcher {
 
   private static final ImmutableSet<Kind> CONDITIONALS =

@@ -46,12 +46,11 @@ import javax.annotation.Nullable;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "InjectScopeOrQualifierAnnotationRetention",
-  summary = "Scoping and qualifier annotations must have runtime retention.",
-  category = INJECT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "InjectScopeOrQualifierAnnotationRetention",
+    summary = "Scoping and qualifier annotations must have runtime retention.",
+    category = INJECT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ScopeOrQualifierAnnotationRetention extends BugChecker implements ClassTreeMatcher {
 
   private static final String RETENTION_ANNOTATION = "java.lang.annotation.Retention";

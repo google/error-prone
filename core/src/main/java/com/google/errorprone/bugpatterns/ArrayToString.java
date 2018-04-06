@@ -37,11 +37,10 @@ import com.sun.source.tree.Tree;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-  name = "ArrayToString",
-  summary = "Calling toString on an array does not provide useful information",
-  category = JDK,
-  severity = ERROR
-)
+    name = "ArrayToString",
+    summary = "Calling toString on an array does not provide useful information",
+    category = JDK,
+    severity = ERROR)
 public class ArrayToString extends AbstractToString {
 
   private static final Matcher<ExpressionTree> GET_STACK_TRACE =

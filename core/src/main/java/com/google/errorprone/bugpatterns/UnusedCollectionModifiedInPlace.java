@@ -34,11 +34,10 @@ import com.sun.source.tree.Tree.Kind;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-  name = "UnusedCollectionModifiedInPlace",
-  summary = "Collection is modified in place, but the result is not used",
-  category = JDK,
-  severity = ERROR
-)
+    name = "UnusedCollectionModifiedInPlace",
+    summary = "Collection is modified in place, but the result is not used",
+    category = JDK,
+    severity = ERROR)
 public class UnusedCollectionModifiedInPlace extends BugChecker
     implements MethodInvocationTreeMatcher {
   /**

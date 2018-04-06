@@ -34,12 +34,11 @@ import com.sun.source.tree.AnnotationTree;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
-  name = "ProvidesMethodOutsideOfModule",
-  summary = "@Provides methods need to be declared in a Module to have any effect.",
-  category = GUICE,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ProvidesMethodOutsideOfModule",
+    summary = "@Provides methods need to be declared in a Module to have any effect.",
+    category = GUICE,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ProvidesMethodOutsideOfModule extends BugChecker implements AnnotationTreeMatcher {
 
   private static final Matcher<AnnotationTree> PROVIDES_ANNOTATION_ON_METHOD_OUTSIDE_OF_MODULE =

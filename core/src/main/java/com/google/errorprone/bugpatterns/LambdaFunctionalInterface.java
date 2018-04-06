@@ -49,13 +49,12 @@ import javax.lang.model.element.Modifier;
 
 /** @author amesbah@google.com (Ali Mesbah) */
 @BugPattern(
-  name = "LambdaFunctionalInterface",
-  summary =
-      "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
-  category = JDK,
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "LambdaFunctionalInterface",
+    summary =
+        "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
+    category = JDK,
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class LambdaFunctionalInterface extends BugChecker implements MethodTreeMatcher {
   private static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
   private static final String JAVA_LANG_NUMBER = "java.lang.Number";

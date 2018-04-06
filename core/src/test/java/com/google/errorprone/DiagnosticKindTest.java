@@ -59,12 +59,11 @@ public class DiagnosticKindTest {
   }
 
   @BugPattern(
-    name = "ErrorChecker",
-    summary = "This is an error!",
-    explanation = "Don't do this!",
-    category = JDK,
-    severity = SeverityLevel.ERROR
-  )
+      name = "ErrorChecker",
+      summary = "This is an error!",
+      explanation = "Don't do this!",
+      category = JDK,
+      severity = SeverityLevel.ERROR)
   public static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -87,12 +86,11 @@ public class DiagnosticKindTest {
   }
 
   @BugPattern(
-    name = "WarningChecker",
-    summary = "This is a warning!",
-    explanation = "Please don't do this!",
-    category = JDK,
-    severity = SeverityLevel.WARNING
-  )
+      name = "WarningChecker",
+      summary = "This is a warning!",
+      explanation = "Please don't do this!",
+      category = JDK,
+      severity = SeverityLevel.WARNING)
   public static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -116,12 +114,11 @@ public class DiagnosticKindTest {
   }
 
   @BugPattern(
-    name = "SuggestionChecker",
-    summary = "This is a suggestion!",
-    explanation = "Don't do this. Or do it. I'm a suggestion, not a cop.",
-    category = JDK,
-    severity = SeverityLevel.SUGGESTION
-  )
+      name = "SuggestionChecker",
+      summary = "This is a suggestion!",
+      explanation = "Don't do this. Or do it. I'm a suggestion, not a cop.",
+      category = JDK,
+      severity = SeverityLevel.SUGGESTION)
   public static class SuggestionChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {

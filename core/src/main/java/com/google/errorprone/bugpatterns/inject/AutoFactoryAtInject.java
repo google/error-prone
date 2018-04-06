@@ -42,12 +42,11 @@ import com.sun.source.tree.Tree;
 
 /** @author ronshapiro@google.com (Ron Shapiro) */
 @BugPattern(
-  name = "AutoFactoryAtInject",
-  summary = "@AutoFactory and @Inject should not be used in the same type.",
-  category = INJECT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "AutoFactoryAtInject",
+    summary = "@AutoFactory and @Inject should not be used in the same type.",
+    category = INJECT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMatcher {
 
   private static final Matcher<Tree> HAS_AUTO_FACTORY_ANNOTATION =

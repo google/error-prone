@@ -40,14 +40,14 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "MixedArrayDimensions",
-  category = JDK,
-  summary = "C-style array declarations should not be used",
-  severity = SUGGESTION,
-  linkType = CUSTOM,
-  tags = StandardTags.STYLE,
-  link = "https://google.github.io/styleguide/javaguide.html#s4.8.3.2-array-declarations"
-)
+    name = "MixedArrayDimensions",
+    category = JDK,
+    summary = "C-style array declarations should not be used",
+    severity = SUGGESTION,
+    linkType = CUSTOM,
+    tags = StandardTags.STYLE,
+    link = "https://google.github.io/styleguide/javaguide.html#s4.8.3.2-array-declarations"
+    )
 public class MixedArrayDimensions extends BugChecker
     implements MethodTreeMatcher, VariableTreeMatcher {
 

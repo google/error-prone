@@ -46,13 +46,12 @@ import org.junit.runners.JUnit4;
 public class CommandLineFlagTest {
 
   @BugPattern(
-    name = "DisableableChecker",
-    altNames = "foo",
-    summary = "Disableable checker that flags all return statements as errors",
-    explanation = "Disableable checker that flags all return statements as errors",
-    category = ONE_OFF,
-    severity = ERROR
-  )
+      name = "DisableableChecker",
+      altNames = "foo",
+      summary = "Disableable checker that flags all return statements as errors",
+      explanation = "Disableable checker that flags all return statements as errors",
+      category = ONE_OFF,
+      severity = ERROR)
   public static class DisableableChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -61,13 +60,12 @@ public class CommandLineFlagTest {
   }
 
   @BugPattern(
-    name = "NondisableableChecker",
-    summary = "NondisableableChecker checker that flags all return statements as errors",
-    explanation = "NondisableableChecker checker that flags all return statements as errors",
-    disableable = false,
-    category = ONE_OFF,
-    severity = ERROR
-  )
+      name = "NondisableableChecker",
+      summary = "NondisableableChecker checker that flags all return statements as errors",
+      explanation = "NondisableableChecker checker that flags all return statements as errors",
+      disableable = false,
+      category = ONE_OFF,
+      severity = ERROR)
   public static class NondisableableChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -76,12 +74,11 @@ public class CommandLineFlagTest {
   }
 
   @BugPattern(
-    name = "WarningChecker",
-    summary = "Checker that flags all return statements as warnings",
-    explanation = "Checker that flags all return statements as warningss",
-    category = ONE_OFF,
-    severity = WARNING
-  )
+      name = "WarningChecker",
+      summary = "Checker that flags all return statements as warnings",
+      explanation = "Checker that flags all return statements as warningss",
+      category = ONE_OFF,
+      severity = WARNING)
   public static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -90,12 +87,11 @@ public class CommandLineFlagTest {
   }
 
   @BugPattern(
-    name = "ErrorChecker",
-    summary = "Checker that flags all return statements as errors",
-    explanation = "Checker that flags all return statements as errors",
-    category = ONE_OFF,
-    severity = ERROR
-  )
+      name = "ErrorChecker",
+      summary = "Checker that flags all return statements as errors",
+      explanation = "Checker that flags all return statements as errors",
+      category = ONE_OFF,
+      severity = ERROR)
   public static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {

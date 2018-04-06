@@ -36,13 +36,12 @@ import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ImmutableModification",
-  category = GUAVA,
-  summary =
-      "Modifying an immutable collection is guaranteed to throw an exception and leave the"
-          + " collection unmodified",
-  severity = ERROR
-)
+    name = "ImmutableModification",
+    category = GUAVA,
+    summary =
+        "Modifying an immutable collection is guaranteed to throw an exception and leave the"
+            + " collection unmodified",
+    severity = ERROR)
 public class ImmutableModification extends BugChecker implements MethodInvocationTreeMatcher {
 
   public static final ImmutableMultimap<String, String> ILLEGAL =

@@ -52,11 +52,11 @@ import java.util.regex.Pattern;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
-  name = "BindingToUnqualifiedCommonType",
-  summary = "This code declares a binding for a common value type without a Qualifier annotation.",
-  category = GUICE,
-  severity = WARNING
-)
+    name = "BindingToUnqualifiedCommonType",
+    summary =
+        "This code declares a binding for a common value type without a Qualifier annotation.",
+    category = GUICE,
+    severity = WARNING)
 public class BindingToUnqualifiedCommonType extends BugChecker
     implements MethodTreeMatcher, MethodInvocationTreeMatcher {
 

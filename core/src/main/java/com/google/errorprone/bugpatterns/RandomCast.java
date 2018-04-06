@@ -40,11 +40,11 @@ import javax.lang.model.type.TypeKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "RandomCast",
-  summary =
-      "Casting a random number in the range [0.0, 1.0) to an integer or long always results in 0.",
-  severity = ERROR
-)
+    name = "RandomCast",
+    summary =
+        "Casting a random number in the range [0.0, 1.0) to an integer or long always results"
+            + " in 0.",
+    severity = ERROR)
 public class RandomCast extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =

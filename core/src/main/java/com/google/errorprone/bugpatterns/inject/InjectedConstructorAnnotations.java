@@ -41,12 +41,11 @@ import com.sun.source.tree.MethodTree;
 
 /** A checker for injected constructors with @Inject(optional=true) or binding annotations. */
 @BugPattern(
-  name = "InjectedConstructorAnnotations",
-  summary = "Injected constructors cannot be optional nor have binding annotations",
-  category = INJECT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "InjectedConstructorAnnotations",
+    summary = "Injected constructors cannot be optional nor have binding annotations",
+    category = INJECT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InjectedConstructorAnnotations extends BugChecker implements MethodTreeMatcher {
 
   // A matcher of @Inject{optional=true}

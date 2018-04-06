@@ -47,11 +47,10 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "BooleanParameter",
-  summary = "Use parameter comments to document ambiguous literals",
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "BooleanParameter",
+    summary = "Use parameter comments to document ambiguous literals",
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class BooleanParameter extends BugChecker implements MethodInvocationTreeMatcher {
 
   @Override

@@ -37,13 +37,12 @@ import java.util.regex.Pattern;
 
 /** @author Louis Wasserman */
 @BugPattern(
-  name = "PreconditionsInvalidPlaceholder",
-  summary = "Preconditions only accepts the %s placeholder in error message strings",
-  category = GUAVA,
-  severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "PreconditionsInvalidPlaceholder",
+    summary = "Preconditions only accepts the %s placeholder in error message strings",
+    category = GUAVA,
+    severity = WARNING,
+    tags = StandardTags.LIKELY_ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class PreconditionsInvalidPlaceholder extends BugChecker
     implements MethodInvocationTreeMatcher {
 

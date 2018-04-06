@@ -35,15 +35,14 @@ import javax.lang.model.type.TypeKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "NullableVoid",
-  summary =
-      "void-returning methods should not be annotated with @Nullable,"
-          + " since they cannot return null",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "NullableVoid",
+    summary =
+        "void-returning methods should not be annotated with @Nullable,"
+            + " since they cannot return null",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class NullableVoid extends BugChecker implements MethodTreeMatcher {
 
   @Override

@@ -53,12 +53,11 @@ import javax.annotation.Nullable;
 
 /** @author bhagwani@google.com (Sumit Bhagwani) */
 @BugPattern(
-  name = "SelfEquals",
-  summary = "Testing an object for equality with itself will always be true.",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "SelfEquals",
+    summary = "Testing an object for equality with itself will always be true.",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class SelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<Tree> ASSERTION =

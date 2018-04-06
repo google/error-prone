@@ -52,14 +52,13 @@ import java.lang.annotation.Annotation;
  * meet the contract specified by the {@link Annotation} interface.
  */
 @BugPattern(
-  name = "BadAnnotationImplementation",
-  summary =
-      "Classes that implement Annotation must override equals and hashCode. Consider "
-          + "using AutoAnnotation instead of implementing Annotation by hand.",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR
-)
+    name = "BadAnnotationImplementation",
+    summary =
+        "Classes that implement Annotation must override equals and hashCode. Consider "
+            + "using AutoAnnotation instead of implementing Annotation by hand.",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.LIKELY_ERROR)
 public class BadAnnotationImplementation extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ClassTree> CLASS_TREE_MATCHER =

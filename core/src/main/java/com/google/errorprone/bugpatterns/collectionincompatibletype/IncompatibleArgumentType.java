@@ -48,11 +48,10 @@ import javax.lang.model.element.TypeParameterElement;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
-  name = "IncompatibleArgumentType",
-  summary = "Passing argument to a generic method with an incompatible type.",
-  category = JDK,
-  severity = ERROR
-)
+    name = "IncompatibleArgumentType",
+    summary = "Passing argument to a generic method with an incompatible type.",
+    category = JDK,
+    severity = ERROR)
 public class IncompatibleArgumentType extends BugChecker implements MethodInvocationTreeMatcher {
 
   // Nonnull requiredType: The type I need is bound, in requiredType

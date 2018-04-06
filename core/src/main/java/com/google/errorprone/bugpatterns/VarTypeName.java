@@ -31,10 +31,9 @@ import javax.lang.model.element.Name;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "VarTypeName",
-  summary = "`var` should not be used as a type name.",
-  severity = ERROR
-)
+    name = "VarTypeName",
+    summary = "`var` should not be used as a type name.",
+    severity = ERROR)
 public class VarTypeName extends BugChecker implements ClassTreeMatcher, TypeParameterTreeMatcher {
 
   @Override

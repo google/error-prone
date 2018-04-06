@@ -41,14 +41,13 @@ import com.sun.source.tree.Tree;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(
-  name = "MoreThanOneInjectableConstructor",
-  summary =
-      "This class has more than one @Inject-annotated constructor. Please remove the @Inject"
-          + " annotation from all but one of them.",
-  category = INJECT,
-  severity = ERROR,
-  altNames = {"inject-constructors", "InjectMultipleAtInjectConstructors"}
-)
+    name = "MoreThanOneInjectableConstructor",
+    summary =
+        "This class has more than one @Inject-annotated constructor. Please remove the @Inject"
+            + " annotation from all but one of them.",
+    category = INJECT,
+    severity = ERROR,
+    altNames = {"inject-constructors", "InjectMultipleAtInjectConstructors"})
 public class MoreThanOneInjectableConstructor extends BugChecker implements AnnotationTreeMatcher {
 
   private static final Matcher<AnnotationTree> IS_EITHER_INJECT =

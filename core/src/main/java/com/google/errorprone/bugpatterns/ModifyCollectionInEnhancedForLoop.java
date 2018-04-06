@@ -40,13 +40,12 @@ import java.util.regex.Pattern;
 
 /** @author anishvisaria98@gmail.com (Anish Visaria) */
 @BugPattern(
-  name = "ModifyCollectionInEnhancedForLoop",
-  summary =
-      "Modifying a collection while iterating over it in a loop may cause a"
-          + " ConcurrentModificationException to be thrown.",
-  category = JDK,
-  severity = WARNING
-)
+    name = "ModifyCollectionInEnhancedForLoop",
+    summary =
+        "Modifying a collection while iterating over it in a loop may cause a"
+            + " ConcurrentModificationException to be thrown.",
+    category = JDK,
+    severity = WARNING)
 public class ModifyCollectionInEnhancedForLoop extends BugChecker
     implements MethodInvocationTreeMatcher {
 

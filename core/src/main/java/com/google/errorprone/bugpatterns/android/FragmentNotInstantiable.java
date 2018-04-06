@@ -45,15 +45,14 @@ import java.util.stream.Collectors;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
-  name = "FragmentNotInstantiable",
-  altNames = {"ValidFragment"},
-  summary =
-      "Subclasses of Fragment must be instantiable via Class#newInstance():"
-          + " the class must be public, static and have a public nullary constructor",
-  category = ANDROID,
-  severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR
-)
+    name = "FragmentNotInstantiable",
+    altNames = {"ValidFragment"},
+    summary =
+        "Subclasses of Fragment must be instantiable via Class#newInstance():"
+            + " the class must be public, static and have a public nullary constructor",
+    category = ANDROID,
+    severity = WARNING,
+    tags = StandardTags.LIKELY_ERROR)
 public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatcher {
   private static final String MESSAGE_BASE = "Fragment is not instantiable: ";
 

@@ -34,11 +34,10 @@ import com.sun.tools.javac.tree.JCTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "UnusedAnonymousClass",
-  summary = "Instance created but never used",
-  category = JDK,
-  severity = ERROR
-)
+    name = "UnusedAnonymousClass",
+    summary = "Instance created but never used",
+    category = JDK,
+    severity = ERROR)
 public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatcher {
 
   // An anonymous class creation cannot have side-effects if:

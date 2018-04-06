@@ -55,12 +55,11 @@ import java.util.Set;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "InjectInvalidTargetingOnScopingAnnotation",
-  summary = "A scoping annotation's Target should include TYPE and METHOD.",
-  category = INJECT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "InjectInvalidTargetingOnScopingAnnotation",
+    summary = "A scoping annotation's Target should include TYPE and METHOD.",
+    category = INJECT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InvalidTargetingOnScopingAnnotation extends BugChecker implements ClassTreeMatcher {
 
   private static final String TARGET_ANNOTATION = "java.lang.annotation.Target";

@@ -251,12 +251,11 @@ public class HeldLockAnalyzerTest {
 
   /** A customized {@link GuardedByChecker} that prints more test-friendly diagnostics. */
   @BugPattern(
-    name = "GuardedByLockSet",
-    summary = "",
-    explanation = "",
-    category = JDK,
-    severity = ERROR
-  )
+      name = "GuardedByLockSet",
+      summary = "",
+      explanation = "",
+      category = JDK,
+      severity = ERROR)
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
 
     @Override

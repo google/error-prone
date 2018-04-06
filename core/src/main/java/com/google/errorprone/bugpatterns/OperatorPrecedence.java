@@ -36,13 +36,12 @@ import java.util.EnumSet;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "OperatorPrecedence",
-  category = JDK,
-  summary = "Use grouping parenthesis to make the operator precedence explicit",
-  severity = WARNING,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "OperatorPrecedence",
+    category = JDK,
+    summary = "Use grouping parenthesis to make the operator precedence explicit",
+    severity = WARNING,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class OperatorPrecedence extends BugChecker implements BinaryTreeMatcher {
 
   private static final EnumSet<Kind> CONDITIONAL =

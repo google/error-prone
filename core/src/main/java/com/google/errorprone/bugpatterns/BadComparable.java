@@ -48,13 +48,12 @@ import com.sun.tools.javac.code.TypeTag;
 
 /** @author irogers@google.com (Ian Rogers) */
 @BugPattern(
-  name = "BadComparable",
-  summary = "Possible sign flip from narrowing conversion",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "BadComparable",
+    summary = "Possible sign flip from narrowing conversion",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
   /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */
   private static final Matcher<MethodTree> COMPARABLE_METHOD_MATCHER =

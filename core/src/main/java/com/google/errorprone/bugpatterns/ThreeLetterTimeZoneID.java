@@ -39,12 +39,11 @@ import java.util.concurrent.TimeUnit;
 
 /** @author awturner@google.com (Andy Turner) */
 @BugPattern(
-  name = "ThreeLetterTimeZoneID",
-  summary = ThreeLetterTimeZoneID.SUMMARY,
-  category = JDK,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ThreeLetterTimeZoneID",
+    summary = ThreeLetterTimeZoneID.SUMMARY,
+    category = JDK,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocationTreeMatcher {
   static final String SUMMARY =
       "Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what "

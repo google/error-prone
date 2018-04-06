@@ -43,12 +43,11 @@ import java.util.Map.Entry;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "StaticGuardedByInstance",
-  category = Category.JDK,
-  summary = "Writes to static fields should not be guarded by instance locks",
-  severity = SeverityLevel.WARNING,
-  tags = StandardTags.FRAGILE_CODE
-)
+    name = "StaticGuardedByInstance",
+    category = Category.JDK,
+    summary = "Writes to static fields should not be guarded by instance locks",
+    severity = SeverityLevel.WARNING,
+    tags = StandardTags.FRAGILE_CODE)
 public class StaticGuardedByInstance extends BugChecker implements SynchronizedTreeMatcher {
 
   private static final String MESSAGE =

@@ -44,12 +44,11 @@ import javax.lang.model.element.ElementKind;
  * @author andrewrice@google.com (Andrew Rice)
  */
 @BugPattern(
-  name = "AssertEqualsArgumentOrderChecker",
-  summary = "Arguments are swapped in assertEquals-like call",
-  category = JUNIT,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "AssertEqualsArgumentOrderChecker",
+    summary = "Arguments are swapped in assertEquals-like call",
+    category = JUNIT,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AssertEqualsArgumentOrderChecker extends BugChecker
     implements MethodInvocationTreeMatcher {
 

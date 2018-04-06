@@ -65,10 +65,9 @@ import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "JdkObsolete",
-  summary = "Suggests alternatives to obsolete JDK classes.",
-  severity = WARNING
-)
+    name = "JdkObsolete",
+    summary = "Suggests alternatives to obsolete JDK classes.",
+    severity = WARNING)
 public class JdkObsolete extends BugChecker
     implements NewClassTreeMatcher, ClassTreeMatcher, MemberReferenceTreeMatcher {
 

@@ -54,14 +54,13 @@ import javax.lang.model.element.Modifier;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-  name = "JUnit4TestNotRun",
-  summary =
-      "This looks like a test method but is not run; please add @Test and @Ignore, or, if this is "
-          + "a helper method, reduce its visibility.",
-  category = JUNIT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "JUnit4TestNotRun",
+    summary =
+        "This looks like a test method but is not run; please add @Test and @Ignore, or, if this"
+            + " is a helper method, reduce its visibility.",
+    category = JUNIT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
 
   private static final String TEST_CLASS = "org.junit.Test";

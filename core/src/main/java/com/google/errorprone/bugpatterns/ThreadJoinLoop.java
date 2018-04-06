@@ -44,14 +44,13 @@ import java.util.Objects;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
-  name = "ThreadJoinLoop",
-  summary =
-      "Thread.join needs to be surrounded by a loop until it succeeds, "
-          + "as in Uninterruptibles.joinUninterruptibly.",
-  category = JDK,
-  severity = SeverityLevel.WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ThreadJoinLoop",
+    summary =
+        "Thread.join needs to be surrounded by a loop until it succeeds, "
+            + "as in Uninterruptibles.joinUninterruptibly.",
+    category = JDK,
+    severity = SeverityLevel.WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ThreadJoinLoop extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final MethodNameMatcher MATCH_THREAD_JOIN =

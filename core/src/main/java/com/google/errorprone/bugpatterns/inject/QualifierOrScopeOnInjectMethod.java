@@ -47,15 +47,14 @@ import java.util.List;
 
 /** @author Nick Glorioso (glorioso@google.com) */
 @BugPattern(
-  name = "QualifierOrScopeOnInjectMethod",
-  category = Category.INJECT,
-  summary =
-      "Qualifiers/Scope annotations on @Inject methods don't have any effect."
-          + " Move the qualifier annotation to the binding location.",
-  severity = SeverityLevel.WARNING,
-  tags = StandardTags.LIKELY_ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "QualifierOrScopeOnInjectMethod",
+    category = Category.INJECT,
+    summary =
+        "Qualifiers/Scope annotations on @Inject methods don't have any effect."
+            + " Move the qualifier annotation to the binding location.",
+    severity = SeverityLevel.WARNING,
+    tags = StandardTags.LIKELY_ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class QualifierOrScopeOnInjectMethod extends BugChecker implements MethodTreeMatcher {
 
   private static final MultiMatcher<MethodTree, AnnotationTree> QUALIFIER_ANNOTATION_FINDER =

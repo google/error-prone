@@ -54,14 +54,14 @@ import javax.lang.model.element.Modifier;
 
 /** @author epmjohnston@google.com (Emily P.M. Johnston) */
 @BugPattern(
-  name = "FragmentInjection",
-  summary =
-      "Classes extending PreferenceActivity must implement isValidFragment such that it does not"
-          + " unconditionally return true to prevent vulnerability to fragment injection attacks.",
-  category = ANDROID,
-  severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR
-)
+    name = "FragmentInjection",
+    summary =
+        "Classes extending PreferenceActivity must implement isValidFragment such that it does not"
+            + " unconditionally return true to prevent vulnerability to fragment injection"
+            + " attacks.",
+    category = ANDROID,
+    severity = WARNING,
+    tags = StandardTags.LIKELY_ERROR)
 public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<MethodTree> OVERRIDES_IS_VALID_FRAGMENT =

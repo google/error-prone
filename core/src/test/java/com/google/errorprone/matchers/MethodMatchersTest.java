@@ -42,11 +42,10 @@ public class MethodMatchersTest {
 
   /** A bugchecker to test constructor matching. */
   @BugPattern(
-    name = "ConstructorDeleter",
-    category = JDK,
-    summary = "Deletes constructors",
-    severity = ERROR
-  )
+      name = "ConstructorDeleter",
+      category = JDK,
+      summary = "Deletes constructors",
+      severity = ERROR)
   public static class ConstructorDeleter extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher, BugChecker.NewClassTreeMatcher {
 
@@ -130,11 +129,10 @@ public class MethodMatchersTest {
 
   /** This is javadoc. */
   @BugPattern(
-    name = "CrashyParameterMatcherTestChecker",
-    category = JDK,
-    summary = "",
-    severity = ERROR
-  )
+      name = "CrashyParameterMatcherTestChecker",
+      category = JDK,
+      summary = "",
+      severity = ERROR)
   public static class CrashyerMatcherTestChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
 

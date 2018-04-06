@@ -42,15 +42,14 @@ import javax.lang.model.element.TypeElement;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "IncompatibleModifiers",
-  summary =
-      "This annotation has incompatible modifiers as specified by its "
-          + "@IncompatibleModifiers annotation",
-  linkType = NONE,
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR
-)
+    name = "IncompatibleModifiers",
+    summary =
+        "This annotation has incompatible modifiers as specified by its "
+            + "@IncompatibleModifiers annotation",
+    linkType = NONE,
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.LIKELY_ERROR)
 
 // TODO(cushon): merge the implementation with RequiredModifiersChecker
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {

@@ -37,14 +37,13 @@ import javax.lang.model.element.Name;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "SynchronizeOnNonFinalField",
-  summary =
-      "Synchronizing on non-final fields is not safe: if the field is ever updated,"
-          + " different threads may end up locking on different objects.",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
-)
+    name = "SynchronizeOnNonFinalField",
+    summary =
+        "Synchronizing on non-final fields is not safe: if the field is ever updated,"
+            + " different threads may end up locking on different objects.",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE)
 public class SynchronizeOnNonFinalField extends BugChecker
     implements BugChecker.SynchronizedTreeMatcher {
 

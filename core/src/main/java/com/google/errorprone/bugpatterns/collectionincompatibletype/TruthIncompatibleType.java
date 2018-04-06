@@ -44,10 +44,9 @@ import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "TruthIncompatibleType",
-  summary = "Argument is not compatible with the subject's type.",
-  severity = WARNING
-)
+    name = "TruthIncompatibleType",
+    summary = "Argument is not compatible with the subject's type.",
+    severity = WARNING)
 public class TruthIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final AbstractCollectionIncompatibleTypeMatcher MATCHER =

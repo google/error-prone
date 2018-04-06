@@ -38,12 +38,11 @@ import javax.lang.model.element.ElementKind;
 
 /** @author scottjohnson@google.com (Scott Johnson) */
 @BugPattern(
-  name = "ParameterPackage",
-  summary = "Method parameter has wrong package",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ParameterPackage",
+    summary = "Method parameter has wrong package",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class WrongParameterPackage extends BugChecker implements MethodTreeMatcher {
 
   private MethodSymbol supermethod;

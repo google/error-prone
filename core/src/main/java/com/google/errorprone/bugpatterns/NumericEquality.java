@@ -26,11 +26,10 @@ import com.sun.tools.javac.code.Symbol;
 
 /** @author scottjohnson@google.com (Scott Johnson) */
 @BugPattern(
-  name = "NumericEquality",
-  summary = "Numeric comparison using reference equality instead of value equality",
-  category = JDK,
-  severity = ERROR
-)
+    name = "NumericEquality",
+    summary = "Numeric comparison using reference equality instead of value equality",
+    category = JDK,
+    severity = ERROR)
 public class NumericEquality extends AbstractReferenceEquality {
 
   @Override

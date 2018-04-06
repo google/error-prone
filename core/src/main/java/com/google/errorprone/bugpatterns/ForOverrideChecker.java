@@ -51,13 +51,12 @@ import javax.lang.model.element.Modifier;
  * where the method is defined.
  */
 @BugPattern(
-  name = "ForOverride",
-  summary =
-      "Method annotated @ForOverride must be protected or package-private and only invoked from "
-          + "declaring class, or from an override of the method",
-  category = GUAVA,
-  severity = ERROR
-)
+    name = "ForOverride",
+    summary =
+        "Method annotated @ForOverride must be protected or package-private and only invoked from "
+            + "declaring class, or from an override of the method",
+    category = GUAVA,
+    severity = ERROR)
 public class ForOverrideChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher {
 

@@ -45,15 +45,14 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-  name = "StaticQualifiedUsingExpression",
-  summary = "A static variable or method should be qualified with a class name, not expression",
-  category = JDK,
-  severity = WARNING,
-  altNames = {"static", "static-access", "StaticAccessedFromInstance"},
-  generateExamplesFromTestCases = false,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "StaticQualifiedUsingExpression",
+    summary = "A static variable or method should be qualified with a class name, not expression",
+    category = JDK,
+    severity = WARNING,
+    altNames = {"static", "static-access", "StaticAccessedFromInstance"},
+    generateExamplesFromTestCases = false,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class StaticQualifiedUsingExpression extends BugChecker implements MemberSelectTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE =

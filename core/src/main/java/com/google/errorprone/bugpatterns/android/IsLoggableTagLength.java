@@ -50,11 +50,10 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 /** @author epmjohnston@google.com (Emily P.M. Johnston) */
 @BugPattern(
-  name = "IsLoggableTagLength",
-  summary = "Log tag too long, cannot exceed 23 characters.",
-  category = ANDROID,
-  severity = ERROR
-)
+    name = "IsLoggableTagLength",
+    summary = "Log tag too long, cannot exceed 23 characters.",
+    category = ANDROID,
+    severity = ERROR)
 public class IsLoggableTagLength extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> IS_LOGGABLE_CALL =

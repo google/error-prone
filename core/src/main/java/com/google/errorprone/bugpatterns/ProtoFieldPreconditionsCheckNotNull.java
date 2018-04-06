@@ -42,13 +42,12 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
 /** @author awturner@google.com (Andy Turner) */
 @BugPattern(
-  name = "ProtoFieldPreconditionsCheckNotNull",
-  summary = "Protobuf fields cannot be null, so this check is redundant",
-  category = GUAVA,
-  severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ProtoFieldPreconditionsCheckNotNull",
+    summary = "Protobuf fields cannot be null, so this check is redundant",
+    category = GUAVA,
+    severity = WARNING,
+    tags = StandardTags.LIKELY_ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ProtoFieldPreconditionsCheckNotNull extends BugChecker
     implements MethodInvocationTreeMatcher {
 

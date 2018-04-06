@@ -40,13 +40,12 @@ import com.sun.tools.javac.tree.JCTree.JCBinary;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "NarrowingCompoundAssignment",
-  summary = "Compound assignments may hide dangerous casts",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "NarrowingCompoundAssignment",
+    summary = "Compound assignments may hide dangerous casts",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class NarrowingCompoundAssignment extends BugChecker
     implements CompoundAssignmentTreeMatcher {
 

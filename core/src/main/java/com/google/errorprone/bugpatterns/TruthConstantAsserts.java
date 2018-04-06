@@ -41,13 +41,12 @@ import java.util.regex.Pattern;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-  name = "TruthConstantAsserts",
-  summary = "Truth Library assert is called on a constant.",
-  category = TRUTH,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "TruthConstantAsserts",
+    summary = "Truth Library assert is called on a constant.",
+    category = TRUTH,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class TruthConstantAsserts extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> ASSERT_THAT =

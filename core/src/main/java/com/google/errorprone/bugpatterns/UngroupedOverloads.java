@@ -43,16 +43,16 @@ import javax.lang.model.element.Name;
 
 /** @author hanuszczak@google.com (Łukasz Hanuszczak) */
 @BugPattern(
-  name = "UngroupedOverloads",
-  summary =
-      "Constructors and methods with the same name should appear sequentially"
-          + " with no other code in between",
-  generateExamplesFromTestCases = false,
-  category = JDK,
-  severity = SUGGESTION,
-  linkType = CUSTOM,
-  link = "https://google.github.io/styleguide/javaguide.html#s3.4.2.1-overloads-never-split"
-)
+    name = "UngroupedOverloads",
+    summary =
+        "Constructors and methods with the same name should appear sequentially"
+            + " with no other code in between",
+    generateExamplesFromTestCases = false,
+    category = JDK,
+    severity = SUGGESTION,
+    linkType = CUSTOM,
+    link = "https://google.github.io/styleguide/javaguide.html#s3.4.2.1-overloads-never-split"
+    )
 public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
 
   @AutoValue

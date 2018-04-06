@@ -36,12 +36,11 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 
 @BugPattern(
-  category = ONE_OFF,
-  name = "ProtoStringFieldReferenceEquality",
-  severity = ERROR,
-  summary = "Comparing protobuf fields of type String using reference equality",
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    category = ONE_OFF,
+    name = "ProtoStringFieldReferenceEquality",
+    severity = ERROR,
+    summary = "Comparing protobuf fields of type String using reference equality",
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ProtoStringFieldReferenceEquality extends BugChecker implements BinaryTreeMatcher {
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";

@@ -44,11 +44,10 @@ import com.sun.tools.javac.code.Type;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ThreadLocalUsage",
-  summary = "ThreadLocals should be stored in static fields",
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ThreadLocalUsage",
+    summary = "ThreadLocals should be stored in static fields",
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher {
 
   private static final Matcher<ExpressionTree> NEW_THREAD_LOCAL =

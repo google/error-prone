@@ -39,12 +39,11 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "UnnecessaryTypeArgument",
-  summary = "Non-generic methods should not be invoked with type arguments",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "UnnecessaryTypeArgument",
+    summary = "Non-generic methods should not be invoked with type arguments",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UnnecessaryTypeArgument extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

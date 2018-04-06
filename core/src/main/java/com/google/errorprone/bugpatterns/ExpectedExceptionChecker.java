@@ -39,13 +39,13 @@ import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ExpectedExceptionChecker",
-  category = JUNIT,
-  summary = "Calls to ExpectedException#expect should always be followed by exactly one statement.",
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ExpectedExceptionChecker",
+    category = JUNIT,
+    summary =
+        "Calls to ExpectedException#expect should always be followed by exactly one statement.",
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ExpectedExceptionChecker extends AbstractExpectedExceptionChecker {
   @Override
   protected Description handleMatch(

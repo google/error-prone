@@ -48,11 +48,10 @@ import java.util.Objects;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "CanonicalDuration",
-  summary = "Duration can be expressed more clearly with different units",
-  severity = WARNING,
-  providesFix = REQUIRES_HUMAN_ATTENTION
-)
+    name = "CanonicalDuration",
+    summary = "Duration can be expressed more clearly with different units",
+    severity = WARNING,
+    providesFix = REQUIRES_HUMAN_ATTENTION)
 public class CanonicalDuration extends BugChecker implements MethodInvocationTreeMatcher {
 
   enum Api {

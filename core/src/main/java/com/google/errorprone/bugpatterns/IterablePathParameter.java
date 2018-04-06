@@ -43,12 +43,11 @@ import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "IterablePathParameter",
-  category = JDK,
-  summary = "Path implements Iterable<Path>; prefer Collection<Path> for clarity",
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "IterablePathParameter",
+    category = JDK,
+    summary = "Path implements Iterable<Path>; prefer Collection<Path> for clarity",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class IterablePathParameter extends BugChecker implements VariableTreeMatcher {
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {

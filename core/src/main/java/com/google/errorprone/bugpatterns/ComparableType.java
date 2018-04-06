@@ -32,11 +32,11 @@ import com.sun.tools.javac.code.Type;
 
 /** @author amesbah@google.com (Ali Mesbah) */
 @BugPattern(
-  name = "ComparableType",
-  summary = " Implementing 'Comparable<T>' where T is not compatible with the implementing class.",
-  category = JDK,
-  severity = ERROR
-)
+    name = "ComparableType",
+    summary =
+        " Implementing 'Comparable<T>' where T is not compatible with the implementing class.",
+    category = JDK,
+    severity = ERROR)
 public class ComparableType extends BugChecker implements ClassTreeMatcher {
 
   /** Matches if a class/interface is subtype of Comparable */

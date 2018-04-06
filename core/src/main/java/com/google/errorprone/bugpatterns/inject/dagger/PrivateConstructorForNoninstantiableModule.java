@@ -43,12 +43,11 @@ import com.sun.source.tree.Tree;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
-  name = "PrivateConstructorForNoninstantiableModule",
-  summary = "Add a private constructor to modules that will not be instantiated by Dagger.",
-  category = DAGGER,
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "PrivateConstructorForNoninstantiableModule",
+    summary = "Add a private constructor to modules that will not be instantiated by Dagger.",
+    category = DAGGER,
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class PrivateConstructorForNoninstantiableModule extends BugChecker
     implements ClassTreeMatcher {
   private static final Predicate<Tree> IS_CONSTRUCTOR =

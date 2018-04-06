@@ -35,12 +35,12 @@ import com.sun.source.tree.ClassTree;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "AssistedInjectAndInjectOnConstructors",
-  summary =
-      "@AssistedInject and @Inject should not be used on different constructors in the same class.",
-  category = INJECT,
-  severity = WARNING
-)
+    name = "AssistedInjectAndInjectOnConstructors",
+    summary =
+        "@AssistedInject and @Inject should not be used on different constructors in the same"
+            + " class.",
+    category = INJECT,
+    severity = WARNING)
 public class AssistedInjectAndInjectOnConstructors extends BugChecker implements ClassTreeMatcher {
 
   /**

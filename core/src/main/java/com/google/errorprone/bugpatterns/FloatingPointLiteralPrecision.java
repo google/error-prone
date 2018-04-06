@@ -36,13 +36,12 @@ import java.math.BigDecimal;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "FloatingPointLiteralPrecision",
-  category = JDK,
-  summary = "Floating point literal loses precision",
-  severity = WARNING,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "FloatingPointLiteralPrecision",
+    category = JDK,
+    summary = "Floating point literal loses precision",
+    severity = WARNING,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class FloatingPointLiteralPrecision extends BugChecker implements LiteralTreeMatcher {
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {

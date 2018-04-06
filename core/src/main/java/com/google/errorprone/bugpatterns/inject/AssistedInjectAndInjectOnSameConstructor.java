@@ -41,12 +41,11 @@ import com.sun.source.tree.Tree;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "AssistedInjectAndInjectOnSameConstructor",
-  summary = "@AssistedInject and @Inject cannot be used on the same constructor.",
-  category = INJECT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "AssistedInjectAndInjectOnSameConstructor",
+    summary = "@AssistedInject and @Inject cannot be used on the same constructor.",
+    category = INJECT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AssistedInjectAndInjectOnSameConstructor extends BugChecker
     implements AnnotationTreeMatcher {
 

@@ -55,11 +55,10 @@ import javax.annotation.Nullable;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
-  name = "EqualsIncompatibleType",
-  summary = "An equality test between objects with incompatible types always returns false",
-  category = JDK,
-  severity = WARNING
-)
+    name = "EqualsIncompatibleType",
+    summary = "An equality test between objects with incompatible types always returns false",
+    category = JDK,
+    severity = WARNING)
 public class EqualsIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<MethodInvocationTree> STATIC_EQUALS_INVOCATION_MATCHER =
       anyOf(
@@ -385,4 +384,3 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     }
   }
 }
-

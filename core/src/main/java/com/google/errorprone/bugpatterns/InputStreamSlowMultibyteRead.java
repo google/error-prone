@@ -51,14 +51,13 @@ import javax.lang.model.element.ElementKind;
 
 /** Checks that InputStreams should override int read(byte[], int, int); */
 @BugPattern(
-  name = "InputStreamSlowMultibyteRead",
-  summary =
-      "Please also override int read(byte[], int, int), otherwise multi-byte reads from this "
-          + "input stream are likely to be slow.",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.PERFORMANCE
-)
+    name = "InputStreamSlowMultibyteRead",
+    summary =
+        "Please also override int read(byte[], int, int), otherwise multi-byte reads from this "
+            + "input stream are likely to be slow.",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.PERFORMANCE)
 public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ClassTree> IS_INPUT_STREAM = isSubtypeOf(InputStream.class);

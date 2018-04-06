@@ -51,13 +51,12 @@ import java.util.regex.Matcher;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ParameterName",
-  summary =
-      "Detects `/* name= */`-style comments on actual parameters where the name doesn't match the"
-          + " formal parameter",
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ParameterName",
+    summary =
+        "Detects `/* name= */`-style comments on actual parameters where the name doesn't match the"
+            + " formal parameter",
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ParameterName extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

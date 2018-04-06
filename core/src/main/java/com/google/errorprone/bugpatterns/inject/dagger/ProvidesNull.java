@@ -42,12 +42,11 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
  * {@code @Nullable}.
  */
 @BugPattern(
-  name = "DaggerProvidesNull",
-  summary = "Dagger @Provides methods may not return null unless annotated with @Nullable",
-  category = DAGGER,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "DaggerProvidesNull",
+    summary = "Dagger @Provides methods may not return null unless annotated with @Nullable",
+    category = DAGGER,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
 
   /**

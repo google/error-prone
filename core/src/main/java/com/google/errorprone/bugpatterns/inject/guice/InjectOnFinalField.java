@@ -35,14 +35,13 @@ import com.sun.source.tree.VariableTree;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "GuiceInjectOnFinalField",
-  summary =
-      "Although Guice allows injecting final fields, doing so is disallowed because the injected "
-          + "value may not be visible to other threads.",
-  category = GUICE,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "GuiceInjectOnFinalField",
+    summary =
+        "Although Guice allows injecting final fields, doing so is disallowed because the injected "
+            + "value may not be visible to other threads.",
+    category = GUICE,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InjectOnFinalField extends BugChecker implements VariableTreeMatcher {
 
   private static final Matcher<VariableTree> FINAL_FIELD_WITH_GUICE_INJECT =

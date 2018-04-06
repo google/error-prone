@@ -41,12 +41,11 @@ import com.sun.tools.javac.tree.JCTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "IsInstanceOfClass",
-  summary = "The argument to Class#isInstance(Object) should not be a Class",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "IsInstanceOfClass",
+    summary = "The argument to Class#isInstance(Object) should not be a Class",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class IsInstanceOfClass extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<MethodInvocationTree> INSTANCE_OF_CLASS =

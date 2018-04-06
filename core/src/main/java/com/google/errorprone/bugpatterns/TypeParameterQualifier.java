@@ -35,12 +35,11 @@ import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "TypeParameterQualifier",
-  summary = "Type parameter used as type qualifier",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "TypeParameterQualifier",
+    summary = "Type parameter used as type qualifier",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class TypeParameterQualifier extends BugChecker implements MemberSelectTreeMatcher {
 
   @Override

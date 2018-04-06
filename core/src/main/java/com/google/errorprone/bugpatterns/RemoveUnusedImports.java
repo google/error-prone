@@ -51,14 +51,13 @@ import javax.annotation.Nullable;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
-  name = "RemoveUnusedImports",
-  summary = "Unused imports",
-  category = JDK,
-  severity = SUGGESTION,
-  documentSuppression = false,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "RemoveUnusedImports",
+    summary = "Unused imports",
+    category = JDK,
+    severity = SUGGESTION,
+    documentSuppression = false,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class RemoveUnusedImports extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
   public Description matchCompilationUnit(

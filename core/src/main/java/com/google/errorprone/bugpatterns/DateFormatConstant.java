@@ -44,13 +44,12 @@ import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "DateFormatConstant",
-  category = JDK,
-  summary = "DateFormat is not thread-safe, and should not be used as a constant field.",
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "DateFormatConstant",
+    category = JDK,
+    summary = "DateFormat is not thread-safe, and should not be used as a constant field.",
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class DateFormatConstant extends BugChecker implements VariableTreeMatcher {
 
   @Override

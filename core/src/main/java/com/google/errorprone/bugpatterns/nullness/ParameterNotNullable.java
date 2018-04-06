@@ -44,12 +44,11 @@ import javax.lang.model.element.ElementKind;
 
 /** @author kmb@google.com (Kevin Bierhoff) */
 @BugPattern(
-  name = "ParameterNotNullable",
-  summary = "Method parameters that aren't checked for null shouldn't be annotated @Nullable",
-  category = JDK,
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ParameterNotNullable",
+    summary = "Method parameters that aren't checked for null shouldn't be annotated @Nullable",
+    category = JDK,
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ParameterNotNullable extends BugChecker
     implements MemberSelectTreeMatcher, ArrayAccessTreeMatcher {
 

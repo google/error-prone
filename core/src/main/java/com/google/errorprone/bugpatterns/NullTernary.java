@@ -30,13 +30,12 @@ import com.sun.source.tree.Tree.Kind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "NullTernary",
-  summary =
-      "This conditional expression may evaluate to null, which will result in an NPE when the"
-          + " result is unboxed.",
-  severity = ERROR,
-  category = JDK
-)
+    name = "NullTernary",
+    summary =
+        "This conditional expression may evaluate to null, which will result in an NPE when the"
+            + " result is unboxed.",
+    severity = ERROR,
+    category = JDK)
 public class NullTernary extends BugChecker implements ConditionalExpressionTreeMatcher {
 
   @Override

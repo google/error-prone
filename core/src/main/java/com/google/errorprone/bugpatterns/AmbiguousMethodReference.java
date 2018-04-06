@@ -44,11 +44,10 @@ import java.util.Map;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "AmbiguousMethodReference",
-  category = JDK,
-  summary = "Method reference is ambiguous",
-  severity = WARNING
-)
+    name = "AmbiguousMethodReference",
+    category = JDK,
+    summary = "Method reference is ambiguous",
+    severity = WARNING)
 public class AmbiguousMethodReference extends BugChecker implements ClassTreeMatcher {
 
   @Override

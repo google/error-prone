@@ -34,11 +34,10 @@ import com.sun.tools.javac.code.Type;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "PredicateIncompatibleType",
-  category = JDK,
-  summary = "Using ::equals as an incompatible Predicate; the predicate will always return false",
-  severity = ERROR
-)
+    name = "PredicateIncompatibleType",
+    category = JDK,
+    summary = "Using ::equals as an incompatible Predicate; the predicate will always return false",
+    severity = ERROR)
 public class PredicateIncompatibleType extends BugChecker implements MemberReferenceTreeMatcher {
 
   @Override

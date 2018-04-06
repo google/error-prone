@@ -41,11 +41,11 @@ import java.util.List;
 
 /** {@link BugChecker} to assert validity of methods calls with {@link FormatString} annotations. */
 @BugPattern(
-  name = "FormatStringAnnotation",
-  summary = "Invalid format string passed to formatting method.",
-  category = JDK,
-  severity = ERROR
-)
+    name = "FormatStringAnnotation",
+    summary = "Invalid format string passed to formatting method.",
+    category = JDK,
+    severity = ERROR
+    )
 public final class FormatStringAnnotationChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher, NewClassTreeMatcher {
 

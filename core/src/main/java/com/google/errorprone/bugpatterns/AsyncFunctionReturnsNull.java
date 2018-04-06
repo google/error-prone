@@ -24,12 +24,11 @@ import com.google.errorprone.BugPattern;
 
 /** Checks that {@link AsyncFunction} implementations do not directly {@code return null}. */
 @BugPattern(
-  name = "AsyncFunctionReturnsNull",
-  summary = "AsyncFunction should not return a null Future, only a Future whose result is null.",
-  category = GUAVA,
-  severity = ERROR,
-  generateExamplesFromTestCases = false
-)
+    name = "AsyncFunctionReturnsNull",
+    summary = "AsyncFunction should not return a null Future, only a Future whose result is null.",
+    category = GUAVA,
+    severity = ERROR,
+    generateExamplesFromTestCases = false)
 public final class AsyncFunctionReturnsNull extends AbstractAsyncTypeReturnsNull {
   public AsyncFunctionReturnsNull() {
     super(AsyncFunction.class);

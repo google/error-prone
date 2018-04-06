@@ -37,13 +37,12 @@ import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "MissingOverride",
-  summary = "method overrides method in supertype; expected @Override",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "MissingOverride",
+    summary = "method overrides method in supertype; expected @Override",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MissingOverride extends BugChecker implements MethodTreeMatcher {
 
   @Override

@@ -35,12 +35,11 @@ import javax.annotation.Nullable;
 
 /** @author lowasser@google.com (Louis Wasserman) */
 @BugPattern(
-  name = "EqualsNaN",
-  summary = "== NaN always returns false; use the isNaN methods instead",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "EqualsNaN",
+    summary = "== NaN always returns false; use the isNaN methods instead",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {

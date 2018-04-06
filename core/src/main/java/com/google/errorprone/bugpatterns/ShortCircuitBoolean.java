@@ -42,13 +42,12 @@ import java.util.Iterator;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-  name = "ShortCircuitBoolean",
-  category = JDK,
-  summary = "Prefer the short-circuiting boolean operators && and || to & and |.",
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ShortCircuitBoolean",
+    category = JDK,
+    summary = "Prefer the short-circuiting boolean operators && and || to & and |.",
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ShortCircuitBoolean extends BugChecker implements BinaryTreeMatcher {
 
   @Override
@@ -100,6 +99,3 @@ public class ShortCircuitBoolean extends BugChecker implements BinaryTreeMatcher
     }
   }
 }
-
-
-

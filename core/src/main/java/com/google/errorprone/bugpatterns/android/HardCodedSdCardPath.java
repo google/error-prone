@@ -39,13 +39,12 @@ import java.util.Map;
  * @author avenet@google.com (Arnaud J. Venet)
  */
 @BugPattern(
-  name = "HardCodedSdCardPath",
-  altNames = {"SdCardPath"},
-  summary = "Hardcoded reference to /sdcard",
-  category = ANDROID,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "HardCodedSdCardPath",
+    altNames = {"SdCardPath"},
+    summary = "Hardcoded reference to /sdcard",
+    category = ANDROID,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class HardCodedSdCardPath extends BugChecker implements LiteralTreeMatcher {
   // The proper ways of retrieving the "/sdcard" and "/data/data" directories.
   static final String SDCARD = "Environment.getExternalStorageDirectory().getPath()";

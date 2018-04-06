@@ -35,15 +35,14 @@ import java.util.regex.Pattern;
 
 /** Check for non-whitelisted access to private_do_not_access_or_else proto fields. */
 @BugPattern(
-  name = "PrivateSecurityContractProtoAccess",
-  summary =
-      "Access to a private protocol buffer field is forbidden. This protocol buffer carries "
-          + "a security contract, and can only be created using an approved library. Direct access "
-          + "to the fields is forbidden.",
-  category = ONE_OFF,
-  severity = ERROR,
-  linkType = NONE
-)
+    name = "PrivateSecurityContractProtoAccess",
+    summary =
+        "Access to a private protocol buffer field is forbidden. This protocol buffer carries"
+            + " a security contract, and can only be created using an approved library."
+            + " Direct access to the fields is forbidden.",
+    category = ONE_OFF,
+    severity = ERROR,
+    linkType = NONE)
 public class PrivateSecurityContractProtoAccess extends BugChecker
     implements MethodInvocationTreeMatcher {
 

@@ -37,15 +37,14 @@ import javax.lang.model.element.Modifier;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "RequiredModifiers",
-  summary =
-      "This annotation is missing required modifiers as specified by its "
-          + "@RequiredModifiers annotation",
-  linkType = NONE,
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR
-)
+    name = "RequiredModifiers",
+    summary =
+        "This annotation is missing required modifiers as specified by its "
+            + "@RequiredModifiers annotation",
+    linkType = NONE,
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.LIKELY_ERROR)
 public class RequiredModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE =

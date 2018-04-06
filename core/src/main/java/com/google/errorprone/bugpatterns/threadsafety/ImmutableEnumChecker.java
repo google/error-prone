@@ -44,13 +44,12 @@ import java.util.stream.Stream;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ImmutableEnumChecker",
-  altNames = "Immutable",
-  category = JDK,
-  summary = "Enums should always be immutable",
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ImmutableEnumChecker",
+    altNames = "Immutable",
+    category = JDK,
+    summary = "Enums should always be immutable",
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher {
 
   public static final String ANNOTATED_ENUM_MESSAGE =

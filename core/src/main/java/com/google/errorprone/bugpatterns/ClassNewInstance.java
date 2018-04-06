@@ -59,15 +59,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ClassNewInstance",
-  category = JDK,
-  summary =
-      "Class.newInstance() bypasses exception checking; prefer"
-          + " getDeclaredConstructor().newInstance()",
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ClassNewInstance",
+    category = JDK,
+    summary =
+        "Class.newInstance() bypasses exception checking; prefer"
+            + " getDeclaredConstructor().newInstance()",
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ClassNewInstance extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> NEW_INSTANCE =

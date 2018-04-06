@@ -53,15 +53,14 @@ import java.util.Set;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
-  name = "QualifierWithTypeUse",
-  summary =
-      "Injection frameworks currently don't understand Qualifiers in TYPE_PARAMETER or"
-          + " TYPE_USE contexts.",
-  category = INJECT,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "QualifierWithTypeUse",
+    summary =
+        "Injection frameworks currently don't understand Qualifiers in TYPE_PARAMETER or"
+            + " TYPE_USE contexts.",
+    category = INJECT,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher {
 
   private static final MultiMatcher<ClassTree, AnnotationTree> HAS_TARGET_ANNOTATION =

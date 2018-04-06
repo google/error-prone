@@ -43,12 +43,11 @@ import javax.lang.model.element.Modifier;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 // TODO(cushon): this should subsume ImmutableModification and LocalizableWrongToString
 @BugPattern(
-  name = "DoNotCall",
-  category = JDK,
-  summary = "This method should not be called.",
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "DoNotCall",
+    category = JDK,
+    summary = "This method should not be called.",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class DoNotCallChecker extends BugChecker
     implements MethodTreeMatcher, MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
   @Override
@@ -123,5 +122,4 @@ public class DoNotCallChecker extends BugChecker
     }
     return buildDescription(tree).setMessage(message.toString()).build();
   }
-
 }

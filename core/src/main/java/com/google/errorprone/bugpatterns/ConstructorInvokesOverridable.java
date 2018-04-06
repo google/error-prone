@@ -35,11 +35,10 @@ import javax.lang.model.element.Modifier;
  * initializers and variables).
  */
 @BugPattern(
-  name = "ConstructorInvokesOverridable",
-  summary = "Constructors should not invoke overridable methods.",
-  category = JDK,
-  severity = WARNING
-)
+    name = "ConstructorInvokesOverridable",
+    summary = "Constructors should not invoke overridable methods.",
+    category = JDK,
+    severity = WARNING)
 public class ConstructorInvokesOverridable extends ConstructorLeakChecker {
 
   @Override

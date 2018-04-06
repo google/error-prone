@@ -40,17 +40,17 @@ import javax.lang.model.element.Name;
 
 /** Enforces type parameters match the google style guide. */
 @BugPattern(
-  name = "TypeParameterNaming",
-  summary =
-      "Type parameters must be a single letter with an optional numeric suffix,"
-          + " or an UpperCamelCase name followed by the letter 'T'.",
-  category = JDK,
-  severity = SUGGESTION,
-  tags = StandardTags.STYLE,
-  linkType = LinkType.CUSTOM,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
-  link = "https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names"
-)
+    name = "TypeParameterNaming",
+    summary =
+        "Type parameters must be a single letter with an optional numeric suffix,"
+            + " or an UpperCamelCase name followed by the letter 'T'.",
+    category = JDK,
+    severity = SUGGESTION,
+    tags = StandardTags.STYLE,
+    linkType = LinkType.CUSTOM,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
+    link = "https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names"
+    )
 public class TypeParameterNaming extends BugChecker implements TypeParameterTreeMatcher {
 
   private static final Pattern SINGLE_PLUS_MAYBE_DIGIT = Pattern.compile("[A-Z]\\d?");

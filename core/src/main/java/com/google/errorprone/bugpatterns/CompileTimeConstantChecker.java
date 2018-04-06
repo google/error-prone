@@ -58,16 +58,16 @@ import java.util.Iterator;
  * @see CompileTimeConstantExpressionMatcher
  */
 @BugPattern(
-  name = "CompileTimeConstant",
-  summary =
-      "Non-compile-time constant expression passed to parameter with "
-          + "@CompileTimeConstant type annotation.",
-  linkType = NONE,
-  category = GUAVA,
-  severity = ERROR,
-  disableable = false,
-  suppressionAnnotations = {}
-)
+    name = "CompileTimeConstant",
+    summary =
+        "Non-compile-time constant expression passed to parameter with "
+            + "@CompileTimeConstant type annotation.",
+    linkType = NONE,
+    category = GUAVA,
+    severity = ERROR,
+    disableable = false,
+    suppressionAnnotations = {}
+    )
 public class CompileTimeConstantChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

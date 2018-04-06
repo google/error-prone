@@ -57,13 +57,12 @@ import javax.lang.model.element.Modifier;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 // TODO(cushon): allow @LazyInit on fields as a suppression mechanism?
 @BugPattern(
-  name = "DoubleCheckedLocking",
-  summary = "Double-checked locking on non-volatile fields is unsafe",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "DoubleCheckedLocking",
+    summary = "Double-checked locking on non-volatile fields is unsafe",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   @Override
   public Description matchIf(IfTree outerIf, VisitorState state) {

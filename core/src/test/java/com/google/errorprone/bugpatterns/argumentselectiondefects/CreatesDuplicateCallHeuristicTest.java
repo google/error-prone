@@ -45,11 +45,10 @@ public class CreatesDuplicateCallHeuristicTest {
 
   /** A {@link BugChecker} which runs the CreatesDuplicateCallHeuristic and prints the result */
   @BugPattern(
-    name = "CreatesDuplicateCallHeuristicChecker",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Runs CreateDuplicateCallHeursitic and prints the result"
-  )
+      name = "CreatesDuplicateCallHeuristicChecker",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Runs CreateDuplicateCallHeursitic and prints the result")
   public static class CreatesDuplicateCallHeuristicChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
 

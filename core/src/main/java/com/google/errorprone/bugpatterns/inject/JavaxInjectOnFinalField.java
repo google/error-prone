@@ -33,12 +33,11 @@ import com.sun.source.tree.AnnotationTree;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "JavaxInjectOnFinalField",
-  summary = "@javax.inject.Inject cannot be put on a final field.",
-  category = INJECT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "JavaxInjectOnFinalField",
+    summary = "@javax.inject.Inject cannot be put on a final field.",
+    category = INJECT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JavaxInjectOnFinalField extends BugChecker implements AnnotationTreeMatcher {
 
   @Override

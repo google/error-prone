@@ -36,16 +36,15 @@ import com.sun.source.tree.TryTree;
 
 /** @author pvisontay@google.com */
 @BugPattern(
-  name = "BinderIdentityRestoredDangerously",
-  tags = StandardTags.FRAGILE_CODE,
-  summary =
-      "A call to Binder.clearCallingIdentity() should be followed by "
-          + "Binder.restoreCallingIdentity() in a finally block. Otherwise the wrong Binder "
-          + "identity may be used by subsequent code.",
-  severity = SeverityLevel.WARNING,
-  category = Category.ANDROID,
-  providesFix = ProvidesFix.NO_FIX
-)
+    name = "BinderIdentityRestoredDangerously",
+    tags = StandardTags.FRAGILE_CODE,
+    summary =
+        "A call to Binder.clearCallingIdentity() should be followed by "
+            + "Binder.restoreCallingIdentity() in a finally block. Otherwise the wrong Binder "
+            + "identity may be used by subsequent code.",
+    severity = SeverityLevel.WARNING,
+    category = Category.ANDROID,
+    providesFix = ProvidesFix.NO_FIX)
 public class BinderIdentityRestoredDangerously extends BugChecker
     implements MethodInvocationTreeMatcher {
 

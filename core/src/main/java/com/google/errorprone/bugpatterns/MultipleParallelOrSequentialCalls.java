@@ -34,12 +34,12 @@ import com.sun.source.util.TreePath;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
-  name = "MultipleParallelOrSequentialCalls",
-  summary = "Multiple calls to either parallel or sequential are unnecessary and cause confusion.",
-  category = JDK,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "MultipleParallelOrSequentialCalls",
+    summary =
+        "Multiple calls to either parallel or sequential are unnecessary and cause confusion.",
+    category = JDK,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MultipleParallelOrSequentialCalls extends BugChecker
     implements MethodInvocationTreeMatcher {
 

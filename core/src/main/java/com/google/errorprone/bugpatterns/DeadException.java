@@ -50,13 +50,12 @@ import com.sun.source.tree.Tree;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 @BugPattern(
-  name = "DeadException",
-  altNames = "ThrowableInstanceNeverThrown",
-  summary = "Exception created but not thrown",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "DeadException",
+    altNames = "ThrowableInstanceNeverThrown",
+    summary = "Exception created but not thrown",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
   public static final Matcher<Tree> MATCHER =

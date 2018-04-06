@@ -41,11 +41,10 @@ public class EnclosedByReverseHeuristicTest {
 
   /** A {@link BugChecker} which runs the EnclosedByReverseHeuristic and prints the result */
   @BugPattern(
-    name = "EnclosedByReverseHeuristic",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Run the EnclosedByReverseHeuristic and print result"
-  )
+      name = "EnclosedByReverseHeuristic",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Run the EnclosedByReverseHeuristic and print result")
   public static class EnclosedByReverseHeuristicChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
 

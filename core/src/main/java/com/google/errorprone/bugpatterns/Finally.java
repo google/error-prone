@@ -56,16 +56,15 @@ import com.sun.tools.javac.util.Name;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-  name = "Finally",
-  altNames = {"finally", "ThrowFromFinallyBlock"},
-  summary =
-      "If you return or throw from a finally, then values returned or thrown from the"
-          + " try-catch block will be ignored. Consider using try-with-resources instead.",
-  category = JDK,
-  severity = WARNING,
-  generateExamplesFromTestCases = false,
-  tags = StandardTags.FRAGILE_CODE
-)
+    name = "Finally",
+    altNames = {"finally", "ThrowFromFinallyBlock"},
+    summary =
+        "If you return or throw from a finally, then values returned or thrown from the"
+            + " try-catch block will be ignored. Consider using try-with-resources instead.",
+    category = JDK,
+    severity = WARNING,
+    generateExamplesFromTestCases = false,
+    tags = StandardTags.FRAGILE_CODE)
 public class Finally extends BugChecker
     implements ContinueTreeMatcher, ThrowTreeMatcher, BreakTreeMatcher, ReturnTreeMatcher {
 

@@ -31,12 +31,11 @@ import com.sun.source.tree.ThrowTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ThrowNull",
-  category = JDK,
-  summary = "Throwing 'null' always results in a NullPointerException being thrown.",
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ThrowNull",
+    category = JDK,
+    summary = "Throwing 'null' always results in a NullPointerException being thrown.",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ThrowNull extends BugChecker implements ThrowTreeMatcher {
   @Override
   public Description matchThrow(ThrowTree tree, VisitorState state) {

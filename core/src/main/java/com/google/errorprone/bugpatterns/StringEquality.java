@@ -26,11 +26,10 @@ import com.sun.source.tree.ExpressionTree;
 
 /** @author ptoomey@google.com (Patrick Toomey) */
 @BugPattern(
-  name = "StringEquality",
-  summary = "String comparison using reference equality instead of value equality",
-  category = JDK,
-  severity = WARNING
-)
+    name = "StringEquality",
+    summary = "String comparison using reference equality instead of value equality",
+    category = JDK,
+    severity = WARNING)
 public class StringEquality extends AbstractReferenceEquality {
 
   @Override

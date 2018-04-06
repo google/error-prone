@@ -56,12 +56,11 @@ import javax.lang.model.element.ElementKind;
 
 /** @author Liam Miller-Cushon (cushon@google.com) */
 @BugPattern(
-  name = "MockitoCast",
-  category = MOCKITO,
-  summary = "A bug in Mockito will cause this test to fail at runtime with a ClassCastException",
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "MockitoCast",
+    category = MOCKITO,
+    summary = "A bug in Mockito will cause this test to fail at runtime with a ClassCastException",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MockitoCast extends BugChecker implements CompilationUnitTreeMatcher {
 
   private static final String MOCKITO_CLASS = "org.mockito.Mockito";

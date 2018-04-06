@@ -39,12 +39,11 @@ import javax.annotation.Nullable;
 
 /** @author kmb@google.com (Kevin Bierhoff) */
 @BugPattern(
-  name = "ReturnMissingNullable",
-  summary = "Methods that can return null should be annotated @Nullable",
-  category = JDK,
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ReturnMissingNullable",
+    summary = "Methods that can return null should be annotated @Nullable",
+    category = JDK,
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatcher {
 
   @Override

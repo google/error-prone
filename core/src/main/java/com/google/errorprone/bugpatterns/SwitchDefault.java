@@ -37,11 +37,10 @@ import java.util.Optional;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "SwitchDefault",
-  summary = "The default case of a switch should appear at the end of the last statement group",
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "SwitchDefault",
+    summary = "The default case of a switch should appear at the end of the last statement group",
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
 
   @Override

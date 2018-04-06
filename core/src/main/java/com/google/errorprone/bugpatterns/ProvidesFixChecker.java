@@ -45,11 +45,10 @@ import com.sun.source.util.TreeScanner;
 import java.util.regex.Pattern;
 
 @BugPattern(
-  name = "ProvidesFix",
-  summary = "BugChecker has incorrect ProvidesFix tag, please update",
-  severity = WARNING,
-  providesFix = REQUIRES_HUMAN_ATTENTION
-)
+    name = "ProvidesFix",
+    summary = "BugChecker has incorrect ProvidesFix tag, please update",
+    severity = WARNING,
+    providesFix = REQUIRES_HUMAN_ATTENTION)
 public class ProvidesFixChecker extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ClassTree> IS_BUGCHECKER =

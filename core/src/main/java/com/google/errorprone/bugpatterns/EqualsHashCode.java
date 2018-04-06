@@ -51,12 +51,11 @@ import javax.lang.model.element.ElementKind;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-  name = "EqualsHashCode",
-  summary = "Classes that override equals should also override hashCode.",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
-)
+    name = "EqualsHashCode",
+    summary = "Classes that override equals should also override hashCode.",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE)
 public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<MethodTree> EQUALS_MATCHER =

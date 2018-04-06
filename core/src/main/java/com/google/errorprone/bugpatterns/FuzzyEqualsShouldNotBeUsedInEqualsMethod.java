@@ -40,11 +40,10 @@ import com.sun.source.tree.MethodTree;
 
 /** @author sulku@google.com (Marsela Sulku) */
 @BugPattern(
-  name = "FuzzyEqualsShouldNotBeUsedInEqualsMethod",
-  summary = "DoubleMath.fuzzyEquals should never be used in an Object.equals() method",
-  category = GUAVA,
-  severity = ERROR
-)
+    name = "FuzzyEqualsShouldNotBeUsedInEqualsMethod",
+    summary = "DoubleMath.fuzzyEquals should never be used in an Object.equals() method",
+    category = GUAVA,
+    severity = ERROR)
 public class FuzzyEqualsShouldNotBeUsedInEqualsMethod extends BugChecker
     implements MethodInvocationTreeMatcher {
 

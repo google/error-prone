@@ -46,13 +46,12 @@ import java.util.Objects;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
-  name = "EqualsReference",
-  summary =
-      "== must be used in equals method to check equality to itself"
-          + " or an infinite loop will occur.",
-  category = JDK,
-  severity = ERROR
-)
+    name = "EqualsReference",
+    summary =
+        "== must be used in equals method to check equality to itself"
+            + " or an infinite loop will occur.",
+    category = JDK,
+    severity = ERROR)
 public class EqualsReference extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<MethodTree> EQUALS_MATCHER =

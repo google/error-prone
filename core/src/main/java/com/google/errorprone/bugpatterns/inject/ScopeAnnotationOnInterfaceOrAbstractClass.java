@@ -41,12 +41,11 @@ import com.sun.tools.javac.code.Flags;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
-  summary = "Scope annotation on an interface or abstact class is not allowed",
-  category = INJECT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
+    summary = "Scope annotation on an interface or abstact class is not allowed",
+    category = INJECT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     implements AnnotationTreeMatcher {
 

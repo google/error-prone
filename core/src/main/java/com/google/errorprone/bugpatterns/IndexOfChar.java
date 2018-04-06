@@ -39,14 +39,13 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "IndexOfChar",
-  category = JDK,
-  summary =
-      "The first argument to indexOf is a Unicode code point, and the second is the index to start"
-          + " the search from",
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "IndexOfChar",
+    category = JDK,
+    summary =
+        "The first argument to indexOf is a Unicode code point, and the second is the index to"
+            + " start the search from",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class IndexOfChar extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.instanceMethod()

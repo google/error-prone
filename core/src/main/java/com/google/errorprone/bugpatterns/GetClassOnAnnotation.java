@@ -33,12 +33,11 @@ import java.lang.annotation.Annotation;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "GetClassOnAnnotation",
-  category = JDK,
-  summary = "Calling getClass() on an annotation may return a proxy class",
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "GetClassOnAnnotation",
+    category = JDK,
+    summary = "Calling getClass() on an annotation may return a proxy class",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class GetClassOnAnnotation extends BugChecker
     implements BugChecker.MethodInvocationTreeMatcher {
 

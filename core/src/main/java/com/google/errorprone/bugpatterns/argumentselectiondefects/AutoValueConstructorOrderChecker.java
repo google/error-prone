@@ -41,12 +41,11 @@ import java.util.function.Function;
  * @author andrewrice@google.com (Andrew Rice)
  */
 @BugPattern(
-  name = "AutoValueConstructorOrderChecker",
-  summary = "Arguments to AutoValue constructor are in the wrong order",
-  category = GUAVA,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "AutoValueConstructorOrderChecker",
+    summary = "Arguments to AutoValue constructor are in the wrong order",
+    category = GUAVA,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AutoValueConstructorOrderChecker extends BugChecker implements NewClassTreeMatcher {
 
   private ArgumentChangeFinder argumentChangeFinder =
