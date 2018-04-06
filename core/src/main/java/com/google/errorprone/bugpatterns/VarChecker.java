@@ -45,12 +45,11 @@ import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "Var",
-  summary = "Non-constant variable missing @Var annotation",
-  category = JDK,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "Var",
+    summary = "Non-constant variable missing @Var annotation",
+    category = JDK,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class VarChecker extends BugChecker implements VariableTreeMatcher {
 
   private static final String UNNECESSARY_FINAL = "Unnecessary 'final' modifier.";

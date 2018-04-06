@@ -43,12 +43,11 @@ import com.sun.source.tree.NewClassTree;
  * resource variable initializer of a try-with-resources statement.
  */
 @BugPattern(
-  name = "MustBeClosedChecker",
-  summary = "The result of this method must be closed.",
-  category = JDK,
-  severity = ERROR,
-  generateExamplesFromTestCases = false
-)
+    name = "MustBeClosedChecker",
+    summary = "The result of this method must be closed.",
+    category = JDK,
+    severity = ERROR,
+    generateExamplesFromTestCases = false)
 public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     implements MethodTreeMatcher, MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

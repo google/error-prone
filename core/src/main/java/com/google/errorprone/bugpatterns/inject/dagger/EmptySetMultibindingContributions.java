@@ -66,14 +66,13 @@ import java.util.TreeSet;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
-  name = "EmptySetMultibindingContributions",
-  summary =
-      "@Multibinds is a more efficient and declarative mechanism for ensuring that a set"
-          + " multibinding is present in the graph.",
-  category = DAGGER,
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "EmptySetMultibindingContributions",
+    summary =
+        "@Multibinds is a more efficient and declarative mechanism for ensuring that a set"
+            + " multibinding is present in the graph.",
+    category = DAGGER,
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class EmptySetMultibindingContributions extends BugChecker
     implements MethodTreeMatcher {
   private static final Matcher<AnnotationTree> HAS_DAGGER_ONE_MODULE_ARGUMENT =

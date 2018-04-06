@@ -49,11 +49,10 @@ import com.sun.tools.javac.code.Symbol;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "LoopConditionChecker",
-  category = JDK,
-  summary = "Loop condition is never modified in loop body.",
-  severity = ERROR
-)
+    name = "LoopConditionChecker",
+    category = JDK,
+    summary = "Loop condition is never modified in loop body.",
+    severity = ERROR)
 public class LoopConditionChecker extends BugChecker
     implements ForLoopTreeMatcher, DoWhileLoopTreeMatcher, WhileLoopTreeMatcher {
 

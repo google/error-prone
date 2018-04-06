@@ -607,13 +607,12 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
    * annotation symbol to be on the classpath.
    */
   @BugPattern(
-    name = "HasDirectAnnotationWithSimpleNameChecker",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary =
-        "Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() "
-            + "does require the annotation symbol to be on the classpath"
-  )
+      name = "HasDirectAnnotationWithSimpleNameChecker",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary =
+          "Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() "
+              + "does require the annotation symbol to be on the classpath")
   public static class HasDirectAnnotationWithSimpleNameChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
     @Override
@@ -723,11 +722,10 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   /** A {@link BugChecker} that prints the result type of the first argument in method calls. */
   @BugPattern(
-    name = "PrintResultTypeOfFirstArgument",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Prints the type of the first argument in method calls"
-  )
+      name = "PrintResultTypeOfFirstArgument",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Prints the type of the first argument in method calls")
   public static class PrintResultTypeOfFirstArgument extends BugChecker
       implements MethodInvocationTreeMatcher {
     @Override
@@ -821,11 +819,10 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   /** A {@link BugChecker} that prints the target type of matched method invocations. */
   @BugPattern(
-    name = "TargetTypeChecker",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Prints the target type"
-  )
+      name = "TargetTypeChecker",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Prints the target type")
   public static class TargetTypeChecker extends BugChecker implements MethodInvocationTreeMatcher {
     private static final Matcher<ExpressionTree> METHOD_MATCHER =
         MethodMatchers.staticMethod().anyClass().withNameMatching(Pattern.compile("^detect.*"));

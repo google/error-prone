@@ -35,16 +35,16 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "MultipleTopLevelClasses",
-  altNames = {"TopLevel"},
-  summary = "Source files should not contain multiple top-level class declarations",
-  category = JDK,
-  severity = SUGGESTION,
-  documentSuppression = false,
-  linkType = CUSTOM,
-  tags = StandardTags.STYLE,
-  link = "https://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class"
-)
+    name = "MultipleTopLevelClasses",
+    altNames = {"TopLevel"},
+    summary = "Source files should not contain multiple top-level class declarations",
+    category = JDK,
+    severity = SUGGESTION,
+    documentSuppression = false,
+    linkType = CUSTOM,
+    tags = StandardTags.STYLE,
+    link = "https://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class"
+    )
 public class MultipleTopLevelClasses extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override

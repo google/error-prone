@@ -35,12 +35,11 @@ import javax.lang.model.type.TypeKind;
 
 /** @author lowasser@google.com (Louis Wasserman) */
 @BugPattern(
-  category = Category.JDK,
-  name = "StringBuilderInitWithChar",
-  severity = ERROR,
-  summary = "StringBuilder does not have a char constructor; this invokes the int constructor.",
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    category = Category.JDK,
+    name = "StringBuilderInitWithChar",
+    severity = ERROR,
+    summary = "StringBuilder does not have a char constructor; this invokes the int constructor.",
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class StringBuilderInitWithChar extends BugChecker implements NewClassTreeMatcher {
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {

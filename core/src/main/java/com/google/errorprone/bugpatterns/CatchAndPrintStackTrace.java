@@ -33,12 +33,11 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "CatchAndPrintStackTrace",
-  summary =
-      "Logging or rethrowing exceptions should usually be preferred to catching and calling"
-          + " printStackTrace",
-  severity = WARNING
-)
+    name = "CatchAndPrintStackTrace",
+    summary =
+        "Logging or rethrowing exceptions should usually be preferred to catching and calling"
+            + " printStackTrace",
+    severity = WARNING)
 public class CatchAndPrintStackTrace extends BugChecker implements CatchTreeMatcher {
 
   private static final Matcher<StatementTree> MATCHER =

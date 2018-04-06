@@ -36,12 +36,11 @@ import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "FallThrough",
-  altNames = "fallthrough",
-  category = JDK,
-  summary = "Switch case may fall through",
-  severity = WARNING
-)
+    name = "FallThrough",
+    altNames = "fallthrough",
+    category = JDK,
+    summary = "Switch case may fall through",
+    severity = WARNING)
 public class FallThrough extends BugChecker implements SwitchTreeMatcher {
 
   private static final Pattern FALL_THROUGH_PATTERN =

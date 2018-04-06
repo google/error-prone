@@ -54,11 +54,10 @@ import java.util.Deque;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "FunctionalInterfaceClash",
-  summary = "Overloads will be ambiguous when passing lambda arguments",
-  category = JDK,
-  severity = WARNING
-)
+    name = "FunctionalInterfaceClash",
+    summary = "Overloads will be ambiguous when passing lambda arguments",
+    category = JDK,
+    severity = WARNING)
 public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMatcher {
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {

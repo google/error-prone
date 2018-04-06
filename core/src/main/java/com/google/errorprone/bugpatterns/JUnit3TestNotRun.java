@@ -50,14 +50,13 @@ import javax.lang.model.element.Modifier;
 
 /** @author rburny@google.com (Radoslaw Burny) */
 @BugPattern(
-  name = "JUnit3TestNotRun",
-  summary =
-      "Test method will not be run; please correct method signature "
-          + "(Should be public, non-static, and method name should begin with \"test\").",
-  category = JUNIT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "JUnit3TestNotRun",
+    summary =
+        "Test method will not be run; please correct method signature "
+            + "(Should be public, non-static, and method name should begin with \"test\").",
+    category = JUNIT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
 
   /*

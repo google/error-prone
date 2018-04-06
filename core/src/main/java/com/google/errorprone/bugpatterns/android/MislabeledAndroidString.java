@@ -41,12 +41,11 @@ import javax.lang.model.element.ElementKind;
  * @author kmb@google.com (Kevin Bierhoff)
  */
 @BugPattern(
-  name = "MislabeledAndroidString",
-  summary = "Certain resources in `android.R.string` have names that do not match their content",
-  category = ANDROID,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "MislabeledAndroidString",
+    summary = "Certain resources in `android.R.string` have names that do not match their content",
+    category = ANDROID,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MislabeledAndroidString extends BugChecker implements MemberSelectTreeMatcher {
 
   private static final String R_STRING_CLASSNAME = "android.R.string";

@@ -37,14 +37,13 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author kmuhlrad@google.com (Katy Muhlrad)
  */
 @BugPattern(
-  name = "GetClassOnClass",
-  summary =
-      "Calling getClass() on an object of type Class returns the Class object for "
-          + "java.lang.Class; you probably meant to operate on the object directly",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "GetClassOnClass",
+    summary =
+        "Calling getClass() on an object of type Class returns the Class object for "
+            + "java.lang.Class; you probably meant to operate on the object directly",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class GetClassOnClass extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> getClassMethodMatcher =

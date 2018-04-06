@@ -37,11 +37,10 @@ import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "MissingCasesInEnumSwitch",
-  summary = "Switches on enum types should either handle all values, or have a default case.",
-  category = JDK,
-  severity = WARNING
-)
+    name = "MissingCasesInEnumSwitch",
+    summary = "Switches on enum types should either handle all values, or have a default case.",
+    category = JDK,
+    severity = WARNING)
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 
   public static final int MAX_CASES_TO_PRINT = 5;

@@ -54,12 +54,11 @@ import java.util.List;
  * pass an incompatible exception type.
  */
 @BugPattern(
-  name = "FuturesGetCheckedIllegalExceptionType",
-  summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
-  category = GUAVA,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "FuturesGetCheckedIllegalExceptionType",
+    summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
+    category = GUAVA,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
     implements MethodInvocationTreeMatcher {
   @Override

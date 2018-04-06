@@ -37,12 +37,11 @@ import java.util.List;
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 @BugPattern(
-  name = "SuppressWarningsDeprecated",
-  summary = "Suppressing \"deprecated\" is probably a typo for \"deprecation\"",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "SuppressWarningsDeprecated",
+    summary = "Suppressing \"deprecated\" is probably a typo for \"deprecation\"",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher {
 
   @SuppressWarnings({"varargs", "unchecked"})

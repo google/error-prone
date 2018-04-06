@@ -41,12 +41,11 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-  name = "ArrayEquals",
-  summary = "Reference equality used to compare arrays",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ArrayEquals",
+    summary = "Reference equality used to compare arrays",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
   /** Matches when the equals instance method is used to compare two arrays. */
   private static final Matcher<MethodInvocationTree> instanceEqualsMatcher =

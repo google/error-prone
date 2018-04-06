@@ -52,12 +52,11 @@ import javax.lang.model.type.TypeKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ConstantOverflow",
-  summary = "Compile-time constant expression overflows",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ConstantOverflow",
+    summary = "Compile-time constant expression overflows",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
 
   @Override

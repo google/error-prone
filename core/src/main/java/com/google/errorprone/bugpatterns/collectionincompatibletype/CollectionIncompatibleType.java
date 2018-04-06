@@ -62,12 +62,11 @@ import javax.annotation.Nullable;
  * </ul>
  */
 @BugPattern(
-  name = "CollectionIncompatibleType",
-  summary = "Incompatible type as argument to Object-accepting Java collections method",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "CollectionIncompatibleType",
+    summary = "Incompatible type as argument to Object-accepting Java collections method",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
   public enum FixType {

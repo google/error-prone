@@ -47,12 +47,11 @@ import com.sun.source.util.SimpleTreeVisitor;
 
 /** @author Ron Shapiro */
 @BugPattern(
-  name = "AndroidInjectionBeforeSuper",
-  summary =
-      "AndroidInjection.inject() should always be invoked before calling super.lifecycleMethod()",
-  category = DAGGER,
-  severity = ERROR
-)
+    name = "AndroidInjectionBeforeSuper",
+    summary =
+        "AndroidInjection.inject() should always be invoked before calling super.lifecycleMethod()",
+    category = DAGGER,
+    severity = ERROR)
 public final class AndroidInjectionBeforeSuper extends BugChecker implements MethodTreeMatcher {
 
   private enum MatchType {

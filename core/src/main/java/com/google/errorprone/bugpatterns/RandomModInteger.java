@@ -34,12 +34,11 @@ import com.sun.source.tree.Tree.Kind;
 
 /** @author Louis Wasserman */
 @BugPattern(
-  name = "RandomModInteger",
-  summary = "Use Random.nextInt(int).  Random.nextInt() % n can have negative results",
-  severity = SeverityLevel.ERROR,
-  category = Category.JDK,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "RandomModInteger",
+    summary = "Use Random.nextInt(int).  Random.nextInt() % n can have negative results",
+    severity = SeverityLevel.ERROR,
+    category = Category.JDK,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class RandomModInteger extends BugChecker implements BinaryTreeMatcher {
 
   private static final Matcher<ExpressionTree> RANDOM_NEXT_INT =

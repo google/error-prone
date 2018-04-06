@@ -34,13 +34,12 @@ import com.sun.tools.javac.code.Symbol;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "NullableConstructor",
-  summary = "Constructors should not be annotated with @Nullable since they cannot return null",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "NullableConstructor",
+    summary = "Constructors should not be annotated with @Nullable since they cannot return null",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class NullableConstructor extends BugChecker implements MethodTreeMatcher {
 
   @Override

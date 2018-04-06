@@ -62,14 +62,13 @@ import java.util.Set;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(
-  name = "PreconditionsCheckNotNullPrimitive",
-  summary =
-      "First argument to `Preconditions.checkNotNull()` is a primitive rather "
-          + "than an object reference",
-  category = GUAVA,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "PreconditionsCheckNotNullPrimitive",
+    summary =
+        "First argument to `Preconditions.checkNotNull()` is a primitive rather "
+            + "than an object reference",
+    category = GUAVA,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class PreconditionsCheckNotNullPrimitive extends BugChecker
     implements MethodInvocationTreeMatcher {
 

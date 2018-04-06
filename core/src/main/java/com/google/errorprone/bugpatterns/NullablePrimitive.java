@@ -41,13 +41,12 @@ import java.util.List;
 
 /** @author sebastian.h.monte@gmail.com (Sebastian Monte) */
 @BugPattern(
-  name = "NullablePrimitive",
-  summary = "@Nullable should not be used for primitive types since they cannot be null",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "NullablePrimitive",
+    summary = "@Nullable should not be used for primitive types since they cannot be null",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class NullablePrimitive extends BugChecker
     implements AnnotatedTypeTreeMatcher, VariableTreeMatcher, MethodTreeMatcher {
 

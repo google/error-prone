@@ -118,13 +118,12 @@ import java.util.Set;
  * </ol>
  */
 @BugPattern(
-  name = "NoAllocation",
-  summary =
-      "@NoAllocation was specified on this method, but something was found that would"
-          + " trigger an allocation",
-  category = JDK,
-  severity = ERROR
-)
+    name = "NoAllocation",
+    summary =
+        "@NoAllocation was specified on this method, but something was found that would"
+            + " trigger an allocation",
+    category = JDK,
+    severity = ERROR)
 public class NoAllocationChecker extends BugChecker
     implements AssignmentTreeMatcher,
         BinaryTreeMatcher,

@@ -47,14 +47,13 @@ import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "UnnecessaryDefaultInEnumSwitch",
-  summary =
-      "Switch handles all enum values; an explicit default case is unnecessary and defeats error"
-          + " checking for non-exhaustive switches.",
-  category = JDK,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "UnnecessaryDefaultInEnumSwitch",
+    summary =
+        "Switch handles all enum values; an explicit default case is unnecessary and defeats error"
+            + " checking for non-exhaustive switches.",
+    category = JDK,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 
   @Override

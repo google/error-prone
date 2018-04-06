@@ -42,13 +42,12 @@ import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "MethodCanBeStatic",
-  altNames = "static-method",
-  summary = "A private method that does not reference the enclosing instance can be static",
-  category = JDK,
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "MethodCanBeStatic",
+    altNames = "static-method",
+    summary = "A private method that does not reference the enclosing instance can be static",
+    category = JDK,
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MethodCanBeStatic extends BugChecker implements MethodTreeMatcher {
 
   @Override

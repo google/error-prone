@@ -37,16 +37,16 @@ import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ConstantField",
-  category = JDK,
-  summary = "Field name is CONSTANT_CASE, but field is not static and final",
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-  // TODO(glorioso): This feels like a Style change, but we suggest adding static and final
-  // to a field which may not compile if we do. We'll want to be more aggressive about not making
-  // breaking changes before we consider this a Style change.
-  // tags = StandardTags.STYLE
-)
+    name = "ConstantField",
+    category = JDK,
+    summary = "Field name is CONSTANT_CASE, but field is not static and final",
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
+    // TODO(glorioso): This feels like a Style change, but we suggest adding static and final
+    // to a field which may not compile if we do. We'll want to be more aggressive about not making
+    // breaking changes before we consider this a Style change.
+    // tags = StandardTags.STYLE
+    )
 public class ConstantField extends BugChecker implements VariableTreeMatcher {
 
   @Override

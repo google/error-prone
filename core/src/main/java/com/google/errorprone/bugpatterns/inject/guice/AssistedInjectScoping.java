@@ -54,12 +54,11 @@ import com.sun.source.tree.MethodTree;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(
-  name = "GuiceAssistedInjectScoping",
-  summary = "Scope annotation on implementation class of AssistedInject factory is not allowed",
-  category = GUICE,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "GuiceAssistedInjectScoping",
+    summary = "Scope annotation on implementation class of AssistedInject factory is not allowed",
+    category = GUICE,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AssistedInjectScoping extends BugChecker implements ClassTreeMatcher {
 
   /** Matches classes that have an annotation that itself is annotated with @ScopeAnnotation. */

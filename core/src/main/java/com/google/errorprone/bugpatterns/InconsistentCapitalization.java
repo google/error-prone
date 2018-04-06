@@ -44,15 +44,14 @@ import javax.lang.model.element.ElementKind;
 
 /** Checker for variables under the same scope that only differ in capitalization. */
 @BugPattern(
-  name = "InconsistentCapitalization",
-  summary =
-      "It is confusing to have a field and a parameter under the same scope that differ only in "
-          + "capitalization.",
-  category = JDK,
-  severity = WARNING,
-  generateExamplesFromTestCases = false,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "InconsistentCapitalization",
+    summary =
+        "It is confusing to have a field and a parameter under the same scope that differ only in "
+            + "capitalization.",
+    category = JDK,
+    severity = WARNING,
+    generateExamplesFromTestCases = false,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InconsistentCapitalization extends BugChecker implements ClassTreeMatcher {
 
   @Override

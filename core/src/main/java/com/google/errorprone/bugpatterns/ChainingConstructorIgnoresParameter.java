@@ -67,15 +67,14 @@ import java.util.Map;
  * @author cpovirk@google.com (Chris Povirk)
  */
 @BugPattern(
-  name = "ChainingConstructorIgnoresParameter",
-  category = JDK,
-  severity = ERROR,
-  summary =
-      "The called constructor accepts a parameter with the same name and type as one of "
-          + "its caller's parameters, but its caller doesn't pass that parameter to it.  It's "
-          + "likely that it was intended to.",
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ChainingConstructorIgnoresParameter",
+    category = JDK,
+    severity = ERROR,
+    summary =
+        "The called constructor accepts a parameter with the same name and type as one of "
+            + "its caller's parameters, but its caller doesn't pass that parameter to it.  It's "
+            + "likely that it was intended to.",
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class ChainingConstructorIgnoresParameter extends BugChecker
     implements CompilationUnitTreeMatcher, MethodInvocationTreeMatcher, MethodTreeMatcher {
   private final Map<MethodSymbol, List<VariableTree>> paramTypesForMethod = newHashMap();

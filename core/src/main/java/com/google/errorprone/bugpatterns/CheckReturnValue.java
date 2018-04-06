@@ -41,12 +41,11 @@ import javax.lang.model.element.ElementKind;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-  name = "CheckReturnValue",
-  altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
-  summary = "Ignored return value of method that is annotated with @CheckReturnValue",
-  category = JDK,
-  severity = ERROR
-)
+    name = "CheckReturnValue",
+    altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
+    summary = "Ignored return value of method that is annotated with @CheckReturnValue",
+    category = JDK,
+    severity = ERROR)
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
 

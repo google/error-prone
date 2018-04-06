@@ -46,13 +46,12 @@ import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "UnsynchronizedOverridesSynchronized",
-  summary = "Unsynchronized method overrides a synchronized method.",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = REQUIRES_HUMAN_ATTENTION
-)
+    name = "UnsynchronizedOverridesSynchronized",
+    summary = "Unsynchronized method overrides a synchronized method.",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = REQUIRES_HUMAN_ATTENTION)
 public class UnsynchronizedOverridesSynchronized extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {

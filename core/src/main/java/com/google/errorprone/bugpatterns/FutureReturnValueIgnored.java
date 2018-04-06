@@ -69,14 +69,13 @@ import javax.lang.model.type.TypeKind;
 
 /** See BugPattern annotation. */
 @BugPattern(
-  name = "FutureReturnValueIgnored",
-  summary =
-      "Return value of methods returning Future must be checked. Ignoring returned Futures "
-          + "suppresses exceptions thrown from the code that completes the Future.",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
-)
+    name = "FutureReturnValueIgnored",
+    summary =
+        "Return value of methods returning Future must be checked. Ignoring returned Futures "
+            + "suppresses exceptions thrown from the code that completes the Future.",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE)
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     implements ReturnTreeMatcher {
 

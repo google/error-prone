@@ -43,13 +43,12 @@ import javax.lang.model.type.TypeKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "IntLongMath",
-  summary = "Expression of type int may overflow before being assigned to a long",
-  severity = WARNING,
-  category = JDK,
-  tags = FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "IntLongMath",
+    summary = "Expression of type int may overflow before being assigned to a long",
+    severity = WARNING,
+    category = JDK,
+    tags = FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class IntLongMath extends BugChecker
     implements VariableTreeMatcher, AssignmentTreeMatcher, ReturnTreeMatcher {
 

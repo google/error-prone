@@ -35,12 +35,11 @@ import com.sun.tools.javac.util.Name;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ReferenceEquality",
-  summary = "Comparison using reference equality instead of value equality",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
-)
+    name = "ReferenceEquality",
+    summary = "Comparison using reference equality instead of value equality",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE)
 public class ReferenceEquality extends AbstractReferenceEquality {
 
   @Override

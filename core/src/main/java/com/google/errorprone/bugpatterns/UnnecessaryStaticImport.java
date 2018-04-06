@@ -31,14 +31,13 @@ import com.sun.source.tree.ImportTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "UnnecessaryStaticImport",
-  summary = "Using static imports for types is unnecessary",
-  category = JDK,
-  severity = SUGGESTION,
-  documentSuppression = false,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "UnnecessaryStaticImport",
+    summary = "Using static imports for types is unnecessary",
+    category = JDK,
+    severity = SUGGESTION,
+    documentSuppression = false,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UnnecessaryStaticImport extends BugChecker implements ImportTreeMatcher {
 
   @Override

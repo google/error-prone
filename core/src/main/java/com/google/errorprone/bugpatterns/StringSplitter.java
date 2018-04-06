@@ -53,11 +53,10 @@ import java.util.Optional;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "StringSplitter",
-  summary = "String.split(String) has surprising behavior",
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "StringSplitter",
+    summary = "String.split(String) has surprising behavior",
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class StringSplitter extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =

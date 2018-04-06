@@ -59,16 +59,15 @@ import com.sun.tools.javac.code.Types;
 
 /** @author epmjohnston@google.com */
 @BugPattern(
-  name = "WakelockReleasedDangerously",
-  tags = StandardTags.FRAGILE_CODE,
-  summary =
-      "A wakelock acquired with a timeout may be released by the system before calling `release`, "
-          + "even after checking `isHeld()`. If so, it will throw a RuntimeException. Please wrap "
-          + "in a try/catch block.",
-  severity = SeverityLevel.WARNING,
-  category = Category.ANDROID,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "WakelockReleasedDangerously",
+    tags = StandardTags.FRAGILE_CODE,
+    summary =
+        "A wakelock acquired with a timeout may be released by the system before calling"
+            + " `release`, even after checking `isHeld()`. If so, it will throw a RuntimeException."
+            + " Please wrap in a try/catch block.",
+    severity = SeverityLevel.WARNING,
+    category = Category.ANDROID,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class WakelockReleasedDangerously extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String WAKELOCK_CLASS_NAME = "android.os.PowerManager.WakeLock";

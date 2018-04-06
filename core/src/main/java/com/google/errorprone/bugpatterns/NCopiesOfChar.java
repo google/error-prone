@@ -37,13 +37,12 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "NCopiesOfChar",
-  category = JDK,
-  summary =
-      "The first argument to nCopies is the number of copies, and the second is the item to copy",
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "NCopiesOfChar",
+    category = JDK,
+    summary =
+        "The first argument to nCopies is the number of copies, and the second is the item to copy",
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class NCopiesOfChar extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =
       staticMethod().onClass("java.util.Collections").named("nCopies");

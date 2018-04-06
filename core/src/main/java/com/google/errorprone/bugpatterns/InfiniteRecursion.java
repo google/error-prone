@@ -40,11 +40,10 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "InfiniteRecursion",
-  category = JDK,
-  summary = "This method always recurses, and will cause a StackOverflowError",
-  severity = ERROR
-)
+    name = "InfiniteRecursion",
+    category = JDK,
+    summary = "This method always recurses, and will cause a StackOverflowError",
+    severity = ERROR)
 public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

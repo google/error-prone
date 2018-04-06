@@ -45,14 +45,13 @@ import com.sun.source.tree.MethodTree;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
-  name = "InjectOnConstructorOfAbstractClass",
-  summary =
-      "Constructors on abstract classes are never directly @Injected, only the constructors"
-          + " of their subclasses can be @Inject'ed.",
-  category = INJECT,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "InjectOnConstructorOfAbstractClass",
+    summary =
+        "Constructors on abstract classes are never directly @Injected, only the constructors"
+            + " of their subclasses can be @Inject'ed.",
+    category = INJECT,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InjectOnConstructorOfAbstractClass extends BugChecker implements MethodTreeMatcher {
 
   private static final MultiMatcher<MethodTree, AnnotationTree> INJECT_FINDER =

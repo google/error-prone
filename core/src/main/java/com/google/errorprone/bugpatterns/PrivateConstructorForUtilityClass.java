@@ -42,14 +42,13 @@ import com.sun.source.util.TreePath;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
-  name = "PrivateConstructorForUtilityClass",
-  summary =
-      "Utility classes (only static members) are not designed to be instantiated and should"
-          + " be made noninstantiable with a default constructor.",
-  category = JDK,
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "PrivateConstructorForUtilityClass",
+    summary =
+        "Utility classes (only static members) are not designed to be instantiated and should"
+            + " be made noninstantiable with a default constructor.",
+    category = JDK,
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class PrivateConstructorForUtilityClass extends BugChecker
     implements ClassTreeMatcher {
 

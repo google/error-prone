@@ -43,12 +43,11 @@ import java.util.Map;
 import javax.lang.model.type.TypeKind;
 
 @BugPattern(
-  name = "ArraysAsListPrimitiveArray",
-  summary = "Arrays.asList does not autobox primitive arrays, as one might expect.",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ArraysAsListPrimitiveArray",
+    summary = "Arrays.asList does not autobox primitive arrays, as one might expect.",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<MethodInvocationTree> ARRAYS_AS_LIST_SINGLE_ARRAY =

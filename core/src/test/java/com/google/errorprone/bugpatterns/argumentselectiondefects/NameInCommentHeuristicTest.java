@@ -45,11 +45,10 @@ public class NameInCommentHeuristicTest {
 
   /** A {@link BugChecker} which runs the NameInCommentHeuristic and prints the result */
   @BugPattern(
-    name = "NameInCommentHeuristicChecker",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Runs NameInCommentHeuristic and prints the result"
-  )
+      name = "NameInCommentHeuristicChecker",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Runs NameInCommentHeuristic and prints the result")
   public static class NameInCommentHeuristicChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
 

@@ -37,12 +37,11 @@ import java.util.Set;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 @BugPattern(
-  name = "ReturnValueIgnored",
-  altNames = {"ResultOfMethodCallIgnored", "CheckReturnValue"},
-  summary = "Return value of this method must be used",
-  category = JDK,
-  severity = ERROR
-)
+    name = "ReturnValueIgnored",
+    altNames = {"ResultOfMethodCallIgnored", "CheckReturnValue"},
+    summary = "Return value of this method must be used",
+    category = JDK,
+    severity = ERROR)
 public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   /**
    * A set of types which this checker should examine method calls on.

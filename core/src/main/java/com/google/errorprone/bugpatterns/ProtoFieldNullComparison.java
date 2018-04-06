@@ -42,12 +42,11 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 @BugPattern(
-  name = "ProtoFieldNullComparison",
-  summary = "Protobuf fields cannot be null",
-  category = PROTOBUF,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ProtoFieldNullComparison",
+    summary = "Protobuf fields cannot be null",
+    category = PROTOBUF,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMatcher {
 
   private static final Predicate<MethodSymbol> NO_ARGS =

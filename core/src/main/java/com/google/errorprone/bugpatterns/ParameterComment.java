@@ -45,13 +45,12 @@ import java.util.stream.Stream;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ParameterComment",
-  category = JDK,
-  summary = "Non-standard parameter comment; prefer `/*paramName=*/ arg`",
-  severity = SUGGESTION,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ParameterComment",
+    category = JDK,
+    summary = "Non-standard parameter comment; prefer `/*paramName=*/ arg`",
+    severity = SUGGESTION,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ParameterComment extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

@@ -41,11 +41,10 @@ import com.sun.tools.javac.code.Type;
  * result in an ArrayStoreException.
  */
 @BugPattern(
-  name = "ArrayFillIncompatibleType",
-  summary = "Arrays.fill(Object[], Object) called with incompatible types.",
-  category = JDK,
-  severity = ERROR
-)
+    name = "ArrayFillIncompatibleType",
+    summary = "Arrays.fill(Object[], Object) called with incompatible types.",
+    category = JDK,
+    severity = ERROR)
 public class ArrayFillIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> ARRAY_FILL_MATCHER =
       anyOf(

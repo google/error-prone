@@ -28,11 +28,10 @@ import com.sun.tools.javac.code.Type;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "OptionalEquality",
-  summary = "Comparison using reference equality instead of value equality",
-  category = GUAVA,
-  severity = ERROR
-)
+    name = "OptionalEquality",
+    summary = "Comparison using reference equality instead of value equality",
+    category = GUAVA,
+    severity = ERROR)
 public class OptionalEquality extends AbstractReferenceEquality {
 
   private static final ImmutableSet<String> OPTIONAL_CLASSES =

@@ -83,11 +83,10 @@ public class SuggestedFixesTest {
 
   /** Test checker that adds or removes modifiers. */
   @BugPattern(
-    name = "EditModifiers",
-    category = ONE_OFF,
-    summary = "Edits modifiers",
-    severity = ERROR
-  )
+      name = "EditModifiers",
+      category = ONE_OFF,
+      summary = "Edits modifiers",
+      severity = ERROR)
   public static class EditModifiersChecker extends BugChecker
       implements VariableTreeMatcher, MethodTreeMatcher {
 
@@ -238,12 +237,11 @@ public class SuggestedFixesTest {
 
   /** Test checker that casts returned expression. */
   @BugPattern(
-    category = ONE_OFF,
-    name = "CastReturn",
-    severity = ERROR,
-    summary = "Adds casts to returned expressions",
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      category = ONE_OFF,
+      name = "CastReturn",
+      severity = ERROR,
+      summary = "Adds casts to returned expressions",
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   public static class CastReturn extends BugChecker implements ReturnTreeMatcher {
 
     @Override
@@ -263,12 +261,11 @@ public class SuggestedFixesTest {
 
   /** Test checker that casts returned expression. */
   @BugPattern(
-    category = ONE_OFF,
-    name = "CastReturn",
-    severity = ERROR,
-    summary = "Adds casts to returned expressions",
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      category = ONE_OFF,
+      name = "CastReturn",
+      severity = ERROR,
+      summary = "Adds casts to returned expressions",
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   public static class CastReturnFullType extends BugChecker implements ReturnTreeMatcher {
 
     @Override
@@ -402,12 +399,11 @@ public class SuggestedFixesTest {
 
   /** A test check that adds an annotation to all return types. */
   @BugPattern(
-    name = "AddAnnotation",
-    category = Category.JDK,
-    summary = "Add an annotation",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      name = "AddAnnotation",
+      category = Category.JDK,
+      summary = "Add an annotation",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   public static class AddAnnotation extends BugChecker implements BugChecker.MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -564,12 +560,11 @@ public class SuggestedFixesTest {
 
   /** A test check that replaces all methods' return types with a given type. */
   @BugPattern(
-    name = "ReplaceReturnType",
-    category = Category.JDK,
-    summary = "Change the method return type",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      name = "ReplaceReturnType",
+      category = Category.JDK,
+      summary = "Change the method return type",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   public static class ReplaceReturnType extends BugChecker implements BugChecker.MethodTreeMatcher {
     private final String newReturnType;
 
@@ -641,12 +636,11 @@ public class SuggestedFixesTest {
 
   /** A test check that qualifies javadoc link. */
   @BugPattern(
-    name = "JavadocQualifier",
-    category = Category.JDK,
-    summary = "all javadoc links should be qualified",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      name = "JavadocQualifier",
+      category = Category.JDK,
+      summary = "all javadoc links should be qualified",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, final VisitorState state) {
@@ -696,12 +690,11 @@ public class SuggestedFixesTest {
   }
 
   @BugPattern(
-    name = "SuppressMe",
-    category = ONE_OFF,
-    summary = "",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      name = "SuppressMe",
+      category = ONE_OFF,
+      summary = "",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   static final class SuppressMe extends BugChecker implements LiteralTreeMatcher {
     @Override
     public Description matchLiteral(LiteralTree tree, VisitorState state) {
@@ -753,12 +746,11 @@ public class SuggestedFixesTest {
   }
 
   @BugPattern(
-    name = "SuppressMeWithComment",
-    category = ONE_OFF,
-    summary = "",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      name = "SuppressMeWithComment",
+      category = ONE_OFF,
+      summary = "",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   static final class SuppressMeWithComment extends BugChecker implements LiteralTreeMatcher {
     private final String lineComment;
 
@@ -848,12 +840,11 @@ public class SuggestedFixesTest {
 
   /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
   @BugPattern(
-    name = "CompilesWithFixChecker",
-    category = JDK,
-    summary = "",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      name = "CompilesWithFixChecker",
+      category = JDK,
+      summary = "",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   public static class CompilesWithFixChecker extends BugChecker implements VariableTreeMatcher {
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -889,12 +880,11 @@ public class SuggestedFixesTest {
 
   /** A test bugchecker that deletes an exception from throws. */
   @BugPattern(
-    name = "RemovesExceptionChecker",
-    category = JDK,
-    summary = "",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      name = "RemovesExceptionChecker",
+      category = JDK,
+      summary = "",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   public static class RemovesExceptionsChecker extends BugChecker implements MethodTreeMatcher {
 
     private final int index;
@@ -992,12 +982,11 @@ public class SuggestedFixesTest {
 
   /** Test checker that renames variables. */
   @BugPattern(
-    name = "RenamesVariableChecker",
-    category = JDK,
-    summary = "",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION
-  )
+      name = "RenamesVariableChecker",
+      category = JDK,
+      summary = "",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
   public static class RenamesVariableChecker extends BugChecker implements VariableTreeMatcher {
 
     private final String toReplace;

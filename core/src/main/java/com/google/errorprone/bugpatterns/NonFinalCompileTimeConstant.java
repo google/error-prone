@@ -38,11 +38,10 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-  name = "NonFinalCompileTimeConstant",
-  summary = "@CompileTimeConstant parameters should be final or effectively final",
-  category = JDK,
-  severity = ERROR
-)
+    name = "NonFinalCompileTimeConstant",
+    summary = "@CompileTimeConstant parameters should be final or effectively final",
+    category = JDK,
+    severity = ERROR)
 public class NonFinalCompileTimeConstant extends BugChecker implements MethodTreeMatcher {
 
   @Override

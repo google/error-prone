@@ -39,14 +39,13 @@ import javax.lang.model.element.Modifier;
 
 /** @author dorir@google.com (Dori Reuveni) */
 @BugPattern(
-  name = "MutableConstantField",
-  category = JDK,
-  summary =
-      "Constant field declarations should use the immutable type (such as ImmutableList) instead of"
-          + " the general collection interface type (such as List)",
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "MutableConstantField",
+    category = JDK,
+    summary =
+        "Constant field declarations should use the immutable type (such as ImmutableList) instead"
+            + " of the general collection interface type (such as List)",
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class MutableConstantField extends BugChecker implements VariableTreeMatcher {
 
   @Override

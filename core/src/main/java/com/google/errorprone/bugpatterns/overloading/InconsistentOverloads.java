@@ -61,14 +61,13 @@ import java.util.Optional;
  * @author hanuszczak@google.com (Łukasz Hanuszczak)
  */
 @BugPattern(
-  name = "InconsistentOverloads",
-  summary =
-      "The ordering of parameters in overloaded methods should be as consistent as possible (when"
-          + " viewed from left to right)",
-  generateExamplesFromTestCases = false,
-  category = Category.JDK,
-  severity = SeverityLevel.WARNING
-)
+    name = "InconsistentOverloads",
+    summary =
+        "The ordering of parameters in overloaded methods should be as consistent as possible (when"
+            + " viewed from left to right)",
+    generateExamplesFromTestCases = false,
+    category = Category.JDK,
+    severity = SeverityLevel.WARNING)
 public final class InconsistentOverloads extends BugChecker implements ClassTreeMatcher {
 
   @Override

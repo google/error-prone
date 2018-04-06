@@ -31,13 +31,12 @@ import org.junit.runners.JUnit4;
 public class FragmentNotInstantiableTest {
   /** Used for testing a custom FragmentNotInstantiable. */
   @BugPattern(
-    name = "CustomFragmentNotInstantiable",
-    summary =
-        "Subclasses of CustomFragment must be instantiable via Class#newInstance():"
-            + " the class must be public, static and have a public nullary constructor",
-    category = ANDROID,
-    severity = WARNING
-  )
+      name = "CustomFragmentNotInstantiable",
+      summary =
+          "Subclasses of CustomFragment must be instantiable via Class#newInstance():"
+              + " the class must be public, static and have a public nullary constructor",
+      category = ANDROID,
+      severity = WARNING)
   public static class CustomFragmentNotInstantiable extends FragmentNotInstantiable {
     public CustomFragmentNotInstantiable() {
       super(ImmutableSet.of("com.google.errorprone.bugpatterns.android.testdata.CustomFragment"));

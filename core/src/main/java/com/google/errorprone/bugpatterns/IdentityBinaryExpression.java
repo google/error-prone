@@ -41,12 +41,11 @@ import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "IdentityBinaryExpression",
-  altNames = "SelfEquality",
-  category = JDK,
-  summary = "A binary expression where both operands are the same is usually incorrect.",
-  severity = ERROR
-)
+    name = "IdentityBinaryExpression",
+    altNames = "SelfEquality",
+    category = JDK,
+    summary = "A binary expression where both operands are the same is usually incorrect.",
+    severity = ERROR)
 public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMatcher {
 
   private static final Matcher<Tree> ASSERTION =

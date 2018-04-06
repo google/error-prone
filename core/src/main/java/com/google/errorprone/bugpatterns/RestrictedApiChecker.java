@@ -45,13 +45,12 @@ import javax.lang.model.type.TypeMirror;
 
 /** Check for non-whitelisted callers to RestrictedApiChecker. */
 @BugPattern(
-  name = "RestrictedApiChecker",
-  summary = " Check for non-whitelisted callers to RestrictedApiChecker.",
-  category = Category.ONE_OFF,
-  severity = SeverityLevel.ERROR,
-  suppressionAnnotations = {},
-  disableable = false
-)
+    name = "RestrictedApiChecker",
+    summary = " Check for non-whitelisted callers to RestrictedApiChecker.",
+    category = Category.ONE_OFF,
+    severity = SeverityLevel.ERROR,
+    suppressionAnnotations = {},
+    disableable = false)
 public class RestrictedApiChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

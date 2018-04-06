@@ -30,12 +30,11 @@ import java.util.Set;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "UnlockMethod",
-  altNames = {"GuardedBy"},
-  summary = "This method does not acquire the locks specified by its @UnlockMethod annotation",
-  category = JDK,
-  severity = ERROR
-)
+    name = "UnlockMethod",
+    altNames = {"GuardedBy"},
+    summary = "This method does not acquire the locks specified by its @UnlockMethod annotation",
+    category = JDK,
+    severity = ERROR)
 public class UnlockMethodChecker extends AbstractLockMethodChecker {
 
   @Override

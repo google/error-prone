@@ -422,11 +422,10 @@ public class MatchersTest {
   }
 
   @BugPattern(
-    name = "InLoopChecker",
-    summary = "Checker that flags the given expression statement if the given matcher matches",
-    category = ONE_OFF,
-    severity = ERROR
-  )
+      name = "InLoopChecker",
+      summary = "Checker that flags the given expression statement if the given matcher matches",
+      category = ONE_OFF,
+      severity = ERROR)
   public static class InLoopChecker extends MatcherChecker {
     public InLoopChecker() {
       super("System.out.println();", inLoop());
@@ -438,11 +437,10 @@ public class MatchersTest {
   }
 
   @BugPattern(
-    name = "MethodTreeChecker",
-    summary = "Checker that flags the given method declaration if the given matcher matches",
-    category = ONE_OFF,
-    severity = ERROR
-  )
+      name = "MethodTreeChecker",
+      summary = "Checker that flags the given method declaration if the given matcher matches",
+      category = ONE_OFF,
+      severity = ERROR)
   static class MethodTreeChecker extends BugChecker implements MethodTreeMatcher {
     private final Matcher<MethodTree> matcher;
 
@@ -458,11 +456,10 @@ public class MatchersTest {
 
   /** Simple checker to make sure hasAnnotation doesn't match on MethodInvocationTree. */
   @BugPattern(
-    name = "MethodInvocationTreeChecker",
-    summary = "Checker that flags the given method invocation if the given matcher matches",
-    category = ONE_OFF,
-    severity = ERROR
-  )
+      name = "MethodInvocationTreeChecker",
+      summary = "Checker that flags the given method invocation if the given matcher matches",
+      category = ONE_OFF,
+      severity = ERROR)
   public static class NoAnnotatedCallsChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
     @Override
@@ -476,11 +473,10 @@ public class MatchersTest {
 
   /** Checker that makes sure symbolHasAnnotation matches on MethodInvocationTree. */
   @BugPattern(
-    name = "NoAnnotatedDeclarationCallsChecker",
-    summary = "Checker that flags the given method invocation if the given matcher matches",
-    category = ONE_OFF,
-    severity = ERROR
-  )
+      name = "NoAnnotatedDeclarationCallsChecker",
+      summary = "Checker that flags the given method invocation if the given matcher matches",
+      category = ONE_OFF,
+      severity = ERROR)
   public static class NoAnnotatedDeclarationCallsChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
     @Override
@@ -494,11 +490,10 @@ public class MatchersTest {
 
   /** Checker that checks if a class is in a particular package. */
   @BugPattern(
-    name = "PackageNameChecker",
-    summary = "Checks the name of the package",
-    category = ONE_OFF,
-    severity = ERROR
-  )
+      name = "PackageNameChecker",
+      summary = "Checks the name of the package",
+      category = ONE_OFF,
+      severity = ERROR)
   public static class PackageNameChecker extends BugChecker implements ClassTreeMatcher {
     private static final Matcher<Tree> MATCHER = Matchers.packageStartsWith("test.foo");
 

@@ -37,12 +37,11 @@ import java.util.List;
 
 /** Migrate users who use JSR 330 scopes on Dagger modules. */
 @BugPattern(
-  name = "ScopeOnModule",
-  summary = "Scopes on modules have no function and will soon be an error.",
-  category = DAGGER,
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ScopeOnModule",
+    summary = "Scopes on modules have no function and will soon be an error.",
+    category = DAGGER,
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class ScopeOnModule extends BugChecker implements ClassTreeMatcher {
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {

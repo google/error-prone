@@ -43,12 +43,11 @@ import com.sun.tools.javac.code.Type;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "GuardedBy",
-  altNames = "GuardedByChecker",
-  summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
-  category = JDK,
-  severity = ERROR
-)
+    name = "GuardedBy",
+    altNames = "GuardedByChecker",
+    summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
+    category = JDK,
+    severity = ERROR)
 public class GuardedByChecker extends BugChecker
     implements VariableTreeMatcher, MethodTreeMatcher, LambdaExpressionTreeMatcher {
 

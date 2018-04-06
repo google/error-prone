@@ -49,13 +49,12 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Name;
 
 @BugPattern(
-  name = "TypeParameterShadowing",
-  summary = "Type parameter declaration overrides another type parameter already declared",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "TypeParameterShadowing",
+    summary = "Type parameter declaration overrides another type parameter already declared",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class TypeParameterShadowing extends BugChecker
     implements MethodTreeMatcher, ClassTreeMatcher {
 

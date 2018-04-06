@@ -65,11 +65,10 @@ import java.util.OptionalLong;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "UnnecessarySetDefault",
-  summary = "Unnecessary call to NullPointerTester#setDefault",
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "UnnecessarySetDefault",
+    summary = "Unnecessary call to NullPointerTester#setDefault",
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UnnecessarySetDefault extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> SET_DEFAULT =

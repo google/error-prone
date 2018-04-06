@@ -44,12 +44,11 @@ import com.sun.tools.javac.tree.JCTree;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(
-  name = "BadShiftAmount",
-  summary = "Shift by an amount that is out of range",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "BadShiftAmount",
+    summary = "Shift by an amount that is out of range",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
 
   /**

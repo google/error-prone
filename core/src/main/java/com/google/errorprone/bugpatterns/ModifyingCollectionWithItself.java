@@ -51,12 +51,11 @@ import javax.lang.model.element.ElementKind;
 
 /** @author scottjohnson@google.com (Scott Johnson) */
 @BugPattern(
-  name = "ModifyingCollectionWithItself",
-  summary = "Using a collection function with itself as the argument.",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ModifyingCollectionWithItself",
+    summary = "Using a collection function with itself as the argument.",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ModifyingCollectionWithItself extends BugChecker
     implements MethodInvocationTreeMatcher {
 

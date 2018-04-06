@@ -47,13 +47,12 @@ import javax.lang.model.type.TypeKind;
  * @author mwacker@google.com (Mike Wacker)
  */
 @BugPattern(
-  name = "JUnit3FloatingPointComparisonWithoutDelta",
-  summary = "Floating-point comparison without error tolerance",
-  // First sentence copied directly from JUnit 4.
-  category = JUNIT,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "JUnit3FloatingPointComparisonWithoutDelta",
+    summary = "Floating-point comparison without error tolerance",
+    // First sentence copied directly from JUnit 4.
+    category = JUNIT,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     implements MethodInvocationTreeMatcher {
 

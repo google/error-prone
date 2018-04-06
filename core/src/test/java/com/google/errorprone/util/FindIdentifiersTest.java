@@ -38,13 +38,12 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class FindIdentifiersTest {
 
-  /** A {@link BugChecker} that prints all identifers in scope at a call to String.format(). */
+  /** A {@link BugChecker} that prints all identifiers in scope at a call to String.format(). */
   @BugPattern(
-    name = "PrintIdents",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Prints all identifers in scope at a call to String.format()"
-  )
+      name = "PrintIdents",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Prints all identifiers in scope at a call to String.format()")
   public static class PrintIdents extends BugChecker implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -630,11 +629,10 @@ public class FindIdentifiersTest {
    * A {@link BugChecker} that prints all unused variables in scope at a call to String.format().
    */
   @BugPattern(
-    name = "PrintUnusedVariables",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Prints all unused variabled in scope at a call to String.format()"
-  )
+      name = "PrintUnusedVariables",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Prints all unused variabled in scope at a call to String.format()")
   public static class PrintUnusedVariables extends BugChecker
       implements MethodInvocationTreeMatcher {
     @Override
@@ -768,11 +766,10 @@ public class FindIdentifiersTest {
 
   /** A {@link BugChecker} that prints all fields in receiver class on method invocations. */
   @BugPattern(
-    name = "PrintFields",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Prints all fields in receivers of method invocations"
-  )
+      name = "PrintFields",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Prints all fields in receivers of method invocations")
   public static class PrintFields extends BugChecker implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

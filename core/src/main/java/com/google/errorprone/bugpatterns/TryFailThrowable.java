@@ -94,12 +94,11 @@ import java.util.List;
  * @author adamwos@google.com (Adam Wos)
  */
 @BugPattern(
-  name = "TryFailThrowable",
-  summary = "Catching Throwable/Error masks failures from fail() or assert*() in the try block",
-  category = JUNIT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "TryFailThrowable",
+    summary = "Catching Throwable/Error masks failures from fail() or assert*() in the try block",
+    category = JUNIT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<VariableTree> javaLangThrowable = isSameType("java.lang.Throwable");

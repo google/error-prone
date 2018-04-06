@@ -49,11 +49,10 @@ import javax.lang.model.element.Modifier;
  * @author Louis Wasserman
  */
 @BugPattern(
-  name = "CannotMockFinalClass",
-  summary = "Mockito cannot mock final classes",
-  category = Category.MOCKITO,
-  severity = SeverityLevel.WARNING
-)
+    name = "CannotMockFinalClass",
+    summary = "Mockito cannot mock final classes",
+    category = Category.MOCKITO,
+    severity = SeverityLevel.WARNING)
 public class CannotMockFinalClass extends BugChecker
     implements MethodInvocationTreeMatcher, VariableTreeMatcher {
   // TODO(lowasser): consider stopping mocks of primitive types here or in its own checker

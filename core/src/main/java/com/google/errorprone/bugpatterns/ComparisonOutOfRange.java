@@ -47,22 +47,21 @@ import java.util.List;
  *     <p>TODO(eaftan): Support other types of comparisons? Are there likely to be errors in those?
  */
 @BugPattern(
-  name = "ComparisonOutOfRange",
-  summary = "Comparison to value that is out of range for the compared type",
-  explanation =
-      "This checker looks for equality comparisons to values that are out of "
-          + "range for the compared type.  For example, bytes may have a value in the range "
-          + Byte.MIN_VALUE
-          + " to "
-          + Byte.MAX_VALUE
-          + ". Comparing a byte for equality with a value "
-          + "outside that range will always evaluate to false and usually indicates an error in "
-          + "the code.\n\n"
-          + "This checker currently supports checking for bad byte and character comparisons.",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ComparisonOutOfRange",
+    summary = "Comparison to value that is out of range for the compared type",
+    explanation =
+        "This checker looks for equality comparisons to values that are out of "
+            + "range for the compared type.  For example, bytes may have a value in the range "
+            + Byte.MIN_VALUE
+            + " to "
+            + Byte.MAX_VALUE
+            + ". Comparing a byte for equality with a value "
+            + "outside that range will always evaluate to false and usually indicates an error in "
+            + "the code.\n\n"
+            + "This checker currently supports checking for bad byte and character comparisons.",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE =

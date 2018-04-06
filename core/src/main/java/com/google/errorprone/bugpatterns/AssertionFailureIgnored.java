@@ -59,15 +59,14 @@ import java.util.stream.Stream;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "AssertionFailureIgnored",
-  summary =
-      "This assertion throws an AssertionError if it fails, which will be caught by an enclosing"
-          + " try block.",
-  // TODO(cushon): promote this to an error and turn down TryFailThrowable
-  severity = WARNING,
-  tags = LIKELY_ERROR,
-  category = JDK
-)
+    name = "AssertionFailureIgnored",
+    summary =
+        "This assertion throws an AssertionError if it fails, which will be caught by an enclosing"
+            + " try block.",
+    // TODO(cushon): promote this to an error and turn down TryFailThrowable
+    severity = WARNING,
+    tags = LIKELY_ERROR,
+    category = JDK)
 public class AssertionFailureIgnored extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> ASSERTION =
@@ -227,4 +226,3 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
     return null;
   }
 }
-

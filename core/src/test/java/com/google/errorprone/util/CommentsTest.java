@@ -48,11 +48,10 @@ public class CommentsTest {
    * line of source ending at that position
    */
   @BugPattern(
-    name = "ComputeEndPosition",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Calls computeEndPosition and prints results"
-  )
+      name = "ComputeEndPosition",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Calls computeEndPosition and prints results")
   public static class ComputeEndPosition extends BugChecker implements MethodInvocationTreeMatcher {
 
     @Override
@@ -121,13 +120,12 @@ public class CommentsTest {
 
   /** A {@link BugChecker} that prints the contents of comments around arguments */
   @BugPattern(
-    name = "PrintCommentsForArguments",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary =
-        "Prints comments occurring around arguments. Matches calls to methods named "
-            + "'target' and all constructors"
-  )
+      name = "PrintCommentsForArguments",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary =
+          "Prints comments occurring around arguments. Matches calls to methods named "
+              + "'target' and all constructors")
   public static class PrintCommentsForArguments extends BugChecker
       implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
@@ -438,13 +436,12 @@ public class CommentsTest {
 
   /** A {@link BugChecker} that prints the source code at comment positions */
   @BugPattern(
-    name = "PrintTextAtCommentPosition",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary =
-        "Prints the source code text which is under the comment position. Matches calls to "
-            + "methods called target and constructors only"
-  )
+      name = "PrintTextAtCommentPosition",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary =
+          "Prints the source code text which is under the comment position. Matches calls to "
+              + "methods called target and constructors only")
   public static class PrintTextAtCommentPosition extends BugChecker
       implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

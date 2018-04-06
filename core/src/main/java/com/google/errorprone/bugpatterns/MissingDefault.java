@@ -40,16 +40,15 @@ import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "MissingDefault",
-  category = JDK,
-  summary =
-      "The Google Java Style Guide requires that each switch statement includes a default statement"
-          + " group, even if it contains no code. (This requirement is lifted for any switch"
-          + " statement that covers all values of an enum.)",
-  severity = WARNING,
-  tags = StandardTags.STYLE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "MissingDefault",
+    category = JDK,
+    summary =
+        "The Google Java Style Guide requires that each switch statement includes a default"
+            + " statement group, even if it contains no code. (This requirement is lifted for any"
+            + " switch statement that covers all values of an enum.)",
+    severity = WARNING,
+    tags = StandardTags.STYLE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {

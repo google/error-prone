@@ -41,13 +41,12 @@ import java.util.Set;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-  name = "Overrides",
-  altNames = "overrides",
-  summary = "Varargs doesn't agree for overridden method",
-  category = JDK,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "Overrides",
+    altNames = "overrides",
+    summary = "Varargs doesn't agree for overridden method",
+    category = JDK,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class Overrides extends BugChecker implements MethodTreeMatcher {
 
   @Override

@@ -42,12 +42,11 @@ import com.sun.source.tree.MethodTree;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "JavaxInjectOnAbstractMethod",
-  summary = "Abstract and default methods are not injectable with javax.inject.Inject",
-  category = INJECT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "JavaxInjectOnAbstractMethod",
+    summary = "Abstract and default methods are not injectable with javax.inject.Inject",
+    category = INJECT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JavaxInjectOnAbstractMethod extends BugChecker implements MethodTreeMatcher {
   private static final MultiMatcher<MethodTree, AnnotationTree> INJECT_FINDER =
       annotations(AT_LEAST_ONE, IS_APPLICATION_OF_JAVAX_INJECT);

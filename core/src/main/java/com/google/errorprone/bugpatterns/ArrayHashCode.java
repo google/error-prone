@@ -44,13 +44,12 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-  name = "ArrayHashCode",
-  summary = "hashcode method on array does not hash array contents",
-  category = JDK,
-  severity = ERROR,
-  generateExamplesFromTestCases = false,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ArrayHashCode",
+    summary = "hashcode method on array does not hash array contents",
+    category = JDK,
+    severity = ERROR,
+    generateExamplesFromTestCases = false,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMatcher {
 
   /**

@@ -42,10 +42,9 @@ import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "OrphanedFormatString",
-  summary = "String literal contains format specifiers, but is not passed to a format method",
-  severity = WARNING
-)
+    name = "OrphanedFormatString",
+    summary = "String literal contains format specifiers, but is not passed to a format method",
+    severity = WARNING)
 public class OrphanedFormatString extends BugChecker implements LiteralTreeMatcher {
 
   private static final Matcher<Tree> MATCHER =

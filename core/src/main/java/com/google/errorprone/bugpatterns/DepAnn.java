@@ -41,13 +41,12 @@ import com.sun.tools.javac.code.Symbol;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-  name = "DepAnn",
-  altNames = "dep-ann",
-  summary = "Deprecated item is not annotated with @Deprecated",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "DepAnn",
+    altNames = "dep-ann",
+    summary = "Deprecated item is not annotated with @Deprecated",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class DepAnn extends BugChecker
     implements MethodTreeMatcher, ClassTreeMatcher, VariableTreeMatcher {
 

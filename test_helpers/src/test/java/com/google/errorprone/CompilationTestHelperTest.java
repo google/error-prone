@@ -376,12 +376,11 @@ public class CompilationTestHelperTest {
   }
 
   @BugPattern(
-    name = "ReturnTreeChecker",
-    summary = "Method may return normally.",
-    explanation = "Consider mutating some global state instead.",
-    category = JDK,
-    severity = ERROR
-  )
+      name = "ReturnTreeChecker",
+      summary = "Method may return normally.",
+      explanation = "Consider mutating some global state instead.",
+      category = JDK,
+      severity = ERROR)
   public static class ReturnTreeChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -402,12 +401,11 @@ public class CompilationTestHelperTest {
   }
 
   @BugPattern(
-    name = "PackageTreeChecker",
-    summary = "Package declaration found",
-    explanation = "Prefer to use the default package for everything.",
-    category = JDK,
-    severity = ERROR
-  )
+      name = "PackageTreeChecker",
+      summary = "Package declaration found",
+      explanation = "Prefer to use the default package for everything.",
+      category = JDK,
+      severity = ERROR)
   public static class PackageTreeChecker extends BugChecker implements CompilationUnitTreeMatcher {
     @Override
     public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {

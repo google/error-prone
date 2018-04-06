@@ -49,14 +49,13 @@ import java.util.Optional;
  * array, or when the buffer wasn't initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
  */
 @BugPattern(
-  name = "ByteBufferBackingArray",
-  summary =
-      "ByteBuffer.array() shouldn't be called unless ByteBuffer.arrayOffset() is used or "
-          + "if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().",
-  category = JDK,
-  severity = WARNING,
-  generateExamplesFromTestCases = false
-)
+    name = "ByteBufferBackingArray",
+    summary =
+        "ByteBuffer.array() shouldn't be called unless ByteBuffer.arrayOffset() is used or "
+            + "if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().",
+    category = JDK,
+    severity = WARNING,
+    generateExamplesFromTestCases = false)
 public class ByteBufferBackingArray extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> BYTE_BUFFER_ARRAY_MATCHER =

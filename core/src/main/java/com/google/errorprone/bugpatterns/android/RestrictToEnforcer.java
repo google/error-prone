@@ -57,11 +57,10 @@ import javax.lang.model.element.ElementKind;
  * @author clm@google.com (Charles Munger)
  */
 @BugPattern(
-  name = "RestrictTo",
-  summary = "Use of method or class annotated with @RestrictTo",
-  category = ANDROID,
-  severity = ERROR
-)
+    name = "RestrictTo",
+    summary = "Use of method or class annotated with @RestrictTo",
+    category = ANDROID,
+    severity = ERROR)
 public final class RestrictToEnforcer extends BugChecker
     implements AnnotationTreeMatcher,
         LambdaExpressionTreeMatcher,

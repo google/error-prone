@@ -36,13 +36,12 @@ import java.util.List;
 
 /** @author mariasam@google.com (Maria Sam) on 6/27/17. */
 @BugPattern(
-  name = "CollectionToArraySafeParameter",
-  summary =
-      "The type of the array parameter of Collection.toArray "
-          + "needs to be compatible with the array type",
-  category = JDK,
-  severity = WARNING
-)
+    name = "CollectionToArraySafeParameter",
+    summary =
+        "The type of the array parameter of Collection.toArray "
+            + "needs to be compatible with the array type",
+    category = JDK,
+    severity = WARNING)
 public class CollectionToArraySafeParameter extends BugChecker
     implements MethodInvocationTreeMatcher {
 

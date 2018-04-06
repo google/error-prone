@@ -53,15 +53,15 @@ import javax.lang.model.element.ElementKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "WildcardImport",
-  summary = "Wildcard imports, static or otherwise, should not be used",
-  category = JDK,
-  severity = SUGGESTION,
-  linkType = CUSTOM,
-  documentSuppression = false,
-  tags = StandardTags.STYLE,
-  link = "https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports"
-)
+    name = "WildcardImport",
+    summary = "Wildcard imports, static or otherwise, should not be used",
+    category = JDK,
+    severity = SUGGESTION,
+    linkType = CUSTOM,
+    documentSuppression = false,
+    tags = StandardTags.STYLE,
+    link = "https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports"
+    )
 public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {
 
   /** Maximum number of members to import before switching to qualified names. */

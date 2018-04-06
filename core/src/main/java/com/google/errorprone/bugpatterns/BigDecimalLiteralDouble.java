@@ -41,14 +41,13 @@ import java.math.BigInteger;
 
 /** @author endobson@google.com (Eric Dobson) */
 @BugPattern(
-  name = "BigDecimalLiteralDouble",
-  summary =
-      "BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, "
-          + "prefer BigDecimal(String) or BigDecimal(long)",
-  category = JDK,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "BigDecimalLiteralDouble",
+    summary =
+        "BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, "
+            + "prefer BigDecimal(String) or BigDecimal(long)",
+    category = JDK,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class BigDecimalLiteralDouble extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

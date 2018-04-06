@@ -38,13 +38,12 @@ import javax.lang.model.element.Name;
  * uses the reference may observe the object in a partly-constructed state.
  */
 @BugPattern(
-  name = "ConstructorLeaksThis",
-  summary =
-      "Constructors should not pass the 'this' reference out in method invocations,"
-          + " since the object may not be fully constructed.",
-  category = JDK,
-  severity = WARNING
-)
+    name = "ConstructorLeaksThis",
+    summary =
+        "Constructors should not pass the 'this' reference out in method invocations,"
+            + " since the object may not be fully constructed.",
+    category = JDK,
+    severity = WARNING)
 public class ConstructorLeaksThis extends ConstructorLeakChecker {
 
   @Override

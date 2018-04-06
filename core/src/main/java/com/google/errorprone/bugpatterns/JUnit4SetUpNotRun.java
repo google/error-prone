@@ -42,11 +42,10 @@ import java.util.List;
  * @author glorioso@google.com (Nick Glorioso)
  */
 @BugPattern(
-  name = "JUnit4SetUpNotRun",
-  summary = "setUp() method will not be run; please add JUnit's @Before annotation",
-  category = JUNIT,
-  severity = ERROR
-)
+    name = "JUnit4SetUpNotRun",
+    summary = "setUp() method will not be run; please add JUnit's @Before annotation",
+    category = JUNIT,
+    severity = ERROR)
 public class JUnit4SetUpNotRun extends AbstractJUnit4InitMethodNotRun {
   @Override
   protected Matcher<MethodTree> methodMatcher() {

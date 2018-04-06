@@ -47,12 +47,11 @@ import javax.lang.model.element.Name;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-  name = "HidingField",
-  category = JDK,
-  summary = "Hiding fields of superclasses may cause confusion and errors",
-  severity = WARNING,
-  altNames = {"hiding", "OvershadowingSubclassFields"}
-)
+    name = "HidingField",
+    category = JDK,
+    summary = "Hiding fields of superclasses may cause confusion and errors",
+    severity = WARNING,
+    altNames = {"hiding", "OvershadowingSubclassFields"})
 public class HidingField extends BugChecker implements ClassTreeMatcher {
   // List of types that are allowed to hide superclass fields
   private static final ImmutableSet<String> IGNORED_CLASSES =

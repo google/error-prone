@@ -32,14 +32,13 @@ import com.sun.source.tree.AssertTree;
 
 /** @author sebastian.h.monte@gmail.com (Sebastian Monte) */
 @BugPattern(
-  name = "AssertFalse",
-  summary =
-      "Assertions may be disabled at runtime and do not guarantee that execution will "
-          + "halt here; consider throwing an exception instead",
-  category = JDK,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "AssertFalse",
+    summary =
+        "Assertions may be disabled at runtime and do not guarantee that execution will "
+            + "halt here; consider throwing an exception instead",
+    category = JDK,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AssertFalse extends BugChecker implements AssertTreeMatcher {
 
   private static final Matcher<AssertTree> ASSERT_FALSE_MATCHER =

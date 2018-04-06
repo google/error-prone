@@ -37,11 +37,10 @@ import java.util.List;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-  name = "ComparableAndComparator",
-  summary = "Class should not implement both `Comparable` and `Comparator`",
-  category = JDK,
-  severity = WARNING
-)
+    name = "ComparableAndComparator",
+    summary = "Class should not implement both `Comparable` and `Comparator`",
+    category = JDK,
+    severity = WARNING)
 public class ComparableAndComparator extends BugChecker implements ClassTreeMatcher {
   private static final String COMPARABLE = Comparable.class.getCanonicalName();
   private static final String COMPARATOR = Comparator.class.getCanonicalName();

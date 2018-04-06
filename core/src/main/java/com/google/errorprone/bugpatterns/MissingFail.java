@@ -80,13 +80,12 @@ import javax.lang.model.element.Name;
 
 /** @author schmitt@google.com (Peter Schmitt) */
 @BugPattern(
-  name = "MissingFail",
-  altNames = "missing-fail",
-  summary = "Not calling fail() when expecting an exception masks bugs",
-  category = JUNIT,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "MissingFail",
+    altNames = "missing-fail",
+    summary = "Not calling fail() when expecting an exception masks bugs",
+    category = JUNIT,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MissingFail extends BugChecker implements TryTreeMatcher {
 
   // Many test writers don't seem to know about `fail()`. They instead use synonyms of varying

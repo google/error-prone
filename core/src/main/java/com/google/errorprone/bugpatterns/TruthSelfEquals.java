@@ -43,14 +43,13 @@ import java.util.regex.Pattern;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-  name = "TruthSelfEquals",
-  summary =
-      "isEqualTo should not be used to test an object for equality with itself; the"
-          + " assertion will never fail.",
-  category = TRUTH,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "TruthSelfEquals",
+    summary =
+        "isEqualTo should not be used to test an object for equality with itself; the"
+            + " assertion will never fail.",
+    category = TRUTH,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
   /**

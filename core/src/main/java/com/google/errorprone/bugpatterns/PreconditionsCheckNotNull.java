@@ -38,12 +38,11 @@ import java.util.List;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 @BugPattern(
-  name = "PreconditionsCheckNotNull",
-  summary = "Literal passed as first argument to Preconditions.checkNotNull() can never be null",
-  category = GUAVA,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "PreconditionsCheckNotNull",
+    summary = "Literal passed as first argument to Preconditions.checkNotNull() can never be null",
+    category = GUAVA,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class PreconditionsCheckNotNull extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings({"unchecked"})

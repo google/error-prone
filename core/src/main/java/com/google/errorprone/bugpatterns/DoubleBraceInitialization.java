@@ -60,11 +60,11 @@ import javax.lang.model.element.Modifier;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "DoubleBraceInitialization",
-  summary =
-      "Prefer collection factory methods or builders to the double-brace intitialization pattern.",
-  severity = WARNING
-)
+    name = "DoubleBraceInitialization",
+    summary =
+        "Prefer collection factory methods or builders to the double-brace initialization"
+            + " pattern.",
+    severity = WARNING)
 public class DoubleBraceInitialization extends BugChecker implements NewClassTreeMatcher {
 
   @SuppressWarnings("ImmutableEnumChecker") // Matcher is immutable in practice

@@ -32,11 +32,10 @@ import java.util.stream.Collectors;
 
 /** @author sulku@google.com (Marsela Sulku) */
 @BugPattern(
-  name = "MultipleUnaryOperatorsInMethodCall",
-  summary = "Avoid having multiple unary operators acting on the same variable in a method call",
-  category = JDK,
-  severity = SUGGESTION
-)
+    name = "MultipleUnaryOperatorsInMethodCall",
+    summary = "Avoid having multiple unary operators acting on the same variable in a method call",
+    category = JDK,
+    severity = SUGGESTION)
 public class MultipleUnaryOperatorsInMethodCall extends BugChecker
     implements MethodInvocationTreeMatcher {
 

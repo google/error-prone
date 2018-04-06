@@ -31,14 +31,13 @@ import com.sun.source.tree.CompilationUnitTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "PackageLocation",
-  summary = "Package names should match the directory they are declared in",
-  category = JDK,
-  severity = SUGGESTION,
-  documentSuppression = false,
-  suppressionAnnotations = SuppressPackageLocation.class,
-  tags = StandardTags.STYLE
-)
+    name = "PackageLocation",
+    summary = "Package names should match the directory they are declared in",
+    category = JDK,
+    severity = SUGGESTION,
+    documentSuppression = false,
+    suppressionAnnotations = SuppressPackageLocation.class,
+    tags = StandardTags.STYLE)
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
 
   private static final CharMatcher DOT_MATCHER = CharMatcher.is('.');

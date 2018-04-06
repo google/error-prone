@@ -48,13 +48,12 @@ import java.util.Objects;
 /** Matches on string formatting inside print methods. */
 @AutoService(BugChecker.class)
 @BugPattern(
-  name = "MyCustomCheck",
-  category = JDK,
-  summary = "String formatting inside print method",
-  severity = ERROR,
-  linkType = CUSTOM,
-  link = "example.com/bugpattern/MyCustomCheck"
-)
+    name = "MyCustomCheck",
+    category = JDK,
+    summary = "String formatting inside print method",
+    severity = ERROR,
+    linkType = CUSTOM,
+    link = "example.com/bugpattern/MyCustomCheck")
 public class MyCustomCheck extends BugChecker implements MethodInvocationTreeMatcher {
 
   Matcher<ExpressionTree> PRINT_METHOD =

@@ -42,13 +42,12 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
 @BugPattern(
-  name = "JMockTestWithoutRunWithOrRuleAnnotation",
-  summary =
-      "jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must "
-          + "have a @Rule JUnit annotation",
-  category = JMOCK,
-  severity = ERROR
-)
+    name = "JMockTestWithoutRunWithOrRuleAnnotation",
+    summary =
+        "jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must "
+            + "have a @Rule JUnit annotation",
+    category = JMOCK,
+    severity = ERROR)
 public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker
     implements VariableTreeMatcher {
 

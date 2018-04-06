@@ -33,13 +33,13 @@ import com.sun.tools.javac.tree.JCTree;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
-  name = "InsecureCryptoUsage",
-  altNames = {"InsecureCipherMode"},
-  summary = "A standard cryptographic operation is used in a mode that is prone to vulnerabilities",
-  category = JDK,
-  documentSuppression = false,
-  severity = ERROR
-)
+    name = "InsecureCryptoUsage",
+    altNames = {"InsecureCipherMode"},
+    summary =
+        "A standard cryptographic operation is used in a mode that is prone to vulnerabilities",
+    category = JDK,
+    documentSuppression = false,
+    severity = ERROR)
 public class InsecureCipherMode extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String MESSAGE_BASE = "Insecure usage of a crypto API: ";
 

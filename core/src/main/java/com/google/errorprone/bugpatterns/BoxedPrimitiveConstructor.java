@@ -50,13 +50,12 @@ import com.sun.tools.javac.util.Context;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "BoxedPrimitiveConstructor",
-  category = Category.JDK,
-  summary = "valueOf or autoboxing provides better time and space performance",
-  severity = SeverityLevel.WARNING,
-  tags = StandardTags.PERFORMANCE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "BoxedPrimitiveConstructor",
+    category = Category.JDK,
+    summary = "valueOf or autoboxing provides better time and space performance",
+    severity = SeverityLevel.WARNING,
+    tags = StandardTags.PERFORMANCE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTreeMatcher {
 
   private static final Matcher<Tree> TO_STRING =
@@ -163,8 +162,6 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
           .replace(state.getEndPosition(arg), state.getEndPosition(parent), optionalSuffix + ")")
           .build();
     }
-
-
 
     if (COMPARE_TO.matches(parent, state)
         && ASTHelpers.getReceiver((ExpressionTree) parent).equals(tree)) {

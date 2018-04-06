@@ -53,14 +53,13 @@ import java.util.List;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-  name = "URLEqualsHashCode",
-  summary =
-      "Avoid hash-based containers of java.net.URL--the containers rely on equals() and hashCode(),"
-          + " which cause java.net.URL to make blocking internet connections.",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
-)
+    name = "URLEqualsHashCode",
+    summary =
+        "Avoid hash-based containers of java.net.URL--the containers rely on equals() and"
+            + " hashCode(), which cause java.net.URL to make blocking internet connections.",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE)
 public class URLEqualsHashCode extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
@@ -139,4 +138,3 @@ public class URLEqualsHashCode extends BugChecker
     }
   }
 }
-

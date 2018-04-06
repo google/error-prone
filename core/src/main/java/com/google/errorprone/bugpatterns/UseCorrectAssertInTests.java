@@ -50,12 +50,11 @@ import com.sun.tools.javac.tree.TreeInfo;
 
 /** @author galitch@google.com (Anton Galitch) */
 @BugPattern(
-  name = "UseCorrectAssertInTests",
-  summary = "Java assert is used in test. For testing purposes Assert.* matchers should be used.",
-  category = JDK,
-  severity = SeverityLevel.WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "UseCorrectAssertInTests",
+    summary = "Java assert is used in test. For testing purposes Assert.* matchers should be used.",
+    category = JDK,
+    severity = SeverityLevel.WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<Tree> CONTAINS_ASSERT =

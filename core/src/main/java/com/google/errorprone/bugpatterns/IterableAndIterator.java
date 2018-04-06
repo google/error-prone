@@ -35,12 +35,11 @@ import java.util.List;
 
 /** @author jsjeon@google.com (Jinseong Jeon) */
 @BugPattern(
-  name = "IterableAndIterator",
-  summary = "Class should not implement both `Iterable` and `Iterator`",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE
-)
+    name = "IterableAndIterator",
+    summary = "Class should not implement both `Iterable` and `Iterator`",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE)
 public class IterableAndIterator extends BugChecker implements ClassTreeMatcher {
 
   private static final String ITERABLE = Iterable.class.getCanonicalName();

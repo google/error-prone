@@ -37,12 +37,11 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "MockitoUsage",
-  summary = "Missing method call for verify(mock) here",
-  category = MOCKITO,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "MockitoUsage",
+    summary = "Missing method call for verify(mock) here",
+    category = MOCKITO,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String MESSAGE_FORMAT = "Missing method call for %s here";

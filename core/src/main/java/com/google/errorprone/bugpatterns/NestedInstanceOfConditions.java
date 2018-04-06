@@ -39,12 +39,11 @@ import com.sun.tools.javac.code.Types;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-  name = "NestedInstanceOfConditions",
-  category = JDK,
-  summary =
-      "Nested instanceOf conditions of disjoint types create blocks of code that never execute",
-  severity = WARNING
-)
+    name = "NestedInstanceOfConditions",
+    category = JDK,
+    summary =
+        "Nested instanceOf conditions of disjoint types create blocks of code that never execute",
+    severity = WARNING)
 public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatcher {
 
   @Override

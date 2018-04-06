@@ -31,11 +31,10 @@ import com.sun.tools.javac.code.Type;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "StreamToString",
-  summary = "Calling toString on a Stream does not provide useful information",
-  category = JDK,
-  severity = ERROR
-)
+    name = "StreamToString",
+    summary = "Calling toString on a Stream does not provide useful information",
+    category = JDK,
+    severity = ERROR)
 public class StreamToString extends AbstractToString {
 
   static final TypePredicate STREAM =

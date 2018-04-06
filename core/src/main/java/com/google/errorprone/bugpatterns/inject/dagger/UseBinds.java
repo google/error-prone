@@ -66,12 +66,11 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 
 @BugPattern(
-  name = "UseBinds",
-  summary = "@Binds is a more efficient and declarative mechanism for delegating a binding.",
-  category = DAGGER,
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "UseBinds",
+    summary = "@Binds is a more efficient and declarative mechanism for delegating a binding.",
+    category = DAGGER,
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UseBinds extends BugChecker implements MethodTreeMatcher {
   private static final Matcher<MethodTree> SIMPLE_METHOD =
       new Matcher<MethodTree>() {

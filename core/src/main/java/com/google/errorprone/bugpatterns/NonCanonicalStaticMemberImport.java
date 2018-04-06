@@ -34,13 +34,12 @@ import com.sun.source.tree.ImportTree;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-  name = "NonCanonicalStaticMemberImport",
-  summary = "Static import of member uses non-canonical name",
-  category = JDK,
-  severity = WARNING,
-  documentSuppression = false,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "NonCanonicalStaticMemberImport",
+    summary = "Static import of member uses non-canonical name",
+    category = JDK,
+    severity = WARNING,
+    documentSuppression = false,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class NonCanonicalStaticMemberImport extends BugChecker implements ImportTreeMatcher {
 
   @Override

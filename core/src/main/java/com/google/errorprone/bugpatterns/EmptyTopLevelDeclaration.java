@@ -32,12 +32,11 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "EmptyTopLevelDeclaration",
-  summary = "Empty top-level type declaration",
-  category = JDK,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "EmptyTopLevelDeclaration",
+    summary = "Empty top-level type declaration",
+    category = JDK,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class EmptyTopLevelDeclaration extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override

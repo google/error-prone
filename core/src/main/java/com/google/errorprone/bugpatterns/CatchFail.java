@@ -67,12 +67,11 @@ import java.util.stream.Stream;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "CatchFail",
-  summary =
-      "Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful",
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "CatchFail",
+    summary =
+        "Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful",
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class CatchFail extends BugChecker implements TryTreeMatcher {
 
   public static final MethodNameMatcher ASSERT_WITH_MESSAGE =

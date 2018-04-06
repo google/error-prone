@@ -38,11 +38,10 @@ import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "FormatString",
-  summary = "Invalid printf-style format string",
-  category = JDK,
-  severity = ERROR
-)
+    name = "FormatString",
+    summary = "Invalid printf-style format string",
+    category = JDK,
+    severity = ERROR)
 public class FormatString extends BugChecker implements MethodInvocationTreeMatcher {
 
   // TODO(cushon): add support for additional printf methods, maybe with an annotation

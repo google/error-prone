@@ -61,13 +61,12 @@ import java.util.regex.Pattern;
  * @author glorioso@google.com (Nick Glorioso)
  */
 @BugPattern(
-  name = "SizeGreaterThanOrEqualsZero",
-  summary =
-      "Comparison of a size >= 0 is always true, did you intend to check for " + "non-emptiness?",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "SizeGreaterThanOrEqualsZero",
+    summary =
+        "Comparison of a size >= 0 is always true, did you intend to check for " + "non-emptiness?",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTreeMatcher {
 
   private enum MethodName {

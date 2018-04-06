@@ -32,13 +32,12 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
-  name = "LiteByteStringUtf8",
-  category = PROTOBUF,
-  summary =
-      "This pattern will silently corrupt certain byte sequences from the serialized protocol "
-          + "message. Use ByteString or byte[] directly",
-  severity = ERROR
-)
+    name = "LiteByteStringUtf8",
+    category = PROTOBUF,
+    summary =
+        "This pattern will silently corrupt certain byte sequences from the serialized protocol "
+            + "message. Use ByteString or byte[] directly",
+    severity = ERROR)
 public class LiteByteStringUtf8 extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<MethodInvocationTree> BYTE_STRING_UTF_8 =
       allOf(

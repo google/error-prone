@@ -236,13 +236,12 @@ public class ErrorProneJavaCompilerTest {
   }
 
   @BugPattern(
-    name = "ArrayEquals",
-    summary = "Reference equality used to compare arrays",
-    explanation = "",
-    category = JDK,
-    severity = ERROR,
-    disableable = false
-  )
+      name = "ArrayEquals",
+      summary = "Reference equality used to compare arrays",
+      explanation = "",
+      category = JDK,
+      severity = ERROR,
+      disableable = false)
   public static class UnsuppressibleArrayEquals extends ArrayEquals {}
 
   @Test
@@ -364,15 +363,14 @@ public class ErrorProneJavaCompilerTest {
   }
 
   @BugPattern(
-    name = "DeleteMethod",
-    summary =
-        "You appear to be using methods; prefer to implement all program logic inside the main"
-            + " function by flipping bits in a single long[].",
-    explanation = "",
-    category = JDK,
-    severity = ERROR,
-    disableable = false
-  )
+      name = "DeleteMethod",
+      summary =
+          "You appear to be using methods; prefer to implement all program logic inside the main"
+              + " function by flipping bits in a single long[].",
+      explanation = "",
+      category = JDK,
+      severity = ERROR,
+      disableable = false)
   public static class DeleteMethod extends BugChecker implements ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {

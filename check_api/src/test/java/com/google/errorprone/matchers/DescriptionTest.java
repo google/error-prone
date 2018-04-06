@@ -46,12 +46,11 @@ public class DescriptionTest {
   }
 
   @BugPattern(
-    name = "DeadException",
-    summary = "Exception created but not thrown",
-    explanation = "",
-    category = JDK,
-    severity = ERROR
-  )
+      name = "DeadException",
+      summary = "Exception created but not thrown",
+      explanation = "",
+      category = JDK,
+      severity = ERROR)
   public static class MyChecker extends BugChecker {
     Description getDescription() {
       return describeMatch(new MockTree());
@@ -83,14 +82,13 @@ public class DescriptionTest {
   }
 
   @BugPattern(
-    name = "CustomLinkChecker",
-    summary = "Exception created but not thrown",
-    explanation = "",
-    category = JDK,
-    severity = ERROR,
-    linkType = CUSTOM,
-    link = "https://www.google.com/"
-  )
+      name = "CustomLinkChecker",
+      summary = "Exception created but not thrown",
+      explanation = "",
+      category = JDK,
+      severity = ERROR,
+      linkType = CUSTOM,
+      link = "https://www.google.com/")
   public static class CustomLinkChecker extends BugChecker {
     Description getDescription() {
       return describeMatch(new MockTree());

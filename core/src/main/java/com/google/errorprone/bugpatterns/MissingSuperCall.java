@@ -45,11 +45,10 @@ import javax.lang.model.element.Modifier;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-  name = "MissingSuperCall",
-  summary = "Overriding method is missing a call to overridden super method",
-  severity = ERROR,
-  providesFix = ProvidesFix.NO_FIX
-)
+    name = "MissingSuperCall",
+    summary = "Overriding method is missing a call to overridden super method",
+    severity = ERROR,
+    providesFix = ProvidesFix.NO_FIX)
 // TODO(eaftan): Add support for JDK methods that cannot be annotated, such as
 // java.lang.Object#finalize and java.lang.Object#clone.
 public class MissingSuperCall extends BugChecker

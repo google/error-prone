@@ -56,13 +56,12 @@ import com.sun.tools.javac.util.Name;
 
 /** Bug checker for equals methods that don't actually override equals. */
 @BugPattern(
-  name = "NonOverridingEquals",
-  summary = "equals method doesn't override Object.equals",
-  category = JDK,
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "NonOverridingEquals",
+    summary = "equals method doesn't override Object.equals",
+    category = JDK,
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher {
 
   private static final String MESSAGE_BASE = "equals method doesn't override Object.equals";

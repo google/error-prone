@@ -41,15 +41,14 @@ import com.sun.tools.javac.tree.JCTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "LogicalAssignment",
-  category = JDK,
-  summary =
-      "Assignment where a boolean expression was expected;"
-          + " use == if this assignment wasn't expected or add parentheses for clarity.",
-  severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "LogicalAssignment",
+    category = JDK,
+    summary =
+        "Assignment where a boolean expression was expected;"
+            + " use == if this assignment wasn't expected or add parentheses for clarity.",
+    severity = WARNING,
+    tags = StandardTags.LIKELY_ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class LogicalAssignment extends BugChecker
     implements IfTreeMatcher, WhileLoopTreeMatcher, DoWhileLoopTreeMatcher, ForLoopTreeMatcher {
 

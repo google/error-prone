@@ -38,11 +38,10 @@ public final class NextStatementTest {
 
   /** A bugchecker to test the ability to notice the 'next statement' */
   @BugPattern(
-    name = "CompoundAssignmentBeforeReturn",
-    category = JDK,
-    summary = "This is a compound assignment before another statement in the same block",
-    severity = ERROR
-  )
+      name = "CompoundAssignmentBeforeReturn",
+      category = JDK,
+      summary = "This is a compound assignment before another statement in the same block",
+      severity = ERROR)
   public static class CompoundBeforeAnythingChecker extends BugChecker
       implements BugChecker.CompoundAssignmentTreeMatcher {
 

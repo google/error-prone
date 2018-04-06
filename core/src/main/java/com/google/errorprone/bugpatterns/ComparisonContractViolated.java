@@ -59,12 +59,11 @@ import java.util.Set;
 
 /** @author Louis Wasserman */
 @BugPattern(
-  name = "ComparisonContractViolated",
-  summary = "This comparison method violates the contract",
-  severity = SeverityLevel.ERROR,
-  category = Category.JDK,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ComparisonContractViolated",
+    summary = "This comparison method violates the contract",
+    severity = SeverityLevel.ERROR,
+    category = Category.JDK,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ComparisonContractViolated extends BugChecker implements MethodTreeMatcher {
   /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */
   private static final Matcher<MethodTree> COMPARABLE_METHOD_MATCHER =

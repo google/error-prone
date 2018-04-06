@@ -39,14 +39,13 @@ import java.util.Optional;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-  name = "OverrideThrowableToString",
-  summary =
-      "To return a custom message with a Throwable class, one should "
-          + "override getMessage() instead of toString() for Throwable.",
-  category = JDK,
-  severity = WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "OverrideThrowableToString",
+    summary =
+        "To return a custom message with a Throwable class, one should "
+            + "override getMessage() instead of toString() for Throwable.",
+    category = JDK,
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class OverrideThrowableToString extends BugChecker implements ClassTreeMatcher {
 
   @Override

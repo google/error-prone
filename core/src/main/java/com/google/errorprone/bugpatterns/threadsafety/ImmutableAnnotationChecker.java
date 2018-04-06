@@ -45,14 +45,13 @@ import java.util.Optional;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ImmutableAnnotationChecker",
-  altNames = "Immutable",
-  category = JDK,
-  summary = "Annotations should always be immutable",
-  severity = WARNING,
-  tags = StandardTags.LIKELY_ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ImmutableAnnotationChecker",
+    altNames = "Immutable",
+    category = JDK,
+    summary = "Annotations should always be immutable",
+    severity = WARNING,
+    tags = StandardTags.LIKELY_ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeMatcher {
 
   public static final String ANNOTATED_ANNOTATION_MESSAGE =

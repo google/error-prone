@@ -44,13 +44,12 @@ import com.sun.source.tree.Tree;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(
-  name = "EmptyIf",
-  altNames = {"empty"},
-  summary = "Empty statement after if",
-  category = JDK,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "EmptyIf",
+    altNames = {"empty"},
+    summary = "Empty statement after if",
+    category = JDK,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMatcher {
 
   /**

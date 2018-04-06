@@ -38,15 +38,14 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "TestExceptionChecker",
-  category = JUNIT,
-  summary =
-      "Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in"
-          + " the test method throws the expected exception",
-  severity = WARNING,
-  tags = StandardTags.FRAGILE_CODE,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "TestExceptionChecker",
+    category = JUNIT,
+    summary =
+        "Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in"
+            + " the test method throws the expected exception",
+    severity = WARNING,
+    tags = StandardTags.FRAGILE_CODE,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class TestExceptionChecker extends AbstractTestExceptionChecker {
 
   @Override

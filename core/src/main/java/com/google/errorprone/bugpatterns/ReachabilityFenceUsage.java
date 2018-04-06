@@ -32,10 +32,9 @@ import com.sun.source.tree.TryTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ReachabilityFenceUsage",
-  summary = "reachabilityFence should always be called inside a finally block",
-  severity = WARNING
-)
+    name = "ReachabilityFenceUsage",
+    summary = "reachabilityFence should always be called inside a finally block",
+    severity = WARNING)
 public class ReachabilityFenceUsage extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> FENCE_MATCHER =

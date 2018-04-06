@@ -37,12 +37,11 @@ import java.util.List;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-  name = "InjectMoreThanOneQualifier",
-  summary = "Using more than one qualifier annotation on the same element is not allowed.",
-  category = INJECT,
-  severity = ERROR,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "InjectMoreThanOneQualifier",
+    summary = "Using more than one qualifier annotation on the same element is not allowed.",
+    category = INJECT,
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MoreThanOneQualifier extends BugChecker implements AnnotationTreeMatcher {
 
   private static final Matcher<AnnotationTree> QUALIFIER_ANNOTATION_MATCHER =
