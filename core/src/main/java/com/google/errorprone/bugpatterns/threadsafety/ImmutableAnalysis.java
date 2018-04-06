@@ -83,8 +83,8 @@ public class ImmutableAnalysis {
         allowContainerTypeParameters, containerTypeParameters, type);
   }
 
-  boolean isImmutableTypeParameter(TypeVariableSymbol sym) {
-    return threadSafety.isThreadSafeTypeParameter(sym);
+  boolean hasThreadSafeTypeParameterAnnotation(TypeVariableSymbol sym) {
+    return threadSafety.hasThreadSafeTypeParameterAnnotation(sym);
   }
 
   Violation checkInstantiation(

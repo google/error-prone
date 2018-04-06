@@ -134,7 +134,7 @@ public class ImmutableChecker extends BugChecker
       return NO_MATCH;
     }
     ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
-    if (!analysis.isImmutableTypeParameter((TypeVariableSymbol) sym)) {
+    if (!analysis.hasThreadSafeTypeParameterAnnotation((TypeVariableSymbol) sym)) {
       return NO_MATCH;
     }
     switch (sym.owner.getKind()) {
@@ -196,7 +196,7 @@ public class ImmutableChecker extends BugChecker
             .filter(
                 e ->
                     annotation.containerOf().contains(e.getKey())
-                        && analysis.isImmutableTypeParameter(e.getValue()))
+                        && analysis.hasThreadSafeTypeParameterAnnotation(e.getValue()))
             .map(Entry::getKey)
             .collect(toImmutableSet());
     if (!immutableAndContainer.isEmpty()) {

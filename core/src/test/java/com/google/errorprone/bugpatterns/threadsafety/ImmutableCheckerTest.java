@@ -1506,12 +1506,19 @@ public class ImmutableCheckerTest {
   public void immutableTypeParameterInstantiation() {
     compilationHelper
         .addSourceLines(
+            "MyImmutableType.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class MyImmutableType {}")
+        .addSourceLines(
+            "MyMutableType.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "class MyMutableType {}")
+        .addSourceLines(
             "A.java",
             "import com.google.errorprone.annotations.ImmutableTypeParameter;",
             "import com.google.errorprone.annotations.Immutable;",
             "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {",
-            "}")
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
         .addSourceLines(
             "Test.java",
             "class Test {",
@@ -1519,7 +1526,15 @@ public class ImmutableCheckerTest {
             "    return new A<>();",
             "  }",
             "  A<Object> g() {",
-            "   // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'Object' is mutable",
+            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'Object' is mutable",
+            "    return new A<>();",
+            "  }",
+            "  <T extends MyImmutableType> A<T> h() {",
+            "    return new A<>();",
+            "  }",
+            "  <T extends MyMutableType> A<T> i() {",
+            "    // BUG: Diagnostic contains: "
+                + "instantiation of 'T' is mutable, 'T' is a mutable type variable",
             "    return new A<>();",
             "  }",
             "}")
@@ -1675,6 +1690,90 @@ public class ImmutableCheckerTest {
             "    }",
             "  };",
             "  I two = () -> x++;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableUpperBound() {
+    compilationHelper
+        .addSourceLines(
+            "MyImmutableType.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class MyImmutableType {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class Test<T extends MyImmutableType, U extends T> {",
+            "  final T t = null;",
+            "  final U u = null;",
+            "  final ImmutableList<? extends U> v = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableRecursiveUpperBound() {
+    compilationHelper
+        .addSourceLines(
+            "Recursive.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable",
+            "abstract class Recursive<T extends Recursive<T>> {",
+            "  final T x = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableRecursiveUpperBound_notImmutable() {
+    compilationHelper
+        .addSourceLines(
+            "Recursive.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "@Immutable",
+            "abstract class Recursive<T extends Recursive<T>> {",
+            "  final T x = null;",
+            "  // BUG: Diagnostic contains: 'Recursive' has field 'y' of type 'java.util.List<T>'",
+            "  final List<T> y = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableUpperBoundAndContainerOfInconsistency() {
+    compilationHelper
+        .addSourceLines(
+            "ImmutableInterface.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable interface ImmutableInterface {}")
+        .addSourceLines(
+            "MutableImpl.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@SuppressWarnings(\"Immutable\") class MutableImpl implements ImmutableInterface {",
+            "  int mutableField;",
+            "}")
+        .addSourceLines(
+            "WithContainerOf.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf=\"T\")",
+            "class WithContainerOf<T extends ImmutableInterface> { final T x = null; }")
+        .addSourceLines(
+            "WithoutContainerOf.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable",
+            "class WithoutContainerOf<T extends ImmutableInterface> { final T x = null; }")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class Test {",
+            "  final WithContainerOf<ImmutableInterface> a = null;",
+            "  final WithoutContainerOf<ImmutableInterface> b = null;",
+            "  // BUG: Diagnostic contains: field 'c' of type 'WithContainerOf<MutableImpl>'",
+            "  final WithContainerOf<MutableImpl> c = null;",
+            "  final WithoutContainerOf<MutableImpl> d = null;",
             "}")
         .doTest();
   }

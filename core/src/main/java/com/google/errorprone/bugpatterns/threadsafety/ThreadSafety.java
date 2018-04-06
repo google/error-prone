@@ -30,7 +30,6 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
-import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Attribute;
@@ -53,6 +52,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -76,6 +76,9 @@ public final class ThreadSafety {
   private final Class<? extends Annotation> containerOfAnnotation;
   @Nullable private final Class<? extends Annotation> suppressAnnotation;
   @Nullable private final Class<? extends Annotation> typeParameterAnnotation;
+
+  /** Stores recursive invocations of {@link #isTypeParameterThreadSafe} */
+  private final Set<TypeVariableSymbol> recursiveThreadSafeTypeParameter = new HashSet<>();
 
   public static Builder builder() {
     return new Builder();
@@ -278,7 +281,7 @@ public final class ThreadSafety {
     }
     for (int i = 0; i < type.tsym.getTypeParameters().size(); i++) {
       TypeVariableSymbol typaram = type.tsym.getTypeParameters().get(i);
-      boolean immutableTypeParameter = isThreadSafeTypeParameter(typaram);
+      boolean immutableTypeParameter = hasThreadSafeTypeParameterAnnotation(typaram);
       if (annotation.containerOf().contains(typaram.getSimpleName().toString())
           || immutableTypeParameter) {
         Type tyarg = type.getTypeArguments().get(i);
@@ -355,7 +358,8 @@ public final class ThreadSafety {
     }
     // (2)
     if (!containerTypeParameters.contains(tyargument.asElement().getSimpleName().toString())
-        || isThreadSafeTypeParameter((TypeVariableSymbol) tyargument.asElement())) {
+        || isTypeParameterThreadSafe(
+            (TypeVariableSymbol) tyargument.asElement(), containerTypeParameters)) {
       return false;
     }
     // (3)
@@ -416,7 +420,7 @@ public final class ThreadSafety {
       if (containerTypeParameters.contains(tyvar.getSimpleName().toString())) {
         return Violation.absent();
       }
-      if (isThreadSafeTypeParameter(tyvar)) {
+      if (isTypeParameterThreadSafe(tyvar, containerTypeParameters)) {
         return Violation.absent();
       }
       String message;
@@ -485,12 +489,49 @@ public final class ThreadSafety {
    * Returns true if the given type parameter's declaration is annotated with {@link
    * #typeParameterAnnotation} indicated it will only ever be instantiated with thread-safe types.
    */
-  public boolean isThreadSafeTypeParameter(TypeVariableSymbol symbol) {
+  public boolean hasThreadSafeTypeParameterAnnotation(TypeVariableSymbol symbol) {
     return typeParameterAnnotation != null
         && symbol
             .getAnnotationMirrors()
             .stream()
             .anyMatch(t -> t.type.tsym.flatName().contentEquals(typeParameterAnnotation.getName()));
+  }
+
+  /**
+   * Returns whether a type parameter is thread-safe.
+   *
+   * <p>This is true if either the type parameter's declaration is annotated with {@link
+   * #typeParameterAnnotation} (indicating it can only be instantiated with thread-safe types), or
+   * the type parameter has a thread-safe upper bound (sub-classes of thread-safe types are also
+   * thread-safe).
+   *
+   * <p>If a type has a recursive bound, we recursively assume that this type satisfies all
+   * thread-safety constraints. Recursion can only happen with type variables that have recursive
+   * type bounds. These type variables do not need to be called out in the "containerOf" attribute
+   * or annotated with {@link #typeParameterAnnotation}.
+   *
+   * <p>Recursion does not apply to other kinds of types because all declared types must be
+   * annotated thread-safe, which means that thread-safety checkers don't need to analyze all
+   * referenced types recursively.
+   */
+  private boolean isTypeParameterThreadSafe(
+      TypeVariableSymbol symbol, Set<String> containerTypeParameters) {
+    if (!recursiveThreadSafeTypeParameter.add(symbol)) {
+      return true;
+    }
+    // TODO(b/77695285): Prevent type variables that are immutable because of an immutable upper
+    // bound to be marked thread-safe via containerOf or typeParameterAnnotation.
+    try {
+      for (Type bound : symbol.getBounds()) {
+        if (!isThreadSafeType(true, containerTypeParameters, bound).isPresent()) {
+          // A type variable is thread-safe if any upper bound is thread-safe.
+          return true;
+        }
+      }
+      return hasThreadSafeTypeParameterAnnotation(symbol);
+    } finally {
+      recursiveThreadSafeTypeParameter.remove(symbol);
+    }
   }
 
   /**
@@ -701,7 +742,7 @@ public final class ThreadSafety {
             typeParameters.stream(),
             typeArguments.stream(),
             (sym, type) -> {
-              if (!isThreadSafeTypeParameter(sym)) {
+              if (!hasThreadSafeTypeParameterAnnotation(sym)) {
                 return Violation.absent();
               }
               Violation info =
@@ -725,7 +766,7 @@ public final class ThreadSafety {
       return Violation.absent();
     }
     Collection<TypeVariableSymbol> typeParameters = symbol.getTypeParameters();
-    if (typeParameters.stream().noneMatch(this::isThreadSafeTypeParameter)) {
+    if (typeParameters.stream().noneMatch(this::hasThreadSafeTypeParameterAnnotation)) {
       // fast path
       return Violation.absent();
     }
