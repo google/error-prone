@@ -70,10 +70,17 @@ public final class RestrictToEnforcer extends BugChecker
         NewClassTreeMatcher,
         IdentifierTreeMatcher {
 
+  private static final String PACKAGE_ANDROID_SUPPORT = "android.support";
+  private static final String PACKAGE_ANDROIDX = "androidx";
+  private static final String PACKAGE_MATERIAL = "com.google.android.material";
+  private static final String PACKAGE_ANDROID_ARCH = "android.arch";
+
   private static final Matcher<Tree> COMPILING_SUPPORT_LIBRARY_MATCHER =
       Matchers.anyOf(
-          Matchers.packageStartsWith("android.support"),
-          Matchers.packageStartsWith("android.arch"));
+          Matchers.packageStartsWith(PACKAGE_ANDROID_SUPPORT),
+          Matchers.packageStartsWith(PACKAGE_ANDROIDX),
+          Matchers.packageStartsWith(PACKAGE_MATERIAL),
+          Matchers.packageStartsWith(PACKAGE_ANDROID_ARCH));
 
   @Override
   public final Description matchAnnotation(AnnotationTree tree, VisitorState state) {
@@ -240,10 +247,10 @@ public final class RestrictToEnforcer extends BugChecker
   }
 
   private static boolean symbolInSupportLibrary(Symbol sym) {
-    return ASTHelpers.enclosingPackage(sym)
-        .getQualifiedName()
-        .toString()
-        .startsWith("android.support");
+    String packageName = ASTHelpers.enclosingPackage(sym).getQualifiedName().toString();
+    return packageName.startsWith(PACKAGE_ANDROID_SUPPORT)
+        || packageName.startsWith(PACKAGE_ANDROIDX)
+        || packageName.startsWith(PACKAGE_MATERIAL);
   }
 
   private static boolean checkEnclosingTypes(Type type, VisitorState state) {
