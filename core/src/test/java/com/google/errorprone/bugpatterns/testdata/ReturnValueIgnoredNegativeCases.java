@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -53,5 +54,17 @@ public class ReturnValueIgnoredNegativeCases {
   public void passReturnValueCheckedMethodReferenceToFunctionVoid() {
     Function<Integer, Void> fn = (i -> null);
     acceptFunctionOfVoid(fn::apply);
+  }
+
+  public void arraysReturnValues() {
+    int[] numbers = {5, 4, 3, 2, 1};
+    int result = Arrays.binarySearch(numbers, 3);
+    int hashCode = Arrays.hashCode(numbers);
+  }
+
+  public void arraysNoReturnValues() {
+    int[] numbers = {5, 4, 3, 2, 1};
+    Arrays.fill(numbers, 0);
+    Arrays.sort(numbers);
   }
 }
