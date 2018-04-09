@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Locale;
 
 /** @author alexeagle@google.com (Alex Eagle) */
@@ -132,5 +133,31 @@ public class ReturnValueIgnoredPositiveCases {
       p.toRealPath();
     } catch (IOException e) {
     }
+  }
+
+  int[] numbers = {5, 4, 3, 2, 1};
+  Object[] objects = {new Object(), new Object()};
+
+  { // Arrays methods
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.asList(5, 4, 3, 2, 1);
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.binarySearch(numbers, 3);
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.copyOf(numbers, 3);
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.copyOfRange(numbers, 1, 3);
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.deepEquals(objects, objects);
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.deepHashCode(objects);
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.deepToString(objects);
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.equals(objects, objects);
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.hashCode(objects);
+    // BUG: Diagnostic contains: Return value of this method must be used
+    Arrays.toString(objects);
   }
 }

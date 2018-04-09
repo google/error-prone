@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
@@ -82,14 +83,21 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
 
   /**
    * The return value of stream methods should always be checked (except for forEach and
-   * forEachOrded, which are void-returning and will not be checked by AbstractReturnValueIgnored).
+   * forEachOrdered, which are void-returning and won't be checked by AbstractReturnValueIgnored).
    */
   private static final Matcher<ExpressionTree> STREAM_METHOD =
       instanceMethod().onDescendantOf("java.util.stream.BaseStream");
 
+  /**
+   * The return values of {@link java.util.Arrays} methods should always be checked (except for
+   * void-returning ones, which won't be checked by AbstractReturnValueIgnored).
+   */
+  private static final Matcher<ExpressionTree> ARRAYS_METHODS =
+      staticMethod().onClass("java.util.Arrays");
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return anyOf(RETURNS_SAME_TYPE, FUNCTIONAL_METHOD, STREAM_METHOD);
+    return anyOf(RETURNS_SAME_TYPE, FUNCTIONAL_METHOD, STREAM_METHOD, ARRAYS_METHODS);
   }
 
   /** Matches method invocations that return the same type as the receiver object. */
