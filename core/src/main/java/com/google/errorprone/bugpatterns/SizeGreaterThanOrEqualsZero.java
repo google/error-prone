@@ -24,8 +24,8 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static java.util.stream.Collectors.joining;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Iterables;
@@ -50,7 +50,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -236,13 +235,8 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     ExpressionTree classToken = getReceiver(callToSize);
 
     if (HAS_EMPTY_METHOD.matches(classToken, state)) {
-      List<CharSequence> argumentSourceValues =
-          callToSize
-              .getArguments()
-              .stream()
-              .map(state::getSourceForNode)
-              .collect(toImmutableList());
-      String argumentString = Joiner.on(',').join(argumentSourceValues);
+      String argumentString =
+          callToSize.getArguments().stream().map(state::getSourceForNode).collect(joining(","));
 
       return describeMatch(
           tree,
