@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":42,"i9":10,"i10":10,"i11":10,"i12":10};
+var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":42,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -250,6 +250,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#hasThreadSafeTypeParameterAnnotation-com.sun.tools.javac.code.Symbol.TypeVariableSymbol-">hasThreadSafeTypeParameterAnnotation</a></span>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code>
+<div class="block">Returns true if the given type parameter's declaration is annotated with <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#typeParameterAnnotation"><code>typeParameterAnnotation</code></a> indicated it will only ever be instantiated with thread-safe types.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-boolean-java.util.Set-com.sun.tools.javac.code.Type-">isThreadSafeType</a></span>(boolean&nbsp;allowContainerTypeParameters,
                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
@@ -257,19 +263,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Returns an <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> explaining whether the type is threadsafe.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-java.util.Set-com.sun.tools.javac.code.Type-">isThreadSafeType</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;containerTypeParameters,
                 com.sun.tools.javac.code.Type&nbsp;type)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
 <div class="block"><span class="deprecationComment">use <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-boolean-java.util.Set-com.sun.tools.javac.code.Type-"><code>isThreadSafeType(boolean, Set, Type)</code></a> instead.</span></div>
 </div>
-</td>
-</tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeTypeParameter-com.sun.tools.javac.code.Symbol.TypeVariableSymbol-">isThreadSafeTypeParameter</a></span>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code>
-<div class="block">Returns true if the given type parameter's declaration is annotated with <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#typeParameterAnnotation"><code>typeParameterAnnotation</code></a> indicated it will only ever be instantiated with thread-safe types.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
@@ -446,13 +446,13 @@ public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafe
 </dl>
 </li>
 </ul>
-<a name="isThreadSafeTypeParameter-com.sun.tools.javac.code.Symbol.TypeVariableSymbol-">
+<a name="hasThreadSafeTypeParameterAnnotation-com.sun.tools.javac.code.Symbol.TypeVariableSymbol-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>isThreadSafeTypeParameter</h4>
-<pre>public&nbsp;boolean&nbsp;isThreadSafeTypeParameter(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</pre>
+<h4>hasThreadSafeTypeParameterAnnotation</h4>
+<pre>public&nbsp;boolean&nbsp;hasThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</pre>
 <div class="block">Returns true if the given type parameter's declaration is annotated with <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#typeParameterAnnotation"><code>typeParameterAnnotation</code></a> indicated it will only ever be instantiated with thread-safe types.</div>
 </li>
 </ul>

@@ -1,6 +1,6 @@
 ---
 title: DefaultCharset
-summary: Implicit use of the platform default charset, which can result in differing behavior between JVM executions or incorrect behavior if the encoding of the data source doesn't match expectations.
+summary: Implicit use of the platform default charset, which can result in differing behaviour between JVM executions or incorrect behavior if the encoding of the data source doesn't match expectations.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
