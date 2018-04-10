@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -770,23 +771,29 @@ public final class ThreadSafety {
       // fast path
       return Violation.absent();
     }
-    ImmutableMap<TypeVariableSymbol, Type> instantiation = getInstantiation(methodType);
+    ImmutableMap<TypeVariableSymbol, Type> instantiation =
+        getInstantiation(state.getTypes(), methodType);
     return checkInstantiation(
         typeParameters, typeParameters.stream().map(instantiation::get).collect(toImmutableList()));
   }
 
-  private static ImmutableMap<TypeVariableSymbol, Type> getInstantiation(Type methodType) {
+  private static ImmutableMap<TypeVariableSymbol, Type> getInstantiation(
+      Types types, Type methodType) {
     List<Type> to = new ArrayList<>();
     ArrayList<Type> from = new ArrayList<>();
     getSubst(getMapping(methodType), from, to);
-    ImmutableMap.Builder<TypeVariableSymbol, Type> mapping = ImmutableMap.builder();
+    Map<TypeVariableSymbol, Type> mapping = new LinkedHashMap<>();
     Streams.forEachPair(
         from.stream(),
         to.stream(),
         (f, t) -> {
-          mapping.put((TypeVariableSymbol) f.asElement(), t);
+          Type existing = mapping.put((TypeVariableSymbol) f.asElement(), t);
+          if (existing != null && !types.isSameType(t, existing)) {
+            throw new AssertionError(
+                String.format("%s instantiated as both %s and %s", f.asElement(), t, existing));
+          }
         });
-    return mapping.build();
+    return ImmutableMap.copyOf(mapping);
   }
 
   private static Type getMapping(Type type) {

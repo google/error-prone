@@ -1777,4 +1777,24 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
+  // regression test for b/77781008
+  @Test
+  public void immutableTypeParameter_twoInstantiations() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class Test<@ImmutableTypeParameter T> {",
+            "  <@ImmutableTypeParameter T> T f(T t) { return t; }",
+            "  <@ImmutableTypeParameter T> void g(T a, T b) {}",
+            "  @Immutable interface I {}",
+            "  void test(I i) {",
+            "    g(f(i), f(i));",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
