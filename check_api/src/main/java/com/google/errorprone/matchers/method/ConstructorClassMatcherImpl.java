@@ -50,11 +50,16 @@ class ConstructorClassMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
 
   @Override
   public ParameterMatcher withParameters(String... parameters) {
-    return withParameters(Suppliers.fromStrings(Arrays.asList(parameters)));
+    return withParameters(Arrays.asList(parameters));
   }
 
   @Override
-  public ParameterMatcher withParameters(Iterable<Supplier<Type>> parameters) {
+  public ParameterMatcher withParameters(Iterable<String> parameters) {
+    return withParametersOfType(Suppliers.fromStrings(parameters));
+  }
+
+  @Override
+  public ParameterMatcher withParametersOfType(Iterable<Supplier<Type>> parameters) {
     return new ParameterMatcherImpl(this, ImmutableList.copyOf(parameters));
   }
 }
