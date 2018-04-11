@@ -79,8 +79,7 @@ import java.util.List;
  *   <li>{@code org.junit.Assert},
  *   <li>{@code junit.framework.Assert},
  *   <li>{@code junit.framework.TestCase} - which overrides the methods from Assert in order to
- *       deprecate them,
- *   <li>{@code com.google.testing.util.MoreAsserts} and
+ *       deprecate them and
  *   <li>every class whose name ends with "MoreAsserts".
  * </ul>
  *
@@ -88,7 +87,6 @@ import java.util.List;
  *
  * <ul>
  *   <li>support multiple catch() blocks
- *   <li>support MoreAsserts
  * </ul>
  *
  * @author adamwos@google.com (Adam Wos)
