@@ -137,20 +137,20 @@ public class DefaultCharset extends BugChecker
       anyOf(
           constructor()
               .forClass(String.class.getName())
-              .withParameters(ImmutableList.of(Suppliers.arrayOf(Suppliers.BYTE_TYPE))),
+              .withParametersOfType(ImmutableList.of(Suppliers.arrayOf(Suppliers.BYTE_TYPE))),
           constructor()
               .forClass(String.class.getName())
-              .withParameters(
+              .withParametersOfType(
                   ImmutableList.of(
                       Suppliers.arrayOf(Suppliers.BYTE_TYPE),
                       Suppliers.INT_TYPE,
                       Suppliers.INT_TYPE)),
           constructor()
               .forClass(OutputStreamWriter.class.getName())
-              .withParameters(ImmutableList.of(Suppliers.typeFromClass(OutputStream.class))),
+              .withParametersOfType(ImmutableList.of(Suppliers.typeFromClass(OutputStream.class))),
           constructor()
               .forClass(InputStreamReader.class.getName())
-              .withParameters(ImmutableList.of(Suppliers.typeFromClass(InputStream.class))));
+              .withParametersOfType(ImmutableList.of(Suppliers.typeFromClass(InputStream.class))));
 
   private static final Matcher<ExpressionTree> BYTESTRING_COPY_FROM =
       staticMethod().onClass("com.google.protobuf.ByteString").named("copyFrom");

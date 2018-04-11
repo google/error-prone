@@ -127,7 +127,10 @@ public class MethodMatchers {
     ParameterMatcher withParameters(String... parameters);
 
     /** Match constructors whose formal parameters have the given types. */
-    ParameterMatcher withParameters(Iterable<Supplier<Type>> parameters);
+    ParameterMatcher withParameters(Iterable<String> parameters);
+
+    /** Match constructors whose formal parameters have the given types. */
+    ParameterMatcher withParametersOfType(Iterable<Supplier<Type>> parameters);
   }
 
   public interface ParameterMatcher extends Matcher<ExpressionTree> {}
