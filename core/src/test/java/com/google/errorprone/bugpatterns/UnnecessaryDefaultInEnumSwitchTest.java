@@ -262,4 +262,47 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void notExhaustive2() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE }",
+            "  boolean m(boolean f, Case c) {",
+            "    if (f) {",
+            "      switch (c) {",
+            "        case ONE:",
+            "        case TWO:",
+            "        case THREE:",
+            "          return true;",
+            "        default:",
+            "          return false;",
+            "      }",
+            "    } else {",
+            "      return false;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE }",
+            "  boolean m(boolean f, Case c) {",
+            "    if (f) {",
+            "      switch (c) {",
+            "        case ONE:",
+            "        case TWO:",
+            "        case THREE:",
+            "          return true;",
+            "      }",
+            "      return false;",
+            "    } else {",
+            "      return false;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
