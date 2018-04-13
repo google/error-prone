@@ -13,8 +13,8 @@ if [ "$TRAVIS_REPO_SLUG" == "google/error-prone" ] && \
   git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/google/error-prone $GH_PAGES_DIR > /dev/null
   (
     cd $GH_PAGES_DIR
-    rm -rf _data/bugpatterns.yaml bugpattern api/latest
-    mkdir -p _data bugpattern api/latest
+    rm -rf _data/bugpatterns.yaml api/latest
+    mkdir -p _data api/latest
   )
 
   mvn javadoc:aggregate -P!examples
