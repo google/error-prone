@@ -30,13 +30,12 @@
   <artifactId>error_prone_type_annotations</artifactId>
 
   <dependencies>
-
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotations</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
