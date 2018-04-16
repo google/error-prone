@@ -13,7 +13,12 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-See https://github.com/google/guice/wiki/InjectionPoints#how-guice-injects
+From the [Guice wiki][wiki]:
+
+> Injecting `final` fields is not recommended because the injected value may not
+> be visible to other threads.
+
+[wiki]: https://github.com/google/guice/wiki/InjectionPoints#how-guice-injects
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuiceInjectOnFinalField")` to the enclosing element.

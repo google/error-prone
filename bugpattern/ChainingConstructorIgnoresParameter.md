@@ -13,7 +13,21 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-A constructor parameter might not be being used as expected
+When a class exposes multiple constructors, they're generally used as a means of
+initializing default parameters. If a chaining constructor ignores a parameter,
+it's likely the parameter needed to be plumbed to the chained constructor.
+
+```java
+MissileLauncher(Location target) {
+  this(target, false);
+}
+MissileLauncher(boolean askForConfirmation) {
+  this(TEST_TARGET, false); // should be askForConfirmation
+}
+MissileLauncher(Location target, boolean askForConfirmation) {
+   ...
+}
+```
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ChainingConstructorIgnoresParameter")` to the enclosing element.

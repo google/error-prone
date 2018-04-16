@@ -13,7 +13,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-The Thread is created with new, but is never started, and the reference is lost.
+The Thread is created with `new`, but is never started and is not otherwise
+captured.
+
+Threads must be started with `start()` to actually execute.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DeadThread")` to the enclosing element.
