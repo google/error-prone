@@ -63,6 +63,11 @@ public abstract class AbstractToString extends BugChecker
    */
   protected abstract Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state);
 
+  /** Adds the description message for match on the type without fixes. */
+  protected Optional<String> descriptionMessageForDefaultMatch(Type type) {
+    return Optional.absent();
+  }
+
   /**
    * Constructs a fix for an explicit toString call, e.g. from {@code Object.toString()} or {@code
    * String.valueOf()}.
@@ -103,9 +108,9 @@ public abstract class AbstractToString extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     ExpressionTree receiver = ASTHelpers.getReceiver(tree);
-    if (TO_STRING.matches(tree, state)
-        && typePredicate().apply(ASTHelpers.getType(receiver), state)) {
-      return maybeFix(tree, toStringFix(tree, receiver, state));
+    Type receiverType = ASTHelpers.getType(receiver);
+    if (TO_STRING.matches(tree, state) && typePredicate().apply(receiverType, state)) {
+      return maybeFix(tree, receiverType, toStringFix(tree, receiver, state));
     }
     return checkToString(tree, state);
   }
@@ -142,7 +147,7 @@ public abstract class AbstractToString extends BugChecker
     if (!typePredicate().apply(type, state)) {
       return NO_MATCH;
     }
-    return maybeFix(tree, fix);
+    return maybeFix(tree, type, fix);
   }
 
   enum ToStringKind {
@@ -178,7 +183,15 @@ public abstract class AbstractToString extends BugChecker
         && state.getTypes().isSameType(ASTHelpers.getType(tree), state.getSymtab().stringType);
   }
 
-  private Description maybeFix(Tree tree, Optional<Fix> fix) {
-    return fix.isPresent() ? describeMatch(tree, fix.get()) : describeMatch(tree);
+  private Description maybeFix(Tree tree, Type matchedType, Optional<Fix> fix) {
+    Description.Builder description = buildDescription(tree);
+    if (fix.isPresent()) {
+      description.addFix(fix.get());
+    }
+    Optional<String> summary = descriptionMessageForDefaultMatch(matchedType);
+    if (summary.isPresent()) {
+      description.setMessage(summary.get());
+    }
+    return description.build();
   }
 }
