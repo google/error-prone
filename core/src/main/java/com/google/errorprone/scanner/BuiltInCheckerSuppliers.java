@@ -76,6 +76,7 @@ import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.EqualsReference;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.FallThrough;
+import com.google.errorprone.bugpatterns.FieldCanBeFinal;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.FloatCast;
 import com.google.errorprone.bugpatterns.FloatingPointLiteralPrecision;
@@ -569,6 +570,7 @@ public class BuiltInCheckerSuppliers {
           EmptyTopLevelDeclaration.class,
           ExpectedExceptionChecker.class,
           FieldMissingNullable.class,
+          FieldCanBeFinal.class,
           FunctionalInterfaceClash.class,
           FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
           HardCodedSdCardPath.class,
