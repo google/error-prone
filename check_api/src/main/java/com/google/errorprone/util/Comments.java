@@ -21,6 +21,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.Commented.Position;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -132,25 +133,34 @@ public class Comments {
     for (ErrorProneToken token : tokens) {
       tokenTracker.advance(token);
       if (tokenTracker.atStartOfLine() && !tokenTracker.wasPreviousLineEmpty()) {
+        // if the token is at the start of a line it could still have a comment attached which was
+        // on the previous line
         for (Comment c : token.comments()) {
           if (tokenTracker.isCommentOnPreviousLine(c)
               && token.pos() <= argumentTracker.currentArgumentStartPosition
               && argumentTracker.isPreviousArgumentOnPreviousLine()) {
             // token was on the previous line so therefore we should add it to the previous comment
-            // unless the previous argument was not on the the previous line with it
-            argumentTracker.addCommentToPreviousArgument(c);
+            // unless the previous argument was not on the previous line with it
+            argumentTracker.addCommentToPreviousArgument(c, Position.ANY);
           } else {
             // if the comment comes after the end of the invocation and its not on the same line
             // as the final argument then we need to ignore it
             if (c.getSourcePos(0) <= invocationEnd
                 || lineMap.getLineNumber(c.getSourcePos(0))
                     <= lineMap.getLineNumber(argumentTracker.currentArgumentEndPosition)) {
-              argumentTracker.addCommentToCurrentArgument(c);
+              argumentTracker.addCommentToCurrentArgument(c, Position.ANY);
             }
           }
         }
       } else {
-        argumentTracker.addAllCommentsToCurrentArgument(token.comments());
+        // we add all the before-comments from the first token of the argument
+        // we add all the after-comments from the last token of the argument
+        if (token.pos() == argumentTracker.currentArgumentStartPosition) {
+          argumentTracker.addAllCommentsToCurrentArgument(token.comments(), Position.BEFORE);
+        }
+        if (token.endPos() > argumentTracker.currentArgumentEndPosition) {
+          argumentTracker.addAllCommentsToCurrentArgument(token.comments(), Position.AFTER);
+        }
       }
       if (token.pos() >= argumentTracker.currentArgumentEndPosition) {
         // We are between arguments so wait for a (lexed) comma to delimit them
@@ -384,16 +394,17 @@ public class Comments {
           == lineMap.getLineNumber(currentArgumentStartPosition) - 1;
     }
 
-    void addCommentToPreviousArgument(Comment c) {
-      previousCommentedResultBuilder.addComment(c, previousArgumentEndPosition, offset);
+    void addCommentToPreviousArgument(Comment c, Position position) {
+      previousCommentedResultBuilder.addComment(c, previousArgumentEndPosition, offset, position);
     }
 
-    void addCommentToCurrentArgument(Comment c) {
-      currentCommentedResultBuilder.addComment(c, currentArgumentStartPosition, offset);
+    void addCommentToCurrentArgument(Comment c, Position position) {
+      currentCommentedResultBuilder.addComment(c, currentArgumentStartPosition, offset, position);
     }
 
-    void addAllCommentsToCurrentArgument(Iterable<Comment> comments) {
-      currentCommentedResultBuilder.addAllComment(comments, currentArgumentStartPosition, offset);
+    void addAllCommentsToCurrentArgument(Iterable<Comment> comments, Position position) {
+      currentCommentedResultBuilder.addAllComment(
+          comments, currentArgumentStartPosition, offset, position);
     }
 
     boolean hasMoreArguments() {

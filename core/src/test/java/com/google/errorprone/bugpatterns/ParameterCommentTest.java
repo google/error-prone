@@ -136,4 +136,28 @@ public class ParameterCommentTest {
             "}")
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void parameterComment_doesNotChange_whenNestedComment() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second);",
+            "  abstract Object target2(Object second);",
+            "  void test(Object first, Object second) {",
+            "    target(first, target2(/* second= */ second));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object first, Object second);",
+            "  abstract Object target2(Object second);",
+            "  void test(Object first, Object second) {",
+            "    target(first, target2(/* second= */ second));",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
 }

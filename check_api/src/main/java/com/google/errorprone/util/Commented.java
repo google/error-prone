@@ -25,6 +25,13 @@ import com.sun.tools.javac.parser.Tokens.Comment;
 @AutoValue
 public abstract class Commented<T extends Tree> {
 
+  /** Identifies the position of a comment relative to the associated treenode. */
+  public enum Position {
+    BEFORE,
+    AFTER,
+    ANY
+  }
+
   public abstract T tree();
 
   public abstract ImmutableList<Comment> beforeComments();
@@ -44,21 +51,29 @@ public abstract class Commented<T extends Tree> {
 
     protected abstract ImmutableList.Builder<Comment> afterCommentsBuilder();
 
-    Builder<T> addComment(Comment comment, int nodePosition, int tokenizingOffset) {
+    Builder<T> addComment(
+        Comment comment, int nodePosition, int tokenizingOffset, Position position) {
       OffsetComment offsetComment = new OffsetComment(comment, tokenizingOffset);
 
       if (comment.getSourcePos(0) < nodePosition) {
-        beforeCommentsBuilder().add(offsetComment);
+        if (position.equals(Position.BEFORE) || position.equals(Position.ANY)) {
+          beforeCommentsBuilder().add(offsetComment);
+        }
       } else {
-        afterCommentsBuilder().add(offsetComment);
+        if (position.equals(Position.AFTER) || position.equals(Position.ANY)) {
+          afterCommentsBuilder().add(offsetComment);
+        }
       }
       return this;
     }
 
     Builder<T> addAllComment(
-        Iterable<? extends Comment> comments, int nodePosition, int tokenizingOffset) {
+        Iterable<? extends Comment> comments,
+        int nodePosition,
+        int tokenizingOffset,
+        Position position) {
       for (Comment comment : comments) {
-        addComment(comment, nodePosition, tokenizingOffset);
+        addComment(comment, nodePosition, tokenizingOffset, position);
       }
       return this;
     }
