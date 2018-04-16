@@ -59,7 +59,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.BoundKind;
@@ -684,7 +684,7 @@ public class SuggestedFixes {
     }
     JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
     JavaFileObject modifiedFile = compilationUnit.getSourceFile();
-    JavacTaskImpl javacTask = (JavacTaskImpl) state.context.get(JavacTask.class);
+    BasicJavacTask javacTask = (BasicJavacTask) state.context.get(JavacTask.class);
     if (javacTask == null) {
       throw new IllegalArgumentException("No JavacTask in context.");
     }
