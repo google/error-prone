@@ -240,6 +240,7 @@ import com.google.errorprone.bugpatterns.android.FragmentNotInstantiable;
 import com.google.errorprone.bugpatterns.android.HardCodedSdCardPath;
 import com.google.errorprone.bugpatterns.android.IsLoggableTagLength;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
+import com.google.errorprone.bugpatterns.android.ParcelableCreator;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.android.RestrictToEnforcer;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
@@ -519,6 +520,7 @@ public class BuiltInCheckerSuppliers {
           OverridesGuiceInjectableMethod.class,
           OverrideThrowableToString.class,
           ParameterName.class,
+          ParcelableCreator.class,
           PreconditionsInvalidPlaceholder.class,
           ProtoFieldPreconditionsCheckNotNull.class,
           QualifierOrScopeOnInjectMethod.class,
