@@ -67,4 +67,34 @@ public class OrphanedFormatStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void formatMethod() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "import com.google.errorprone.annotations.FormatString;",
+            "class Test {",
+            "  static class MyPrintWriter extends java.io.PrintWriter {",
+            "    MyPrintWriter() throws java.io.FileNotFoundException {super((String) null);}",
+            "    @FormatMethod",
+            "    public void println(String first, Object...args) {}",
+            "    @FormatMethod",
+            "    public void print(String first,"
+                + " @FormatString String second, Object...args) {}",
+            "  }",
+            "  void f(MyPrintWriter pw) {",
+            "    pw.println(\"%s %s\", \"\", \"\");",
+            "    pw.print(\"\", \"%s\");",
+            // Here, %s in the first position is a non-format String arg
+            "    // BUG: Diagnostic contains: ",
+            "    pw.print(\"%s\", \"%s\");",
+            // The first argument to the format string is another format string
+            "    // BUG: Diagnostic contains: ",
+            "    pw.print(\"\", \"%s\", \"%d\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
