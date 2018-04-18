@@ -15,16 +15,6 @@ matrix:
 # use travis-ci docker based infrastructure
 sudo: false
 
-# TODO(eaftan): uncomment addons below when
-# https://github.com/travis-ci/travis-ci/issues/9512 is fixed
-#
-# https://github.com/travis-ci/travis-ci/issues/3259#issuecomment-130860338
-#addons:
-#  apt:
-#    packages:
-#
-#      - oracle-java8-installer
-
 cache:
   directories:
     - $HOME/.m2
@@ -47,21 +37,6 @@ env:
     - secure: "kM6uLpPkYz/i5FTMAh0yUyhLrmJFDr643u49i9FHreg+L5n+DYUilbRPOfHhN802Wd9Pb1yGkFxbumuzo+ZjTjHmyjH5w5hsRvRrPVX3FRnMN5SMCnE95nBZJOyMrYHYnko+IXsENqqfPjTe5d/fUsMcwYcIPuqssaO+lvTv0Yw="
     - secure: "VTl3ljwGf0KPbX5wW1+MgQuLwpfSppph/STiyUOQkISO5jDwBAfnvcBymn/oLESwQeLZ/D+GZtL/sooG2Kf6v8Fdn6Q6VhwfSxgLDJUME+A4rOBBnDExhpUz+OT0XugWHfQ/sYRaDRk1/c1axt3XB/cxlzPNIJKlzDoPZpfDyGM="
     - secure: "FHXaeHYXmdGNYZLuSbAE7c5xmIhUT8/VzpnlkVmDgCPXgOGY7RzCpF4MVPIDm7f63bx/qZSu+d008gFHTI98UQLHMACjD1wuahk+0vqXVG1W3WwruqilTriYjW1gUkwa5zv5AaApq0dd5CO7li1DpNPgqOrU50ddJlb0BZ6wv1Q="
-
-# TODO(eaftan): remove before_install section when
-# https://github.com/travis-ci/travis-ci/issues/9512 is fixed
-before_install:
-  - sudo add-apt-repository -y ppa:webupd8team/java
-  - sudo apt-get update
-  - sudo apt-get install -y oracle-java8-installer || true
-  - pushd /var/lib/dpkg/info
-  - sudo sed -i 's|JAVA_VERSION=8u161|JAVA_VERSION=8u172|' oracle-java8-installer.*
-  - sudo sed -i 's|PARTNER_URL=http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/|PARTNER_URL=http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/|' oracle-java8-installer.*
-  - sudo sed -i 's|SHA256SUM_TGZ="6dbc56a0e3310b69e91bb64db63a485bd7b6a8083f08e48047276380a0e2021e"|SHA256SUM_TGZ="28a00b9400b6913563553e09e8024c286b506d8523334c93ddec6c9ec7e9d346"|' oracle-java8-installer.*
-  - sudo sed -i 's|J_DIR=jdk1.8.0_161|J_DIR=jdk1.8.0_172|' oracle-java8-installer.*
-  - popd
-  - sudo apt-get update
-  - sudo apt-get install -y oracle-java8-installer
 
 after_success:
   - util/publish-snapshot-on-commit.sh
