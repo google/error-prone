@@ -54,8 +54,8 @@ import javax.lang.model.element.Modifier;
   name = "ParcelableCreator",
   summary = "Detects classes which implement Parcelable but don't have CREATOR",
   category = Category.ANDROID,
-  severity = SeverityLevel.WARNING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
+  severity = SeverityLevel.ERROR,
+  providesFix = ProvidesFix.NO_FIX
 )
 public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
 
