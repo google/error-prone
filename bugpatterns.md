@@ -346,6 +346,9 @@ Arguments are in the wrong order or could be commented for clarity.
 __[AssertEqualsArgumentOrderChecker](bugpattern/AssertEqualsArgumentOrderChecker)__<br>
 Arguments are swapped in assertEquals-like call
 
+__[AssertThrowsMultipleStatements](bugpattern/AssertThrowsMultipleStatements)__<br>
+The lambda passed to assertThows should contain exactly one statement
+
 __[AssertionFailureIgnored](bugpattern/AssertionFailureIgnored)__<br>
 This assertion throws an AssertionError if it fails, which will be caught by an enclosing try block.
 
@@ -519,6 +522,9 @@ __[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
 
 __[NullableVoid](bugpattern/NullableVoid)__<br>
 void-returning methods should not be annotated with @Nullable, since they cannot return null
+
+__[ObjectToString](bugpattern/ObjectToString)__<br>
+Calling toString on Objects that don&#39;t override toString() doesn&#39;t provide useful information
 
 __[OperatorPrecedence](bugpattern/OperatorPrecedence)__<br>
 Use grouping parenthesis to make the operator precedence explicit
@@ -780,6 +786,9 @@ Field name is CONSTANT_CASE, but field is not static and final
 
 __[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributions)__<br>
 @Multibinds is a more efficient and declarative mechanism for ensuring that a set multibinding is present in the graph.
+
+__[FieldCanBeFinal](bugpattern/FieldCanBeFinal)__<br>
+This field is only assigned during initialization; consider making it final
 
 __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
