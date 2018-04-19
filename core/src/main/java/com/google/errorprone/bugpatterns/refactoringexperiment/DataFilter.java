@@ -68,7 +68,7 @@ public class DataFilter {
         return  ft.addAllTypeParameter(args).build();
     }
 
-    public static boolean isPrimitiveWrapperType(Tree tree) {
+    public static boolean isOfTypePrimitiveWrapper(Tree tree) {
         try {
             Type t = ASTHelpers.getSymbol(tree).type;
             if (t == null)

@@ -3,7 +3,6 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.collect;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LAMBDA_EXPRESSION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PRIMITIVE_WRAPPER;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.WRAPPER_CLASSES;
@@ -38,11 +37,14 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AutoService(BugChecker.class)
@@ -63,9 +65,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         boolean returnMatter = DataFilter.apply(methodTree.getReturnType(), state);
         if (paramsMatter || returnMatter) {
             MethodDeclaration.Builder mthdDcl = manageMethodDecl(state, ASTHelpers.getSymbol(methodTree));
-            if (returnMatter)
+            if (returnMatter) {
                 mthdDcl.setReturnType(DataFilter.getFilteredType(methodTree.getReturnType(), state));
-
+            }
             ProtoBuffPersist.write(mthdDcl, "METHOD");
         }
         return null;
@@ -74,11 +76,10 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     private MethodDeclaration.Builder manageMethodDecl(VisitorState state, MethodSymbol symb) {
         MethodDeclaration.Builder mthdDcl = MethodDeclaration.newBuilder();
         infoFromSymbol(symb).map(mthdDcl::setId);
-
-        java.util.Optional<MethodSymbol> y = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().findFirst();
-        if (y.isPresent())
+        Optional<MethodSymbol> y = ASTHelpers.findSuperMethods(symb, state.getTypes()).stream().findFirst();
+        if (y.isPresent()) {
             mthdDcl.setSuperMethod(manageMethodDecl(state, y.get()));
-
+        }
         mthdDcl.putAllParameters(Collections.unmodifiableMap(symb.getParameters().stream().filter(x -> DataFilter.apply(x.asType(), state))
                 .collect(Collectors.toMap(x -> symb.getParameters().indexOf(x), x -> infoFromSymbol(x).get()))));
 
@@ -96,23 +97,26 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
         boolean paramLT = tree.getArguments().stream().filter(x -> DataFilter.apply(x, state))
                 .count() > 0;
-
         boolean ofLT = DataFilter.apply(ASTHelpers.getReceiverType(tree), state);
         boolean returnMatter = DataFilter.apply(ASTHelpers.getReturnType(tree), state);
         if (paramLT || ofLT || returnMatter) {
             MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
             infoFromTree(tree).ifPresent(id -> mthdInvc.setId(id));
-            for (ExpressionTree arg : tree.getArguments()) {
-                if (DataFilter.apply(arg, state)) {
-                    mthdInvc.putArguments(tree.getArguments().indexOf(arg), infoOfTree(arg)).build();
-                }
-            }
+            //iterating over each argument to check if it is of Function type
+            // If so, collect them.
+            tree.getArguments().stream().filter(arg -> DataFilter.apply(arg, state))
+                    .forEach(arg ->
+                            mthdInvc.putArguments(tree.getArguments().indexOf(arg), infoOfTree(arg)).build());
+
             if (ofLT) {
                 infoFromTree(ASTHelpers.getReceiver(tree)).ifPresent(id -> mthdInvc.setReceiver(id));
             }
-
+            //foreach argument which is an Lambda Expression,
+            // if (a wrapper method is used inside the lambda expression)
+            // then create a new proto of type MethodInvocation, with name:PRIMITIVE_WRAPPER, type:PRIMITIVE_WRAPPER,
+            // owner: the method invocation itself kind : Method_Invocation
             mthdInvc.getArgumentsMap().entrySet().stream()
-                    .filter(en -> en.getValue().getKind().equals(LAMBDA_EXPRESSION) && lookForWrapperusage(tree.getArguments().get(en.getKey())))
+                    .filter(en -> en.getValue().getKind().equals(Kind.LAMBDA_EXPRESSION.name()) && isPrimitiveWrapperUsed(tree.getArguments().get(en.getKey())))
                     .forEach(en -> {
                         Builder wrapper = MethodInvocation.newBuilder();
                         wrapper.setId(Identification.newBuilder()
@@ -146,12 +150,13 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         if (paramMatters) {
             MethodInvocation.Builder mthdInvc = MethodInvocation.newBuilder();
             infoFromTree(var1).ifPresent(id -> mthdInvc.setId(id));
-            for (ExpressionTree arg : var1.getArguments())
-                if (DataFilter.apply(arg, state))
-                    // mthdInvc.putArguments(var1.getArguments().indexOf(arg),Identifications.newBuilder().addAllId(infoOfTree(arg)).build());
-                    mthdInvc.putArguments(var1.getArguments().indexOf(arg), infoOfTree(arg)).build();
+            //iterating over each argument to check if it is of Function type
+            var1.getArguments().stream().filter(arg -> DataFilter.apply(arg, state))
+                    .forEach(arg ->
+                            mthdInvc.putArguments(var1.getArguments().indexOf(arg), infoOfTree(arg)).build());
+
             mthdInvc.getArgumentsMap().entrySet().stream()
-                    .filter(en -> en.getValue().getKind().equals(LAMBDA_EXPRESSION) && lookForWrapperusage(var1.getArguments().get(en.getKey())))
+                    .filter(en -> en.getValue().getKind().equals(Kind.LAMBDA_EXPRESSION.name()) && isPrimitiveWrapperUsed(var1.getArguments().get(en.getKey())))
                     .forEach(en -> {
                         Builder wrapper = MethodInvocation.newBuilder();
                         wrapper.setId(Identification.newBuilder()
@@ -171,8 +176,9 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         if (DataFilter.apply(var1, state)) {
             Variable.Builder vrbl = Variable.newBuilder();
             infoFromTree(var1).map(id -> vrbl.setId(id));
-            if (var1.getInitializer() != null)
+            if (var1.getInitializer() != null) {
                 vrbl.setInitializer(infoOfTree(var1.getInitializer()));
+            }
             vrbl.setFilteredType(DataFilter.getFilteredType(var1, state));
             ProtoBuffPersist.write(vrbl, var1.getKind().toString());
         }
@@ -187,7 +193,11 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             Assignment.Builder asgn = Assignment.newBuilder();
             infoFromTree(lhs).ifPresent(x -> asgn.setLhs(x));
             asgn.setRhs(infoOfTree(var1.getExpression()));
-            if (asgn.getRhs().getKind().equals(LAMBDA_EXPRESSION) && lookForWrapperusage(var1.getExpression())) {
+            //foreach argument which is an Lambda Expression,
+            // if (a wrapper method is used inside the lambda expression)
+            // then create a new proto of type MethodInvocation, with name:PRIMITIVE_WRAPPER; type:PRIMITIVE_WRAPPER,
+            // owner: LHS of the assignment operation; kind : Method_Invocation
+            if (asgn.getRhs().getKind().equals(Kind.LAMBDA_EXPRESSION.name()) && isPrimitiveWrapperUsed(var1.getExpression())) {
                 MethodInvocation.Builder wrapper = MethodInvocation.newBuilder();
                 wrapper.setId(Identification.newBuilder()
                         .setName(PRIMITIVE_WRAPPER).setKind(METHOD_INVOCATION).setType(PRIMITIVE_WRAPPER)
@@ -215,13 +225,48 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         return null;
     }
 
-    private boolean lookForWrapperusage(ExpressionTree ex) {
+    /**
+     *
+     * @param ex
+     * @return if Wrapper classes' methods are used inside the lambda expression ||
+     *         lambda expression is declared with an identifier.
+     *
+     */
+
+    private boolean isPrimitiveWrapperUsed(ExpressionTree ex) {
         LambdaExpressionTree lambda = (LambdaExpressionTree) ex;//
         List<? extends VariableTree> params = lambda.getParameters().stream()
                 .filter(x -> WRAPPER_CLASSES.contains(ASTHelpers.getSymbol(x).type.toString()))
                 .collect(Collectors.toList());
         PrimitiveUsageCollector visitor = new PrimitiveUsageCollector();
         lambda.accept(visitor, null);
-        return visitor.primitiveWrapperUsageCounter > 0 || params.stream().anyMatch(x -> !x.getType().getKind().equals(Kind.MEMBER_SELECT));
+        return visitor.primitiveWrapperUsageCounter > 0 || isLmbdExpUsedWithIdentfier(params);
+    }
+
+    /**
+     * This method tries to check if lambda expressions has been defined with Identifiers
+     * Eg. (Integer x) -> x +1;
+     * @param params
+     * @return if params are not member select
+     */
+    private boolean isLmbdExpUsedWithIdentfier(List<? extends VariableTree> params) {
+        return params.stream().anyMatch(x -> !x.getType().getKind().equals(Kind.MEMBER_SELECT));
+    }
+
+    /**
+     * This class checks if any methodinvocations inside the lambda expression
+     * belongs to primitve wrapper type.
+     */
+
+    public class PrimitiveUsageCollector extends TreeScanner<Void, Void>
+            implements TreeVisitor<Void, Void> {
+        int primitiveWrapperUsageCounter = 0;
+        @Override
+        public Void visitMethodInvocation(MethodInvocationTree mi, Void v) {
+            if (DataFilter.isOfTypePrimitiveWrapper(ASTHelpers.getReceiver(mi))){
+                primitiveWrapperUsageCounter ++;
+            }
+            return null;
+        }
     }
 }
