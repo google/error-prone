@@ -3,8 +3,8 @@ title: ParcelableCreator
 summary: Detects classes which implement Parcelable but don't have CREATOR
 layout: bugpattern
 tags: ''
-severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
+severity: ERROR
+providesFix: NO_FIX
 ---
 
 <!--

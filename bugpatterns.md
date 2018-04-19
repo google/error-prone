@@ -248,6 +248,9 @@ This method is not annotated with @Inject, but it overrides a method that is  an
 __[PackageInfo](bugpattern/PackageInfo)__<br>
 Declaring types inside package-info.java files is very bad form
 
+__[ParcelableCreator](bugpattern/ParcelableCreator)__<br>
+Detects classes which implement Parcelable but don&#39;t have CREATOR
+
 __[PreconditionsCheckNotNull](bugpattern/PreconditionsCheckNotNull)__<br>
 Literal passed as first argument to Preconditions.checkNotNull() can never be null
 
@@ -546,9 +549,6 @@ This method is not annotated with @Inject, but it overrides a method that is ann
 
 __[ParameterName](bugpattern/ParameterName)__<br>
 Detects `/* name= */`-style comments on actual parameters where the name doesn&#39;t match the formal parameter
-
-__[ParcelableCreator](bugpattern/ParcelableCreator)__<br>
-Detects classes which implement Parcelable but don&#39;t have CREATOR
 
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
