@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static java.util.function.Function.identity;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -65,7 +64,8 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
     ImmutableMap<String, Symbol> fieldNamesMap =
         fields
             .stream()
-            .collect(toImmutableMap(symbol -> symbol.toString().toLowerCase(), identity()));
+            .collect(
+                toImmutableMap(symbol -> symbol.toString().toLowerCase(), x -> x, (x, y) -> x));
     ImmutableMap<TreePath, Symbol> matchedParameters =
         MatchingParametersScanner.findMatchingParameters(fieldNamesMap, state.getPath());
 
