@@ -274,4 +274,23 @@ public class InconsistentCapitalizationTest {
             "}")
         .doTest();
   }
+
+  // regression test for https://github.com/google/error-prone/issues/999
+  @Test
+  public void clash() throws Exception {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  Object _DocumentObjectData_QNAME;",
+            "  Object _DocumentObjectdata_QNAME;",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  Object _DocumentObjectData_QNAME;",
+            "  Object _DocumentObjectdata_QNAME;",
+            "}")
+        .doTest();
+  }
 }
