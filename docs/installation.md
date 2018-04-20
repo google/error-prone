@@ -66,7 +66,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
         <dependency>
           <groupId>com.google.errorprone</groupId>
           <artifactId>error_prone_core</artifactId>
-          <version>2.3.0</version>
+          <version>2.3.1</version>
         </dependency>
       </dependencies>
     </plugin>
@@ -173,7 +173,7 @@ Example:
 
 ```bash
 JAVA9_HOME=... # path to a JDK 9 installation
-ERROR_PRONE_JAR=... @ path to error_prone_ant-2.3.0.jar
+ERROR_PRONE_JAR=... @ path to error_prone_ant-2.3.1.jar
 $JAVA9_HOME/bin/javac \
   -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
   -J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
@@ -202,8 +202,8 @@ ShortSet.java:8: error: [CollectionIncompatibleType] Argument 'i - 1' should not
 To use Error Prone from the command line as a javac replacement:
 
 ```
-wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant/2.3.0/error_prone_ant-2.3.0.jar
-java -Xbootclasspath/p:error_prone_ant-2.3.0.jar com.google.errorprone.ErrorProneCompiler Test.java
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant/2.3.1/error_prone_ant-2.3.1.jar
+java -Xbootclasspath/p:error_prone_ant-2.3.1.jar com.google.errorprone.ErrorProneCompiler Test.java
 ```
 
 ```
