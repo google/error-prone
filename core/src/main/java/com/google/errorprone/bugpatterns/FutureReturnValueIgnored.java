@@ -50,6 +50,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import java.lang.reflect.Field;
@@ -165,7 +166,9 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
     Type returnType = ASTHelpers.getResultType(tree);
     Type returnedFutureType = state.getTypes().asSuper(returnType, futureType.tsym);
-    if (returnedFutureType != null && !returnedFutureType.isRaw()) {
+    if (returnedFutureType != null
+        && !returnedFutureType.hasTag(TypeTag.ERROR) // work around error-prone#996
+        && !returnedFutureType.isRaw()) {
       if (ASTHelpers.isSubtype(
           ASTHelpers.getUpperBound(returnedFutureType.getTypeArguments().get(0), state.getTypes()),
           futureType,
