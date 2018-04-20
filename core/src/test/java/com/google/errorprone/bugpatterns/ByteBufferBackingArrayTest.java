@@ -43,4 +43,18 @@ public class ByteBufferBackingArrayTest {
     compilationHelper.addSourceFile("ByteBufferBackingArrayNegativeCases.java").doTest();
   }
 
+
+  @Test
+  public void i1004() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.nio.ByteBuffer;",
+            "public class Test {",
+            "  public void ByteBufferBackingArrayTest() {",
+            "    byte[] byteArray = ((ByteBuffer) new Object()).array();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

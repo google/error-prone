@@ -87,6 +87,9 @@ public class ByteBufferBackingArray extends BugChecker implements MethodInvocati
     } while (receiver instanceof MethodInvocationTree);
 
     Symbol bufferSymbol = ASTHelpers.getSymbol(receiver);
+    if (bufferSymbol == null) {
+      return Description.NO_MATCH;
+    }
 
     // Checks for validating use on method scope.
     if (bufferSymbol.owner instanceof MethodSymbol) {
