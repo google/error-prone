@@ -96,13 +96,17 @@ public class BaseErrorProneCompiler {
     }
     List<String> javacOpts = new ArrayList<>();
     List<String> sources = new ArrayList<>();
+
+    boolean nextArgIsUsedByJavacOption = false;
+    List<String> javacArgsThatTakeDirectories = ImmutableList.of("-d", "-h", "-s");
     for (String arg : argv) {
       // TODO(cushon): is there a better way to categorize javacopts?
-      if (!arg.startsWith("-") && arg.endsWith(".java")) {
+      if (!arg.startsWith("-") && arg.endsWith(".java") && !nextArgIsUsedByJavacOption) {
         sources.add(arg);
       } else {
         javacOpts.add(arg);
       }
+      nextArgIsUsedByJavacOption = javacArgsThatTakeDirectories.contains(arg);
     }
     StandardJavaFileManager fileManager = new MaskedFileManager();
     return run(
