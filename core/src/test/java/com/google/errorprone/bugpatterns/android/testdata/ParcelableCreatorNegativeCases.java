@@ -19,10 +19,13 @@ package com.google.errorprone.bugpatterns.android.testdata;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.ClassLoaderCreator;
-import com.google.errorprone.bugpatterns.android.ParcelableCreator;
 
 /** @author bhagwani@google.com (Sumit Bhagwani) */
 public class ParcelableCreatorNegativeCases {
+
+  public abstract static class PublicAbstractParcelableClass implements Parcelable {
+    // since the class is abstract, it is ok to not have CREATOR.
+  }
 
   public static class PublicParcelableClass implements Parcelable {
 
@@ -87,6 +90,28 @@ public class ParcelableCreatorNegativeCases {
 
           public EmptyInterfaceAndParcelableImpl[] newArray(int size) {
             return new EmptyInterfaceAndParcelableImpl[size];
+          }
+        };
+
+    public int describeContents() {
+      return 0;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+      // no op
+    }
+  }
+
+  public static class PublicParcelableWithRawCreatorClass implements Parcelable {
+
+    public static final Parcelable.Creator CREATOR =
+        new Parcelable.Creator() {
+          public PublicParcelableWithRawCreatorClass createFromParcel(Parcel in) {
+            return new PublicParcelableWithRawCreatorClass();
+          }
+
+          public PublicParcelableWithRawCreatorClass[] newArray(int size) {
+            return new PublicParcelableWithRawCreatorClass[size];
           }
         };
 

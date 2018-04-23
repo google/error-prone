@@ -23,6 +23,17 @@ import android.os.Parcelable;
 public class ParcelableCreatorPositiveCases {
 
   // BUG: Diagnostic contains: ParcelableCreator
+  public static class PublicParcelableClassWithoutCreator implements Parcelable {
+    public int describeContents() {
+      return 0;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+      // no op
+    }
+  }
+
+  // BUG: Diagnostic contains: ParcelableCreator
   public static class ParcelableClassWithoutStaticCreator implements Parcelable {
 
     public final Parcelable.Creator<ParcelableClassWithoutStaticCreator> CREATOR =
