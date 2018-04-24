@@ -60,7 +60,7 @@ public final class ConstructGraph {
         List<Identification> removeNodes = new ArrayList<>();
         for (Identification n : gr.nodes())
             if (isWrapper.test(n)) {
-                wrapperAnalysis(gr, n);
+                recordWrapperMthdCallFromLambda(gr, n);
             } else if (isMethodKind.test(n)) {
                 methodAnalysis(gr, n);
             } else if (isInferredKind.test(n)) {
@@ -77,7 +77,7 @@ public final class ConstructGraph {
      * @param n :  a possible lambda expression which might be using wrapper
      */
 
-    private static void wrapperAnalysis(MutableValueGraph<Identification, String> gr, Identification n) {
+    private static void recordWrapperMthdCallFromLambda(MutableValueGraph<Identification, String> gr, Identification n) {
         Optional<Identification> temp = gr.nodes().stream().filter(x -> x.getKind().equals(LAMBDA_EXPRESSION))
                 .filter(x -> x.equals(n.getOwner())).findFirst();
         if (temp.isPresent())
