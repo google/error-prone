@@ -1,8 +1,8 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.*;
 
+//import static com.google.common.collect.;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.graph.ImmutableValueGraph;
@@ -17,6 +17,7 @@ import com.google.errorprone.bugpatterns.refactoringexperiment.models.VariableOu
 
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by ameya on 2/28/18.
@@ -127,6 +128,7 @@ public final class ProtoToGraphMapper {
         if (m.getArgumentsCount() > 0) {
             for (Entry<Integer, Identification> e : m.getArgumentsMap().entrySet()) {
                 createBiDirectionalRelation(n, addNodeToGraph( e.getValue(), m.getId(), g, e.getKey()), EDGE_ARG_INDEX + e.getKey(),EDGE_PASSED_AS_ARG_TO, false,g);
+                //createBiDirectionalRelation(n, addNodeToGraph( e.getValue(), m.getId(), g), EDGE_ARG_INDEX + e.getKey(),EDGE_PASSED_AS_ARG_TO, false,g);
             }
         }
         return ImmutableValueGraph.copyOf(g);
@@ -232,11 +234,11 @@ public final class ProtoToGraphMapper {
     }
 
     private static Identification addNodeToGraph(Identification id, Identification owner, MutableValueGraph<Identification, String> g) {
-        return addNodeToGraph(!id.hasName() ? id.toBuilder().setOwner(owner).build() : id, g);
+        return addNodeToGraph(!id.hasName() ? id.toBuilder().setName(id.getKind()).setOwner(owner).build() : id, g);
     }
 
     private static Identification addNodeToGraph(Identification id, Identification owner, MutableValueGraph<Identification, String> g, Integer key) {
-        return addNodeToGraph(!id.hasName() ? id.toBuilder().setOwner(owner).build() : id, g);
+        return addNodeToGraph(!id.hasName() ? id.toBuilder().setName(id.getKind() + key).setOwner(owner).build() : id, g);
     }
 
     /**
@@ -247,6 +249,6 @@ public final class ProtoToGraphMapper {
      * @param gr : Graph in which the
      */
     public static ImmutableSet<Identification> getSuccessorWithEdge(Identification n, MutableValueGraph<Identification, String> gr, String edgeValue) {
-        return gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().contains(edgeValue)).collect(toImmutableSet());
+        return ImmutableSet.copyOf(gr.successors(n).stream().filter(a -> gr.edgeValue(n, a).get().contains(edgeValue)).collect(Collectors.toSet()));
     }
 }
