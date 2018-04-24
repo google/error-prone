@@ -122,6 +122,34 @@ public class FieldMissingNullableTest {
   }
 
   @Test
+  public void testAssignNullableMethodCall_typeAnnotation() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/anno/my/Nullable.java",
+            "package com.google.anno.my;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Target;",
+            "@Target({ElementType.TYPE_USE})",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/NullableMethodCallTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class NullableMethodCallTest {",
+            "  private String message = \"hello\";",
+            "  public void setMessage(int x) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    message = toSignString(x);",
+            "  }",
+            "",
+            "  @com.google.anno.my.Nullable",
+            "  private String toSignString(int x) {",
+            "    return x < 0 ? \"negative\" : \"positive\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testAssignNullableField() throws Exception {
     createCompilationTestHelper()
         .addSourceLines(
@@ -213,6 +241,29 @@ public class FieldMissingNullableTest {
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
             "package com.google.errorprone.bugpatterns.nullness;",
             "import javax.annotation.Nullable;",
+            "public class FieldMissingNullTest {",
+            "  @Nullable String message;",
+            "  public void reset() {",
+            "    this.message = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_alreadyTypeAnnotated() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/anno/my/Nullable.java",
+            "package com.google.anno.my;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Target;",
+            "@Target({ElementType.TYPE_USE})",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import com.google.anno.my.Nullable;",
             "public class FieldMissingNullTest {",
             "  @Nullable String message;",
             "  public void reset() {",
