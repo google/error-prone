@@ -95,6 +95,12 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
         } else {
           replacement = source.substring(start, end);
         }
+        // If the last statement group falls out of the switch, add a `break;` before moving
+        // the default to the end.
+        CaseTree last = getLast(tree.getCases());
+        if (last.getExpression() == null || Reachability.canCompleteNormally(last)) {
+          replacement = "break;\n" + replacement;
+        }
         fix.replace(start, end, "").postfixWith(getLast(tree.getCases()), replacement);
       }
     } else if (idx != defaultStatementGroup.size() - 1) {

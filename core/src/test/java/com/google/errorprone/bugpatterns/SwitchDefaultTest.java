@@ -125,4 +125,72 @@ public class SwitchDefaultTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void refactoring_fallthrough() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "class Test {",
+            "  boolean f(int i) {",
+            "    switch (i) {",
+            "      default:",
+            "        return false;",
+            "      case 0:",
+            "      case 1:",
+            "        System.err.println();",
+            "    }",
+            "    return true;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "class Test {",
+            "  boolean f(int i) {",
+            "    switch (i) {",
+            "      case 0:",
+            "      case 1:",
+            "        System.err.println();",
+            "        break;",
+            "      default:",
+            "        return false;",
+            "    }",
+            "    return true;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoring_fallthroughEmpty() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "class Test {",
+            "  boolean f(int i) {",
+            "    switch (i) {",
+            "      default:",
+            "        return false;",
+            "      case 0:",
+            "      case 1:",
+            "    }",
+            "    return true;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "class Test {",
+            "  boolean f(int i) {",
+            "    switch (i) {",
+            "      case 0:",
+            "      case 1:",
+            "        break;",
+            "      default:",
+            "        return false;",
+            "    }",
+            "    return true;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
