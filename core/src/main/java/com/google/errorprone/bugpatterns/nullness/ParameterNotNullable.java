@@ -30,6 +30,7 @@ import com.google.errorprone.dataflow.nullnesspropagation.TrustingNullnessAnalys
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ExpressionTree;
@@ -81,13 +82,24 @@ public class ParameterNotNullable extends BugChecker
       return Description.NO_MATCH;
     }
 
-    for (AnnotationTree anno :
-        findDeclaration(state, dereferenced).getModifiers().getAnnotations()) {
-      if (ASTHelpers.getSymbol(anno).type.toString().endsWith(".Nullable")) {
+    VariableTree paramDecl = findDeclaration(state, dereferenced);
+    for (AnnotationTree anno : paramDecl.getModifiers().getAnnotations()) {
+      String annoType = ASTHelpers.getSymbol(anno).type.toString();
+      if (annoType.endsWith(".Nullable") || annoType.endsWith(".NullableDecl")) {
         return buildDescription(dereferencedExpression)
             .setMessage("Nullable parameter not checked for null")
             .addFix(SuggestedFix.delete(anno))
             .build();
+      }
+    }
+    if (paramDecl.getType() instanceof AnnotatedTypeTree) {
+      for (AnnotationTree anno : ((AnnotatedTypeTree) paramDecl.getType()).getAnnotations()) {
+        if (ASTHelpers.getSymbol(anno).type.toString().endsWith(".Nullable")) {
+          return buildDescription(dereferencedExpression)
+              .setMessage("Nullable parameter not checked for null")
+              .addFix(SuggestedFix.delete(anno))
+              .build();
+        }
       }
     }
     // Shouldn't get here

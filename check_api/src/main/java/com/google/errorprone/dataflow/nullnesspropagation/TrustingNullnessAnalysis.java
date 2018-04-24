@@ -25,11 +25,11 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import org.checkerframework.dataflow.analysis.Analysis;
 import org.checkerframework.dataflow.cfg.CFGBuilder;
@@ -124,7 +124,7 @@ public final class TrustingNullnessAnalysis implements Serializable {
     }
   }
 
-  public static boolean hasNullableAnnotation(Element element) {
-    return TrustingNullnessPropagation.nullnessFromAnnotations(element) == Nullness.NULLABLE;
+  public static boolean hasNullableAnnotation(Symbol symbol) {
+    return TrustingNullnessPropagation.nullnessFromAnnotations(symbol) == Nullness.NULLABLE;
   }
 }

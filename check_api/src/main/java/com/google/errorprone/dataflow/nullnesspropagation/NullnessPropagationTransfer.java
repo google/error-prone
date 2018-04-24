@@ -826,7 +826,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   static final class ClassAndMethod implements Member, MethodInfo {
     final String clazz;
     final String method;
-    final List<String> annotations;
+    final ImmutableList<String> annotations;
     final boolean isStatic;
     final boolean isPrimitive;
     final boolean isBoolean;
@@ -835,14 +835,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     private ClassAndMethod(
         String clazz,
         String method,
-        List<String> annotations,
+        ImmutableList<String> annotations,
         boolean isStatic,
         boolean isPrimitive,
         boolean isBoolean,
         boolean isNonNullReturning) {
       this.clazz = clazz;
       this.method = method;
-      this.annotations = ImmutableList.copyOf(annotations);
+      this.annotations = annotations;
       this.isStatic = isStatic;
       this.isPrimitive = isPrimitive;
       this.isBoolean = isBoolean;
@@ -850,18 +850,22 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     static ClassAndMethod make(MethodSymbol methodSymbol, @Nullable Types types) {
-      List<? extends AnnotationMirror> annotationMirrors = methodSymbol.getAnnotationMirrors();
-      List<String> annotations = new ArrayList<>(annotationMirrors.size());
-      for (AnnotationMirror annotationMirror : annotationMirrors) {
+      // TODO(b/71812955): consider just wrapping methodSymbol instead of copying everything out.
+      // TODO(b/71812955): for type variables, check for type annotations on the referenced variable
+      ImmutableList.Builder<String> annotations = ImmutableList.builder();
+      for (AnnotationMirror annotationMirror : methodSymbol.getAnnotationMirrors()) {
+        annotations.add(annotationMirror.getAnnotationType().toString());
+      }
+      for (AnnotationMirror annotationMirror :
+          methodSymbol.getReturnType().getAnnotationMirrors()) {
         annotations.add(annotationMirror.getAnnotationType().toString());
       }
 
       ClassSymbol clazzSymbol = (ClassSymbol) methodSymbol.owner;
-
       return new ClassAndMethod(
           clazzSymbol.getQualifiedName().toString(),
           methodSymbol.getSimpleName().toString(),
-          annotations,
+          annotations.build(),
           methodSymbol.isStatic(),
           methodSymbol.getReturnType().isPrimitive(),
           methodSymbol.getReturnType().getTag() == BOOLEAN,
@@ -915,7 +919,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     @Override
-    public List<String> annotations() {
+    public ImmutableList<String> annotations() {
       return annotations;
     }
 

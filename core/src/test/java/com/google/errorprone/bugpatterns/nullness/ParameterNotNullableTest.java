@@ -42,6 +42,72 @@ public class ParameterNotNullableTest {
   }
 
   @Test
+  public void testMethodInvocationOnParameter_alternativeAnnotation() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/anno/my/Nullable.java",
+            "package com.google.anno.my;",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import com.google.anno.my.Nullable;",
+            "public class ParameterDereferenceTest {",
+            "  public static String toString(@Nullable Integer x) {",
+            "    // BUG: Diagnostic contains: toString( Integer",
+            "    return x.toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMethodInvocationOnParameter_typeAnnotation() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/anno/my/Nullable.java",
+            "package com.google.anno.my;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Target;",
+            "@Target({ElementType.TYPE_USE})",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import com.google.anno.my.Nullable;",
+            "public class ParameterDereferenceTest {",
+            "  public static String toString(@Nullable Integer x) {",
+            "    // BUG: Diagnostic contains: toString( Integer",
+            "    return x.toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMethodInvocationOnParameter_nullableArrayTypeAnnotation() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/anno/my/Nullable.java",
+            "package com.google.anno.my;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Target;",
+            "@Target({ElementType.TYPE_USE})",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import com.google.anno.my.Nullable;",
+            "public class ParameterDereferenceTest {",
+            "  public static Integer first(Integer @Nullable [] xs) {",
+            "    // BUG: Diagnostic contains: first(Integer  [] xs)",
+            "    return xs[0];",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testFieldDereferenceOnParameter() throws Exception {
     createCompilationTestHelper()
         .addSourceLines(
@@ -100,6 +166,28 @@ public class ParameterNotNullableTest {
             "public class ParameterDereferenceTest {",
             "  public static String toString(Integer x) {",
             "    return x.toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_arrayParameterWithNullableElements() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/anno/my/Nullable.java",
+            "package com.google.anno.my;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Target;",
+            "@Target({ElementType.TYPE_USE})",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import com.google.anno.my.Nullable;",
+            "public class ParameterDereferenceTest {",
+            "  public static Integer first(@Nullable Integer[] xs) {",
+            "    return xs[0];",
             "  }",
             "}")
         .doTest();
