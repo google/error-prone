@@ -102,14 +102,15 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
     public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
         if(DataFilter.apply(tree.getQualifierExpression(),state)){
             Optional<Refactorable> rec = getRefactorInfo(tree.getQualifierExpression());
-            Optional<Identification> mid = infoFromTree(tree).map(x ->x.toBuilder().setKind(METHOD_INVOCATION).build());
-            Optional<Refactorable> mi = getRefactorInfo(mid.get().toBuilder().setOwner(infoFromTree(tree.getQualifierExpression()).get()).build());
-            if (rec.isPresent() && mid.isPresent()) {
-                return changeNameMemberReference(tree, mi);
+            Optional<Identification> method_id = infoFromTree(tree).map(x ->x.toBuilder().setKind(METHOD_INVOCATION).build());
+            if (rec.isPresent() && method_id.isPresent()) {
+                Optional<Refactorable> mthd_invc = getRefactorInfo(method_id.get().toBuilder().setOwner(infoFromTree(tree.getQualifierExpression()).get()).build());
+                return changeNameMemberReference(tree, mthd_invc);
             }else{
                 rec = getRefactorInfoOfType(infoFromTree(tree.getQualifierExpression()).get());
-                if (rec.isPresent() && mid.isPresent()) {
-                    return changeNameMemberReference(tree, mi);
+                if (rec.isPresent() && method_id.isPresent()) {
+                    Optional<Refactorable> mthd_invc = getRefactorInfo(method_id.get().toBuilder().setOwner(infoFromTree(tree.getQualifierExpression()).get()).build());
+                    return changeNameMemberReference(tree, mthd_invc);
                 }
             }
         }
