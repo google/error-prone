@@ -3,6 +3,7 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGES_INVOKED_IN;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_PASSED;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ASSIGNED_AS;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PARAM_INDEX;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PASSED_AS_ARG_TO;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_CLASS;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_METHOD;
@@ -27,6 +28,8 @@ import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDecl
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocationOuterClass.MethodInvocation;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.VariableOuterClass.Variable;
+
+import com.sun.source.tree.Tree.Kind;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -86,6 +89,13 @@ public final class GraphAnalyzer {
             !graph.nodes().stream().filter(x -> x.getKind().equals(LAMBDA_EXPRESSION))
                     .anyMatch(x -> graph.successors(x).stream().anyMatch(y->graph.edgeValue(x,y).get().equals(EDGES_INVOKED_IN)));
 
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ENHANCED_FOR_LOOP = graph ->
+            !graph.nodes().stream().anyMatch(x -> x.getKind().equals(Kind.ENHANCED_FOR_LOOP.name()));
+
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_PARAMS_WITHOUT_ARG = graph ->
+            !graph.nodes().stream().filter(isVarKind).anyMatch(x -> graph.predecessors(x).stream().anyMatch(s -> graph.edgeValue(s,x).get().contains(EDGE_PARAM_INDEX)));
+
+
 
     public static void main(String args[]) throws Exception {
         induceAndMap(pckgName).forEach(r -> ProtoBuffPersist.write(r, REFACTOR_INFO));
@@ -106,6 +116,8 @@ public final class GraphAnalyzer {
                 .filter(PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_ORPHAN_METHOD_INVOCATION)
                 .filter(PRE_CONDITION_NO_INFERRED)
                 .filter(PRE_CONDITION_NO_WRAPPER)
+                .filter(PRE_CONDITION_NO_PARAMS_WITHOUT_ARG)
+                .filter(PRE_CONDITION_NO_ENHANCED_FOR_LOOP)
                 .collect(Collectors.toList());
         subGraphs.forEach(g -> {
             Map<Identification, String> mappings = getMapping(g);

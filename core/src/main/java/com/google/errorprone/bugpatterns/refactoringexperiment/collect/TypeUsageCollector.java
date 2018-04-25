@@ -27,6 +27,7 @@ import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -55,7 +56,7 @@ import java.util.stream.Collectors;
         link = "example.com/bugpattern/MyCustomCheck"
 )
 public class TypeUsageCollector extends BugChecker implements BugChecker.MethodTreeMatcher, BugChecker.MethodInvocationTreeMatcher, BugChecker.NewClassTreeMatcher, BugChecker.VariableTreeMatcher
-        , BugChecker.AssignmentTreeMatcher, BugChecker.ClassTreeMatcher,BugChecker.MemberReferenceTreeMatcher {
+        , BugChecker.AssignmentTreeMatcher, BugChecker.ClassTreeMatcher,BugChecker.MemberReferenceTreeMatcher,BugChecker.EnhancedForLoopTreeMatcher {
 
     @Override
     public Description matchMethod(MethodTree methodTree, VisitorState state) {
@@ -208,6 +209,20 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             ProtoBuffPersist.write(asgn, var1.getKind().toString());
         }
 
+        return null;
+    }
+
+    @Override
+    public Description matchEnhancedForLoop(EnhancedForLoopTree enhancedForLoopTree, VisitorState state) {
+
+        VariableTree var = enhancedForLoopTree.getVariable();
+        if (DataFilter.apply(var, state)) {
+            Variable.Builder vrbl = Variable.newBuilder();
+            infoFromTree(var).map(id -> vrbl.setId(id));
+            vrbl.setInitializer(Identification.newBuilder().setKind(Kind.ENHANCED_FOR_LOOP.name()));
+            vrbl.setFilteredType(DataFilter.getFilteredType(var, state));
+            ProtoBuffPersist.write(vrbl, var.getKind().toString());
+        }
         return null;
     }
 
