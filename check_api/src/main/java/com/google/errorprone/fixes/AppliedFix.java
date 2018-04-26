@@ -62,8 +62,12 @@ public class AppliedFix {
     public AppliedFix apply(Fix suggestedFix) {
       StringBuilder replaced = new StringBuilder(source);
 
+      // We have to apply the replacements in descending order, since otherwise the positions in
+      // subsequent replacements are invalidated by earlier replacements.
+      Set<Replacement> replacements = descending(suggestedFix.getReplacements(endPositions));
+
       Set<Integer> modifiedLines = new HashSet<>();
-      for (Replacement repl : suggestedFix.getReplacements(endPositions)) {
+      for (Replacement repl : replacements) {
         replaced.replace(repl.startPosition(), repl.endPosition(), repl.replaceWith());
 
         // Find the line number(s) being modified
@@ -112,6 +116,13 @@ public class AppliedFix {
         // impossible since source is in-memory
       }
       return new AppliedFix(snippet, isRemoveLine);
+    }
+
+    /** Get the replacements in an appropriate order to apply correctly. */
+    private static Set<Replacement> descending(Set<Replacement> set) {
+      Replacements replacements = new Replacements();
+      set.forEach(replacements::add);
+      return replacements.descending();
     }
   }
 
