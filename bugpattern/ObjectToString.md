@@ -82,6 +82,8 @@ __ObjectToStringNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import org.joda.time.Duration;
+
 /** @author bhagwani@google.com (Sumit Bhagwani) */
 public class ObjectToStringNegativeCases {
 
@@ -137,6 +139,14 @@ public class ObjectToStringNegativeCases {
     NonFinalObjectClassWithToString nonFinalObjectClassWithToString =
         new NonFinalObjectClassWithToString();
     log(nonFinalObjectClassWithToString);
+  }
+
+  public void overridePresentInAbstractClassInHierarchy(Duration durationArg) {
+    String unusedString = Duration.standardSeconds(86400).toString();
+    System.out.println("test joda string " + Duration.standardSeconds(86400));
+
+    unusedString = durationArg.toString();
+    System.out.println("test joda string " + durationArg);
   }
 }
 {% endhighlight %}
