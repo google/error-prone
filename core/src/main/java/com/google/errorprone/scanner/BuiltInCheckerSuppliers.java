@@ -261,6 +261,7 @@ import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChec
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameConstructor;
 import com.google.errorprone.bugpatterns.inject.AutoFactoryAtInject;
+import com.google.errorprone.bugpatterns.inject.CloseableProvides;
 import com.google.errorprone.bugpatterns.inject.InjectOnConstructorOfAbstractClass;
 import com.google.errorprone.bugpatterns.inject.InjectedConstructorAnnotations;
 import com.google.errorprone.bugpatterns.inject.InvalidTargetingOnScopingAnnotation;
@@ -473,6 +474,7 @@ public class BuiltInCheckerSuppliers {
           CatchFail.class,
           ClassCanBeStatic.class,
           ClassNewInstance.class,
+          CloseableProvides.class,
           CollectionToArraySafeParameter.class,
           CollectorShouldNotUseState.class,
           ComparableAndComparator.class,
