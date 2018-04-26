@@ -44,7 +44,7 @@ public final class ProtoToGraphMapper {
         Identification n = v.getId();
         g.addNode(n);
         if (v.hasInitializer()) {
-            createBiDirectionalRelation(n, addNodeToGraph(v.getInitializer(), n, g), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
+            createBiDirectionalRelation(n, addNodeToGraph(v.getInitializer(), n, g,null), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
         }
         if (Mapping.CLASS_MAPPING_FOR.containsKey(v.getFilteredType().getInterfaceName())) {
             if (v.getId().getType().startsWith(v.getFilteredType().getInterfaceName())) {
@@ -145,7 +145,7 @@ public final class ProtoToGraphMapper {
      */
     public static ImmutableValueGraph<Identification, String> mapAssgnmntToGraph(Assignment a) {
         MutableValueGraph<Identification, String> g = ValueGraphBuilder.directed().allowsSelfLoops(true).build();
-        createBiDirectionalRelation(addNodeToGraph(a.getLhs(), g), addNodeToGraph(a.getRhs(), a.getLhs(), g), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
+        createBiDirectionalRelation(addNodeToGraph(a.getLhs(), g), addNodeToGraph(a.getRhs(), a.getLhs(), g,null), EDGE_ASSIGNED_AS, EDGE_ASSIGNED_TO, false, g);
         return ImmutableValueGraph.copyOf(g);
     }
 
@@ -220,25 +220,18 @@ public final class ProtoToGraphMapper {
      */
 
     private static Identification addNodeToGraph(MethodInvocation mi, MutableValueGraph<Identification, String> g) {
-        return mi.hasReceiver() ? addToGraph(mi.getId().toBuilder().setOwner(mi.getReceiver()).build(), g) : addToGraph(mi.getId(), g);
+        return mi.hasReceiver() ? addNodeToGraph(mi.getId().toBuilder().setOwner(mi.getReceiver()).build(), g) : addNodeToGraph(mi.getId(), g);
     }
 
-    private static Identification addNodeToGraph(Identification id, MutableValueGraph<Identification, String> g) {
-        return !id.hasName() ? addToGraph(id, g) : addToGraph(id, g);
-    }
-
-    private static Identification addToGraph(Identification n1, MutableValueGraph<Identification, String> g) {
+    private static Identification addNodeToGraph(Identification n1, MutableValueGraph<Identification, String> g) {
         Identification n = n1;
         g.addNode(n);
         return n;
     }
 
-    private static Identification addNodeToGraph(Identification id, Identification owner, MutableValueGraph<Identification, String> g) {
-        return addNodeToGraph(!id.hasName() ? id.toBuilder().setName(id.getKind()).setOwner(owner).build() : id, g);
-    }
-
     private static Identification addNodeToGraph(Identification id, Identification owner, MutableValueGraph<Identification, String> g, Integer key) {
-        return addNodeToGraph(!id.hasName() ? id.toBuilder().setName(id.getKind() + key).setOwner(owner).build() : id, g);
+        return key == null ? addNodeToGraph(!id.hasName() ? id.toBuilder().setName(id.getKind()).setOwner(owner).build() : id, g)
+                : addNodeToGraph(!id.hasName() ? id.toBuilder().setName(id.getKind() + key).setOwner(owner).build() : id, g);
     }
 
     /**
