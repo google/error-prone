@@ -20,13 +20,18 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Position;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -150,5 +155,20 @@ public class AppliedFixTest {
         AppliedFix.fromSource("package com.example;\n" + "import java.util.Map;\n", endPositions)
             .apply(SuggestedFix.delete(node));
     assertThat(fix.getNewCodeSnippet().toString(), equalTo("to remove this line"));
+  }
+
+  @Test
+  public void shouldApplyFixesInReverseOrder() {
+    // Have to use a mock Fix here in order to intentionally return Replacements in wrong order.
+    Set<Replacement> replacements = new LinkedHashSet<>();
+    replacements.add(Replacement.create(0, 1, ""));
+    replacements.add(Replacement.create(1, 1, ""));
+
+    Fix mockFix = mock(Fix.class);
+    when(mockFix.getReplacements(any())).thenReturn(replacements);
+
+    // If the fixes had been applied in the wrong order, this would fail.
+    // But it succeeds, so they were applied in the right order.
+    AppliedFix.fromSource(" ", endPositions).apply(mockFix);
   }
 }
