@@ -2544,6 +2544,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FloatCast.html#FloatCast--">FloatCast()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FloatCast.html" title="class in com.google.errorprone.bugpatterns">FloatCast</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/FloatingPointAssertionWithinEpsilon.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">FloatingPointAssertionWithinEpsilon</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Detects usages of <code>Float,DoubleSubject.isWithin(TOLERANCE).of(EXPECTED)</code> where there are no
+ other floating point values other than <code>EXPECTED</code> with satisfy the assertion, but <code>TOLERANCE</code> is not zero.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FloatingPointAssertionWithinEpsilon.html#FloatingPointAssertionWithinEpsilon--">FloatingPointAssertionWithinEpsilon()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FloatingPointAssertionWithinEpsilon.html" title="class in com.google.errorprone.bugpatterns">FloatingPointAssertionWithinEpsilon</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/FloatingPointLiteralPrecision.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">FloatingPointLiteralPrecision</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FloatingPointLiteralPrecision.html#FloatingPointLiteralPrecision--">FloatingPointLiteralPrecision()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FloatingPointLiteralPrecision.html" title="class in com.google.errorprone.bugpatterns">FloatingPointLiteralPrecision</a></dt>
@@ -5173,6 +5180,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/DoNotCallChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DoNotCallChecker.html" title="class in com.google.errorprone.bugpatterns">DoNotCallChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">EqualsIncompatibleType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FloatingPointAssertionWithinEpsilon.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FloatingPointAssertionWithinEpsilon.html" title="class in com.google.errorprone.bugpatterns">FloatingPointAssertionWithinEpsilon</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatString</a></dt>
 <dd>&nbsp;</dd>
