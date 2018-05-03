@@ -12,7 +12,7 @@ version is released!
 
 
 
-# Bazel
+## Bazel
 
 Error Prone works out of the box with [Bazel](http://bazel.io).
 
@@ -36,7 +36,7 @@ BazelJavaBuilder threw exception: java compilation returned status ERROR
 INFO: Elapsed time: 1.989s, Critical Path: 1.69s
 ```
 
-# Maven
+## Maven
 
 Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
 
@@ -92,7 +92,7 @@ directory for a working example:
 [INFO] ------------------------------------------------------------------------
 ```
 
-# Gradle
+## Gradle
 The gradle plugin is an external contribution. The documentation and code is at
 [tbroyer/gradle-errorprone-plugin](https://github.com/tbroyer/gradle-errorprone-plugin).
 
@@ -113,7 +113,7 @@ $ gradle compileJava
 FAILURE: Build failed with an exception.
 ```
 
-# Ant
+## Ant
 
 Download the [latest release of Error Prone](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant)
 from maven, and add the following javac task to your project's `build.xml` file.
@@ -148,21 +148,21 @@ compile:
 BUILD FAILED
 ```
 
-# IntelliJ IDEA
+## IntelliJ IDEA
 
 To add the plugin, start the IDE and find the Plugins dialog. Browse Repositories, choose Category: Build, and find the Error-prone plugin. Right-click and choose "Download and install". The IDE will restart after you've exited these dialogs.
 
 To enable Error Prone, choose `Settings | Compiler | Java Compiler | Use compiler: Javac with error-prone` and also make sure `Settings | Compiler | Use external build` is NOT selected.
 
-# Eclipse
+## Eclipse
 
 Ideally, you should find out about failed Error Prone checks as you code in eclipse, thanks to the continuous compilation by ECJ (eclipse compiler for Java). But this is an architectural challenge, as Error Prone currently relies heavily on the `com.sun.*` APIs for accessing the AST and symbol table.
 
 For now, Eclipse users should use the Findbugs eclipse plugin instead, as it catches many of the same issues.
 
-# Command Line
+## Command Line
 
-## Java 9
+### Java 9
 
 Error Prone supports the
 [`com.sun.source.util.Plugin`](https://docs.oracle.com/javase/8/docs/jdk/api/javac/tree/com/sun/source/util/Plugin.html)
@@ -197,7 +197,7 @@ ShortSet.java:8: error: [CollectionIncompatibleType] Argument 'i - 1' should not
 1 error
 ```
 
-## Java 8
+### Java 8
 
 To use Error Prone from the command line as a javac replacement:
 
@@ -214,7 +214,7 @@ class Test { void f() { f(); } }
 ```
 
 
-# My build system isn't listed here
+## My build system isn't listed here
 
 If you're an end-user of the build system, you can [file a bug to request integration](https://github.com/google/error-prone/issues).
 
