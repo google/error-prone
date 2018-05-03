@@ -43,8 +43,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
   providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
 )
 public class BadNestedImport extends BugChecker implements IdentifierTreeMatcher {
-  private static final ImmutableSet<String> IDENTIFIERS_TO_REPLACE =
-      ImmutableSet.of("Builder", "Type", "Entry");
+  private static final ImmutableSet<String> IDENTIFIERS_TO_REPLACE = ImmutableSet.of("Builder");
 
   @Override
   public Description matchIdentifier(IdentifierTree tree, VisitorState state) {
