@@ -790,6 +790,9 @@ Non-constant variable missing @Var annotation
 __[BooleanParameter](bugpattern/BooleanParameter)__<br>
 Use parameter comments to document ambiguous literals
 
+__[ClassNamedLikeTypeParameter](bugpattern/ClassNamedLikeTypeParameter)__<br>
+This class&#39;s name looks like a Type Parameter.
+
 __[ConstantField](bugpattern/ConstantField)__<br>
 Field name is CONSTANT_CASE, but field is not static and final
 
