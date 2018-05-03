@@ -19,7 +19,7 @@ package com.google.errorprone;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -53,55 +53,55 @@ public class CompilationTestHelperTest {
 
   @Test
   public void fileWithNoBugMarkersAndErrorFails() {
-    try {
-      compilationHelper
-          .addSourceLines(
-              "Test.java",
-              "public class Test {",
-              "  public boolean doIt() {",
-              "    return true;",
-              "  }",
-              "}")
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("Saw unexpected error on line 3");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        "public class Test {",
+                        "  public boolean doIt() {",
+                        "    return true;",
+                        "  }",
+                        "}")
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Saw unexpected error on line 3");
   }
 
   @Test
   public void fileWithBugMarkerAndNoErrorsFails() {
-    try {
-      compilationHelper
-          .addSourceLines(
-              "Test.java",
-              "public class Test {",
-              "  // BUG: Diagnostic contains:",
-              "  public void doIt() {}",
-              "}")
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("Did not see an error on line 3");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        "public class Test {",
+                        "  // BUG: Diagnostic contains:",
+                        "  public void doIt() {}",
+                        "}")
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
   }
 
   @Test
   public void fileWithBugMatcherAndNoErrorsFails() {
-    try {
-      compilationHelper
-          .addSourceLines(
-              "Test.java",
-              "public class Test {",
-              "  // BUG: Diagnostic matches: X",
-              "  public void doIt() {}",
-              "}")
-          .expectErrorMessage("X", Predicates.containsPattern(""))
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("Did not see an error on line 3");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        "public class Test {",
+                        "  // BUG: Diagnostic matches: X",
+                        "  public void doIt() {}",
+                        "}")
+                    .expectErrorMessage("X", Predicates.containsPattern(""))
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
   }
 
   @Test
@@ -135,41 +135,41 @@ public class CompilationTestHelperTest {
 
   @Test
   public void fileWithBugMarkerAndErrorOnWrongLineFails() {
-    try {
-      compilationHelper
-          .addSourceLines(
-              "Test.java",
-              "public class Test {",
-              "  // BUG: Diagnostic contains:",
-              "  public boolean doIt() {",
-              "    return true;",
-              "  }",
-              "}")
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("Did not see an error on line 3");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        "public class Test {",
+                        "  // BUG: Diagnostic contains:",
+                        "  public boolean doIt() {",
+                        "    return true;",
+                        "  }",
+                        "}")
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
   }
 
   @Test
   public void fileWithBugMatcherAndErrorOnWrongLineFails() {
-    try {
-      compilationHelper
-          .addSourceLines(
-              "Test.java",
-              "public class Test {",
-              "  // BUG: Diagnostic matches: X",
-              "  public boolean doIt() {",
-              "    return true;",
-              "  }",
-              "}")
-          .expectErrorMessage("X", Predicates.containsPattern(""))
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("Did not see an error on line 3");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        "public class Test {",
+                        "  // BUG: Diagnostic matches: X",
+                        "  public boolean doIt() {",
+                        "    return true;",
+                        "  }",
+                        "}")
+                    .expectErrorMessage("X", Predicates.containsPattern(""))
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
   }
 
   @Test
@@ -231,22 +231,23 @@ public class CompilationTestHelperTest {
 
   @Test
   public void fileWithSyntaxErrorFails() throws Exception {
-    try {
-      compilationHelper
-          .addSourceLines(
-              "Test.java",
-              "class Test {",
-              "  void m() {",
-              "    // BUG: Diagnostic contains:",
-              "    return}", // there's a syntax error on this line, but it shouldn't register as
-              // an error-prone diagnostic
-              "}")
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage())
-          .contains("Test program failed to compile with non Error Prone error");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        "class Test {",
+                        "  void m() {",
+                        "    // BUG: Diagnostic contains:",
+                        // There's a syntax error on this line, but it shouldn't register as an
+                        // Error Prone diagnostic
+                        "    return}",
+                        "}")
+                    .doTest());
+    assertThat(expected.getMessage())
+        .contains("Test program failed to compile with non Error Prone error");
   }
 
   @Test
@@ -259,15 +260,15 @@ public class CompilationTestHelperTest {
 
   @Test
   public void expectedResultDiffersFromActualResultFails() {
-    try {
-      compilationHelper
-          .expectResult(Result.ERROR)
-          .addSourceLines("Test.java", "public class Test {}")
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("Expected compilation result ERROR, but was OK");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .expectResult(Result.ERROR)
+                    .addSourceLines("Test.java", "public class Test {}")
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Expected compilation result ERROR, but was OK");
   }
 
   @Test
@@ -289,62 +290,63 @@ public class CompilationTestHelperTest {
 
   @Test
   public void expectNoDiagnoticsButDiagnosticsProducedFails() {
-    try {
-      compilationHelper
-          .expectNoDiagnostics()
-          .addSourceLines(
-              "Test.java",
-              "public class Test {",
-              "  public boolean doIt() {",
-              "    // BUG: Diagnostic contains:",
-              "    return true;",
-              "  }",
-              "}")
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .expectNoDiagnostics()
+                    .addSourceLines(
+                        "Test.java",
+                        "public class Test {",
+                        "  public boolean doIt() {",
+                        "    // BUG: Diagnostic contains:",
+                        "    return true;",
+                        "  }",
+                        "}")
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
   }
 
   @Test
   public void expectNoDiagnoticsButDiagnosticsProducedFailsWithMatches() {
-    try {
-      compilationHelper
-          .expectNoDiagnostics()
-          .addSourceLines(
-              "Test.java",
-              "public class Test {",
-              "  public boolean doIt() {",
-              "    // BUG: Diagnostic matches: X",
-              "    return true;",
-              "  }",
-              "}")
-          .expectErrorMessage("X", Predicates.containsPattern(""))
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .expectNoDiagnostics()
+                    .addSourceLines(
+                        "Test.java",
+                        "public class Test {",
+                        "  public boolean doIt() {",
+                        "    // BUG: Diagnostic matches: X",
+                        "    return true;",
+                        "  }",
+                        "}")
+                    .expectErrorMessage("X", Predicates.containsPattern(""))
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
   }
 
   @Test
   public void failureWithErrorAndNoDiagnosticFails() {
-    try {
-      compilationHelper
-          .expectNoDiagnostics()
-          .addSourceLines("Test.java", "public class Test {}")
-          .setArgs(ImmutableList.of("-Xep:ReturnTreeChecker:Squirrels")) // Bad flag crashes.
-          .ignoreJavacErrors()
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage())
-          .contains(
-              "Expected compilation result to be OK, but was CMDERR. No diagnostics were"
-                  + " emitted.");
-      assertThat(expected.getMessage()).contains("InvalidCommandLineOptionException");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .expectNoDiagnostics()
+                    .addSourceLines("Test.java", "public class Test {}")
+                    .setArgs(
+                        ImmutableList.of("-Xep:ReturnTreeChecker:Squirrels")) // Bad flag crashes.
+                    .ignoreJavacErrors()
+                    .doTest());
+    assertThat(expected.getMessage())
+        .contains(
+            "Expected compilation result to be OK, but was CMDERR. No diagnostics were"
+                + " emitted.");
+    assertThat(expected.getMessage()).contains("InvalidCommandLineOptionException");
   }
 
   @Test
@@ -365,14 +367,15 @@ public class CompilationTestHelperTest {
 
   @Test
   public void missingExpectErrorFails() {
-    try {
-      compilationHelper
-          .addSourceLines("Test.java", " // BUG: Diagnostic matches: X", "public class Test {}")
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("No expected error message with key [X]");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java", " // BUG: Diagnostic matches: X", "public class Test {}")
+                    .doTest());
+    assertThat(expected.getMessage()).contains("No expected error message with key [X]");
   }
 
   @BugPattern(
@@ -390,14 +393,14 @@ public class CompilationTestHelperTest {
 
   @Test
   public void unexpectedDiagnosticOnFirstLine() {
-    try {
-      CompilationTestHelper.newInstance(PackageTreeChecker.class, getClass())
-          .addSourceLines("test/Test.java", "package test;", "public class Test {}")
-          .doTest();
-      fail();
-    } catch (AssertionError expected) {
-      assertThat(expected.getMessage()).contains("Package declaration found");
-    }
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                CompilationTestHelper.newInstance(PackageTreeChecker.class, getClass())
+                    .addSourceLines("test/Test.java", "package test;", "public class Test {}")
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Package declaration found");
   }
 
   @BugPattern(
