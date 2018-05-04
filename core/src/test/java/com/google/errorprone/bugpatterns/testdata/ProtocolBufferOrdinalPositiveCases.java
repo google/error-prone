@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.errorprone.bugpatterns.proto.TestEnum;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestEnum;
 
 /** Positive test cases for {@link ProtocolBufferOrdinal} check. */
 public class ProtocolBufferOrdinalPositiveCases {
