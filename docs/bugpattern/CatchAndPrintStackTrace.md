@@ -14,7 +14,7 @@ try {
 try {
   // ...
 } catch (IOException e) {
-  throw new UncheckedIOException(e);
+  throw new UncheckedIOException(e); // New in Java 8
 }
 ```
 
