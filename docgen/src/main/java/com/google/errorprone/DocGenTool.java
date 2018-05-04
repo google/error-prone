@@ -16,7 +16,8 @@
 
 package com.google.errorprone;
 
-import static com.google.common.io.Files.readLines;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.io.Files.asCharSource;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.ENABLED_ERRORS;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.ENABLED_WARNINGS;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -25,6 +26,7 @@ import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import java.io.IOException;
 import java.io.Writer;
@@ -32,10 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -127,15 +126,18 @@ public class DocGenTool {
             explanationDir,
             options.target == Target.EXTERNAL,
             options.usePygments,
-            options.baseUrl);
+            options.baseUrl,
+                input -> input.severity);
     try (Writer w =
         Files.newBufferedWriter(wikiDir.resolve("bugpatterns.md"), StandardCharsets.UTF_8)) {
-      List<BugPatternInstance> patterns = readLines(bugPatterns.toFile(), UTF_8, generator);
-      new BugPatternIndexWriter().dump(patterns, w, options.target, enabledChecks());
+      List<BugPatternInstance> patterns =
+          asCharSource(bugPatterns.toFile(), UTF_8).readLines(generator);
+      new BugPatternIndexWriter().dump(patterns, w, options.target, enabledCheckNames());
     }
   }
 
-  private static Set<String> enabledChecks() {
+
+  private static ImmutableSet<String> enabledCheckNames() {
     return StreamSupport.stream(
             Iterables.concat(
                     ENABLED_ERRORS,
@@ -143,7 +145,7 @@ public class DocGenTool {
                 .spliterator(),
             false)
         .map(BugCheckerInfo::canonicalName)
-        .collect(Collectors.toCollection(HashSet::new));
+        .collect(toImmutableSet());
   }
 
   private static void usage(String err) {

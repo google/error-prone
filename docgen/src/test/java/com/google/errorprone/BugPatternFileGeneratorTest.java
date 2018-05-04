@@ -94,7 +94,8 @@ public class BugPatternFileGeneratorTest {
   @Test
   public void regressionTest_frontmatter_pygments() throws Exception {
     BugPatternFileGenerator generator =
-        new BugPatternFileGenerator(wikiDir, exampleDirBase, explanationDirBase, true, true, null);
+        new BugPatternFileGenerator(
+            wikiDir, exampleDirBase, explanationDirBase, true, true, null, input -> input.severity);
     generator.processLine(BUGPATTERN_LINE);
     String expected =
         CharStreams.toString(
@@ -110,7 +111,13 @@ public class BugPatternFileGeneratorTest {
   public void regressionTest_nofrontmatter_gfm() throws Exception {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
-            wikiDir, exampleDirBase, explanationDirBase, false, false, null);
+            wikiDir,
+            exampleDirBase,
+            explanationDirBase,
+            false,
+            false,
+            null,
+            input -> input.severity);
     generator.processLine(BUGPATTERN_LINE);
     String expected =
         CharStreams.toString(
@@ -125,7 +132,13 @@ public class BugPatternFileGeneratorTest {
   public void regressionTest_sidecar() throws Exception {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
-            wikiDir, exampleDirBase, explanationDirBase, false, false, null);
+            wikiDir,
+            exampleDirBase,
+            explanationDirBase,
+            false,
+            false,
+            null,
+            input -> input.severity);
     Files.write(
         explanationDirBase.resolve("DeadException.md"),
         Arrays.asList(
@@ -158,7 +171,13 @@ public class BugPatternFileGeneratorTest {
     // Write markdown file
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
-            wikiDir, exampleDirBase, explanationDirBase, false, false, null);
+            wikiDir,
+            exampleDirBase,
+            explanationDirBase,
+            false,
+            false,
+            null,
+            input -> input.severity);
     generator.processLine(new Gson().toJson(instance));
     String expected =
         CharStreams.toString(
