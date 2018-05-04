@@ -2,23 +2,27 @@
 implementations are the non-direct byte buffers, which are backed by a bytes
 array, and direct byte buffers, which usually are off-heap directly mapped to
 memory. Thus, not all `ByteBuffer` implementations are backed by a bytes array,
-and so it is needed to call `.hasArray()` before calling `.array()`.
+and when they are, the beginning of the array returned by `.array()` may not
+necessarily correspond to the beginning of the `ByteBuffer`.
 
-On the other hand, the beginning of the array returned by `.array()` does not
-necessarily correspond to the beginning of the `ByteBuffer`, and in this way,
-accessing the returned array without knowing the `.arrayOffset()` may cause
-undesired results.
+Since it's so finicky, **use of `.array()` is discouraged. Use `.get(...)` to
+copy the underlying data instead.**
 
-For this reason, the `array()` method should only be used when the programmer
-knows that the underlying ByteBuffer has a backing array (for example:
-constructing the ByteBuffer with `ByteBuffer.wrap()` or `ByteBuffer.allocate()`)
-. In addition, the `.arrayOffset()` should also be used to know the starting
-position of the `ByteBuffer` content in such array.
+But, if you *absolutely must* use `.array()` to look behind the `ByteBuffer`
+curtain, check all of the following:
+
+*   Ensure there is a backing array with `.hasArray()`
+*   Check the start position of the backing array by calling `.arrayOffset()`
+*   Check the end position of the backing array with `.remaining()`
+
+If you know that the `ByteBuffer` was created locally with
+`ByteBuffer.wrap(...)` or `ByteBuffer.allocate(...)`, it's safe, you can use the
+backing array normally, without checking the above.
 
 Do this:
 
 ``` {.good}
-// This will use the current buffer position
+// Use `.get(...)` to copy the byte[] without changing the current position.
 public void foo(ByteBuffer buffer) throws Exception {
    byte[] bytes = new byte[buffer.remaining()];
    buffer.get(bytes);
@@ -30,19 +34,21 @@ public void foo(ByteBuffer buffer) throws Exception {
 or this:
 
 ``` {.good}
-// This is an example of a correct usage of .array()
+// Use `.array()` only if you also check `.hasArray()`, `.arrayOffset()`, and `.remaining()`.
 public void foo(ByteBuffer buffer) throws Exception {
-   if (buffer.hasArray()) {
-     bar(buffer.array(), /* offset */ buffer.arrayOffset() + buffer.position(),
-         /* length */ buffer.remaining());
-   }
-   // ...
+  if (buffer.hasArray()) {
+    int startIndex = byteBuffer.arrayOffset();
+    int curIndex = byteBuffer.arrayOffset() + byteBuffer.position();
+    int endIndex = curIndex + byteBuffer.remaining();
+    // Access elements of `.array()` with the above indices ...
+  }
 }
 ```
 
 or this:
 
 ``` {.good}
+// No checking necessary when the buffer was constructed locally with `allocate(...)`.
 public void foo() throws Exception {
       ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
       buffer.putLong(1L);
@@ -55,6 +61,7 @@ public void foo() throws Exception {
 or this:
 
 ``` {.good}
+// No checking necessary when the buffer was constructed locally with `wrap(...)`.
 public void foo(byte[] bytes) throws Exception {
    ByteBuffer buffer = ByteBuffer.wrap(bytes);
    // ...
