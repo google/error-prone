@@ -734,7 +734,7 @@ public class SuggestedFixes {
     try {
       newTask.analyze();
     } catch (Throwable e) {
-      // ignored
+      return false; // ¯\_(ツ)_/¯
     }
     return countErrors(diagnosticListener) == 0;
   }
