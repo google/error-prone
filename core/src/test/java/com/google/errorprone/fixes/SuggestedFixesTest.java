@@ -57,7 +57,7 @@ import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.lang.annotation.Retention;
-import java.util.Optional;
+import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,7 +70,7 @@ public class SuggestedFixesTest {
   /** Edit modifiers type. */
   @Retention(RUNTIME)
   public @interface EditModifiers {
-    String value() default "";
+    String[] value() default {};
 
     EditKind kind() default EditKind.ADD;
 
@@ -114,20 +114,22 @@ public class SuggestedFixesTest {
       EditModifiers editModifiers =
           ASTHelpers.getAnnotation(
               ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class), EditModifiers.class);
-      Modifier mod = MODIFIERS_BY_NAME.get(editModifiers.value());
-      Verify.verifyNotNull(mod, editModifiers.value());
-      Optional<SuggestedFix> fix;
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      Modifier[] mods =
+          Stream.of(editModifiers.value())
+              .map(v -> Verify.verifyNotNull(MODIFIERS_BY_NAME.get(v), v))
+              .toArray(Modifier[]::new);
       switch (editModifiers.kind()) {
         case ADD:
-          fix = SuggestedFixes.addModifiers(tree, state, mod);
+          fix.merge(SuggestedFixes.addModifiers(tree, state, mods).orElse(null));
           break;
         case REMOVE:
-          fix = SuggestedFixes.removeModifiers(tree, state, mod);
+          fix.merge(SuggestedFixes.removeModifiers(tree, state, mods).orElse(null));
           break;
         default:
           throw new AssertionError(editModifiers.kind());
       }
-      return describeMatch(tree, fix);
+      return describeMatch(tree, fix.build());
     }
   }
 
@@ -231,6 +233,21 @@ public class SuggestedFixesTest {
             "  @Nullable public final Object three = null;",
             "  // BUG: Diagnostic contains: public Object four",
             "  public final Object four = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void removeMultipleModifiers() {
+    CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            String.format("import %s;", EditModifiers.class.getCanonicalName()),
+            "import javax.annotation.Nullable;",
+            "@EditModifiers(value={\"final\", \"static\"}, kind=EditModifiers.EditKind.REMOVE)",
+            "class Test {",
+            "  // BUG: Diagnostic contains: private Object one = null;",
+            "  private static final Object one = null;",
             "}")
         .doTest();
   }

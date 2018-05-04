@@ -216,7 +216,6 @@ public class SuggestedFixes {
       if (toRemove.contains(mod)) {
         empty = false;
         fix.replace(basePos + tok.pos(), basePos + tok.endPos() + 1, "");
-        break;
       }
     }
     if (empty) {
