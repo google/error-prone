@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-// Generated Java src must be manually regenerated whenever this is updated.
-
 syntax = "proto3";
 
 package com.google.errorprone.bugpatterns;
