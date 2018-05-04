@@ -29,6 +29,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.LineProcessor;
+import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.gson.Gson;
 import java.io.IOError;
 import java.io.IOException;
@@ -70,6 +71,8 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
    */
   private final boolean usePygments;
 
+  private final Function<BugPatternInstance, SeverityLevel> severityRemapper;
+
   /** Controls whether yaml front-matter is generated. */
   private final boolean generateFrontMatter;
 
@@ -82,10 +85,12 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
       Path explanationDir,
       boolean generateFrontMatter,
       boolean usePygments,
-      String baseUrl) {
+      String baseUrl,
+      Function<BugPatternInstance, SeverityLevel> severityRemapper) {
     this.outputDir = bugpatternDir;
     this.exampleDirBase = exampleDirBase;
     this.explanationDir = explanationDir;
+    this.severityRemapper = severityRemapper;
     this.generateFrontMatter = generateFrontMatter;
     this.usePygments = usePygments;
     this.baseUrl = baseUrl;
@@ -151,6 +156,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
   @Override
   public boolean processLine(String line) throws IOException {
     BugPatternInstance pattern = new Gson().fromJson(line, BugPatternInstance.class);
+    pattern.severity = severityRemapper.apply(pattern);
     result.add(pattern);
 
     // replace spaces in filename with underscores
