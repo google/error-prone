@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.errorprone.annotations.CheckReturnValue;
 import org.junit.rules.ExpectedException;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
@@ -23,7 +24,7 @@ public class CheckReturnValuePositiveCases {
 
   IntValue intValue = new IntValue(0);
 
-  @javax.annotation.CheckReturnValue
+  @CheckReturnValue
   private int increment(int bar) {
     return bar + 1;
   }
@@ -134,7 +135,7 @@ public class CheckReturnValuePositiveCases {
   }
 
   private static class MyObject {
-    @javax.annotation.CheckReturnValue
+    @CheckReturnValue
     MyObject() {}
   }
 
@@ -142,7 +143,7 @@ public class CheckReturnValuePositiveCases {
 
   private static class LB2<A> extends LB1<A> {
 
-    @javax.annotation.CheckReturnValue
+    @CheckReturnValue
     public static <T> LB2<T> lb1() {
       return new LB2<T>();
     }
@@ -154,8 +155,8 @@ public class CheckReturnValuePositiveCases {
     }
   }
 
-  private static class ErrorProneAnnotation {
-    @com.google.errorprone.annotations.CheckReturnValue
+  private static class JavaxAnnotation {
+    @javax.annotation.CheckReturnValue
     public static int check() {
       return 1;
     }
