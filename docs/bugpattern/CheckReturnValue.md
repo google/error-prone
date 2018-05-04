@@ -1,13 +1,20 @@
-The JSR 305 `@CheckReturnValue` annotation marks methods whose return values
-should be checked. This error is triggered when one of these methods is called
-but the result is not used.
+The `@CheckReturnValue` annotation (available in JSR-305[^jsr] or in [Error
+Prone][epcrv]) marks methods whose return values should be checked. This error
+is triggered when one of these methods is called but the result is not used.
+
+[^jsr]: Of note, the JSR-305 project was [never fully approved][jsr305], so the
+
+JSR-305 version of the annotation is not actually official and causes issues
+with Java 9 and the [Module System][j9jsr305]. Prefer to use the Error Prone
+version.
 
 `@CheckReturnValue` may be applied to a class or package [^package-info] to
-indicate that all
-methods in that class or package must have their return values checked. For
-convenience, we provide an annotation, `@CanIgnoreReturnValue`, to exempt
-specific methods or classes from this behavior. `@CanIgnoreReturnValue` is
-available from the Error Prone annotations package,
+indicate that all methods in that class or package must have their return values
+checked.
+
+For convenience, we provide an annotation, [`@CanIgnoreReturnValue`][epcirv], to
+exempt specific methods or classes from this behavior. `@CanIgnoreReturnValue`
+is available from the Error Prone annotations package,
 `com.google.errorprone.annotations`.
 
 [^package-info]: To annotate a package, create a
@@ -25,25 +32,44 @@ public void setNameFormat(String nameFormat) {
 }
 ```
 
-NOTE: `@CheckReturnValue` is ignored under the following conditions (which saves
-users from having to use either an `unused` variable or `@SuppressWarnings`):
 
-1.  calls from `Mockito.verify()`; e.g., `Mockito.verify(t).foo()` (where
-    `foo()` is annotated with `@CheckReturnValue`)
+### Ignored contexts
 
-2.  calls from `Stubber.when()`; e.g. `doReturn(val).when(t).foo()` (where
-    `foo()` is annotated with `@CheckReturnValue`)
+`@CheckReturnValue` is ignored under the following conditions (which saves users
+from having to use either an `unused` variable or `@SuppressWarnings`):
 
-3.  code that is using the `try/execute/fail/catch` pattern; e.g.:
+1.  Calls from `Mockito.verify()` or `Stubber.when()`; e.g.,
+    `Mockito.verify(t).foo()` or `doReturn(val).when(t).foo()` (where `foo()` is
+    annotated with `@CheckReturnValue`). Here, the method calls are just used to
+    program the mock object, not to be consumed directly.
 
-```java
-try {
-  user.setName(null);
-  fail("Expected a NullPointerException to be thrown on a null name");
-} catch (NullPointerException expected) {
-}
-```
+2.  Code that doing exception-testing with JUnit, where the intent is that the
+    method call should throw an exception:
 
-This is because such tests meant to check if a method is invoked and/or throws
-the correct exception type, rather than consuming the return value.
+    *   Uses of JUnit 4.13 or JUnit5's `assertThrows` methods:
 
+        ```java
+        assertThrows(IndexOutOfBoundsException.class, () -> list.get(-1));
+        ```
+
+    *   The `try/execute/fail/catch` pattern
+
+        ```java
+         try {
+           list.get(-1);
+           fail("Expected a IndexOutOfBoundsException to be thrown on a negative index");
+         } catch (IndexOutOfBoundsException expected) {
+         }
+        ```
+
+    *   JUnit's `ExpectedException`
+
+        ```java
+        expectedException.expect(IndexOutOfBoundsException.class);
+        list.get(-1); // If this throws IOOBE, the test passes.
+        ```
+
+[epcrv]: https://errorprone.info/api/latest/com/google/errorprone/annotations/CheckReturnValue.html
+[epcirv]: https://errorprone.info/api/latest/com/google/errorprone/annotations/CanIgnoreReturnValue.html
+[j9jsr305]: https://blog.codefx.org/java/jsr-305-java-9/
+[jsr305]: https://jcp.org/en/jsr/detail?id=305

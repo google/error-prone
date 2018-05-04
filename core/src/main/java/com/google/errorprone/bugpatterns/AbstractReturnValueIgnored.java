@@ -126,7 +126,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         == TypeKind.VOID;
   }
 
-  private static boolean methodCallInDeclarationOfExceptionType(VisitorState state) {
+  private static boolean methodCallInDeclarationOfThrowingRunnable(VisitorState state) {
     // Find the nearest definitional context for this method invocation
     // (i.e.: the nearest surrounding class or lambda)
     Tree tree = null;
@@ -267,7 +267,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           allOf(
               anyOf(isLastStatementInBlock(), parentNode(kindIs(Kind.LAMBDA_EXPRESSION))),
               // Within the context of a ThrowingRunnable/Executable:
-              (t, s) -> methodCallInDeclarationOfExceptionType(s)));
+              (t, s) -> methodCallInDeclarationOfThrowingRunnable(s)));
 
   private static final Matcher<ExpressionTree> MOCKITO_MATCHER =
       anyOf(
