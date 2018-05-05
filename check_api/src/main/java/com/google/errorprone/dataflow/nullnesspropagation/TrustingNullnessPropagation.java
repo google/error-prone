@@ -17,13 +17,12 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.dataflow.LocalStore;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.lang.model.AnnotatedConstruct;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import org.checkerframework.dataflow.cfg.UnderlyingAST;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
@@ -71,7 +70,7 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     LocalStore.Builder<Nullness> result = LocalStore.<Nullness>empty().toBuilder();
     for (LocalVariableNode param : parameters) {
       Element element = param.getElement();
-      Nullness assumed = nullnessFromAnnotations(element, param.getType());
+      Nullness assumed = nullnessFromAnnotations((Symbol) element);
       result.setInformation(element, assumed);
     }
     return result.build();
@@ -87,23 +86,18 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     return nullnessFromAnnotations(accessed.symbol);
   }
 
+  // TODO(b/79270313): consolidate hard-coded names of @Nullable annotations
+  private static final ImmutableSet<String> NULLABLE_ANNOTATION_SIMPLE_NAMES =
+      ImmutableSet.of("Nullable", "NullableDecl");
+
   /** Returns nullability based on the presence of a {@code Nullable} annotation. */
   static Nullness nullnessFromAnnotations(Symbol symbol) {
-    return nullnessFromAnnotations(
-        symbol,
-        symbol instanceof MethodSymbol ? ((MethodSymbol) symbol).getReturnType() : symbol.type);
-  }
-
-  // TODO(b/71812955): for type variables, check for type annotations on the referenced variable
-  private static Nullness nullnessFromAnnotations(AnnotatedConstruct... elements) {
-    for (AnnotatedConstruct element : elements) {
-      for (AnnotationMirror anno : element.getAnnotationMirrors()) {
-        // Check for Nullable like ReturnValueIsNonNull
-        if (anno.getAnnotationType().toString().endsWith(".Nullable")
-            || anno.getAnnotationType().toString().endsWith(".NullableDecl")) {
-          return Nullness.NULLABLE;
-        }
-      }
+    if (MoreAnnotations.getDeclarationAndTypeAttributes(symbol)
+        .anyMatch(
+            c ->
+                NULLABLE_ANNOTATION_SIMPLE_NAMES.contains(
+                    c.getAnnotationType().asElement().getSimpleName().toString()))) {
+      return Nullness.NULLABLE;
     }
     return Nullness.NONNULL;
   }
