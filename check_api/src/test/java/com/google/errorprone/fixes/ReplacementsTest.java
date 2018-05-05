@@ -17,6 +17,7 @@
 package com.google.errorprone.fixes;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Function;
@@ -121,5 +122,13 @@ public class ReplacementsTest {
                 .add(Replacement.create(42, 42, "hello;"))
                 .descending())
         .containsExactly(Replacement.create(42, 42, "hello;"));
+  }
+
+  @Test
+  public void zeroLengthRangeOverlaps() {
+    Replacements replacements = new Replacements();
+    replacements.add(Replacement.create(1, 1, "Something"));
+    Replacement around = Replacement.create(0, 2, "Around");
+    assertThrows(IllegalArgumentException.class, () -> replacements.add(around));
   }
 }
