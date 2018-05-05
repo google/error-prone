@@ -16,6 +16,7 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
@@ -38,6 +39,7 @@ import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 import com.google.errorprone.dataflow.LocalStore;
 import com.google.errorprone.dataflow.LocalVariableValues;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
@@ -72,7 +74,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nullable;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.VariableElement;
 import org.checkerframework.dataflow.analysis.Analysis;
 import org.checkerframework.dataflow.cfg.CFGBuilder;
@@ -852,20 +853,16 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     static ClassAndMethod make(MethodSymbol methodSymbol, @Nullable Types types) {
       // TODO(b/71812955): consider just wrapping methodSymbol instead of copying everything out.
       // TODO(b/71812955): for type variables, check for type annotations on the referenced variable
-      ImmutableList.Builder<String> annotations = ImmutableList.builder();
-      for (AnnotationMirror annotationMirror : methodSymbol.getAnnotationMirrors()) {
-        annotations.add(annotationMirror.getAnnotationType().toString());
-      }
-      for (AnnotationMirror annotationMirror :
-          methodSymbol.getReturnType().getAnnotationMirrors()) {
-        annotations.add(annotationMirror.getAnnotationType().toString());
-      }
+      ImmutableList<String> annotations =
+          MoreAnnotations.getDeclarationAndTypeAttributes(methodSymbol)
+              .map(c -> c.getAnnotationType().asElement().toString())
+              .collect(toImmutableList());
 
       ClassSymbol clazzSymbol = (ClassSymbol) methodSymbol.owner;
       return new ClassAndMethod(
           clazzSymbol.getQualifiedName().toString(),
           methodSymbol.getSimpleName().toString(),
-          annotations.build(),
+          annotations,
           methodSymbol.isStatic(),
           methodSymbol.getReturnType().isPrimitive(),
           methodSymbol.getReturnType().getTag() == BOOLEAN,

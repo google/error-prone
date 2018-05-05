@@ -17,8 +17,14 @@
 package com.google.errorprone.util;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE_USE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -55,10 +61,16 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.api.BasicJavacTask;
+import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.main.Main.Result;
+import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.io.File;
@@ -67,10 +79,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.regex.Pattern;
@@ -888,5 +902,79 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "}")
         .expectResult(Result.ERROR)
         .doTest();
+  }
+
+  @Target(TYPE_USE)
+  @interface A {
+    int value();
+  }
+
+  @Target({METHOD, FIELD, LOCAL_VARIABLE, PARAMETER})
+  @interface B {
+    String value();
+  }
+
+  @interface ExpectedAnnotation {
+    String expected();
+
+    Target target();
+  }
+
+  /** A {@link Lib}rary for testing. */
+  public static class Lib {
+    @B("one")
+    private volatile Map.@A(1) Entry<@A(2) ?, ? extends @A(3) Object> field;
+
+    @B("two")
+    Map.@A(4) Entry<@A(5) ?, ? extends @A(6) Object> method(
+        @B("three") Map.@A(7) Entry<@A(8) ?, ? extends @A(9) Object> param1,
+        @B("four") @A(11) Object @A(10) [] param2) {
+      return null;
+    }
+  }
+
+  @Test
+  public void getDeclarationAndTypeAttributesTest() {
+    BasicJavacTask tool =
+        (BasicJavacTask) JavacTool.create().getTask(null, null, null, null, null, null);
+    ClassSymbol element =
+        JavacElements.instance(tool.getContext()).getTypeElement(Lib.class.getCanonicalName());
+    VarSymbol field =
+        (VarSymbol)
+            element
+                .getEnclosedElements()
+                .stream()
+                .filter(e -> e.getSimpleName().contentEquals("field"))
+                .findAny()
+                .get();
+    assertThat(ASTHelpers.getDeclarationAndTypeAttributes(field).map(String::valueOf))
+        .containsExactly(
+            "@com.google.errorprone.util.ASTHelpersTest.B(\"one\")",
+            "@com.google.errorprone.util.ASTHelpersTest.A(1)");
+
+    MethodSymbol method =
+        (MethodSymbol)
+            element
+                .getEnclosedElements()
+                .stream()
+                .filter(e -> e.getSimpleName().contentEquals("method"))
+                .findAny()
+                .get();
+    assertThat(ASTHelpers.getDeclarationAndTypeAttributes(method).map(String::valueOf))
+        .containsExactly(
+            "@com.google.errorprone.util.ASTHelpersTest.B(\"two\")",
+            "@com.google.errorprone.util.ASTHelpersTest.A(4)");
+    assertThat(
+            ASTHelpers.getDeclarationAndTypeAttributes(method.getParameters().get(0))
+                .map(String::valueOf))
+        .containsExactly(
+            "@com.google.errorprone.util.ASTHelpersTest.B(\"three\")",
+            "@com.google.errorprone.util.ASTHelpersTest.A(7)");
+    assertThat(
+            ASTHelpers.getDeclarationAndTypeAttributes(method.getParameters().get(1))
+                .map(String::valueOf))
+        .containsExactly(
+            "@com.google.errorprone.util.ASTHelpersTest.B(\"four\")",
+            "@com.google.errorprone.util.ASTHelpersTest.A(10)");
   }
 }
