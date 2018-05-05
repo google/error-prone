@@ -149,54 +149,64 @@ public class SuggestedFixes {
     }
     Set<Modifier> toAdd =
         Sets.difference(new TreeSet<>(Arrays.asList(modifiers)), originalModifiers.getFlags());
-    if (originalModifiers.getFlags().isEmpty()) {
-      int pos =
-          state.getEndPosition(originalModifiers) != Position.NOPOS
-              ? state.getEndPosition(originalModifiers) + 1
-              : ((JCTree) tree).getStartPosition();
-      int base = ((JCTree) tree).getStartPosition();
-      Optional<Integer> insert =
-          state
-              .getTokensForNode(tree)
-              .stream()
-              .map(token -> token.pos() + base)
-              .filter(thisPos -> thisPos >= pos)
-              .findFirst();
-      int insertPos = insert.orElse(pos); // shouldn't ever be able to get to the else
-      return Optional.of(
-          SuggestedFix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " "));
-    }
-    // a map from modifiers to modifier position (or -1 if the modifier is being added)
-    // modifiers are sorted in Google Java Style order
-    Map<Modifier, Integer> modifierPositions = new TreeMap<>();
-    for (Modifier mod : toAdd) {
-      modifierPositions.put(mod, -1);
-    }
-    List<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
-    int base = ((JCTree) originalModifiers).getStartPosition();
-    for (ErrorProneToken tok : tokens) {
-      Modifier mod = getTokModifierKind(tok);
-      if (mod != null) {
-        modifierPositions.put(mod, base + tok.pos());
-      }
-    }
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    // walk the map of all modifiers, and accumulate a list of new modifiers to insert
-    // beside an existing modifier
     List<Modifier> modifiersToWrite = new ArrayList<>();
-    for (Modifier mod : modifierPositions.keySet()) {
-      int p = modifierPositions.get(mod);
-      if (p == -1) {
-        modifiersToWrite.add(mod);
-      } else if (!modifiersToWrite.isEmpty()) {
-        fix.replace(p, p, Joiner.on(' ').join(modifiersToWrite) + " ");
-        modifiersToWrite.clear();
+    if (!originalModifiers.getFlags().isEmpty()) {
+      // a map from modifiers to modifier position (or -1 if the modifier is being added)
+      // modifiers are sorted in Google Java Style order
+      Map<Modifier, Integer> modifierPositions = new TreeMap<>();
+      for (Modifier mod : toAdd) {
+        modifierPositions.put(mod, -1);
       }
+      List<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
+      int base = ((JCTree) originalModifiers).getStartPosition();
+      for (ErrorProneToken tok : tokens) {
+        Modifier mod = getTokModifierKind(tok);
+        if (mod != null) {
+          modifierPositions.put(mod, base + tok.pos());
+        }
+      }
+      // walk the map of all modifiers, and accumulate a list of new modifiers to insert
+      // beside an existing modifier
+      for (Modifier mod : modifierPositions.keySet()) {
+        int p = modifierPositions.get(mod);
+        if (p == -1) {
+          modifiersToWrite.add(mod);
+        } else if (!modifiersToWrite.isEmpty()) {
+          fix.replace(p, p, Joiner.on(' ').join(modifiersToWrite) + " ");
+          modifiersToWrite.clear();
+        }
+      }
+    } else {
+      modifiersToWrite.addAll(toAdd);
     }
-    if (!modifiersToWrite.isEmpty()) {
-      fix.postfixWith(originalModifiers, " " + Joiner.on(' ').join(modifiersToWrite));
-    }
+    addRemainingModifiers(tree, state, originalModifiers, modifiersToWrite, fix);
     return Optional.of(fix.build());
+  }
+
+  private static void addRemainingModifiers(
+      Tree tree,
+      VisitorState state,
+      ModifiersTree originalModifiers,
+      Collection<Modifier> toAdd,
+      SuggestedFix.Builder fix) {
+    if (toAdd.isEmpty()) {
+      return;
+    }
+    int pos =
+        state.getEndPosition(originalModifiers) != Position.NOPOS
+            ? state.getEndPosition(originalModifiers) + 1
+            : ((JCTree) tree).getStartPosition();
+    int base = ((JCTree) tree).getStartPosition();
+    Optional<Integer> insert =
+        state
+            .getTokensForNode(tree)
+            .stream()
+            .map(token -> token.pos() + base)
+            .filter(thisPos -> thisPos >= pos)
+            .findFirst();
+    int insertPos = insert.orElse(pos); // shouldn't ever be able to get to the else
+    fix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
   }
 
   /** Remove modifiers from the given class, method, or field declaration. */

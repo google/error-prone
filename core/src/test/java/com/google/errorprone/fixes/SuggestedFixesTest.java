@@ -35,6 +35,7 @@ import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -1197,6 +1198,34 @@ public class SuggestedFixesTest {
             "    }",
             "  }",
             "}")
+        .doTest();
+  }
+
+  /** Test checker that removes and adds modifiers in the same fix. */
+  @BugPattern(
+      name = "RemoveAddModifier",
+      category = JDK,
+      summary = "",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
+  public static class RemoveAddModifier extends BugChecker implements ClassTreeMatcher {
+
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return describeMatch(
+          tree,
+          SuggestedFix.builder()
+              .merge(SuggestedFixes.removeModifiers(tree, state, Modifier.PUBLIC).orElse(null))
+              .merge(SuggestedFixes.addModifiers(tree, state, Modifier.ABSTRACT).orElse(null))
+              .build());
+    }
+  }
+
+  @Test
+  public void removeAddModifier_rangesCompatible() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new RemoveAddModifier(), getClass())
+        .addInputLines("in/Test.java", "public class Test {}")
+        .addOutputLines("out/Test.java", "abstract class Test {}")
         .doTest();
   }
 }
