@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /** A collection of {@link Replacement}s to be made to a source file. */
 public class Replacements {
@@ -50,6 +51,7 @@ public class Replacements {
 
   private final TreeMap<Range<Integer>, Replacement> replacements = new TreeMap<>(DESCENDING);
   private final RangeMap<Integer, Replacement> overlaps = TreeRangeMap.create();
+  private final TreeSet<Integer> zeroLengthRanges = new TreeSet<>();
 
   public Replacements add(Replacement replacement) {
     if (replacements.containsKey(replacement.range())) {
@@ -76,14 +78,29 @@ public class Replacements {
   }
 
   private void checkOverlaps(Replacement replacement) {
+    Range<Integer> replacementRange = replacement.range();
     Collection<Replacement> overlap =
-        overlaps.subRangeMap(replacement.range()).asMapOfRanges().values();
+        overlaps.subRangeMap(replacementRange).asMapOfRanges().values();
     checkArgument(
         overlap.isEmpty(),
         "%s overlaps with existing replacements: %s",
         replacement,
         Joiner.on(", ").join(overlap));
-    overlaps.put(replacement.range(), replacement);
+    Set<Integer> containedZeroLengthRangeStarts =
+        zeroLengthRanges.subSet(
+            replacementRange.lowerEndpoint(),
+            /* fromInclusive= */ false,
+            replacementRange.upperEndpoint(),
+            /* toInclusive= */ false);
+    checkArgument(
+        containedZeroLengthRangeStarts.isEmpty(),
+        "%s overlaps with existing zero-length replacements: %s",
+        replacement,
+        Joiner.on(", ").join(containedZeroLengthRangeStarts));
+    overlaps.put(replacementRange, replacement);
+    if (replacementRange.isEmpty()) {
+      zeroLengthRanges.add(replacementRange.lowerEndpoint());
+    }
   }
 
   /** Non-overlapping replacements, sorted in descending order by position. */
