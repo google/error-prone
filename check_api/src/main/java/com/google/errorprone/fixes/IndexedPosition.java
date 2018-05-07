@@ -16,6 +16,8 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
@@ -27,6 +29,8 @@ public class IndexedPosition implements DiagnosticPosition {
   final int endPos;
 
   public IndexedPosition(int startPos, int endPos) {
+    checkArgument(startPos >= 0, "Start [%s] should not be less than zero", startPos);
+    checkArgument(startPos <= endPos, "Start [%s] should not be after end [%s]", startPos, endPos);
     this.startPos = startPos;
     this.endPos = endPos;
   }
