@@ -39,6 +39,68 @@ public final class BadNestedImportTest {
   }
 
   @Test
+  public void positiveCases_parentNotAlreadyImported() {
+    // Ensure that the snippet reports on the first occurrence, not the import.
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList.Builder;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: ImmutableList.Builder<String> builder = null;",
+            "  Builder<String> builder = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveCases_conflictingName() {
+    // Ensure that the snippet reports on the first occurrence, not the import.
+    compilationTestHelper
+        .addSourceLines(
+            "thing/A.java",
+            "package thing;",
+            "public class A {",
+            "  public static class B {",
+            "    public static class Builder {",
+            "    }",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import thing.A.B.Builder;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: A.B.Builder builder;",
+            "  Builder builder;",
+            "  static class B {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeCases_conflictingNames_noResolution() {
+    // Ensure that the snippet reports on the first occurrence, not the import.
+    compilationTestHelper
+        .addSourceLines(
+            "thing/A.java",
+            "package thing;",
+            "public class A {",
+            "  public static class B {",
+            "    public static class Builder {",
+            "    }",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import thing.A.B.Builder;",
+            "class Test {",
+            "  Builder builder;",
+            "  static class A {}",
+            "  static class B {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeCases() {
     compilationTestHelper.addSourceFile("BadNestedImportNegativeCases.java").doTest();
   }
