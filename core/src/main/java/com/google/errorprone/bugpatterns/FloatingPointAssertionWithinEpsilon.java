@@ -37,6 +37,7 @@ import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
@@ -92,6 +93,11 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
       boolean isIntolerantComparison(Number tolerance, Number actual) {
         return tolerance.floatValue() != 0 && tolerance.floatValue() < nextNumber(actual);
       }
+
+      @Override
+      String suffixLiteralIfNecessary(String literal) {
+        return literal + "f";
+      }
     },
     DOUBLE(
         TypeTag.DOUBLE,
@@ -108,6 +114,14 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
       boolean isIntolerantComparison(Number tolerance, Number actual) {
         return tolerance.doubleValue() != 0 && tolerance.doubleValue() < nextNumber(actual);
       }
+
+      @Override
+      String suffixLiteralIfNecessary(String literal) {
+        if (literal.contains(".")) {
+          return literal;
+        }
+        return literal + "d";
+      }
     };
 
     private final TypeTag typeTag;
@@ -116,7 +130,7 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
     private final Matcher<ExpressionTree> junitWithoutMessage;
     private final Matcher<ExpressionTree> junitWithMessage;
 
-    private FloatingPointType(
+    FloatingPointType(
         TypeTag typeTag, String typeName, String subjectClass, String tolerantSubclass) {
       this.typeTag = typeTag;
       this.typeName = typeName;
@@ -139,6 +153,8 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
     abstract Number nextNumber(Number actual);
 
     abstract boolean isIntolerantComparison(Number tolerance, Number actual);
+
+    abstract String suffixLiteralIfNecessary(String literal);
 
     private Optional<Description> match(
         BugChecker bugChecker, MethodInvocationTree tree, VisitorState state) {
@@ -224,6 +240,9 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
       Type type = ASTHelpers.getType(tree);
       if (state.getTypes().unboxedTypeOrType(type).getTag() == typeTag) {
         return source;
+      }
+      if (tree instanceof LiteralTree) {
+        return suffixLiteralIfNecessary(source.replaceAll("[fFdDlL]$", ""));
       }
       if (parenthesize(tree)) {
         return String.format("(%s) (%s)", typeName, source);
