@@ -16,6 +16,8 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.sun.tools.javac.tree.EndPosTable;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -68,6 +70,11 @@ public class AppliedFix {
 
       Set<Integer> modifiedLines = new HashSet<>();
       for (Replacement repl : replacements) {
+        checkArgument(
+            repl.endPosition() <= source.length(),
+            "End [%s] should not exceed source length [%s]",
+            repl.endPosition(),
+            source.length());
         replaced.replace(repl.startPosition(), repl.endPosition(), repl.replaceWith());
 
         // Find the line number(s) being modified
