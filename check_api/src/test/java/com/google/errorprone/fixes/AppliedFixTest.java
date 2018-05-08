@@ -20,6 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -141,10 +142,11 @@ public class AppliedFixTest {
     assertNull(fix);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void shouldThrowExceptionOnIllegalRange() {
-    AppliedFix.fromSource("public class Foo {}", endPositions)
-        .apply(SuggestedFix.replace(0, -1, ""));
+    assertThrows(IllegalArgumentException.class, () -> SuggestedFix.replace(0, -1, ""));
+    assertThrows(IllegalArgumentException.class, () -> SuggestedFix.replace(-1, -1, ""));
+    assertThrows(IllegalArgumentException.class, () -> SuggestedFix.replace(-1, 1, ""));
   }
 
   @Test
@@ -170,5 +172,12 @@ public class AppliedFixTest {
     // If the fixes had been applied in the wrong order, this would fail.
     // But it succeeds, so they were applied in the right order.
     AppliedFix.fromSource(" ", endPositions).apply(mockFix);
+  }
+
+  @Test
+  public void shouldThrowIfReplacementOutsideSource() {
+    AppliedFix.Applier applier = AppliedFix.fromSource("Hello", endPositions);
+    SuggestedFix fix = SuggestedFix.replace(0, 6, "World!");
+    assertThrows(IllegalArgumentException.class, () -> applier.apply(fix));
   }
 }
