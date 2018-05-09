@@ -857,7 +857,7 @@ __[TypeParameterNaming](bugpattern/TypeParameterNaming)__<br>
 Type parameters must be a single letter with an optional numeric suffix, or an UpperCamelCase name followed by the letter &#39;T&#39;.
 
 __[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
-Constructors and methods with the same name should appear sequentially with no other code in between
+Constructors and methods with the same name should appear sequentially with no other code in between. Please re-order or re-name methods.
 
 __[UnnecessarySetDefault](bugpattern/UnnecessarySetDefault)__<br>
 Unnecessary call to NullPointerTester#setDefault
