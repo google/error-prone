@@ -17,6 +17,7 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
@@ -54,6 +55,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
@@ -497,7 +499,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree(), Types.instance(context));
     setReceiverNonnull(bothUpdates, node.getTarget().getReceiver(), callee);
     setUnconditionalArgumentNullness(bothUpdates, node.getArguments(), callee);
-    setConditionalArgumentNullness(thenUpdates, elseUpdates, node.getArguments(), callee);
+    setConditionalArgumentNullness(
+        thenUpdates,
+        elseUpdates,
+        node.getArguments(),
+        callee,
+        Types.instance(context),
+        Symtab.instance(context));
     return returnValueNullness(callee);
   }
 
@@ -745,7 +753,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       LocalVariableUpdates thenUpdates,
       LocalVariableUpdates elseUpdates,
       List<Node> arguments,
-      ClassAndMethod callee) {
+      ClassAndMethod callee,
+      Types types,
+      Symtab symtab) {
     MemberName calleeName = callee.name();
     for (LocalVariableNode var :
         variablesAtIndexes(NULL_IMPLIES_TRUE_PARAMETERS.get(calleeName), arguments)) {
@@ -761,9 +771,32 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       thenUpdates.set(var, NULL);
       elseUpdates.set(var, NONNULL);
     }
+    if (isEqualsMethod(calleeName, arguments, types, symtab)) {
+      LocalVariableNode var = variablesAtIndexes(ImmutableSet.of(0), arguments).get(0);
+      thenUpdates.set(var, NONNULL);
+    }
   }
 
-  private static Iterable<LocalVariableNode> variablesAtIndexes(
+  private static boolean isEqualsMethod(
+      MemberName calleeName, List<Node> arguments, Types types, Symtab symtab) {
+    // we don't care about class name -- we're matching against Object.equals(Object)
+    // this implies that non-overriding methods are assumed to be null-guaranteeing.
+    // Also see http://errorprone.info/bugpattern/NonOverridingEquals
+    if (!calleeName.member.equals("equals") || arguments.size() != 1) {
+      return false;
+    }
+    if (!(getOnlyElement(arguments).getTree() instanceof JCIdent)) {
+      return false;
+    }
+    Symbol sym = ((JCIdent) getOnlyElement(arguments).getTree()).sym;
+    if (sym == null || sym.type == null) {
+      return false;
+    }
+    return types.isSameType(sym.type, symtab.objectType)
+        && (!variablesAtIndexes(ImmutableSet.of(0), arguments).isEmpty());
+  }
+
+  private static List<LocalVariableNode> variablesAtIndexes(
       Set<Integer> indexes, List<Node> arguments) {
     List<LocalVariableNode> result = new ArrayList<>();
     for (Integer i : indexes) {
