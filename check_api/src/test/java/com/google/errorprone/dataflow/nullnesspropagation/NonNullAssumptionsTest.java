@@ -111,6 +111,19 @@ public class NonNullAssumptionsTest {
     }
   }
 
+  @Test
+  public void testEqualsParameters() throws Exception {
+    int found = 0;
+    for (Method method : loadClass("java.lang.Object").getMethods()) {
+      if (!method.getName().equals("equals")) {
+        continue;
+      }
+      found++;
+      assertThat(invokeWithSingleNullArgument(method, 0)).isEqualTo(Boolean.FALSE);
+    }
+    assertWithMessage("equals()").that(found).isGreaterThan(0);
+  }
+
   private static Object invokeWithSingleNullArgument(Method method, int nullParam)
       throws IllegalAccessException, InvocationTargetException {
     Class<?>[] params = method.getParameterTypes();
