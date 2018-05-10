@@ -291,6 +291,7 @@ import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
+import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ParameterNotNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
@@ -581,6 +582,7 @@ public class BuiltInCheckerSuppliers {
           EmptyIfStatement.class,
           EmptySetMultibindingContributions.class,
           EmptyTopLevelDeclaration.class,
+          EqualsBrokenForNull.class,
           ExpectedExceptionChecker.class,
           FieldMissingNullable.class,
           FieldCanBeFinal.class,
