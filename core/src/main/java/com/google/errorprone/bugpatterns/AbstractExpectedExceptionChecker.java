@@ -141,7 +141,8 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
 
   protected BaseFix buildBaseFix(
       VisitorState state, List<Tree> expectations, @Nullable StatementTree failure) {
-    String exceptionClass = "Throwable";
+    String exceptionClassName = "Throwable";
+    String exceptionClassExpr = "Throwable.class";
     // additional assertions to perform on the captured exception (if any)
     List<String> newAsserts = new ArrayList<>();
     Builder fix = SuggestedFix.builder();
@@ -156,14 +157,24 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
           Type type = ASTHelpers.getType(getOnlyElement(invocation.getArguments()));
           if (isSubtype(type, symtab.classType, state)) {
             // expect(Class<?>)
-            exceptionClass = state.getSourceForNode(getReceiver(getOnlyElement(args)));
+            ExpressionTree arg = getOnlyElement(args);
+            exceptionClassExpr = state.getSourceForNode(arg);
+            ExpressionTree exceptionClassTree;
+            try {
+              exceptionClassTree = getReceiver(arg);
+            } catch (IllegalStateException e) {
+              // This can happen if exceptionClassExpr is not of the form SomeType.class.
+              break;
+            }
+            exceptionClassName = state.getSourceForNode(exceptionClassTree);
           } else if (isSubtype(type, state.getTypeFromString("org.hamcrest.Matcher"), state)) {
             Type matcherType =
                 state.getTypes().asSuper(type, state.getSymbolFromString("org.hamcrest.Matcher"));
             if (!matcherType.getTypeArguments().isEmpty()) {
               Type matchType = getOnlyElement(matcherType.getTypeArguments());
               if (isSubtype(matchType, symtab.throwableType, state)) {
-                exceptionClass = SuggestedFixes.qualifyType(state, fix, matchType);
+                exceptionClassName = SuggestedFixes.qualifyType(state, fix, matchType);
+                exceptionClassExpr = exceptionClassName + ".class";
               }
             }
             // expect(Matcher)
@@ -220,19 +231,25 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
     if (failure != null) {
       fix.delete(failure);
     }
-    return new BaseFix(fix.build(), exceptionClass, newAsserts);
+    return new BaseFix(fix.build(), exceptionClassName, exceptionClassExpr, newAsserts);
   }
 
   /** A partially assembled fix. */
   protected static class BaseFix {
 
     final SuggestedFix baseFix;
-    final String exceptionClass;
+    final String exceptionClassName;
+    final String exceptionClassExpr;
     final List<String> newAsserts;
 
-    BaseFix(SuggestedFix baseFix, String exceptionClass, List<String> newAsserts) {
+    BaseFix(
+        SuggestedFix baseFix,
+        String exceptionClassName,
+        String exceptionClassExpr,
+        List<String> newAsserts) {
       this.baseFix = baseFix;
-      this.exceptionClass = exceptionClass;
+      this.exceptionClassName = exceptionClassName;
+      this.exceptionClassExpr = exceptionClassExpr;
       this.newAsserts = newAsserts;
     }
 
@@ -244,10 +261,10 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
       fix.addStaticImport("org.junit.Assert.assertThrows");
       StringBuilder fixPrefix = new StringBuilder();
       if (!newAsserts.isEmpty()) {
-        fixPrefix.append(String.format("%s thrown = ", exceptionClass));
+        fixPrefix.append(String.format("%s thrown = ", exceptionClassName));
       }
       fixPrefix.append("assertThrows");
-      fixPrefix.append(String.format("(%s.class, () -> ", exceptionClass));
+      fixPrefix.append(String.format("(%s, () -> ", exceptionClassExpr));
       boolean useExpressionLambda =
           throwingStatements.size() == 1
               && getOnlyElement(throwingStatements).getKind() == Kind.EXPRESSION_STATEMENT;
