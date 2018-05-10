@@ -81,4 +81,34 @@ public class StaticQualifiedUsingExpressionTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void expr() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass())
+        .addInputLines(
+            "I.java", //
+            "interface I {",
+            "  int CONST = 42;",
+            "  I id();",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Test.java", //
+            "class Test {",
+            "  void f(I i) {",
+            "    System.err.println(((I) null).CONST);",
+            "    System.err.println(i.id().CONST);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "class Test {",
+            "  void f(I i) {",
+            "    System.err.println(I.CONST);",
+            "    i.id();",
+            "    System.err.println(I.CONST);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

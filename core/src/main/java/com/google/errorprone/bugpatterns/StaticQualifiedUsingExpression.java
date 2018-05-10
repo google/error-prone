@@ -19,12 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.selectedIsInstance;
-import static com.google.errorprone.matchers.Matchers.staticFieldAccess;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -33,15 +29,14 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.Objects;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
@@ -51,53 +46,71 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
     severity = WARNING,
     altNames = {"static", "static-access", "StaticAccessedFromInstance"},
     generateExamplesFromTestCases = false,
-    tags = StandardTags.STYLE,
+    tags = StandardTags.FRAGILE_CODE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class StaticQualifiedUsingExpression extends BugChecker implements MemberSelectTreeMatcher {
 
-  private static final String MESSAGE_TEMPLATE =
-      "Static %s %s should not be accessed from an " + "object instance; instead use %s";
-
-  private static final Matcher<ExpressionTree> staticAccessedFromInstanceMatcher =
-      allOf(
-          anyOf(staticMethod(), staticFieldAccess()),
-          kindIs(Kind.MEMBER_SELECT),
-          selectedIsInstance());
-
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
-    if (!staticAccessedFromInstanceMatcher.matches(tree, state)) {
-      return Description.NO_MATCH;
+    Symbol sym = getSymbol(tree);
+    if (sym == null) {
+      return NO_MATCH;
     }
-
-    // Is the static member being accessed a method or a variable?
-    Symbol staticMemberSym = ASTHelpers.getSymbol(tree);
-    if (staticMemberSym == null) {
-      return Description.NO_MATCH;
+    switch (sym.getKind()) {
+      case FIELD:
+        if (sym.getSimpleName().contentEquals("class")) {
+          return NO_MATCH;
+        }
+        // fall through
+      case METHOD:
+        if (!sym.isStatic()) {
+          return NO_MATCH;
+        }
+        break; // continue below
+      default:
+        return NO_MATCH;
     }
-    boolean isMethod = staticMemberSym instanceof MethodSymbol;
-
-    // Is the static member defined in this class?
-    ClassSymbol ownerSym = staticMemberSym.owner.enclClass();
-    ClassSymbol whereAccessedSym =
-        ASTHelpers.getSymbol(
-            ASTHelpers.findEnclosingNode(state.getPath().getParentPath(), ClassTree.class));
+    ClassSymbol owner = sym.owner.enclClass();
+    switch (tree.getExpression().getKind()) {
+      case MEMBER_SELECT:
+      case IDENTIFIER:
+        // References to static variables should be qualified by the type name of the owning type,
+        // or a sub-type. e.g.: if CONST is declared in Foo, and SubFoo extends Foo,
+        // allow `Foo.CONST` and `SubFoo.CONST` (but not, say, `new Foo().CONST`.
+        Symbol base = getSymbol(tree.getExpression());
+        if (base instanceof ClassSymbol && base.isSubClass(owner, state.getTypes())) {
+          return NO_MATCH;
+        }
+        break;
+      default: // continue below
+    }
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    boolean staticMemberDefinedHere = whereAccessedSym.equals(ownerSym);
     String replacement;
-    if (staticMemberDefinedHere && isMethod) {
-      replacement = staticMemberSym.getSimpleName().toString();
+    boolean isMethod = sym instanceof MethodSymbol;
+    if (isMethod && Objects.equals(getSymbol(state.findEnclosing(ClassTree.class)), owner)) {
+      replacement = sym.getSimpleName().toString();
     } else {
-      replacement = qualifyType(state, fix, staticMemberSym);
+      replacement = qualifyType(state, fix, sym);
     }
     fix.replace(tree, replacement);
 
-    // Compute strings to interpolate into diagnostic message.
-    String memberName = staticMemberSym.getSimpleName().toString();
-    String methodOrVariable = isMethod ? "method" : "variable";
+    // Spill possibly side-effectful qualifier expressions to the top level.
+    // This doesn't preserve order of operations for non-trivial expressions, but we don't have
+    // letexprs and hopefully it'll call attention to the fact that just deleting the qualifier
+    // might not always be the right fix.
+    if (tree.getExpression() instanceof MethodInvocationTree) {
+      StatementTree statement = state.findEnclosing(StatementTree.class);
+      if (statement != null) {
+        fix.prefixWith(statement, state.getSourceForNode(tree.getExpression()) + ";");
+      }
+    }
 
-    String customDiagnosticMessage =
-        String.format(MESSAGE_TEMPLATE, methodOrVariable, memberName, replacement);
-    return buildDescription(tree).setMessage(customDiagnosticMessage).addFix(fix.build()).build();
+    return buildDescription(tree)
+        .setMessage(
+            String.format(
+                "Static %s %s should not be accessed from an object instance; instead use %s",
+                isMethod ? "method" : "variable", sym.getSimpleName().toString(), replacement))
+        .addFix(fix.build())
+        .build();
   }
 }
