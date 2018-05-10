@@ -64,7 +64,6 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -1126,28 +1125,6 @@ public class Matchers {
    */
   public static Matcher<Tree> hasIdentifier(Matcher<IdentifierTree> nodeMatcher) {
     return new HasIdentifier(nodeMatcher);
-  }
-
-  /**
-   * Returns true if the expression is a member access on an instance, rather than a static type.
-   * Supports member method invocations and field accesses.
-   */
-  public static Matcher<ExpressionTree> selectedIsInstance() {
-    return new Matcher<ExpressionTree>() {
-      @Override
-      public boolean matches(ExpressionTree expr, VisitorState state) {
-        if (!(expr instanceof JCFieldAccess)) {
-          // TODO(cushon): throw IllegalArgumentException?
-          return false;
-        }
-        JCExpression selected = ((JCFieldAccess) expr).getExpression();
-        if (selected instanceof JCNewClass) {
-          return true;
-        }
-        Symbol sym = ASTHelpers.getSymbol(selected);
-        return sym instanceof VarSymbol;
-      }
-    };
   }
 
   /** Returns true if the Tree node has the expected {@code Modifier}. */
