@@ -3,7 +3,6 @@ Prone][epcrv]) marks methods whose return values should be checked. This error
 is triggered when one of these methods is called but the result is not used.
 
 [^jsr]: Of note, the JSR-305 project was [never fully approved][jsr305], so the
-
 JSR-305 version of the annotation is not actually official and causes issues
 with Java 9 and the [Module System][j9jsr305]. Prefer to use the Error Prone
 version.
