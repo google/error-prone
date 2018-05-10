@@ -22,4 +22,4 @@ that method with [`@FormatMethod`][fm] to ensure that callers correctly pass
 format strings (and to inform Error Prone that the method call you're making
 doesn't orphan a format string).
 
-[fm]: http://errorprone.info/api/latest/com/google/errorprone/annotations/FormatMethod.html
+[fm]: https://errorprone.info/api/latest/com/google/errorprone/annotations/FormatMethod.html

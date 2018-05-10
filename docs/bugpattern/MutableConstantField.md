@@ -27,7 +27,7 @@ TIP: Using the immutable type for the field declaration allows Error Prone to
 prevent accidental attempts to modify the collection at compile-time (see
 [`ImmutableModification`]).
 
-[`ImmutableModification`]: https:errorprone.info/bugpattern/ImmutableModification
+[`ImmutableModification`]: https://errorprone.info/bugpattern/ImmutableModification
 
 [ej52]: https://books.google.com/books?id=ka2VUBqHiWkC
 

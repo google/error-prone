@@ -37,7 +37,7 @@ import java.util.Optional;
  * <p>To access ErrorProneFlags from a BugChecker class, add a constructor to the class that takes
  * one parameter of type ErrorProneFlags.
  *
- * <p>See <a href=http://errorprone.info/docs/flags>documentation</a> for full syntax description.
+ * <p>See <a href="https://errorprone.info/docs/flags">documentation</a> for full syntax description.
  */
 public final class ErrorProneFlags implements Serializable {
   public static final String PREFIX = "-XepOpt:";

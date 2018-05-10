@@ -41,7 +41,7 @@ import java.lang.annotation.Target;
  * </ol>
  *
  * <p>This constraint on call sites of methods or constructors that have one or more formal
- * parameters with this annotation is enforced by <a href="http://errorprone.info">error-prone</a>.
+ * parameters with this annotation is enforced by <a href="https://errorprone.info">error-prone</a>.
  *
  * <p>For example, the following code snippet is legal:
  *
