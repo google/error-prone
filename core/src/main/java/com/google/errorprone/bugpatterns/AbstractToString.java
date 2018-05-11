@@ -64,7 +64,7 @@ public abstract class AbstractToString extends BugChecker
   protected abstract Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state);
 
   /** Adds the description message for match on the type without fixes. */
-  protected Optional<String> descriptionMessageForDefaultMatch(Type type) {
+  protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
     return Optional.absent();
   }
 
@@ -110,7 +110,7 @@ public abstract class AbstractToString extends BugChecker
     ExpressionTree receiver = ASTHelpers.getReceiver(tree);
     Type receiverType = ASTHelpers.getType(receiver);
     if (TO_STRING.matches(tree, state) && typePredicate().apply(receiverType, state)) {
-      return maybeFix(tree, receiverType, toStringFix(tree, receiver, state));
+      return maybeFix(tree, state, receiverType, toStringFix(tree, receiver, state));
     }
     return checkToString(tree, state);
   }
@@ -147,7 +147,7 @@ public abstract class AbstractToString extends BugChecker
     if (!typePredicate().apply(type, state)) {
       return NO_MATCH;
     }
-    return maybeFix(tree, type, fix);
+    return maybeFix(tree, state, type, fix);
   }
 
   enum ToStringKind {
@@ -183,12 +183,12 @@ public abstract class AbstractToString extends BugChecker
         && state.getTypes().isSameType(ASTHelpers.getType(tree), state.getSymtab().stringType);
   }
 
-  private Description maybeFix(Tree tree, Type matchedType, Optional<Fix> fix) {
+  private Description maybeFix(Tree tree, VisitorState state, Type matchedType, Optional<Fix> fix) {
     Description.Builder description = buildDescription(tree);
     if (fix.isPresent()) {
       description.addFix(fix.get());
     }
-    Optional<String> summary = descriptionMessageForDefaultMatch(matchedType);
+    Optional<String> summary = descriptionMessageForDefaultMatch(matchedType, state);
     if (summary.isPresent()) {
       description.setMessage(summary.get());
     }

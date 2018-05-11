@@ -24,6 +24,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
@@ -91,11 +92,15 @@ public class ObjectToString extends AbstractToString {
   }
 
   @Override
-  protected Optional<String> descriptionMessageForDefaultMatch(Type type) {
+  protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
     String format =
-        "%1$s is final and does not override Object.toString, converting it to a string"
-            + " will print its identity (e.g. `%1$s@ 4488aabb`) instead of useful information.";
-    return Optional.of(String.format(format, type.toString()));
+        "%1$s is final and does not override Object.toString, so converting it to a string"
+            + " will print its identity (e.g. `%2$s@ 4488aabb`) instead of useful information.";
+    return Optional.of(
+        String.format(
+            format,
+            SuggestedFixes.prettyType(state, /* fix= */ null, type),
+            type.tsym.getSimpleName()));
   }
 
   @Override
