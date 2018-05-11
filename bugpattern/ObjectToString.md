@@ -51,11 +51,20 @@ public class ObjectToStringPositiveCases {
 
   public static final class FinalObjectClassWithoutToString {}
 
+  public static final class FinalGenericClassWithoutToString<T> {}
+
   void directToStringCalls() {
     FinalObjectClassWithoutToString finalObjectClassWithoutToString =
         new FinalObjectClassWithoutToString();
     // BUG: Diagnostic contains: ObjectToString
     System.out.println(finalObjectClassWithoutToString.toString());
+  }
+
+  void genericClassShowsErasure() {
+    FinalGenericClassWithoutToString<Object> finalGenericClassWithoutToString =
+        new FinalGenericClassWithoutToString<>();
+    // BUG: Diagnostic contains: `FinalGenericClassWithoutToString@
+    System.out.println(finalGenericClassWithoutToString.toString());
   }
 }
 {% endhighlight %}
