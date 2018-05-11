@@ -562,6 +562,9 @@ Preconditions only accepts the %s placeholder in error message strings
 __[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
 Protobuf fields cannot be null, so this check is redundant
 
+__[ProtoRedundantSet](bugpattern/ProtoRedundantSet)__<br>
+A field on a protocol buffer was set twice in the same chained expression.
+
 __[QualifierOrScopeOnInjectMethod](bugpattern/QualifierOrScopeOnInjectMethod)__<br>
 Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move the qualifier annotation to the binding location.
 
@@ -733,6 +736,9 @@ Constructors should not pass the &#39;this&#39; reference out in method invocati
 
 __[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
 Empty top-level type declaration
+
+__[EqualsBrokenForNull](bugpattern/EqualsBrokenForNull)__<br>
+equals() implementation throws NullPointerException when given null
 
 __[ExpectedExceptionChecker](bugpattern/ExpectedExceptionChecker)__<br>
 Calls to ExpectedException#expect should always be followed by exactly one statement.

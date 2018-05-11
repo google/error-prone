@@ -45,6 +45,7 @@ __BadComparablePositiveCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import java.io.File;
 import java.util.Comparator;
 
 /** @author irogers@google.com (Ian Rogers) */
@@ -80,6 +81,14 @@ public class BadComparablePositiveCases {
         public int compare(Long n1, Long n2) {
           // BUG: Diagnostic contains: return n1.compareTo(n2)
           return (int) (n1 - n2);
+        }
+      };
+
+  static final Comparator<File> COMPARATOR_FILE_INT_CAST =
+      new Comparator<File>() {
+        public int compare(File lhs, File rhs) {
+          // BUG: Diagnostic contains: return Long.compare(rhs.lastModified(), lhs.lastModified())
+          return (int) (rhs.lastModified() - lhs.lastModified());
         }
       };
 }

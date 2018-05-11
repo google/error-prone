@@ -54,7 +54,7 @@ switch (state) {
 
 [style]: https://google.github.io/styleguide/javaguide.html#s4.8.4-switch
 
-[MissingCasesInEnumSwitch]: http://errorprone.info/bugpattern/MissingCasesInEnumSwitch
+[MissingCasesInEnumSwitch]: https://errorprone.info/bugpattern/MissingCasesInEnumSwitch
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingDefault")` to the enclosing element.
