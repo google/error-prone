@@ -496,6 +496,8 @@ public class CheckReturnValueTest {
             "     foo.f(); ",
             "   });",
             "   bar(() -> foo.f());",
+            "   org.assertj.core.api.Assertions.assertThatExceptionOfType(IllegalStateException.class)",
+            "      .isThrownBy(() -> foo.f());",
             "  }",
             "  void bar(org.junit.function.ThrowingRunnable r) {}",
             "}")
