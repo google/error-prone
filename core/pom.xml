@@ -300,6 +300,7 @@
       <version>2.9.4</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.common.html.types</groupId>
@@ -319,6 +320,13 @@
       <groupId>com.android.support</groupId>
       <artifactId>support-annotations</artifactId>
       <version>27.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.9.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
