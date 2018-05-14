@@ -209,6 +209,7 @@ import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
+import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
@@ -546,12 +547,13 @@ public class BuiltInCheckerSuppliers {
           StringSplitter.class,
           StaticGuardedByInstance.class,
           StreamResourceLeak.class,
-          TruthIncompatibleType.class,
+          SwigMemoryLeak.class,
           SynchronizeOnNonFinalField.class,
           ThreadJoinLoop.class,
           ThreadLocalUsage.class,
           ThreeLetterTimeZoneID.class,
           TruthConstantAsserts.class,
+          TruthIncompatibleType.class,
           TypeParameterShadowing.class,
           TypeParameterUnusedInFormals.class,
           UnsafeFinalization.class,
