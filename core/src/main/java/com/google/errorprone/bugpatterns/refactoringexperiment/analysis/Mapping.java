@@ -1,6 +1,7 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.GOOGLE_COMMON_BASE_PREDICATE;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.JAVA_UTIL_FUNCTION_FUNCTION;
 
 import com.google.common.collect.ImmutableList;
@@ -62,6 +63,10 @@ public class Mapping {
     public static final String AND ="and" ;
     public static final String COMPOSE ="compose" ;
     public static final String IDENTITY ="identity" ;
+    public static final String EQUALS ="equals" ;
+    public static final String IS_EQUAL ="isEqual" ;
+    public static final String NEGATE ="negate";
+    public static final String OR ="or";
 
     private static final ImmutableMap<String, String> JAVA_UTIL_FUNCTION_FUNCTION_IO_SPECIALIZE =
             ImmutableMap.<String, String>builder()
@@ -175,7 +180,14 @@ public class Mapping {
                     .put(APPLY, TEST)
                     .put(AND_THEN, AND)
                     .put(COMPOSE, NO_MAPPING)
-                    .put(IDENTITY, NO_MAPPING).build();
+                    .put(IDENTITY, NO_MAPPING)
+                    .put(AND, AND)
+                    .put(TEST, TEST)
+                    .put(IS_EQUAL, IS_EQUAL)
+                    .put(OR,OR)
+                    .put(NEGATE,NEGATE)
+                    .put(EQUALS,EQUALS).build();
+
     private static final ImmutableMap<String, String> DOUBLE_PREDICATE_MAPPING =
             ImmutableMap.<String, String>builder()
                     .put(APPLY, TEST)
@@ -224,6 +236,8 @@ public class Mapping {
         }
         return NO_MAPPING;
     };
+    private static Function<FilteredType, String> mapJavaUtilPredicateToType = ft -> PREDICATE + preserveType(ft.getTypeParameter(0));
+
 
     private static String preserveType(String typeParameter) {
         return "<" + typeParameter + ">";
@@ -265,14 +279,13 @@ public class Mapping {
                     .put(TO_LONG_FUNCTION, TO_LONG_FUNCTION_METHOD_MAPPING)
 
                     .put(PREDICATE, PREDICATE_MAPPING)
-
-
                     .build();
 
 
     public static final ImmutableMap<String, Function<FilteredType, String>> CLASS_MAPPING_FOR =
             ImmutableMap.<String, Function<FilteredType, String>>builder()
-                    .put(JAVA_UTIL_FUNCTION_FUNCTION, mapJavaUtilFunctionToType).build();
+                    .put(JAVA_UTIL_FUNCTION_FUNCTION, mapJavaUtilFunctionToType)
+                    .put(GOOGLE_COMMON_BASE_PREDICATE,mapJavaUtilPredicateToType).build();
 
     public static final ImmutableMap<String, String> SPECIALIZE_TO_PRIMITIVE =
             ImmutableMap.<String, String>builder()

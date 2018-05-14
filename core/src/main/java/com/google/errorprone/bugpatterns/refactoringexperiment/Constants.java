@@ -14,6 +14,7 @@ public class Constants {
     public static final String BOOLEAN = "java.lang.Boolean";
     public static final Set<String> WRAPPER_CLASSES = ImmutableSet.of(LONG,INTEGER,DOUBLE,BOOLEAN);
     public static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
+    public static final String GOOGLE_COMMON_BASE_PREDICATE = "com.google.common.base.Predicate";
 
 
     public static final String LAMBDA_EXPRESSION = "LAMBDA_EXPRESSION";
