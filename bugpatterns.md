@@ -427,6 +427,9 @@ If you return or throw from a finally, then values returned or thrown from the t
 __[FloatCast](bugpattern/FloatCast)__<br>
 Use parentheses to make the precedence explicit
 
+__[FloatingPointAssertionWithinEpsilon](bugpattern/FloatingPointAssertionWithinEpsilon)__<br>
+This fuzzy equality check is using a tolerance less than the gap to the next number. You may want a less restrictive tolerance, or to assert equality.
+
 __[FloatingPointLiteralPrecision](bugpattern/FloatingPointLiteralPrecision)__<br>
 Floating point literal loses precision
 
@@ -742,9 +745,6 @@ equals() implementation throws NullPointerException when given null
 
 __[ExpectedExceptionChecker](bugpattern/ExpectedExceptionChecker)__<br>
 Calls to ExpectedException#expect should always be followed by exactly one statement.
-
-__[FloatingPointAssertionWithinEpsilon](bugpattern/FloatingPointAssertionWithinEpsilon)__<br>
-This fuzzy equality check is using a tolerance less than the gap to the next number. You may want a less restrictive tolerance, or to assert equality.
 
 __[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
 Overloads will be ambiguous when passing lambda arguments
