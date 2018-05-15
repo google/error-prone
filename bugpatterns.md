@@ -592,6 +592,9 @@ Streams that encapsulate a closeable resource should be closed using try-with-re
 __[StringSplitter](bugpattern/StringSplitter)__<br>
 String.split(String) has surprising behavior
 
+__[SwigMemoryLeak](bugpattern/SwigMemoryLeak)__<br>
+SWIG generated code that can&#39;t call a C++ destructor will leak memory
+
 __[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
 Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
 
