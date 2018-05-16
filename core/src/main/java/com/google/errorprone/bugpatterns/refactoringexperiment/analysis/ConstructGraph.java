@@ -104,6 +104,10 @@ public final class ConstructGraph {
         return removeNodes;
     }
 
+    private static boolean isMethodAnalysed(MutableValueGraph<Identification, String> gr, Identification n){
+        return gr.successors(n).stream().anyMatch(s -> gr.edgeValue(n,s).get().equals(EDGE_PARENT_METHOD));
+    }
+
     /**
      * This method tries to search for method declaration of the method invocation in the graph.
      *
@@ -116,7 +120,7 @@ public final class ConstructGraph {
      * between the method parameters and the arguments passed to the method declaration.
      */
     private static void methodAnalysis(MutableValueGraph<Identification, String> gr, Identification n) {
-        if (n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS)) {
+        if ((n.getKind().equals(METHOD_INVOCATION) || n.getKind().equals(NEW_CLASS)) && !isMethodAnalysed(gr,n)) {
             Identification md = getNode(n, Constants.METHOD, gr).orElse(getNode(n, CONSTRUCTOR, gr).orElse(null));
             if (md != null) {
                 gr.putEdgeValue(n, md, EDGE_PARENT_METHOD);
@@ -216,12 +220,12 @@ public final class ConstructGraph {
             , ImmutableList<Variable> variableDeclarations, ImmutableList<MethodInvocation> methodInvocations
             , ImmutableList<Assignment> assignments) throws Exception {
 
-        return Stream.of(methodDeclarationGraphs(methdDeclarations),
-                classDeclGraphs(classDeclarations),
-                variableDeclarationGraphs(variableDeclarations),
-                methodInvcGraphs(methodInvocations),
-                assgnmntGraphs(assignments))
-                .reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
-                        mergeGraphWithAnalysis);
+        return Stream.of(
+                Stream.of(methodDeclarationGraphs(methdDeclarations),methodInvcGraphs(methodInvocations))
+                        .reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),mergeGraphWithAnalysis),
+                Stream.of(classDeclGraphs(classDeclarations),variableDeclarationGraphs(variableDeclarations))
+                        .reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),mergeGraphWithAnalysis),
+                assgnmntGraphs(assignments)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                mergeGraphWithoutAnalysis);
     }
 }
