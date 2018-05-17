@@ -253,8 +253,6 @@ import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored
 import com.google.errorprone.bugpatterns.android.RestrictToEnforcer;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.android.WakelockReleasedDangerously;
-import com.google.errorprone.bugpatterns.apidiff.AndroidJdkLibsChecker;
-import com.google.errorprone.bugpatterns.apidiff.Java7ApiChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
@@ -568,7 +566,6 @@ public class BuiltInCheckerSuppliers {
   /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
-          AndroidJdkLibsChecker.class,
           AutoFactoryAtInject.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
@@ -602,7 +599,6 @@ public class BuiltInCheckerSuppliers {
           IterablePathParameter.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           JavaxInjectOnFinalField.class,
-          Java7ApiChecker.class,
           LambdaFunctionalInterface.class,
           LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
