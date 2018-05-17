@@ -222,10 +222,10 @@ public final class ConstructGraph {
 
         return Stream.of(
                 Stream.of(methodDeclarationGraphs(methdDeclarations),methodInvcGraphs(methodInvocations))
-                        .reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),mergeGraphWithAnalysis),
+                        .parallel().reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),mergeGraphWithAnalysis),
                 Stream.of(classDeclGraphs(classDeclarations),variableDeclarationGraphs(variableDeclarations))
-                        .reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),mergeGraphWithAnalysis),
-                assgnmntGraphs(assignments)).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                        .parallel().reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),mergeGraphWithAnalysis),
+                assgnmntGraphs(assignments)).parallel().reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                 mergeGraphWithoutAnalysis);
     }
 }
