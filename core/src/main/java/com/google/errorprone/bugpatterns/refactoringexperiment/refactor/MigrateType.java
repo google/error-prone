@@ -4,6 +4,7 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.refactor;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.GOOGLE_COMMON_BASE_PREDICATE;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoFromTree;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ConstructGraph.isTypeKind;
@@ -58,6 +59,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
             if (info.isPresent() && !Strings.isNullOrEmpty(info.get().getRefactorTo())) {
                 SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
                 fixBuilder.addImport(getImportName(info.get().getRefactorTo()));
+                fixBuilder.removeImport(GOOGLE_COMMON_BASE_PREDICATE);
                 fixBuilder.replace(tree.getType(), getClassName(getImportName(info.get().getRefactorTo()), tree.getType()));
                 return describeMatch(tree, fixBuilder.build());
             }
