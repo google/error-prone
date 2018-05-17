@@ -21,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
@@ -71,6 +73,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
         description
             .fixes
             .stream()
+            .filter(f -> !shouldSkipImportTreeFix(description.node, f))
             .map(fixToAppliedFix)
             .filter(Objects::nonNull)
             .collect(Collectors.toCollection(ArrayList::new));
@@ -99,6 +102,17 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     if (originalSource != null) {
       log.useSource(originalSource);
     }
+  }
+
+  // b/79407644: Because AppliedFix doesn't consider imports, just don't display a
+  // suggested fix to an ImportTree when the fix reports imports to remove/add. Imports can still
+  // be fixed if they were specified via SuggestedFix.replace, for example.
+  private static boolean shouldSkipImportTreeFix(Tree node, Fix f) {
+    if (node == null || node.getKind() != Kind.IMPORT) {
+      return false;
+    }
+
+    return !f.getImportsToAdd().isEmpty() || !f.getImportsToRemove().isEmpty();
   }
 
   private static String messageForFixes(Description description, List<AppliedFix> appliedFixes) {

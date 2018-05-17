@@ -16,8 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.base.Predicates;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import java.util.regex.Pattern;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -450,38 +452,52 @@ public class WildcardImportTest {
 
   @Test
   public void qualifyMembersFix() throws Exception {
+    String[] enumLines = {
+      "package e;",
+      "public enum E {",
+      "  A, B, C, D, E, F, G, H, I, J,",
+      "  K, L, M, N, O, P, Q, R, S, T,",
+      "  U, V, W, X, Y, Z",
+      "}"
+    };
+    String[] testLines = {
+      "// BUG: Diagnostic matches: X",
+      "import static e.E.*;",
+      "public class Test {",
+      "  Object[] ex = {",
+      "    A, B, C, D, E, F, G, H, I, J,",
+      "    K, L, M, N, O, P, Q, R, S, T,",
+      "    U, V, W, X, Y, Z",
+      "  };",
+      "  boolean f(e.E e) {",
+      "    switch (e) {",
+      "      case A:",
+      "      case E:",
+      "      case I:",
+      "      case O:",
+      "      case U:",
+      "        return true;",
+      "      default:",
+      "        return false;",
+      "    }",
+      "  }",
+      "}"
+    };
+
+    CompilationTestHelper.newInstance(WildcardImport.class, getClass())
+        .addSourceLines("e/E.java", enumLines)
+        .addSourceLines("e/Test.java", testLines)
+        .expectErrorMessage(
+            "X",
+            Predicates.and(
+                Predicates.containsPattern("Wildcard imports.*should not be used"),
+                Predicates.not(Predicates.contains(Pattern.compile("Did you mean")))))
+        .doTest();
+
     testHelper
-        .addInputLines(
-            "e/E.java",
-            "package e;",
-            "public enum E {",
-            "  A, B, C, D, E, F, G, H, I, J,",
-            "  K, L, M, N, O, P, Q, R, S, T,",
-            "  U, V, W, X, Y, Z",
-            "}")
+        .addInputLines("e/E.java", enumLines)
         .expectUnchanged()
-        .addInputLines(
-            "in/Test.java",
-            "import static e.E.*;",
-            "public class Test {",
-            "  Object[] ex = {",
-            "    A, B, C, D, E, F, G, H, I, J,",
-            "    K, L, M, N, O, P, Q, R, S, T,",
-            "    U, V, W, X, Y, Z",
-            "  };",
-            "  boolean f(e.E e) {",
-            "    switch (e) {",
-            "      case A:",
-            "      case E:",
-            "      case I:",
-            "      case O:",
-            "      case U:",
-            "        return true;",
-            "      default:",
-            "        return false;",
-            "    }",
-            "  }",
-            "}")
+        .addInputLines("in/Test.java", testLines)
         .addOutputLines(
             "out/Test.java",
             "import e.E;",
