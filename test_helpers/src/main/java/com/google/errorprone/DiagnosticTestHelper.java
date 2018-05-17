@@ -363,6 +363,9 @@ public class DiagnosticTestHelper {
   }
 
   private static String allErrors(List<Diagnostic<? extends JavaFileObject>> diagnostics) {
+    if (diagnostics.isEmpty()) {
+      return "There were no errors.";
+    }
     return "All errors:\n"
         + diagnostics.stream().map(Object::toString).collect(Collectors.joining("\n\n"));
   }
