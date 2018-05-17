@@ -17,11 +17,11 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.base.Verify.verify;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.base.Throwables;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -156,6 +156,11 @@ public class ErrorProneAnalyzer implements TaskListener {
       // let the exception propagate to javac's main, where it will cause the compilation to
       // terminate with Result.ABNORMAL
       throw e;
+    } catch (LinkageError e) {
+      // similar to ErrorProneError
+      String version = ErrorProneVersion.loadVersionFromPom().or("unknown version");
+      log.error("error.prone.crash", getStackTraceAsString(e), version, "(see stack trace)");
+      throw e;
     } catch (CompletionFailure e) {
       // A CompletionFailure can be triggered when error-prone tries to complete a symbol
       // that isn't on the compilation classpath. This can occur when a check performs an
@@ -163,7 +168,7 @@ public class ErrorProneAnalyzer implements TaskListener {
       // symbol's supertypes. If javac didn't need to check the symbol's assignability
       // then a normal compilation would have succeeded, and no diagnostics will have been
       // reported yet, but we don't want to crash javac.
-      log.error("proc.cant.access", e.sym, e.getDetailValue(), Throwables.getStackTraceAsString(e));
+      log.error("proc.cant.access", e.sym, e.getDetailValue(), getStackTraceAsString(e));
     } finally {
       log.useSource(originalSource);
     }
