@@ -172,31 +172,31 @@ public final class ConstructGraph {
 
     private static ImmutableValueGraph<Identification, String> methodDeclarationGraphs(ImmutableList<MethodDeclaration> methodDeclarations) {
         return methodDeclarations.stream()
-                .map(ProtoToGraphMapper::mapMethodDeclToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapMethodDeclToGraph).parallel().reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 
     private static ImmutableValueGraph<Identification, String> variableDeclarationGraphs(ImmutableList<Variable> vars) {
         return vars.stream()
-                .map(ProtoToGraphMapper::mapVarDeclToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapVarDeclToGraph).parallel().reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 
     private static ImmutableValueGraph<Identification, String> methodInvcGraphs(ImmutableList<MethodInvocation> mthInvc_newClass) {
         return mthInvc_newClass.stream()
-                .map(ProtoToGraphMapper::mapMethodInvcToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapMethodInvcToGraph).parallel().reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 
     private static ImmutableValueGraph<Identification, String> assgnmntGraphs(ImmutableList<Assignment> assgns) {
         return assgns.stream()
-                .map(ProtoToGraphMapper::mapAssgnmntToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapAssgnmntToGraph).parallel().reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 
     private static ImmutableValueGraph<Identification, String> classDeclGraphs(ImmutableList<ClassDeclaration> classDecl) {
         return classDecl.stream()
-                .map(ProtoToGraphMapper::mapClassDeclToGraph).reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
+                .map(ProtoToGraphMapper::mapClassDeclToGraph).parallel().reduce(ImmutableValueGraph.copyOf(ValueGraphBuilder.directed().allowsSelfLoops(true).build()),
                         mergeGraphWithoutAnalysis);
     }
 
