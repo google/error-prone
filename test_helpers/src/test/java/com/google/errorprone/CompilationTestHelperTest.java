@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.base.Predicates;
@@ -415,7 +416,40 @@ public class CompilationTestHelperTest {
       if (tree.getPackage() != null) {
         return describeMatch(tree.getPackage());
       }
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
+  }
+
+  @BugPattern(
+      name = "ThisCheckerCannotBeInstantiated",
+      summary = "A checker that Error Prone can't instantiate.",
+      category = JDK,
+      severity = ERROR)
+  public static class ThisCheckerCannotBeInstantiated extends BugChecker
+      implements CompilationUnitTreeMatcher {
+    // One way to create a non-instantiable checker is to make it a non-static nested class.
+    // Here, we just make the constructor private.
+    private ThisCheckerCannotBeInstantiated() {}
+
+    @Override
+    public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+      return NO_MATCH;
+    }
+  }
+
+  @Test
+  public void cannotInstantiateChecker() {
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                CompilationTestHelper.newInstance(ThisCheckerCannotBeInstantiated.class, getClass())
+                    .addSourceLines(
+                        "test/Test.java",
+                        "package test;",
+                        "// BUG: Diagnostic contains:",
+                        "public class Test {}")
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Could not instantiate BugChecker");
   }
 }
