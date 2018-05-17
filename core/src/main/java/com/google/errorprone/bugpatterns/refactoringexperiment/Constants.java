@@ -50,4 +50,8 @@ public class Constants {
     public static final String EDGE_PARENT_METHOD = "EDGE_PARENT_METHOD";
     public static final String EDGE_OVERRIDES = "EDGE_OVERRIDES";
     public static final String EDGES_INVOKED_IN = "EDGES_INVOKED_IN";
+
+    public static final ImmutableSet<String> exclude = ImmutableSet.of(
+            "com.google.android"
+    );
 }

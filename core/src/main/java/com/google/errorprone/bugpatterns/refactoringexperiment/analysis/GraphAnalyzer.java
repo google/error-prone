@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
+import com.google.errorprone.bugpatterns.refactoringexperiment.Constants;
 import com.google.errorprone.bugpatterns.refactoringexperiment.ProtoBuffPersist;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDeclarationOuterClass.ClassDeclaration;
@@ -58,8 +59,13 @@ public final class GraphAnalyzer {
      * operations. For Goal1, we do not want to perform refactorings which propagate across
      * assignment operations. Thus, we filter all edges of a graph based on edge value: EDGE_ASSIGNED_AS
      */
-    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
-            !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ASSIGNED_AS));
+//    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_ASSIGNMENTS = graph ->
+//            !graph.edges().stream().anyMatch(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ASSIGNED_AS));
+
+    private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_ASSIGNED_AS_LAMBDA = graph ->
+            !graph.edges().stream().filter(endpt -> graph.edgeValue(endpt.nodeU(), endpt.nodeV()).get().equals(EDGE_ASSIGNED_AS))
+                    .map(endpt -> endpt.nodeV()).anyMatch(v -> !((v.getKind().equals(LAMBDA_EXPRESSION) ||isVarKind.test(v))));
+
 
     /**
      * This precondition makes sure that we do not refactor a instance ,if a var is being passed to
@@ -95,6 +101,12 @@ public final class GraphAnalyzer {
     private static final Predicate<ImmutableValueGraph<Identification, String>> PRE_CONDITION_NO_PARAMS_WITHOUT_ARG = graph ->
             !graph.nodes().stream().filter(isVarKind).anyMatch(x -> graph.predecessors(x).stream().anyMatch(s -> graph.edgeValue(s,x).get().contains(EDGE_PARAM_INDEX)));
 
+    private static final Predicate<ImmutableValueGraph<Identification, String>> EXCLUDE_PACKAGES = graph ->
+            !graph.nodes().stream().anyMatch(x -> Constants.exclude.stream().anyMatch(y -> y.equals(getPckgName(x))));
+
+    public static String getPckgName(Identification n){
+        return  n.getKind().equals("PACKAGE") ? n.getName() : getPckgName(n.getOwner());
+    }
 
 
     public static void main(String args[]) throws Exception {
@@ -112,12 +124,15 @@ public final class GraphAnalyzer {
         List<Refactorable> refactorables = new ArrayList<>();
         List<ImmutableValueGraph<Identification, String>> subGraphs = induceSubgraphs(ConstructGraph.create(getMethodDeclarations(fromFolder), getClassDeclarations(fromFolder)
                 , getVariables(fromFolder), getMethodInovcation_NewClass(fromFolder)
-                , getAssignments(fromFolder))).stream().filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA).filter(PRE_CONDITION_NO_ASSIGNMENTS)
+                , getAssignments(fromFolder))).stream().filter(PRE_CONDITION_METHOD_INVOCATIONS_LAMBDA)
+                .filter(PRE_CONDITION_ASSIGNED_AS_LAMBDA)
                 .filter(PRE_CONDITION_OBJ_REF_NOT_PASSED_TO_ORPHAN_METHOD_INVOCATION)
                 .filter(PRE_CONDITION_NO_INFERRED)
                 .filter(PRE_CONDITION_NO_WRAPPER)
                 .filter(PRE_CONDITION_NO_PARAMS_WITHOUT_ARG)
                 .filter(PRE_CONDITION_NO_ENHANCED_FOR_LOOP)
+                .filter(EXCLUDE_PACKAGES)
+                .filter(EXCLUDE_PACKAGES)
                 .collect(Collectors.toList());
         subGraphs.forEach(g -> {
             Map<Identification, String> mappings = getMapping(g);
