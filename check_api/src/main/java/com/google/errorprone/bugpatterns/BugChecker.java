@@ -256,6 +256,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
     Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state);
   }
 
+  public interface CompilationUnitTreeEndMatcher extends Suppressible {
+    // return a Set here since there may be many errors to report over the compilation unit
+    Set<Description> endCompilationUnit(CompilationUnitTree tree, VisitorState state);
+  }
+
   public interface CompoundAssignmentTreeMatcher extends Suppressible {
     Description matchCompoundAssignment(CompoundAssignmentTree tree, VisitorState state);
   }
