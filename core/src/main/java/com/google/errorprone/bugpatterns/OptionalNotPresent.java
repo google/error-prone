@@ -36,9 +36,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 import java.util.Iterator;
-import java.util.Objects;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
@@ -63,7 +61,7 @@ public class OptionalNotPresent extends BugChecker implements MethodInvocationTr
       MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
     if (GOOGLE_OPTIONAL_PRESENT.matches(methodInvocationTree, visitorState)
         || OPTIONAL_PRESENT.matches(methodInvocationTree, visitorState)) {
-      Symbol optionalVar = ASTHelpers.getSymbol(ASTHelpers.getReceiver(methodInvocationTree));
+      ExpressionTree optionalVar = ASTHelpers.getReceiver(methodInvocationTree);
       // using an iterator to make sure that only !optional.isPresent() matches and not
       // !(optional.isPresent() || foo == 7)
       Iterator<Tree> iter = visitorState.getPath().iterator();
@@ -111,19 +109,18 @@ public class OptionalNotPresent extends BugChecker implements MethodInvocationTr
     return ifTree;
   }
 
-  private static class TreeScannerInside extends TreeScanner<Void, Symbol> {
+  private static class TreeScannerInside extends TreeScanner<Void, ExpressionTree> {
 
     private boolean hasGet = false;
     private boolean hasAssignment = false;
 
     @Override
-    public Void visitMethodInvocation(MethodInvocationTree tree, Symbol optionalVar) {
-      if (tree.getArguments()
-          .stream()
-          .anyMatch(m -> Objects.equals(ASTHelpers.getSymbol(m), optionalVar))) {
+    public Void visitMethodInvocation(MethodInvocationTree tree, ExpressionTree optionalVar) {
+      if (tree.getArguments().stream().anyMatch(m -> ASTHelpers.sameVariable(m, optionalVar))) {
         hasAssignment = true;
       }
-      if (Objects.equals(ASTHelpers.getSymbol(ASTHelpers.getReceiver(tree)), optionalVar)) {
+      ExpressionTree receiver = ASTHelpers.getReceiver(tree);
+      if (receiver != null && ASTHelpers.sameVariable(receiver, optionalVar)) {
         ExpressionTree treeIdent = tree.getMethodSelect();
         if (treeIdent instanceof MemberSelectTree) {
           if (((MemberSelectTree) treeIdent).getIdentifier().contentEquals("get")) {
@@ -131,15 +128,15 @@ public class OptionalNotPresent extends BugChecker implements MethodInvocationTr
           }
         }
       }
-      return null;
+      return super.visitMethodInvocation(tree, optionalVar);
     }
 
     @Override
-    public Void visitAssignment(AssignmentTree assignmentTree, Symbol optionalVar) {
-      if (Objects.equals(ASTHelpers.getSymbol(assignmentTree.getVariable()), optionalVar)) {
+    public Void visitAssignment(AssignmentTree assignmentTree, ExpressionTree optionalVar) {
+      if (ASTHelpers.sameVariable(assignmentTree.getVariable(), optionalVar)) {
         hasAssignment = true;
       }
-      return null;
+      return super.visitAssignment(assignmentTree, optionalVar);
     }
   }
 }
