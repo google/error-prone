@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,12 +24,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class OptionalNotPresentTest {
 
-  private static CompilationTestHelper compilationTestHelper;
-
-  @Before
-  public void setup() {
-    compilationTestHelper = CompilationTestHelper.newInstance(OptionalNotPresent.class, getClass());
-  }
+  private final CompilationTestHelper compilationTestHelper =
+      CompilationTestHelper.newInstance(OptionalNotPresent.class, getClass());
 
   @Test
   public void testNegativeCases() {
@@ -40,5 +35,26 @@ public class OptionalNotPresentTest {
   @Test
   public void testPositiveCases() {
     compilationTestHelper.addSourceFile("OptionalNotPresentPositiveCases.java").doTest();
+  }
+
+  @Test
+  public void b80065837() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.Optional;",
+            "import java.util.Map;",
+            "class Test {",
+            "  <T> Optional<T> f(T t) {",
+            "    return Optional.ofNullable(t);",
+            "  }",
+            "  int g(Map<String, Optional<Integer>> m) {",
+            "    if (!m.get(\"one\").isPresent()) {",
+            "      return m.get(\"two\").get();",
+            "    }",
+            "    return -1;",
+            "  }",
+            "}")
+        .doTest();
   }
 }
