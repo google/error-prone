@@ -98,7 +98,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
 
     initSuppressionHelper(state);
 
-    Symbol sym = ASTHelpers.getSymbol(tree);
+    Symbol sym = ASTHelpers.getDeclaredSymbol(tree);
     if (sym != null) {
       SuppressionHelper.SuppressionInfo newSuppressions =
           suppressionHelper.extendSuppressionSets(
