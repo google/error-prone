@@ -76,15 +76,26 @@ public class ImmutableChecker extends BugChecker
         MemberReferenceTreeMatcher {
 
   private final WellKnownMutability wellKnownMutability;
+  private final ImmutableSet<String> immutableAnnotations;
 
   @Deprecated // Used reflectively, but you should pass in ErrorProneFlags to get custom mutability
   public ImmutableChecker() {
     this(ErrorProneFlags.empty());
   }
 
-  public ImmutableChecker(ErrorProneFlags flags) {
-    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+  ImmutableChecker(ImmutableSet<String> immutableAnnotations) {
+    this(ErrorProneFlags.empty(), immutableAnnotations);
   }
+
+  public ImmutableChecker(ErrorProneFlags flags) {
+    this(flags, ImmutableSet.of(Immutable.class.getName()));
+  }
+
+  private ImmutableChecker(ErrorProneFlags flags, ImmutableSet<String> immutableAnnotations) {
+    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+    this.immutableAnnotations = immutableAnnotations;
+  }
+
 
   // check instantiations of `@ImmutableTypeParameter`s in method references
   @Override
@@ -106,7 +117,7 @@ public class ImmutableChecker extends BugChecker
     checkInvocation(
         tree, ((JCNewClass) tree).constructorType, state, ((JCNewClass) tree).constructor);
     // check instantiations of `@ImmutableTypeParameter`s in class constructor invocations
-    ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
+    ImmutableAnalysis analysis = createImmutableAnalysis(state);
     Violation info =
         analysis.checkInstantiation(
             ASTHelpers.getSymbol(tree.getIdentifier()).getTypeParameters(),
@@ -117,9 +128,13 @@ public class ImmutableChecker extends BugChecker
     return NO_MATCH;
   }
 
+  private ImmutableAnalysis createImmutableAnalysis(VisitorState state) {
+    return new ImmutableAnalysis(this, state, wellKnownMutability, immutableAnnotations);
+  }
+
   private Description checkInvocation(
       Tree tree, Type methodType, VisitorState state, Symbol symbol) {
-    ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
+    ImmutableAnalysis analysis = createImmutableAnalysis(state);
     Violation info = analysis.checkInvocation(methodType, symbol);
     if (info.isPresent()) {
       state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
@@ -133,7 +148,7 @@ public class ImmutableChecker extends BugChecker
     if (sym == null) {
       return NO_MATCH;
     }
-    ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
+    ImmutableAnalysis analysis = createImmutableAnalysis(state);
     if (!analysis.hasThreadSafeTypeParameterAnnotation((TypeVariableSymbol) sym)) {
       return NO_MATCH;
     }
@@ -154,7 +169,7 @@ public class ImmutableChecker extends BugChecker
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    ImmutableAnalysis analysis = new ImmutableAnalysis(this, state, wellKnownMutability);
+    ImmutableAnalysis analysis = createImmutableAnalysis(state);
     if (tree.getSimpleName().length() == 0) {
       // anonymous classes have empty names
       // TODO(cushon): once Java 8 happens, require @Immutable on anonymous classes
@@ -320,14 +335,16 @@ public class ImmutableChecker extends BugChecker
    * Returns the type of the first superclass or superinterface in the hierarchy annotated with
    * {@code @Immutable}, or {@code null} if no such super type exists.
    */
-  private static Type immutableSupertype(Symbol sym, VisitorState state) {
+  private Type immutableSupertype(Symbol sym, VisitorState state) {
     for (Type superType : state.getTypes().closure(sym.type)) {
       if (superType.equals(sym.type)) {
         continue;
       }
       // Don't use getImmutableAnnotation here: subtypes of trusted types are
       // also trusted, only check for explicitly annotated supertypes.
-      if (ASTHelpers.hasAnnotation(superType.tsym, Immutable.class, state)) {
+      if (immutableAnnotations
+          .stream()
+          .anyMatch(annotation -> ASTHelpers.hasAnnotation(superType.tsym, annotation, state))) {
         return superType;
       }
       // We currently trust that @interface annotations are immutable, but don't enforce that
