@@ -22,7 +22,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Negative test cases for TruthAssertExpected check.
+ * Positive test cases for TruthAssertExpected check.
  *
  * @author ghm@google.com (Graeme Morgan)
  */
