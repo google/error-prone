@@ -179,9 +179,6 @@ public class ASTHelpers {
     if (tree instanceof PackageTree) {
       return getSymbol((PackageTree) tree);
     }
-    if (tree instanceof ParameterizedTypeTree) {
-      return getSymbol(((ParameterizedTypeTree) tree).getType());
-    }
     if (tree instanceof TypeParameterTree) {
       Type type = ((JCTypeParameter) tree).type;
       return type == null ? null : type.tsym;
@@ -222,6 +219,9 @@ public class ASTHelpers {
     }
     if (tree instanceof JCAnnotatedType) {
       return getSymbol(((JCAnnotatedType) tree).underlyingType);
+    }
+    if (tree instanceof ParameterizedTypeTree) {
+      return getSymbol(((ParameterizedTypeTree) tree).getType());
     }
 
     return getDeclaredSymbol(tree);
