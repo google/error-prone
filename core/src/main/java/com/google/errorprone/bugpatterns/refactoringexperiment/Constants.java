@@ -1,6 +1,6 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment;
 
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.*;
+//import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.*;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -22,7 +22,9 @@ public class Constants {
     public static final Set<String> SOURCE_TYPE_PARAMETERS = ImmutableSet.copyOf(WRAPPER_CLASSES);
     public static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
     public static final String GOOGLE_COMMON_BASE_PREDICATE = "com.google.common.base.Predicate";
-
+    public static final String JAVA_UTIL_FUNCTION_SUPPLIER = "java.util.function.Supplier";
+    public static final String JAVA_UTIL_FUNCTION_CONSUMER = "java.util.function.Consumer";
+    public static final String JAVA_UTIL_FUNCTION_PREDICATE = "java.util.function.Predicate";
 
     public static Set<String> SOURCE_TYPES = ImmutableSet.of(JAVA_UTIL_FUNCTION_FUNCTION
             , JAVA_UTIL_FUNCTION_SUPPLIER, JAVA_UTIL_FUNCTION_CONSUMER,JAVA_UTIL_FUNCTION_PREDICATE);

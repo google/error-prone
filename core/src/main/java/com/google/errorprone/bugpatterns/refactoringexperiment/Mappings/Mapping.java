@@ -1,13 +1,6 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment.Mappings;
 
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.BOOLEAN;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.BOOLEAN_PRIMITIVE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.DOUBLE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.DOUBLE_PRIMITIVE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INTEGER;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INTEGER_PRIMITIVE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LONG;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LONG_PRIMITIVE;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.*;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Mappings.ConsumerMapping.DOUBLE_CONSUMER;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Mappings.ConsumerMapping.DOUBLE_CONSUMER_METHOD_MAPPING;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Mappings.ConsumerMapping.INT_CONSUMER;
@@ -78,11 +71,6 @@ import java.util.function.Function;
  */
 public class Mapping {
 
-
-    public static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
-    public static final String JAVA_UTIL_FUNCTION_SUPPLIER = "java.util.function.Supplier";
-    public static final String JAVA_UTIL_FUNCTION_CONSUMER = "java.util.function.Consumer";
-    public static final String JAVA_UTIL_FUNCTION_PREDICATE = "java.util.function.Predicate";
     public static final String NO_MAPPING = "NO MAPPING";
     public static final String TEST = "test";
     public static final String OR = "or";
