@@ -2,12 +2,29 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.analysis;
 
 
 //import static com.google.common.collect.;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.*;
+
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_AFFECTED_BY_HIERARCHY;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ARG_INDEX;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ASSIGNED_AS;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_ASSIGNED_TO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_METHOD_INVOKED;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_OF_TYPE;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PARAM_INDEX;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PARENT_METHOD;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PASSED_AS_ARG_TO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_RECURSIVE;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_REFERENCE;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_CLASS;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_METHOD;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.INFERRED_VAR;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
+import com.google.errorprone.bugpatterns.refactoringexperiment.Mappings.Mapping;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.AssignmentOuterClass.Assignment;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDeclarationOuterClass.ClassDeclaration;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;

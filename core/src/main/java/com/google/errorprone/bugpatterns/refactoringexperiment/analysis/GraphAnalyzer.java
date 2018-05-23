@@ -12,8 +12,8 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.NEW_CLASS;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Mappings.Mapping.NO_MAPPING;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ConstructGraph.isVarKind;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.NO_MAPPING;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.PopulateRefactorToInfo.getMapping;
 
 import com.google.common.collect.ImmutableList;
@@ -131,7 +131,6 @@ public final class GraphAnalyzer {
                 .filter(PRE_CONDITION_NO_WRAPPER)
                 .filter(PRE_CONDITION_NO_PARAMS_WITHOUT_ARG)
                 .filter(PRE_CONDITION_NO_ENHANCED_FOR_LOOP)
-                .filter(EXCLUDE_PACKAGES)
                 .filter(EXCLUDE_PACKAGES)
                 .collect(Collectors.toList());
         subGraphs.forEach(g -> {

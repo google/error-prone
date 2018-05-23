@@ -3,7 +3,9 @@ package com.google.errorprone.bugpatterns.refactoringexperiment.collect;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.LAMBDA_EXPRESSION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.PRIMITIVE_WRAPPER;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.WRAPPER_CLASSES;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoFromSymbol;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoFromTree;
@@ -21,6 +23,7 @@ import com.google.errorprone.bugpatterns.refactoringexperiment.models.ClassDecla
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodDeclarationOuterClass.MethodDeclaration;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocationOuterClass.MethodInvocation;
+import com.google.errorprone.bugpatterns.refactoringexperiment.models.MethodInvocationOuterClass.MethodInvocation.Builder;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.VariableOuterClass.Variable;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -65,7 +68,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         if (paramsMatter || returnMatter) {
             MethodDeclaration.Builder mthdDcl = manageMethodDecl(state, ASTHelpers.getSymbol(methodTree));
             if (returnMatter) {
-                mthdDcl.setReturnType(DataFilter.getFilteredType(methodTree.getReturnType(), state));
+                DataFilter.getFilteredType(methodTree.getReturnType(), state).ifPresent(f -> mthdDcl.setReturnType(f));
             }
             ProtoBuffPersist.write(mthdDcl, "METHOD");
         }
@@ -114,16 +117,16 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             // if (a wrapper method is used inside the lambda expression)
             // then create a new proto of type MethodInvocation, with name:PRIMITIVE_WRAPPER, type:PRIMITIVE_WRAPPER,
             // owner: the method invocation itself kind : Method_Invocation
-//            mthdInvc.getArgumentsMap().entrySet().stream()
-//                    .filter(en -> en.getValue().getKind().equals(Kind.LAMBDA_EXPRESSION.name()) && isPrimitiveWrapperUsed(tree.getArguments().get(en.getKey())))
-//                    .forEach(en -> {
-//                        Builder wrapper = MethodInvocation.newBuilder();
-//                        wrapper.setId(Identification.newBuilder()
-//                                .setName(PRIMITIVE_WRAPPER).setKind(METHOD_INVOCATION).setType(PRIMITIVE_WRAPPER)
-//                                .setOwner(en.getValue().toBuilder().setOwner(mthdInvc.getId()).setName(LAMBDA_EXPRESSION+en.getKey()).build())
-//                                .build());
-//                        ProtoBuffPersist.write(wrapper, METHOD_INVOCATION);
-//                    });
+            mthdInvc.getArgumentsMap().entrySet().stream()
+                    .filter(en -> en.getValue().getKind().equals(Kind.LAMBDA_EXPRESSION.name()) && isPrimitiveWrapperUsed(tree.getArguments().get(en.getKey())))
+                    .forEach(en -> {
+                        Builder wrapper = MethodInvocation.newBuilder();
+                        wrapper.setId(Identification.newBuilder()
+                                .setName(PRIMITIVE_WRAPPER).setKind(METHOD_INVOCATION).setType(PRIMITIVE_WRAPPER)
+                                .setOwner(en.getValue().toBuilder().setOwner(mthdInvc.getId()).setName(LAMBDA_EXPRESSION+en.getKey()).build())
+                                .build());
+                        ProtoBuffPersist.write(wrapper, METHOD_INVOCATION);
+                    });
             ProtoBuffPersist.write(mthdInvc, tree.getKind().toString());
 
         }
@@ -154,17 +157,17 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
                     .forEach(arg ->
                             mthdInvc.putArguments(var1.getArguments().indexOf(arg), infoOfTree(arg)).build());
 
-//            mthdInvc.getArgumentsMap().entrySet().stream()
-//                    .filter(en -> en.getValue().getKind().equals(Kind.LAMBDA_EXPRESSION.name()) && isPrimitiveWrapperUsed(var1.getArguments().get(en.getKey())))
-//                    .forEach(en -> {
-//                        Builder wrapper = MethodInvocation.newBuilder();
-//                        wrapper.setId(Identification.newBuilder()
-//                                .setName(PRIMITIVE_WRAPPER).setKind(METHOD_INVOCATION).setType(PRIMITIVE_WRAPPER)
-//                                .setOwner(en.getValue().toBuilder().setOwner(mthdInvc.getId())
-//                                        .setName(LAMBDA_EXPRESSION+en.getKey()).build())
-//                                .build());
-//                        ProtoBuffPersist.write(wrapper, METHOD_INVOCATION);
-//                    });
+            mthdInvc.getArgumentsMap().entrySet().stream()
+                    .filter(en -> en.getValue().getKind().equals(Kind.LAMBDA_EXPRESSION.name()) && isPrimitiveWrapperUsed(var1.getArguments().get(en.getKey())))
+                    .forEach(en -> {
+                        Builder wrapper = MethodInvocation.newBuilder();
+                        wrapper.setId(Identification.newBuilder()
+                                .setName(PRIMITIVE_WRAPPER).setKind(METHOD_INVOCATION).setType(PRIMITIVE_WRAPPER)
+                                .setOwner(en.getValue().toBuilder().setOwner(mthdInvc.getId())
+                                        .setName(LAMBDA_EXPRESSION+en.getKey()).build())
+                                .build());
+                        ProtoBuffPersist.write(wrapper, METHOD_INVOCATION);
+                    });
             ProtoBuffPersist.write(mthdInvc, var1.getKind().toString());
         }
         return null;
@@ -179,7 +182,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             if (var1.getInitializer() != null) {
                 vrbl.setInitializer(infoOfTree(var1.getInitializer()));
             }
-            vrbl.setFilteredType(DataFilter.getFilteredType(var1, state));
+            DataFilter.getFilteredType(var1, state).ifPresent(f -> vrbl.setFilteredType(f));
             ProtoBuffPersist.write(vrbl, var1.getKind().toString());
         }
         return null;
@@ -197,15 +200,15 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             // if (a wrapper method is used inside the lambda expression)
             // then create a new proto of type MethodInvocation, with name:PRIMITIVE_WRAPPER; type:PRIMITIVE_WRAPPER,
             // owner: LHS of the assignment operation; kind : Method_Invocation
-//            if (asgn.getRhs().getKind().equals(Kind.LAMBDA_EXPRESSION.name()) && isPrimitiveWrapperUsed(var1.getExpression())) {
-//                MethodInvocation.Builder wrapper = MethodInvocation.newBuilder();
-//                wrapper.setId(Identification.newBuilder()
-//                        .setName(PRIMITIVE_WRAPPER).setKind(METHOD_INVOCATION).setType(PRIMITIVE_WRAPPER)
-//                        .setOwner(asgn.getRhs().toBuilder().setOwner(asgn.getLhs())
-//                                .setName(LAMBDA_EXPRESSION).build())
-//                        .build());
-//                ProtoBuffPersist.write(wrapper, METHOD_INVOCATION);
-//            }
+            if (asgn.getRhs().getKind().equals(Kind.LAMBDA_EXPRESSION.name()) && isPrimitiveWrapperUsed(var1.getExpression())) {
+                MethodInvocation.Builder wrapper = MethodInvocation.newBuilder();
+                wrapper.setId(Identification.newBuilder()
+                        .setName(PRIMITIVE_WRAPPER).setKind(METHOD_INVOCATION).setType(PRIMITIVE_WRAPPER)
+                        .setOwner(asgn.getRhs().toBuilder().setOwner(asgn.getLhs())
+                                .setName(LAMBDA_EXPRESSION).build())
+                        .build());
+                ProtoBuffPersist.write(wrapper, METHOD_INVOCATION);
+            }
             ProtoBuffPersist.write(asgn, var1.getKind().toString());
         }
 
@@ -220,7 +223,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
             Variable.Builder vrbl = Variable.newBuilder();
             infoFromTree(var).map(id -> vrbl.setId(id));
             vrbl.setInitializer(Identification.newBuilder().setKind(Kind.ENHANCED_FOR_LOOP.name()));
-            vrbl.setFilteredType(DataFilter.getFilteredType(var, state));
+            DataFilter.getFilteredType(var, state).ifPresent(f -> vrbl.setFilteredType(f));
             ProtoBuffPersist.write(vrbl, var.getKind().toString());
         }
         return null;
@@ -233,7 +236,7 @@ public class TypeUsageCollector extends BugChecker implements BugChecker.MethodT
         ClassDeclaration.Builder clsDcl = ClassDeclaration.newBuilder();
         if ((implementsLt || isLT)) {
             infoFromTree(classTree).map(id -> clsDcl.setId(id));
-            clsDcl.setSuperType(DataFilter.getFilteredType(classTree, state));
+            DataFilter.getFilteredType(classTree, state).ifPresent(f -> clsDcl.setSuperType(f));
             ProtoBuffPersist.write(clsDcl, classTree.getKind().toString());
 
         }

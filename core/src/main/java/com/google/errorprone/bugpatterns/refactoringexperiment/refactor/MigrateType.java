@@ -15,7 +15,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.refactoringexperiment.DataFilter;
-import com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping;
+import com.google.errorprone.bugpatterns.refactoringexperiment.Mappings.Mapping;
 import com.google.errorprone.bugpatterns.refactoringexperiment.analysis.QueryProtoBuffData;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.IdentificationOuterClass.Identification;
 import com.google.errorprone.bugpatterns.refactoringexperiment.models.RefactorableOuterClass.Refactorable;

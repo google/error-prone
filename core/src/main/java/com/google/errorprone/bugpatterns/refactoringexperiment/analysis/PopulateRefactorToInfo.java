@@ -10,10 +10,10 @@ import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.EDGE_PASSED_AS_ARG_TO;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.REFACTOR_INFO;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Mappings.Mapping.SPECIALIZE_TO_PRIMITIVE;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Mappings.Mapping.getMethodMappingFor;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ConstructGraph.isTypeKind;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ConstructGraph.isVarKind;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.SPECIALIZE_TO_PRIMITIVE;
-import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.getMethodMappingFor;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 

@@ -1,5 +1,7 @@
 package com.google.errorprone.bugpatterns.refactoringexperiment;
 
+import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.Mapping.*;
+
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
@@ -12,9 +14,19 @@ public class Constants {
     public static final String INTEGER = "java.lang.Integer";
     public static final String DOUBLE = "java.lang.Double";
     public static final String BOOLEAN = "java.lang.Boolean";
+    public static final String LONG_PRIMITIVE = "long";
+    public static final String INTEGER_PRIMITIVE = "int";
+    public static final String DOUBLE_PRIMITIVE = "double";
+    public static final String BOOLEAN_PRIMITIVE = "boolean";
     public static final Set<String> WRAPPER_CLASSES = ImmutableSet.of(LONG,INTEGER,DOUBLE,BOOLEAN);
+    public static final Set<String> SOURCE_TYPE_PARAMETERS = ImmutableSet.copyOf(WRAPPER_CLASSES);
     public static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
     public static final String GOOGLE_COMMON_BASE_PREDICATE = "com.google.common.base.Predicate";
+
+
+    public static Set<String> SOURCE_TYPES = ImmutableSet.of(JAVA_UTIL_FUNCTION_FUNCTION
+            , JAVA_UTIL_FUNCTION_SUPPLIER, JAVA_UTIL_FUNCTION_CONSUMER,JAVA_UTIL_FUNCTION_PREDICATE);
+
 
 
     public static final String LAMBDA_EXPRESSION = "LAMBDA_EXPRESSION";
