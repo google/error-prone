@@ -4,6 +4,7 @@ package com.google.errorprone.bugpatterns.refactoringexperiment;
 
 import com.google.common.collect.ImmutableSet;
 
+
 import java.util.Set;
 
 /**
@@ -28,6 +29,8 @@ public class Constants {
 
     public static Set<String> SOURCE_TYPES = ImmutableSet.of(JAVA_UTIL_FUNCTION_FUNCTION
             , JAVA_UTIL_FUNCTION_SUPPLIER, JAVA_UTIL_FUNCTION_CONSUMER,JAVA_UTIL_FUNCTION_PREDICATE);
+
+    public static Set<String> QUALIFY_TYPE_NEEDED_FOR = ImmutableSet.of(GOOGLE_COMMON_BASE_PREDICATE);
 
 
 

@@ -238,6 +238,7 @@ public class Mapping {
 
     public static final String changeMethodSelect = "ChangeMethodSelect";
     public static final String castMethodSelect = "CastMethodSelect";
+
     public static ImmutableSet<String> refactoringInstruction = ImmutableSet.of(changeMethodSelect,castMethodSelect);
 
     public static final String string_valueOf = "String.valueOf";

@@ -6,6 +6,7 @@ import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.GOOGLE_COMMON_BASE_PREDICATE;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.METHOD_INVOCATION;
+import static com.google.errorprone.bugpatterns.refactoringexperiment.Constants.QUALIFY_TYPE_NEEDED_FOR;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.IdentificationExtractionUtil.infoFromTree;
 import static com.google.errorprone.bugpatterns.refactoringexperiment.analysis.ConstructGraph.isTypeKind;
 
@@ -59,8 +60,9 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
             if (info.isPresent() && !Strings.isNullOrEmpty(info.get().getRefactorTo())) {
                 SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
                 fixBuilder.addImport(getImportName(info.get().getRefactorTo()));
-                fixBuilder.removeImport(GOOGLE_COMMON_BASE_PREDICATE);
-                fixBuilder.replace(tree.getType(), getClassName(getImportName(info.get().getRefactorTo()), tree.getType()));
+                boolean qualifyTypeNeeded = qualifyTypeNeeded(tree,state);
+                fixBuilder.replace(tree.getType(), getClassName(getImportName(info.get().getRefactorTo()), tree.getType(),qualifyTypeNeeded));
+
                 return describeMatch(tree, fixBuilder.build());
             }
         }
@@ -144,10 +146,11 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
     private void changeImplementClauseForClass(ClassTree classTree, VisitorState state, SuggestedFix.Builder fixBuilder) {
         Optional<Refactorable> info = getRefactorInfo(classTree);
         if (info.isPresent()) {
+            boolean qualifyTypeNeeded = qualifyTypeNeeded(classTree,state);
             Tree clauseToEdit = classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state)).findFirst().map(x -> (Tree) x)
                     .orElse(DataFilter.apply(classTree.getExtendsClause(), state) ? classTree.getExtendsClause() : null);
             fixBuilder.addImport(getImportName(info.get().getRefactorTo()));
-            fixBuilder.replace(clauseToEdit, getClassName(getImportName(info.get().getRefactorTo()), clauseToEdit));
+            fixBuilder.replace(clauseToEdit, getClassName(getImportName(info.get().getRefactorTo()), clauseToEdit, qualifyTypeNeeded));
         }
     }
 
@@ -157,7 +160,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
                 : refactorTo;
     }
 
-    private String getClassName(String refactorTo, Tree type) {
+    private String getClassName(String refactorTo, Tree type, boolean qualifyTypeNeeded) {
         String preservedTypeParam = "";
         if (type.getKind().equals(Kind.PARAMETERIZED_TYPE)) {
             List<? extends Tree> typeArg = ((ParameterizedTypeTree) type).getTypeArguments();
@@ -166,8 +169,13 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
                         .map(x -> typeArg.get(x).toString()).collect(Collectors.toList()));
             }
         }
+        return qualifyTypeNeeded? getImportName(refactorTo) + preservedTypeParam :
+                getImportName(refactorTo).replace("java.util.function.", "") + preservedTypeParam;
+    }
 
-        return getImportName(refactorTo).replace("java.util.function.", "") + preservedTypeParam;
+    private boolean qualifyTypeNeeded(Tree type,VisitorState state) {
+        return QUALIFY_TYPE_NEEDED_FOR.stream().anyMatch(x ->
+                ASTHelpers.isSubtype(ASTHelpers.getType(type), state.getTypeFromString(x), state));
     }
 
 
