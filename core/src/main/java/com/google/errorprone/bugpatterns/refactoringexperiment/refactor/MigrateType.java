@@ -59,8 +59,8 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
             if (info.isPresent() && !Strings.isNullOrEmpty(info.get().getRefactorTo())) {
                 SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
                 fixBuilder.addImport(getImportName(info.get().getRefactorTo()));
-                String replacementType = getClassName(getImportName(info.get().getRefactorTo()), tree.getType());
-                fixBuilder.replace(tree.getType(), SuggestedFixes.qualifyType(state,fixBuilder,state.getSymbolFromString(replacementType)));
+                String typeParameters = getTypeParameters(getImportName(info.get().getRefactorTo()), tree.getType());
+                fixBuilder.replace(tree.getType(), SuggestedFixes.qualifyType(state,fixBuilder,state.getSymbolFromString(getImportName(info.get().getRefactorTo()))) + typeParameters);
                 return describeMatch(tree, fixBuilder.build());
             }
         }
@@ -147,8 +147,8 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
             Tree clauseToEdit = classTree.getImplementsClause().stream().filter(x -> DataFilter.apply(x, state)).findFirst().map(x -> (Tree) x)
                     .orElse(DataFilter.apply(classTree.getExtendsClause(), state) ? classTree.getExtendsClause() : null);
             fixBuilder.addImport(getImportName(info.get().getRefactorTo()));
-            String replacementType = getClassName(getImportName(info.get().getRefactorTo()), clauseToEdit);
-            fixBuilder.replace(clauseToEdit, SuggestedFixes.qualifyType(state,fixBuilder,state.getSymbolFromString(replacementType)));
+            String typeParameters = getTypeParameters(getImportName(info.get().getRefactorTo()), clauseToEdit);
+            fixBuilder.replace(clauseToEdit, SuggestedFixes.qualifyType(state,fixBuilder,state.getSymbolFromString(getImportName(info.get().getRefactorTo()))) + typeParameters);
         }
     }
 
@@ -158,7 +158,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
                 : refactorTo;
     }
 
-    private String getClassName(String refactorTo, Tree type) {
+    private String getTypeParameters(String refactorTo, Tree type) {
         String preservedTypeParam = "";
         if (type.getKind().equals(Kind.PARAMETERIZED_TYPE)) {
             List<? extends Tree> typeArg = ((ParameterizedTypeTree) type).getTypeArguments();
@@ -167,7 +167,7 @@ public class MigrateType extends BugChecker implements BugChecker.VariableTreeMa
                         .map(x -> typeArg.get(x).toString()).collect(Collectors.toList()));
             }
         }
-        return getImportName(refactorTo).replace("java.util.function.", "") + preservedTypeParam;
+        return  preservedTypeParam;
     }
 
     private static Optional<Refactorable> getRefactorInfo(Tree tree) {
