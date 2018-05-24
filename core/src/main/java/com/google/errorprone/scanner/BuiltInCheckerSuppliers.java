@@ -306,6 +306,7 @@ import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableEnumChecker;
+import com.google.errorprone.bugpatterns.threadsafety.ImmutableRefactoring;
 import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
 import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
@@ -599,6 +600,7 @@ public class BuiltInCheckerSuppliers {
           FunctionalInterfaceClash.class,
           FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
           HardCodedSdCardPath.class,
+          ImmutableRefactoring.class,
           InconsistentOverloads.class,
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
