@@ -55,6 +55,82 @@ For more information about immutability, see:
 *   Java Concurrency in Practice §3.4
 *   Effective Java §15
 
+## Type Parameters
+
+When an `@Immutable` class has type parameters that are used in the type of that
+class's fields, that class is called an immutable generic container. Usages of
+immutable generic container classes, such as `ImmutableList`, are only actually
+deemed immutable if the arguments to all such type parameters are also deemed
+immutable. For example, an `ImmutableList<String>` is deemed immutable since
+`String`s are immutable. However, an `ImmutableList<Object>` is not deemed
+immutable since `Object`s are not provably immutable.
+
+When creating generic container classes, Error Prone requires that you declare
+whether that container is allowed to be used with mutable, or only with
+immutable type parameters.
+
+### `@Immutable(containerOf = ...)`
+
+If you want to allow your immutable generic container to possibly contain
+mutable types, use `@Immutable`'s `containerOf` method:
+
+```java
+@Immutable(containerOf = "T")
+class ImmutableHolder<T> {
+  final T ref;
+  ...
+}
+```
+
+Error Prone will allow you to instantiate an `ImmutableHolder<String>` and use
+it as a field in another `@Immutable` class. You may instantiate an
+`ImmutableHolder<Object>`, but since it is mutable, Error Prone would report an
+error if that was a field of another `@Immutable` class.
+
+### `@ImmutableTypeParameter`
+
+If you want to allow your `@Immutable` generic container to only contain
+immutable types, use `@ImmutableTypeParameter`:
+
+```java
+@Immutable
+class ImmutableContainer<@ImmutableTypeParameter T> {
+  final T ref;
+  ...
+}
+```
+
+Error Prone will allow you to instantiate a `ImmutableContainer<String>` and use
+it as a field in another `@Immutable` class. However, it is a compiler error to
+instantiate an `ImmutableContainer<Object>`.
+
+You can also use `@ImmutableTypeParameter` to annotate a method's type
+parameters:
+
+```java
+class SomeMutableClass {
+  <@ImmutableTypeParameter T> ImmutableList<T> putInImmutableList(T t) {
+    return ImmutableList.of(t);
+  }
+}
+```
+
+### Type Parameters Not Used in Fields
+
+If your `@Immutable` class has a type parameter that is not used in the type of
+your class's fields, then there is no need to use `containerOf` or
+`@ImmutableTypeParameter`:
+
+```java
+@Immutable
+class NonContainer<T> {
+  ... // No fields whose type contains T
+  void process(T element) {
+    // process 'element', which won't violate NonContainer's immutability.
+  }
+}
+```
+
 ## Suppression
 
 Suppress false positives by adding an `@SuppressWarnings("Immutable")`

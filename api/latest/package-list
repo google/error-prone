@@ -4,6 +4,7 @@ com.google.errorprone.annotations.concurrent
 com.google.errorprone.apply
 com.google.errorprone.bugpatterns
 com.google.errorprone.bugpatterns.android
+com.google.errorprone.bugpatterns.apidiff
 com.google.errorprone.bugpatterns.argumentselectiondefects
 com.google.errorprone.bugpatterns.collectionincompatibletype
 com.google.errorprone.bugpatterns.formatstring

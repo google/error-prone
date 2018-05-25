@@ -607,6 +607,9 @@ ThreadLocals should be stored in static fields
 __[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
 Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.
 
+__[TruthAssertExpected](bugpattern/TruthAssertExpected)__<br>
+The actual and expected values appear to be swapped, which results in poor assertion failure messages.
+
 __[TruthConstantAsserts](bugpattern/TruthConstantAsserts)__<br>
 Truth Library assert is called on a constant.
 
@@ -638,6 +641,9 @@ __[WakelockReleasedDangerously](bugpattern/WakelockReleasedDangerously)__<br>
 A wakelock acquired with a timeout may be released by the system before calling `release`, even after checking `isHeld()`. If so, it will throw a RuntimeException. Please wrap in a try/catch block.
 
 ## Experimental : ERROR
+
+__[AndroidJdkLibsChecker](bugpattern/AndroidJdkLibsChecker)__<br>
+Use of class, field, or method that is not compatible with legacy Android devices
 
 __[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>
 @AssistedInject and @Inject cannot be used on the same constructor.
@@ -687,6 +693,9 @@ Path implements Iterable&lt;Path&gt;; prefer Collection&lt;Path&gt; for clarity
 __[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOrRuleAnnotation)__<br>
 jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation
 
+__[Java7ApiChecker](bugpattern/Java7ApiChecker)__<br>
+Use of class, field, or method that is not compatible with JDK 7
+
 __[JavaxInjectOnFinalField](bugpattern/JavaxInjectOnFinalField)__<br>
 @javax.inject.Inject cannot be put on a final field.
 
@@ -718,6 +727,9 @@ __[UnlockMethod](bugpattern/UnlockMethod)__<br>
 This method does not acquire the locks specified by its @UnlockMethod annotation
 
 ## Experimental : WARNING
+
+__[AnnotateFormatMethod](bugpattern/AnnotateFormatMethod)__<br>
+This method passes a pair of parameters through to String.format, but the enclosing method wasn&#39;t annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.
 
 __[AssertFalse](bugpattern/AssertFalse)__<br>
 Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead
@@ -813,6 +825,9 @@ This field is only assigned during initialization; consider making it final
 
 __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
+
+__[ImmutableRefactoring](bugpattern/ImmutableRefactoring)__<br>
+Refactors uses of the JSR 305 @Immutable to Error Prone&#39;s annotation
 
 __[LambdaFunctionalInterface](bugpattern/LambdaFunctionalInterface)__<br>
 Use Java&#39;s utility functional interfaces instead of Function&lt;A, B&gt; for primitive types.
