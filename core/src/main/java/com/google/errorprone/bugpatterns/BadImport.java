@@ -59,7 +59,9 @@ import javax.lang.model.element.Name;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class BadImport extends BugChecker implements ImportTreeMatcher {
 
-  private static final ImmutableSet<String> BAD_NESTED_CLASSES = ImmutableSet.of("Builder");
+  private static final ImmutableSet<String> BAD_NESTED_CLASSES =
+      ImmutableSet.of(
+          "Builder");
   private static final ImmutableSet<String> BAD_STATIC_IDENTIFIERS =
       ImmutableSet.of("of", "from", "INSTANCE", "builder", "newBuilder");
 
