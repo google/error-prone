@@ -803,6 +803,9 @@ Using @Test(expected=...) is discouraged, since the test will pass if *any* stat
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
 
+__[UnusedException](bugpattern/UnusedException)__<br>
+This catch block catches an symbol and re-throws another, but swallows the caught symbol rather than setting it as a cause. This can make debugging harder.
+
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
 
