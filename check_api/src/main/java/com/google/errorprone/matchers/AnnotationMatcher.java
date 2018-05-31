@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
+import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -47,6 +48,8 @@ public class AnnotationMatcher<T extends Tree> extends ChildMultiMatcher<T, Anno
       return ((MethodTree) tree).getModifiers().getAnnotations();
     } else if (tree instanceof CompilationUnitTree) {
       return ((CompilationUnitTree) tree).getPackageAnnotations();
+    } else if (tree instanceof AnnotatedTypeTree) {
+      return ((AnnotatedTypeTree) tree).getAnnotations();
     } else if (tree instanceof PackageTree) {
       return ((PackageTree) tree).getAnnotations();
     } else {
