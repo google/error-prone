@@ -16,43 +16,46 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 /**
- * Tests for {@link BadNestedImport}.
+ * Tests for {@link BadImport}.
  *
  * @author awturner@google.com (Andy Turner)
  */
-class BadNestedImportPositiveCases {
+class BadImportPositiveCases {
   public void variableDeclarations() {
-    ImmutableList.Builder<String> qualified;
-    ImmutableList.Builder raw;
+    // Only the first match is reported; but all occurrences are fixed.
+    // BUG: Diagnostic contains: ImmutableList.Builder
+    Builder<String> qualified;
+    Builder raw;
   }
 
   public void variableDeclarationsNestedGenerics() {
-    ImmutableList.Builder<ImmutableList.Builder<String>> builder1;
-    ImmutableList.Builder<ImmutableList.Builder> builder1Raw;
-    ImmutableList.Builder<ImmutableList.Builder<String>> builder2;
-    ImmutableList.Builder<ImmutableList.Builder> builder2Raw;
+    Builder<Builder<String>> builder1;
+    Builder<Builder> builder1Raw;
+    ImmutableList.Builder<Builder<String>> builder2;
+    ImmutableList.Builder<Builder> builder2Raw;
   }
 
   public void newClass() {
-    new ImmutableList.Builder<String>();
-    new ImmutableList.Builder<ImmutableList.Builder<String>>();
+    new Builder<String>();
+    new Builder<Builder<String>>();
   }
 
-  ImmutableList.Builder<String> returnGenericExplicit() {
-    return new ImmutableList.Builder<String>();
+  Builder<String> returnGenericExplicit() {
+    return new Builder<String>();
   }
 
-  ImmutableList.Builder<String> returnGenericDiamond() {
-    return new ImmutableList.Builder<>();
+  Builder<String> returnGenericDiamond() {
+    return new Builder<>();
   }
 
-  ImmutableList.Builder returnRaw() {
-    return new ImmutableList.Builder();
+  Builder returnRaw() {
+    return new Builder();
   }
 
   void classLiteral() {
-    System.out.println(ImmutableList.Builder.class);
+    System.out.println(Builder.class);
   }
 }

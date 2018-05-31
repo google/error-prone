@@ -18,11 +18,11 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Tests for {@link BadNestedImport}.
+ * Tests for {@link BadImport}.
  *
  * @author awturner@google.com (Andy Turner)
  */
-public class BadNestedImportNegativeCases {
+public class BadImportNegativeCases {
   public void qualified() {
     ImmutableList.Builder<String> qualified;
     com.google.common.collect.ImmutableList.Builder<String> fullyQualified;

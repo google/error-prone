@@ -34,7 +34,7 @@ import com.google.errorprone.bugpatterns.AsyncCallableReturnsNull;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
-import com.google.errorprone.bugpatterns.BadNestedImport;
+import com.google.errorprone.bugpatterns.BadImport;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
 import com.google.errorprone.bugpatterns.BooleanParameter;
@@ -476,7 +476,7 @@ public class BuiltInCheckerSuppliers {
           AssertionFailureIgnored.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
-          BadNestedImport.class,
+          BadImport.class,
           BoxedPrimitiveConstructor.class,
           ByteBufferBackingArray.class,
           CannotMockFinalClass.class,
