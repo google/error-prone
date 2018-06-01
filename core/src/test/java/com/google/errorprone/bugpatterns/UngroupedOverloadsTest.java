@@ -16,9 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneFlags;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +34,8 @@ public final class UngroupedOverloadsTest {
       CompilationTestHelper.newInstance(UngroupedOverloads.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new UngroupedOverloads(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(
+          new UngroupedOverloads(ErrorProneFlags.empty()), getClass());
 
   @Test
   public void ungroupedOverloadsPositiveCasesSingle() throws Exception {
@@ -52,6 +55,14 @@ public final class UngroupedOverloadsTest {
   @Test
   public void ungroupedOverloadsPositiveCasesCovering() throws Exception {
     compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesCovering.java").doTest();
+  }
+
+  @Test
+  public void ungroupedOverloadsPositiveCasesCoveringOnlyFirstOverload() throws Exception {
+    compilationHelper
+        .addSourceFile("UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst.java")
+        .setArgs(ImmutableList.of("-XepOpt:UngroupedOverloads:FindingsOnFirstOverload"))
+        .doTest();
   }
 
   @Test
