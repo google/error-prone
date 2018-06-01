@@ -17,9 +17,6 @@
 package com.google.errorprone;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.collect.ImmutableSet;
-import java.lang.annotation.Annotation;
-import java.util.Set;
 
 /**
  * Validates an {@code @BugPattern} annotation for wellformedness.
@@ -51,15 +48,6 @@ public class BugPatternValidator {
           throw new ValidationException("Expected no custom link but found: " + pattern.link());
         }
         break;
-    }
-
-    Set<Class<? extends Annotation>> customSuppressionAnnotations =
-        ImmutableSet.copyOf(pattern.suppressionAnnotations());
-    if (customSuppressionAnnotations.contains(SuppressWarnings.class)
-        && customSuppressionAnnotations.size() > 1) {
-      // TODO(cushon): there's not reason not to support using @SuppressWarnings together with
-      // custom annotations once the migration to suppressionAnnotations is done.
-      throw new ValidationException("Custom suppression annotation may not use @SuppressWarnings");
     }
   }
 }

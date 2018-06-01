@@ -172,7 +172,7 @@ public class BugPatternValidatorTest {
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
-    assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
+    BugPatternValidator.validate(annotation);
   }
 
   @Test
