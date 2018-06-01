@@ -44,6 +44,7 @@ final class FloatingPointAssertionWithinEpsilonPositiveCases {
     assertThat(1.0).isEqualTo(1.0);
     assertThat(1.0).isEqualTo(1d);
     assertThat(1e20).isEqualTo(1e20);
+    assertThat(0.1).isNotEqualTo((double) 0.1f);
     assertEquals(1.0, 1.0, 0);
     assertEquals("equal!", 1.0, 1.0, 0);
   }

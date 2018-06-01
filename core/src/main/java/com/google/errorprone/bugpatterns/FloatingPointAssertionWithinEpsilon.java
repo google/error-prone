@@ -95,8 +95,10 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
       }
 
       @Override
-      String suffixLiteralIfNecessary(String literal) {
-        return literal + "f";
+      Optional<String> suffixLiteralIfPossible(LiteralTree literal, VisitorState state) {
+        // If the value passed to #of was being converted to a float, we can make that explicit with
+        // an "f" qualifier.
+        return Optional.of(removeSuffixes(state.getSourceForNode(literal)) + "f");
       }
     },
     DOUBLE(
@@ -116,11 +118,20 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
       }
 
       @Override
-      String suffixLiteralIfNecessary(String literal) {
-        if (literal.contains(".")) {
-          return literal;
+      Optional<String> suffixLiteralIfPossible(LiteralTree literal, VisitorState state) {
+        String literalString = removeSuffixes(state.getSourceForNode(literal));
+        double asDouble;
+        try {
+          asDouble = Double.parseDouble(literalString);
+        } catch (NumberFormatException nfe) {
+          return Optional.empty();
         }
-        return literal + "d";
+        // We need to double-check that the value with a "d" suffix has the same value. For example,
+        // 0.1f != 0.1d, so must be replaced with (double) 0.1f
+        if (asDouble == ASTHelpers.constValue(literal, Number.class).doubleValue()) {
+          return Optional.of(literalString.contains(".") ? literalString : literalString + "d");
+        }
+        return Optional.empty();
       }
     };
 
@@ -154,7 +165,7 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
 
     abstract boolean isIntolerantComparison(Number tolerance, Number actual);
 
-    abstract String suffixLiteralIfNecessary(String literal);
+    abstract Optional<String> suffixLiteralIfPossible(LiteralTree literal, VisitorState state);
 
     private Optional<Description> match(
         BugChecker bugChecker, MethodInvocationTree tree, VisitorState state) {
@@ -242,12 +253,19 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
         return source;
       }
       if (tree instanceof LiteralTree) {
-        return suffixLiteralIfNecessary(source.replaceAll("[fFdDlL]$", ""));
+        Optional<String> suffixed = suffixLiteralIfPossible((LiteralTree) tree, state);
+        if (suffixed.isPresent()) {
+          return suffixed.get();
+        }
       }
       if (parenthesize(tree)) {
         return String.format("(%s) (%s)", typeName, source);
       }
       return String.format("(%s) %s", typeName, source);
+    }
+
+    static String removeSuffixes(String source) {
+      return source.replaceAll("[fFdDlL]$", "");
     }
 
     private static boolean parenthesize(ExpressionTree tree) {
