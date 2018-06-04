@@ -34,6 +34,7 @@ import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.Store;
 import org.checkerframework.dataflow.cfg.CFGVisualizer;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
+import org.checkerframework.javacutil.trees.DetachedVarSymbol;
 
 /**
  * Immutable map from each local variable to its {@link AbstractValue}. Note that, while the
@@ -168,7 +169,11 @@ public final class LocalStore<V extends AbstractValue<V>>
         element.getKind() == LOCAL_VARIABLE
             || element.getKind() == PARAMETER
             || element.getKind() == EXCEPTION_PARAMETER
-            || element.getKind() == RESOURCE_VARIABLE,
+            || element.getKind() == RESOURCE_VARIABLE
+            // The following is a workaround for b/80179088. DetachedVarSymbol is used for temp
+            // variables introduced into dataflow CFGs. These are always local variables, but can
+            // sometimes be reported as fields.
+            || element instanceof DetachedVarSymbol,
         "unexpected element type: %s (%s)",
         element.getKind(),
         element);
