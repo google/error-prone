@@ -111,4 +111,29 @@ public class StaticQualifiedUsingExpressionTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void superAccess() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass())
+        .addInputLines(
+            "I.java", //
+            "interface I {",
+            "  interface Builder {",
+            "    default void f() {}",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Test.java", //
+            "interface J extends I {",
+            "  interface Builder extends I.Builder {",
+            "    default void f() {}",
+            "    default void aI() {",
+            "      I.Builder.super.f();",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
