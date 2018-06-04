@@ -52,7 +52,7 @@ void approachIntersection(TrafficLightColour state) {
 The definition of control flow in [JLS §14.21] does not consider whether enum
 switches handle all cases, so in the example above javac will complain that
 `stop` is not definitely assigned. This is because adding constants to an enum
-is a binary compatble change (see [JLS §13.4.26]), so the spec allows for the
+is a binary compatible change (see [JLS §13.4.26]), so the spec allows for the
 possibility that `TrafficLightColour` is defined in another library, and after
 compiling our code we update to a new version of the library (without
 recompiling) that adds another colour of traffic light (say, `PURPLE`) that the

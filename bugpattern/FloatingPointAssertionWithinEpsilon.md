@@ -107,6 +107,9 @@ final class FloatingPointAssertionWithinEpsilonPositiveCases {
     // BUG: Diagnostic contains: 1.6e+04
     assertThat(1e20).isWithin(1).of(1e20);
 
+    // BUG: Diagnostic contains: 1.4e-17
+    assertThat(0.1).isNotWithin(TOLERANCE2).of(0.1f);
+
     // BUG: Diagnostic contains: 1.1e-16
     assertEquals(1.0, 1.0, TOLERANCE2);
     // BUG: Diagnostic contains: 1.1e-16
@@ -164,6 +167,7 @@ final class FloatingPointAssertionWithinEpsilonPositiveCases {
     assertThat(1.0).isEqualTo(1.0);
     assertThat(1.0).isEqualTo(1d);
     assertThat(1e20).isEqualTo(1e20);
+    assertThat(0.1).isNotEqualTo((double) 0.1f);
     assertEquals(1.0, 1.0, 0);
     assertEquals("equal!", 1.0, 1.0, 0);
   }

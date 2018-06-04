@@ -361,8 +361,8 @@ Classes that implement Annotation must override equals and hashCode. Consider us
 __[BadComparable](bugpattern/BadComparable)__<br>
 Possible sign flip from narrowing conversion
 
-__[BadNestedImport](bugpattern/BadNestedImport)__<br>
-Importing nested classes with commonly-used names can make code harder to read, because it may not be clear from the context exactly which type is being referred to. Qualifying the name with that of the containing class can make the code clearer.
+__[BadImport](bugpattern/BadImport)__<br>
+Importing nested classes/static methods/static fields with commonly-used names can make code harder to read, because it may not be clear from the context exactly which type is being referred to. Qualifying the name with that of the containing class can make the code clearer.
 
 __[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
 valueOf or autoboxing provides better time and space performance
