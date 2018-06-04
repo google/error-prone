@@ -58,7 +58,8 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
     }
     switch (sym.getKind()) {
       case FIELD:
-        if (sym.getSimpleName().contentEquals("class")) {
+        if (sym.getSimpleName().contentEquals("class")
+            || sym.getSimpleName().contentEquals("super")) {
           return NO_MATCH;
         }
         // fall through
