@@ -129,8 +129,9 @@ public class TypeParameterShadowing extends BugChecker
     return descriptionBuilder.build();
   }
 
-  private TypeParameterTree typeParameterInList(
-      List<? extends TypeParameterTree> typeParameters, TypeVariableSymbol v) {
+  // Package-private for TypeNameShadowing
+  static TypeParameterTree typeParameterInList(
+      List<? extends TypeParameterTree> typeParameters, Symbol v) {
     return typeParameters
         .stream()
         .filter(t -> t.getName().contentEquals(v.name))
@@ -138,10 +139,12 @@ public class TypeParameterShadowing extends BugChecker
   }
 
   private static final Pattern TRAILING_DIGIT_EXTRACTOR = Pattern.compile("^(.*?)(\\d+)$");
+
   // T -> T2
   // T2 -> T3
   // T -> T4 (if T2 and T3 already exist)
-  private String replacementTypeVarName(Name name, Set<String> superTypeVars) {
+  // Package-private for TypeNameShadowing
+  static String replacementTypeVarName(Name name, Set<String> superTypeVars) {
     String baseName = name.toString();
     int typeVarNum = 2;
 
