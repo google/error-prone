@@ -124,4 +124,18 @@ public class EqualsHashCodeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nopEqualsWithNullable() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "  public boolean equals(@Nullable Object o) {",
+            "    return super.equals(o);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
