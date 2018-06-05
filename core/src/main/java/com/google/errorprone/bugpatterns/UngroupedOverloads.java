@@ -26,6 +26,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -54,6 +55,13 @@ import javax.lang.model.element.Name;
     link = "https://google.github.io/styleguide/javaguide.html#s3.4.2.1-overloads-never-split"
     )
 public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
+
+  private final Boolean showFindingOnFirstOverloadOnly;
+
+  public UngroupedOverloads(ErrorProneFlags flags) {
+    showFindingOnFirstOverloadOnly =
+        flags.getBoolean("UngroupedOverloads:FindingsOnFirstOverload").orElse(false);
+  }
 
   @AutoValue
   abstract static class MemberWithIndex {
@@ -146,6 +154,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     // emit findings for each overload
     overloads
         .stream()
+        .limit(showFindingOnFirstOverloadOnly ? 1 : Long.MAX_VALUE)
         .forEach(
             o ->
                 state.reportMatch(

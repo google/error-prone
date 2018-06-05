@@ -72,6 +72,7 @@
         <directory>src/main/java</directory>
         <includes>
           <include>**/*.properties</include>
+          <include>**/*.binarypb</include>
         </includes>
       </resource>
     </resources>

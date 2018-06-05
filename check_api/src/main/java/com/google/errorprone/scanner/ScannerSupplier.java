@@ -150,6 +150,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     ImmutableBiMap<String, BugCheckerInfo> checks = getAllChecks();
     Map<String, SeverityLevel> severities = new LinkedHashMap<>(severities());
     Set<String> disabled = new HashSet<>(disabled());
+    Map<String, String> flagsMap = new HashMap<>(getFlags().getFlagsMap());
 
     if (errorProneOptions.isEnableAllChecksAsWarnings()) {
       disabled.forEach(c -> severities.put(c, SeverityLevel.WARNING));
@@ -217,11 +218,13 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
           }
         });
 
+    flagsMap.putAll(errorProneOptions.getFlags().getFlagsMap());
+
     return new ScannerSupplierImpl(
         checks,
         ImmutableMap.copyOf(severities),
         ImmutableSet.copyOf(disabled),
-        errorProneOptions.getFlags());
+        ErrorProneFlags.fromMap(flagsMap));
   }
 
   /**

@@ -17,20 +17,16 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+/** {@link EqualsHashCode}Test */
 @RunWith(JUnit4.class)
 public class EqualsHashCodeTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(EqualsHashCode.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(EqualsHashCode.class, getClass());
 
   @Test
   public void testPositiveCase() throws Exception {
@@ -112,6 +108,19 @@ public class EqualsHashCodeTest {
             "class Test {",
             "  @SuppressWarnings(\"EqualsHashCode\")",
             "  public boolean equals(Object o) { return false; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nopEquals() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public boolean equals(Object o) {",
+            "    return super.equals(o);",
+            "  }",
             "}")
         .doTest();
   }
