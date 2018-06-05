@@ -33,11 +33,13 @@ import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -51,6 +53,11 @@ public class ApiDiffCheckerTest {
   @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
   private final JavacFileManager fileManager =
       new JavacFileManager(new Context(), false, StandardCharsets.UTF_8);
+
+  @After
+  public void closeManager() throws IOException {
+    fileManager.close();
+  }
 
   /** An {@link ApiDiffChecker} for testing. */
   @BugPattern(name = "SampleChecker", severity = SeverityLevel.ERROR, summary = "")
