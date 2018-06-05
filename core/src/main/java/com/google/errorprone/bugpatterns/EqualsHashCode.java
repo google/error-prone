@@ -16,8 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
@@ -26,6 +28,7 @@ import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 
@@ -38,11 +41,14 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.List;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -58,7 +64,10 @@ import javax.lang.model.element.ElementKind;
     tags = StandardTags.FRAGILE_CODE)
 public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
 
-  private static final Matcher<MethodTree> EQUALS_MATCHER =
+  private static final Matcher<ExpressionTree> EQUALS_MATCHER =
+      instanceMethod().anyClass().named("equals").withParameters("java.lang.Object");
+
+  private static final Matcher<MethodTree> EQUALS_DECL_MATCHER =
       allOf(
           methodIsNamed("equals"),
           methodHasVisibility(PUBLIC),
@@ -70,7 +79,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
 
     TypeSymbol symbol = ASTHelpers.getSymbol(classTree);
     if (symbol.getKind() != ElementKind.CLASS) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     MethodTree equals = null;
@@ -79,14 +88,16 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
         continue;
       }
       MethodTree methodTree = (MethodTree) member;
-      if (EQUALS_MATCHER.matches(methodTree, state)) {
+      if (EQUALS_DECL_MATCHER.matches(methodTree, state)) {
         equals = methodTree;
       }
     }
     if (equals == null || isSuppressed(equals)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
-
+    if (callsSuperEquals(equals, state)) {
+      return NO_MATCH;
+    }
     MethodSymbol hashCodeSym =
         ASTHelpers.resolveExistingMethod(
             state,
@@ -95,9 +106,28 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
             ImmutableList.<Type>of(),
             ImmutableList.<Type>of());
 
-    if (hashCodeSym.owner.equals(state.getSymtab().objectType.tsym)) {
-      return describeMatch(equals);
+    if (!hashCodeSym.owner.equals(state.getSymtab().objectType.tsym)) {
+      return NO_MATCH;
     }
-    return Description.NO_MATCH;
+    return describeMatch(equals);
+  }
+
+  private static boolean callsSuperEquals(MethodTree method, VisitorState state) {
+    if (method.getBody() == null) {
+      return false;
+    }
+    List<? extends Tree> statements = method.getBody().getStatements();
+    if (statements.size() != 1) {
+      return false;
+    }
+    Tree statement = getOnlyElement(statements);
+    if (!(statement instanceof ReturnTree)) {
+      return false;
+    }
+    ExpressionTree expression = ((ReturnTree) statement).getExpression();
+    if (expression == null) {
+      return false;
+    }
+    return EQUALS_MATCHER.matches(expression, state);
   }
 }

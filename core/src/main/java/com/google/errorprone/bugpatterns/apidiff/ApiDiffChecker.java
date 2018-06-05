@@ -27,6 +27,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.tools.javac.code.Symbol;
@@ -35,19 +36,28 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import java.lang.annotation.Annotation;
+import java.util.Optional;
 
 /** A base Error Prone check implementation to enforce compliance with a given API diff. */
 public abstract class ApiDiffChecker extends BugChecker
     implements IdentifierTreeMatcher, MemberSelectTreeMatcher {
 
   private final ApiDiff apiDiff;
+  private final Optional<Class<? extends Annotation>> alsoForbidApisAnnotated;
 
   protected ApiDiffChecker(ApiDiff apiDiff) {
     this.apiDiff = apiDiff;
+    this.alsoForbidApisAnnotated = Optional.empty();
+  }
+
+  protected ApiDiffChecker(ApiDiff apiDiff, Class<? extends Annotation> alsoForbidApisAnnotated) {
+    this.apiDiff = apiDiff;
+    this.alsoForbidApisAnnotated = Optional.of(alsoForbidApisAnnotated);
   }
 
   @Override
-  public Description matchIdentifier(com.sun.source.tree.IdentifierTree tree, VisitorState state) {
+  public Description matchIdentifier(IdentifierTree tree, VisitorState state) {
     return check(tree, state);
   }
 
@@ -70,13 +80,14 @@ public abstract class ApiDiffChecker extends BugChecker
       return Description.NO_MATCH;
     }
     Types types = state.getTypes();
-    // check for diff information associated with the class
-    if (apiDiff.isClassUnsupported(Signatures.classDescriptor(receiver.type, types))) {
+    // check for information associated with the class
+    if (apiDiff.isClassUnsupported(Signatures.classDescriptor(receiver.type, types))
+        || classOrEnclosingClassIsForbiddenByAnnotation(receiver, state)) {
       return buildDescription(tree)
           .setMessage(String.format("%s is not available", receiver))
           .build();
     }
-    // check for fields and methods that are not present in the new API
+    // check for fields and methods that are not present in the old API
     if (!(sym instanceof VarSymbol || sym instanceof MethodSymbol)) {
       return Description.NO_MATCH;
     }
@@ -84,12 +95,30 @@ public abstract class ApiDiffChecker extends BugChecker
         ClassMemberKey.create(
             sym.getSimpleName().toString(), Signatures.descriptor(sym.type, types));
     ClassSymbol owner = sym.owner.enclClass();
-    if (apiDiff.isMemberUnsupported(Signatures.classDescriptor(owner.type, types), memberKey)) {
+    if (apiDiff.isMemberUnsupported(Signatures.classDescriptor(owner.type, types), memberKey)
+        || hasAnnotationForbiddingUse(sym, state)) {
       return buildDescription(tree)
           .setMessage(String.format("%s#%s is not available in %s", owner, sym, receiver))
           .build();
     }
     return Description.NO_MATCH;
+  }
+
+  private boolean classOrEnclosingClassIsForbiddenByAnnotation(Symbol clazz, VisitorState state) {
+    if (!alsoForbidApisAnnotated.isPresent()) {
+      return false;
+    }
+    for (; clazz instanceof ClassSymbol; clazz = clazz.owner) {
+      if (hasAnnotationForbiddingUse(clazz, state)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean hasAnnotationForbiddingUse(Symbol sym, VisitorState state) {
+    return alsoForbidApisAnnotated.isPresent()
+        && ASTHelpers.hasAnnotation(sym, alsoForbidApisAnnotated.get(), state);
   }
 
   /**

@@ -31,6 +31,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.jimfs.Jimfs;
 import com.google.common.truth.FailureMetadata;
+import com.google.common.truth.MapSubject;
 import com.google.common.truth.Subject;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern;
@@ -270,7 +271,22 @@ public class ScannerSupplierTest {
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(Collections.emptyList());
 
     ScannerSupplier overridden = ss.applyOverrides(epOptions);
-    assertThat(overridden.getFlags().isEmpty()).isTrue();
+    assertScanner(overridden).flagsMap().isEmpty();
+  }
+
+  @Test
+  public void applyOverridesHandlesErrorProneFlagsMerging() {
+    ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses();
+
+    ScannerSupplier overridden =
+        ss.applyOverrides(
+            ErrorProneOptions.processArgs(ImmutableList.of("-XepOpt:A:B", "-XepOpt:Foo=2")));
+    assertScanner(overridden).flagsMap().containsExactly("A:B", "true", "Foo", "2");
+
+    overridden =
+        overridden.applyOverrides(
+            ErrorProneOptions.processArgs(ImmutableList.of("-XepOpt:A:B=false", "-XepOpt:Bar=1")));
+    assertScanner(overridden).flagsMap().containsExactly("A:B", "false", "Foo", "2", "Bar", "1");
   }
 
   @Test
@@ -623,14 +639,18 @@ public class ScannerSupplierTest {
     }
 
     final void hasSeverities(Map<String, SeverityLevel> severities) {
-      check().that(getSubject().severities()).containsExactlyEntriesIn(severities);
+      check().that(actual().severities()).containsExactlyEntriesIn(severities);
     }
 
     @SafeVarargs
     final void hasEnabledChecks(Class<? extends BugChecker>... bugCheckers) {
       check()
-          .that(getSubject().getEnabledChecks())
+          .that(actual().getEnabledChecks())
           .containsExactlyElementsIn(getSuppliers(bugCheckers));
+    }
+
+    final MapSubject flagsMap() {
+      return check().that(actual().getFlags().getFlagsMap()).named("Flags map");
     }
   }
 
