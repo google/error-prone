@@ -60,9 +60,9 @@ public final class UnusedExceptionTest {
             "    try {",
             "    } catch (Exception e) {",
             "      if (equals(this)) {",
-            "        throw new RuntimeException();",
+            "        throw new RuntimeException(toString());",
             "      } else {",
-            "        throw new IllegalArgumentException();",
+            "        throw new RuntimeException();",
             "      }",
             "    }",
             "  }",
@@ -74,9 +74,9 @@ public final class UnusedExceptionTest {
             "    try {",
             "    } catch (Exception e) {",
             "      if (equals(this)) {",
-            "        throw new RuntimeException(e);",
+            "        throw new RuntimeException(toString(), e);",
             "      } else {",
-            "        throw new IllegalArgumentException(e);",
+            "        throw new RuntimeException(e);",
             "      }",
             "    }",
             "  }",
@@ -169,5 +169,31 @@ public final class UnusedExceptionTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void anonymousClass() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void test() {",
+            "    try {",
+            "    } catch (Exception e) {",
+            "      throw new RuntimeException() {};",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void test() {",
+            "    try {",
+            "    } catch (Exception e) {",
+            "      throw new RuntimeException(e) {};",
+            "    }",
+            "  }",
+            "}")
+        .doTest(TestMode.AST_MATCH);
   }
 }

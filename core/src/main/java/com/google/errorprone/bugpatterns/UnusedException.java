@@ -139,11 +139,8 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
       }
       if (typesEqual(proposedTypes.subList(0, types.size()), types, state)
           && state.getTypes().isAssignable(exception.type, getLast(proposedTypes))) {
-        int pos = state.getEndPosition(constructor);
-        String replacement =
-            String.format(
-                "%s%s)", types.isEmpty() ? "" : ", ", exception.getSimpleName().toString());
-        return Optional.of(SuggestedFix.replace(pos - 1, pos, replacement));
+        return Optional.of(
+            appendArgument(constructor, exception.getSimpleName().toString(), state, types));
       }
     }
     return Optional.empty();
@@ -153,6 +150,23 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
     return Streams.zip(
             typesA.stream(), typesB.stream(), (a, b) -> ASTHelpers.isSameType(a, b, state))
         .allMatch(x -> x);
+  }
+
+  private static SuggestedFix appendArgument(
+      NewClassTree constructor, String exception, VisitorState state, List<Type> types) {
+    if (types.isEmpty()) {
+      // Skip past the opening '(' of the constructor.
+
+      String source = state.getSourceForNode(constructor);
+      int startPosition = ((JCTree) constructor).getStartPosition();
+      int pos =
+          source.indexOf('(', state.getEndPosition(constructor.getIdentifier()) - startPosition)
+              + startPosition
+              + 1;
+      return SuggestedFix.replace(pos, pos, exception);
+    }
+    return SuggestedFix.postfixWith(
+        getLast(constructor.getArguments()), String.format(", %s", exception));
   }
 
   private static List<Type> getParameterTypes(MethodSymbol constructorSymbol) {
