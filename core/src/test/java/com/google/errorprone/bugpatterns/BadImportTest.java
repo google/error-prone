@@ -180,6 +180,22 @@ public final class BadImportTest {
   }
 
   @Test
+  public void negative_badImportIsTopLevelClass() {
+    compilationTestHelper
+        .addSourceLines(
+            "thing/thang/Builder.java", // Avoid rewrapping onto single line.
+            "package thing.thang;",
+            "public class Builder {}")
+        .addSourceLines(
+            "Test.java", // Avoid rewrapping onto single line.
+            "import thing.thang.Builder;",
+            "class Test {",
+            "  Builder builder;",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void test_nested_fixes() throws Exception {
     BugCheckerRefactoringTestHelper.newInstance(new BadImport(), getClass())
         .addInput("BadImportPositiveCases.java")
