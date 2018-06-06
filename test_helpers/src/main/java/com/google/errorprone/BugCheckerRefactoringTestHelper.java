@@ -185,6 +185,11 @@ public class BugCheckerRefactoringTestHelper {
     for (Map.Entry<JavaFileObject, JavaFileObject> entry : sources.entrySet()) {
       runTestOnPair(entry.getKey(), entry.getValue(), testMode);
     }
+    try {
+      fileManager.close();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+}
   }
 
   private BugCheckerRefactoringTestHelper addInputAndOutput(

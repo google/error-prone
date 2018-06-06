@@ -292,6 +292,11 @@ public class CompilationTestHelper {
           .that(result)
           .isEqualTo(expectedResult.get());
     }
+    try {
+    fileManager.close();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private Result compile(Iterable<JavaFileObject> sources, String[] args) {
