@@ -39,6 +39,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.util.Arrays;
@@ -93,6 +94,10 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       if (isAcceptableImport(symbol, BAD_STATIC_IDENTIFIERS)) {
         return Description.NO_MATCH;
       }
+    }
+
+    if (symbol.getEnclosingElement() instanceof PackageSymbol) {
+      return Description.NO_MATCH;
     }
 
     SuggestedFix.Builder builder =
