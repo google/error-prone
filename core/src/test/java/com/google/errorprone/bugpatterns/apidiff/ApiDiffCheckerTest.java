@@ -188,7 +188,7 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(newJar, originalJar))
+            .setClasspath(Arrays.asList(newJar))
             .compile();
 
     // This should be an error (the inherited A.f() is not backwards compatible), but we don't
@@ -247,7 +247,7 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(newJar, originalJar))
+            .setClasspath(Arrays.asList(newJar))
             .compile();
 
     assertWithMessage(result.errorOutput()).that(result.diagnostics()).isEmpty();
@@ -322,7 +322,7 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(newJar, originalJar))
+            .setClasspath(Arrays.asList(newJar))
             .compile();
 
     // This is actually OK, but we see it as a call to the newly-added A.f, and don't consider that
@@ -381,7 +381,7 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(newJar, originalJar))
+            .setClasspath(Arrays.asList(newJar))
             .compile();
 
     assertWithMessage(result.errorOutput()).that(result.diagnostics()).hasSize(1);
