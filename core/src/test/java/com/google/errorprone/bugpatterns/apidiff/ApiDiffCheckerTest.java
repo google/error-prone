@@ -55,7 +55,8 @@ public class ApiDiffCheckerTest {
       new JavacFileManager(new Context(), false, StandardCharsets.UTF_8);
 
   @After
-  public void closeManager() throws IOException {
+  public void closeManager() throws Exception {
+//    Thread.sleep(100000000);
     fileManager.close();
   }
 
