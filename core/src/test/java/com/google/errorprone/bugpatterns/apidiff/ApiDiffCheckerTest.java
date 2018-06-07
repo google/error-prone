@@ -133,7 +133,7 @@ public class ApiDiffCheckerTest {
             .setClasspath(Arrays.asList(newJar, originalJar))
             .compile();
 
-    assertThat(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
+    assertWithMessage(result.errorOutput()).that(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
         .contains("g() is not available in lib.Derived");
   }
 
@@ -197,7 +197,7 @@ public class ApiDiffCheckerTest {
 
     // This should be an error (the inherited A.f() is not backwards compatible), but we don't
     // detect newly added methods in newly added super types.
-    assertThat(result.diagnostics()).isEmpty();
+    assertWithMessage(result.errorOutput()).that(result.diagnostics()).isEmpty();
   }
 
   @Test
@@ -255,7 +255,7 @@ public class ApiDiffCheckerTest {
             .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar"), newJar))
             .compile();
 
-    assertThat(result.diagnostics()).isEmpty();
+    assertWithMessage(result.errorOutput()).that(result.diagnostics()).isEmpty();
   }
 
   @Test
@@ -334,8 +334,8 @@ public class ApiDiffCheckerTest {
     // This is actually OK, but we see it as a call to the newly-added A.f, and don't consider that
     // B.f is available in the old version of the API. It's not clear how to avoid this false
     // positive.
-    assertThat(result.diagnostics()).hasSize(1);
-    assertThat(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
+    assertWithMessage(result.errorOutput()).that(result.diagnostics()).hasSize(1);
+    assertWithMessage(result.errorOutput()).that(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
         .contains("lib.A#f() is not available in lib.C");
   }
 
@@ -391,8 +391,8 @@ public class ApiDiffCheckerTest {
             .setClasspath(Arrays.asList(newJar))
             .compile();
 
-    assertThat(result.diagnostics()).hasSize(1);
-    assertThat(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
+    assertWithMessage(result.errorOutput()).that(result.diagnostics()).hasSize(1);
+    assertWithMessage(result.errorOutput()).that(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
         .contains("lib.A#f() is not available in <anonymous Test$1>");
   }
 }
