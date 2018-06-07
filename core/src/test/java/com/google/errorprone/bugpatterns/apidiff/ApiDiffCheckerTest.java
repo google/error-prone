@@ -36,6 +36,7 @@ import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -111,6 +112,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie(); // fails
 
+    System.err.println(Files.readAllBytes(newJar));
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -171,6 +173,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
+    System.err.println(Files.readAllBytes(newJar));
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -229,6 +232,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
+    System.err.println(Files.readAllBytes(newJar));
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -303,6 +307,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
+    System.err.println(Files.readAllBytes(newJar));
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -359,6 +364,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
+    System.err.println(Files.readAllBytes(newJar));
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));

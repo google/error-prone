@@ -110,14 +110,15 @@ public class CompilationBuilderHelpers {
       DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
       StringWriter errorOutput = new StringWriter();
 
-      List<Path> cp = new ArrayList<>();
-      for (Path p : fileManager.getLocationAsPaths(StandardLocation.CLASS_PATH)) {
-        cp.add(p);
-      }
-      System.err.println("was " + cp);
-      cp.addAll(classpath);
-      System.err.println("now " + cp);
-      fileManager.setLocationFromPaths(StandardLocation.CLASS_PATH, cp);
+//      List<Path> cp = new ArrayList<>();
+//      for (Path p : fileManager.getLocationAsPaths(StandardLocation.CLASS_PATH)) {
+//        cp.add(p);
+//      }
+//      System.err.println("was " + cp);
+//      cp.addAll(classpath);
+//      System.err.println("now " + cp);
+//      fileManager.setLocationFromPaths(StandardLocation.CLASS_PATH, cp);
+      fileManager.setLocationFromPaths(StandardLocation.CLASS_PATH, classpath);
       fileManager.setLocationFromPaths(StandardLocation.SOURCE_PATH, Collections.<Path>emptyList());
       fileManager.setLocationFromPaths(
           StandardLocation.ANNOTATION_PROCESSOR_PATH, Collections.<Path>emptyList());
