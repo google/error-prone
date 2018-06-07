@@ -135,7 +135,7 @@ public class CompilationBuilderHelpers {
 
     CompilationResult compileOrDie() throws IOException {
       CompilationResult result = compile();
-      assertWithMessage("Compilation failed unexpectedly")
+      assertWithMessage("Compilation failed unexpectedly: %s", result.errorOutput())
           .that(result.ok())
           .named(Joiner.on('\n').join(result.diagnostics()))
           .isTrue();

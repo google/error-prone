@@ -107,7 +107,7 @@ public class ApiDiffCheckerTest {
                         "  public void g() {}",
                         "}")
                     .build())
-            .compileOutputToJarOrDie();
+            .compileOutputToJarOrDie(); // fails
 
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
@@ -185,7 +185,7 @@ public class ApiDiffCheckerTest {
                         "}")
                     .build())
             .setClasspath(Arrays.asList(newJar))
-            .compileOutputToJarOrDie();
+            .compileOutputToJarOrDie(); // fails
 
     // This should be an error (the inherited A.f() is not backwards compatible), but we don't
     // detect newly added methods in newly added super types.
@@ -242,7 +242,7 @@ public class ApiDiffCheckerTest {
                         "}")
                     .build())
             .setClasspath(Arrays.asList(newJar))
-            .compileOutputToJarOrDie();
+            .compileOutputToJarOrDie(); // fails
 
   }
 
@@ -315,7 +315,7 @@ public class ApiDiffCheckerTest {
                         "}")
                     .build())
             .setClasspath(Arrays.asList(newJar))
-            .compileOutputToJarOrDie();
+            .compileOutputToJarOrDie(); // fails
 
     // This is actually OK, but we see it as a call to the newly-added A.f, and don't consider that
     // B.f is available in the old version of the API. It's not clear how to avoid this false
@@ -370,7 +370,7 @@ public class ApiDiffCheckerTest {
                         "}")
                     .build())
             .setClasspath(Arrays.asList(newJar))
-            .compile();
+            .compileOutputToJarOrDie(); // oops, had forgotten to change this
 
   }
 }
