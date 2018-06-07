@@ -31,6 +31,7 @@ import static java.util.stream.Collectors.joining;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicates;
+import com.google.common.base.Verify;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -78,6 +79,8 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Options;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,6 +94,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nullable;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.ArrayType;
@@ -810,5 +814,59 @@ public class SuggestedFixes {
           }
         },
         null);
+  }
+
+  /**
+   * Create a fix to add a suppression annotation on the surrounding class.
+   *
+   * <p>No suggested fix is produced if the suppression annotation cannot be used on classes, i.e.
+   * the annotation has a {@code @Target} but does not include {@code @Target(TYPE)}.
+   *
+   * <p>If the suggested annotation is {@code DontSuggestFixes}, return empty.
+   */
+  public static Optional<SuggestedFix> suggestWhitelistAnnotation(
+      String whitelistAnnotation, TreePath where, VisitorState state) {
+    // TODO(bangert): Support annotations that do not have @Target(CLASS).
+    if (whitelistAnnotation.equals("com.google.errorprone.annotations.DontSuggestFixes")) {
+      return Optional.empty();
+    }
+
+    Tree whitelistLocation;
+    if (where.getLeaf() instanceof ClassTree) {
+      whitelistLocation = where.getLeaf();
+    } else {
+      whitelistLocation = ASTHelpers.findEnclosingNode(where, ClassTree.class);
+    }
+    if (whitelistLocation == null) {
+      return Optional.empty();
+    }
+
+    Type whitelistAnnotationType = state.getTypeFromString(whitelistAnnotation);
+    if (whitelistAnnotationType != null) {
+      if (!suggestedWhitelistAnnotationSupported(whitelistAnnotationType.asElement())) {
+        return Optional.empty();
+      }
+      SuggestedFix.Builder builder = SuggestedFix.builder();
+      String annotation = qualifyType(state, builder, whitelistAnnotationType);
+      return Optional.of(builder.prefixWith(whitelistLocation, "@" + annotation + " ").build());
+    } else {
+      // If we can't resolve the type, fall back to an approximation.
+      int idx = whitelistAnnotation.lastIndexOf('.');
+      Verify.verify(idx > 0 && idx + 1 < whitelistAnnotation.length());
+      String annotationName = whitelistAnnotation.substring(idx + 1);
+
+      return Optional.of(
+          SuggestedFix.builder()
+              .addImport(whitelistAnnotation)
+              .prefixWith(whitelistLocation, "@" + annotationName + " ")
+              .build());
+    }
+  }
+
+  /** Returns true iff {@code suggestWhitelistAnnotation()} supports this annotation. */
+  public static boolean suggestedWhitelistAnnotationSupported(Element whitelistAnnotation) {
+    Target targetAnnotation = whitelistAnnotation.getAnnotation(Target.class);
+    return targetAnnotation == null
+        || Arrays.asList(targetAnnotation.value()).contains(ElementType.TYPE);
   }
 }

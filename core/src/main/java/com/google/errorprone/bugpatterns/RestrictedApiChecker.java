@@ -18,30 +18,28 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.RestrictedApi;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.type.MirroredTypesException;
-import javax.lang.model.type.TypeMirror;
 
 /** Check for non-whitelisted callers to RestrictedApiChecker. */
 @BugPattern(
@@ -50,9 +48,30 @@ import javax.lang.model.type.TypeMirror;
     category = Category.ONE_OFF,
     severity = SeverityLevel.ERROR,
     suppressionAnnotations = {},
-    disableable = false)
+    disableable = false,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class RestrictedApiChecker extends BugChecker
-    implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
+    implements MethodInvocationTreeMatcher, NewClassTreeMatcher, AnnotationTreeMatcher {
+
+  /**
+   * Validates a {@code @RestrictedApi} annotation and that the declared restriction makes sense.
+   *
+   * <p>The other match functions in this class check the <em>usages</em> of a restricted API.
+   */
+  @Override
+  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    // TODO(bangert): Validate all the fields
+    if (!ASTHelpers.getSymbol(tree).toString().equals(RestrictedApi.class.getName())) {
+      return Description.NO_MATCH;
+    }
+    // TODO(bangert): make a more elegant API to get the annotation within an annotation tree.
+    // Maybe find the declared object and get annotations on that...
+    AnnotationMirror restrictedApi = ASTHelpers.getAnnotationMirror(tree);
+    if (restrictedApi == null) {
+      return Description.NO_MATCH;
+    }
+    return Description.NO_MATCH;
+  }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -117,49 +136,26 @@ public class RestrictedApiChecker extends BugChecker
     }
     SeverityLevel level = warn ? SeverityLevel.WARNING : SeverityLevel.ERROR;
 
-    return Description.builder(
-            where, restriction.checkerName(), restriction.link(), level, restriction.explanation())
-        .build();
+    Description.Builder description =
+        Description.builder(
+            where, restriction.checkerName(), restriction.link(), level, restriction.explanation());
+    return description.build();
   }
 
   // TODO(bangert): Memoize these if necessary.
   private static Matcher<Tree> shouldAllow(RestrictedApi api, VisitorState state) {
     try {
-      return anyAnnotation(api.whitelistAnnotations());
+      return Matchers.hasAnyAnnotation(api.whitelistAnnotations());
     } catch (MirroredTypesException e) {
-      return anyAnnotation(e.getTypeMirrors(), state);
+      return Matchers.hasAnyAnnotation(e.getTypeMirrors());
     }
   }
 
   private static Matcher<Tree> shouldAllowWithWarning(RestrictedApi api, VisitorState state) {
     try {
-      return anyAnnotation(api.whitelistWithWarningAnnotations());
+      return Matchers.hasAnyAnnotation(api.whitelistWithWarningAnnotations());
     } catch (MirroredTypesException e) {
-      return anyAnnotation(e.getTypeMirrors(), state);
+      return Matchers.hasAnyAnnotation(e.getTypeMirrors());
     }
-  }
-
-  private static Matcher<Tree> anyAnnotation(Class<? extends Annotation>[] annotations) {
-    ArrayList<Matcher<Tree>> matchers = new ArrayList<>(annotations.length);
-    for (Class<? extends Annotation> annotation : annotations) {
-      matchers.add(Matchers.hasAnnotation(annotation));
-    }
-    return Matchers.anyOf(matchers);
-  }
-
-  private static Matcher<Tree> anyAnnotation(
-      List<? extends TypeMirror> mirrors, VisitorState state) {
-    JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
-    ArrayList<Matcher<Tree>> matchers = new ArrayList<>(mirrors.size());
-    for (TypeMirror mirror : mirrors) {
-      TypeElement typeElem = (TypeElement) javacEnv.getTypeUtils().asElement(mirror);
-      String name = mirror.toString();
-      if (typeElem != null) {
-        // Get the binary name if possible ($ to separate nested members). See b/36160747
-        name = javacEnv.getElementUtils().getBinaryName(typeElem).toString();
-      }
-      matchers.add(Matchers.hasAnnotation(name));
-    }
-    return Matchers.anyOf(matchers);
   }
 }

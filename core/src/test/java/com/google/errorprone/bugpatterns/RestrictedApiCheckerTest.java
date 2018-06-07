@@ -165,7 +165,7 @@ public class RestrictedApiCheckerTest {
 
   // Regression test for b/36160747
   @Test
-  public void testAllowAllDefintionsInFile() {
+  public void testAllowAllDefinitionsInFile() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -193,4 +193,5 @@ public class RestrictedApiCheckerTest {
             "}")
         .doTest();
   }
+
 }
