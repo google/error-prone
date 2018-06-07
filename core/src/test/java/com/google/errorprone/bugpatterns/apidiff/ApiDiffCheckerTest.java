@@ -92,6 +92,7 @@ public class ApiDiffCheckerTest {
                         "public class Derived extends Base {",
                         "}")
                     .build())
+            .setClasspath(Arrays.asList("doesnotexist.jar")
             .compileOutputToJarOrDie();
 
     Path newJar =
@@ -148,6 +149,7 @@ public class ApiDiffCheckerTest {
                         "public class B {",
                         "}")
                     .build())
+            .setClasspath(Arrays.asList("doesnotexist.jar")
             .compileOutputToJarOrDie();
 
     Path newJar =
@@ -206,6 +208,7 @@ public class ApiDiffCheckerTest {
                         "  public void f() {}",
                         "}")
                     .build())
+            .setClasspath(Arrays.asList("doesnotexist.jar")
             .compileOutputToJarOrDie();
 
     Path newJar =
@@ -273,6 +276,7 @@ public class ApiDiffCheckerTest {
                         "public class C extends B {",
                         "}")
                     .build())
+            .setClasspath(Arrays.asList("doesnotexist.jar")
             .compileOutputToJarOrDie();
 
     Path newJar =
@@ -338,6 +342,7 @@ public class ApiDiffCheckerTest {
                         "public class A {",
                         "}")
                     .build())
+            .setClasspath(Arrays.asList("doesnotexist.jar")
             .compileOutputToJarOrDie();
 
     Path newJar =
