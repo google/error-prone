@@ -81,7 +81,7 @@ public class CompilationBuilderHelpers {
 
     private Collection<Path> sources = Collections.emptyList();
     private Collection<Path> classpath = Collections.emptyList();
-    private Iterable<String> javacopts = Collections.emptyList();
+    private Iterable<String> javacopts = Collections.singleton("-verbose");
 
     public CompilationBuilder(
         JavaCompiler compiler, File tempFolder, JavacFileManager fileManager) {
