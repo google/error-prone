@@ -128,6 +128,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -1192,6 +1193,9 @@ public class ErrorProneScanner extends Scanner {
   protected void handleError(Suppressible s, Throwable t) {
     if (t instanceof ErrorProneError) {
       throw (ErrorProneError) t;
+    }
+    if (t instanceof CompletionFailure) {
+      throw (CompletionFailure) t;
     }
     TreePath path = getCurrentPath();
     throw new ErrorProneError(
