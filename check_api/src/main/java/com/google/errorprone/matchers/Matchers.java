@@ -59,12 +59,14 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -74,6 +76,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 
 /**
  * Static factory methods which make the DSL read more fluently. Since matchers are run in a tight
@@ -751,6 +755,28 @@ public class Matchers {
   }
 
   /**
+   * Determines if an expression has an annotation referred to by the given mirror. Accounts for
+   * binary names and annotations inherited due to @Inherited.
+   *
+   * @param annotationMirror mirror referring to the annotation type
+   */
+  public static Matcher<Tree> hasAnnotation(TypeMirror annotationMirror) {
+    return new Matcher<Tree>() {
+      @Override
+      public boolean matches(Tree tree, VisitorState state) {
+        JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
+        TypeElement typeElem = (TypeElement) javacEnv.getTypeUtils().asElement(annotationMirror);
+        String name = annotationMirror.toString();
+        if (typeElem != null) {
+          // Get the binary name if possible ($ to separate nested members). See b/36160747
+          name = javacEnv.getElementUtils().getBinaryName(typeElem).toString();
+        }
+        return ASTHelpers.hasAnnotation(ASTHelpers.getDeclaredSymbol(tree), name, state);
+      }
+    };
+  }
+
+  /**
    * Determines whether an expression has an annotation with the given simple name. This does not
    * include annotations inherited from superclasses due to @Inherited.
    *
@@ -1422,6 +1448,22 @@ public class Matchers {
   public static Matcher<ClassTree> isDirectImplementationOf(String clazz) {
     Matcher<Tree> isProvidedType = isSameType(clazz);
     return new IsDirectImplementationOf(isProvidedType);
+  }
+
+  public static Matcher<Tree> hasAnyAnnotation(Class<? extends Annotation>... annotations) {
+    ArrayList<Matcher<Tree>> matchers = new ArrayList<>(annotations.length);
+    for (Class<? extends Annotation> annotation : annotations) {
+      matchers.add(hasAnnotation(annotation));
+    }
+    return anyOf(matchers);
+  }
+
+  public static Matcher<Tree> hasAnyAnnotation(List<? extends TypeMirror> mirrors) {
+    ArrayList<Matcher<Tree>> matchers = new ArrayList<>(mirrors.size());
+    for (TypeMirror mirror : mirrors) {
+      matchers.add(hasAnnotation(mirror));
+    }
+    return anyOf(matchers);
   }
 
   private static class IsDirectImplementationOf extends ChildMultiMatcher<ClassTree, Tree> {

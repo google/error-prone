@@ -87,6 +87,7 @@ import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Resolve;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotatedType;
+import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -1415,5 +1416,15 @@ public class ASTHelpers {
    */
   public static Stream<Attribute.Compound> getDeclarationAndTypeAttributes(Symbol sym) {
     return MoreAnnotations.getDeclarationAndTypeAttributes(sym);
+  }
+
+  /**
+   * Return a mirror of this annotation.
+   *
+   * @param annotationTree
+   * @return an {@code AnnotationMirror} for the annotation represented by {@code annotationTree}.
+   */
+  public static AnnotationMirror getAnnotationMirror(AnnotationTree annotationTree) {
+    return ((JCAnnotation) annotationTree).attribute;
   }
 }
