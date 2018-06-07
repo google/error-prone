@@ -94,12 +94,11 @@ public class ApiDiffCheckerTest {
                         "public class Derived extends Base {",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar")))
             .compileOutputToJarOrDie();
 
     Path newJar =
         new CompilationBuilder(JavacTool.create(), tempFolder.newFolder(), fileManager)
-            .setClasspath(Collections.singleton(originalJar))
+            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar"), originalJar))
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
                     .addSourceLines(
@@ -117,6 +116,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
+    final CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -131,8 +131,10 @@ public class ApiDiffCheckerTest {
                         "}")
                     .build())
             .setClasspath(Arrays.asList(newJar, originalJar))
-            .compileOutputToJarOrDie();
+            .compile();
 
+    assertThat(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
+        .contains("g() is not available in lib.Derived");
   }
 
   @Test
@@ -152,7 +154,6 @@ public class ApiDiffCheckerTest {
                         "public class B {",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar")))
             .compileOutputToJarOrDie();
 
     Path newJar =
@@ -178,6 +179,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
+    final CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -190,11 +192,12 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(newJar))
-            .compileOutputToJarOrDie(); // fails
+            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar"), newJar))
+            .compile();
 
     // This should be an error (the inherited A.f() is not backwards compatible), but we don't
     // detect newly added methods in newly added super types.
+    assertThat(result.diagnostics()).isEmpty();
   }
 
   @Test
@@ -212,7 +215,6 @@ public class ApiDiffCheckerTest {
                         "  public void f() {}",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar")))
             .compileOutputToJarOrDie();
 
     Path newJar =
@@ -237,6 +239,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
+    final CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -249,9 +252,10 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(newJar))
-            .compileOutputToJarOrDie(); // fails
+            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar"), newJar))
+            .compile();
 
+    assertThat(result.diagnostics()).isEmpty();
   }
 
   @Test
@@ -281,7 +285,6 @@ public class ApiDiffCheckerTest {
                         "public class C extends B {",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar")))
             .compileOutputToJarOrDie();
 
     Path newJar =
@@ -312,6 +315,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
+    final CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -324,12 +328,15 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(newJar))
-            .compileOutputToJarOrDie(); // fails
+            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar"), newJar))
+            .compile();
 
     // This is actually OK, but we see it as a call to the newly-added A.f, and don't consider that
     // B.f is available in the old version of the API. It's not clear how to avoid this false
     // positive.
+    assertThat(result.diagnostics()).hasSize(1);
+    assertThat(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
+        .contains("lib.A#f() is not available in lib.C");
   }
 
   @Test
@@ -348,7 +355,6 @@ public class ApiDiffCheckerTest {
                         "public class A {",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar")))
             .compileOutputToJarOrDie();
 
     Path newJar =
@@ -369,6 +375,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
+    final CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -382,7 +389,10 @@ public class ApiDiffCheckerTest {
                         "}")
                     .build())
             .setClasspath(Arrays.asList(newJar))
-            .compileOutputToJarOrDie(); // oops, had forgotten to change this
+            .compile();
 
+    assertThat(result.diagnostics()).hasSize(1);
+    assertThat(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
+        .contains("lib.A#f() is not available in <anonymous Test$1>");
   }
 }
