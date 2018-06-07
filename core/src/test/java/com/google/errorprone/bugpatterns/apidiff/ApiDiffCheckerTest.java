@@ -113,6 +113,7 @@ public class ApiDiffCheckerTest {
             .compileOutputToJarOrDie(); // fails
 
     System.err.println(Files.readAllBytes(newJar));
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { newJar.toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));

@@ -81,7 +81,8 @@ public class CompilationBuilderHelpers {
 
     private Collection<Path> sources = Collections.emptyList();
     private Collection<Path> classpath = Collections.emptyList();
-    private Iterable<String> javacopts = Arrays.asList("-verbose", "-Xlint:all", "-implicit:none");
+    private Iterable<String> javacopts = Collections.emptyList();
+//    private Iterable<String> javacopts = Arrays.asList("-verbose", "-Xlint:all", "-implicit:none");
 
     public CompilationBuilder(
         JavaCompiler compiler, File tempFolder, JavacFileManager fileManager) {
