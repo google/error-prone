@@ -164,7 +164,7 @@ public class CompilationBuilderHelpers {
               public FileVisitResult visitFile(Path path, BasicFileAttributes attrs)
                   throws IOException {
                 if (path.toString().endsWith(".class")) {
-                  jos.putNextEntry(new JarEntry(outputDir.relativize(path).toString()));
+                  jos.putNextEntry(new JarEntry(Joiner.on('/').join(outputDir.relativize(path))));
                   Files.copy(path, jos);
                 }
                 return FileVisitResult.CONTINUE;
