@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.TRUTH;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -51,7 +50,6 @@ import java.util.stream.Collectors;
 @BugPattern(
     name = "ProtoRedundantSet",
     summary = "A field on a protocol buffer was set twice in the same chained expression.",
-    category = TRUTH,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -95,7 +93,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
         PROTO_FLUENT_METHOD.matches(current, state);
         current = ASTHelpers.getReceiver(current)) {
       MethodInvocationTree method = (MethodInvocationTree) current;
-      if (!type.equals(ASTHelpers.getReturnType(current))) {
+      if (!ASTHelpers.isSameType(type, ASTHelpers.getReturnType(current), state)) {
         break;
       }
       Symbol symbol = ASTHelpers.getSymbol(current);
