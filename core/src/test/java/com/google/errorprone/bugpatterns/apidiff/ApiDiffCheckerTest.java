@@ -98,7 +98,7 @@ public class ApiDiffCheckerTest {
 
     Path newJar =
         new CompilationBuilder(JavacTool.create(), tempFolder.newFolder(), fileManager)
-            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar"), originalJar))
+            .setClasspath(Collections.singleton(originalJar))
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
                     .addSourceLines(
@@ -111,7 +111,8 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie(); // fails
 
-    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
+    System.err.println(Files.readAllBytes(newJar));
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { newJar.toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -174,7 +175,8 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
-    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
+    System.err.println(Files.readAllBytes(newJar));
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { newJar.toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -192,7 +194,7 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar"), newJar))
+            .setClasspath(Arrays.asList(newJar))
             .compile();
 
     // This should be an error (the inherited A.f() is not backwards compatible), but we don't
@@ -234,7 +236,8 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
-    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
+    System.err.println(Files.readAllBytes(newJar));
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { newJar.toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -252,7 +255,7 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar"), newJar))
+            .setClasspath(Arrays.asList(newJar))
             .compile();
 
     assertWithMessage(result.errorOutput()).that(result.diagnostics()).isEmpty();
@@ -310,7 +313,8 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
-    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
+    System.err.println(Files.readAllBytes(newJar));
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { newJar.toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -328,7 +332,7 @@ public class ApiDiffCheckerTest {
                         "  }",
                         "}")
                     .build())
-            .setClasspath(Arrays.asList(Paths.get("doesnotexist.jar"), newJar))
+            .setClasspath(Arrays.asList(newJar))
             .compile();
 
     // This is actually OK, but we see it as a call to the newly-added A.f, and don't consider that
@@ -370,7 +374,8 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
-    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
+    System.err.println(Files.readAllBytes(newJar));
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { newJar.toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
