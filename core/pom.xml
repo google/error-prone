@@ -381,6 +381,9 @@
           <!-- set heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
           <!-- put javac.jar on bootclasspath when executing tests -->
           <argLine>-Xmx1024m -Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</argLine>
+          <includes>
+            <include>%regex[com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.class]</include>
+          </includes>
         </configuration>
       </plugin>
       <plugin>
