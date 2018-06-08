@@ -111,7 +111,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie(); // fails
 
-    System.err.println(com.google.common.io.Files.asByteSource(newJar.toFile()).read());
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -174,7 +174,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
-    System.err.println(com.google.common.io.Files.asByteSource(newJar.toFile()).read());
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -234,7 +234,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
-    System.err.println(com.google.common.io.Files.asByteSource(newJar.toFile()).read());
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -310,7 +310,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
-    System.err.println(com.google.common.io.Files.asByteSource(newJar.toFile()).read());
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
@@ -370,7 +370,7 @@ public class ApiDiffCheckerTest {
                     .build())
             .compileOutputToJarOrDie();
 
-    System.err.println(com.google.common.io.Files.asByteSource(newJar.toFile()).read());
+    System.err.println(com.google.common.reflect.ClassPath.from(new java.net.URLClassLoader(new java.net.URL[] { Paths.get("C:\\Progra~1\\Java\\jdk1.8.0\\jre\\lib\\rt.jar").toUri().toURL() }, null)).getAllClasses());
     BaseErrorProneJavaCompiler errorProneCompiler =
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
