@@ -75,8 +75,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
       Iterable<String> classes,
       Iterable<? extends JavaFileObject> compilationUnits) {
     ErrorProneOptions errorProneOptions = ErrorProneOptions.processArgs(options);
-    List<String> remainingOptions = Arrays.asList(errorProneOptions.getRemainingArgs());
-    ImmutableList<String> javacOpts = ImmutableList.copyOf(remainingOptions);
+    ImmutableList<String> javacOpts = ImmutableList.copyOf(errorProneOptions.getRemainingArgs());
     javacOpts = defaultToLatestSupportedLanguageLevel(javacOpts);
     javacOpts = setCompilePolicyToByFile(javacOpts);
     final JavacTaskImpl task =
