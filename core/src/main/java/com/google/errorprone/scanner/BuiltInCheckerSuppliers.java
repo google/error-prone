@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
 import com.google.errorprone.bugpatterns.AnnotateFormatMethod;
+import com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayFillIncompatibleType;
 import com.google.errorprone.bugpatterns.ArrayHashCode;
@@ -475,6 +476,7 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
           AmbiguousMethodReference.class,
+          ArrayAsKeyOfSetOrMap.class,
           ArgumentSelectionDefectChecker.class,
           AssertEqualsArgumentOrderChecker.class,
           AssertThrowsMultipleStatements.class,
