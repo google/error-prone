@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -292,6 +292,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i17" class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#suggestedWhitelistAnnotationSupported-javax.lang.model.element.Element-">suggestedWhitelistAnnotationSupported</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;whitelistAnnotation)</code>
+<div class="block">Returns true iff <code>suggestWhitelistAnnotation()</code> supports this annotation.</div>
+</td>
+</tr>
+<tr id="i18" class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#suggestWhitelistAnnotation-java.lang.String-com.sun.source.util.TreePath-com.google.errorprone.VisitorState-">suggestWhitelistAnnotation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;whitelistAnnotation,
+                          com.sun.source.util.TreePath&nbsp;where,
+                          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Create a fix to add a suppression annotation on the surrounding class.</div>
+</td>
+</tr>
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#updateAnnotationArgumentValues-com.sun.source.tree.AnnotationTree-java.lang.String-java.util.Collection-">updateAnnotationArgumentValues</a></span>(com.sun.source.tree.AnnotationTree&nbsp;annotation,
                               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;parameterName,
@@ -602,7 +616,7 @@ public static&nbsp;<a href="../../../../com/google/errorprone/fixes/Fix.html" ti
 <a name="prettyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Type-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>prettyType</h4>
 <pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;prettyType(<a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
@@ -611,6 +625,33 @@ public static&nbsp;<a href="../../../../com/google/errorprone/fixes/Fix.html" ti
                                 <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
                                 com.sun.tools.javac.code.Type&nbsp;type)</pre>
 <div class="block">Pretty-prints a Type for use in fixes, qualifying any enclosed type names using <a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol-"><code>qualifyType(com.google.errorprone.VisitorState, com.google.errorprone.fixes.SuggestedFix.Builder, com.sun.tools.javac.code.Symbol)</code></a>}.</div>
+</li>
+</ul>
+<a name="suggestWhitelistAnnotation-java.lang.String-com.sun.source.util.TreePath-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>suggestWhitelistAnnotation</h4>
+<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestWhitelistAnnotation(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;whitelistAnnotation,
+                                                                com.sun.source.util.TreePath&nbsp;where,
+                                                                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block">Create a fix to add a suppression annotation on the surrounding class.
+
+ <p>No suggested fix is produced if the suppression annotation cannot be used on classes, i.e.
+ the annotation has a <code>@Target</code> but does not include <code>@Target(TYPE)</code>.
+
+ <p>If the suggested annotation is <code>DontSuggestFixes</code>, return empty.</div>
+</li>
+</ul>
+<a name="suggestedWhitelistAnnotationSupported-javax.lang.model.element.Element-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>suggestedWhitelistAnnotationSupported</h4>
+<pre>public static&nbsp;boolean&nbsp;suggestedWhitelistAnnotationSupported(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element">Element</a>&nbsp;whitelistAnnotation)</pre>
+<div class="block">Returns true iff <code>suggestWhitelistAnnotation()</code> supports this annotation.</div>
 </li>
 </ul>
 </li>

@@ -62,6 +62,9 @@ Incompatible type as argument to Object-accepting Java collections method
 __[ComparableType](bugpattern/ComparableType)__<br>
  Implementing &#39;Comparable&lt;T&gt;&#39; where T is not compatible with the implementing class.
 
+__[ComparingThisWithNull](bugpattern/ComparingThisWithNull)__<br>
+this == null is always false, this != null is always true
+
 __[ComparisonOutOfRange](bugpattern/ComparisonOutOfRange)__<br>
 Comparison to value that is out of range for the compared type
 
@@ -308,6 +311,9 @@ Calling toString on a Stream does not provide useful information
 __[StringBuilderInitWithChar](bugpattern/StringBuilderInitWithChar)__<br>
 StringBuilder does not have a char constructor; this invokes the int constructor.
 
+__[SubstringOfZero](bugpattern/SubstringOfZero)__<br>
+String.substring(0) returns the original String
+
 __[SuppressWarningsDeprecated](bugpattern/SuppressWarningsDeprecated)__<br>
 Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot;
 
@@ -345,6 +351,9 @@ Method reference is ambiguous
 
 __[ArgumentSelectionDefectChecker](bugpattern/ArgumentSelectionDefectChecker)__<br>
 Arguments are in the wrong order or could be commented for clarity.
+
+__[ArrayAsKeyOfSetOrMap](bugpattern/ArrayAsKeyOfSetOrMap)__<br>
+Arrays do not override equals() or hashCode, so comparisons will be done on reference equality only. If neither deduplication nor lookup are needed, consider using a List instead. Otherwise, use IdentityHashMap/Set, a Map from a library that handles object arrays, or an Iterable/List of pairs.
 
 __[AssertEqualsArgumentOrderChecker](bugpattern/AssertEqualsArgumentOrderChecker)__<br>
 Arguments are swapped in assertEquals-like call
@@ -799,6 +808,9 @@ String comparison using reference equality instead of value equality
 
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
+
+__[TypeNameShadowing](bugpattern/TypeNameShadowing)__<br>
+Type parameter declaration shadows another named type
 
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.

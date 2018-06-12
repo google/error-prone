@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -114,13 +114,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">RestrictedApiChecker</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></pre>
+implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotationTreeMatcher</a></pre>
 <div class="block">Check for non-whitelisted callers to RestrictedApiChecker.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -178,10 +178,17 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/RestrictedApiChecker.html#matchAnnotation-com.sun.source.tree.AnnotationTree-com.google.errorprone.VisitorState-">matchAnnotation</a></span>(com.sun.source.tree.AnnotationTree&nbsp;tree,
+               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Validates a <code>@RestrictedApi</code> annotation and that the declared restriction makes sense.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/RestrictedApiChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/RestrictedApiChecker.html#matchNewClass-com.sun.source.tree.NewClassTree-com.google.errorprone.VisitorState-">matchNewClass</a></span>(com.sun.source.tree.NewClassTree&nbsp;tree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
@@ -239,6 +246,23 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Met
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="matchAnnotation-com.sun.source.tree.AnnotationTree-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>matchAnnotation</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchAnnotation(com.sun.source.tree.AnnotationTree&nbsp;tree,
+                                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block">Validates a <code>@RestrictedApi</code> annotation and that the declared restriction makes sense.
+
+ <p>The other match functions in this class check the <em>usages</em> of a restricted API.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotationTreeMatcher.html#matchAnnotation-com.sun.source.tree.AnnotationTree-com.google.errorprone.VisitorState-">matchAnnotation</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.AnnotationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotationTreeMatcher</a></code></dd>
+</dl>
+</li>
+</ul>
 <a name="matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
