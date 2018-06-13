@@ -1188,18 +1188,36 @@ public class ASTHelpers {
 
     @Override
     public Type visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
+      Type variableType = getType(tree.getVariable());
+      Type expressionType = getType(tree.getExpression());
+      Types types = state.getTypes();
       switch (tree.getKind()) {
         case LEFT_SHIFT_ASSIGNMENT:
         case RIGHT_SHIFT_ASSIGNMENT:
         case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
           // Shift operators perform *unary* numeric promotion on the operands, separately.
           if (tree.getExpression().equals(current)) {
-            return unaryNumericPromotion(ASTHelpers.getType(current), state);
+            return unaryNumericPromotion(expressionType, state);
           }
-          // Fall through.
+          break;
+        case PLUS_ASSIGNMENT:
+          Type stringType = state.getSymtab().stringType;
+          if (types.isSameType(stringType, variableType)) {
+            return stringType;
+          }
+          break;
         default:
-          return getType(tree.getVariable());
+          // Fall though.
       }
+      // If we've got to here, we can only have boolean or numeric operands
+      // (because the only compound assignment operator for String is +=).
+
+      // These operands will necessarily be unboxed (and, if numeric, undergo binary numeric
+      // promotion), even if the resulting expression is of boxed type. As such, report the unboxed
+      // type.
+      return types.unboxedTypeOrType(variableType).getTag() == TypeTag.BOOLEAN
+          ? state.getSymtab().booleanType
+          : binaryNumericPromotion(variableType, expressionType, state);
     }
 
     @Override
