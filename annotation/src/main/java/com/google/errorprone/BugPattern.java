@@ -179,7 +179,9 @@ public @interface BugPattern {
     /** Errors specific to Protocol Buffers. */
     PROTOBUF,
     /** Errors specific to Truth. */
-    TRUTH;
+    TRUTH,
+    /** Errors specific to SLF4J. */
+    SLF4J;
   }
 
   /**
