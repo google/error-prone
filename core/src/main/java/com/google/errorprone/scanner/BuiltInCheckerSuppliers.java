@@ -245,6 +245,7 @@ import com.google.errorprone.bugpatterns.UnusedException;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.VarTypeName;
+import com.google.errorprone.bugpatterns.VariableNameSameAsType;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
@@ -574,6 +575,7 @@ public class BuiltInCheckerSuppliers {
           UnsynchronizedOverridesSynchronized.class,
           URLEqualsHashCode.class,
           UseCorrectAssertInTests.class,
+          VariableNameSameAsType.class,
           WaitNotInLoop.class,
           WakelockReleasedDangerously.class);
 
