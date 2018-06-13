@@ -317,6 +317,50 @@ class TargetTypeTest {
     return detectWrappedInteger().toString();
   }
 
+  void compoundAssignment_numeric(Integer i, int j, Long k) {
+    // BUG: Diagnostic contains: int
+    i /= detectWrappedInteger();
+
+    // BUG: Diagnostic contains: int
+    i *= (detectWrappedInteger());
+
+    // BUG: Diagnostic contains: int
+    j -= detectWrappedInteger();
+
+    // BUG: Diagnostic contains: long
+    k /= detectWrappedInteger();
+  }
+
+  void compoundAssignment_string(String s) {
+    // BUG: Diagnostic contains: java.lang.String
+    s += detectWrappedInteger();
+
+    // BUG: Diagnostic contains: java.lang.String
+    s += detectPrimitiveInt();
+  }
+
+  void compoundAssignment_boolean(boolean b) {
+    // BUG: Diagnostic contains: boolean
+    b &= detectWrappedBoolean();
+
+    // BUG: Diagnostic contains: boolean
+    b |= detectPrimitiveBoolean();
+  }
+
+  void concatenation(String s, Object a) {
+    // BUG: Diagnostic contains: java.lang.String
+    a = s + detectWrappedInteger();
+
+    // BUG: Diagnostic contains: java.lang.String
+    a = s + detectPrimitiveByte();
+
+    // BUG: Diagnostic contains: java.lang.String
+    a = s + detectVoid();
+
+    // BUG: Diagnostic contains: java.lang.String
+    a = s + detectStringArray();
+  }
+
   // Helper methods that we can search for.
   static byte detectPrimitiveByte() {
     return 0;
@@ -347,6 +391,10 @@ class TargetTypeTest {
   }
 
   static ThisEnum detectThisEnum() {
+    return null;
+  }
+
+  static Void detectVoid() {
     return null;
   }
 
