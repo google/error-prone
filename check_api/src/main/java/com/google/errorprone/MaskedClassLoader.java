@@ -28,7 +28,7 @@ import javax.tools.JavaFileManager;
 /**
  * A classloader that allows plugins to access the Error Prone classes from the compiler classpath.
  */
-// TODO(cushon): consolidate with Bazel's ClassLoaderMaskingPlugin
+// TODO(cushon): consolidate with Bazel's ClassloaderMaskingFileManager
 public class MaskedClassLoader extends ClassLoader {
 
   /**
