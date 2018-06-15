@@ -38,11 +38,14 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.tree.JCTree.Tag;
+import com.sun.tools.javac.util.Names;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -82,7 +85,8 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
    * Returns a list of type symbols in the scope enclosing {@code env} guaranteeing that, when two
    * symbols share a simple name, the shadower precedes the shadow-ee
    */
-  private static Iterable<Symbol> typesInEnclosingScope(Env<AttrContext> env) {
+  private static Iterable<Symbol> typesInEnclosingScope(
+      Env<AttrContext> env, PackageSymbol javaLang) {
     // Collect all visible type names declared in this source file by ascending lexical scopes
     // and excluding TypeVariableSymbols (otherwise, every type parameter spuriously shadows itself)
     Iterable<Symbol> localSymbolsInScope =
@@ -98,10 +102,11 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
             .collect(ImmutableList.toImmutableList());
 
     // Concatenate with all visible type names declared in other source files:
+    // Ignore wildcard imports here since we don't use them and they can cause issues (b/109867096)
     return Iterables.concat(
         localSymbolsInScope, // Local symbols
         env.toplevel.namedImportScope.getSymbols(), // Explicitly named imports
-        env.toplevel.starImportScope.getSymbols(), // Wildcard imports
+        javaLang.members().getSymbols(), // implicitly imported java.lang.* symbols
         env.toplevel.packge.members().getSymbols()); // Siblings in class hierarchy
   }
 
@@ -112,7 +117,12 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
     Env<AttrContext> env =
         Enter.instance(state.context)
             .getEnv(ASTHelpers.getSymbol(state.findEnclosing(ClassTree.class)));
-    Iterable<Symbol> enclosingTypes = typesInEnclosingScope(env);
+
+    Symtab symtab = state.getSymtab();
+    PackageSymbol javaLang =
+        symtab.enterPackage(symtab.java_base, Names.instance(state.context).java_lang);
+
+    Iterable<Symbol> enclosingTypes = typesInEnclosingScope(env, javaLang);
 
     List<Symbol> shadowedTypes =
         typeParameters
