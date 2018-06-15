@@ -170,19 +170,13 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void positiveStarImport() throws Exception {
+  public void positiveJavaLangCollision() throws Exception {
     compilationHelper
         .addSourceLines(
-            "a/T.java",
-            "package a;", //
-            "public class T {}")
-        .addSourceLines(
-            "b/Foo.java",
-            "package b;", //
-            "import a.*;",
-            "// BUG: Diagnostic contains: T shadows visible type a.T",
-            "class Foo<T> {",
-            "  void bar(T t) {}",
+            "Foo.java",
+            "// BUG: Diagnostic contains: Class shadows visible type java.lang.Class", //
+            "class Foo<Class> {",
+            "  void bar(Class c) {}",
             "}")
         .doTest();
   }
