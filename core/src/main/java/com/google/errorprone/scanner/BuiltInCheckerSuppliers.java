@@ -132,6 +132,7 @@ import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
+import com.google.errorprone.bugpatterns.MathRoundIntLong;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingDefault;
@@ -422,6 +423,7 @@ public class BuiltInCheckerSuppliers {
           JUnitAssertSameCheck.class,
           LiteByteStringUtf8.class,
           LoopConditionChecker.class,
+          MathRoundIntLong.class,
           MislabeledAndroidString.class,
           MissingSuperCall.class,
           MisusedWeekYear.class,
