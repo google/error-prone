@@ -38,7 +38,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.io.Files;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
-import com.google.errorprone.dataflow.LocalStore;
+import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.dataflow.LocalVariableValues;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
@@ -120,19 +120,18 @@ import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
  *   <li>We compute the nullability of each expression by applying rules that may reference only the
  *       nullability of <i>subexpressions</i>. We make the result available only to superexpressions
  *       (and to the {@linkplain Analysis#getValue final output of the analysis}).
- *   <li>We {@linkplain LocalVariableUpdates update} and {@linkplain LocalVariableValues read} the
- *       nullability of <i>variables</i> in a mapping that persists from node to node. This is the
- *       only exception to the rule that we propagate data from subexpression to superexpression
- *       only. The mapping is read only when visiting a {@link LocalVariableNode}. That is enough to
- *       give the {@code LocalVariableNode} a value that is then available to superexpressions.
+ *   <li>We {@linkplain Updates update} and {@linkplain LocalVariableValues read} the nullability of
+ *       <i>variables</i> in a mapping that persists from node to node. This is the only exception
+ *       to the rule that we propagate data from subexpression to superexpression only. The mapping
+ *       is read only when visiting a {@link LocalVariableNode}. That is enough to give the {@code
+ *       LocalVariableNode} a value that is then available to superexpressions.
  * </ol>
  *
  * <p>A further complication is that sometimes we know the nullability of an expression only
  * conditionally based on its result. For example, {@code foo == null} proves that {@code foo} is
  * null in the true case (such as inside {@code if (foo == null) { ... }}) and non-null in the false
  * case (such an inside an accompanying {@code else} block). This is handled by methods that accept
- * multiple {@link LocalVariableUpdates} instances, one for the true case and one for the false
- * case.
+ * multiple {@link Updates} instances, one for the true case and one for the false case.
  *
  * @author deminguyen@google.com (Demi Nguyen)
  */
@@ -333,10 +332,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   @Override
   Nullness visitInstanceOf(
-      InstanceOfNode node,
-      SubNodeValues inputs,
-      LocalVariableUpdates thenUpdates,
-      LocalVariableUpdates elseUpdates) {
+      InstanceOfNode node, SubNodeValues inputs, Updates thenUpdates, Updates elseUpdates) {
     setNonnullIfLocalVariable(thenUpdates, node.getOperand());
     return NONNULL; // the result of an instanceof is a primitive boolean, so it's non-null
   }
@@ -374,10 +370,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   @Override
   void visitEqualTo(
-      EqualToNode node,
-      SubNodeValues inputs,
-      LocalVariableUpdates thenUpdates,
-      LocalVariableUpdates elseUpdates) {
+      EqualToNode node, SubNodeValues inputs, Updates thenUpdates, Updates elseUpdates) {
     handleEqualityComparison(
         /* equalTo= */ true,
         node.getLeftOperand(),
@@ -389,10 +382,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   @Override
   void visitNotEqual(
-      NotEqualNode node,
-      SubNodeValues inputs,
-      LocalVariableUpdates thenUpdates,
-      LocalVariableUpdates elseUpdates) {
+      NotEqualNode node, SubNodeValues inputs, Updates thenUpdates, Updates elseUpdates) {
     handleEqualityComparison(
         /* equalTo= */ false,
         node.getLeftOperand(),
@@ -403,8 +393,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   @Override
-  Nullness visitAssignment(
-      AssignmentNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
+  Nullness visitAssignment(AssignmentNode node, SubNodeValues inputs, Updates updates) {
     Nullness value = inputs.valueOfSubNode(node.getExpression());
 
     Node target = node.getTarget();
@@ -466,7 +455,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * method. Instead, it will call {@link #visitAssignment}.
    */
   @Override
-  Nullness visitFieldAccess(FieldAccessNode node, LocalVariableUpdates updates) {
+  Nullness visitFieldAccess(FieldAccessNode node, Updates updates) {
     ClassAndField accessed = tryGetFieldSymbol(node.getTree());
     setReceiverNonnull(updates, node.getReceiver(), accessed);
     return fieldNullness(accessed);
@@ -479,8 +468,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * method. Instead, it will call {@link #visitAssignment}.
    */
   @Override
-  Nullness visitArrayAccess(
-      ArrayAccessNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
+  Nullness visitArrayAccess(ArrayAccessNode node, SubNodeValues inputs, Updates updates) {
     setNonnullIfLocalVariable(updates, node.getArray());
     return hasPrimitiveType(node) ? NONNULL : defaultAssumption;
   }
@@ -492,10 +480,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    */
   @Override
   Nullness visitMethodInvocation(
-      MethodInvocationNode node,
-      LocalVariableUpdates thenUpdates,
-      LocalVariableUpdates elseUpdates,
-      LocalVariableUpdates bothUpdates) {
+      MethodInvocationNode node, Updates thenUpdates, Updates elseUpdates, Updates bothUpdates) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree(), Types.instance(context));
     setReceiverNonnull(bothUpdates, node.getTarget().getReceiver(), callee);
     setUnconditionalArgumentNullness(bothUpdates, node.getArguments(), callee);
@@ -515,21 +500,20 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   @Override
-  Nullness visitArrayCreation(
-      ArrayCreationNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
+  Nullness visitArrayCreation(ArrayCreationNode node, SubNodeValues inputs, Updates updates) {
     return NONNULL;
   }
 
   @Override
   Nullness visitMemberReference(
-      FunctionalInterfaceNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
+      FunctionalInterfaceNode node, SubNodeValues inputs, Updates updates) {
     // TODO(kmb,cpovirk): Mark object member reference receivers as non-null
     return NONNULL; // lambdas and member references are never null :)
   }
 
   @Override
   void visitVariableDeclaration(
-      VariableDeclarationNode node, SubNodeValues inputs, LocalVariableUpdates updates) {
+      VariableDeclarationNode node, SubNodeValues inputs, Updates updates) {
     /*
      * We could try to handle primitives here instead of in visitLocalVariable, but it won't be
      * enough because we don't see method parameters here.
@@ -561,13 +545,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       Node leftNode,
       Node rightNode,
       SubNodeValues inputs,
-      LocalVariableUpdates thenUpdates,
-      LocalVariableUpdates elseUpdates) {
+      Updates thenUpdates,
+      Updates elseUpdates) {
     Nullness leftVal = inputs.valueOfSubNode(leftNode);
     Nullness rightVal = inputs.valueOfSubNode(rightNode);
     Nullness equalBranchValue = leftVal.greatestLowerBound(rightVal);
-    LocalVariableUpdates equalBranchUpdates = equalTo ? thenUpdates : elseUpdates;
-    LocalVariableUpdates notEqualBranchUpdates = equalTo ? elseUpdates : thenUpdates;
+    Updates equalBranchUpdates = equalTo ? thenUpdates : elseUpdates;
+    Updates notEqualBranchUpdates = equalTo ? elseUpdates : thenUpdates;
 
     if (leftNode instanceof LocalVariableNode) {
       LocalVariableNode localVar = (LocalVariableNode) leftNode;
@@ -709,7 +693,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
               ast,
               /* assumeAssertionsEnabled */ false, /* assumeAssertionsDisabled */
               false);
-      Analysis<Nullness, LocalStore<Nullness>, NullnessPropagationTransfer> analysis =
+      Analysis<Nullness, AccessPathStore<Nullness>, NullnessPropagationTransfer> analysis =
           new Analysis<>(javacEnv, this);
       analysis.performAnalysis(cfg);
       return analysis.getValue(initializerPath.getLeaf());
@@ -718,14 +702,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
-  private static void setReceiverNonnull(
-      LocalVariableUpdates updates, Node receiver, Member member) {
+  private static void setReceiverNonnull(Updates updates, Node receiver, Member member) {
     if (!member.isStatic()) {
       setNonnullIfLocalVariable(updates, receiver);
     }
   }
 
-  private static void setNonnullIfLocalVariable(LocalVariableUpdates updates, Node node) {
+  private static void setNonnullIfLocalVariable(Updates updates, Node node) {
     if (node instanceof LocalVariableNode) {
       updates.set((LocalVariableNode) node, NONNULL);
     }
@@ -737,7 +720,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * {@code foo} is not null.
    */
   private static void setUnconditionalArgumentNullness(
-      LocalVariableUpdates bothUpdates, List<Node> arguments, ClassAndMethod callee) {
+      Updates bothUpdates, List<Node> arguments, ClassAndMethod callee) {
     Set<Integer> requiredNonNullParameters = REQUIRED_NON_NULL_PARAMETERS.get(callee.name());
     for (LocalVariableNode var : variablesAtIndexes(requiredNonNullParameters, arguments)) {
       bothUpdates.set(var, NONNULL);
@@ -750,8 +733,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * Strings.isNullOrEmpty(s)} returns {@code false}, then {@code s} is not null.
    */
   private static void setConditionalArgumentNullness(
-      LocalVariableUpdates thenUpdates,
-      LocalVariableUpdates elseUpdates,
+      Updates thenUpdates,
+      Updates elseUpdates,
       List<Node> arguments,
       ClassAndMethod callee,
       Types types,

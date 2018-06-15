@@ -18,12 +18,12 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.dataflow.LocalStore;
+import com.google.errorprone.dataflow.AccessPath;
+import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.tools.javac.code.Symbol;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.lang.model.element.Element;
 import org.checkerframework.dataflow.cfg.UnderlyingAST;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 
@@ -60,18 +60,17 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
   }
 
   @Override
-  public LocalStore<Nullness> initialStore(
+  public AccessPathStore<Nullness> initialStore(
       UnderlyingAST underlyingAST, List<LocalVariableNode> parameters) {
     if (parameters == null) {
       // Documentation of this method states, "parameters is only set if the underlying AST is a
       // method"
-      return LocalStore.empty();
+      return AccessPathStore.empty();
     }
-    LocalStore.Builder<Nullness> result = LocalStore.<Nullness>empty().toBuilder();
+    AccessPathStore.Builder<Nullness> result = AccessPathStore.<Nullness>empty().toBuilder();
     for (LocalVariableNode param : parameters) {
-      Element element = param.getElement();
-      Nullness assumed = nullnessFromAnnotations((Symbol) element);
-      result.setInformation(element, assumed);
+      Nullness assumed = nullnessFromAnnotations((Symbol) param.getElement());
+      result.setInformation(AccessPath.fromLocalVariable(param), assumed);
     }
     return result.build();
   }
