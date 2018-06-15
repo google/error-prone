@@ -17,30 +17,71 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author endobson@google.com (Eric Dobson) */
+/**
+ * Tests for {@link BigDecimalLiteralDouble}.
+ *
+ * @author endobson@google.com (Eric Dobson)
+ */
 @RunWith(JUnit4.class)
 public class BigDecimalLiteralDoubleTest {
 
-  private CompilationTestHelper compilationHelper;
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(BigDecimalLiteralDouble.class, getClass());
 
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(BigDecimalLiteralDouble.class, getClass());
+  @Test
+  public void exactlyRepresentable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.math.BigDecimal;",
+            "class Test {",
+            "  void test() {",
+            "    new BigDecimal(\"99\");",
+            "    new BigDecimal(\"99.0\");",
+            "    new BigDecimal(123_459);",
+            "    new BigDecimal(123_456L);",
+            "    BigDecimal.valueOf(123);",
+            "    BigDecimal.valueOf(123L);",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
-    compilationHelper.addSourceFile("BigDecimalLiteralDoublePositiveCases.java").doTest();
-  }
-
-  @Test
-  public void testNegativeCase() throws Exception {
-    compilationHelper.addSourceFile("BigDecimalLiteralDoubleNegativeCases.java").doTest();
+  public void losesPrecision() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.math.BigDecimal;",
+            "class Test {",
+            "  void test() {",
+            "    // BUG: Diagnostic matches: A",
+            "    new BigDecimal(-0.012);",
+            "    // BUG: Diagnostic matches: B",
+            "    new BigDecimal(0.1f);",
+            "    // BUG: Diagnostic matches: C",
+            "    new BigDecimal(0.99);",
+            "  }",
+            "}")
+        .expectErrorMessage(
+            "A",
+            message ->
+                message.contains("-0.0120000000000000002498001805406602215953171253204345703125")
+                    && message.contains("new BigDecimal(\"-0.012\")"))
+        .expectErrorMessage(
+            "B",
+            message ->
+                message.contains("0.100000001490116119384765625")
+                    && message.contains("new BigDecimal(\"0.1\")"))
+        .expectErrorMessage(
+            "C",
+            message ->
+                message.contains("0.9899999999999999911182158029987476766109466552734375")
+                    && message.contains("new BigDecimal(\"0.99\")"))
+        .doTest();
   }
 }

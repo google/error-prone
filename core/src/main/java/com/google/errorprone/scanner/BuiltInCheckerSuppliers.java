@@ -485,6 +485,7 @@ public class BuiltInCheckerSuppliers {
           BadAnnotationImplementation.class,
           BadComparable.class,
           BadImport.class,
+          BigDecimalLiteralDouble.class,
           BoxedPrimitiveConstructor.class,
           ByteBufferBackingArray.class,
           CannotMockFinalClass.class,
@@ -588,7 +589,6 @@ public class BuiltInCheckerSuppliers {
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,
-          BigDecimalLiteralDouble.class,
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
           ClassName.class,
