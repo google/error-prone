@@ -16,151 +16,127 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
-import com.google.common.base.Optional;
-import com.google.common.primitives.Ints;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Optional;
 
-/** @author endobson@google.com (Eric Dobson) */
+/**
+ * Matches usages of {@code new BigDecimal(double)} which lose precision.
+ *
+ * @author endobson@google.com (Eric Dobson)
+ */
 @BugPattern(
     name = "BigDecimalLiteralDouble",
-    summary =
-        "BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, "
-            + "prefer BigDecimal(String) or BigDecimal(long)",
+    summary = "new BigDecimal(double) loses precision in this case.",
     category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
-public class BigDecimalLiteralDouble extends BugChecker
-    implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
+public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeMatcher {
+
+  private static final String ACTUAL_VALUE = " The exact value here is `new BigDecimal(\"%s\")`.";
 
   private static final BigInteger LONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
   private static final BigInteger LONG_MIN = BigInteger.valueOf(Long.MIN_VALUE);
 
   private static final String BIG_DECIMAL = BigDecimal.class.getName();
 
-  private static final Matcher<ExpressionTree> valueOfMethod =
-      staticMethod().onClass(BIG_DECIMAL).named("valueOf").withParameters("double");
-
-  private static final Matcher<ExpressionTree> constructor =
+  private static final Matcher<ExpressionTree> BIGDECIMAL_DOUBLE_CONSTRUCTOR =
       Matchers.constructor().forClass(BIG_DECIMAL).withParameters("double");
 
-  // Matches literals and unary +/- and a literal, since most people conceptually think of -1.0 as a
-  // literal. Doesn't handle nested unary operators as new BigDecimal(String) doesn't accept
-  // multiple unary prefixes.
-  private static final Matcher<ExpressionTree> literalArgument =
-      new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree tree, VisitorState state) {
-          if (tree.getKind() == Kind.UNARY_PLUS || tree.getKind() == Kind.UNARY_MINUS) {
-            tree = ((UnaryTree) tree).getExpression();
-          }
-          return tree.getKind() == Kind.DOUBLE_LITERAL;
+  // Matches literals and unary +/- followed by a literal, since most people conceptually think of
+  // -1.0 as a literal. Doesn't handle nested unary operators as new BigDecimal(String) doesn't
+  // accept multiple unary prefixes.
+  private static final Matcher<ExpressionTree> FLOATING_POINT_ARGUMENT =
+      (tree, state) -> {
+        if (tree.getKind() == Kind.UNARY_PLUS || tree.getKind() == Kind.UNARY_MINUS) {
+          tree = ((UnaryTree) tree).getExpression();
         }
+        return tree.getKind() == Kind.DOUBLE_LITERAL || tree.getKind() == Kind.FLOAT_LITERAL;
       };
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!valueOfMethod.matches(tree, state)) {
-      return Description.NO_MATCH;
-    }
-
-    ExpressionTree arg = tree.getArguments().get(0);
-    if (!literalArgument.matches(arg, state)) {
-      return Description.NO_MATCH;
-    }
-
-    // Don't suggest an integral replacement in this case as it may change the scale of the
-    // resulting BigDecimal.
-    return createDescription(tree, arg, state, /* suggestIntegral= */ false);
-  }
-
-  @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (!constructor.matches(tree, state)) {
+    if (!BIGDECIMAL_DOUBLE_CONSTRUCTOR.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
-    ExpressionTree arg = tree.getArguments().get(0);
-    if (!literalArgument.matches(arg, state)) {
+    ExpressionTree arg = getOnlyElement(tree.getArguments());
+    if (!FLOATING_POINT_ARGUMENT.matches(arg, state)) {
       return Description.NO_MATCH;
     }
 
-    return createDescription(tree, arg, state, /* suggestIntegral= */ true);
+    return createDescription(arg, state);
   }
 
-  public Description createDescription(
-      ExpressionTree tree, ExpressionTree arg, VisitorState state, boolean suggestIntegral) {
-    String literal = state.getSourceForNode(arg);
+  private Description createDescription(ExpressionTree arg, VisitorState state) {
+    Number literalNumber = ASTHelpers.constValue(arg, Number.class);
 
-    if (literal == null) {
-      return describeMatch(tree);
+    if (literalNumber == null) {
+      return Description.NO_MATCH;
+    }
+    Double literal = literalNumber.doubleValue();
+
+    // Strip off 'd', 'f' suffixes and _ separators from the source.
+    String literalString = state.getSourceForNode(arg).replaceAll("[_dDfF]", "");
+
+    // We assume that the expected value of `new BigDecimal(double)` is precisely the BigDecimal
+    // which stringifies to the same String as `double`'s literal.
+    BigDecimal intendedValue;
+    try {
+      intendedValue = new BigDecimal(literalString);
+    } catch (ArithmeticException e) {
+      return Description.NO_MATCH;
     }
 
-    // BigDecimal doesn't seem to support underscores or terminal Ds in its string parsing
-    literal = literal.replaceAll("[_dD]", "");
+    // Compute the actual BigDecimal produced by the expression, and bail if they're equivalent.
+    BigDecimal actualValue = new BigDecimal(literal);
+    if (actualValue.compareTo(intendedValue) == 0) {
+      return Description.NO_MATCH;
+    }
 
-    BigDecimal intendedValue = new BigDecimal(literal);
     Optional<BigInteger> integralValue = asBigInteger(intendedValue);
 
-    Description.Builder description = buildDescription(tree);
-    if (suggestIntegral && integralValue.isPresent() && isWithinLongRange(integralValue.get())) {
+    if (integralValue.map(BigDecimalLiteralDouble::isWithinLongRange).orElse(false)) {
       long longValue = integralValue.get().longValue();
-      String suggestedString;
-      switch (Ints.saturatedCast(longValue)) {
-        case 0:
-          suggestedString = "BigDecimal.ZERO";
-          break;
-        case 1:
-          suggestedString = "BigDecimal.ONE";
-          break;
-        case 10:
-          suggestedString = "BigDecimal.TEN";
-          break;
-        default:
-          suggestedString = "new BigDecimal(" + longValue + "L)";
-      }
-
-      description.addFix(
-          SuggestedFix.builder()
-              .addImport("java.math.BigDecimal")
-              .replace(tree, suggestedString)
-              .build());
+      return suggestReplacement(arg, actualValue, String.format("%sL", longValue));
     }
-    description.addFix(
-        SuggestedFix.builder()
-            .addImport("java.math.BigDecimal")
-            .replace(tree, "new BigDecimal(\"" + literal + "\")")
-            .build());
-    return description.build();
+    return suggestReplacement(arg, actualValue, String.format("\"%s\"", literalString));
   }
 
-  public static Optional<BigInteger> asBigInteger(BigDecimal v) {
+  private Description suggestReplacement(
+      ExpressionTree tree, BigDecimal actualValue, String replacement) {
+    return buildDescription(tree)
+        .setMessage(message() + String.format(ACTUAL_VALUE, actualValue))
+        .addFix(SuggestedFix.replace(tree, replacement))
+        .build();
+  }
+
+  private static Optional<BigInteger> asBigInteger(BigDecimal v) {
     try {
       return Optional.of(v.toBigIntegerExact());
     } catch (ArithmeticException e) {
-      return Optional.absent();
+      return Optional.empty();
     }
   }
 
-  private boolean isWithinLongRange(BigInteger v) {
+  private static boolean isWithinLongRange(BigInteger v) {
     return LONG_MIN.compareTo(v) <= 0 && v.compareTo(LONG_MAX) <= 0;
   }
 }

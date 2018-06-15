@@ -1,10 +1,16 @@
-BigDecimal has a two mechanisms for converting a double into a BigDecimal, new
-BigDecimal(double), and BigDecimal.valueOf(double). These methods are a possible
-source of precision loss if the number does not have an exact double
-representation. The new BigDecimal(String) and new BigDecimal(long) constructors
-should be prefered, as they do not require using a lossy argument.
+BigDecimal's `double` can lose precision in surprising ways.
 
-For example `0.1` cannot be exactly represented a double. Thus
-`new BigDecimal(.1)` represents the same bignum as
-`new BigDecimal("0.1000000000000000055511151231257827021181583404541015625")`
-and not `new BigDecimal(".1").
+```java {bad}
+  // these are the same:
+  new BigDecimal(0.1)
+  new BigDecimal("0.1000000000000000055511151231257827021181583404541015625")
+```
+
+Prefer the `BigDecimal.valueOf(double)` method or the `new BigDecimal(String)`
+constructor.
+
+NOTE `BigDecimal.valueOf(double)` does not suffer from the same problem; it is
+equivalent to `new BigDecimal(Double.valueOf(double))`, and while `0.1` is not
+exactly representable, `Double.valueOf(0.1)` yields `"0.1"`. As long as
+go/errorprone/bugpattern/FloatingPointLiteralPrecision doesn't generate a
+warning, `BigDecimal.valueOf` is safe.
