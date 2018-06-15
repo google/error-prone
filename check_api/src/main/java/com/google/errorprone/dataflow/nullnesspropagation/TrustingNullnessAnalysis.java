@@ -18,8 +18,8 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.dataflow.DataFlow;
-import com.google.errorprone.dataflow.LocalStore;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
@@ -115,7 +115,7 @@ public final class TrustingNullnessAnalysis implements Serializable {
           .setContext(context)
           .setCompilationUnit(fieldDeclPath.getCompilationUnit());
 
-      Analysis<Nullness, LocalStore<Nullness>, TrustingNullnessPropagation> analysis =
+      Analysis<Nullness, AccessPathStore<Nullness>, TrustingNullnessPropagation> analysis =
           new Analysis<>(javacEnv, nullnessPropagation);
       analysis.performAnalysis(cfg);
       return analysis.getValue(initializer);
