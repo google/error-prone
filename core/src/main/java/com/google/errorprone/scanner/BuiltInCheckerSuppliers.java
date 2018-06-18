@@ -223,6 +223,7 @@ import com.google.errorprone.bugpatterns.ThreeLetterTimeZoneID;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
 import com.google.errorprone.bugpatterns.ThrowNull;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
+import com.google.errorprone.bugpatterns.ToStringReturnsNull;
 import com.google.errorprone.bugpatterns.TruthAssertExpected;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
@@ -569,6 +570,7 @@ public class BuiltInCheckerSuppliers {
           ThreadJoinLoop.class,
           ThreadLocalUsage.class,
           ThreeLetterTimeZoneID.class,
+          ToStringReturnsNull.class,
           TruthAssertExpected.class,
           TruthConstantAsserts.class,
           TruthIncompatibleType.class,
