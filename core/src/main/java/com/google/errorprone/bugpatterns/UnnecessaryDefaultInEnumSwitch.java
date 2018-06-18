@@ -156,7 +156,15 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
         }
       }
     }
-    return describeMatch(defaultCase, fix);
+    Description.Builder description = buildDescription(defaultCase).addFix(fix);
+    if (!trivialDefault(defaultStatements)) {
+      description.setMessage(
+          "Switch handles all enum values: move code from the default case to execute after the "
+              + "switch statement, to enable checking for non-exhaustive switches. "
+              + "That is, prefer: `switch (...) { ... } throw new AssertionError();` to: "
+              + "`switch (...) { ... default: throw new AssertionError(); }`");
+    }
+    return description.build();
   }
 
   /** Returns true if the default is empty, or contains only a break statement. */
