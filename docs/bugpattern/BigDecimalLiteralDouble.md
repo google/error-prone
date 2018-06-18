@@ -12,5 +12,5 @@ constructor.
 NOTE `BigDecimal.valueOf(double)` does not suffer from the same problem; it is
 equivalent to `new BigDecimal(Double.valueOf(double))`, and while `0.1` is not
 exactly representable, `Double.valueOf(0.1)` yields `"0.1"`. As long as
-go/errorprone/bugpattern/FloatingPointLiteralPrecision doesn't generate a
-warning, `BigDecimal.valueOf` is safe.
+[FloatingPointLiteralPrecision](./FloatingPointLiteralPrecision) doesn't
+generate a warning, `BigDecimal.valueOf` is safe.
