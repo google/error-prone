@@ -204,4 +204,25 @@ public final class UngroupedOverloadsTest {
             "}")
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void diagnostic() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 8, 10, 12",
+            "  private void foo() {}",
+            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 8, 10, 12",
+            "  private void foo(int a) {}",
+            "  private void bar() {}",
+            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 3, 5",
+            "  private void foo(int a, int b) {}",
+            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 3, 5",
+            "  private void foo(int a, int b, int c) {}",
+            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 3, 5",
+            "  private void foo(int a, int b, int c, int d) {}",
+            "}")
+        .doTest();
+  }
 }
