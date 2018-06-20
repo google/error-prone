@@ -20,6 +20,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.dataflow.AccessPath;
 import com.google.errorprone.dataflow.AccessPathStore;
+import com.google.errorprone.dataflow.AccessPathValues;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.tools.javac.code.Symbol;
 import java.util.List;
@@ -76,13 +77,17 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
   }
 
   @Override
-  Nullness fieldNullness(@Nullable ClassAndField accessed) {
+  Nullness fieldNullness(
+      @Nullable ClassAndField accessed,
+      @Nullable AccessPath path,
+      AccessPathValues<Nullness> store) {
     if (accessed == null) {
       return Nullness.NONNULL; // optimistically assume non-null if we can't resolve
     }
-    // In the absence of annotations, this will do the right thing for things like primitives,
-    // array length, .class, etc.
-    return nullnessFromAnnotations(accessed.symbol);
+    // In the absence of annotations or dataflow information, this will do the right thing for
+    // things like primitives, array length, .class, etc.
+    Nullness defaultValue = nullnessFromAnnotations(accessed.symbol);
+    return store.valueOfAccessPath(path, defaultValue);
   }
 
   // TODO(b/79270313): consolidate hard-coded names of @Nullable annotations
