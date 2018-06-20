@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
@@ -59,6 +60,30 @@ public class ConstantFieldTest {
             "class Test {",
             "  // BUG: Diagnostic contains: 'Object constantCaseName = 42;'",
             "  Object CONSTANT_CASE_NAME = 42;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typo() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: PROJECT_DATA_SUBDIRECTORY",
+            "  private static final String PROJECT_DATA_SUBDIREcTORY = \".project\";",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void snakeCase() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: SNAKE_CASE_VARIABLE",
+            "  private static final String snake_case_variable = \"Kayla\";",
             "}")
         .doTest();
   }
