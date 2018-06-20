@@ -29,6 +29,9 @@ public class MisusedWeekYearNegativeCases {
 
     // Don't flag if the pattern contains "ww", the week-in-year specifier.
     simpleDateFormat = new SimpleDateFormat("YYYY-ww");
+    simpleDateFormat = new SimpleDateFormat("YY-ww");
+    simpleDateFormat = new SimpleDateFormat("Y-ww");
+    simpleDateFormat = new SimpleDateFormat("Yw");
   }
 
   void testLiteralPatternWithFolding() {

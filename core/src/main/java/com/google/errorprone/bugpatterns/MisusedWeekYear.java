@@ -133,9 +133,9 @@ public class MisusedWeekYear extends BugChecker
    */
   private Description constructDescription(Tree tree, ExpressionTree patternArg) {
     String pattern = (String) ASTHelpers.constValue((JCTree) patternArg);
-    if (pattern != null && pattern.contains("YYYY") && !pattern.contains("ww")) {
+    if (pattern != null && pattern.contains("Y") && !pattern.contains("w")) {
       if (patternArg.getKind() == Kind.STRING_LITERAL) {
-        String replacement = patternArg.toString().replace("YYYY", "yyyy");
+        String replacement = patternArg.toString().replace('Y', 'y');
         return describeMatch(tree, SuggestedFix.replace(patternArg, replacement));
       } else {
         return describeMatch(tree);
