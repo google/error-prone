@@ -23,6 +23,7 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropaga
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.dataflow.AccessPath;
 import com.google.errorprone.dataflow.AccessPathStore;
+import com.google.errorprone.dataflow.AccessPathValues;
 import com.google.errorprone.dataflow.LocalVariableValues;
 import java.util.HashMap;
 import java.util.List;
@@ -283,11 +284,12 @@ abstract class AbstractNullnessPropagationTransfer
   public final TransferResult<Nullness, AccessPathStore<Nullness>> visitFieldAccess(
       FieldAccessNode node, TransferInput<Nullness, AccessPathStore<Nullness>> input) {
     ReadableUpdates updates = new ReadableUpdates();
-    Nullness result = visitFieldAccess(node, updates);
+    Nullness result = visitFieldAccess(node, updates, input.getRegularStore());
     return updateRegularStore(result, input, updates);
   }
 
-  Nullness visitFieldAccess(FieldAccessNode node, Updates updates) {
+  Nullness visitFieldAccess(
+      FieldAccessNode node, Updates updates, AccessPathValues<Nullness> store) {
     return NULLABLE;
   }
 
@@ -1035,12 +1037,7 @@ abstract class AbstractNullnessPropagationTransfer
 
   private static SubNodeValues values(
       final TransferInput<Nullness, AccessPathStore<Nullness>> input) {
-    return new SubNodeValues() {
-      @Override
-      public Nullness valueOfSubNode(Node node) {
-        return input.getValueOfSubNode(node);
-      }
-    };
+    return input::getValueOfSubNode;
   }
 
   private static final class ResultingStore {

@@ -38,7 +38,9 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.io.Files;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
+import com.google.errorprone.dataflow.AccessPath;
 import com.google.errorprone.dataflow.AccessPathStore;
+import com.google.errorprone.dataflow.AccessPathValues;
 import com.google.errorprone.dataflow.LocalVariableValues;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
@@ -120,11 +122,12 @@ import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
  *   <li>We compute the nullability of each expression by applying rules that may reference only the
  *       nullability of <i>subexpressions</i>. We make the result available only to superexpressions
  *       (and to the {@linkplain Analysis#getValue final output of the analysis}).
- *   <li>We {@linkplain Updates update} and {@linkplain LocalVariableValues read} the nullability of
- *       <i>variables</i> in a mapping that persists from node to node. This is the only exception
- *       to the rule that we propagate data from subexpression to superexpression only. The mapping
- *       is read only when visiting a {@link LocalVariableNode}. That is enough to give the {@code
- *       LocalVariableNode} a value that is then available to superexpressions.
+ *   <li>We {@linkplain Updates update} and {@linkplain AccessPathValues read} the nullability of
+ *       <i>variables</i> and <i>access paths</i> in a mapping that persists from node to node. This
+ *       is the only exception to the rule that we propagate data from subexpression to
+ *       superexpression only. The mapping is read only when visiting a {@link LocalVariableNode} or
+ *       {@link FieldAccessNode}. That is enough to give the Node a value that is then available to
+ *       superexpressions.
  * </ol>
  *
  * <p>A further complication is that sometimes we know the nullability of an expression only
@@ -333,7 +336,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   @Override
   Nullness visitInstanceOf(
       InstanceOfNode node, SubNodeValues inputs, Updates thenUpdates, Updates elseUpdates) {
-    setNonnullIfLocalVariable(thenUpdates, node.getOperand());
+    setNonnullIfTrackable(thenUpdates, node.getOperand());
     return NONNULL; // the result of an instanceof is a primitive boolean, so it's non-null
   }
 
@@ -402,13 +405,22 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     if (target instanceof ArrayAccessNode) {
-      setNonnullIfLocalVariable(updates, ((ArrayAccessNode) target).getArray());
+      setNonnullIfTrackable(updates, ((ArrayAccessNode) target).getArray());
     }
 
     if (target instanceof FieldAccessNode) {
       FieldAccessNode fieldAccess = (FieldAccessNode) target;
-      ClassAndField targetField = tryGetFieldSymbol(target.getTree());
-      setReceiverNonnull(updates, fieldAccess.getReceiver(), targetField);
+      if (!fieldAccess.isStatic()) {
+        setNonnullIfTrackable(updates, fieldAccess.getReceiver());
+      }
+      /* NOTE: This transfer function makes the unsound assumption that the {@code fieldAccess}
+       * memory cell does not alias any element of other tracked access paths.  To be sound, we
+       * would have to "forget" all information about any access path that could contain an alias
+       * of {@code fieldAccess} in non-terminal position (by setting it to NULLABLE) and perform a
+       * weak update of {@code value} into any access path that could alias {@code fieldAccess} in
+       * full (by setting its value to the join of its current value and {@code value}).
+       */
+      updates.set(fieldAccess, value);
     }
 
     /*
@@ -449,16 +461,19 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   /**
    * Refines the receiver of a field access to type non-null after a successful field access, and
    * refines the value of the expression as a whole to non-null if applicable (e.g., if the field
-   * has a primitive type).
+   * has a primitive type or the {@code store}) has a non-null value for this access path.
    *
    * <p>Note: If the field access occurs when the node is an l-value, the analysis won't call this
    * method. Instead, it will call {@link #visitAssignment}.
    */
   @Override
-  Nullness visitFieldAccess(FieldAccessNode node, Updates updates) {
+  Nullness visitFieldAccess(
+      FieldAccessNode node, Updates updates, AccessPathValues<Nullness> store) {
+    if (!node.isStatic()) {
+      setNonnullIfTrackable(updates, node.getReceiver());
+    }
     ClassAndField accessed = tryGetFieldSymbol(node.getTree());
-    setReceiverNonnull(updates, node.getReceiver(), accessed);
-    return fieldNullness(accessed);
+    return fieldNullness(accessed, AccessPath.fromFieldAccess(node), store);
   }
 
   /**
@@ -469,7 +484,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    */
   @Override
   Nullness visitArrayAccess(ArrayAccessNode node, SubNodeValues inputs, Updates updates) {
-    setNonnullIfLocalVariable(updates, node.getArray());
+    setNonnullIfTrackable(updates, node.getArray());
     return hasPrimitiveType(node) ? NONNULL : defaultAssumption;
   }
 
@@ -477,12 +492,19 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * Refines the receiver of a method invocation to type non-null after successful invocation, and
    * refines the value of the expression as a whole to non-null if applicable (e.g., if the method
    * returns a primitive type).
+   *
+   * <p>NOTE: This transfer makes the unsound assumption that fields reachable via the actual params
+   * of this method invocation are not mutated by the callee. To be sound with respect to escaping
+   * mutable references in general, we would have to set to top (i.e. NULLABLE) any tracked access
+   * path that could contain an alias of an actual parameter of this invocation.
    */
   @Override
   Nullness visitMethodInvocation(
       MethodInvocationNode node, Updates thenUpdates, Updates elseUpdates, Updates bothUpdates) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree(), Types.instance(context));
-    setReceiverNonnull(bothUpdates, node.getTarget().getReceiver(), callee);
+    if (callee != null && !callee.isStatic) {
+      setNonnullIfTrackable(bothUpdates, node.getTarget().getReceiver());
+    }
     setUnconditionalArgumentNullness(bothUpdates, node.getArguments(), callee);
     setConditionalArgumentNullness(
         thenUpdates,
@@ -552,19 +574,19 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     Nullness equalBranchValue = leftVal.greatestLowerBound(rightVal);
     Updates equalBranchUpdates = equalTo ? thenUpdates : elseUpdates;
     Updates notEqualBranchUpdates = equalTo ? elseUpdates : thenUpdates;
+    AccessPath leftOperand = AccessPath.fromNodeIfTrackable(leftNode);
+    AccessPath rightOperand = AccessPath.fromNodeIfTrackable(rightNode);
 
-    if (leftNode instanceof LocalVariableNode) {
-      LocalVariableNode localVar = (LocalVariableNode) leftNode;
-      equalBranchUpdates.set(localVar, equalBranchValue);
+    if (leftOperand != null) {
+      equalBranchUpdates.set(leftOperand, equalBranchValue);
       notEqualBranchUpdates.set(
-          localVar, leftVal.greatestLowerBound(rightVal.deducedValueWhenNotEqual()));
+          leftOperand, leftVal.greatestLowerBound(rightVal.deducedValueWhenNotEqual()));
     }
 
-    if (rightNode instanceof LocalVariableNode) {
-      LocalVariableNode localVar = (LocalVariableNode) rightNode;
-      equalBranchUpdates.set(localVar, equalBranchValue);
+    if (rightOperand != null) {
+      equalBranchUpdates.set(rightOperand, equalBranchValue);
       notEqualBranchUpdates.set(
-          localVar, rightVal.greatestLowerBound(leftVal.deducedValueWhenNotEqual()));
+          rightOperand, rightVal.greatestLowerBound(leftVal.deducedValueWhenNotEqual()));
     }
   }
 
@@ -614,7 +636,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return null;
   }
 
-  Nullness fieldNullness(@Nullable ClassAndField accessed) {
+  Nullness fieldNullness(
+      ClassAndField accessed, @Nullable AccessPath path, AccessPathValues<Nullness> store) {
     if (accessed == null) {
       return defaultAssumption;
     }
@@ -642,8 +665,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         return initializer;
       }
     }
-
-    return defaultAssumption;
+    return (path == null) ? defaultAssumption : store.valueOfAccessPath(path, defaultAssumption);
   }
 
   private Nullness returnValueNullness(@Nullable ClassAndMethod callee) {
@@ -702,15 +724,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
-  private static void setReceiverNonnull(Updates updates, Node receiver, Member member) {
-    if (!member.isStatic()) {
-      setNonnullIfLocalVariable(updates, receiver);
-    }
-  }
-
-  private static void setNonnullIfLocalVariable(Updates updates, Node node) {
+  private static void setNonnullIfTrackable(Updates updates, Node node) {
     if (node instanceof LocalVariableNode) {
       updates.set((LocalVariableNode) node, NONNULL);
+    } else if (node instanceof FieldAccessNode) {
+      updates.set((FieldAccessNode) node, NONNULL);
+    } else if (node instanceof VariableDeclarationNode) {
+      updates.set((VariableDeclarationNode) node, NONNULL);
     }
   }
 
