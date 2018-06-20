@@ -25,6 +25,12 @@ public class MisusedWeekYearPositiveCases {
     // BUG: Diagnostic contains: new SimpleDateFormat("yyyy-MM-dd")
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
 
+    // BUG: Diagnostic contains: new SimpleDateFormat("yy-MM-dd")
+    simpleDateFormat = new SimpleDateFormat("YY-MM-dd");
+
+    // BUG: Diagnostic contains: new SimpleDateFormat("y-MM-dd")
+    simpleDateFormat = new SimpleDateFormat("Y-MM-dd");
+
     // BUG: Diagnostic contains: new SimpleDateFormat("yyyyMMdd_HHmm")
     simpleDateFormat = new SimpleDateFormat("YYYYMMdd_HHmm");
 
@@ -47,14 +53,38 @@ public class MisusedWeekYearPositiveCases {
 
   private static final String WEEK_YEAR_PATTERN = "YYYY";
 
+  private static final String WEEK_YEAR_PATTERN_2 = "YY";
+
+  private static final String WEEK_YEAR_PATTERN_3 = "Y";
+
   void testConstructorWithConstantPattern() {
     // BUG: Diagnostic contains:
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN);
   }
 
+  void testConstructorWithConstantPattern2() {
+    // BUG: Diagnostic contains:
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN_2);
+  }
+
+  void testConstructorWithConstantPattern3() {
+    // BUG: Diagnostic contains:
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN_3);
+  }
+
   void testConstructorWithConstantPatternWithFolding() {
     // BUG: Diagnostic contains:
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN + "-MM-dd");
+  }
+
+  void testConstructorWithConstantPatternWithFolding2() {
+    // BUG: Diagnostic contains:
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN_2 + "-MM-dd");
+  }
+
+  void testConstructorWithConstantPatternWithFolding3() {
+    // BUG: Diagnostic contains:
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WEEK_YEAR_PATTERN_3 + "-MM-dd");
   }
 
   void testApplyPatternAndApplyLocalizedPatternWithLiteralPattern() {
