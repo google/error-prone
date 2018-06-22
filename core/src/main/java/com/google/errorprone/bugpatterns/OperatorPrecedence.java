@@ -27,9 +27,12 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
 import com.sun.tools.javac.tree.TreeInfo;
 import java.util.EnumSet;
@@ -53,6 +56,9 @@ public class OperatorPrecedence extends BugChecker implements BinaryTreeMatcher 
   private static final EnumSet<Kind> ARITHMETIC =
       EnumSet.of(Kind.PLUS, Kind.MULTIPLY, Kind.DIVIDE, Kind.MINUS);
 
+  private static final EnumSet<Kind> SAFE_ASSOCIATIVE_OPERATORS =
+      EnumSet.of(Kind.CONDITIONAL_AND, Kind.CONDITIONAL_OR, Kind.PLUS);
+
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
@@ -66,18 +72,63 @@ public class OperatorPrecedence extends BugChecker implements BinaryTreeMatcher 
     if (!isConfusing(tree.getKind(), parent.getKind())) {
       return NO_MATCH;
     }
-    return describeMatch(
-        tree, SuggestedFix.builder().prefixWith(tree, "(").postfixWith(tree, ")").build());
+    return createAppropriateFix(tree, state);
   }
 
   private boolean isConfusing(Kind thisKind, Kind parentKind) {
     if (CONDITIONAL.contains(thisKind) && CONDITIONAL.contains(parentKind)) {
       return true;
     }
-    if ((SHIFT.contains(thisKind) && ARITHMETIC.contains(parentKind))
-        || (SHIFT.contains(parentKind) && ARITHMETIC.contains(thisKind))) {
-      return true;
+    return (SHIFT.contains(thisKind) && ARITHMETIC.contains(parentKind))
+        || (SHIFT.contains(parentKind) && ARITHMETIC.contains(thisKind));
+  }
+
+  private Description createAppropriateFix(BinaryTree tree, VisitorState state) {
+    // If our expression is like: (A && B) && C, replace it with (A && B && C) instead of
+    // ((A && B) && C)
+    return SAFE_ASSOCIATIVE_OPERATORS.contains(tree.getKind())
+            && tree.getLeftOperand() instanceof ParenthesizedTree
+                != tree.getRightOperand() instanceof ParenthesizedTree
+            && parenthesizedChildHasKind(tree, tree.getKind())
+        ? leftOrRightFix(tree, state)
+        : basicFix(tree);
+  }
+
+  private Description leftOrRightFix(BinaryTree tree, VisitorState state) {
+    int startPos;
+    int endPos;
+    String prefix = "(";
+    String postfix = ")";
+    if (tree.getRightOperand() instanceof ParenthesizedTree) {
+      startPos = ((JCTree) tree.getRightOperand()).getStartPosition();
+      endPos = ((JCTree) tree.getRightOperand()).getStartPosition() + 1;
+      postfix = "";
+    } else {
+      startPos = state.getEndPosition(tree.getLeftOperand()) - 1;
+      endPos = state.getEndPosition(tree.getLeftOperand());
+      prefix = "";
     }
-    return false;
+    return describeMatch(
+        tree,
+        SuggestedFix.builder()
+            .prefixWith(tree, prefix)
+            .replace(startPos, endPos, "")
+            .postfixWith(tree, postfix)
+            .build());
+  }
+
+  private Description basicFix(BinaryTree tree) {
+    return describeMatch(
+        tree, SuggestedFix.builder().prefixWith(tree, "(").postfixWith(tree, ")").build());
+  }
+
+  private static boolean parenthesizedChildHasKind(BinaryTree tree, Kind kind) {
+    Kind childKind =
+        ASTHelpers.stripParentheses(
+                tree.getLeftOperand() instanceof ParenthesizedTree
+                    ? tree.getLeftOperand()
+                    : tree.getRightOperand())
+            .getKind();
+    return childKind == kind;
   }
 }
