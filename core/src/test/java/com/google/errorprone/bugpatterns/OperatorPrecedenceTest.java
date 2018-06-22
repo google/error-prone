@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,9 @@ public class OperatorPrecedenceTest {
 
   private final CompilationTestHelper compilationTestHelper =
       CompilationTestHelper.newInstance(OperatorPrecedence.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper helper =
+      BugCheckerRefactoringTestHelper.newInstance(new OperatorPrecedence(), getClass());
 
   @Test
   public void positive() {
@@ -65,6 +69,124 @@ public class OperatorPrecedenceTest {
             "    boolean r = (a && b) || (!a && !b);",
             "    r = (a = a && b);",
             "    return r;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveNotSpecialParenthesisCase() throws Exception {
+    helper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
+            "    boolean r = a || (b && c) && (d && e);",
+            "    return r;",
+            "  }",
+            "  int f2(int a, int b, int c, int d) {",
+            "    int e = a << (b + c) + d;",
+            "    return e;",
+            "  }",
+            "  boolean f3(boolean a, boolean b, boolean c, boolean d, boolean e) {",
+            "    boolean r = a || b && c;",
+            "    return r;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
+            "    boolean r = a || ((b && c) && (d && e));",
+            "    return r;",
+            "  }",
+            "  int f2(int a, int b, int c, int d) {",
+            "    int e = a << (b + c + d);",
+            "    return e;",
+            "  }",
+            "  boolean f3(boolean a, boolean b, boolean c, boolean d, boolean e) {",
+            "    boolean r = a || (b && c);",
+            "    return r;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void extraParenthesis() throws Exception {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
+            "   boolean g = (a || (b && c && d) && e);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
+            "   boolean g = (a || (b && c && d && e));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void rightAndParenthesis() throws Exception {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d) {",
+            "   boolean g = a || b && (c && d);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d) {",
+            "   boolean g = a || (b && c && d);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void leftAndParenthesis() throws Exception {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d) {",
+            "   boolean g = a || (b && c) && d;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d) {",
+            "   boolean g = a || (b && c && d);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void aLotOfParenthesis() throws Exception {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
+            "   boolean g = (a || (b && c && d) && e);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
+            "   boolean g = (a || (b && c && d && e));",
             "  }",
             "}")
         .doTest();
