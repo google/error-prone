@@ -27,7 +27,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -58,21 +57,49 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
       allOf(
           MATH_ROUND_CALLS, argument(0, anyOf(isSameType("int"), isSameType("java.lang.Integer"))));
 
-  private static final Matcher<MethodInvocationTree> ROUND_CALLS_WITH_PRIMITIVE_LONG_ARG =
-      allOf(MATH_ROUND_CALLS, argument(0, isSameType("long")));
-
   private static final Matcher<MethodInvocationTree> ROUND_CALLS_WITH_LONG_ARG =
-      allOf(MATH_ROUND_CALLS, argument(0, isSameType("java.lang.Long")));
+      allOf(MATH_ROUND_CALLS, argument(0, anyOf(isSameType("long"), isSameType("java.lang.Long"))));
 
   private static final Matcher<MethodInvocationTree> ROUND_CALLS_WITH_INT_OR_LONG_ARG =
-      anyOf(
-          ROUND_CALLS_WITH_INT_ARG, ROUND_CALLS_WITH_PRIMITIVE_LONG_ARG, ROUND_CALLS_WITH_LONG_ARG);
+      anyOf(ROUND_CALLS_WITH_INT_ARG, ROUND_CALLS_WITH_LONG_ARG);
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     return ROUND_CALLS_WITH_INT_OR_LONG_ARG.matches(tree, state)
-        ? describeMatch(tree, removeMathRoundCall(tree, state))
+        ? removeMathRoundCall(tree, state)
         : Description.NO_MATCH;
+  }
+
+  private Description removeMathRoundCall(MethodInvocationTree tree, VisitorState state) {
+    if (ROUND_CALLS_WITH_INT_ARG.matches(tree, state)) {
+      return describeMatch(
+          tree, SuggestedFix.replace(tree, state.getSourceForNode(tree.getArguments().get(0))));
+    } else if (ROUND_CALLS_WITH_LONG_ARG.matches(tree, state)) {
+      if (state.getTypeFromString("com.google.common.primitives.Ints") != null) {
+        return describeMatch(
+            tree,
+            SuggestedFix.builder()
+                .addImport("com.google.common.primitives.Ints")
+                .prefixWith(tree, "Ints.saturatedCast(")
+                .replace(tree, state.getSourceForNode(tree.getArguments().get(0)))
+                .postfixWith(tree, ")")
+                .build());
+      } else {
+        return buildDescription(tree)
+            .setMessage(
+                "Calling Math.round() when the argument is an integer or a long can result "
+                    + "in a loss of information because it coerces the argument to a float before "
+                    + "rounding back to an int. We suggest replacing Math.round() with Guava's"
+                    + " Ints.saturatedCast(). Another suggestion is to cast to an integer but that "
+                    + " may cause other errors when dealing with large numbers.")
+            .addFix(
+                SuggestedFix.builder()
+                    .prefixWith(tree, castPrimitive(tree, state.getSourceForNode(tree)))
+                    .build())
+            .build();
+      }
+    }
+    throw new AssertionError("Unknown argument type to round call: " + tree);
   }
 
   private static String castPrimitive(Tree tree, String sourceForNode) {
@@ -85,25 +112,5 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
       openingBracket = closingBracket = "";
     }
     return String.format("%s%s%s", openingBracket, sourceForNode, closingBracket);
-  }
-
-  private static Fix removeMathRoundCall(MethodInvocationTree tree, VisitorState state) {
-    if (ROUND_CALLS_WITH_INT_ARG.matches(tree, state)) {
-      return SuggestedFix.replace(tree, state.getSourceForNode(tree.getArguments().get(0)));
-    } else if (ROUND_CALLS_WITH_PRIMITIVE_LONG_ARG.matches(tree, state)) {
-      return SuggestedFix.builder()
-          .replace(
-              tree,
-              castPrimitive(
-                  tree.getArguments().get(0), state.getSourceForNode(tree.getArguments().get(0))))
-          .prefixWith(tree, "(int) ")
-          .build();
-    } else if (ROUND_CALLS_WITH_LONG_ARG.matches(tree, state)) {
-      return SuggestedFix.builder()
-          .replace(tree, state.getSourceForNode(tree.getArguments().get(0)))
-          .postfixWith(tree, ".intValue()")
-          .build();
-    }
-    throw new AssertionError("Unknown argument type to round call: " + tree);
   }
 }

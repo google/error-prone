@@ -70,7 +70,7 @@ public class MathRoundIntLongTest {
   }
 
   @Test
-  public void deleteRoundMethodLong() throws Exception {
+  public void replaceRoundMethodLong() throws Exception {
     helper
         .addInputLines(
             "Test.java", //
@@ -82,17 +82,18 @@ public class MathRoundIntLongTest {
             "}")
         .addOutputLines(
             "Test.java", //
+            "import com.google.common.primitives.Ints;",
             "class Test {",
             "  void f() {",
             "    long l = 3L;",
-            "    int y = (int) l;",
+            "    int y = Ints.saturatedCast(l);",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void deleteRoundMethodLongClass() throws Exception {
+  public void replaceRoundMethodLongClass() throws Exception {
     helper
         .addInputLines(
             "Test.java", //
@@ -104,10 +105,11 @@ public class MathRoundIntLongTest {
             "}")
         .addOutputLines(
             "Test.java", //
+            "import com.google.common.primitives.Ints;",
             "class Test {",
             "  void f() {",
             "    Long l = new Long(\"3\");",
-            "    int y = l.intValue();",
+            "    int y = Ints.saturatedCast(l);",
             "  }",
             "}")
         .doTest();
@@ -144,10 +146,11 @@ public class MathRoundIntLongTest {
   }
 
   @Test
-  public void deleteRoundMethodAddParenthesis() throws Exception {
+  public void replaceRoundMethodAddParenthesis() throws Exception {
     helper
         .addInputLines(
             "Test.java", //
+            "import com.google.common.primitives.Ints;",
             "class Test {",
             "  void f() {",
             "    long l = 3L;",
@@ -157,11 +160,12 @@ public class MathRoundIntLongTest {
             "}")
         .addOutputLines(
             "Test.java", //
+            "import com.google.common.primitives.Ints;",
             "class Test {",
             "  void f() {",
             "    long l = 3L;",
             "    long x = 6L;",
-            "    int y = (int) (l/x);",
+            "    int y = Ints.saturatedCast(l/x);",
             "  }",
             "}")
         .doTest();
