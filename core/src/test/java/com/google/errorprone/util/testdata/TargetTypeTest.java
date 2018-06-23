@@ -17,8 +17,9 @@
 package com.google.errorprone.util.testdata;
 
 import java.io.Serializable;
+import java.util.List;
 
-class TargetTypeTest {
+abstract class TargetTypeTest {
   void unary() {
     System.out.println(
         // BUG: Diagnostic contains: boolean
@@ -361,6 +362,21 @@ class TargetTypeTest {
     a = s + detectStringArray();
   }
 
+  abstract <T> T id(T t);
+
+  abstract <T> List<T> list(List<T> t);
+
+  void generic() {
+    // BUG: Diagnostic contains: java.lang.String
+    String s = id(detectString());
+    // BUG: Diagnostic contains: java.lang.Integer
+    int i = id(detectPrimitiveInt());
+    // BUG: Diagnostic contains: java.util.List<java.lang.String>
+    List<String> y = id(detectStringList());
+    // BUG: Diagnostic contains: java.lang.Integer
+    Integer z = id(detectPrimitiveInt());
+  }
+
   // Helper methods that we can search for.
   static byte detectPrimitiveByte() {
     return 0;
@@ -395,6 +411,10 @@ class TargetTypeTest {
   }
 
   static Void detectVoid() {
+    return null;
+  }
+
+  static List<String> detectStringList() {
     return null;
   }
 
