@@ -1337,29 +1337,31 @@ public class ASTHelpers {
 
     @Override
     public Type visitNewClass(NewClassTree tree, Void unused) {
-      return visitMethodInvocationOrNewClass(tree.getArguments(), ASTHelpers.getSymbol(tree));
+      return visitMethodInvocationOrNewClass(
+          tree.getArguments(), ASTHelpers.getSymbol(tree), ((JCNewClass) tree).constructorType);
     }
 
     @Override
     public Type visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-      return visitMethodInvocationOrNewClass(tree.getArguments(), ASTHelpers.getSymbol(tree));
+      return visitMethodInvocationOrNewClass(
+          tree.getArguments(), ASTHelpers.getSymbol(tree), ((JCMethodInvocation) tree).meth.type);
     }
 
     private Type visitMethodInvocationOrNewClass(
-        List<? extends ExpressionTree> arguments, MethodSymbol sym) {
+        List<? extends ExpressionTree> arguments, MethodSymbol sym, Type type) {
       int idx = arguments.indexOf(current);
       if (idx == -1) {
         return null;
       }
-      if (sym.getParameters().size() <= idx) {
+      if (type.getParameterTypes().size() <= idx) {
         checkState(sym.isVarArgs());
-        idx = sym.getParameters().size() - 1;
+        idx = type.getParameterTypes().size() - 1;
       }
-      Type type = sym.getParameters().get(idx).asType();
-      if (sym.isVarArgs() && idx == sym.getParameters().size() - 1) {
-        type = state.getTypes().elemtype(type);
+      Type argType = type.getParameterTypes().get(idx);
+      if (sym.isVarArgs() && idx == type.getParameterTypes().size() - 1) {
+        argType = state.getTypes().elemtype(argType);
       }
-      return type;
+      return argType;
     }
 
     @Override
