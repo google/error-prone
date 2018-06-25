@@ -170,4 +170,24 @@ public class MathRoundIntLongTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void removeMathRoundLeaveParenthesisIfUnary() throws Exception {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  void f() {",
+            "    int y = Math.round(1 + 3) * 3;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  void f() {",
+            "    int y = (1 + 3) * 3;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
