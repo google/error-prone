@@ -31,7 +31,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 
 /**
@@ -49,14 +48,6 @@ public class ToStringReturnsNull extends BugChecker implements MethodTreeMatcher
 
   private static final Matcher<MethodTree> TO_STRING =
       allOf(Matchers.methodIsNamed("toString"), Matchers.methodHasParameters());
-
-  private static class ReturnNullMatcher implements Matcher<Tree> {
-    @Override
-    public boolean matches(Tree tree, VisitorState state) {
-      return tree instanceof ReturnTree
-          && ((ReturnTree) tree).getExpression().getKind() == NULL_LITERAL;
-    }
-  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
