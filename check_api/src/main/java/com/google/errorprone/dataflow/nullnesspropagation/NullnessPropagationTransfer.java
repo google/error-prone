@@ -18,11 +18,13 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.BOTTOM;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
+import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -77,8 +79,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 import org.checkerframework.dataflow.analysis.Analysis;
 import org.checkerframework.dataflow.cfg.CFGBuilder;
 import org.checkerframework.dataflow.cfg.ControlFlowGraph;
@@ -513,7 +524,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         callee,
         Types.instance(context),
         Symtab.instance(context));
-    return returnValueNullness(callee);
+    return returnValueNullness(callee, node);
   }
 
   @Override
@@ -665,15 +676,106 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         return initializer;
       }
     }
-    return (path == null) ? defaultAssumption : store.valueOfAccessPath(path, defaultAssumption);
+
+    // First, check the store for a dataflow-computed nullness value and return it if it exists
+    // Otherwise, check for nullness annotations on the field declaration
+    // If there are none, check for nullness annotations on generic type declarations
+    // If there are none, fall back to the defaultAssumption
+
+    Nullness dataflowResult = (path == null) ? BOTTOM : store.valueOfAccessPath(path, BOTTOM);
+
+    if (dataflowResult != BOTTOM) {
+      return dataflowResult;
+    }
+
+    java.util.Optional<Nullness> declaredNullness =
+        nullnessFromAnnotations(
+            MoreAnnotations.getDeclarationAndTypeAttributes(accessed.symbol)
+                .map(Object::toString)
+                .collect(Collectors.toList()));
+    return declaredNullness.orElseGet(
+        () ->
+            nullnessFromAnnotations(inheritedAnnotations(accessed.symbol.type))
+                .orElse(defaultAssumption));
   }
 
-  private Nullness returnValueNullness(@Nullable ClassAndMethod callee) {
+  private Nullness returnValueNullness(@Nullable ClassAndMethod callee, MethodInvocationNode node) {
     if (callee == null) {
       return defaultAssumption;
     }
+    java.util.Optional<Nullness> declaredNullness = nullnessFromAnnotations(callee.annotations);
+    if (declaredNullness.isPresent()) {
+      return declaredNullness.get();
+    }
 
-    return methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
+    // If there is no nullness annotation on the callee method declaration, look for applicable
+    // annotations inherited from elsewhere.
+    List<String> annotations =
+        ImmutableList.<String>builder()
+            .addAll(inheritedAnnotations(node.getTarget().getMethod().getReturnType()))
+            .addAll(
+                node.getType()
+                    .getAnnotationMirrors()
+                    .stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList()))
+            .build();
+
+    return nullnessFromAnnotations(annotations)
+        .orElse(methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE);
+  }
+
+  // TODO(bennostein): Support jsr305 @CheckForNull?
+  // See CF Manual 3.7.2 for discussion of its idiosyncracy/incompatibility
+  private static final Pattern ANNOTATION_RELEVANT_TO_NULLNESS =
+      Pattern.compile(".*\\.(Nullable(Decl)?|NotNull|Nonnull|NonNull)$");
+
+  private static final Pattern NULLABLE_ANNOTATION = Pattern.compile(".*\\.Nullable(Decl)?$");
+
+  private static java.util.Optional<Nullness> nullnessFromAnnotations(List<String> annotations) {
+    return annotations
+        .stream()
+        .filter(annot -> ANNOTATION_RELEVANT_TO_NULLNESS.matcher(annot).matches())
+        .map(annot -> NULLABLE_ANNOTATION.matcher(annot).matches() ? NULLABLE : NONNULL)
+        .reduce(Nullness::greatestLowerBound);
+  }
+
+  /**
+   * Gathers all type annotations that are applicable to this TypeMirror and its bounds but are not
+   * applied syntactically to its declaration. This includes:
+   *
+   * <ul>
+   *   <li>annotations on type parameters at type use, e.g. {@code List<@Nullable String> xs = ...}
+   *   <li>annotations on generic type declarations, e.g. {@code class MyClass<@Nullable T> {...} }
+   *   <li>bounds on the above, e.g. {@code class MyClass<T extends @Nullable MyOtherClass> {...} }
+   * </ul>
+   */
+  private static List<String> inheritedAnnotations(TypeMirror type) {
+    ImmutableSet.Builder<AnnotationMirror> inheritedAnnotations = ImmutableSet.builder();
+
+    // Annotations on type parameters at use-site
+    inheritedAnnotations.addAll(type.getAnnotationMirrors());
+
+    if (type.getKind() == TypeKind.TYPEVAR) {
+      TypeVariable typeVar = (TypeVariable) type;
+      // Annotations on bounds at type variable declaration
+      inheritedAnnotations.addAll(typeVar.getUpperBound().getAnnotationMirrors());
+      if (typeVar.asElement().getKind() == TYPE_PARAMETER) {
+        Element genericElt = ((TypeParameterElement) typeVar.asElement()).getGenericElement();
+        if (genericElt.getKind().isClass() || genericElt.getKind().isInterface()) {
+          ((TypeElement) genericElt)
+              .getTypeParameters()
+              .stream()
+              .filter(
+                  typeParam ->
+                      typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
+              .findFirst()
+              // Annotations at class/interface type variable declaration
+              .ifPresent(decl -> inheritedAnnotations.addAll(decl.getAnnotationMirrors()));
+        }
+      }
+    }
+    return inheritedAnnotations.build().stream().map(Object::toString).collect(Collectors.toList());
   }
 
   @Nullable
@@ -713,8 +815,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
               initializerPath,
               javacEnv,
               ast,
-              /* assumeAssertionsEnabled */ false, /* assumeAssertionsDisabled */
-              false);
+              /*assumeAssertionsEnabled=*/ false,
+              /*assumeAssertionsDisabled=*/ false);
       Analysis<Nullness, AccessPathStore<Nullness>, NullnessPropagationTransfer> analysis =
           new Analysis<>(javacEnv, this);
       analysis.performAnalysis(cfg);

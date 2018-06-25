@@ -47,9 +47,9 @@ import org.checkerframework.javacutil.TreeUtils;
 public abstract class AccessPath {
 
   /** If present, base of access path is contained Element; if absent, base is `this` */
-  abstract @Nullable Element base();
+  public abstract @Nullable Element base();
   // TODO(b/110226434): Support getters (or arbitrary nullary pure methods) as well as fields?
-  abstract ImmutableList<String> fields();
+  public abstract ImmutableList<String> fields();
 
   private static AccessPath create(@Nullable Element base, ImmutableList<String> fields) {
     return new AutoValue_AccessPath(base, fields);
