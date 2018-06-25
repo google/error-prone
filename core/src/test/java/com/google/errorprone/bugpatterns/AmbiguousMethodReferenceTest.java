@@ -50,6 +50,27 @@ public class AmbiguousMethodReferenceTest {
   }
 
   @Test
+  public void moreThan1PublicMethod() {
+    testHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  interface B {}",
+            "  interface C {}",
+            "  interface D {}",
+            "",
+            "  // BUG: Diagnostic contains: c(A, D)",
+            "  public B c(D d) {",
+            "    return null;",
+            "  }",
+            "  public static B c(A a, D d) {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void suppressedAtClass() {
     testHelper
         .addSourceLines(
@@ -128,6 +149,46 @@ public class AmbiguousMethodReferenceTest {
             "    return null;",
             "  }",
             "  static B d(A a, D d) {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativePrivateMethods() {
+    testHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  interface B {}",
+            "  interface C {}",
+            "  interface D {}",
+            "",
+            "  private B c(D d) {",
+            "    return null;",
+            "  }",
+            "  private static B c(A a, D d) {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void only1PublicMethod() {
+    testHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  interface B {}",
+            "  interface C {}",
+            "  interface D {}",
+            "",
+            "  private B c(D d) {",
+            "    return null;",
+            "  }",
+            "  public static B c(A a, D d) {",
             "    return null;",
             "  }",
             "}")
