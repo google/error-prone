@@ -168,6 +168,7 @@ import com.google.errorprone.bugpatterns.NullablePrimitive;
 import com.google.errorprone.bugpatterns.NullableVoid;
 import com.google.errorprone.bugpatterns.NumericEquality;
 import com.google.errorprone.bugpatterns.ObjectToString;
+import com.google.errorprone.bugpatterns.ObjectsHashCodePrimitive;
 import com.google.errorprone.bugpatterns.OperatorPrecedence;
 import com.google.errorprone.bugpatterns.OptionalEquality;
 import com.google.errorprone.bugpatterns.OptionalNotPresent;
@@ -547,6 +548,7 @@ public class BuiltInCheckerSuppliers {
           NullableConstructor.class,
           NullablePrimitive.class,
           NullableVoid.class,
+          ObjectsHashCodePrimitive.class,
           ObjectToString.class,
           OperatorPrecedence.class,
           OptionalNotPresent.class,
