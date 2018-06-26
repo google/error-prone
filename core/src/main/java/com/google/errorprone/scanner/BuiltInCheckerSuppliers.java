@@ -217,6 +217,7 @@ import com.google.errorprone.bugpatterns.SubstringOfZero;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
+import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
 import com.google.errorprone.bugpatterns.ThreadLocalUsage;
@@ -662,6 +663,7 @@ public class BuiltInCheckerSuppliers {
           StaticOrDefaultInterfaceMethod.class,
           StringEquality.class,
           SwitchDefault.class,
+          SystemExitOutsideMain.class,
           TestExceptionChecker.class,
           ThrowsUncheckedException.class,
           TypeParameterNaming.class,
