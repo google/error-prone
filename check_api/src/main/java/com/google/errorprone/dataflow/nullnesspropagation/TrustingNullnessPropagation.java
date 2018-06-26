@@ -87,7 +87,7 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     // In the absence of annotations or dataflow information, this will do the right thing for
     // things like primitives, array length, .class, etc.
     Nullness defaultValue = nullnessFromAnnotations(accessed.symbol);
-    return store.valueOfAccessPath(path, defaultValue);
+    return (path == null) ? defaultValue : store.valueOfAccessPath(path, defaultValue);
   }
 
   // TODO(b/79270313): consolidate hard-coded names of @Nullable annotations
