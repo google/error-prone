@@ -214,6 +214,8 @@ public class ImmutableEnumCheckerTest {
             "Test.java", //
             "enum Test {",
             "  ONE;",
+            "  // BUG: Diagnostic contains:"
+                + " not annotated with @com.google.errorprone.annotations.Immutable",
             "  final Lib l = new Lib();",
             "}")
         .doTest();
