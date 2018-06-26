@@ -534,6 +534,27 @@ public class ReturnMissingNullableTest {
         .doTest();
   }
 
+  // Regression test for b/110812469; verifies that untracked access paths that mix field access
+  // and method invocation are "trusted" to yield nonNull values
+  @Test
+  public void testNegativeCases_mixedMethodFieldAccessPath() throws Exception {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nonnull;",
+            "public class MissingNullableReturnTest {",
+            "  public @Nonnull MyClass test() {",
+            "    return ((MyClass) null).myMethod().myField;",
+            "  }",
+            "  abstract class MyClass {",
+            "    abstract MyClass myMethod();",
+            "    MyClass myField;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   @Test
   public void testSuggestNonJsr305Nullable() throws Exception {
     createRefactoringTestHelper()
