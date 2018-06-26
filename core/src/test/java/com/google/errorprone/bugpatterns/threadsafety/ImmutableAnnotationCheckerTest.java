@@ -323,6 +323,8 @@ public class ImmutableAnnotationCheckerTest {
             "Test.java", //
             "import java.lang.annotation.Annotation;",
             "class MyAnno implements Annotation {",
+            "  // BUG: Diagnostic contains:"
+                + " not annotated with @com.google.errorprone.annotations.Immutable",
             "  final Lib l = new Lib();",
             "  public Class<? extends Annotation> annotationType() {",
             "    return Deprecated.class;",

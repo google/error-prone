@@ -102,12 +102,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
 
     Violation info =
         new ImmutableAnalysis(
-                this,
-                state,
-                wellKnownMutability,
-                ImmutableSet.of(
-                    Immutable.class.getName(),
-                    javax.annotation.concurrent.Immutable.class.getName()))
+                this, state, wellKnownMutability, ImmutableSet.of(Immutable.class.getName()))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describeClass);
 
