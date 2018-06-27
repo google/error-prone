@@ -23,6 +23,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
+import org.checkerframework.dataflow.cfg.node.AssignmentNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 import org.checkerframework.dataflow.cfg.node.Node;
@@ -107,6 +108,8 @@ public abstract class AccessPath {
       return fromVariableDecl((VariableDeclarationNode) node);
     } else if (node instanceof FieldAccessNode) {
       return fromFieldAccess((FieldAccessNode) node);
+    } else if (node instanceof AssignmentNode) {
+      return fromNodeIfTrackable(((AssignmentNode) node).getTarget());
     }
     return null;
   }
