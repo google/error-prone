@@ -202,6 +202,13 @@
       <version>4.0-beta5</version>
       <scope>test</scope>
     </dependency>
+      <!-- Apache 2.0 -->
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-testlib</artifactId>
+      <version>4.0</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.gwt.inject</groupId>

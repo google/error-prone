@@ -18,6 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
+import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.isSameType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -26,7 +29,10 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
@@ -48,8 +54,14 @@ import javax.lang.model.element.Modifier;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class MutableConstantField extends BugChecker implements VariableTreeMatcher {
 
+  private static final String BIND = "com.google.inject.testing.fieldbinder.Bind";
+
+  private static final MultiMatcher<VariableTree, AnnotationTree> VAR_TO_BIND_ANNOTATION =
+      annotations(AT_LEAST_ONE, isSameType(BIND));
+
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
+
     if (!isConstantField(ASTHelpers.getSymbol(tree))) {
       return Description.NO_MATCH;
     }
@@ -63,6 +75,12 @@ public final class MutableConstantField extends BugChecker implements VariableTr
     Tree lhsTree = tree.getType();
     Type lhsType = ASTHelpers.getType(lhsTree);
     if (lhsType == null || ImmutableCollections.isImmutableType(lhsType)) {
+      return Description.NO_MATCH;
+    }
+
+    MultiMatchResult<AnnotationTree> hasBindAnnotations =
+        VAR_TO_BIND_ANNOTATION.multiMatchResult(tree, state);
+    if (hasBindAnnotations.matches()) {
       return Description.NO_MATCH;
     }
 
