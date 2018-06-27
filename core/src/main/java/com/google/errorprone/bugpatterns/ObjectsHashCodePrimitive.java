@@ -40,11 +40,6 @@ import java.util.Objects;
 @BugPattern(
     name = "ObjectsHashCodePrimitive",
     summary = "Objects.hashCode(Object o) should not be passed a primitive value",
-    explanation =
-        "When Objects.hashCode(Object o) is given a primitive parameter,"
-            + "it calls the primitive type's valueOf() function and gets that hashCode instead of "
-            + "getting a unique hashcode for that parameter. Instead, we want the primitive value "
-            + "to be treated as an Object and thus receive a unique hashcode.",
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class ObjectsHashCodePrimitive extends BugChecker
