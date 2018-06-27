@@ -41,6 +41,21 @@ public class MutableConstantFieldTest {
   }
 
   @Test
+  public void bind() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.inject.testing.fieldbinder.Bind;",
+            "import java.util.List;",
+            "class Test {",
+            "   @Bind ",
+            "   private static final List<String> LABELS = ImmutableList.of(\"MiniCluster\");",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void staticFinalMapInitializedInDeclarationWithImmutableBiMapOf_suggestsFix() {
     testHelper
         .addSourceLines(
