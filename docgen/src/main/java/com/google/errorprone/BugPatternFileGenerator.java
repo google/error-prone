@@ -16,20 +16,19 @@
 
 package com.google.errorprone;
 
-import static com.google.common.base.Predicates.not;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimaps;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ExampleInfo.ExampleKind;
 import com.google.gson.Gson;
 import java.io.IOError;
 import java.io.IOException;
@@ -42,10 +41,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
@@ -122,7 +121,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
 
     @Override
     public ExampleInfo apply(Path path) {
-      ExampleInfo.ExampleKind posOrNeg = null;
+      ExampleInfo.ExampleKind posOrNeg;
       String fileName = path.getFileName().toString();
       if (fileName.contains("Positive")) {
         posOrNeg = ExampleInfo.ExampleKind.POSITIVE;
@@ -145,13 +144,6 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
     }
   }
 
-  private static final Predicate<ExampleInfo> IS_POSITIVE =
-      new Predicate<ExampleInfo>() {
-        @Override
-        public boolean apply(ExampleInfo input) {
-          return input.type() == ExampleInfo.ExampleKind.POSITIVE;
-        }
-      };
 
   @Override
   public boolean processLine(String line) throws IOException {
@@ -184,6 +176,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
               .put("severity", pattern.severity)
               .put("providesFix", pattern.providesFix.displayInfo())
               .put("name", pattern.name)
+              .put("className", pattern.className)
               .put("summary", pattern.summary.trim())
               .put("altNames", Joiner.on(", ").join(pattern.altNames))
               .put("explanation", pattern.explanation.trim());
@@ -244,21 +237,18 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
             new ExampleFilter(pattern.className.substring(pattern.className.lastIndexOf('.') + 1));
         findExamples(examplePaths, exampleDirBase, filter);
 
-        List<ExampleInfo> exampleInfos =
-            FluentIterable.from(examplePaths)
-                .transform(new PathToExampleInfo(pattern.className))
-                .toSortedList( // sort by name
-                    new Comparator<ExampleInfo>() {
-                      @Override
-                      public int compare(ExampleInfo first, ExampleInfo second) {
-                        return first.name().compareTo(second.name());
-                      }
-                    });
-        Collection<ExampleInfo> positiveExamples = Collections2.filter(exampleInfos, IS_POSITIVE);
-        Collection<ExampleInfo> negativeExamples =
-            Collections2.filter(exampleInfos, not(IS_POSITIVE));
+        List<ExampleInfo> exampleInfo =
+            examplePaths
+                .stream()
+                .map(new PathToExampleInfo(pattern.className))
+                .sorted(Comparator.comparing(ExampleInfo::name))
+                .collect(Collectors.toList());
+        ImmutableListMultimap<Boolean, ExampleInfo> byPositivity =
+            Multimaps.index(exampleInfo, info -> info.type() == ExampleKind.POSITIVE);
+        ImmutableList<ExampleInfo> positiveExamples = byPositivity.get(true);
+        ImmutableList<ExampleInfo> negativeExamples = byPositivity.get(false);
 
-        if (!exampleInfos.isEmpty()) {
+        if (!exampleInfo.isEmpty()) {
           writer.write("\n----------\n\n");
 
           if (!positiveExamples.isEmpty()) {
