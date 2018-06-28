@@ -106,17 +106,17 @@ public final class TrustingNullnessAnalysis implements Serializable {
     ControlFlowGraph cfg =
         CFGBuilder.build(
             initializerPath,
-            javacEnv,
             ast,
             /* assumeAssertionsEnabled */ false,
-            /* assumeAssertionsDisabled */ false);
+            /* assumeAssertionsDisabled */ false,
+            javacEnv);
     try {
       nullnessPropagation
           .setContext(context)
           .setCompilationUnit(fieldDeclPath.getCompilationUnit());
 
       Analysis<Nullness, AccessPathStore<Nullness>, TrustingNullnessPropagation> analysis =
-          new Analysis<>(javacEnv, nullnessPropagation);
+          new Analysis<>(nullnessPropagation, javacEnv);
       analysis.performAnalysis(cfg);
       return analysis.getValue(initializer);
     } finally {

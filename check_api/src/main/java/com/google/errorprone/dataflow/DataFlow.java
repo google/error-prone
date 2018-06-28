@@ -81,7 +81,7 @@ public final class DataFlow {
                   final TransferFunction<?, ?> transfer = key.transferFunction();
 
                   @SuppressWarnings({"unchecked", "rawtypes"})
-                  final Analysis<?, ?, ?> analysis = new Analysis(env, transfer);
+                  final Analysis<?, ?, ?> analysis = new Analysis(transfer, env);
                   analysis.performAnalysis(cfg);
                   return analysis;
                 }
@@ -117,7 +117,7 @@ public final class DataFlow {
                   analysisCache.invalidateAll();
                   CompilationUnitTree root = methodPath.getCompilationUnit();
                   // TODO(user), replace with faster build(bodyPath, env, ast, false, false);
-                  return CFGBuilder.build(root, env, ast, false, false);
+                  return CFGBuilder.build(root, ast, false, false, env);
                 }
               });
 
