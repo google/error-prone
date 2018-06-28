@@ -813,12 +813,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       ControlFlowGraph cfg =
           CFGBuilder.build(
               initializerPath,
-              javacEnv,
               ast,
               /*assumeAssertionsEnabled=*/ false,
-              /*assumeAssertionsDisabled=*/ false);
+              /*assumeAssertionsDisabled=*/ false,
+              javacEnv);
       Analysis<Nullness, AccessPathStore<Nullness>, NullnessPropagationTransfer> analysis =
-          new Analysis<>(javacEnv, this);
+          new Analysis<>(this, javacEnv);
       analysis.performAnalysis(cfg);
       return analysis.getValue(initializerPath.getLeaf());
     } finally {
