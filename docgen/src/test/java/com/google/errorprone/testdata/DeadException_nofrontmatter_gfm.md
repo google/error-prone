@@ -7,6 +7,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 <tr><td>Severity</td><td>ERROR</td></tr>
 <tr><td>Tags</td><td>LikelyError</td></tr>
 <tr><td>Provides Fix?</td><td>No</td></tr>
+<div class=".more-info" data-qualified-name=com.google.errorprone.bugpatterns.DeadException></div>
 </table></div>
 
 # DeadException
