@@ -166,6 +166,11 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     if (receiverType == null || argumentType == null) {
       return TypeCompatibilityReport.createCompatibleReport();
     }
+    if (receiverType.isPrimitive()
+        && argumentType.isPrimitive()
+        && !ASTHelpers.isSameType(receiverType, argumentType, state)) {
+      return TypeCompatibilityReport.incompatible(receiverType, argumentType);
+    }
 
     // If one type can be cast into the other, we don't flag the equality test.
     // Note: we do this precisely in this order to allow primitive values to be checked pre-1.7:
