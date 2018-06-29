@@ -32,12 +32,10 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.UnaryTree;
 
 /**
  * Check for calls to Math's {@link Math#round} with an integer or long parameter.
@@ -76,7 +74,7 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
 
   private Description removeMathRoundCall(MethodInvocationTree tree, VisitorState state) {
     if (ROUND_CALLS_WITH_INT_ARG.matches(tree, state)) {
-      if (necessary(Iterables.getOnlyElement(tree.getArguments()))) {
+      if (ASTHelpers.requiresParentheses(Iterables.getOnlyElement(tree.getArguments()))) {
         return buildDescription(tree)
             .addFix(
                 SuggestedFix.builder()
@@ -128,20 +126,4 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
     return String.format("%s%s%s", openingBracket, sourceForNode, closingBracket);
   }
 
-  private static boolean necessary(ExpressionTree expression) {
-    // Same logic as necessary in Unnecessary Parenthesis
-    switch (expression.getKind()) {
-      case IDENTIFIER:
-      case MEMBER_SELECT:
-      case METHOD_INVOCATION:
-      case ARRAY_ACCESS:
-      case PARENTHESIZED:
-        return false;
-      default:
-    }
-    if (expression instanceof LiteralTree || expression instanceof UnaryTree) {
-      return false;
-    }
-    return true;
-  }
 }

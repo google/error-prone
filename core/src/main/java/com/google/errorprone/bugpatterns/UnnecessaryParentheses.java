@@ -26,11 +26,10 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ParenthesizedTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.UnaryTree;
 import com.sun.tools.javac.tree.JCTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -48,7 +47,7 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
     if (state.getPath().getParentPath().getLeaf() instanceof StatementTree) {
       return NO_MATCH;
     }
-    if (necessary(expression)) {
+    if (ASTHelpers.requiresParentheses(expression)) {
       return NO_MATCH;
     }
     return describeMatch(
@@ -60,19 +59,4 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
             .build());
   }
 
-  private static boolean necessary(ExpressionTree expression) {
-    switch (expression.getKind()) {
-      case IDENTIFIER:
-      case MEMBER_SELECT:
-      case METHOD_INVOCATION:
-      case ARRAY_ACCESS:
-      case PARENTHESIZED:
-        return false;
-      default: // continue below
-    }
-    if (expression instanceof LiteralTree || expression instanceof UnaryTree) {
-      return false;
-    }
-    return true;
-  }
 }
