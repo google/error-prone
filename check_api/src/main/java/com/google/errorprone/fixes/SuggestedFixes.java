@@ -380,11 +380,12 @@ public class SuggestedFixes {
   public static SuggestedFix renameVariable(
       VariableTree tree, final String replacement, VisitorState state) {
     String name = tree.getName().toString();
-    // For a lambda parameter without explicit type, it will return null.
-    String source = state.getSourceForNode(tree.getType());
-    int typeLength = source == null ? 0 : source.length();
+    int typeEndPos = state.getEndPosition(tree.getType());
+    // handle implicit lambda parameter types
+    int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - ((JCTree) tree).getStartPosition());
     int pos =
-        ((JCTree) tree).getStartPosition() + state.getSourceForNode(tree).indexOf(name, typeLength);
+        ((JCTree) tree).getStartPosition()
+            + state.getSourceForNode(tree).indexOf(name, searchOffset);
     final SuggestedFix.Builder fix =
         SuggestedFix.builder().replace(pos, pos + name.length(), replacement);
     final Symbol.VarSymbol sym = getSymbol(tree);

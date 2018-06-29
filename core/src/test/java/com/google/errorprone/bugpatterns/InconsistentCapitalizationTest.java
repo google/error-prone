@@ -293,4 +293,23 @@ public class InconsistentCapitalizationTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void i1008() {
+    compilationHelper
+        .addSourceLines(
+            "Callback.java",
+            "public class Callback {",
+            "  interface WaitHandler { } // ignore",
+            "  private final WaitHandler waitHandler;",
+            "  // BUG: Diagnostic contains:",
+            "  protected Callback(final WaitHandler waithandler) {",
+            "    this.waitHandler = waithandler;",
+            "  }",
+            "  public static Callback doOnSuccess() {",
+            "    return new Callback(null) {};",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
