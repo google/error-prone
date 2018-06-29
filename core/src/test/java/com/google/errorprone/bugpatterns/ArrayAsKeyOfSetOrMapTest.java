@@ -47,8 +47,16 @@ public final class ArrayAsKeyOfSetOrMapTest {
             "import java.util.Arrays;",
             "import java.util.Set;",
             "import java.util.Map;",
+            "import java.util.LinkedHashMap;",
             "import com.google.common.collect.Sets;",
             "import com.google.common.collect.Maps;",
+            "import com.google.common.collect.HashMultiset;",
+            "import com.google.common.collect.LinkedHashMultiset;",
+            "import com.google.common.collect.HashBiMap;",
+            "import com.google.common.collect.HashMultimap;",
+            "import com.google.common.collect.LinkedHashMultimap;",
+            "import com.google.common.collect.ArrayListMultimap;",
+            "import com.google.common.collect.LinkedListMultimap;",
             "import java.util.HashMap;",
             "import java.util.HashSet;",
             "class Test{",
@@ -69,6 +77,27 @@ public final class ArrayAsKeyOfSetOrMapTest {
             "    HashMap<String[], Integer> testHashMap = new HashMap<String[], Integer>();",
             "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
             "    HashSet<String[]> testHashSet = new HashSet<String[]>();",
+            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
+            "    HashMultimap<String[], Integer> testHashMultimap = HashMultimap.create();",
+            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
+            "    ArrayListMultimap<String[], Integer> testArrayListMultimap"
+                + " = ArrayListMultimap.create();",
+            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
+            "    LinkedHashMultimap<String[], Integer> testLinkedHashMultimap"
+                + "= LinkedHashMultimap.create();",
+            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
+            "    LinkedListMultimap<String[], Integer> testLinkedListMultimap"
+                + "= LinkedListMultimap.create();",
+            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
+            "    HashBiMap<String[], Integer> testHashBiMap = HashBiMap.create();",
+            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
+            "    LinkedHashMap<String[], Integer> testLinkedHashMap"
+                + "= new LinkedHashMap<String[], Integer>();",
+            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
+            "    HashMultiset<String[]> testHashMultiSet = HashMultiset.create();",
+            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
+            "    LinkedHashMultiset<String[]> testLinkedHashMultiSet"
+                + "= LinkedHashMultiset.create();",
             "  }",
             "}")
         .doTest();
@@ -82,11 +111,19 @@ public final class ArrayAsKeyOfSetOrMapTest {
             "import java.util.Arrays;",
             "import java.util.Set;",
             "import java.util.Map;",
+            "import java.util.LinkedHashMap;",
             "import com.google.common.collect.Sets;",
             "import com.google.common.collect.Maps;",
             "import java.util.HashMap;",
             "import java.util.HashSet;",
             "import java.util.TreeSet;",
+            "import com.google.common.collect.HashMultiset;",
+            "import com.google.common.collect.LinkedHashMultiset;",
+            "import com.google.common.collect.HashBiMap;",
+            "import com.google.common.collect.HashMultimap;",
+            "import com.google.common.collect.LinkedHashMultimap;",
+            "import com.google.common.collect.ArrayListMultimap;",
+            "import com.google.common.collect.LinkedListMultimap;",
             "import com.google.common.collect.Ordering;",
             "class Test {",
             "  public static void main(String[] args) {",
@@ -100,6 +137,19 @@ public final class ArrayAsKeyOfSetOrMapTest {
             "    Set<String> setFromMethod = Sets.newHashSet();",
             "    Set<String[]> thisShouldWork = new TreeSet<String[]>"
                 + "(Ordering.natural().lexicographical().onResultOf(Arrays::asList));",
+            "    HashMultimap<String, Integer> testHashMultimap = HashMultimap.create();",
+            "    ArrayListMultimap<String, Integer> testArrayListMultimap"
+                + " = ArrayListMultimap.create();",
+            "    LinkedHashMultimap<String, Integer> testLinkedHashMultimap"
+                + "= LinkedHashMultimap.create();",
+            "    LinkedListMultimap<String, Integer> testLinkedListMultimap"
+                + "= LinkedListMultimap.create();",
+            "    HashBiMap<String, Integer> testHashBiMap = HashBiMap.create();",
+            "    LinkedHashMap<String, Integer> testLinkedHashMap"
+                + "= new LinkedHashMap<String, Integer>();",
+            "    HashMultiset<String> testHashMultiSet = HashMultiset.create();",
+            "    LinkedHashMultiset<String> testLinkedHashMultiSet"
+                + "= LinkedHashMultiset.create();",
             "  }",
             "}")
         .doTest();
