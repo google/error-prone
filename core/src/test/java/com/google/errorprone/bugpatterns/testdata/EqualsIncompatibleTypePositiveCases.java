@@ -77,6 +77,17 @@ public class EqualsIncompatibleTypePositiveCases {
     com.google.common.base.Objects.equal(c2, c3);
   }
 
+  void checkPrimitiveEquals(int a, long b) {
+    // BUG: Diagnostic contains: incompatible types
+    java.util.Objects.equals(a, b);
+    // BUG: Diagnostic contains: incompatible types
+    java.util.Objects.equals(b, a);
+    // BUG: Diagnostic contains: incompatible types
+    com.google.common.base.Objects.equal(a, b);
+    // BUG: Diagnostic contains: incompatible types
+    com.google.common.base.Objects.equal(b, a);
+  }
+
   interface I {
     public boolean equals(Object o);
   }
