@@ -182,12 +182,12 @@ final Lock lock = new ReentrantLock();
 int x;
 
 @UnlockMethod("lock")
-releaseLock() {
+void releaseLock() {
   lock.unlock();
 }
 
 @LockMethod("lock")
-acquireLock() {
+void acquireLock() {
   lock.lock();
 }
 

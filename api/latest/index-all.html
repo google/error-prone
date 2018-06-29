@@ -152,6 +152,27 @@
  annotation, @Immutable would be included in this list, as an immutable class is by definition
  thread-safe.</div>
 </dd>
+<dt><a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow"><span class="typeNameLink">AccessPath</span></a> - Class in <a href="com/google/errorprone/dataflow/package-summary.html">com.google.errorprone.dataflow</a></dt>
+<dd>
+<div class="block">A sequence of field names along with either a variable or a reference (explicit or implicit) to
+ <code>this</code></div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPath.html#AccessPath--">AccessPath()</a></span> - Constructor for class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow"><span class="typeNameLink">AccessPathStore</span></a>&lt;<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="type parameter in AccessPathStore">V</a> extends org.checkerframework.dataflow.analysis.AbstractValue&lt;<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;&gt; - Class in <a href="com/google/errorprone/dataflow/package-summary.html">com.google.errorprone.dataflow</a></dt>
+<dd>
+<div class="block">Immutable map from local variables or heap access paths to their <code>AbstractValue</code></div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#AccessPathStore--">AccessPathStore()</a></span> - Constructor for class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/dataflow/AccessPathStore.Builder.html" title="class in com.google.errorprone.dataflow"><span class="typeNameLink">AccessPathStore.Builder</span></a>&lt;<a href="com/google/errorprone/dataflow/AccessPathStore.Builder.html" title="type parameter in AccessPathStore.Builder">V</a> extends org.checkerframework.dataflow.analysis.AbstractValue&lt;<a href="com/google/errorprone/dataflow/AccessPathStore.Builder.html" title="type parameter in AccessPathStore.Builder">V</a>&gt;&gt; - Class in <a href="com/google/errorprone/dataflow/package-summary.html">com.google.errorprone.dataflow</a></dt>
+<dd>
+<div class="block">Builder for <a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow"><code>AccessPathStore</code></a> instances.</div>
+</dd>
+<dt><a href="com/google/errorprone/dataflow/AccessPathValues.html" title="interface in com.google.errorprone.dataflow"><span class="typeNameLink">AccessPathValues</span></a>&lt;<a href="com/google/errorprone/dataflow/AccessPathValues.html" title="type parameter in AccessPathValues">T</a>&gt; - Interface in <a href="com/google/errorprone/dataflow/package-summary.html">com.google.errorprone.dataflow</a></dt>
+<dd>
+<div class="block">Read-only access to <a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow"><code>AccessPathStore</code></a> for convenience.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Template.html#actualTypes-com.google.errorprone.refaster.Inliner-">actualTypes(Inliner)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster">Template</a></dt>
 <dd>
 <div class="block">Returns a list of the actual types to be matched.</div>
@@ -688,8 +709,6 @@
 <dd>
 <div class="block">Build an Array Type from another Type</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html#asBigInteger-java.math.BigDecimal-">asBigInteger(BigDecimal)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/apply/ImportOrganizer.OrganizedImports.html#asImportBlock--">asImportBlock()</a></span> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportOrganizer.OrganizedImports.html" title="class in com.google.errorprone.apply">ImportOrganizer.OrganizedImports</a></dt>
 <dd>
 <div class="block">Get the organized imports as a block of imports, with blank links between the separate
@@ -831,6 +850,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Select.html#base--">base()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Select.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Select</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPath.html#base--">base()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></dt>
+<dd>
+<div class="block">If present, base of access path is contained Element; if absent, base is `this`</div>
+</dd>
 <dt><a href="com/google/errorprone/BaseErrorProneCompiler.html" title="class in com.google.errorprone"><span class="typeNameLink">BaseErrorProneCompiler</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">An Error Prone compiler that matches the interface of <code>Main</code>.</div>
@@ -852,7 +875,9 @@
 <div class="block">Desired "before" version of a refactoring.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">BigDecimalLiteralDouble</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Matches usages of <code>new BigDecimal(double)</code> which lose precision.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html#BigDecimalLiteralDouble--">BigDecimalLiteralDouble()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BadShiftAmount.html#BINARY_TREE_MATCHER">BINARY_TREE_MATCHER</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BadShiftAmount.html" title="class in com.google.errorprone.bugpatterns">BadShiftAmount</a></dt>
@@ -1110,6 +1135,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#build-com.google.errorprone.VisitorState-">build(VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.Builder.html" title="class in com.google.errorprone.dataflow">AccessPathStore.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.Builder.html" title="class in com.google.errorprone.dataflow">LocalStore.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></dt>
@@ -1213,6 +1240,8 @@
 </a>
 <h2 class="title">C</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#canAlias-org.checkerframework.dataflow.analysis.FlowExpressions.Receiver-org.checkerframework.dataflow.analysis.FlowExpressions.Receiver-">canAlias(FlowExpressions.Receiver, FlowExpressions.Receiver)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#canAlias-org.checkerframework.dataflow.analysis.FlowExpressions.Receiver-org.checkerframework.dataflow.analysis.FlowExpressions.Receiver-">canAlias(FlowExpressions.Receiver, FlowExpressions.Receiver)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">CanBeStaticAnalyzer</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
@@ -1859,6 +1888,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/names/NamingConventions.html#convertToLowerUnderscore-java.lang.String-">convertToLowerUnderscore(String)</a></span> - Static method in class com.google.errorprone.names.<a href="com/google/errorprone/names/NamingConventions.html" title="class in com.google.errorprone.names">NamingConventions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#copy--">copy()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#copy--">copy()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html#correctAnnotation--">correctAnnotation()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4SetUpNotRun</a></dt>
@@ -1990,8 +2021,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneAnalyzer.html#createByScanningForPlugins-com.google.errorprone.scanner.ScannerSupplier-com.google.errorprone.ErrorProneOptions-com.sun.tools.javac.util.Context-">createByScanningForPlugins(ScannerSupplier, ErrorProneOptions, Context)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneExternalCompilerAdapter.html#createClasspath--">createClasspath()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneExternalCompilerAdapter.html" title="class in com.google.errorprone">ErrorProneExternalCompilerAdapter</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html#createDescription-com.sun.source.tree.ExpressionTree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-boolean-">createDescription(ExpressionTree, ExpressionTree, VisitorState, boolean)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/apply/DescriptionBasedDiff.html#createIgnoringOverlaps-com.sun.tools.javac.tree.JCTree.JCCompilationUnit-com.google.errorprone.apply.ImportOrganizer-">createIgnoringOverlaps(JCTree.JCCompilationUnit, ImportOrganizer)</a></span> - Static method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a></dt>
 <dd>&nbsp;</dd>
@@ -2341,6 +2370,8 @@
 <dd>
 <div class="block">This is a special method to emit a comment before an expression.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#empty--">empty()</a></span> - Static method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#empty--">empty()</a></span> - Static method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneFlags.html#empty--">empty()</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
@@ -2720,6 +2751,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/nullness/FieldMissingNullable.html#FieldMissingNullable--">FieldMissingNullable()</a></span> - Constructor for class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/FieldMissingNullable.html" title="class in com.google.errorprone.bugpatterns.nullness">FieldMissingNullable</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPath.html#fields--">fields()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/apply/FileDestination.html" title="interface in com.google.errorprone.apply"><span class="typeNameLink">FileDestination</span></a> - Interface in <a href="com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/apply/FileSource.html" title="interface in com.google.errorprone.apply"><span class="typeNameLink">FileSource</span></a> - Interface in <a href="com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a></dt>
@@ -2988,12 +3021,24 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPatternInstance.html#fromElement-javax.lang.model.element.Element-">fromElement(Element)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BugPatternInstance.html" title="class in com.google.errorprone">BugPatternInstance</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPath.html#fromFieldAccess-org.checkerframework.dataflow.cfg.node.FieldAccessNode-">fromFieldAccess(FieldAccessNode)</a></span> - Static method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></dt>
+<dd>
+<div class="block">Creates an AccessPath from field accesses we can track and returns null otherwise (for example,
+ when the receiver of the field access contains a method call or array access)</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#fromFlags-com.google.errorprone.ErrorProneFlags-">fromFlags(ErrorProneFlags)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownMutability</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPath.html#fromLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-">fromLocalVariable(LocalVariableNode)</a></span> - Static method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneFlags.html#fromMap-java.util.Map-">fromMap(Map&lt;String, String&gt;)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiff.html#fromMembers-java.util.Set-com.google.common.collect.Multimap-">fromMembers(Set&lt;String&gt;, Multimap&lt;String, ApiDiff.ClassMemberKey&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPath.html#fromNodeIfTrackable-org.checkerframework.dataflow.cfg.node.Node-">fromNodeIfTrackable(Node)</a></span> - Static method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></dt>
+<dd>
+<div class="block">Returns an AccessPath representing <code>node</code> if <code>node</code> is representable as an access
+ path and null otherwise</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Choice.html#fromOptional-com.google.common.base.Optional-">fromOptional(Optional&lt;T&gt;)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>
 <div class="block">Returns a choice of the optional value, if it is present, or the empty choice if it is absent.</div>
@@ -3009,6 +3054,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/AppliedFix.html#fromSource-java.lang.CharSequence-com.sun.tools.javac.tree.EndPosTable-">fromSource(CharSequence, EndPosTable)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/suppliers/Suppliers.html#fromStrings-java.lang.Iterable-">fromStrings(Iterable&lt;String&gt;)</a></span> - Static method in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPath.html#fromVariableDecl-org.checkerframework.dataflow.cfg.node.VariableDeclarationNode-">fromVariableDecl(VariableDeclarationNode)</a></span> - Static method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/apply/FsFileDestination.html" title="class in com.google.errorprone.apply"><span class="typeNameLink">FsFileDestination</span></a> - Class in <a href="com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a></dt>
 <dd>
@@ -4315,6 +4362,8 @@
 <dd>
 <div class="block">Returns true if the given type parameter's declaration is annotated with <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#typeParameterAnnotation"><code>ThreadSafety.typeParameterAnnotation</code></a> indicated it will only ever be instantiated with thread-safe types.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#heap--">heap()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="typeNameLink">HeldLockAnalyzer</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
 <div class="block">A method body analyzer.</div>
@@ -5224,6 +5273,8 @@
 <div class="block">Use this annotation on any static or field that will be initialized lazily, where races yield no
  semantic difference in the code (as, for example, is the case with <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true#hashCode--" title="class or interface in java.lang"><code>String.hashCode()</code></a>).</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#leastUpperBound-com.google.errorprone.dataflow.AccessPathStore-">leastUpperBound(AccessPathStore&lt;V&gt;)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#leastUpperBound-com.google.errorprone.dataflow.LocalStore-">leastUpperBound(LocalStore&lt;V&gt;)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#leastUpperBound-com.google.errorprone.dataflow.nullnesspropagation.Nullness-">leastUpperBound(Nullness)</a></span> - Method in enum com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
@@ -5945,6 +5996,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html" title="class in com.google.errorprone.bugpatterns">ThrowsUncheckedException</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ToStringReturnsNull.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ToStringReturnsNull.html" title="class in com.google.errorprone.bugpatterns">ToStringReturnsNull</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TypeNameShadowing.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeNameShadowing.html" title="class in com.google.errorprone.bugpatterns">TypeNameShadowing</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TypeParameterShadowing.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterShadowing.html" title="class in com.google.errorprone.bugpatterns">TypeParameterShadowing</a></dt>
@@ -5994,8 +6047,6 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AssertionFailureIgnored.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AssertionFailureIgnored.html" title="class in com.google.errorprone.bugpatterns">AssertionFailureIgnored</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AssertThrowsMultipleStatements.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AssertThrowsMultipleStatements.html" title="class in com.google.errorprone.bugpatterns">AssertThrowsMultipleStatements</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BooleanParameter.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BooleanParameter.html" title="class in com.google.errorprone.bugpatterns">BooleanParameter</a></dt>
 <dd>&nbsp;</dd>
@@ -6079,6 +6130,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/LiteByteStringUtf8.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LiteByteStringUtf8.html" title="class in com.google.errorprone.bugpatterns">LiteByteStringUtf8</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MathRoundIntLong.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MathRoundIntLong.html" title="class in com.google.errorprone.bugpatterns">MathRoundIntLong</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MisusedWeekYear.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MisusedWeekYear.html" title="class in com.google.errorprone.bugpatterns">MisusedWeekYear</a></dt>
 <dd>
 <div class="block">Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in which
@@ -6107,6 +6160,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html" title="class in com.google.errorprone.bugpatterns">NonRuntimeAnnotation</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ObjectsHashCodePrimitive.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ObjectsHashCodePrimitive.html" title="class in com.google.errorprone.bugpatterns">ObjectsHashCodePrimitive</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html" title="class in com.google.errorprone.bugpatterns">OptionalNotPresent</a></dt>
 <dd>&nbsp;</dd>
@@ -6147,6 +6202,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StringSplitter.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StringSplitter.html" title="class in com.google.errorprone.bugpatterns">StringSplitter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/SubstringOfZero.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SubstringOfZero.html" title="class in com.google.errorprone.bugpatterns">SubstringOfZero</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/SystemExitOutsideMain.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SystemExitOutsideMain.html" title="class in com.google.errorprone.bugpatterns">SystemExitOutsideMain</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ThreadJoinLoop.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThreadJoinLoop.html" title="class in com.google.errorprone.bugpatterns">ThreadJoinLoop</a></dt>
 <dd>&nbsp;</dd>
@@ -6246,6 +6303,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.ParameterizedTypeTreeMatcher.html#matchParameterizedType-com.sun.source.tree.ParameterizedTypeTree-com.google.errorprone.VisitorState-">matchParameterizedType(ParameterizedTypeTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.ParameterizedTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ParameterizedTypeTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.ParenthesizedTreeMatcher.html#matchParenthesized-com.sun.source.tree.ParenthesizedTree-com.google.errorprone.VisitorState-">matchParenthesized(ParenthesizedTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.ParenthesizedTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ParenthesizedTreeMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryParentheses.html#matchParenthesized-com.sun.source.tree.ParenthesizedTree-com.google.errorprone.VisitorState-">matchParenthesized(ParenthesizedTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryParentheses.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryParentheses</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.PrimitiveTypeTreeMatcher.html#matchPrimitiveType-com.sun.source.tree.PrimitiveTypeTree-com.google.errorprone.VisitorState-">matchPrimitiveType(PrimitiveTypeTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.PrimitiveTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.PrimitiveTypeTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -6371,6 +6430,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/VarChecker.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/VarChecker.html" title="class in com.google.errorprone.bugpatterns">VarChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/VariableNameSameAsType.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/VariableNameSameAsType.html" title="class in com.google.errorprone.bugpatterns">VariableNameSameAsType</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.WhileLoopTreeMatcher.html#matchWhileLoop-com.sun.source.tree.WhileLoopTree-com.google.errorprone.VisitorState-">matchWhileLoop(WhileLoopTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.WhileLoopTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.WhileLoopTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/LogicalAssignment.html#matchWhileLoop-com.sun.source.tree.WhileLoopTree-com.google.errorprone.VisitorState-">matchWhileLoop(WhileLoopTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LogicalAssignment.html" title="class in com.google.errorprone.bugpatterns">LogicalAssignment</a></dt>
@@ -6378,6 +6439,12 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/LoopConditionChecker.html#matchWhileLoop-com.sun.source.tree.WhileLoopTree-com.google.errorprone.VisitorState-">matchWhileLoop(WhileLoopTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LoopConditionChecker.html" title="class in com.google.errorprone.bugpatterns">LoopConditionChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.WildcardTreeMatcher.html#matchWildcard-com.sun.source.tree.WildcardTree-com.google.errorprone.VisitorState-">matchWildcard(WildcardTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.WildcardTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.WildcardTreeMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/MathRoundIntLong.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MathRoundIntLong</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Check for calls to Math's <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html?is-external=true#round-float-" title="class or interface in java.lang"><code>Math.round(float)</code></a> with an integer or long parameter.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MathRoundIntLong.html#MathRoundIntLong--">MathRoundIntLong()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MathRoundIntLong.html" title="class in com.google.errorprone.bugpatterns">MathRoundIntLong</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html#MAX_CASES_TO_PRINT">MAX_CASES_TO_PRINT</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">MissingCasesInEnumSwitch</a></dt>
 <dd>&nbsp;</dd>
@@ -6996,6 +7063,12 @@
 <h2 class="title">O</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/suppliers/Suppliers.html#OBJECT_TYPE">OBJECT_TYPE</a></span> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ObjectsHashCodePrimitive.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ObjectsHashCodePrimitive</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Check for calls to Objects' <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Objects.html?is-external=true#hashCode-java.lang.Object-" title="class or interface in java.util"><code>Objects.hashCode(java.lang.Object)</code></a> with a primitive parameter.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ObjectsHashCodePrimitive.html#ObjectsHashCodePrimitive--">ObjectsHashCodePrimitive()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ObjectsHashCodePrimitive.html" title="class in com.google.errorprone.bugpatterns">ObjectsHashCodePrimitive</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ObjectToString.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ObjectToString</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -7807,6 +7880,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/RequiredModifiersChecker.html#RequiredModifiersChecker--">RequiredModifiersChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RequiredModifiersChecker.html" title="class in com.google.errorprone.bugpatterns">RequiredModifiersChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#requiresParentheses-com.sun.source.tree.ExpressionTree-">requiresParentheses(ExpressionTree)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#resolveClass-java.lang.CharSequence-">resolveClass(CharSequence)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.Resolver.html#resolveEnclosingClass-com.sun.source.tree.ExpressionTree-">resolveEnclosingClass(ExpressionTree)</a></span> - Method in interface com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></dt>
@@ -8025,6 +8100,8 @@
 <div class="block"><code>string identifier = 1;</code></div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#setImportOrder-java.lang.String-">setImportOrder(String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.Builder.html#setInformation-com.google.errorprone.dataflow.AccessPath-V-">setInformation(AccessPath, V)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.Builder.html" title="class in com.google.errorprone.dataflow">AccessPathStore.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.Builder.html#setInformation-javax.lang.model.element.Element-V-">setInformation(Element, V)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.Builder.html" title="class in com.google.errorprone.dataflow">LocalStore.Builder</a></dt>
 <dd>
@@ -8424,6 +8501,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/SynchronizeOnNonFinalField.html#SynchronizeOnNonFinalField--">SynchronizeOnNonFinalField()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/SynchronizeOnNonFinalField.html" title="class in com.google.errorprone.bugpatterns.threadsafety">SynchronizeOnNonFinalField</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/SystemExitOutsideMain.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">SystemExitOutsideMain</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Check for calls to <code>System.exit()</code> outside of a main method.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/SystemExitOutsideMain.html#SystemExitOutsideMain--">SystemExitOutsideMain()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SystemExitOutsideMain.html" title="class in com.google.errorprone.bugpatterns">SystemExitOutsideMain</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:T">
 <!--   -->
@@ -8577,6 +8660,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.MemberDiff.html#toBuilder--">toBuilder()</a></span> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.MemberDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.MemberDiff</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#toBuilder--">toBuilder()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#toBuilder--">toBuilder()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/MethodVisibility.Visibility.html#toModifier--">toModifier()</a></span> - Method in enum com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/MethodVisibility.Visibility.html" title="enum in com.google.errorprone.matchers">MethodVisibility.Visibility</a></dt>
@@ -8634,6 +8719,12 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ObjectToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix(Tree, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ObjectToString.html" title="class in com.google.errorprone.bugpatterns">ObjectToString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StreamToString.html#toStringFix-com.sun.source.tree.Tree-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">toStringFix(Tree, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns">StreamToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ToStringReturnsNull.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ToStringReturnsNull</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">ToString should not return null.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ToStringReturnsNull.html#ToStringReturnsNull--">ToStringReturnsNull()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ToStringReturnsNull.html" title="class in com.google.errorprone.bugpatterns">ToStringReturnsNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#toType-java.lang.Class-com.google.errorprone.matchers.Matcher-">toType(Class&lt;S&gt;, Matcher&lt;? super S&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -8921,6 +9012,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html#UnnecessaryDefaultInEnumSwitch--">UnnecessaryDefaultInEnumSwitch()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryDefaultInEnumSwitch</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UnnecessaryParentheses.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">UnnecessaryParentheses</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryParentheses.html#UnnecessaryParentheses--">UnnecessaryParentheses()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryParentheses.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryParentheses</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnnecessarySetDefault.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">UnnecessarySetDefault</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessarySetDefault.html#UnnecessarySetDefault--">UnnecessarySetDefault()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessarySetDefault.html" title="class in com.google.errorprone.bugpatterns">UnnecessarySetDefault</a></dt>
@@ -9158,6 +9253,12 @@
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#valueOfAccessPath-com.google.errorprone.dataflow.AccessPath-V-">valueOfAccessPath(AccessPath, V)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathValues.html#valueOfAccessPath-com.google.errorprone.dataflow.AccessPath-T-">valueOfAccessPath(AccessPath, T)</a></span> - Method in interface com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathValues.html" title="interface in com.google.errorprone.dataflow">AccessPathValues</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#valueOfLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-V-">valueOfLocalVariable(LocalVariableNode, V)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#valueOfLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-V-">valueOfLocalVariable(LocalVariableNode, V)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalVariableValues.html#valueOfLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-T-">valueOfLocalVariable(LocalVariableNode, T)</a></span> - Method in interface com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalVariableValues.html" title="interface in com.google.errorprone.dataflow">LocalVariableValues</a></dt>
@@ -9276,6 +9377,12 @@ the order they are declared.</div>
 <dd>
 <div class="block">Matches on the initializer of a VariableTree AST node.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/VariableNameSameAsType.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">VariableNameSameAsType</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Check for variables and types with the same name</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/VariableNameSameAsType.html#VariableNameSameAsType--">VariableNameSameAsType()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/VariableNameSameAsType.html" title="class in com.google.errorprone.bugpatterns">VariableNameSameAsType</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#variableType-com.google.errorprone.matchers.Matcher-">variableType(Matcher&lt;Tree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches on the type of a VariableTree AST node.</div>
@@ -9568,6 +9675,8 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitWildcard-com.sun.source.tree.WildcardTree-com.google.errorprone.VisitorState-">visitWildcard(WildcardTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#visualize-org.checkerframework.dataflow.cfg.CFGVisualizer-">visualize(CFGVisualizer&lt;?, AccessPathStore&lt;V&gt;, ?&gt;)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#visualize-org.checkerframework.dataflow.cfg.CFGVisualizer-">visualize(CFGVisualizer&lt;?, LocalStore&lt;V&gt;, ?&gt;)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/suppliers/Suppliers.html#VOID_TYPE">VOID_TYPE</a></span> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
@@ -9604,6 +9713,8 @@ the order they are declared.</div>
 <dd>
 <div class="block">A collection of types with known mutability.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/AccessPathStore.html#widenedUpperBound-com.google.errorprone.dataflow.AccessPathStore-">widenedUpperBound(AccessPathStore&lt;V&gt;)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.html#widenedUpperBound-com.google.errorprone.dataflow.LocalStore-">widenedUpperBound(LocalStore&lt;V&gt;)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/WildcardImport.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">WildcardImport</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>

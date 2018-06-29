@@ -83,12 +83,18 @@
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/AccessPathValues.html" title="interface in com.google.errorprone.dataflow">AccessPathValues</a>&lt;T&gt;</td>
+<td class="colLast">
+<div class="block">Read-only access to <a href="../../../../com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow"><code>AccessPathStore</code></a> for convenience.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/DataFlow.Result.html" title="interface in com.google.errorprone.dataflow">DataFlow.Result</a>&lt;A extends org.checkerframework.dataflow.analysis.AbstractValue&lt;A&gt;,S extends org.checkerframework.dataflow.analysis.Store&lt;S&gt;,T extends org.checkerframework.dataflow.analysis.TransferFunction&lt;A,S&gt;&gt;</td>
 <td class="colLast">
 <div class="block">A pair of Analysis and ControlFlowGraph.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/LocalVariableValues.html" title="interface in com.google.errorprone.dataflow">LocalVariableValues</a>&lt;T&gt;</td>
 <td class="colLast">
 <div class="block">Read-only access to <a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow"><code>LocalStore</code></a> for convenience.</div>
@@ -106,24 +112,43 @@
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></td>
+<td class="colLast">
+<div class="block">A sequence of field names along with either a variable or a reference (explicit or implicit) to
+ <code>this</code></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;V extends org.checkerframework.dataflow.analysis.AbstractValue&lt;V&gt;&gt;</td>
+<td class="colLast">
+<div class="block">Immutable map from local variables or heap access paths to their <code>AbstractValue</code></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/AccessPathStore.Builder.html" title="class in com.google.errorprone.dataflow">AccessPathStore.Builder</a>&lt;V extends org.checkerframework.dataflow.analysis.AbstractValue&lt;V&gt;&gt;</td>
+<td class="colLast">
+<div class="block">Builder for <a href="../../../../com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow"><code>AccessPathStore</code></a> instances.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/ConstantPropagationAnalysis.html" title="class in com.google.errorprone.dataflow">ConstantPropagationAnalysis</a></td>
 <td class="colLast">
 <div class="block">An interface to the constant propagation analysis.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/DataFlow.html" title="class in com.google.errorprone.dataflow">DataFlow</a></td>
 <td class="colLast">
 <div class="block">Provides a wrapper around <code>Analysis</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow">LocalStore</a>&lt;V extends org.checkerframework.dataflow.analysis.AbstractValue&lt;V&gt;&gt;</td>
 <td class="colLast">
 <div class="block">Immutable map from each local variable to its <code>AbstractValue</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../com/google/errorprone/dataflow/LocalStore.Builder.html" title="class in com.google.errorprone.dataflow">LocalStore.Builder</a>&lt;V extends org.checkerframework.dataflow.analysis.AbstractValue&lt;V&gt;&gt;</td>
 <td class="colLast">
 <div class="block">Builder for <a href="../../../../com/google/errorprone/dataflow/LocalStore.html" title="class in com.google.errorprone.dataflow"><code>LocalStore</code></a> instances.</div>

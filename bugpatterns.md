@@ -200,6 +200,9 @@ This pattern will silently corrupt certain byte sequences from the serialized pr
 __[LoopConditionChecker](bugpattern/LoopConditionChecker)__<br>
 Loop condition is never modified in loop body.
 
+__[MathRoundIntLong](bugpattern/MathRoundIntLong)__<br>
+Math.round(Integer) results in truncation
+
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in `android.R.string` have names that do not match their content
 
@@ -372,6 +375,9 @@ Possible sign flip from narrowing conversion
 
 __[BadImport](bugpattern/BadImport)__<br>
 Importing nested classes/static methods/static fields with commonly-used names can make code harder to read, because it may not be clear from the context exactly which type is being referred to. Qualifying the name with that of the containing class can make the code clearer.
+
+__[BigDecimalLiteralDouble](bugpattern/BigDecimalLiteralDouble)__<br>
+new BigDecimal(double) loses precision in this case.
 
 __[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
 valueOf or autoboxing provides better time and space performance
@@ -547,6 +553,9 @@ void-returning methods should not be annotated with @Nullable, since they cannot
 __[ObjectToString](bugpattern/ObjectToString)__<br>
 Calling toString on Objects that don&#39;t override toString() doesn&#39;t provide useful information
 
+__[ObjectsHashCodePrimitive](bugpattern/ObjectsHashCodePrimitive)__<br>
+Objects.hashCode(Object o) should not be passed a primitive value
+
 __[OperatorPrecedence](bugpattern/OperatorPrecedence)__<br>
 Use grouping parenthesis to make the operator precedence explicit
 
@@ -616,14 +625,20 @@ ThreadLocals should be stored in static fields
 __[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
 Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.
 
+__[ToStringReturnsNull](bugpattern/ToStringReturnsNull)__<br>
+An implementation of Object.toString() should never return null.
+
 __[TruthAssertExpected](bugpattern/TruthAssertExpected)__<br>
-The actual and expected values appear to be swapped, which results in poor assertion failure messages.
+The actual and expected values appear to be swapped, which results in poor assertion failure messages. The actual value should come first.
 
 __[TruthConstantAsserts](bugpattern/TruthConstantAsserts)__<br>
 Truth Library assert is called on a constant.
 
 __[TruthIncompatibleType](bugpattern/TruthIncompatibleType)__<br>
 Argument is not compatible with the subject&#39;s type.
+
+__[TypeNameShadowing](bugpattern/TypeNameShadowing)__<br>
+Type parameter declaration shadows another named type
 
 __[TypeParameterShadowing](bugpattern/TypeParameterShadowing)__<br>
 Type parameter declaration overrides another type parameter already declared
@@ -634,6 +649,9 @@ Declaring a type parameter that is only used in the return type is a misuse of g
 __[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
 Avoid hash-based containers of java.net.URL--the containers rely on equals() and hashCode(), which cause java.net.URL to make blocking internet connections.
 
+__[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
+Unnecessary use of grouping parentheses
+
 __[UnsafeFinalization](bugpattern/UnsafeFinalization)__<br>
 Finalizer may run before native code finishes execution
 
@@ -642,6 +660,9 @@ Unsynchronized method overrides a synchronized method.
 
 __[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
 Java assert is used in test. For testing purposes Assert.* matchers should be used.
+
+__[VariableNameSameAsType](bugpattern/VariableNameSameAsType)__<br>
+variableName and type with the same name would refer to the static field instead of the class
 
 __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
@@ -746,9 +767,6 @@ Assertions may be disabled at runtime and do not guarantee that execution will h
 __[AssistedInjectAndInjectOnConstructors](bugpattern/AssistedInjectAndInjectOnConstructors)__<br>
 @AssistedInject and @Inject should not be used on different constructors in the same class.
 
-__[BigDecimalLiteralDouble](bugpattern/BigDecimalLiteralDouble)__<br>
-BigDecimal(double) and BigDecimal.valueOf(double) may lose precision, prefer BigDecimal(String) or BigDecimal(long)
-
 __[BinderIdentityRestoredDangerously](bugpattern/BinderIdentityRestoredDangerously)__<br>
 A call to Binder.clearCallingIdentity() should be followed by Binder.restoreCallingIdentity() in a finally block. Otherwise the wrong Binder identity may be used by subsequent code.
 
@@ -806,11 +824,11 @@ A static variable or method should be qualified with a class name, not expressio
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
 
+__[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
+Code that contains System.exit() is untestable.
+
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
-
-__[TypeNameShadowing](bugpattern/TypeNameShadowing)__<br>
-Type parameter declaration shadows another named type
 
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
