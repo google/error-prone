@@ -42,7 +42,7 @@ from having to use either an `unused` variable or `@SuppressWarnings`):
     annotated with `@CheckReturnValue`). Here, the method calls are just used to
     program the mock object, not to be consumed directly.
 
-2.  Code that doing exception-testing with JUnit, where the intent is that the
+2.  Code that does exception testing with JUnit, where the intent is that the
     method call should throw an exception:
 
     *   Uses of JUnit 4.13 or JUnit5's `assertThrows` methods:
