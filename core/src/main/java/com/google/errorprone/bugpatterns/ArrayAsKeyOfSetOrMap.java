@@ -53,21 +53,59 @@ import java.util.List;
 public class ArrayAsKeyOfSetOrMap extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
-  private static final Matcher<ExpressionTree> CONSTRUCTS_HASHSET_OR_HASHMAP =
+  private static final Matcher<ExpressionTree> CONSTRUCTS_SET =
       anyOf(
           MethodMatchers.staticMethod()
               .onClass("com.google.common.collect.Sets")
               .named("newHashSet"),
+          Matchers.constructor().forClass("java.util.HashSet"));
+
+  private static final Matcher<ExpressionTree> CONSTRUCTS_MULTISET =
+      anyOf(
+          MethodMatchers.staticMethod()
+              .onClass("com.google.common.collect.HashMultiset")
+              .named("create"),
+          MethodMatchers.staticMethod()
+              .onClass("com.google.common.collect.LinkedHashMultiset")
+              .named("create"));
+
+  private static final Matcher<ExpressionTree> CONSTRUCTS_MAP =
+      anyOf(
           MethodMatchers.staticMethod()
               .onClass("com.google.common.collect.Maps")
               .named("newHashMap"),
           Matchers.constructor().forClass("java.util.HashMap"),
-          Matchers.constructor().forClass("java.util.HashSet"));
+          MethodMatchers.staticMethod()
+              .onClass("com.google.common.collect.Maps")
+              .named("newLinkedHashMap"),
+          Matchers.constructor().forClass("java.util.LinkedHashMap"),
+          MethodMatchers.staticMethod()
+              .onClass("com.google.common.collect.HashBiMap")
+              .named("create"));
+
+  private static final Matcher<ExpressionTree> CONSTRUCTS_MULTIMAP =
+      anyOf(
+          MethodMatchers.staticMethod()
+              .onClass("com.google.common.collect.HashMultimap")
+              .named("create"),
+          MethodMatchers.staticMethod()
+              .onClass("com.google.common.collect.LinkedHashMultimap")
+              .named("create"),
+          MethodMatchers.staticMethod()
+              .onClass("com.google.common.collect.ArrayListMultimap")
+              .named("create"),
+          MethodMatchers.staticMethod()
+              .onClass("com.google.common.collect.LinkedListMultimap")
+              .named("create"));
 
   private Description matchArrays(ExpressionTree tree, VisitorState state) {
-    if (!CONSTRUCTS_HASHSET_OR_HASHMAP.matches(tree, state)) {
+    if (!CONSTRUCTS_SET.matches(tree, state)
+        && !CONSTRUCTS_MAP.matches(tree, state)
+        && !CONSTRUCTS_MULTIMAP.matches(tree, state)
+        && !CONSTRUCTS_MULTISET.matches(tree, state)) {
       return Description.NO_MATCH;
     }
+
     List<Type> argumentTypes = ASTHelpers.getResultType(tree).getTypeArguments();
     if (argumentTypes.isEmpty()) {
       return Description.NO_MATCH;
