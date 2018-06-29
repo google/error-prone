@@ -293,4 +293,29 @@ public class InconsistentCapitalizationTest {
             "}")
         .doTest();
   }
+
+  // regression test for https://github.com/google/error-prone/issues/1008
+  @Test
+  public void testSyntheticConstructor() throws Exception {
+    refactoringHelper
+        .addInputLines(
+           "Test.java",
+           "class Test {",
+           "  private final AutoCloseable autoCloseable;",
+           "  protected Test(final AutoCloseable autocloseable) {",
+           "    this.autoCloseable = autocloseable;",
+           "  }",
+           "  static Test test = new Test(null) {};",
+           "}")
+        .addOutputLines(
+           "Test.java",
+           "class Test {",
+           "  private final AutoCloseable autoCloseable;",
+           "  protected Test(final AutoCloseable autoCloseable) {",
+           "    this.autoCloseable = autoCloseable;",
+           "  }",
+           "  static Test test = new Test(null) {};",
+           "}")
+        .doTest();
+  }
 }

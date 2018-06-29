@@ -379,6 +379,10 @@ public class SuggestedFixes {
    */
   public static SuggestedFix renameVariable(
       VariableTree tree, final String replacement, VisitorState state) {
+    // For synthetic code returns null, there is nothing to replace
+    if (state.getSourceForNode(tree) == null) {
+      return SuggestedFix.builder().build();
+    }
     String name = tree.getName().toString();
     // For a lambda parameter without explicit type, it will return null.
     String source = state.getSourceForNode(tree.getType());
