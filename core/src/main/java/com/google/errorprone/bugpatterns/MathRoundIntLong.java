@@ -47,8 +47,8 @@ import com.sun.source.tree.Tree;
     summary = "Math.round(Integer) results in truncation",
     explanation =
         "Math.round() called with an integer or long type results in truncation"
-            + "because Math.round only accepts floats or doubles and some integers and longs can't"
-            + "be represented with float.",
+            + " because Math.round only accepts floats or doubles and some integers and longs can't"
+            + " be represented with float.",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class MathRoundIntLong extends BugChecker implements MethodInvocationTreeMatcher {
