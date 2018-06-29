@@ -29,7 +29,7 @@ management:
 
 *   If multiple Client classes are constructed, multiple output streams are
     opened against the same file, and writes to the file may clash with
-    eachother.
+    each other.
 *   It's not clear which class has the responsibility of closing the
     `FileOutputStream` resource:
 
