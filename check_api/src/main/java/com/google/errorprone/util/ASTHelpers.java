@@ -46,6 +46,7 @@ import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -268,6 +269,23 @@ public class ASTHelpers {
   public static MethodSymbol getSymbol(MemberReferenceTree tree) {
     Symbol sym = ((JCMemberReference) tree).sym;
     return sym instanceof MethodSymbol ? (MethodSymbol) sym : null;
+  }
+
+  /* Checks whether an expression requires parentheses. */
+  public static boolean requiresParentheses(ExpressionTree expression) {
+    switch (expression.getKind()) {
+      case IDENTIFIER:
+      case MEMBER_SELECT:
+      case METHOD_INVOCATION:
+      case ARRAY_ACCESS:
+      case PARENTHESIZED:
+        return false;
+      default: // continue below
+    }
+    if (expression instanceof LiteralTree || expression instanceof UnaryTree) {
+      return false;
+    }
+    return true;
   }
 
   /** Removes any enclosing parentheses from the tree. */
@@ -1223,6 +1241,11 @@ public class ASTHelpers {
     @Override
     public Type visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree, Void unused) {
       return state.getTypes().findDescriptorType(getType(lambdaExpressionTree)).getReturnType();
+    }
+
+    @Override
+    public Type visitParenthesized(ParenthesizedTree node, Void unused) {
+      return visit(node.getExpression(), unused);
     }
 
     @Override
