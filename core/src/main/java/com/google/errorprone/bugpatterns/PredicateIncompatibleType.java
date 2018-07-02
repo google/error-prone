@@ -20,7 +20,6 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.Signatures.prettyType;
 
 import com.google.errorprone.BugPattern;
@@ -32,31 +31,46 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ * @author eleanorh@google.com (Eleanor Harris)
+ */
 @BugPattern(
     name = "PredicateIncompatibleType",
     category = JDK,
-    summary = "Using ::equals as an incompatible Predicate; the predicate will always return false",
+    summary =
+        "Using ::equals or ::isInstance as an incompatible Predicate;"
+            + " the predicate will always return false",
     severity = ERROR)
 public class PredicateIncompatibleType extends BugChecker implements MemberReferenceTreeMatcher {
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    if (!tree.getName().contentEquals("equals")) {
-      return NO_MATCH;
-    }
+
     Type predicateType = predicateType(ASTHelpers.getType(tree), state);
-    Type receiverType = getReceiverType(tree);
-    if (EqualsIncompatibleType.compatibilityOfTypes(receiverType, predicateType, state)
-        .compatible()) {
+    if (predicateType == null) {
       return NO_MATCH;
     }
-    return buildDescription(tree)
-        .setMessage(
-            String.format(
-                "Using %s::equals as Predicate<%s>; the predicate will always return false",
-                prettyType(receiverType), prettyType(predicateType)))
-        .build();
+    Type receiverType = ASTHelpers.getReceiverType(tree);
+
+    if (tree.getName().contentEquals("equals")
+        && !EqualsIncompatibleType.compatibilityOfTypes(receiverType, predicateType, state)
+            .compatible()) {
+      return buildMessage(receiverType, predicateType, tree);
+    }
+
+    if (tree.getName().contentEquals("isInstance")
+        && ASTHelpers.isSameType(receiverType, state.getSymtab().classType, state)
+        && !receiverType.getTypeArguments().isEmpty()) {
+      Type argumentType = receiverType.getTypeArguments().get(0);
+      Type upperBound = ASTHelpers.getUpperBound(predicateType, state.getTypes());
+      if (!EqualsIncompatibleType.compatibilityOfTypes(upperBound, argumentType, state)
+          .compatible()) {
+        return buildMessage(upperBound, argumentType, tree);
+      }
+    }
+
+    return NO_MATCH;
   }
 
   private static Type predicateType(Type type, VisitorState state) {
@@ -69,5 +83,14 @@ public class PredicateIncompatibleType extends BugChecker implements MemberRefer
       return null;
     }
     return getOnlyElement(asPredicate.getTypeArguments(), null);
+  }
+
+  private Description buildMessage(Type type1, Type type2, MemberReferenceTree tree) {
+    return buildDescription(tree)
+        .setMessage(
+            String.format(
+                "Predicate will always evaluate to false because types %s and %s are incompatible",
+                prettyType(type1), prettyType(type2)))
+        .build();
   }
 }
