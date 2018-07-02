@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
@@ -1491,5 +1492,39 @@ public class Matchers {
   private static String getPackageFullName(VisitorState state) {
     JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
     return compilationUnit.packge.fullname.toString();
+  }
+
+  /**
+   * Matches an invocation of a recognized static object equality method such as {@link
+   * java.util.Objects#equals}. These are simple facades to {@link Object#equals} that accept null
+   * for either argument.
+   */
+  public static Matcher<MethodInvocationTree> staticEqualsInvocation() {
+    return anyOf(
+        allOf(
+            staticMethod()
+                .onClass("android.support.v4.util.ObjectsCompat")
+                .named("equals")
+                .withParameters("java.lang.Object", "java.lang.Object"),
+            isSameType(BOOLEAN_TYPE)),
+        allOf(
+            staticMethod()
+                .onClass("java.util.Objects")
+                .named("equals")
+                .withParameters("java.lang.Object", "java.lang.Object"),
+            isSameType(BOOLEAN_TYPE)),
+        allOf(
+            staticMethod()
+                .onClass("com.google.common.base.Objects")
+                .named("equal")
+                .withParameters("java.lang.Object", "java.lang.Object"),
+            isSameType(BOOLEAN_TYPE)));
+  }
+
+  /** Matches calls to the method {link Object#equals(Object)} or any override of that method. */
+  public static Matcher<MethodInvocationTree> instanceEqualsInvocation() {
+    return allOf(
+        instanceMethod().anyClass().named("equals").withParameters("java.lang.Object"),
+        isSameType(BOOLEAN_TYPE));
   }
 }

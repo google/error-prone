@@ -18,13 +18,12 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.isSameType;
+import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.toType;
-import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicate;
@@ -60,31 +59,11 @@ import javax.annotation.Nullable;
     category = JDK,
     severity = WARNING)
 public class EqualsIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
-  private static final Matcher<MethodInvocationTree> STATIC_EQUALS_INVOCATION_MATCHER =
-      anyOf(
-          allOf(
-              staticMethod()
-                  .onClass("android.support.v4.util.ObjectsCompat")
-                  .named("equals")
-                  .withParameters("java.lang.Object", "java.lang.Object"),
-              isSameType(BOOLEAN_TYPE)),
-          allOf(
-              staticMethod()
-                  .onClass("java.util.Objects")
-                  .named("equals")
-                  .withParameters("java.lang.Object", "java.lang.Object"),
-              isSameType(BOOLEAN_TYPE)),
-          allOf(
-              staticMethod()
-                  .onClass("com.google.common.base.Objects")
-                  .named("equal")
-                  .withParameters("java.lang.Object", "java.lang.Object"),
-              isSameType(BOOLEAN_TYPE)));
+  private static final Matcher<MethodInvocationTree> STATIC_EQUALS_MATCHER =
+      staticEqualsInvocation();
 
-  private static final Matcher<MethodInvocationTree> INSTANCE_EQUALS_INVOCATION_MATCHER =
-      allOf(
-          instanceMethod().anyClass().named("equals").withParameters("java.lang.Object"),
-          isSameType(BOOLEAN_TYPE));
+  private static final Matcher<MethodInvocationTree> INSTANCE_EQUALS_MATCHER =
+      instanceEqualsInvocation();
 
   private static final Matcher<Tree> ASSERT_FALSE_MATCHER =
       toType(
@@ -96,8 +75,8 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree invocationTree, final VisitorState state) {
-    if (!STATIC_EQUALS_INVOCATION_MATCHER.matches(invocationTree, state)
-        && !INSTANCE_EQUALS_INVOCATION_MATCHER.matches(invocationTree, state)) {
+    if (!STATIC_EQUALS_MATCHER.matches(invocationTree, state)
+        && !INSTANCE_EQUALS_MATCHER.matches(invocationTree, state)) {
       return Description.NO_MATCH;
     }
 
@@ -110,7 +89,7 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     // to this method.
     Type argumentType;
 
-    if (STATIC_EQUALS_INVOCATION_MATCHER.matches(invocationTree, state)) {
+    if (STATIC_EQUALS_MATCHER.matches(invocationTree, state)) {
       receiverType = ASTHelpers.getType(invocationTree.getArguments().get(0));
       argumentType = ASTHelpers.getType(invocationTree.getArguments().get(1));
     } else {
