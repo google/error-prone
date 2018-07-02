@@ -37,7 +37,7 @@ public class PredicateIncompatibleTypeTest {
             "import java.util.stream.Stream;",
             "class Test {",
             "  Stream<Integer> f(List<Integer> lx) {",
-            "    // BUG: Diagnostic contains: Using String::equals as Predicate<Integer>;",
+            "    // BUG: Diagnostic contains: types String and Integer are incompatible",
             "    return lx.stream().filter(\"\"::equals);",
             "  }",
             "}")
@@ -84,7 +84,7 @@ public class PredicateIncompatibleTypeTest {
             "import com.google.common.base.Predicate;",
             "class Test {",
             "  void f(Integer x) {",
-            "    // BUG: Diagnostic contains: Using Integer::equals as Predicate<String>;",
+            "    // BUG: Diagnostic contains: types Integer and String are incompatible",
             "    Predicate<String> p = x::equals;",
             "  }",
             "}")
@@ -101,6 +101,114 @@ public class PredicateIncompatibleTypeTest {
             "class Test {",
             "  void f() {",
             "    BiFunction<Object, Object, Boolean> f = Object::equals;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveInstanceOf() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  Optional<String> f(Optional<String> s) {",
+            "    // BUG: Diagnostic contains: types String and Integer are incompatible",
+            "    return s.filter(Integer.class::isInstance);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveInstanceOf2() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import java.util.HashMap;",
+            "class Test {",
+            "  Optional<HashMap<String,Integer>> f(Optional<HashMap<String,Integer>> m) {",
+            "    // BUG: Diagnostic contains: Predicate will always evaluate to false",
+            "    return m.filter(Integer.class::isInstance);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveInstanceOfWithGenerics() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import java.lang.Number;",
+            "class Test {",
+            "  <T extends Number> Optional<T> f(Optional<T> t) {",
+            "    // BUG: Diagnostic contains: types Number and String are incompatible",
+            "    return t.filter(String.class::isInstance);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeInstanceOf() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import java.util.HashMap;",
+            "import java.util.LinkedHashMap;",
+            "class Test {",
+            "  Optional<HashMap> f(Optional<HashMap> m) {",
+            "    return m.filter(LinkedHashMap.class::isInstance);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeInstanceOf2() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import java.util.HashMap;",
+            "import java.util.LinkedHashMap;",
+            "class Test {",
+            "  Optional<HashMap<String, Integer>> f(Optional<HashMap<String,Integer>> m) {",
+            "    return m.filter(LinkedHashMap.class::isInstance);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeInstanceOfWithGenerics() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  <T> Optional<T> f(Optional<T> t) {",
+            "    return t.filter(Object.class::isInstance);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  /* String.class::isInstance is used as a Function<T, Boolean>, not a Predicate<T>. */
+  @Test
+  public void methodReferenceNotPredicate() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  <T> Optional<Boolean> f(Optional<T> t) {",
+            "    return t.map(String.class::isInstance);",
             "  }",
             "}")
         .doTest();
