@@ -43,6 +43,21 @@ public class VariableNameSameAsTypeTest {
   }
 
   @Test
+  public void positiveLambda() throws Exception {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: Variable named String has the type java.lang.String",
+            "    Predicate<String> p = (String) -> String.isEmpty(); ",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveInitialized() throws Exception {
     helper
         .addSourceLines(
