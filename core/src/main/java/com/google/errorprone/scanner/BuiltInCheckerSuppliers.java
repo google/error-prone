@@ -312,6 +312,7 @@ import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ParameterNotNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
+import com.google.errorprone.bugpatterns.threadsafety.DeprecatedThreadMethods;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker;
@@ -321,6 +322,7 @@ import com.google.errorprone.bugpatterns.threadsafety.ImmutableRefactoring;
 import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
 import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
+import com.google.errorprone.bugpatterns.threadsafety.ThreadPriorityCheck;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 import java.util.Arrays;
 
@@ -506,6 +508,7 @@ public class BuiltInCheckerSuppliers {
           ComparableAndComparator.class,
           DateFormatConstant.class,
           DefaultCharset.class,
+          DeprecatedThreadMethods.class,
           DoubleBraceInitialization.class,
           DoubleCheckedLocking.class,
           EqualsHashCode.class,
@@ -573,6 +576,7 @@ public class BuiltInCheckerSuppliers {
           SynchronizeOnNonFinalField.class,
           ThreadJoinLoop.class,
           ThreadLocalUsage.class,
+          ThreadPriorityCheck.class,
           ThreeLetterTimeZoneID.class,
           ToStringReturnsNull.class,
           TruthAssertExpected.class,
