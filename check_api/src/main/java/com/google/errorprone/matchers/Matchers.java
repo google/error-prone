@@ -1527,4 +1527,15 @@ public class Matchers {
         instanceMethod().anyClass().named("equals").withParameters("java.lang.Object"),
         isSameType(BOOLEAN_TYPE));
   }
+
+  /**
+   * Matches calls to the method {link org.junit.Assert#assertEquals} and corresponding methods in
+   * JUnit 3.x.
+   */
+  public static Matcher<ExpressionTree> assertEqualsInvocation() {
+    return anyOf(
+        staticMethod().onClass("org.junit.Assert").named("assertEquals"),
+        staticMethod().onClass("junit.framework.Assert").named("assertEquals"),
+        staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
+  }
 }

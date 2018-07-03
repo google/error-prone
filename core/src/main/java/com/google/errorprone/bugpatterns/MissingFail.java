@@ -108,11 +108,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   // assertTrue(thrown);
   // ```
 
-  private static final Matcher<ExpressionTree> ASSERT_EQUALS =
-      Matchers.anyOf(
-          staticMethod().onClass("org.junit.Assert").named("assertEquals"),
-          staticMethod().onClass("junit.framework.Assert").named("assertEquals"),
-          staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
+  private static final Matcher<ExpressionTree> ASSERT_EQUALS = Matchers.assertEqualsInvocation();
   private static final Matcher<Tree> ASSERT_UNEQUAL =
       toType(MethodInvocationTree.class, new UnequalIntegerLiteralMatcher(ASSERT_EQUALS));
 
