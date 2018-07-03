@@ -27,6 +27,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
+import javax.lang.model.element.Name;
 
 /** @author kayco@google.com (Kayla Walker) & seibelsabrina@google.com (Sabrina Seibel) */
 /** Check for variables and types with the same name */
@@ -40,12 +41,14 @@ public class VariableNameSameAsType extends BugChecker implements VariableTreeMa
 
   @Override
   public Description matchVariable(VariableTree varTree, VisitorState state) {
+
+    Name varName = varTree.getName();
     Matcher<VariableTree> nameSameAsType =
         Matchers.variableType(
             (typeTree, s) -> {
               Symbol typeSymbol = ASTHelpers.getSymbol(typeTree);
               if (typeSymbol != null) {
-                return typeSymbol.getSimpleName().contentEquals(varTree.getName());
+                return typeSymbol.getSimpleName().contentEquals(varName);
               }
               return false;
             });
@@ -53,6 +56,11 @@ public class VariableNameSameAsType extends BugChecker implements VariableTreeMa
     if (!nameSameAsType.matches(varTree, state)) {
       return Description.NO_MATCH;
     }
-    return describeMatch(varTree);
+    String message =
+        String.format(
+            "Variable named %s has the type %s. Calling methods using \"%s.something\" are "
+                + "difficult to distinguish between static and instance methods.",
+            varName, varTree.getType(), varName);
+    return buildDescription(varTree).setMessage(message).build();
   }
 }
