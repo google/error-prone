@@ -116,8 +116,10 @@ public class RestrictedApiChecker extends BugChecker
       }
     }
     boolean warn =
-        Matchers.enclosingNode(shouldAllowWithWarning(restriction, state)).matches(where, state);
-    boolean allow = Matchers.enclosingNode(shouldAllow(restriction, state)).matches(where, state);
+        Matchers.enclosingNode(shouldAllowWithWarning(restriction))
+                .matches(where, state) ;
+
+    boolean allow = Matchers.enclosingNode(shouldAllow(restriction)).matches(where, state);
     if (warn && allow) {
       // TODO(bangert): Clarify this message if possible.
       return buildDescription(where)
@@ -143,7 +145,7 @@ public class RestrictedApiChecker extends BugChecker
   }
 
   // TODO(bangert): Memoize these if necessary.
-  private static Matcher<Tree> shouldAllow(RestrictedApi api, VisitorState state) {
+  private static Matcher<Tree> shouldAllow(RestrictedApi api) {
     try {
       return Matchers.hasAnyAnnotation(api.whitelistAnnotations());
     } catch (MirroredTypesException e) {
@@ -151,7 +153,7 @@ public class RestrictedApiChecker extends BugChecker
     }
   }
 
-  private static Matcher<Tree> shouldAllowWithWarning(RestrictedApi api, VisitorState state) {
+  private static Matcher<Tree> shouldAllowWithWarning(RestrictedApi api) {
     try {
       return Matchers.hasAnyAnnotation(api.whitelistWithWarningAnnotations());
     } catch (MirroredTypesException e) {
