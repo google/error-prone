@@ -139,9 +139,9 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
     String annotationToValidate;
     if (checkReturn) {
-      annotationToValidate = javax.annotation.CheckReturnValue.class.getSimpleName();
+      annotationToValidate = CHECK_RETURN_VALUE;
     } else if (canIgnore) {
-      annotationToValidate = CanIgnoreReturnValue.class.getSimpleName();
+      annotationToValidate = CAN_IGNORE_RETURN_VALUE;
     } else {
       return Description.NO_MATCH;
     }
