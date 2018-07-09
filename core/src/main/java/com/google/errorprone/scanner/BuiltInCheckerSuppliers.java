@@ -157,6 +157,7 @@ import com.google.errorprone.bugpatterns.NCopiesOfChar;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
 import com.google.errorprone.bugpatterns.NestedInstanceOfConditions;
 import com.google.errorprone.bugpatterns.NoAllocationChecker;
+import com.google.errorprone.bugpatterns.NoFunctionalReturnType;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.bugpatterns.NonCanonicalStaticImport;
 import com.google.errorprone.bugpatterns.NonCanonicalStaticMemberImport;
@@ -647,6 +648,7 @@ public class BuiltInCheckerSuppliers {
           MultipleTopLevelClasses.class,
           MultipleUnaryOperatorsInMethodCall.class,
           NoAllocationChecker.class,
+          NoFunctionalReturnType.class,
           NonCanonicalStaticMemberImport.class,
           NumericEquality.class,
           PackageLocation.class,
