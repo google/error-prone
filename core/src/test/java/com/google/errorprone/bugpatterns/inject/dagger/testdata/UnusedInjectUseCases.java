@@ -19,7 +19,7 @@ public class UnusedInjectUseCases {
   // BUG: Diagnostic contains: Unused field with @Inject annotation.
   @Inject int unusedInt;
 
-  @SuppressWarnings("UnusedInject")
+  @SuppressWarnings("UnusedMemberInjection")
   @Inject int suppressedUnusedInt;
 
   @Inject String usedString1;

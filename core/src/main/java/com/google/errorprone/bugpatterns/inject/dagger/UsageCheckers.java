@@ -24,22 +24,21 @@ import java.util.HashMap;
 import static com.google.errorprone.BugPattern.Category.DAGGER;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+/** @authors Murali Krishna Ramanathan, Manu Sridharan */
 /** Class that analyzes the use of variables to determine unused variables. */
 @AutoService(BugChecker.class)
-
-/** @authors Murali Krishna Ramanathan, Manu Sridharan */
 @BugPattern(
   name = "UsageCheckers",
-  altNames = {"UnusedParam", "UnusedInject"},
+  altNames = {"UnusedProviderParam", "UnusedMemberInjection"},
   summary = "Unused field with @Inject annotation.",
   category = DAGGER,
   severity = WARNING
 )
 public class UsageCheckers extends BugChecker implements BugChecker.ClassTreeMatcher {
 
-  private static final String unusedInjectCheckerName = "UnusedInject";
+  private static final String unusedInjectCheckerName = "UnusedMemberInjection";
   private static final String unusedInjectCheckerMessage = "Unused field with @Inject annotation.";
-  private static final String unusedParamCheckerName = "UnusedParam";
+  private static final String unusedParamCheckerName = "UnusedProviderParam";
   private static final String unusedParamCheckerMessage =
       "Unused parameter in method with @Provides annotation.";
 

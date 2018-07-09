@@ -19,7 +19,7 @@ public class UnusedParamUseCases {
      return new Integer(0);
   }
 
-  @SuppressWarnings("UnusedParam")
+  @SuppressWarnings("UnusedProviderParam")
   @Provides static Integer providesMethodWithUnusedParamSuppressed(String unusedSuppressed) {
     return new Integer(0);
   }
