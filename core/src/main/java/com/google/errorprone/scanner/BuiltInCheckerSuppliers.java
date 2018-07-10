@@ -33,6 +33,7 @@ import com.google.errorprone.bugpatterns.AssertThrowsMultipleStatements;
 import com.google.errorprone.bugpatterns.AssertionFailureIgnored;
 import com.google.errorprone.bugpatterns.AsyncCallableReturnsNull;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
+import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadImport;
@@ -492,6 +493,7 @@ public class BuiltInCheckerSuppliers {
           AssertEqualsArgumentOrderChecker.class,
           AssertThrowsMultipleStatements.class,
           AssertionFailureIgnored.class,
+          AutoValueFinalMethods.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BadImport.class,
