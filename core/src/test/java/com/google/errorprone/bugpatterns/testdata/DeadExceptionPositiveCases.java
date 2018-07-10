@@ -17,9 +17,14 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 public class DeadExceptionPositiveCases {
-  public void error() {
+  public void runtimeException() {
     // BUG: Diagnostic contains: throw new RuntimeException
     new RuntimeException("Not thrown, and reference lost");
+  }
+
+  public void error() {
+    // BUG: Diagnostic contains: throw new AssertionError
+    new AssertionError("Not thrown, and reference lost");
   }
 
   public void fixIsToDeleteTheFirstStatement() {

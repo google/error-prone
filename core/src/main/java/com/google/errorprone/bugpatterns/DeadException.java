@@ -25,7 +25,7 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
-import static com.google.errorprone.suppliers.Suppliers.EXCEPTION_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.THROWABLE_TYPE;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.IF;
 
@@ -61,7 +61,7 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
   public static final Matcher<Tree> MATCHER =
       allOf(
           parentNode(kindIs(EXPRESSION_STATEMENT)),
-          isSubtypeOf(EXCEPTION_TYPE),
+          isSubtypeOf(THROWABLE_TYPE),
           not(
               anyOf(
                   enclosingClass(JUnitMatchers.isJUnit3TestClass),
