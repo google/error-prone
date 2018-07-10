@@ -208,6 +208,14 @@ public class Suppliers {
         }
       };
 
+  public static final Supplier<Type> THROWABLE_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().throwableType;
+        }
+      };
+
   public static final Supplier<Type> ANNOTATION_TYPE =
       new Supplier<Type>() {
         @Override
