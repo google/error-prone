@@ -832,15 +832,11 @@ public class SuggestedFixes {
       return Optional.empty();
     }
 
-    Tree whitelistLocation;
-    if (where.getLeaf() instanceof ClassTree) {
-      whitelistLocation = where.getLeaf();
-    } else {
-      whitelistLocation = ASTHelpers.findEnclosingNode(where, ClassTree.class);
-    }
-    if (whitelistLocation == null) {
+    Optional<ClassTree> whitelistLocation = findFixLocation(where);
+    if (!whitelistLocation.isPresent()) {
       return Optional.empty();
     }
+
 
     Type whitelistAnnotationType = state.getTypeFromString(whitelistAnnotation);
     if (whitelistAnnotationType != null) {
@@ -849,7 +845,8 @@ public class SuggestedFixes {
       }
       SuggestedFix.Builder builder = SuggestedFix.builder();
       String annotation = qualifyType(state, builder, whitelistAnnotationType);
-      return Optional.of(builder.prefixWith(whitelistLocation, "@" + annotation + " ").build());
+      return Optional.of(
+          builder.prefixWith(whitelistLocation.get(), "@" + annotation + " ").build());
     } else {
       // If we can't resolve the type, fall back to an approximation.
       int idx = whitelistAnnotation.lastIndexOf('.');
@@ -859,9 +856,24 @@ public class SuggestedFixes {
       return Optional.of(
           SuggestedFix.builder()
               .addImport(whitelistAnnotation)
-              .prefixWith(whitelistLocation, "@" + annotationName + " ")
+              .prefixWith(whitelistLocation.get(), "@" + annotationName + " ")
               .build());
     }
+  }
+
+  // Finds a surrounding ClassTree where we can add an annotation: this skips over anonymous
+  // classes.
+  private static Optional<ClassTree> findFixLocation(TreePath where) {
+    for (Tree node : where) {
+      if (node instanceof ClassTree) {
+        ClassTree classTree = (ClassTree) node;
+        if (!classTree.getSimpleName().contentEquals("")) {
+          // Anonymous classes don't have a name
+          return Optional.of(classTree);
+        }
+      }
+    }
+    return Optional.empty();
   }
 
   /** Returns true iff {@code suggestWhitelistAnnotation()} supports this annotation. */
