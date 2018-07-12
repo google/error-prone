@@ -533,6 +533,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   @Override
+  Nullness visitClassDeclaration() {
+    return NONNULL;
+  }
+
+  @Override
   Nullness visitArrayCreation(ArrayCreationNode node, SubNodeValues inputs, Updates updates) {
     return NONNULL;
   }

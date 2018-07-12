@@ -995,12 +995,16 @@ abstract class AbstractNullnessPropagationTransfer
     return NULLABLE;
   }
 
-  // TODO(b/111301865): This is a new API in CF 2.5.3
   @Override
   public final TransferResult<Nullness, AccessPathStore<Nullness>> visitClassDeclaration(
       ClassDeclarationNode classDeclarationNode,
       TransferInput<Nullness, AccessPathStore<Nullness>> input) {
-    return noStoreChanges(NULLABLE, input);
+    Nullness result = visitClassDeclaration();
+    return noStoreChanges(result, input);
+  }
+
+  Nullness visitClassDeclaration() {
+    return NULLABLE;
   }
 
   private static final class ReadableUpdates implements Updates {
