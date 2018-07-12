@@ -49,12 +49,14 @@ import java.lang.annotation.Target;
  * http://jeremymanson.blogspot.com/2008/12/benign-data-races-in-java.html (see, particularly, the
  * part after "Now, let's break the code").
  *
- * <p>Also note that {@code LazyInit} must not be used on 64-bit primitives (such as {@code long}s
- * and {@code double}s), because the Java Language Specification does not guarantee that writing to
- * these is made atomically. Furthermore, when using for non-primitives, the non-primitive must be
- * either truly immutable or at least thread safe (in the Java memory model sense). Again, unless
- * you really understand this <b>and</b> you really need the performance benefits of avoiding the
- * data race, do not use this construct.
+ * <p>Also note that {@code LazyInit} must not be used on 64-bit primitives ({@code long}s and
+ * {@code double}s), because the Java Language Specification does not guarantee that writing to
+ * these is atomic. Furthermore, when used for non-primitives, the non-primitive must be either
+ * truly immutable or at least thread safe (in the Java memory model sense). And callers must
+ * accommodate the fact that different calls to something like the above getData() method may return
+ * different (though identically computed) objects, with different identityHashCode() values. Again,
+ * unless you really understand this <b>and</b> you really need the performance benefits of
+ * introducing the data race, do not use this construct.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
