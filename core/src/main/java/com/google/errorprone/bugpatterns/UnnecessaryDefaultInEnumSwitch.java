@@ -24,6 +24,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.Reachability.canCompleteNormally;
 
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -58,6 +60,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
+
     TypeSymbol switchType = ((JCSwitch) tree).getExpression().type.tsym;
     if (switchType.getKind() != ElementKind.ENUM) {
       return NO_MATCH;
@@ -82,14 +85,27 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
             .filter(IdentifierTree.class::isInstance)
             .map(p -> ((IdentifierTree) p).getName().toString())
             .collect(toImmutableSet());
-    if (!ASTHelpers.enumValues(switchType).equals(handledCases)) {
-      return NO_MATCH;
+    boolean unrecognized = false;
+    SetView<String> setDifference =
+        Sets.difference(ASTHelpers.enumValues(switchType), handledCases);
+    if (!setDifference.isEmpty()) {
+      if (setDifference.contains("UNRECOGNIZED") && setDifference.size() == 1) {
+        // if a switch handles all values of an proto-generated enum except for 'UNRECOGNIZED',
+        // we explicitly handle 'UNRECOGNIZED' and remove the default.
+        unrecognized = true;
+      } else {
+        return NO_MATCH;
+      }
     }
     Fix fix;
     List<? extends StatementTree> defaultStatements = defaultCase.getStatements();
     if (trivialDefault(defaultStatements)) {
       // deleting `default:` or `default: break;` is a no-op
-      fix = SuggestedFix.delete(defaultCase);
+      if (unrecognized) {
+        fix = SuggestedFix.replace(defaultCase, "case UNRECOGNIZED: \n // continue below");
+      } else {
+        fix = SuggestedFix.delete(defaultCase);
+      }
     } else {
       String defaultSource =
           state
@@ -99,15 +115,22 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
                   state.getEndPosition(getLast(defaultStatements)))
               .toString();
       String initialComments = comments(state, defaultCase, defaultStatements);
-
       if (!canCompleteNormally(tree)) {
         // if the switch statement cannot complete normally, then deleting the default
         // and moving its statements to after the switch statement is a no-op
-        fix =
-            SuggestedFix.builder()
-                .delete(defaultCase)
-                .postfixWith(tree, initialComments + defaultSource)
-                .build();
+        if (unrecognized) {
+          fix =
+              SuggestedFix.builder()
+                  .replace(defaultCase, "case UNRECOGNIZED: \n break;")
+                  .postfixWith(tree, initialComments + defaultSource)
+                  .build();
+        } else {
+          fix =
+              SuggestedFix.builder()
+                  .delete(defaultCase)
+                  .postfixWith(tree, initialComments + defaultSource)
+                  .build();
+        }
       } else {
         // The switch is already exhaustive, we want to delete the default.
         // There are a few modes we need to handle:
@@ -148,11 +171,20 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
           fix = SuggestedFix.delete(defaultCase);
         } else {
           // case (1) -- If it can complete, we need to merge the default into it.
-          fix =
-              SuggestedFix.builder()
-                  .delete(defaultCase)
-                  .postfixWith(caseBeforeDefault, initialComments + defaultSource)
-                  .build();
+          if (unrecognized) {
+            fix =
+                SuggestedFix.builder()
+                    .prefixWith(defaultCase, "case UNRECOGNIZED:")
+                    .delete(defaultCase)
+                    .postfixWith(defaultCase, initialComments + defaultSource)
+                    .build();
+          } else {
+            fix =
+                SuggestedFix.builder()
+                    .delete(defaultCase)
+                    .postfixWith(caseBeforeDefault, initialComments + defaultSource)
+                    .build();
+          }
         }
       }
     }
@@ -172,11 +204,8 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
     if (defaultStatements.isEmpty()) {
       return true;
     }
-    if (defaultStatements.size() == 1
-        && getOnlyElement(defaultStatements).getKind() == Tree.Kind.BREAK) {
-      return true;
-    }
-    return false;
+    return (defaultStatements.size() == 1
+        && getOnlyElement(defaultStatements).getKind() == Tree.Kind.BREAK);
   }
 
   /** Returns the comments between the "default:" case and the first statement within it, if any. */
