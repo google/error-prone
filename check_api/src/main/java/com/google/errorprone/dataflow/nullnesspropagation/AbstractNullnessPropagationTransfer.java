@@ -47,6 +47,7 @@ import org.checkerframework.dataflow.cfg.node.BitwiseXorNode;
 import org.checkerframework.dataflow.cfg.node.BooleanLiteralNode;
 import org.checkerframework.dataflow.cfg.node.CaseNode;
 import org.checkerframework.dataflow.cfg.node.CharacterLiteralNode;
+import org.checkerframework.dataflow.cfg.node.ClassDeclarationNode;
 import org.checkerframework.dataflow.cfg.node.ClassNameNode;
 import org.checkerframework.dataflow.cfg.node.ConditionalAndNode;
 import org.checkerframework.dataflow.cfg.node.ConditionalNotNode;
@@ -992,6 +993,14 @@ abstract class AbstractNullnessPropagationTransfer
 
   Nullness visitMarker(MarkerNode node, SubNodeValues inputs, Updates updates) {
     return NULLABLE;
+  }
+
+  // TODO(b/111301865): This is a new API in CF 2.5.3
+  @Override
+  public final TransferResult<Nullness, AccessPathStore<Nullness>> visitClassDeclaration(
+      ClassDeclarationNode classDeclarationNode,
+      TransferInput<Nullness, AccessPathStore<Nullness>> input) {
+    return noStoreChanges(NULLABLE, input);
   }
 
   private static final class ReadableUpdates implements Updates {
