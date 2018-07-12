@@ -90,6 +90,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotatedType;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
@@ -801,6 +802,17 @@ public class ASTHelpers {
   /** Return the enclosing {@code PackageSymbol} of the given symbol, or {@code null}. */
   public static PackageSymbol enclosingPackage(Symbol sym) {
     return sym.packge();
+  }
+
+  /** Return true if the given symbol is defined in the current package. */
+  public static boolean inSamePackage(Symbol targetSymbol, VisitorState state) {
+    JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
+    PackageSymbol usePackage = compilationUnit.packge;
+    PackageSymbol targetPackage = targetSymbol.packge();
+
+    return targetPackage != null
+        && usePackage != null
+        && targetPackage.getQualifiedName().equals(usePackage.getQualifiedName());
   }
 
   /**

@@ -54,6 +54,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
@@ -683,6 +684,63 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "}")
         .setArgs(Arrays.asList("-cp", libJar.toString()))
         .doTest();
+  }
+
+  /* Tests inSamePackage. */
+
+  private TestScanner inSamePackageScanner(final boolean expectedBoolean) {
+    return new TestScanner() {
+      @Override
+      public Void visitMemberSelect(MemberSelectTree tree, VisitorState state) {
+        setAssertionsComplete();
+        Symbol targetSymbol = ASTHelpers.getSymbol(tree);
+        assertThat(ASTHelpers.inSamePackage(targetSymbol, state)).isEqualTo(expectedBoolean);
+        return super.visitMemberSelect(tree, state);
+      }
+    };
+  }
+
+  @Test
+  public void testSamePackagePositive() {
+    writeFile(
+        "A.java",
+        "package p;",
+        "public class A { ",
+        "  public static final String BAR = \"BAR\";",
+        "}");
+    writeFile(
+        "B.java",
+        "package p;",
+        "public class B { ",
+        "  public String bar() {",
+        "    return A.BAR;",
+        "  }",
+        "}");
+    TestScanner scanner = inSamePackageScanner(true);
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testSamePackageNegative() {
+    writeFile(
+        "A.java",
+        "package p;",
+        "public class A { ",
+        "  public static final String BAR = \"BAR\";",
+        "}");
+    writeFile(
+        "B.java",
+        "package q;",
+        "import p.A;",
+        "public class B { ",
+        "  public String bar() {",
+        "    return A.BAR;",
+        "  }",
+        "}");
+    TestScanner scanner = inSamePackageScanner(false);
+    tests.add(scanner);
+    assertCompiles(scanner);
   }
 
   /* Test infrastructure */
