@@ -37,7 +37,7 @@
     <javac.version>9+181-r4173-1</javac.version>
     <autovalue.version>1.5.3</autovalue.version>
     <junit.version>4.13-SNAPSHOT</junit.version>
-    <dataflow.version>2.5.2</dataflow.version>
+    <dataflow.version>2.5.3</dataflow.version>
   </properties>
 
   <modules>
