@@ -35,7 +35,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -258,7 +257,7 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
           return suffixed.get();
         }
       }
-      if (parenthesize(tree)) {
+      if (ASTHelpers.requiresParentheses(tree)) {
         return String.format("(%s) (%s)", typeName, source);
       }
       return String.format("(%s) %s", typeName, source);
@@ -266,10 +265,6 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
 
     static String removeSuffixes(String source) {
       return source.replaceAll("[fFdDlL]$", "");
-    }
-
-    private static boolean parenthesize(ExpressionTree tree) {
-      return tree instanceof BinaryTree;
     }
   }
 }
