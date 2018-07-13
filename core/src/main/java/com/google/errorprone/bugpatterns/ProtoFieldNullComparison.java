@@ -20,80 +20,140 @@ import static com.google.errorprone.BugPattern.Category.PROTOBUF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
-import com.google.common.base.Predicate;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePathScanner;
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
 
+/** Matches comparison of proto fields to {@code null}. */
 @BugPattern(
     name = "ProtoFieldNullComparison",
-    summary = "Protobuf fields cannot be null",
+    summary = "Protobuf fields cannot be null.",
     category = PROTOBUF,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
-public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMatcher {
-
-  private static final Predicate<MethodSymbol> NO_ARGS =
-      new Predicate<MethodSymbol>() {
-        @Override
-        public boolean apply(MethodSymbol input) {
-          return input.params().isEmpty();
-        }
-      };
+public class ProtoFieldNullComparison extends BugChecker implements CompilationUnitTreeMatcher {
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
-  private static final Matcher<ExpressionTree> protoMessageReceiverMatcher =
+  private static final Matcher<ExpressionTree> PROTO_RECEIVER =
       instanceMethod().onDescendantOf(PROTO_SUPER_CLASS);
 
-  private static final String LIST_INTERFACE = "java.util.List";
-
-  private static final Matcher<Tree> returnsListMatcher = Matchers.isSubtypeOf(LIST_INTERFACE);
+  private static final Matcher<Tree> RETURNS_LIST = Matchers.isSubtypeOf("java.util.List");
 
   private static final Set<Kind> COMPARISON_OPERATORS =
       EnumSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
-
-  private static final Matcher<BinaryTree> MATCHER =
-      new Matcher<BinaryTree>() {
-        @Override
-        public boolean matches(BinaryTree tree, VisitorState state) {
-          if (!COMPARISON_OPERATORS.contains(tree.getKind())) {
-            return false;
-          }
-          ExpressionTree leftOperand = tree.getLeftOperand();
-          ExpressionTree rightOperand = tree.getRightOperand();
-          return (isNull(rightOperand) && isProtoMessageGetInvocation(leftOperand, state))
-              || (isNull(leftOperand) && isProtoMessageGetInvocation(rightOperand, state));
-        }
-      };
 
   private static boolean isNull(ExpressionTree tree) {
     return tree.getKind() == Kind.NULL_LITERAL;
   }
 
-  private static boolean isProtoMessageGetInvocation(ExpressionTree tree, VisitorState state) {
-    return (isGetMethodInvocation(tree, state) || isGetListMethodInvocation(tree, state))
-        && receiverIsProtoMessage(tree, state);
+  private final boolean trackAssignments;
+
+  public ProtoFieldNullComparison(ErrorProneFlags flags) {
+    trackAssignments = flags.getBoolean("ProtoFieldNullComparison:TrackAssignments").orElse(false);
   }
 
-  private static boolean isFieldGetMethod(String methodName) {
-    return methodName.startsWith("get");
+  @Override
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    ProtoNullComparisonScanner scanner = new ProtoNullComparisonScanner(state);
+    scanner.scan(state.getPath(), null);
+    return Description.NO_MATCH;
+  }
+
+  private class ProtoNullComparisonScanner extends TreePathScanner<Void, Void> {
+    private final Map<Symbol, ExpressionTree> effectivelyFinalValues = new HashMap<>();
+    private final VisitorState state;
+
+    private ProtoNullComparisonScanner(VisitorState state) {
+      this.state = state;
+    }
+
+    @Override
+    public Void visitMethod(MethodTree method, Void unused) {
+      return isSuppressed(method) ? null : super.visitMethod(method, unused);
+    }
+
+    @Override
+    public Void visitClass(ClassTree clazz, Void unused) {
+      return isSuppressed(clazz) ? null : super.visitClass(clazz, unused);
+    }
+
+    @Override
+    public Void visitVariable(VariableTree variable, Void unused) {
+      if (trackAssignments) {
+        Symbol symbol = ASTHelpers.getSymbol(variable);
+        if (isEffectivelyFinal(symbol) && variable.getInitializer() != null) {
+          effectivelyFinalValues.put(symbol, variable.getInitializer());
+        }
+      }
+      return isSuppressed(variable) ? null : super.visitVariable(variable, null);
+    }
+
+    @Override
+    public Void visitBinary(BinaryTree binary, Void unused) {
+      if (!COMPARISON_OPERATORS.contains(binary.getKind())) {
+        return super.visitBinary(binary, null);
+      }
+      VisitorState subState = state.withPath(getCurrentPath());
+      Optional<Fixer> getter = Optional.empty();
+      if (isNull(binary.getLeftOperand())) {
+        getter = getFixer(binary.getRightOperand(), subState);
+      }
+      if (isNull(binary.getRightOperand())) {
+        getter = getFixer(binary.getLeftOperand(), subState);
+      }
+      getter
+          .map(g -> describeMatch(binary, g.generateFix(binary, subState)))
+          .ifPresent(state::reportMatch);
+      return super.visitBinary(binary, null);
+    }
+
+    private boolean isEffectivelyFinal(@Nullable Symbol symbol) {
+      return symbol != null && (symbol.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) != 0;
+    }
+
+    private Optional<Fixer> getFixer(ExpressionTree tree, VisitorState state) {
+      ExpressionTree resolvedTree =
+          tree.getKind() == Kind.IDENTIFIER
+              ? effectivelyFinalValues.get(ASTHelpers.getSymbol(tree))
+              : tree;
+      if (resolvedTree == null || !PROTO_RECEIVER.matches(resolvedTree, state)) {
+        return Optional.empty();
+      }
+      return Arrays.stream(GetterTypes.values())
+          .map(type -> type.match(resolvedTree, state))
+          .filter(Objects::nonNull)
+          .findFirst();
+    }
   }
 
   private static String getMethodName(ExpressionTree tree) {
@@ -103,111 +163,89 @@ public class ProtoFieldNullComparison extends BugChecker implements BinaryTreeMa
     return access.sym.getQualifiedName().toString();
   }
 
-  private static boolean isGetListMethodInvocation(ExpressionTree tree, VisitorState state) {
-    if (tree.getKind() == Tree.Kind.METHOD_INVOCATION) {
-      MethodInvocationTree method = (MethodInvocationTree) tree;
-      if (!method.getArguments().isEmpty()) {
-        return false;
-      }
-      if (!returnsListMatcher.matches(method, state)) {
-        return false;
-      }
-      ExpressionTree expressionTree = method.getMethodSelect();
-      if (expressionTree instanceof JCFieldAccess) {
-        JCFieldAccess access = (JCFieldAccess) expressionTree;
-        String methodName = access.sym.getQualifiedName().toString();
-        return isFieldGetMethod(methodName);
-      }
-      return true;
-    }
-    return false;
-  }
-
-  private static boolean isGetMethodInvocation(ExpressionTree tree, VisitorState state) {
-    if (tree.getKind() == Tree.Kind.METHOD_INVOCATION) {
-      MethodInvocationTree method = (MethodInvocationTree) tree;
-      if (!method.getArguments().isEmpty()) {
-        return false;
-      }
-      if (returnsListMatcher.matches(method, state)) {
-        return false;
-      }
-      ExpressionTree expressionTree = method.getMethodSelect();
-      if (expressionTree instanceof JCFieldAccess) {
-        JCFieldAccess access = (JCFieldAccess) expressionTree;
-        String methodName = access.sym.getQualifiedName().toString();
-        return isFieldGetMethod(methodName);
-      }
-      return true;
-    }
-    return false;
-  }
-
-  private static boolean receiverIsProtoMessage(ExpressionTree tree, VisitorState state) {
-    return protoMessageReceiverMatcher.matches(tree, state);
-  }
-
   private static String replaceLast(String text, String pattern, String replacement) {
     StringBuilder builder = new StringBuilder(text);
     int lastIndexOf = builder.lastIndexOf(pattern);
     return builder.replace(lastIndexOf, lastIndexOf + pattern.length(), replacement).toString();
   }
 
-  /**
-   * Creates replacements for the following comparisons:
-   * <pre>
-   * proto.getField() == null --> !proto.hasField()
-   * proto.getField() != null --> proto.hasField()
-   * proto.getList() == null  --> proto.getList().isEmpty()
-   * proto.getList() != null  --> !proto.getList().isEmpty()
-   * <pre>
-   * Also creates replacements for the Yoda style version of them.
-   */
-  @Nullable
-  private static String createReplacement(BinaryTree tree, VisitorState state) {
-    ExpressionTree leftOperand = tree.getLeftOperand();
-    ExpressionTree rightOperand = tree.getRightOperand();
-    ExpressionTree methodInvocation;
-    if (isNull(leftOperand)) {
-      methodInvocation = rightOperand;
-    } else {
-      methodInvocation = leftOperand;
-    }
-    if (isGetMethodInvocation(methodInvocation, state)) {
-      String methodName = getMethodName(methodInvocation);
-      String hasMethod = methodName.replaceFirst("get", "has");
-
-      // proto3 does not generate has methods for scalar types, e.g. ByteString and String.
-      // Do not provide a replacement in these cases.
-      Set<MethodSymbol> hasMethods =
-          ASTHelpers.findMatchingMethods(
-              state.getName(hasMethod),
-              NO_ARGS,
-              ASTHelpers.getType(ASTHelpers.getReceiver(methodInvocation)),
-              state.getTypes());
-      if (hasMethods.isEmpty()) {
-        return null;
-      }
-      String replacement = replaceLast(methodInvocation.toString(), methodName, hasMethod);
-      replacement = tree.getKind() == Kind.EQUAL_TO ? "!" + replacement : replacement;
-      return replacement;
-    } else {
-      String replacement = methodInvocation + ".isEmpty()";
-      return tree.getKind() == Kind.EQUAL_TO ? replacement : "!" + replacement;
-    }
+  @FunctionalInterface
+  private interface Fixer {
+    SuggestedFix generateFix(BinaryTree binaryTree, VisitorState state);
   }
 
-  @Override
-  public Description matchBinary(BinaryTree tree, VisitorState state) {
-    if (!MATCHER.matches(tree, state)) {
-      return Description.NO_MATCH;
+  private enum GetterTypes {
+    SCALAR {
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (tree.getKind() != Kind.METHOD_INVOCATION) {
+          return null;
+        }
+        MethodInvocationTree method = (MethodInvocationTree) tree;
+        if (!method.getArguments().isEmpty()) {
+          return null;
+        }
+        if (RETURNS_LIST.matches(method, state)) {
+          return null;
+        }
+        ExpressionTree expressionTree = method.getMethodSelect();
+        return isGetter(expressionTree) ? (b, s) -> generateFix(method, b, s) : null;
+      }
+
+      private SuggestedFix generateFix(
+          MethodInvocationTree methodInvocation, BinaryTree binaryTree, VisitorState state) {
+        String methodName = getMethodName(methodInvocation);
+        String hasMethod = methodName.replaceFirst("get", "has");
+
+        // proto3 does not generate has methods for scalar types, e.g. ByteString and String.
+        // Do not provide a replacement in these cases.
+        Set<MethodSymbol> hasMethods =
+            ASTHelpers.findMatchingMethods(
+                state.getName(hasMethod),
+                ms -> ms.params().isEmpty(),
+                ASTHelpers.getType(ASTHelpers.getReceiver(methodInvocation)),
+                state.getTypes());
+        if (hasMethods.isEmpty()) {
+          return SuggestedFix.builder().build();
+        }
+        String replacement = replaceLast(methodInvocation.toString(), methodName, hasMethod);
+        return SuggestedFix.replace(
+            binaryTree, binaryTree.getKind() == Kind.EQUAL_TO ? "!" + replacement : replacement);
+      }
+    },
+    VECTOR {
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (tree.getKind() != Kind.METHOD_INVOCATION) {
+          return null;
+        }
+        MethodInvocationTree method = (MethodInvocationTree) tree;
+        if (!method.getArguments().isEmpty()) {
+          return null;
+        }
+        if (!RETURNS_LIST.matches(method, state)) {
+          return null;
+        }
+        ExpressionTree expressionTree = method.getMethodSelect();
+        return isGetter(expressionTree) ? (b, s) -> generateFix(method, b) : null;
+      }
+
+      private SuggestedFix generateFix(ExpressionTree methodInvocation, BinaryTree binaryTree) {
+        String replacement = methodInvocation + ".isEmpty()";
+        return SuggestedFix.replace(
+            binaryTree, binaryTree.getKind() == Kind.EQUAL_TO ? replacement : ("!" + replacement));
+      }
+    };
+
+    private static boolean isGetter(ExpressionTree expressionTree) {
+      if (!(expressionTree instanceof JCFieldAccess)) {
+        return false;
+      }
+      JCFieldAccess access = (JCFieldAccess) expressionTree;
+      String methodName = access.sym.getQualifiedName().toString();
+      return methodName.startsWith("get");
     }
 
-    String replacement = createReplacement(tree, state);
-    if (replacement == null) {
-      return describeMatch(tree);
-    } else {
-      return describeMatch(tree, SuggestedFix.replace(tree, createReplacement(tree, state)));
-    }
+    abstract Fixer match(ExpressionTree tree, VisitorState state);
   }
 }
