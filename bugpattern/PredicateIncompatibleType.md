@@ -1,6 +1,6 @@
 ---
 title: PredicateIncompatibleType
-summary: Using ::equals as an incompatible Predicate; the predicate will always return false
+summary: Using ::equals or ::isInstance as an incompatible Predicate; the predicate will always return false
 layout: bugpattern
 tags: ''
 severity: ERROR

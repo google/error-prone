@@ -264,7 +264,7 @@ __[PreconditionsCheckNotNullPrimitive](bugpattern/PreconditionsCheckNotNullPrimi
 First argument to `Preconditions.checkNotNull()` is a primitive rather than an object reference
 
 __[PredicateIncompatibleType](bugpattern/PredicateIncompatibleType)__<br>
-Using ::equals as an incompatible Predicate; the predicate will always return false
+Using ::equals or ::isInstance as an incompatible Predicate; the predicate will always return false
 
 __[PrivateSecurityContractProtoAccess](bugpattern/PrivateSecurityContractProtoAccess)__<br>
 Access to a private protocol buffer field is forbidden. This protocol buffer carries a security contract, and can only be created using an approved library. Direct access to the fields is forbidden.
@@ -367,6 +367,9 @@ The lambda passed to assertThows should contain exactly one statement
 __[AssertionFailureIgnored](bugpattern/AssertionFailureIgnored)__<br>
 This assertion throws an AssertionError if it fails, which will be caught by an enclosing try block.
 
+__[AutoValueFinalMethods](bugpattern/AutoValueFinalMethods)__<br>
+Make toString(), hashCode() and equals() final in AutoValue classes, so it is clear to readers that AutoValue is not overriding them
+
 __[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
 Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
 
@@ -420,6 +423,9 @@ DateFormat is not thread-safe, and should not be used as a constant field.
 
 __[DefaultCharset](bugpattern/DefaultCharset)__<br>
 Implicit use of the platform default charset, which can result in differing behaviour between JVM executions or incorrect behavior if the encoding of the data source doesn&#39;t match expectations.
+
+__[DeprecatedThreadMethods](bugpattern/DeprecatedThreadMethods)__<br>
+Avoid deprecated Thread methods; read the method&#39;s javadoc for details.
 
 __[DoubleBraceInitialization](bugpattern/DoubleBraceInitialization)__<br>
 Prefer collection factory methods or builders to the double-brace initialization pattern.
@@ -622,6 +628,9 @@ Thread.join needs to be surrounded by a loop until it succeeds, as in Uninterrup
 __[ThreadLocalUsage](bugpattern/ThreadLocalUsage)__<br>
 ThreadLocals should be stored in static fields
 
+__[ThreadPriorityCheck](bugpattern/ThreadPriorityCheck)__<br>
+Relying on the thread scheduler is discouraged; see Effective Java Item 72 (2nd edition) / 84 (3rd edition).
+
 __[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
 Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.
 
@@ -800,8 +809,14 @@ The ordering of parameters in overloaded methods should be as consistent as poss
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
 
+__[ModifiedButNotUsed](bugpattern/ModifiedButNotUsed)__<br>
+A collection or proto builder was created, but its values were never accessed.
+
 __[MutableMethodReturnType](bugpattern/MutableMethodReturnType)__<br>
 Method return type should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
+
+__[NoFunctionalReturnType](bugpattern/NoFunctionalReturnType)__<br>
+Instead of returning a functional type, return the actual type that the returned function would return and use lambdas at use site.
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
