@@ -47,4 +47,42 @@ public class UnnecessaryParenthesesTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void anonymousClass() throws IOException {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.common.base.Function;",
+            "import com.google.common.collect.Iterables;",
+            "import java.util.List;",
+            "class Test {",
+            "  Iterable<Integer> f(List<Integer> l) {",
+            "    return Iterables.transform(",
+            "        l,",
+            "        (new Function<Integer, Integer>() {",
+            "          public Integer apply(Integer a) {",
+            "              return a * 2;",
+            "         }",
+            "        }));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.base.Function;",
+            "import com.google.common.collect.Iterables;",
+            "import java.util.List;",
+            "class Test {",
+            "  Iterable<Integer> f(List<Integer> l) {",
+            "    return Iterables.transform(",
+            "        l,",
+            "        new Function<Integer, Integer>() {",
+            "          public Integer apply(Integer a) {",
+            "              return a * 2;",
+            "         }",
+            "        });",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
