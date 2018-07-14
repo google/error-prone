@@ -176,6 +176,7 @@ class RefactoringCollection implements DescriptionListener.Factory {
           throw new IOError(e);
         }
       }
+      Files.createDirectories(patchFilePatch.getParent());
       Files.write(patchFilePatch, patchFile.getBytes(UTF_8), APPEND, CREATE);
     }
   }
