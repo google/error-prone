@@ -831,55 +831,80 @@ public class SuggestedFixes {
     if (whitelistAnnotation.equals("com.google.errorprone.annotations.DontSuggestFixes")) {
       return Optional.empty();
     }
-
-    Optional<ClassTree> whitelistLocation = findFixLocation(where);
-    if (!whitelistLocation.isPresent()) {
-      return Optional.empty();
-    }
-
-
+    SuggestedFix.Builder builder = SuggestedFix.builder();
     Type whitelistAnnotationType = state.getTypeFromString(whitelistAnnotation);
+    ImmutableSet<Tree.Kind> supportedWhitelistLocationKinds;
+    String annotationName;
+
     if (whitelistAnnotationType != null) {
-      if (!suggestedWhitelistAnnotationSupported(whitelistAnnotationType.asElement())) {
-        return Optional.empty();
-      }
-      SuggestedFix.Builder builder = SuggestedFix.builder();
-      String annotation = qualifyType(state, builder, whitelistAnnotationType);
-      return Optional.of(
-          builder.prefixWith(whitelistLocation.get(), "@" + annotation + " ").build());
+      supportedWhitelistLocationKinds = supportedTreeTypes(whitelistAnnotationType.asElement());
+      annotationName = qualifyType(state, builder, whitelistAnnotationType);
     } else {
       // If we can't resolve the type, fall back to an approximation.
       int idx = whitelistAnnotation.lastIndexOf('.');
       Verify.verify(idx > 0 && idx + 1 < whitelistAnnotation.length());
-      String annotationName = whitelistAnnotation.substring(idx + 1);
-
-      return Optional.of(
-          SuggestedFix.builder()
-              .addImport(whitelistAnnotation)
-              .prefixWith(whitelistLocation.get(), "@" + annotationName + " ")
-              .build());
+      supportedWhitelistLocationKinds = TREE_TYPE_UNKNOWN_ANNOTATION;
+      annotationName = whitelistAnnotation.substring(idx + 1);
+      builder.addImport(whitelistAnnotation);
     }
+    Optional<Tree> whitelistLocation =
+        StreamSupport.stream(where.spliterator(), false)
+            .filter(tree -> supportedWhitelistLocationKinds.contains(tree.getKind()))
+            .filter(Predicates.not(SuggestedFixes::isAnonymousClassTree))
+            .findFirst();
+
+    return whitelistLocation.map(
+        location -> builder.prefixWith(location, "@" + annotationName + " ").build());
   }
 
-  // Finds a surrounding ClassTree where we can add an annotation: this skips over anonymous
-  // classes.
-  private static Optional<ClassTree> findFixLocation(TreePath where) {
-    for (Tree node : where) {
-      if (node instanceof ClassTree) {
-        ClassTree classTree = (ClassTree) node;
-        if (!classTree.getSimpleName().contentEquals("")) {
-          // Anonymous classes don't have a name
-          return Optional.of(classTree);
-        }
-      }
+  private static boolean isAnonymousClassTree(Tree t) {
+    if (t instanceof ClassTree) {
+      ClassTree classTree = (ClassTree) t;
+      return classTree.getSimpleName().contentEquals("");
     }
-    return Optional.empty();
+    return false;
   }
+
+  /**
+   * We assume annotations with an unknown type can be used on these Tree kinds.
+   *
+   * <p>These are reasonable for whitelist-type annotations which annotate a block of code, e.g.
+   * they don't usually make sense on a variable declaration.
+   */
+  private static final ImmutableSet<Tree.Kind> TREE_TYPE_UNKNOWN_ANNOTATION =
+      ImmutableSet.of(
+          Tree.Kind.CLASS,
+          Tree.Kind.ENUM,
+          Tree.Kind.INTERFACE,
+          Tree.Kind.ANNOTATION_TYPE,
+          Tree.Kind.METHOD);
 
   /** Returns true iff {@code suggestWhitelistAnnotation()} supports this annotation. */
   public static boolean suggestedWhitelistAnnotationSupported(Element whitelistAnnotation) {
+    return !supportedTreeTypes(whitelistAnnotation).isEmpty();
+  }
+
+  private static ImmutableSet<Tree.Kind> supportedTreeTypes(Element whitelistAnnotation) {
     Target targetAnnotation = whitelistAnnotation.getAnnotation(Target.class);
-    return targetAnnotation == null
-        || Arrays.asList(targetAnnotation.value()).contains(ElementType.TYPE);
+    if (targetAnnotation == null) {
+      // in the absence of further information, we assume the annotation is supported on classes and
+      // methods.
+      return TREE_TYPE_UNKNOWN_ANNOTATION;
+    }
+    ImmutableSet.Builder<Tree.Kind> types = ImmutableSet.builder();
+    for (ElementType t : targetAnnotation.value()) {
+      switch (t) {
+        case TYPE:
+          types.add(
+              Tree.Kind.CLASS, Tree.Kind.ENUM, Tree.Kind.INTERFACE, Tree.Kind.ANNOTATION_TYPE);
+          break;
+        case METHOD:
+          types.add(Tree.Kind.METHOD);
+          break;
+        default:
+          break;
+      }
+    }
+    return types.build();
   }
 }
