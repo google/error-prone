@@ -2504,6 +2504,13 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/nullness/EqualsBrokenForNull.html#EqualsBrokenForNull--">EqualsBrokenForNull()</a></span> - Constructor for class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/EqualsBrokenForNull.html" title="class in com.google.errorprone.bugpatterns.nullness">EqualsBrokenForNull</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/EqualsGetClass.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">EqualsGetClass</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Discourages the use of <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang"><code>Object.getClass()</code></a> when implementing <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang"><code>Object.equals(Object)</code></a>
+ for non-final classes.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/EqualsGetClass.html#EqualsGetClass--">EqualsGetClass()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsGetClass.html" title="class in com.google.errorprone.bugpatterns">EqualsGetClass</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/EqualsHashCode.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">EqualsHashCode</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Classes that override equals should also override hashCode.</div>
@@ -5541,8 +5548,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/OperatorPrecedence.html#matchBinary-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">matchBinary(BinaryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OperatorPrecedence.html" title="class in com.google.errorprone.bugpatterns">OperatorPrecedence</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html#matchBinary-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">matchBinary(BinaryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldNullComparison</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ProtoStringFieldReferenceEquality.html#matchBinary-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">matchBinary(BinaryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoStringFieldReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">ProtoStringFieldReferenceEquality</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/RandomModInteger.html#matchBinary-com.sun.source.tree.BinaryTree-com.google.errorprone.VisitorState-">matchBinary(BinaryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RandomModInteger.html" title="class in com.google.errorprone.bugpatterns">RandomModInteger</a></dt>
@@ -5678,6 +5683,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PackageInfo.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PackageInfo.html" title="class in com.google.errorprone.bugpatterns">PackageInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PackageLocation.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PackageLocation.html" title="class in com.google.errorprone.bugpatterns">PackageLocation</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldNullComparison</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/RemoveUnusedImports.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RemoveUnusedImports.html" title="class in com.google.errorprone.bugpatterns">RemoveUnusedImports</a></dt>
 <dd>&nbsp;</dd>
@@ -6107,6 +6114,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/DoNotCallChecker.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DoNotCallChecker.html" title="class in com.google.errorprone.bugpatterns">DoNotCallChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/EqualsGetClass.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsGetClass.html" title="class in com.google.errorprone.bugpatterns">EqualsGetClass</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">EqualsIncompatibleType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FloatingPointAssertionWithinEpsilon.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FloatingPointAssertionWithinEpsilon.html" title="class in com.google.errorprone.bugpatterns">FloatingPointAssertionWithinEpsilon</a></dt>
@@ -6410,6 +6419,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/InstanceOfAndCastMatchWrongType.html#matchTypeCast-com.sun.source.tree.TypeCastTree-com.google.errorprone.VisitorState-">matchTypeCast(TypeCastTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InstanceOfAndCastMatchWrongType.html" title="class in com.google.errorprone.bugpatterns">InstanceOfAndCastMatchWrongType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchTypeCast-com.sun.source.tree.TypeCastTree-com.google.errorprone.VisitorState-">matchTypeCast(TypeCastTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnsafeReflectiveConstructionCast.html#matchTypeCast-com.sun.source.tree.TypeCastTree-com.google.errorprone.VisitorState-">matchTypeCast(TypeCastTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnsafeReflectiveConstructionCast.html" title="class in com.google.errorprone.bugpatterns">UnsafeReflectiveConstructionCast</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.TypeParameterTreeMatcher.html#matchTypeParameter-com.sun.source.tree.TypeParameterTree-com.google.errorprone.VisitorState-">matchTypeParameter(TypeParameterTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.TypeParameterTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TypeParameterTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -7596,8 +7607,10 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ProtocolBufferOrdinal.html#ProtocolBufferOrdinal--">ProtocolBufferOrdinal()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtocolBufferOrdinal.html" title="class in com.google.errorprone.bugpatterns">ProtocolBufferOrdinal</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ProtoFieldNullComparison</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html#ProtoFieldNullComparison--">ProtoFieldNullComparison()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldNullComparison</a></dt>
+<dd>
+<div class="block">Matches comparison of proto fields to <code>null</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html#ProtoFieldNullComparison-com.google.errorprone.ErrorProneFlags-">ProtoFieldNullComparison(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldNullComparison</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ProtoFieldPreconditionsCheckNotNull.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ProtoFieldPreconditionsCheckNotNull</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
@@ -7900,7 +7913,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#report-com.google.errorprone.scanner.ScannerSupplier-">report(ScannerSupplier)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/Scanner.html#reportMatch-com.google.errorprone.matchers.Description-T-com.google.errorprone.VisitorState-">reportMatch(Description, T, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/Scanner.html#reportMatch-com.google.errorprone.matchers.Description-com.google.errorprone.VisitorState-">reportMatch(Description, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#reportMatch-com.google.errorprone.matchers.Description-">reportMatch(Description)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
@@ -9091,6 +9104,12 @@
 <dt><a href="com/google/errorprone/bugpatterns/UnsafeFinalization.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">UnsafeFinalization</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnsafeFinalization.html#UnsafeFinalization--">UnsafeFinalization()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnsafeFinalization.html" title="class in com.google.errorprone.bugpatterns">UnsafeFinalization</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UnsafeReflectiveConstructionCast.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">UnsafeReflectiveConstructionCast</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Checks unsafe instance creation via reflection.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnsafeReflectiveConstructionCast.html#UnsafeReflectiveConstructionCast--">UnsafeReflectiveConstructionCast()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnsafeReflectiveConstructionCast.html" title="class in com.google.errorprone.bugpatterns">UnsafeReflectiveConstructionCast</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiff.html#unsupportedClasses--">unsupportedClasses()</a></span> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff</a></dt>
 <dd>

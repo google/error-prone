@@ -710,782 +710,797 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/EqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">EqualsHashCode</a></span></code>
-<div class="block">Classes that override equals should also override hashCode.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/EqualsGetClass.html" title="class in com.google.errorprone.bugpatterns">EqualsGetClass</a></span></code>
+<div class="block">Discourages the use of <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang"><code>Object.getClass()</code></a> when implementing <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang"><code>Object.equals(Object)</code></a>
+ for non-final classes.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/EqualsIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">EqualsIncompatibleType</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/EqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">EqualsHashCode</a></span></code>
+<div class="block">Classes that override equals should also override hashCode.</div>
+</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/EqualsIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">EqualsIncompatibleType</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/EqualsNaN.html" title="class in com.google.errorprone.bugpatterns">EqualsNaN</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/EqualsReference.html" title="class in com.google.errorprone.bugpatterns">EqualsReference</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionChecker</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FallThrough.html" title="class in com.google.errorprone.bugpatterns">FallThrough</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FieldCanBeFinal.html" title="class in com.google.errorprone.bugpatterns">FieldCanBeFinal</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/Finally.html" title="class in com.google.errorprone.bugpatterns">Finally</a></span></code>
 <div class="block">Matches the behaviour of javac's finally Xlint warning.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FloatCast.html" title="class in com.google.errorprone.bugpatterns">FloatCast</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FloatingPointAssertionWithinEpsilon.html" title="class in com.google.errorprone.bugpatterns">FloatingPointAssertionWithinEpsilon</a></span></code>
 <div class="block">Detects usages of <code>Float,DoubleSubject.isWithin(TOLERANCE).of(EXPECTED)</code> where there are no
  other floating point values other than <code>EXPECTED</code> with satisfy the assertion, but <code>TOLERANCE</code> is not zero.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FloatingPointLiteralPrecision.html" title="class in com.google.errorprone.bugpatterns">FloatingPointLiteralPrecision</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></span></code>
 <div class="block">Verifies that methods marked <a href="../../../../../com/google/errorprone/annotations/ForOverride.html" title="annotation in com.google.errorprone.annotations"><code>ForOverride</code></a> are only
  called from the defining class.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FunctionalInterfaceClash.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceClash</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FunctionalInterfaceMethodChanged.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceMethodChanged</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">FutureReturnValueIgnored</a></span></code>
 <div class="block">See BugPattern annotation.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FuturesGetCheckedIllegalExceptionType.html" title="class in com.google.errorprone.bugpatterns">FuturesGetCheckedIllegalExceptionType</a></span></code>
 <div class="block">Checks for calls to Guava's <code>Futures.getChecked</code> method that will always fail because they
  pass an incompatible exception type.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/FuzzyEqualsShouldNotBeUsedInEqualsMethod.html" title="class in com.google.errorprone.bugpatterns">FuzzyEqualsShouldNotBeUsedInEqualsMethod</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GetClassOnAnnotation.html" title="class in com.google.errorprone.bugpatterns">GetClassOnAnnotation</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GetClassOnClass.html" title="class in com.google.errorprone.bugpatterns">GetClassOnClass</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/GetClassOnEnum.html" title="class in com.google.errorprone.bugpatterns">GetClassOnEnum</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/HashtableContains.html" title="class in com.google.errorprone.bugpatterns">HashtableContains</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/HidingField.html" title="class in com.google.errorprone.bugpatterns">HidingField</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IdentityBinaryExpression.html" title="class in com.google.errorprone.bugpatterns">IdentityBinaryExpression</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ImmutableModification.html" title="class in com.google.errorprone.bugpatterns">ImmutableModification</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IncompatibleModifiersChecker.html" title="class in com.google.errorprone.bugpatterns">IncompatibleModifiersChecker</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InconsistentCapitalization.html" title="class in com.google.errorprone.bugpatterns">InconsistentCapitalization</a></span></code>
 <div class="block">Checker for variables under the same scope that only differ in capitalization.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IncrementInForLoopAndHeader.html" title="class in com.google.errorprone.bugpatterns">IncrementInForLoopAndHeader</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IndexOfChar.html" title="class in com.google.errorprone.bugpatterns">IndexOfChar</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InexactVarargsConditional.html" title="class in com.google.errorprone.bugpatterns">InexactVarargsConditional</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InfiniteRecursion.html" title="class in com.google.errorprone.bugpatterns">InfiniteRecursion</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InputStreamSlowMultibyteRead.html" title="class in com.google.errorprone.bugpatterns">InputStreamSlowMultibyteRead</a></span></code>
 <div class="block">Checks that InputStreams should override int read(byte[], int, int);</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InsecureCipherMode.html" title="class in com.google.errorprone.bugpatterns">InsecureCipherMode</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InstanceOfAndCastMatchWrongType.html" title="class in com.google.errorprone.bugpatterns">InstanceOfAndCastMatchWrongType</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IntLongMath.html" title="class in com.google.errorprone.bugpatterns">IntLongMath</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns">InvalidPatternSyntax</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/InvalidTimeZoneID.html" title="class in com.google.errorprone.bugpatterns">InvalidTimeZoneID</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IsInstanceOfClass.html" title="class in com.google.errorprone.bugpatterns">IsInstanceOfClass</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IterableAndIterator.html" title="class in com.google.errorprone.bugpatterns">IterableAndIterator</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/IterablePathParameter.html" title="class in com.google.errorprone.bugpatterns">IterablePathParameter</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JavaLangClash.html" title="class in com.google.errorprone.bugpatterns">JavaLangClash</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JdkObsolete.html" title="class in com.google.errorprone.bugpatterns">JdkObsolete</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html" title="class in com.google.errorprone.bugpatterns">JMockTestWithoutRunWithOrRuleAnnotation</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit3FloatingPointComparisonWithoutDelta.html" title="class in com.google.errorprone.bugpatterns">JUnit3FloatingPointComparisonWithoutDelta</a></span></code>
 <div class="block">Detects floating-point assertEquals() calls that will not work in JUnit 4.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit3TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit3TestNotRun</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4ClassAnnotationNonStatic.html" title="class in com.google.errorprone.bugpatterns">JUnit4ClassAnnotationNonStatic</a></span></code>
 <div class="block"><code>@BeforeClass</code> or <code>@AfterClass</code> should be applied to static methods.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4ClassUsedInJUnit3.html" title="class in com.google.errorprone.bugpatterns">JUnit4ClassUsedInJUnit3</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4SetUpNotRun</a></span></code>
 <div class="block">Checks for the existence of a JUnit3 style setUp() method in a JUnit4 test class or methods
  annotated with a non-JUnit4 @Before annotation.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TearDownNotRun</a></span></code>
 <div class="block">Checks for the existence of a JUnit3 style tearDown() method in a JUnit4 test class or methods
  annotated with a non-JUnit4 @After annotation.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnit4TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TestNotRun</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnitAmbiguousTestClass.html" title="class in com.google.errorprone.bugpatterns">JUnitAmbiguousTestClass</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/JUnitAssertSameCheck.html" title="class in com.google.errorprone.bugpatterns">JUnitAssertSameCheck</a></span></code>
 <div class="block">Points out if an object is tested for reference equality to itself using JUnit library.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/LambdaFunctionalInterface.html" title="class in com.google.errorprone.bugpatterns">LambdaFunctionalInterface</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/LiteByteStringUtf8.html" title="class in com.google.errorprone.bugpatterns">LiteByteStringUtf8</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/LogicalAssignment.html" title="class in com.google.errorprone.bugpatterns">LogicalAssignment</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/LongLiteralLowerCaseSuffix.html" title="class in com.google.errorprone.bugpatterns">LongLiteralLowerCaseSuffix</a></span></code>
 <div class="block">Matcher for a <code>long</code> literal with a lower-case ell for a suffix (e.g.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/LoopConditionChecker.html" title="class in com.google.errorprone.bugpatterns">LoopConditionChecker</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MathRoundIntLong.html" title="class in com.google.errorprone.bugpatterns">MathRoundIntLong</a></span></code>
 <div class="block">Check for calls to Math's <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html?is-external=true#round-float-" title="class or interface in java.lang"><code>Math.round(float)</code></a> with an integer or long parameter.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MethodCanBeStatic.html" title="class in com.google.errorprone.bugpatterns">MethodCanBeStatic</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">MissingCasesInEnumSwitch</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MissingDefault.html" title="class in com.google.errorprone.bugpatterns">MissingDefault</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">MissingFail</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MissingOverride.html" title="class in com.google.errorprone.bugpatterns">MissingOverride</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MissingSuperCall.html" title="class in com.google.errorprone.bugpatterns">MissingSuperCall</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MisusedWeekYear.html" title="class in com.google.errorprone.bugpatterns">MisusedWeekYear</a></span></code>
 <div class="block">Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MixedArrayDimensions.html" title="class in com.google.errorprone.bugpatterns">MixedArrayDimensions</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MockitoCast.html" title="class in com.google.errorprone.bugpatterns">MockitoCast</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MockitoUsage.html" title="class in com.google.errorprone.bugpatterns">MockitoUsage</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ModifiedButNotUsed.html" title="class in com.google.errorprone.bugpatterns">ModifiedButNotUsed</a></span></code>
 <div class="block">Matches creation of new collections/proto builders which are modified but never used.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ModifyCollectionInEnhancedForLoop.html" title="class in com.google.errorprone.bugpatterns">ModifyCollectionInEnhancedForLoop</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ModifyingCollectionWithItself.html" title="class in com.google.errorprone.bugpatterns">ModifyingCollectionWithItself</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MultipleParallelOrSequentialCalls.html" title="class in com.google.errorprone.bugpatterns">MultipleParallelOrSequentialCalls</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MultipleTopLevelClasses.html" title="class in com.google.errorprone.bugpatterns">MultipleTopLevelClasses</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MultipleUnaryOperatorsInMethodCall.html" title="class in com.google.errorprone.bugpatterns">MultipleUnaryOperatorsInMethodCall</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MultiVariableDeclaration.html" title="class in com.google.errorprone.bugpatterns">MultiVariableDeclaration</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></span></code>
 <div class="block">Checks if a constructor or method annotated with <a href="../../../../../com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> is called within the
  resource variable initializer of a try-with-resources statement.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MutableConstantField.html" title="class in com.google.errorprone.bugpatterns">MutableConstantField</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/MutableMethodReturnType.html" title="class in com.google.errorprone.bugpatterns">MutableMethodReturnType</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NarrowingCompoundAssignment.html" title="class in com.google.errorprone.bugpatterns">NarrowingCompoundAssignment</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NCopiesOfChar.html" title="class in com.google.errorprone.bugpatterns">NCopiesOfChar</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NestedInstanceOfConditions.html" title="class in com.google.errorprone.bugpatterns">NestedInstanceOfConditions</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></span></code>
 <div class="block">Checks methods annotated with <code>@NoAllocation</code> to ensure they really do not allocate.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NoFunctionalReturnType.html" title="class in com.google.errorprone.bugpatterns">NoFunctionalReturnType</a></span></code>
 <div class="block">Check for functional return types.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NonAtomicVolatileUpdate.html" title="class in com.google.errorprone.bugpatterns">NonAtomicVolatileUpdate</a></span></code>
 <div class="block">Detects non-atomic updates to volatile variables.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NonCanonicalStaticImport.html" title="class in com.google.errorprone.bugpatterns">NonCanonicalStaticImport</a></span></code>
 <div class="block">Types shouldn't be statically by their non-canonical name.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NonCanonicalStaticMemberImport.html" title="class in com.google.errorprone.bugpatterns">NonCanonicalStaticMemberImport</a></span></code>
 <div class="block">Members shouldn't be statically by their non-canonical name.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NonFinalCompileTimeConstant.html" title="class in com.google.errorprone.bugpatterns">NonFinalCompileTimeConstant</a></span></code>
 <div class="block">Enforce that @CompileTimeConstant parameters are final or effectively final.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NonOverridingEquals.html" title="class in com.google.errorprone.bugpatterns">NonOverridingEquals</a></span></code>
 <div class="block">Bug checker for equals methods that don't actually override equals.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html" title="class in com.google.errorprone.bugpatterns">NonRuntimeAnnotation</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NullableConstructor.html" title="class in com.google.errorprone.bugpatterns">NullableConstructor</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NullablePrimitive.html" title="class in com.google.errorprone.bugpatterns">NullablePrimitive</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NullableVoid.html" title="class in com.google.errorprone.bugpatterns">NullableVoid</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NullTernary.html" title="class in com.google.errorprone.bugpatterns">NullTernary</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/NumericEquality.html" title="class in com.google.errorprone.bugpatterns">NumericEquality</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ObjectsHashCodePrimitive.html" title="class in com.google.errorprone.bugpatterns">ObjectsHashCodePrimitive</a></span></code>
 <div class="block">Check for calls to Objects' <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Objects.html?is-external=true#hashCode-java.lang.Object-" title="class or interface in java.util"><code>Objects.hashCode(java.lang.Object)</code></a> with a primitive parameter.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ObjectToString.html" title="class in com.google.errorprone.bugpatterns">ObjectToString</a></span></code>
 <div class="block">Warns against calling toString() on Objects which don't have toString() method overridden and
  won't produce meaningful output.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/OperatorPrecedence.html" title="class in com.google.errorprone.bugpatterns">OperatorPrecedence</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/OptionalEquality.html" title="class in com.google.errorprone.bugpatterns">OptionalEquality</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/OptionalNotPresent.html" title="class in com.google.errorprone.bugpatterns">OptionalNotPresent</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/OrphanedFormatString.html" title="class in com.google.errorprone.bugpatterns">OrphanedFormatString</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/Overrides.html" title="class in com.google.errorprone.bugpatterns">Overrides</a></span></code>
 <div class="block">Matches the behaviour of javac's overrides Xlint warning.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/OverrideThrowableToString.html" title="class in com.google.errorprone.bugpatterns">OverrideThrowableToString</a></span></code>
 <div class="block">Warns against overriding toString() in a Throwable class and suggests getMessage()</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PackageInfo.html" title="class in com.google.errorprone.bugpatterns">PackageInfo</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PackageLocation.html" title="class in com.google.errorprone.bugpatterns">PackageLocation</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ParameterComment.html" title="class in com.google.errorprone.bugpatterns">ParameterComment</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ParameterName.html" title="class in com.google.errorprone.bugpatterns">ParameterName</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNull.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNull</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNullPrimitive.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNullPrimitive</a></span></code>
 <div class="block">Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html" title="class in com.google.errorprone.bugpatterns">PreconditionsInvalidPlaceholder</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PredicateIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">PredicateIncompatibleType</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PrimitiveArrayPassedToVarargsMethod.html" title="class in com.google.errorprone.bugpatterns">PrimitiveArrayPassedToVarargsMethod</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PrivateSecurityContractProtoAccess.html" title="class in com.google.errorprone.bugpatterns">PrivateSecurityContractProtoAccess</a></span></code>
 <div class="block">Check for non-whitelisted access to private_do_not_access_or_else proto fields.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ProtocolBufferOrdinal.html" title="class in com.google.errorprone.bugpatterns">ProtocolBufferOrdinal</a></span></code>
 <div class="block">Points out if #ordinal() is called on a Protocol Buffer Enum.</div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldNullComparison</a></span></code>&nbsp;</td>
-</tr>
 <tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldNullComparison</a></span></code>
+<div class="block">Matches comparison of proto fields to <code>null</code>.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ProtoFieldPreconditionsCheckNotNull.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldPreconditionsCheckNotNull</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ProtoRedundantSet.html" title="class in com.google.errorprone.bugpatterns">ProtoRedundantSet</a></span></code>
 <div class="block">Checks that protocol buffers built with chained builders don't set the same field twice.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ProtoStringFieldReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">ProtoStringFieldReferenceEquality</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ProvidesFixChecker.html" title="class in com.google.errorprone.bugpatterns">ProvidesFixChecker</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/RandomCast.html" title="class in com.google.errorprone.bugpatterns">RandomCast</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/RandomModInteger.html" title="class in com.google.errorprone.bugpatterns">RandomModInteger</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ReachabilityFenceUsage.html" title="class in com.google.errorprone.bugpatterns">ReachabilityFenceUsage</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/RedundantThrows.html" title="class in com.google.errorprone.bugpatterns">RedundantThrows</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">ReferenceEquality</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/RemoveUnusedImports.html" title="class in com.google.errorprone.bugpatterns">RemoveUnusedImports</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/RequiredModifiersChecker.html" title="class in com.google.errorprone.bugpatterns">RequiredModifiersChecker</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/RestrictedApiChecker.html" title="class in com.google.errorprone.bugpatterns">RestrictedApiChecker</a></span></code>
 <div class="block">Check for non-whitelisted callers to RestrictedApiChecker.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">ReturnValueIgnored</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SelfAssignment.html" title="class in com.google.errorprone.bugpatterns">SelfAssignment</a></span></code>
 <div class="block">TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SelfComparison.html" title="class in com.google.errorprone.bugpatterns">SelfComparison</a></span></code>
 <div class="block">Points out if an object is compared to itself.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SelfEquals.html" title="class in com.google.errorprone.bugpatterns">SelfEquals</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ShortCircuitBoolean.html" title="class in com.google.errorprone.bugpatterns">ShortCircuitBoolean</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html" title="class in com.google.errorprone.bugpatterns">ShouldHaveEvenArgs</a></span></code>
 <div class="block">Checks that variable argument methods have even number of arguments.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SizeGreaterThanOrEqualsZero.html" title="class in com.google.errorprone.bugpatterns">SizeGreaterThanOrEqualsZero</a></span></code>
 <div class="block">Finds instances where one uses <code>Collection#size() &gt;= 0</code> or <code>T[].length &gt; 0</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/StaticQualifiedUsingExpression.html" title="class in com.google.errorprone.bugpatterns">StaticQualifiedUsingExpression</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/StreamToString.html" title="class in com.google.errorprone.bugpatterns">StreamToString</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html" title="class in com.google.errorprone.bugpatterns">StringBuilderInitWithChar</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/StringEquality.html" title="class in com.google.errorprone.bugpatterns">StringEquality</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/StringSplitter.html" title="class in com.google.errorprone.bugpatterns">StringSplitter</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SubstringOfZero.html" title="class in com.google.errorprone.bugpatterns">SubstringOfZero</a></span></code>
 <div class="block">Check for calls to String's <code>foo.substring(0)</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SuppressWarningsDeprecated.html" title="class in com.google.errorprone.bugpatterns">SuppressWarningsDeprecated</a></span></code>
 <div class="block">Find uses of SuppressWarnings with "deprecated".</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SwigMemoryLeak.html" title="class in com.google.errorprone.bugpatterns">SwigMemoryLeak</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SwitchDefault.html" title="class in com.google.errorprone.bugpatterns">SwitchDefault</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/SystemExitOutsideMain.html" title="class in com.google.errorprone.bugpatterns">SystemExitOutsideMain</a></span></code>
 <div class="block">Check for calls to <code>System.exit()</code> outside of a main method.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">TestExceptionChecker</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ThreadJoinLoop.html" title="class in com.google.errorprone.bugpatterns">ThreadJoinLoop</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ThreadLocalUsage.html" title="class in com.google.errorprone.bugpatterns">ThreadLocalUsage</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ThreeLetterTimeZoneID.html" title="class in com.google.errorprone.bugpatterns">ThreeLetterTimeZoneID</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ThrowIfUncheckedKnownChecked.html" title="class in com.google.errorprone.bugpatterns">ThrowIfUncheckedKnownChecked</a></span></code>
 <div class="block">Catches no-op calls to <code>Throwables.throwIfUnchecked</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ThrowNull.html" title="class in com.google.errorprone.bugpatterns">ThrowNull</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ThrowsUncheckedException.html" title="class in com.google.errorprone.bugpatterns">ThrowsUncheckedException</a></span></code>
 <div class="block">Suggests to remove the unchecked throws clause.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ToStringReturnsNull.html" title="class in com.google.errorprone.bugpatterns">ToStringReturnsNull</a></span></code>
 <div class="block">ToString should not return null.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TruthAssertExpected.html" title="class in com.google.errorprone.bugpatterns">TruthAssertExpected</a></span></code>
 <div class="block">Detects usages of Truth assertions with the expected and actual values reversed.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TruthConstantAsserts.html" title="class in com.google.errorprone.bugpatterns">TruthConstantAsserts</a></span></code>
 <div class="block">Points out if Truth Library assert is called on a constant.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TruthSelfEquals.html" title="class in com.google.errorprone.bugpatterns">TruthSelfEquals</a></span></code>
 <div class="block">Points out if an object is tested for equality/inequality to itself using Truth Libraries.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TryFailThrowable.html" title="class in com.google.errorprone.bugpatterns">TryFailThrowable</a></span></code>
 <div class="block">A bug checker for the following code pattern:</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TypeNameShadowing.html" title="class in com.google.errorprone.bugpatterns">TypeNameShadowing</a></span></code>
 <div class="block">Warns when a type parameter shadows another type name in scope.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TypeParameterNaming.html" title="class in com.google.errorprone.bugpatterns">TypeParameterNaming</a></span></code>
 <div class="block">Enforces type parameters match the google style guide.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TypeParameterQualifier.html" title="class in com.google.errorprone.bugpatterns">TypeParameterQualifier</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TypeParameterShadowing.html" title="class in com.google.errorprone.bugpatterns">TypeParameterShadowing</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/TypeParameterUnusedInFormals.html" title="class in com.google.errorprone.bugpatterns">TypeParameterUnusedInFormals</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/UngroupedOverloads.html" title="class in com.google.errorprone.bugpatterns">UngroupedOverloads</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryDefaultInEnumSwitch</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/UnnecessaryParentheses.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryParentheses</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/UnnecessarySetDefault.html" title="class in com.google.errorprone.bugpatterns">UnnecessarySetDefault</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryStaticImport</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryTypeArgument</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/UnsafeFinalization.html" title="class in com.google.errorprone.bugpatterns">UnsafeFinalization</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/UnsafeReflectiveConstructionCast.html" title="class in com.google.errorprone.bugpatterns">UnsafeReflectiveConstructionCast</a></span></code>
+<div class="block">Checks unsafe instance creation via reflection.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>

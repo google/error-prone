@@ -270,7 +270,7 @@ __[PrivateSecurityContractProtoAccess](bugpattern/PrivateSecurityContractProtoAc
 Access to a private protocol buffer field is forbidden. This protocol buffer carries a security contract, and can only be created using an approved library. Direct access to the fields is forbidden.
 
 __[ProtoFieldNullComparison](bugpattern/ProtoFieldNullComparison)__<br>
-Protobuf fields cannot be null
+Protobuf fields cannot be null.
 
 __[ProtocolBufferOrdinal](bugpattern/ProtocolBufferOrdinal)__<br>
 To get the tag number of a protocol buffer enum, use getNumber() instead.
@@ -432,6 +432,9 @@ Prefer collection factory methods or builders to the double-brace initialization
 
 __[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
 Double-checked locking on non-volatile fields is unsafe
+
+__[EqualsGetClass](bugpattern/EqualsGetClass)__<br>
+Overriding Object#equals in a non-final class by using getClass rather than instanceof breaks substitutability of subclasses.
 
 __[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
 Classes that override equals should also override hashCode.
@@ -663,6 +666,9 @@ Unnecessary use of grouping parentheses
 
 __[UnsafeFinalization](bugpattern/UnsafeFinalization)__<br>
 Finalizer may run before native code finishes execution
+
+__[UnsafeReflectiveConstructionCast](bugpattern/UnsafeReflectiveConstructionCast)__<br>
+Prefer `asSubclass` instead of casting the result of `newInstance`, to detect classes of incorrect type before invoking their constructors.This way, if the class is of the incorrect type,it will throw an exception before invoking its constructor.
 
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
