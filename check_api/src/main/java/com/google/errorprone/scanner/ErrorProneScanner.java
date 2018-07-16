@@ -414,7 +414,7 @@ public class ErrorProneScanner extends Scanner {
     for (AnnotationTreeMatcher matcher : annotationMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchAnnotation(tree, state), tree, state);
+          reportMatch(matcher.matchAnnotation(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -429,7 +429,7 @@ public class ErrorProneScanner extends Scanner {
     for (AnnotatedTypeTreeMatcher matcher : annotatedTypeMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchAnnotatedType(tree, state), tree, state);
+          reportMatch(matcher.matchAnnotatedType(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -444,7 +444,7 @@ public class ErrorProneScanner extends Scanner {
     for (ArrayAccessTreeMatcher matcher : arrayAccessMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchArrayAccess(tree, state), tree, state);
+          reportMatch(matcher.matchArrayAccess(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -459,7 +459,7 @@ public class ErrorProneScanner extends Scanner {
     for (ArrayTypeTreeMatcher matcher : arrayTypeMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchArrayType(tree, state), tree, state);
+          reportMatch(matcher.matchArrayType(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -474,7 +474,7 @@ public class ErrorProneScanner extends Scanner {
     for (AssertTreeMatcher matcher : assertMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchAssert(tree, state), tree, state);
+          reportMatch(matcher.matchAssert(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -489,7 +489,7 @@ public class ErrorProneScanner extends Scanner {
     for (AssignmentTreeMatcher matcher : assignmentMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchAssignment(tree, state), tree, state);
+          reportMatch(matcher.matchAssignment(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -504,7 +504,7 @@ public class ErrorProneScanner extends Scanner {
     for (BinaryTreeMatcher matcher : binaryMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchBinary(tree, state), tree, state);
+          reportMatch(matcher.matchBinary(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -519,7 +519,7 @@ public class ErrorProneScanner extends Scanner {
     for (BlockTreeMatcher matcher : blockMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchBlock(tree, state), tree, state);
+          reportMatch(matcher.matchBlock(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -534,7 +534,7 @@ public class ErrorProneScanner extends Scanner {
     for (BreakTreeMatcher matcher : breakMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchBreak(tree, state), tree, state);
+          reportMatch(matcher.matchBreak(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -549,7 +549,7 @@ public class ErrorProneScanner extends Scanner {
     for (CaseTreeMatcher matcher : caseMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchCase(tree, state), tree, state);
+          reportMatch(matcher.matchCase(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -564,7 +564,7 @@ public class ErrorProneScanner extends Scanner {
     for (CatchTreeMatcher matcher : catchMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchCatch(tree, state), tree, state);
+          reportMatch(matcher.matchCatch(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -579,7 +579,7 @@ public class ErrorProneScanner extends Scanner {
     for (ClassTreeMatcher matcher : classMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchClass(tree, state), tree, state);
+          reportMatch(matcher.matchClass(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -594,7 +594,7 @@ public class ErrorProneScanner extends Scanner {
     for (CompilationUnitTreeMatcher matcher : compilationUnitMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchCompilationUnit(tree, state), tree, state);
+          reportMatch(matcher.matchCompilationUnit(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -609,7 +609,7 @@ public class ErrorProneScanner extends Scanner {
     for (CompoundAssignmentTreeMatcher matcher : compoundAssignmentMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchCompoundAssignment(tree, state), tree, state);
+          reportMatch(matcher.matchCompoundAssignment(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -625,7 +625,7 @@ public class ErrorProneScanner extends Scanner {
     for (ConditionalExpressionTreeMatcher matcher : conditionalExpressionMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchConditionalExpression(tree, state), tree, state);
+          reportMatch(matcher.matchConditionalExpression(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -640,7 +640,7 @@ public class ErrorProneScanner extends Scanner {
     for (ContinueTreeMatcher matcher : continueMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchContinue(tree, state), tree, state);
+          reportMatch(matcher.matchContinue(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -655,7 +655,7 @@ public class ErrorProneScanner extends Scanner {
     for (DoWhileLoopTreeMatcher matcher : doWhileLoopMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchDoWhileLoop(tree, state), tree, state);
+          reportMatch(matcher.matchDoWhileLoop(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -670,7 +670,7 @@ public class ErrorProneScanner extends Scanner {
     for (EmptyStatementTreeMatcher matcher : emptyStatementMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchEmptyStatement(tree, state), tree, state);
+          reportMatch(matcher.matchEmptyStatement(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -685,7 +685,7 @@ public class ErrorProneScanner extends Scanner {
     for (EnhancedForLoopTreeMatcher matcher : enhancedForLoopMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchEnhancedForLoop(tree, state), tree, state);
+          reportMatch(matcher.matchEnhancedForLoop(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -702,7 +702,7 @@ public class ErrorProneScanner extends Scanner {
     for (ExpressionStatementTreeMatcher matcher : expressionStatementMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchExpressionStatement(tree, state), tree, state);
+          reportMatch(matcher.matchExpressionStatement(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -717,7 +717,7 @@ public class ErrorProneScanner extends Scanner {
     for (ForLoopTreeMatcher matcher : forLoopMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchForLoop(tree, state), tree, state);
+          reportMatch(matcher.matchForLoop(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -732,7 +732,7 @@ public class ErrorProneScanner extends Scanner {
     for (IdentifierTreeMatcher matcher : identifierMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchIdentifier(tree, state), tree, state);
+          reportMatch(matcher.matchIdentifier(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -747,7 +747,7 @@ public class ErrorProneScanner extends Scanner {
     for (IfTreeMatcher matcher : ifMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchIf(tree, state), tree, state);
+          reportMatch(matcher.matchIf(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -762,7 +762,7 @@ public class ErrorProneScanner extends Scanner {
     for (ImportTreeMatcher matcher : importMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchImport(tree, state), tree, state);
+          reportMatch(matcher.matchImport(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -777,7 +777,7 @@ public class ErrorProneScanner extends Scanner {
     for (InstanceOfTreeMatcher matcher : instanceOfMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchInstanceOf(tree, state), tree, state);
+          reportMatch(matcher.matchInstanceOf(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -792,7 +792,7 @@ public class ErrorProneScanner extends Scanner {
     for (IntersectionTypeTreeMatcher matcher : intersectionTypeMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchIntersectionType(tree, state), tree, state);
+          reportMatch(matcher.matchIntersectionType(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -807,7 +807,7 @@ public class ErrorProneScanner extends Scanner {
     for (LabeledStatementTreeMatcher matcher : labeledStatementMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchLabeledStatement(tree, state), tree, state);
+          reportMatch(matcher.matchLabeledStatement(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -822,7 +822,7 @@ public class ErrorProneScanner extends Scanner {
     for (LambdaExpressionTreeMatcher matcher : lambdaExpressionMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchLambdaExpression(tree, state), tree, state);
+          reportMatch(matcher.matchLambdaExpression(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -837,7 +837,7 @@ public class ErrorProneScanner extends Scanner {
     for (LiteralTreeMatcher matcher : literalMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchLiteral(tree, state), tree, state);
+          reportMatch(matcher.matchLiteral(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -852,7 +852,7 @@ public class ErrorProneScanner extends Scanner {
     for (MemberReferenceTreeMatcher matcher : memberReferenceMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchMemberReference(tree, state), tree, state);
+          reportMatch(matcher.matchMemberReference(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -867,7 +867,7 @@ public class ErrorProneScanner extends Scanner {
     for (MemberSelectTreeMatcher matcher : memberSelectMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchMemberSelect(tree, state), tree, state);
+          reportMatch(matcher.matchMemberSelect(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -887,7 +887,7 @@ public class ErrorProneScanner extends Scanner {
     for (MethodTreeMatcher matcher : methodMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchMethod(tree, state), tree, state);
+          reportMatch(matcher.matchMethod(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -902,7 +902,7 @@ public class ErrorProneScanner extends Scanner {
     for (MethodInvocationTreeMatcher matcher : methodInvocationMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchMethodInvocation(tree, state), tree, state);
+          reportMatch(matcher.matchMethodInvocation(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -917,7 +917,7 @@ public class ErrorProneScanner extends Scanner {
     for (ModifiersTreeMatcher matcher : modifiersMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchModifiers(tree, state), tree, state);
+          reportMatch(matcher.matchModifiers(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -932,7 +932,7 @@ public class ErrorProneScanner extends Scanner {
     for (NewArrayTreeMatcher matcher : newArrayMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchNewArray(tree, state), tree, state);
+          reportMatch(matcher.matchNewArray(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -947,7 +947,7 @@ public class ErrorProneScanner extends Scanner {
     for (NewClassTreeMatcher matcher : newClassMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchNewClass(tree, state), tree, state);
+          reportMatch(matcher.matchNewClass(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -965,7 +965,7 @@ public class ErrorProneScanner extends Scanner {
     for (ParameterizedTypeTreeMatcher matcher : parameterizedTypeMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchParameterizedType(tree, state), tree, state);
+          reportMatch(matcher.matchParameterizedType(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -980,7 +980,7 @@ public class ErrorProneScanner extends Scanner {
     for (ParenthesizedTreeMatcher matcher : parenthesizedMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchParenthesized(tree, state), tree, state);
+          reportMatch(matcher.matchParenthesized(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -995,7 +995,7 @@ public class ErrorProneScanner extends Scanner {
     for (PrimitiveTypeTreeMatcher matcher : primitiveTypeMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchPrimitiveType(tree, state), tree, state);
+          reportMatch(matcher.matchPrimitiveType(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1010,7 +1010,7 @@ public class ErrorProneScanner extends Scanner {
     for (ReturnTreeMatcher matcher : returnMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchReturn(tree, state), tree, state);
+          reportMatch(matcher.matchReturn(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1025,7 +1025,7 @@ public class ErrorProneScanner extends Scanner {
     for (SwitchTreeMatcher matcher : switchMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchSwitch(tree, state), tree, state);
+          reportMatch(matcher.matchSwitch(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1040,7 +1040,7 @@ public class ErrorProneScanner extends Scanner {
     for (SynchronizedTreeMatcher matcher : synchronizedMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchSynchronized(tree, state), tree, state);
+          reportMatch(matcher.matchSynchronized(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1055,7 +1055,7 @@ public class ErrorProneScanner extends Scanner {
     for (ThrowTreeMatcher matcher : throwMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchThrow(tree, state), tree, state);
+          reportMatch(matcher.matchThrow(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1070,7 +1070,7 @@ public class ErrorProneScanner extends Scanner {
     for (TryTreeMatcher matcher : tryMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchTry(tree, state), tree, state);
+          reportMatch(matcher.matchTry(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1085,7 +1085,7 @@ public class ErrorProneScanner extends Scanner {
     for (TypeCastTreeMatcher matcher : typeCastMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchTypeCast(tree, state), tree, state);
+          reportMatch(matcher.matchTypeCast(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1100,7 +1100,7 @@ public class ErrorProneScanner extends Scanner {
     for (TypeParameterTreeMatcher matcher : typeParameterMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchTypeParameter(tree, state), tree, state);
+          reportMatch(matcher.matchTypeParameter(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1115,7 +1115,7 @@ public class ErrorProneScanner extends Scanner {
     for (UnaryTreeMatcher matcher : unaryMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchUnary(tree, state), tree, state);
+          reportMatch(matcher.matchUnary(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1130,7 +1130,7 @@ public class ErrorProneScanner extends Scanner {
     for (UnionTypeTreeMatcher matcher : unionTypeMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchUnionType(tree, state), tree, state);
+          reportMatch(matcher.matchUnionType(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1145,7 +1145,7 @@ public class ErrorProneScanner extends Scanner {
     for (VariableTreeMatcher matcher : variableMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchVariable(tree, state), tree, state);
+          reportMatch(matcher.matchVariable(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1160,7 +1160,7 @@ public class ErrorProneScanner extends Scanner {
     for (WhileLoopTreeMatcher matcher : whileLoopMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchWhileLoop(tree, state), tree, state);
+          reportMatch(matcher.matchWhileLoop(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
@@ -1175,7 +1175,7 @@ public class ErrorProneScanner extends Scanner {
     for (WildcardTreeMatcher matcher : wildcardMatchers) {
       if (!isSuppressed(matcher, state)) {
         try {
-          reportMatch(matcher.matchWildcard(tree, state), tree, state);
+          reportMatch(matcher.matchWildcard(tree, state), state);
         } catch (Throwable t) {
           handleError(matcher, t);
         }

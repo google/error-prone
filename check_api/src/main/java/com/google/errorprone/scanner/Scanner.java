@@ -145,8 +145,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     return Collections.<Class<? extends Annotation>>emptySet();
   }
 
-  protected <T extends Tree> void reportMatch(
-      Description description, T match, VisitorState state) {
+  protected void reportMatch(Description description, VisitorState state) {
     if (description == null || description == Description.NO_MATCH) {
       return;
     }
