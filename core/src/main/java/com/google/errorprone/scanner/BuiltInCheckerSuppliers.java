@@ -77,6 +77,7 @@ import com.google.errorprone.bugpatterns.DoNotCallChecker;
 import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
+import com.google.errorprone.bugpatterns.EqualsGetClass;
 import com.google.errorprone.bugpatterns.EqualsHashCode;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
@@ -516,6 +517,7 @@ public class BuiltInCheckerSuppliers {
           DeprecatedThreadMethods.class,
           DoubleBraceInitialization.class,
           DoubleCheckedLocking.class,
+          EqualsGetClass.class,
           EqualsHashCode.class,
           EqualsIncompatibleType.class,
           FallThrough.class,
