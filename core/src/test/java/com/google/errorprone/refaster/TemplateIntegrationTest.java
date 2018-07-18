@@ -333,6 +333,11 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
     runTest("PlaceholderAllowedVarsTemplate");
   }
 
+  @Test
+  public void unnecessaryLambdaParens() throws IOException {
+    runTest("UnnecessaryLambdaParens");
+  }
+
   static boolean isJDK8OrEarlier() {
     try {
       Method versionMethod = Runtime.class.getMethod("version");
