@@ -50,9 +50,11 @@ import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCTry;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.Pretty;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
@@ -64,6 +66,7 @@ import com.sun.tools.javac.util.Position;
 import com.sun.tools.javac.util.Warner;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -323,6 +326,39 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
             }
           }
           super.printStat(tree);
+        }
+
+        // Don't print parentheses around single lambda parameters without an explicit type.
+        @Override
+        public void visitLambda(JCLambda lambda) {
+          try {
+            boolean exactlyOneParamWithNoType =
+                lambda.params.size() == 1 && lambda.params.get(0).vartype == null;
+            if (!exactlyOneParamWithNoType) {
+              print("(");
+            }
+            boolean first = true;
+            for (JCVariableDecl param : lambda.params) {
+              if (!first) {
+                print(",");
+              }
+              if (param.vartype != null) {
+                if (!first) {
+                  print(" ");
+                }
+                print(param.vartype + " ");
+              }
+              print(param.name);
+              first = false;
+            }
+            if (!exactlyOneParamWithNoType) {
+              print(")");
+            }
+            print("->");
+            printExpr(lambda.body);
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
         }
 
         @Override
