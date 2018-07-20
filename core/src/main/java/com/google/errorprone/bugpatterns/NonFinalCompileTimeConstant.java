@@ -46,6 +46,9 @@ public class NonFinalCompileTimeConstant extends BugChecker implements MethodTre
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
+    if (tree.getBody() == null) {
+      return NO_MATCH;
+    }
     for (VariableTree parameter : tree.getParameters()) {
       VarSymbol sym = ASTHelpers.getSymbol(parameter);
       if (sym == null) {

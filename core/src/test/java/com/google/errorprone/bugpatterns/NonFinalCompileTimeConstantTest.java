@@ -104,4 +104,16 @@ public class NonFinalCompileTimeConstantTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negativeInterface() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public interface Test {",
+            "  public void f(@CompileTimeConstant Object x);",
+            "}")
+        .doTest();
+  }
 }
