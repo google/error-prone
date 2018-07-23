@@ -19,6 +19,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.truth.BooleanSubject;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,16 +45,16 @@ public class TypeParameterNamingTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "// BUG: Diagnostic contains: ",
+            "// BUG: Diagnostic contains: TypeParameterNaming",
             "class Test<BadName> {",
-            "  // BUG: Diagnostic contains: Foo",
+            "  // BUG: Diagnostic contains: TypeParameterNaming",
             "  public <T, Foo> void method(Exception e) {}",
             "}")
         .doTest();
   }
 
   @Test
-  public void refactoring() throws Exception {
+  public void refactoring_trailing() throws Exception {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -71,6 +72,147 @@ public class TypeParameterNamingTest {
             "    FooT d = f;",
             "  }",
             "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void refactoring_single() throws Exception {
+    refactoring
+        .addInputLines(
+            "in/Test.java",
+            "class Test<BadName> {",
+            "  public <T, Foo> void method(Foo f) {",
+            "    BadName bad = null;",
+            "    Foo d = f;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test<B> {",
+            "  public <T, F> void method(F f) {",
+            "    B bad = null;",
+            "    F d = f;",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void refactoring_single_number() throws Exception {
+    refactoring
+        .addInputLines(
+            "in/Test.java",
+            "class Test<Bar> {",
+            "  public <T, Baz> void method(Baz f) {",
+            "    Bar bad = null;",
+            "    Baz d = f;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test<B> {",
+            "  public <T, B2> void method(B2 f) {",
+            "    B bad = null;",
+            "    B2 d = f;",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void refactoring_single_number_enclosing() throws Exception {
+    refactoring
+        .addInputLines(
+            "in/Test.java",
+            "class Test<Bar> {",
+            "  public <T, Baz, Boo> void method(Baz f) {",
+            "    Bar bad = null;",
+            "    Baz d = f;",
+            "    Boo wow = null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test<B> {",
+            "  public <T, B2, B3> void method(B2 f) {",
+            "    B bad = null;",
+            "    B2 d = f;",
+            "    B3 wow = null;",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void refactoring_single_number_within_scope() throws Exception {
+    refactoring
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  public <T, Baz, Boo> void method(Baz f) {",
+            "    Baz d = f;",
+            "    Boo wow = null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  public <T, B, B2> void method(B f) {",
+            "    B d = f;",
+            "    B2 wow = null;",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void refactoring_single_number_many_ok() throws Exception {
+    refactoring
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  public <B, B2, B3, B4, Bad> void method(Bad f) {",
+            "    Bad d = f;",
+            "    B2 wow = null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  public <B, B2, B3, B4, B5> void method(B5 f) {",
+            "    B5 d = f;",
+            "    B2 wow = null;",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void refactoring_single_number_ok_after() throws Exception {
+    refactoring
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  public <B, Bad, B2> void method(Bad f) {",
+            "    Bad d = f;",
+            "    B2 wow = null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  public <B, B3, B2> void method(B3 f) {",
+            "    B3 d = f;",
+            "    B2 wow = null;",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
@@ -93,6 +235,7 @@ public class TypeParameterNamingTest {
             "    FooT d = f;",
             "  }",
             "}")
+        .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
 
