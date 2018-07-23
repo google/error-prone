@@ -81,11 +81,13 @@ public class TypeParameterShadowing extends BugChecker
     if (symbol == null) {
       return Description.NO_MATCH;
     }
+
     List<TypeVariableSymbol> enclosingTypeSymbols = typeVariablesEnclosing(symbol);
     if (enclosingTypeSymbols.isEmpty()) {
       return Description.NO_MATCH;
     }
 
+    // See if the passed in list typeParameters exist in the enclosingTypeSymbols
     List<TypeVariableSymbol> conflictingTypeSymbols = new ArrayList<>();
     typeParameters.forEach(
         param ->
@@ -94,11 +96,11 @@ public class TypeParameterShadowing extends BugChecker
                 .filter(tvs -> tvs.name.contentEquals(param.getName()))
                 .findFirst()
                 .ifPresent(conflictingTypeSymbols::add));
-
     if (conflictingTypeSymbols.isEmpty()) {
       return Description.NO_MATCH;
     }
 
+    // Describes what's the conflicting type and where it is
     Description.Builder descriptionBuilder = buildDescription(tree);
     String message =
         "Found aliased type parameters: "
@@ -109,6 +111,7 @@ public class TypeParameterShadowing extends BugChecker
 
     descriptionBuilder.setMessage(message);
 
+    // Map conflictingTypeSymbol to its new name
     Set<String> typeVarsInScope =
         Streams.concat(enclosingTypeSymbols.stream(), symbol.getTypeParameters().stream())
             .map(v -> v.name.toString())
@@ -203,6 +206,7 @@ public class TypeParameterShadowing extends BugChecker
     return fixBuilder.build();
   }
 
+  // Get list of type params of every enclosing class
   private static List<TypeVariableSymbol> typeVariablesEnclosing(Symbol sym) {
     List<TypeVariableSymbol> typeVarScopes = new ArrayList<>();
     outer:
