@@ -23,7 +23,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that methods that override the annotated method must invoke {@code super.theMethod}.
+ * Indicates that any concrete method that overrides the annotated method, directly or indirectly,
+ * must invoke {@code super.theAnnotatedMethod(...)} at some point. This does not necessarily
+ * require an <i>unconditional</i> call; any matching call appearing directly within the method body
+ * (not inside an intervening class or lambda expression) is acceptable.
+ *
+ * <p>If the overriding method is itself overridable, applying this annotation to that method is
+ * technically redundant, but may be helpful to readers.
+ *
+ * <p><b>Preferred:</b> usually, a better solution is to make the method {@code final}, and have its
+ * implementation delegate to a second concrete method which <i>is</i> overridable (or to a function
+ * object which subclasses can specify). "Mandatory" statements remain in the final method while
+ * "optional" code moves out. This is the only way to make sure the statements will be executed
+ * unconditionally.
  */
 @Documented
 @Target(METHOD)
