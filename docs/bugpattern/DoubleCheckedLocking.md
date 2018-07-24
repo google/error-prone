@@ -9,23 +9,38 @@ accessor. For more information, see:
 *   Java Concurrency in Practice, §16.2.4
 *   Effective Java, Item 71
 
-The canonical example of *correct* double-checked locking is:
+The canonical example of *correct* double-checked locking for lazy
+initialization is:
 
 ```java
 class Foo {
-  private volatile Object field = null;
-  public Object get() {
-    if (field == null) {
-      synchronized(this) {
-        if (field == null) {
-          field = computeValue();
+  /** This foo's bar.  Lazily initialized via double-checked locking. */
+  private volatile Bar bar;
+
+  public Bar getBar() {
+    Bar value = bar;
+    if (value == null) {
+      synchronized (this) {
+        value = bar;
+        if (value == null) {
+          bar = value = computeBar();
         }
       }
     }
-    return field;
+    return value;
   }
+
+  private Bar computeBar() { ... }
 }
 ```
+
+<!--
+  TODO: Consider instead:
+  - moving the synchronized block into a separate method to encourage getBar inlining
+  - using (sharper) jdk9+ VarHandle.getAcquire together with VarHandle.setRelease
+  - Suppliers.memoize
+  - AtomicReference.updateAndGet()
+-->
 
 ## Alternatives
 
