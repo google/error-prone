@@ -35,6 +35,10 @@ fields (see the implementation of `String#hashCode()` for an example), but doing
 this correctly requires subtle reasoning about safe data races and deep
 knowledge of the Java Memory Model.
 
+If you have an immutable class with mutable fields as described above, you can
+mark it as such by [suppressing the Immutable check](#suppression) on it. This
+will allow your class to be included in other `@Immutable` classes.
+
 For more information about immutability, see:
 
 *   Java Concurrency in Practice §3.4
