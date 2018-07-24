@@ -31,15 +31,20 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.List;
 import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 
@@ -178,6 +183,29 @@ public class MissingSuperCall extends BugChecker
     }
 
     @Override
+    public Boolean visitNewClass(NewClassTree node, Void unused) {
+      Boolean r = scan(node.getEnclosingExpression(), null);
+      r = scanAndReduce(node.getIdentifier(), r);
+      r = scanAndReduce(node.getTypeArguments(), r);
+      r = scanAndReduce(node.getArguments(), r);
+      // don't descend into class body, if it exists
+      return r;
+    }
+
+    @Override
+    public Boolean visitClass(ClassTree node, Void unused) {
+      // don't descend into local classes
+      return false;
+    }
+
+    @Override
+    public Boolean visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+      Boolean r = scan(node.getParameters(), null);
+      r = scanAndReduce(node.getBody(), r);
+      return r;
+    }
+
+    @Override
     public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       boolean result = false;
       MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
@@ -191,6 +219,14 @@ public class MissingSuperCall extends BugChecker
         }
       }
       return result || super.visitMethodInvocation(tree, unused);
+    }
+
+    private Boolean scanAndReduce(List<? extends Tree> node, Boolean r) {
+      return reduce(scan(node, null), r);
+    }
+
+    private Boolean scanAndReduce(Tree node, Boolean r) {
+      return reduce(scan(node, null), r);
     }
 
     @Override
