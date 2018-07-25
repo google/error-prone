@@ -52,6 +52,16 @@ public class ComplexBooleanConstantTest {
             "  boolean barNotEquals() {",
             "    return 1 != 1;",
             "  }",
+            "  boolean f(boolean x) {",
+            "    boolean r;",
+            "    r = x || !false;",
+            "    r = x || !true;",
+            "    r = x || true;",
+            "    r = x && !false;",
+            "    r = x && !true;",
+            "    r = x && false;",
+            "    return r;",
+            "  }",
             "}")
         .addOutputLines(
             "out/Foo.java",
@@ -70,7 +80,17 @@ public class ComplexBooleanConstantTest {
             "  boolean barNotEquals() {",
             "    return false;",
             "  }",
+            "  boolean f(boolean x) {",
+            "    boolean r;",
+            "    r = true;",
+            "    r = x || !true;",
+            "    r = true;",
+            "    r = x && !false;",
+            "    r = false;",
+            "    r = false;",
+            "    return r;",
+            "  }",
             "}")
-        .doTest(TestMode.AST_MATCH);
+        .doTest(TestMode.TEXT_MATCH);
   }
 }
