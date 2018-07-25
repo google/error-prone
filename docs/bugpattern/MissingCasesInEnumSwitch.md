@@ -16,7 +16,7 @@ The author's intent isn't clear. There are three possibilities:
 
 1.  The default case is known to be impossible. This could be made clear by
     adding: \
-    `default: throw new AssertionError();`
+    `default: throw new AssertionError(color);`
 
 2.  The code intentionally 'falls out' of the switch on the default case, and
     execution continues below. This could be made clear by adding: \
