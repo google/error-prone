@@ -115,6 +115,10 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
 
   protected abstract ImmutableSet<String> disabled();
 
+  protected Set<String> enabled() {
+    return Sets.difference(getAllChecks().keySet(), disabled());
+  }
+
   public abstract ErrorProneFlags getFlags();
 
   /**
@@ -263,7 +267,9 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
                         k, v, existing));
               }
             });
-    ImmutableSet<String> disabled = ImmutableSet.copyOf(Sets.union(disabled(), other.disabled()));
+    ImmutableSet<String> disabled =
+        Sets.difference(combinedAllChecks.keySet(), Sets.union(enabled(), other.enabled()))
+            .immutableCopy();
     ErrorProneFlags combinedFlags = this.getFlags().plus(other.getFlags());
     return new ScannerSupplierImpl(
         ImmutableBiMap.copyOf(combinedAllChecks),
