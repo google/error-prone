@@ -38,6 +38,9 @@ public class ConstructorInvokesOverridableNegativeCases {
     safeStatic();
     safePrivate();
 
+    // Safe: on a different instance.
+    new ConstructorInvokesOverridableNegativeCases().localVariable();
+
     new Thread() {
       @Override
       public void run() {
