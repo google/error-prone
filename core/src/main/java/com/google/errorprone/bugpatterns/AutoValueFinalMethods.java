@@ -60,6 +60,7 @@ import javax.lang.model.element.Modifier;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatcher {
 
+  private static final String MEMOIZED = "com.google.auto.value.extension.memoized.Memoized";
   private static final Matcher<MethodTree> EQUALS_MATCHER =
       allOf(
           methodIsNamed("equals"),
@@ -72,12 +73,13 @@ public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatche
   private static final Matcher<MethodTree> HASH_CODE_MATCHER =
       allOf(methodIsNamed("hashCode"), methodHasParameters(), methodReturns(INT_TYPE));
 
-  // public non-final eq/ts/hs methods
+  // public non-memoized non-final eq/ts/hs methods
   private static final Matcher<MethodTree> METHOD_MATCHER =
       allOf(
           Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
           not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
           not(Matchers.<MethodTree>hasModifier(Modifier.FINAL)),
+          not(Matchers.<MethodTree>hasAnnotation(MEMOIZED)),
           anyOf(EQUALS_MATCHER, TO_STRING_MATCHER, HASH_CODE_MATCHER));
 
   @Override
