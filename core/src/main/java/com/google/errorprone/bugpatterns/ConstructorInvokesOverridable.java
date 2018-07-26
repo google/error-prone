@@ -23,12 +23,16 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 
 /**
  * Looks for invocations of overridable methods from constructors and similar scopes (instance
@@ -60,6 +64,7 @@ public class ConstructorInvokesOverridable extends ConstructorLeakChecker {
                 && !method.isStatic()
                 && !method.isPrivate()
                 && !method.getModifiers().contains(Modifier.FINAL)
+                && isOnThis(node)
                 && method.isMemberOf(classSym, state.getTypes())) {
               state.reportMatch(describeMatch(node));
             }
@@ -67,5 +72,24 @@ public class ConstructorInvokesOverridable extends ConstructorLeakChecker {
           }
         },
         null);
+  }
+
+  private static boolean isOnThis(MethodInvocationTree tree) {
+    ExpressionTree receiver = ASTHelpers.getReceiver(tree);
+    if (receiver == null) {
+      return true;
+    }
+    Name receiverName;
+    switch (receiver.getKind()) {
+      case IDENTIFIER:
+        receiverName = ((IdentifierTree) receiver).getName();
+        break;
+      case MEMBER_SELECT:
+        receiverName = ((MemberSelectTree) receiver).getIdentifier();
+        break;
+      default:
+        return false;
+    }
+    return receiverName.contentEquals("this") || receiverName.contentEquals("super");
   }
 }
