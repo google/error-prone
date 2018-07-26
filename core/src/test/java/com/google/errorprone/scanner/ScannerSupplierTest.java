@@ -18,6 +18,7 @@ package com.google.errorprone.scanner;
 
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
@@ -28,7 +29,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 import com.google.common.jimfs.Jimfs;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.MapSubject;
@@ -142,14 +142,16 @@ public class ScannerSupplierTest {
                 + " severity = BugPattern.SeverityLevel.WARNING)",
             "public class TestChecker extends BugChecker {}");
 
-    ScannerSupplier ss1 = ScannerSupplier.fromBugCheckerClasses(class1);
+    ScannerSupplier ss1 =
+        ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class, class1).filter(c -> false);
     ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(class2);
 
     assertThat(class1).isNotEqualTo(class2);
     ScannerSupplier ss = ss1.plus(ss2);
-    assertThat(ss.getAllChecks()).hasSize(1);
-    assertThat(Iterables.getOnlyElement(ss.getAllChecks().values()).checkerClass())
-        .isEqualTo(class1);
+    assertThat(ss.getAllChecks()).hasSize(2);
+    assertThat(ss.getAllChecks().values().stream().map(c -> c.checkerClass()))
+        .containsExactly(ArrayEquals.class, class1);
+    assertScanner(ss).hasEnabledChecks(class1);
   }
 
   /** Another check with the canonical name ArrayEquals, for testing. */
