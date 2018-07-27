@@ -31,6 +31,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SimpleTreeVisitor;
+import java.util.Objects;
 
 /** @author Sumit Bhagwani (bhagwani@google.com) */
 @BugPattern(
@@ -79,7 +80,9 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
           @Override
           public Boolean visitBinary(BinaryTree node, Void unused) {
             Boolean result = defaultAction(node, null);
-            if (result != null) {
+            if (result != null
+                && node.getLeftOperand().getKind() != Tree.Kind.IDENTIFIER
+                && node.getRightOperand().getKind() != Tree.Kind.IDENTIFIER) {
               return result;
             }
             Boolean lhs = node.getLeftOperand().accept(this, null);
@@ -90,7 +93,7 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
                 if (lhs != null && rhs != null) {
                   return lhs && rhs;
                 }
-                if (lhs == Boolean.FALSE || rhs == Boolean.FALSE) {
+                if (Objects.equals(lhs, Boolean.FALSE) || Objects.equals(rhs, Boolean.FALSE)) {
                   return false;
                 }
                 break;
@@ -99,7 +102,7 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
                 if (lhs != null && rhs != null) {
                   return lhs || rhs;
                 }
-                if (lhs == Boolean.TRUE || rhs == Boolean.TRUE) {
+                if (Objects.equals(lhs, Boolean.TRUE) || Objects.equals(rhs, Boolean.TRUE)) {
                   return true;
                 }
                 break;
