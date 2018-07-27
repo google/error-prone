@@ -15,8 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.matchers.Description.NO_MATCH;
-
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -27,10 +25,10 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.util.Objects;
 
 /** @author Sumit Bhagwani (bhagwani@google.com) */
@@ -44,9 +42,9 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
-    Boolean constValue = booleanConstValue(tree);
+    Boolean constValue = booleanValue(tree);
     if (constValue == null) {
-      return NO_MATCH;
+      return Description.NO_MATCH;
     }
     return buildDescription(tree)
         .addFix(SuggestedFix.replace(tree, constValue.toString()))
@@ -57,60 +55,59 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
         .build();
   }
 
-  Boolean booleanConstValue(Tree tree) {
-    return tree.accept(
+  Boolean booleanValue(BinaryTree tree) {
+    if (tree.getLeftOperand() instanceof JCLiteral && tree.getRightOperand() instanceof JCLiteral) {
+      return ASTHelpers.constValue(tree, Boolean.class);
+    }
+    // Handle `&& false` and `|| true` even if the other operand is a non-trivial constant
+    // (including constant fields).
+    SimpleTreeVisitor<Boolean, Void> boolValue =
         new SimpleTreeVisitor<Boolean, Void>() {
           @Override
-          protected Boolean defaultAction(Tree node, Void unused) {
-            return ASTHelpers.constValue(node, Boolean.class);
-          }
-
-          @Override
-          public Boolean visitIdentifier(IdentifierTree node, Void aVoid) {
-            // Ignore constant variables.
-            return null;
-          }
-
-          @Override
-          public Boolean visitMemberSelect(MemberSelectTree node, Void aVoid) {
-            // Ignore constant variables.
-            return null;
-          }
-
-          @Override
-          public Boolean visitBinary(BinaryTree node, Void unused) {
-            Boolean result = defaultAction(node, null);
-            if (result != null
-                && node.getLeftOperand().getKind() != Tree.Kind.IDENTIFIER
-                && node.getRightOperand().getKind() != Tree.Kind.IDENTIFIER) {
-              return result;
+          public Boolean visitLiteral(LiteralTree node, Void aVoid) {
+            if (node.getValue() instanceof Boolean) {
+              return (Boolean) node.getValue();
             }
-            Boolean lhs = node.getLeftOperand().accept(this, null);
-            Boolean rhs = node.getRightOperand().accept(this, null);
+            return null;
+          }
+
+          @Override
+          public Boolean visitUnary(UnaryTree node, Void aVoid) {
+            Boolean r = node.getExpression().accept(this, null);
+            if (r == null) {
+              return null;
+            }
             switch (node.getKind()) {
-              case CONDITIONAL_AND:
-              case AND:
-                if (lhs != null && rhs != null) {
-                  return lhs && rhs;
-                }
-                if (Objects.equals(lhs, Boolean.FALSE) || Objects.equals(rhs, Boolean.FALSE)) {
-                  return false;
-                }
-                break;
-              case CONDITIONAL_OR:
-              case OR:
-                if (lhs != null && rhs != null) {
-                  return lhs || rhs;
-                }
-                if (Objects.equals(lhs, Boolean.TRUE) || Objects.equals(rhs, Boolean.TRUE)) {
-                  return true;
-                }
-                break;
-              default: // fall out
+              case LOGICAL_COMPLEMENT:
+                return !r;
+              default:
+                return null;
             }
-            return null;
           }
-        },
-        null);
+        };
+    Boolean lhs = tree.getLeftOperand().accept(boolValue, null);
+    Boolean rhs = tree.getRightOperand().accept(boolValue, null);
+    switch (tree.getKind()) {
+      case CONDITIONAL_AND:
+      case AND:
+        if (lhs != null && rhs != null) {
+          return lhs && rhs;
+        }
+        if (Objects.equals(lhs, Boolean.FALSE) || Objects.equals(rhs, Boolean.FALSE)) {
+          return false;
+        }
+        break;
+      case CONDITIONAL_OR:
+      case OR:
+        if (lhs != null && rhs != null) {
+          return lhs || rhs;
+        }
+        if (Objects.equals(lhs, Boolean.TRUE) || Objects.equals(rhs, Boolean.TRUE)) {
+          return true;
+        }
+        break;
+      default: // fall out
+    }
+    return null;
   }
 }

@@ -105,6 +105,8 @@ public class ComplexBooleanConstantTest {
             "  static final int A = 1;",
             "  static final int B = 2;",
             "  static final boolean C = A > B;",
+            "  static final boolean D = A + B > 0;",
+            "  static final boolean E = (A + B) > 0;",
             "}")
         .doTest();
   }
