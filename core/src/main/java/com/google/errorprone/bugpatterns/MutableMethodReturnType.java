@@ -19,8 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -31,6 +29,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.IdentifierTree;
@@ -58,7 +57,7 @@ import java.util.function.Predicate;
 public final class MutableMethodReturnType extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<MethodTree> ANNOTATED_WITH_PRODUCES_OR_PROVIDES =
-      anyOf(hasAnnotation("dagger.Provides"), hasAnnotation("dagger.producers.Produces"));
+      InjectMatchers.hasProvidesAnnotation();
 
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
