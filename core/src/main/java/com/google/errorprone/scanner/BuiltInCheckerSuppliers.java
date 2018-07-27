@@ -136,6 +136,7 @@ import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
+import com.google.errorprone.bugpatterns.MathAbsoluteRandom;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
@@ -551,6 +552,7 @@ public class BuiltInCheckerSuppliers {
           JUnit4ClassUsedInJUnit3.class,
           JUnitAmbiguousTestClass.class,
           LogicalAssignment.class,
+          MathAbsoluteRandom.class,
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
           MissingOverride.class,
