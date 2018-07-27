@@ -33,7 +33,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParameterizedTypeTree;
@@ -41,13 +40,11 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import java.util.Optional;
 import java.util.function.Predicate;
-import javax.lang.model.element.Modifier;
 
 /** @author dorir@google.com (Dori Reuveni) */
 @BugPattern(
@@ -71,7 +68,7 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
       return Description.NO_MATCH;
     }
 
-    if (isMethodCanBeOverridden(methodSymbol, state)) {
+    if (ASTHelpers.methodCanBeOverridden(methodSymbol)) {
       return Description.NO_MATCH;
     }
 
@@ -112,28 +109,6 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
     SuggestedFix fix = fixBuilder.build();
 
     return describeMatch(methodTree.getReturnType(), fix);
-  }
-
-  private static boolean isMethodCanBeOverridden(MethodSymbol methodSymbol, VisitorState state) {
-    if (methodSymbol.isStatic() || methodSymbol.isPrivate() || isFinalMethod(methodSymbol)) {
-      return false;
-    }
-
-    ClassTree enclosingClassTree = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-    boolean isEnclosingClassFinal = isFinalClass(enclosingClassTree);
-    if (isEnclosingClassFinal) {
-      return false;
-    }
-
-    return true;
-  }
-
-  private static boolean isFinalClass(ClassTree classTree) {
-    return classTree.getModifiers().getFlags().contains(Modifier.FINAL);
-  }
-
-  private static boolean isFinalMethod(MethodSymbol methodSymbol) {
-    return (methodSymbol.flags() & Flags.FINAL) == Flags.FINAL;
   }
 
   private static Optional<String> getCommonImmutableTypeForAllReturnStatementsTypes(

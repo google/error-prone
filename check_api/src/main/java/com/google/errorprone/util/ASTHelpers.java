@@ -126,6 +126,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
@@ -593,6 +594,31 @@ public class ASTHelpers {
       }
     }
     return matchingMethods;
+  }
+
+  /**
+   * Determines whether a method can be overridden.
+   *
+   * @return true if the method can be overridden.
+   */
+  public static boolean methodCanBeOverridden(MethodSymbol methodSymbol) {
+    if (methodSymbol.getModifiers().contains(Modifier.ABSTRACT)) {
+      return true;
+    }
+
+    if (methodSymbol.isStatic()
+        || methodSymbol.isPrivate()
+        || isFinal(methodSymbol)
+        || methodSymbol.isConstructor()) {
+      return false;
+    }
+
+    ClassSymbol classSymbol = (ClassSymbol) methodSymbol.owner;
+    return !isFinal(classSymbol) && !classSymbol.isAnonymous();
+  }
+
+  private static boolean isFinal(Symbol symbol) {
+    return (symbol.flags() & Flags.FINAL) == Flags.FINAL;
   }
 
   /**
