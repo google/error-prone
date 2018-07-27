@@ -34,13 +34,16 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.ByteStreams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ParameterizedTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -1034,5 +1037,100 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         .containsExactly(
             "@com.google.errorprone.util.ASTHelpersTest.B(\"four\")",
             "@com.google.errorprone.util.ASTHelpersTest.A(10)");
+  }
+
+  /** A {@link BugChecker} that prints if the method can be overridden. */
+  @BugPattern(
+      name = "MethodCanBeOverriddenChecker",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary = "Prints whether the method can be overridden.",
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  public static class MethodCanBeOverriddenChecker extends BugChecker implements MethodTreeMatcher {
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      boolean methodCanBeOverridden = ASTHelpers.methodCanBeOverridden(ASTHelpers.getSymbol(tree));
+      String description = methodCanBeOverridden ? "Can be overridden" : "Cannot be overridden";
+      return describeMatch(tree, SuggestedFix.prefixWith(tree, "/* " + description + " */\n"));
+    }
+  }
+
+  @Test
+  public void methodCanBeOverridden_class() {
+    CompilationTestHelper.newInstance(MethodCanBeOverriddenChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: Cannot be overridden",
+            "  Test() {}",
+            "",
+            "  // BUG: Diagnostic contains: Can be overridden",
+            "  void canBeOverridden() {}",
+            "",
+            "  // BUG: Diagnostic contains: Cannot be overridden",
+            "  final void cannotBeOverriddenBecauseFinal() {}",
+            "",
+            "  // BUG: Diagnostic contains: Cannot be overridden",
+            "  static void cannotBeOverriddenBecauseStatic() {}",
+            "",
+            "  // BUG: Diagnostic contains: Cannot be overridden",
+            "  private void cannotBeOverriddenBecausePrivate() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodCanBeOverridden_interface() {
+    CompilationTestHelper.newInstance(MethodCanBeOverriddenChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "interface Test {",
+            "  // BUG: Diagnostic contains: Can be overridden",
+            "  void canBeOverridden();",
+            "",
+            "  // BUG: Diagnostic contains: Can be overridden",
+            "  default void defaultCanBeOverridden() {}",
+            "",
+            "  // BUG: Diagnostic contains: Cannot be overridden",
+            "  static void cannotBeOverriddenBecauseStatic() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodCanBeOverridden_enum() {
+    CompilationTestHelper.newInstance(MethodCanBeOverriddenChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "enum Test {",
+            "  VALUE {",
+            "    // BUG: Diagnostic contains: Cannot be overridden",
+            "    @Override void abstractCanBeOverridden() {}",
+            "",
+            "    // BUG: Diagnostic contains: Cannot be overridden",
+            "    void declaredOnlyInValue() {}",
+            "  };",
+            "",
+            "  // BUG: Diagnostic contains: Can be overridden",
+            "  abstract void abstractCanBeOverridden();",
+            "",
+            "  // BUG: Diagnostic contains: Can be overridden",
+            "  void canBeOverridden() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodCanBeOverridden_anonymous() {
+    CompilationTestHelper.newInstance(MethodCanBeOverriddenChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  Object obj = new Object() {",
+            "    // BUG: Diagnostic contains: Cannot be overridden",
+            "    void inAnonymousClass() {}",
+            "  };",
+            "}")
+        .doTest();
   }
 }
