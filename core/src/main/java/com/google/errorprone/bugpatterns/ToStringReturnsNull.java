@@ -18,14 +18,12 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -46,13 +44,10 @@ import com.sun.source.util.TreeScanner;
     severity = WARNING)
 public class ToStringReturnsNull extends BugChecker implements MethodTreeMatcher {
 
-  private static final Matcher<MethodTree> TO_STRING =
-      allOf(Matchers.methodIsNamed("toString"), Matchers.methodHasParameters());
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
 
-    if (!TO_STRING.matches(tree, state)) {
+    if (!Matchers.toStringMethodDeclaration().matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
