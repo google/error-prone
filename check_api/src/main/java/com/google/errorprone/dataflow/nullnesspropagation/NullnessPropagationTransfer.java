@@ -353,7 +353,15 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   @Override
   Nullness visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
-    return hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand());
+    List<String> annotations =
+        node.getType()
+            .getAnnotationMirrors()
+            .stream()
+            .map(Object::toString)
+            .collect(Collectors.toList());
+    return nullnessFromAnnotations(annotations)
+        .orElseGet(
+            () -> hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand()));
   }
 
   /**
