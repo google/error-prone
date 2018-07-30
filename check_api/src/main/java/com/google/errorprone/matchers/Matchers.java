@@ -17,7 +17,9 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
@@ -1547,5 +1549,23 @@ public class Matchers {
         methodHasVisibility(Visibility.PUBLIC),
         methodHasParameters(variableType(isSameType("java.lang.Object"))),
         anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
+  }
+
+  /** Matches {@link toString} method declaration. */
+  public static Matcher<MethodTree> toStringMethodDeclaration() {
+    return allOf(
+        methodIsNamed("toString"),
+        methodHasVisibility(Visibility.PUBLIC),
+        methodHasParameters(),
+        methodReturns(STRING_TYPE));
+  }
+
+  /** Matches {@link hashCode} method declaration. */
+  public static Matcher<MethodTree> hashCodeMethodDeclaration() {
+    return allOf(
+        methodIsNamed("hashCode"),
+        methodHasVisibility(Visibility.PUBLIC),
+        methodHasParameters(),
+        methodReturns(INT_TYPE));
   }
 }

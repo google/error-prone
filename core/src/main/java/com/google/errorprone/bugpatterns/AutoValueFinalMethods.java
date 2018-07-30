@@ -20,12 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
-import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -59,12 +54,6 @@ public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatche
 
   private static final String MEMOIZED = "com.google.auto.value.extension.memoized.Memoized";
 
-  private static final Matcher<MethodTree> TO_STRING_MATCHER =
-      allOf(methodIsNamed("toString"), methodHasParameters(), methodReturns(STRING_TYPE));
-
-  private static final Matcher<MethodTree> HASH_CODE_MATCHER =
-      allOf(methodIsNamed("hashCode"), methodHasParameters(), methodReturns(INT_TYPE));
-
   // public non-memoized non-final eq/ts/hs methods
   private static final Matcher<MethodTree> METHOD_MATCHER =
       allOf(
@@ -72,7 +61,10 @@ public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatche
           not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
           not(Matchers.<MethodTree>hasModifier(Modifier.FINAL)),
           not(Matchers.<MethodTree>hasAnnotation(MEMOIZED)),
-          anyOf(Matchers.equalsMethodDeclaration(), TO_STRING_MATCHER, HASH_CODE_MATCHER));
+          anyOf(
+              Matchers.equalsMethodDeclaration(),
+              Matchers.toStringMethodDeclaration(),
+              Matchers.hashCodeMethodDeclaration()));
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
