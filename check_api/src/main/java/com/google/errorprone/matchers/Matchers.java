@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
@@ -1537,5 +1538,14 @@ public class Matchers {
         staticMethod().onClass("org.junit.Assert").named("assertEquals"),
         staticMethod().onClass("junit.framework.Assert").named("assertEquals"),
         staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
+  }
+
+  /** Matches {@link equals} method declaration. */
+  public static Matcher<MethodTree> equalsMethodDeclaration() {
+    return allOf(
+        methodIsNamed("equals"),
+        methodHasVisibility(Visibility.PUBLIC),
+        methodHasParameters(variableType(isSameType("java.lang.Object"))),
+        anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
   }
 }

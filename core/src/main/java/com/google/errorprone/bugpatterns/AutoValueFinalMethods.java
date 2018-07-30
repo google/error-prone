@@ -20,13 +20,10 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 
@@ -61,11 +58,6 @@ import javax.lang.model.element.Modifier;
 public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatcher {
 
   private static final String MEMOIZED = "com.google.auto.value.extension.memoized.Memoized";
-  private static final Matcher<MethodTree> EQUALS_MATCHER =
-      allOf(
-          methodIsNamed("equals"),
-          methodHasParameters(variableType(isSameType("java.lang.Object"))),
-          methodReturns(BOOLEAN_TYPE));
 
   private static final Matcher<MethodTree> TO_STRING_MATCHER =
       allOf(methodIsNamed("toString"), methodHasParameters(), methodReturns(STRING_TYPE));
@@ -80,7 +72,7 @@ public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatche
           not(Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT)),
           not(Matchers.<MethodTree>hasModifier(Modifier.FINAL)),
           not(Matchers.<MethodTree>hasAnnotation(MEMOIZED)),
-          anyOf(EQUALS_MATCHER, TO_STRING_MATCHER, HASH_CODE_MATCHER));
+          anyOf(Matchers.equalsMethodDeclaration(), TO_STRING_MATCHER, HASH_CODE_MATCHER));
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {

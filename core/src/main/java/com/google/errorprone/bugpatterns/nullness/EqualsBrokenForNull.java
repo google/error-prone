@@ -18,13 +18,6 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -37,7 +30,7 @@ import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
@@ -59,15 +52,9 @@ import java.util.Objects;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher {
 
-  private static final Matcher<MethodTree> MATCHER =
-      allOf(
-          methodIsNamed("equals"),
-          methodHasParameters(variableType(isSameType("java.lang.Object"))),
-          methodReturns(BOOLEAN_TYPE));
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (!MATCHER.matches(tree, state)) {
+    if (!Matchers.equalsMethodDeclaration().matches(tree, state)) {
       return NO_MATCH;
     }
     VarSymbol varSymbol = ASTHelpers.getSymbol(getOnlyElement(tree.getParameters()));
