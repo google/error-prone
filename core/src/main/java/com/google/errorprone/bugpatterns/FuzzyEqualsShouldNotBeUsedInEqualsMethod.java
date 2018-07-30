@@ -19,24 +19,15 @@ import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingMethod;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
-import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
-import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
 
 /** @author sulku@google.com (Marsela Sulku) */
 @BugPattern(
@@ -47,17 +38,10 @@ import com.sun.source.tree.MethodTree;
 public class FuzzyEqualsShouldNotBeUsedInEqualsMethod extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<MethodTree> EQUALS_MATCHER =
-      allOf(
-          methodIsNamed("equals"),
-          methodHasVisibility(PUBLIC),
-          methodReturns(BOOLEAN_TYPE),
-          methodHasParameters(variableType(isSameType(OBJECT_TYPE))));
-
   private static final Matcher<MethodInvocationTree> CALL_TO_FUZZY_IN_EQUALS =
       allOf(
           staticMethod().onClass("com.google.common.math.DoubleMath").named("fuzzyEquals"),
-          enclosingMethod(EQUALS_MATCHER));
+          enclosingMethod(Matchers.equalsMethodDeclaration()));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

@@ -18,21 +18,12 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
-import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -54,15 +45,11 @@ import java.util.Objects;
     severity = ERROR)
 public class EqualsReference extends BugChecker implements MethodTreeMatcher {
 
-  private static final Matcher<MethodTree> EQUALS_MATCHER =
-      allOf(
-          methodIsNamed("equals"),
-          methodHasParameters(variableType(isSameType("java.lang.Object"))),
-          anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
+
 
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState visitorState) {
-    if (EQUALS_MATCHER.matches(methodTree, visitorState)) {
+    if (Matchers.equalsMethodDeclaration().matches(methodTree, visitorState)) {
       VariableTree variableTree = methodTree.getParameters().get(0);
       VarSymbol varSymbol = ASTHelpers.getSymbol(variableTree);
       TreeScannerEquals treeScannerEquals = new TreeScannerEquals(methodTree);
