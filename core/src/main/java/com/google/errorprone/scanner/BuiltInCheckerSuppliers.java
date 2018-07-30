@@ -82,6 +82,7 @@ import com.google.errorprone.bugpatterns.EqualsHashCode;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.EqualsReference;
+import com.google.errorprone.bugpatterns.EqualsUnsafeCast;
 import com.google.errorprone.bugpatterns.EqualsWrongThing;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.ExtendingJUnitAssert;
@@ -525,6 +526,7 @@ public class BuiltInCheckerSuppliers {
           EqualsGetClass.class,
           EqualsHashCode.class,
           EqualsIncompatibleType.class,
+          EqualsUnsafeCast.class,
           ExtendingJUnitAssert.class,
           FallThrough.class,
           Finally.class,
