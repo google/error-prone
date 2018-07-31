@@ -32,10 +32,13 @@ import com.google.errorprone.matchers.MultiMatcher;
 import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
@@ -145,9 +148,33 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           }
 
           @Override
+          public IdentifierTree visitClass(ClassTree classTree, Void aVoid) {
+            if (isSuppressed(classTree)) {
+              return null;
+            }
+            return super.visitClass(classTree, aVoid);
+          }
+
+          @Override
+          public IdentifierTree visitMethod(MethodTree methodTree, Void aVoid) {
+            if (isSuppressed(methodTree)) {
+              return null;
+            }
+            return super.visitMethod(methodTree, aVoid);
+          }
+
+          @Override
+          public IdentifierTree visitVariable(VariableTree variableTree, Void aVoid) {
+            if (isSuppressed(variableTree)) {
+              return null;
+            }
+            return super.visitVariable(variableTree, aVoid);
+          }
+
+          @Override
           public IdentifierTree visitIdentifier(IdentifierTree node, Void aVoid) {
             Symbol nodeSymbol = ASTHelpers.getSymbol(node);
-            if (symbols.contains(nodeSymbol)) {
+            if (symbols.contains(nodeSymbol) && !isSuppressed(node)) {
               builder.prefixWith(node, enclosingReplacement);
               moveTypeAnnotations(node);
               return node;

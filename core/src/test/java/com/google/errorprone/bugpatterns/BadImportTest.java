@@ -246,4 +246,56 @@ public final class BadImportTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suppressed_class() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.collect.ImmutableList.of;",
+            "import com.google.common.collect.ImmutableList;",
+            "@SuppressWarnings(\"BadImport\")",
+            "class Test {",
+            "  ImmutableList<?> list = of();",
+            "  ImmutableList<?> list2 = of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressed_field() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.collect.ImmutableList.of;",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  @SuppressWarnings(\"BadImport\")",
+            "  ImmutableList<?> list = of();",
+            "",
+            "  // BUG: Diagnostic contains: ImmutableList.of()",
+            "  ImmutableList<?> list2 = of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressed_method() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.collect.ImmutableList.of;",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  @SuppressWarnings(\"BadImport\")",
+            "  void foo() {",
+            "    ImmutableList<?> list = of();",
+            "  }",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: ImmutableList.of()",
+            "    ImmutableList<?> list2 = of();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
