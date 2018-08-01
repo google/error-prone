@@ -720,15 +720,10 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (declaredNullness.isPresent()) {
       return declaredNullness.get();
     }
-    System.err.println("--------------------------------------------------------");
-    System.err.println("CALLING ISAUTOVALUEACCESSOR ON: ");
-    System.err.println(node);
     // Auto Value accessors are nonnull unless explicitly annotated @Nullable.
     if (AccessPath.isAutoValueAccessor(node.getTree())) {
-      System.err.println("TRUE");
       return NONNULL;
     }
-    System.err.println("FALSE");
     // If there is no nullness annotation on the callee method declaration, look for applicable
     // annotations inherited from elsewhere.
     List<String> annotations =
