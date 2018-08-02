@@ -173,7 +173,8 @@
 <tr class="rowColor">
 <td class="colFirst"><a href="../../../../com/google/errorprone/annotations/OverridingMethodsMustInvokeSuper.html" title="annotation in com.google.errorprone.annotations">OverridingMethodsMustInvokeSuper</a></td>
 <td class="colLast">
-<div class="block">Indicates that methods that override the annotated method must invoke <code>super.theMethod</code>.</div>
+<div class="block">Indicates that any concrete method that overrides the annotated method, directly or indirectly,
+ must invoke <code>super.theAnnotatedMethod(...)</code> at some point.</div>
 </td>
 </tr>
 <tr class="altColor">

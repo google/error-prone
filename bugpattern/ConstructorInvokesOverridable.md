@@ -78,6 +78,10 @@ public class ConstructorInvokesOverridablePositiveCases {
   ConstructorInvokesOverridablePositiveCases() {
     // BUG: Diagnostic contains: Constructors should not invoke overridable
     unsafe();
+    // BUG: Diagnostic contains: Constructors should not invoke overridable
+    this.unsafe();
+    // BUG: Diagnostic contains: Constructors should not invoke overridable
+    ConstructorInvokesOverridablePositiveCases.this.unsafe();
 
     new Thread() {
       @Override
@@ -159,6 +163,9 @@ public class ConstructorInvokesOverridableNegativeCases {
     safeFinal();
     safeStatic();
     safePrivate();
+
+    // Safe: on a different instance.
+    new ConstructorInvokesOverridableNegativeCases().localVariable();
 
     new Thread() {
       @Override

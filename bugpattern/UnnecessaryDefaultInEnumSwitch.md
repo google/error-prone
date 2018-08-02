@@ -138,5 +138,18 @@ boolean isReady(State state) {
 }
 ```
 
+## Cases with UNRECOGNIZED
+
+In situations where a switch handles all values of a proto-generated enum except
+for UNRECOGNIZED, UNRECOGNIZED is explicitly handled and the default is removed.
+This is preferred practice because it will catch unexpected enum types at
+compiletime instead of runtime.
+
+If the switch statement cannot complete normally, the default is deleted and its
+statements are moved after the switch statement. Case UNRECOGNIZED is added with
+a break.
+
+If it can complete, we merge the default with an added UNRECOGNIZED case.
+
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryDefaultInEnumSwitch")` to the enclosing element.

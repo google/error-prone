@@ -105,8 +105,9 @@
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></td>
 <td class="colLast"><span class="typeNameLabel">AccessPath.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/AccessPath.html#fromFieldAccess-org.checkerframework.dataflow.cfg.node.FieldAccessNode-">fromFieldAccess</a></span>(org.checkerframework.dataflow.cfg.node.FieldAccessNode&nbsp;fieldAccess)</code>
-<div class="block">Creates an AccessPath from field accesses we can track and returns null otherwise (for example,
- when the receiver of the field access contains a method call or array access)</div>
+<div class="block">Creates an AccessPath from field reads / AutoValue accessor we can track and returns null
+ otherwise (for example, when the receiver of the field access contains an array access or
+ non-AutoValue method call.</div>
 </td>
 </tr>
 <tr class="rowColor">

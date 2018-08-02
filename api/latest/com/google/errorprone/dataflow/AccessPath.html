@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":9,"i3":9,"i4":9,"i5":9};
+var methods = {"i0":6,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":6};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -111,16 +111,20 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public abstract class <span class="typeNameLabel">AccessPath</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
-<div class="block">A sequence of field names along with either a variable or a reference (explicit or implicit) to
- <code>this</code>
+<div class="block">A sequence of field names or autovalue accessors, along with a receiver: either a variable or a
+ reference (explicit or implicit) to <code>this</code>. Fields and autovalue accessors are stored as
+ strings, with a "()" appended to accessor names to distinguish them from fields of the same name
 
  <p>For example:
 
  <p><code>x.f.g</code>, the <code>g</code> field of the <code>f</code> field of the local variable <code>x</code> is
- represented by {base = Some x, fields = g :: f :: nil}
+ represented by {base = Some x, fields = "g" :: "f" :: nil}
 
  <p><code>foo.bar</code>, the <code>bar</code> field of the <code>foo</code> field of the implicit <code>this</code>
- is represented by {base = None, fields = bar :: foo :: nil}</div>
+ is represented by {base = None, fields = "bar" :: "foo" :: nil}
+
+ <p><code>x.foo().foo</code>, the <code>foo</code> field of the <code>foo()</code> autovalue accessor of the
+ local variable <code>x</code> is represented by {base = Some x, fields = "foo" :: "foo()" :: nil}</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>bennostein@google.com (Benno Stein)</dd>
@@ -167,30 +171,37 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>abstract com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/AccessPath.html#fields--">fields</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/AccessPath.html#fromFieldAccess-org.checkerframework.dataflow.cfg.node.FieldAccessNode-">fromFieldAccess</a></span>(org.checkerframework.dataflow.cfg.node.FieldAccessNode&nbsp;fieldAccess)</code>
+<div class="block">Creates an AccessPath from field reads / AutoValue accessor we can track and returns null
+ otherwise (for example, when the receiver of the field access contains an array access or
+ non-AutoValue method call.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/AccessPath.html#fromFieldAccess-org.checkerframework.dataflow.cfg.node.FieldAccessNode-">fromFieldAccess</a></span>(org.checkerframework.dataflow.cfg.node.FieldAccessNode&nbsp;fieldAccess)</code>
-<div class="block">Creates an AccessPath from field accesses we can track and returns null otherwise (for example,
- when the receiver of the field access contains a method call or array access)</div>
-</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/AccessPath.html#fromLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-">fromLocalVariable</a></span>(org.checkerframework.dataflow.cfg.node.LocalVariableNode&nbsp;node)</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/AccessPath.html#fromNodeIfTrackable-org.checkerframework.dataflow.cfg.node.Node-">fromNodeIfTrackable</a></span>(org.checkerframework.dataflow.cfg.node.Node&nbsp;node)</code>
 <div class="block">Returns an AccessPath representing <code>node</code> if <code>node</code> is representable as an access
  path and null otherwise</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/AccessPath.html#fromVariableDecl-org.checkerframework.dataflow.cfg.node.VariableDeclarationNode-">fromVariableDecl</a></span>(org.checkerframework.dataflow.cfg.node.VariableDeclarationNode&nbsp;node)</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/AccessPath.html#isAutoValueAccessor-com.sun.source.tree.Tree-">isAutoValueAccessor</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
+<div class="block">Check whether <code>tree</code> is an AutoValue accessor.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>abstract com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/dataflow/AccessPath.html#path--">path</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -242,13 +253,32 @@ public abstract&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/javax/la
 <div class="block">If present, base of access path is contained Element; if absent, base is `this`</div>
 </li>
 </ul>
-<a name="fields--">
+<a name="path--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>fields</h4>
-<pre>public abstract&nbsp;com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;fields()</pre>
+<h4>path</h4>
+<pre>public abstract&nbsp;com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;path()</pre>
+</li>
+</ul>
+<a name="isAutoValueAccessor-com.sun.source.tree.Tree-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isAutoValueAccessor</h4>
+<pre>public static&nbsp;boolean&nbsp;isAutoValueAccessor(com.sun.source.tree.Tree&nbsp;tree)</pre>
+<div class="block">Check whether <code>tree</code> is an AutoValue accessor. A tree is an AutoValue accessor iff:
+
+ <ul>
+   <li>it is a method invocation
+   <li>of an abstract method
+   <li>with 0 arguments
+   <li>defined on a class annotated @AutoValue
+ </ul>
+
+ <p>Public visibility for use in NullnessPropagationTransfer#returnValueNullness</div>
 </li>
 </ul>
 <a name="fromFieldAccess-org.checkerframework.dataflow.cfg.node.FieldAccessNode-">
@@ -259,8 +289,9 @@ public abstract&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/javax/la
 <h4>fromFieldAccess</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
 public static&nbsp;<a href="../../../../com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a>&nbsp;fromFieldAccess(org.checkerframework.dataflow.cfg.node.FieldAccessNode&nbsp;fieldAccess)</pre>
-<div class="block">Creates an AccessPath from field accesses we can track and returns null otherwise (for example,
- when the receiver of the field access contains a method call or array access)</div>
+<div class="block">Creates an AccessPath from field reads / AutoValue accessor we can track and returns null
+ otherwise (for example, when the receiver of the field access contains an array access or
+ non-AutoValue method call.</div>
 </li>
 </ul>
 <a name="fromLocalVariable-org.checkerframework.dataflow.cfg.node.LocalVariableNode-">

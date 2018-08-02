@@ -101,6 +101,9 @@ __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 __[EqualsReference](bugpattern/EqualsReference)__<br>
 == must be used in equals method to check equality to itself or an infinite loop will occur.
 
+__[EqualsWrongThing](bugpattern/EqualsWrongThing)__<br>
+Comparing different pairs of fields/getters in an equals implementation is probably a mistake.
+
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class, or from an override of the method
 
@@ -442,6 +445,12 @@ Classes that override equals should also override hashCode.
 __[EqualsIncompatibleType](bugpattern/EqualsIncompatibleType)__<br>
 An equality test between objects with incompatible types always returns false
 
+__[EqualsUnsafeCast](bugpattern/EqualsUnsafeCast)__<br>
+The contract of #equals states that it should return false for incompatible types, while this implementation may throw ClassCastException.
+
+__[ExtendingJUnitAssert](bugpattern/ExtendingJUnitAssert)__<br>
+When only using JUnit Assert&#39;s static methods, you should import statically instead of extending.
+
 __[FallThrough](bugpattern/FallThrough)__<br>
 Switch case may fall through
 
@@ -519,6 +528,9 @@ Suggests alternatives to obsolete JDK classes.
 
 __[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
 Assignment where a boolean expression was expected; use == if this assignment wasn&#39;t expected or add parentheses for clarity.
+
+__[MathAbsoluteRandom](bugpattern/MathAbsoluteRandom)__<br>
+Math.abs does not always give a positive result. Please consider other methods for positive random numbers.
 
 __[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
 Switches on enum types should either handle all values, or have a default case.
@@ -660,6 +672,9 @@ Declaring a type parameter that is only used in the return type is a misuse of g
 
 __[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
 Avoid hash-based containers of java.net.URL--the containers rely on equals() and hashCode(), which cause java.net.URL to make blocking internet connections.
+
+__[UndefinedEquals](bugpattern/UndefinedEquals)__<br>
+Collection, Iterable, Multimap, and Queue do not have well-defined equals behavior
 
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
 Unnecessary use of grouping parentheses
@@ -853,6 +868,9 @@ Using @Test(expected=...) is discouraged, since the test will pass if *any* stat
 
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
+
+__[Unused](bugpattern/Unused)__<br>
+Unused.
 
 __[UnusedException](bugpattern/UnusedException)__<br>
 This catch block catches an symbol and re-throws another, but swallows the caught symbol rather than setting it as a cause. This can make debugging harder.

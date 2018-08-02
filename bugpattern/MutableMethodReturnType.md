@@ -27,7 +27,7 @@ interfaces in every important sense of the word.
 That is, prefer this:
 
 ```java {.good}
-ImmutableList<String> getCoutries() {
+ImmutableList<String> getCountries() {
   return ImmutableList.of("Denmark", "Norway", "Sweden");
 }
 ```
@@ -35,7 +35,7 @@ ImmutableList<String> getCoutries() {
 to this:
 
 ```java {.bad}
-List<String> getCoutries() {
+List<String> getCountries() {
   return ImmutableList.of("Denmark", "Norway", "Sweden");
 }
 ```
