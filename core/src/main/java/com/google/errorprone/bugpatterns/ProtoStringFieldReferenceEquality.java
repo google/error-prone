@@ -45,8 +45,12 @@ public class ProtoStringFieldReferenceEquality extends BugChecker implements Bin
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
 
+  private static final String LITE_PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessageLite";
+
   private static final Matcher<ExpressionTree> PROTO_STRING_METHOD =
-      allOf(instanceMethod().onDescendantOf(PROTO_SUPER_CLASS), isSameType(Suppliers.STRING_TYPE));
+      allOf(
+          instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, LITE_PROTO_SUPER_CLASS),
+          isSameType(Suppliers.STRING_TYPE));
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
