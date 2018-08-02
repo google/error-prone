@@ -620,4 +620,27 @@ public class UnusedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void usedUnaryExpression() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "import java.util.Map;",
+            "import java.util.HashMap;",
+            "public class Test {",
+            "  private int next = 1;",
+            "  private Map<String, Integer> xs = new HashMap<>();",
+            "  public int frobnicate(String s) {",
+            "    Integer x = xs.get(s);",
+            "    if (x == null) {",
+            "      x = next++;",
+            "      xs.put(s, x);",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

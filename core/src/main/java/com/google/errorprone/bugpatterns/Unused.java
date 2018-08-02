@@ -50,7 +50,6 @@ import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
@@ -286,20 +285,12 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
         return false;
       }
 
-      /**
-       * This method visits a try block and explicitly ignores the resources. Variables declared in
-       * resources will be closed automatically. Despite the fact that they might not be used inside
-       * the try block, they have to be declared and they are used in the generated code.
-       */
       @Override
       public Void visitTry(TryTree node, Void unused) {
-        node.getBlock().accept(this, null);
-        for (CatchTree catchTree : node.getCatches()) {
-          catchTree.accept(this, null);
-        }
-        if (node.getFinallyBlock() != null) {
-          node.getFinallyBlock().accept(this, null);
-        }
+        // Skip resources, as while these may not be referenced, they are used.
+        scan(node.getBlock(), null);
+        scan(node.getCatches(), null);
+        scan(node.getFinallyBlock(), null);
         return null;
       }
 
@@ -314,7 +305,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       @Override
       public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
         // skip lambda parameters
-        return node.getBody().accept(this, null);
+        return scan(node.getBody(), null);
       }
 
       @Override
@@ -420,9 +411,9 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
         // usage.
         if (isInExpressionStatementTree()) {
           leftHandSideAssignment = true;
-          tree.getVariable().accept(this, null);
+          scan(tree.getVariable(), null);
           leftHandSideAssignment = false;
-          tree.getExpression().accept(this, null);
+          scan(tree.getExpression(), null);
         } else {
           super.visitAssignment(tree, null);
         }
@@ -485,9 +476,9 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       public Void visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
         if (isInExpressionStatementTree()) {
           leftHandSideAssignment = true;
-          tree.getVariable().accept(this, null);
+          scan(tree.getVariable(), null);
           leftHandSideAssignment = false;
-          tree.getExpression().accept(this, null);
+          scan(tree.getExpression(), null);
         } else {
           super.visitCompoundAssignment(tree, null);
         }
@@ -497,8 +488,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       @Override
       public Void visitArrayAccess(ArrayAccessTree node, Void unused) {
         inArrayAccess++;
-        node.getExpression().accept(this, null);
-        node.getIndex().accept(this, null);
+        super.visitArrayAccess(node, null);
         inArrayAccess--;
         return null;
       }
@@ -506,9 +496,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       @Override
       public Void visitReturn(ReturnTree node, Void unused) {
         inReturnStatement = true;
-        if (node.getExpression() != null) {
-          node.getExpression().accept(this, null);
-        }
+        scan(node.getExpression(), null);
         inReturnStatement = false;
         return null;
       }
@@ -529,7 +517,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
                 || tree.getKind() == PREFIX_DECREMENT
                 || tree.getKind() == PREFIX_INCREMENT)) {
           leftHandSideAssignment = true;
-          tree.getExpression().accept(this, null);
+          scan(tree.getExpression(), null);
           leftHandSideAssignment = false;
         } else {
           super.visitUnary(tree, null);
@@ -539,10 +527,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
 
       @Override
       public Void visitErroneous(ErroneousTree tree, Void unused) {
-        for (Tree t : tree.getErrorTrees()) {
-          t.accept(this, null);
-        }
-        return null;
+        return scan(tree.getErrorTrees(), null);
       }
 
       /**
