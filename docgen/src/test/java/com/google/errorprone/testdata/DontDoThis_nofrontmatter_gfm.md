@@ -3,6 +3,10 @@
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+# DontDoThis
+
+__Don&#39;t do this; do List&lt;Foo&gt; instead__
+
 <div style="float:right;"><table id="metadata">
 <tr><td>Severity</td><td>ERROR</td></tr>
 <tr><td>Tags</td><td>LikelyError</td></tr>
@@ -10,8 +14,6 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 <div class=".more-info" data-qualified-name=com.google.errorprone.bugpatterns.DontDoThis></div>
 </table></div>
 
-# DontDoThis
-__Don&#39;t do this; do List&lt;Foo&gt; instead__
 
 ## The problem
 This is a bad idea, you want `List<Foo>` instead
