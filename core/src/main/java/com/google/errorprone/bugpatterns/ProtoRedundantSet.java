@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -33,14 +34,14 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Collection;
+import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Checks that protocol buffers built with chained builders don't set the same field twice.
@@ -54,10 +55,6 @@ import java.util.stream.Collectors;
     tags = StandardTags.FRAGILE_CODE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class ProtoRedundantSet extends BugChecker implements MethodInvocationTreeMatcher {
-
-  private static final String DESCRIPTION =
-      "%s. Setting the same field multiple times in a proto builder might be hiding a bug, "
-          + "especially if it's set to different values.";
 
   /** Matches a chainable proto builder method. */
   private static final Matcher<ExpressionTree> PROTO_FLUENT_METHOD =
@@ -75,19 +72,18 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
   private static final Matcher<ExpressionTree> TERMINAL_PROTO_FLUENT_METHOD =
       allOf(
           PROTO_FLUENT_METHOD,
-          (tree, state) -> {
-            Tree nextLeaf = state.getPath().getParentPath().getLeaf();
-            return !(nextLeaf instanceof ExpressionTree)
-                || !PROTO_FLUENT_METHOD.matches((ExpressionTree) nextLeaf, state);
-          });
+          (tree, state) ->
+              !(state.getPath().getParentPath().getLeaf() instanceof MemberSelectTree
+                  && PROTO_FLUENT_METHOD.matches(
+                      (ExpressionTree) state.getPath().getParentPath().getParentPath().getLeaf(),
+                      state)));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!TERMINAL_PROTO_FLUENT_METHOD.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    ListMultimap<ProtoField, String> setters = ArrayListMultimap.create();
-    SuggestedFix.Builder suggestedFixes = SuggestedFix.builder();
+    ListMultimap<ProtoField, FieldWithValue> setters = ArrayListMultimap.create();
     Type type = ASTHelpers.getReturnType(tree);
     for (ExpressionTree current = tree;
         PROTO_FLUENT_METHOD.matches(current, state);
@@ -106,7 +102,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
       if (methodName.endsWith("Builder")) {
         break;
       }
-      match(method, state, methodName, setters, suggestedFixes);
+      match(method, methodName, setters);
     }
 
     setters.asMap().entrySet().removeIf(entry -> entry.getValue().size() <= 1);
@@ -115,54 +111,57 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
       return Description.NO_MATCH;
     }
 
-    String description =
-        String.format(
-            DESCRIPTION,
-            setters
-                .asMap()
-                .entrySet()
-                .stream()
-                .map(entry -> describeField(entry.getKey(), entry.getValue()))
-                .collect(Collectors.joining(", ")));
-    return buildDescription(tree).setMessage(description).addFix(suggestedFixes.build()).build();
+    for (Map.Entry<ProtoField, Collection<FieldWithValue>> entry : setters.asMap().entrySet()) {
+      ProtoField protoField = entry.getKey();
+      Collection<FieldWithValue> values = entry.getValue();
+      state.reportMatch(describe(protoField, values, state));
+    }
+    return Description.NO_MATCH;
+  }
+
+  private Description describe(
+      ProtoField protoField, Collection<FieldWithValue> locations, VisitorState state) {
+    // We flag up all duplicate sets, but only suggest a fix if the setter is given the same
+    // argument (based on source code). This is to avoid the temptation to apply the fix in
+    // cases like,
+    //   MyProto.newBuilder().setFoo(copy.getFoo()).setFoo(copy.getBar())
+    // where the correct fix is probably to replace the second 'setFoo' with 'setBar'.
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    long values =
+        locations.stream().map(l -> state.getSourceForNode(l.getArgument())).distinct().count();
+    if (values == 1) {
+      for (FieldWithValue field : Iterables.skip(locations, 1)) {
+        MethodInvocationTree method = field.getMethodInvocation();
+        int startPos = state.getEndPosition(ASTHelpers.getReceiver(method));
+        int endPos = state.getEndPosition(method);
+        fix.replace(startPos, endPos, "");
+      }
+    }
+    return buildDescription(locations.iterator().next().getArgument())
+        .setMessage(
+            String.format(
+                "%s was called %s with %s. Setting the same field multiple times is redundant, and "
+                    + "could mask a bug.",
+                protoField,
+                nTimes(locations.size()),
+                values == 1 ? "the same argument" : "different arguments"))
+        .addFix(fix.build())
+        .build();
   }
 
   private static void match(
       MethodInvocationTree method,
-      VisitorState state,
       String methodName,
-      ListMultimap<ProtoField, String> setters,
-      SuggestedFix.Builder suggestedFixes) {
+      ListMultimap<ProtoField, FieldWithValue> setters) {
     for (FieldType fieldType : FieldType.values()) {
       FieldWithValue match = fieldType.match(methodName, method);
       if (match != null) {
-        Collection<String> previousArguments = setters.get(match.getField());
-        // We flag up all duplicate sets, but only suggest a fix if the setter is given the same
-        // argument (based on source code). This is to avoid the temptation to apply the fix in
-        // cases like,
-        //   MyProto.newBuilder().setFoo(copy.getFoo()).setFoo(copy.getBar())
-        // where the correct fix is probably to replace the second 'setFoo' with 'setBar'.
-        if (!previousArguments.isEmpty()
-            && previousArguments.stream().allMatch(argument -> argument.equals(match.getValue()))) {
-          int startPos = state.getEndPosition(ASTHelpers.getReceiver(method));
-          int endPos = state.getEndPosition(method);
-          suggestedFixes.replace(startPos, endPos, "");
-        }
-        setters.put(match.getField(), match.getValue());
+        setters.put(match.getField(), match);
       }
     }
   }
 
-  private static String describeField(ProtoField field, Collection<String> arguments) {
-    boolean sameArguments = arguments.stream().distinct().count() == 1;
-    return String.format(
-        "%s was called %s with %s",
-        field,
-        nTimes(arguments.size()),
-        sameArguments ? "the same argument" : "different arguments");
-  }
-
-  private static final String nTimes(int n) {
+  private static String nTimes(int n) {
     return n == 2 ? "twice" : String.format("%d times", n);
   }
 
@@ -173,7 +172,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
       @Override
       FieldWithValue match(String name, MethodInvocationTree tree) {
         if (name.startsWith("set") && tree.getArguments().size() == 1) {
-          return FieldWithValue.of(SingleField.of(name), tree.getArguments().get(0));
+          return FieldWithValue.of(SingleField.of(name), tree, tree.getArguments().get(0));
         }
         return null;
       }
@@ -184,7 +183,8 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
         if (name.startsWith("set") && tree.getArguments().size() == 2) {
           Integer index = ASTHelpers.constValue(tree.getArguments().get(0), Integer.class);
           if (index != null) {
-            return FieldWithValue.of(RepeatedField.of(name, index), tree.getArguments().get(1));
+            return FieldWithValue.of(
+                RepeatedField.of(name, index), tree, tree.getArguments().get(1));
           }
         }
         return null;
@@ -196,7 +196,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
         if (name.startsWith("put") && tree.getArguments().size() == 2) {
           Object key = ASTHelpers.constValue(tree.getArguments().get(0), Object.class);
           if (key != null) {
-            return FieldWithValue.of(MapField.of(name, key), tree.getArguments().get(1));
+            return FieldWithValue.of(MapField.of(name, key), tree, tree.getArguments().get(1));
           }
         }
         return null;
@@ -215,7 +215,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
       return String.format("%s(..)", getName());
     }
   }
@@ -231,7 +231,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
       return String.format("%s(%s, ..)", getName(), getIndex());
     }
   }
@@ -247,7 +247,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
       return String.format("%s(%s, ..)", getName(), getKey());
     }
   }
@@ -256,10 +256,14 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
   abstract static class FieldWithValue {
     abstract ProtoField getField();
 
-    abstract String getValue();
+    abstract MethodInvocationTree getMethodInvocation();
 
-    static FieldWithValue of(ProtoField field, ExpressionTree argumentTree) {
-      return new AutoValue_ProtoRedundantSet_FieldWithValue(field, argumentTree.toString());
+    abstract ExpressionTree getArgument();
+
+    static FieldWithValue of(
+        ProtoField field, MethodInvocationTree methodInvocationTree, ExpressionTree argumentTree) {
+      return new AutoValue_ProtoRedundantSet_FieldWithValue(
+          field, methodInvocationTree, argumentTree);
     }
   }
 }
