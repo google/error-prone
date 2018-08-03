@@ -257,7 +257,7 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
           return suffixed.get();
         }
       }
-      if (ASTHelpers.requiresParentheses(tree)) {
+      if (ASTHelpers.requiresParentheses(tree, state)) {
         return String.format("(%s) (%s)", typeName, source);
       }
       return String.format("(%s) %s", typeName, source);

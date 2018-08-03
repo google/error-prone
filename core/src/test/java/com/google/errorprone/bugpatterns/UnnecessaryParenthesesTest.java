@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,8 @@ import org.junit.runners.JUnit4;
 public class UnnecessaryParenthesesTest {
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryParentheses(), getClass());
+  private final CompilationTestHelper helper =
+      CompilationTestHelper.newInstance(UnnecessaryParentheses.class, getClass());
 
   @Test
   public void test() throws IOException {
@@ -81,6 +84,26 @@ public class UnnecessaryParenthesesTest {
             "              return a * 2;",
             "         }",
             "        });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void binaryTrees() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  int e() {",
+            "    // BUG: Diagnostic contains:",
+            "    return (\"b\").hashCode();",
+            "  }",
+            "  int f() {",
+            "    return (\"a\" + \"b\").hashCode();",
+            "  }",
+            "  int g() {",
+            "    return (1 + 2) & 3;",
             "  }",
             "}")
         .doTest();

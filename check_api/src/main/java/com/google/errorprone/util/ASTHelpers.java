@@ -86,6 +86,7 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Resolve;
+import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotatedType;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
@@ -274,7 +275,7 @@ public class ASTHelpers {
   }
 
   /* Checks whether an expression requires parentheses. */
-  public static boolean requiresParentheses(ExpressionTree expression) {
+  public static boolean requiresParentheses(ExpressionTree expression, VisitorState state) {
     switch (expression.getKind()) {
       case IDENTIFIER:
       case MEMBER_SELECT:
@@ -286,7 +287,16 @@ public class ASTHelpers {
         return false;
       default: // continue below
     }
-    if (expression instanceof LiteralTree || expression instanceof UnaryTree) {
+    if (expression instanceof LiteralTree) {
+      if (!isSameType(getType(expression), state.getSymtab().stringType, state)) {
+        return false;
+      }
+      // TODO(b/112139121): work around for javac's too-early constant string folding
+      return ErrorProneTokens.getTokens(state.getSourceForNode(expression), state.context)
+          .stream()
+          .anyMatch(t -> t.kind() == TokenKind.PLUS);
+    }
+    if (expression instanceof UnaryTree) {
       return false;
     }
     return true;
