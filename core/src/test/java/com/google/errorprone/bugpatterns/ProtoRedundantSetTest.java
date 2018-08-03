@@ -36,78 +36,53 @@ public final class ProtoRedundantSetTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ProtoRedundantSet.class, getClass());
 
-  private static final String[] POSITIVE_LINES =
-      new String[] {
-        "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-        "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-        "final class ProtoRedundantSetPositiveCases {",
-        "  private static final TestFieldProtoMessage foo =",
-        "      TestFieldProtoMessage.getDefaultInstance();",
-        "  private static final TestFieldProtoMessage bar =",
-        "      TestFieldProtoMessage.getDefaultInstance();",
-        "  private void singleField() {",
-        "    TestProtoMessage twice =",
-        "        TestProtoMessage.newBuilder()",
-        "            .setMessage(foo)",
-        "            .addMultiField(bar)",
-        "            .setMessage(foo)",
-        "            // BUG: Diagnostic contains: setMessage",
-        "            .addMultiField(bar)",
-        "            .build();",
-        "  }",
-        "  private void repeatedField() {",
-        "    TestProtoMessage.Builder again =",
-        "        TestProtoMessage.newBuilder()",
-        "            .setMessage(foo)",
-        "            .setMessage(foo)",
-        "            .setMessage(foo)",
-        "            .setMultiField(0, bar)",
-        "            .setMultiField(1, foo)",
-        "            // BUG: Diagnostic contains: setMultiField",
-        "            .setMultiField(1, bar);",
-        "  }",
-        "}"
-      };
-
-  private static final String[] EXPECTED_LINES =
-      new String[] {
-        "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-        "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-        "final class ProtoRedundantSetPositiveCases {",
-        "  private static final TestFieldProtoMessage foo =",
-        "      TestFieldProtoMessage.getDefaultInstance();",
-        "  private static final TestFieldProtoMessage bar =",
-        "      TestFieldProtoMessage.getDefaultInstance();",
-        "  private void singleField() {",
-        "    TestProtoMessage twice =",
-        "        TestProtoMessage.newBuilder()",
-        "            .addMultiField(bar)",
-        "            .setMessage(foo)",
-        "            // BUG: Diagnostic contains: setMessage",
-        "            .addMultiField(bar)",
-        "            .build();",
-        "  }",
-        "  private void repeatedField() {",
-        "    TestProtoMessage.Builder again =",
-        "        TestProtoMessage.newBuilder()",
-        "            .setMessage(foo)",
-        "            .setMultiField(0, bar)",
-        "            .setMultiField(1, foo)",
-        "            // BUG: Diagnostic contains: setMultiField",
-        "            .setMultiField(1, bar);",
-        "  }",
-        "}"
-      };
-
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
-        .addSourceLines("ProtoRedundantSetPositiveCases.java", POSITIVE_LINES)
+        .addSourceLines(
+            "ProtoRedundantSetPositiveCases.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "final class ProtoRedundantSetPositiveCases {",
+            "  private static final TestFieldProtoMessage foo =",
+            "      TestFieldProtoMessage.getDefaultInstance();",
+            "  private static final TestFieldProtoMessage bar =",
+            "      TestFieldProtoMessage.getDefaultInstance();",
+            "  private void singleField() {",
+            "    TestProtoMessage twice =",
+            "        TestProtoMessage.newBuilder()",
+            "            .setMessage(foo)",
+            "            .addMultiField(bar)",
+            "            // BUG: Diagnostic contains: setMessage",
+            "            .setMessage(foo)",
+            "            .addMultiField(bar)",
+            "            .build();",
+            "    TestProtoMessage nestedField =",
+            "        TestProtoMessage.newBuilder()",
+            "            .setMessage(",
+            "                // BUG: Diagnostic contains: setField",
+            "                TestFieldProtoMessage.newBuilder().setField(foo).setField(foo))",
+            "            .addMultiField(bar)",
+            "            .build();",
+            "  }",
+            "  private void repeatedField() {",
+            "    TestProtoMessage.Builder again =",
+            "        TestProtoMessage.newBuilder()",
+            "            .setMessage(foo)",
+            "            .setMessage(foo)",
+            "            // BUG: Diagnostic contains: setMessage",
+            "            .setMessage(foo)",
+            "            .setMultiField(0, bar)",
+            "            .setMultiField(1, foo)",
+            "            // BUG: Diagnostic contains: setMultiField",
+            "            .setMultiField(1, bar);",
+            "  }",
+            "}")
         .doTest();
   }
 
   @Test
-  public void singleField() throws Exception {
+  public void singleField() {
     compilationHelper
         .addSourceLines(
             "SingleField.java",
@@ -126,7 +101,7 @@ public final class ProtoRedundantSetTest {
   }
 
   @Test
-  public void repeatedField() throws Exception {
+  public void repeatedField() {
     compilationHelper
         .addSourceLines(
             "RepeatedField.java",
@@ -145,7 +120,7 @@ public final class ProtoRedundantSetTest {
   }
 
   @Test
-  public void complexChaining() throws Exception {
+  public void complexChaining() {
     compilationHelper
         .addSourceLines(
             "ComplexChaining.java",
@@ -168,8 +143,61 @@ public final class ProtoRedundantSetTest {
   @Test
   public void testFixes() throws Exception {
     BugCheckerRefactoringTestHelper.newInstance(new ProtoRedundantSet(), getClass())
-        .addInputLines("ProtoRedundantSetPositiveCases.java", POSITIVE_LINES)
-        .addOutputLines("ProtoRedundantSetExpected.java", EXPECTED_LINES)
+        .addInputLines(
+            "ProtoRedundantSetPositiveCases.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "final class ProtoRedundantSetPositiveCases {",
+            "  private static final TestFieldProtoMessage foo =",
+            "      TestFieldProtoMessage.getDefaultInstance();",
+            "  private static final TestFieldProtoMessage bar =",
+            "      TestFieldProtoMessage.getDefaultInstance();",
+            "  private void singleField() {",
+            "    TestProtoMessage twice =",
+            "        TestProtoMessage.newBuilder()",
+            "            .setMessage(foo)",
+            "            .addMultiField(bar)",
+            "            .setMessage(foo)",
+            "            .addMultiField(bar)",
+            "            .build();",
+            "  }",
+            "  private void repeatedField() {",
+            "    TestProtoMessage.Builder again =",
+            "        TestProtoMessage.newBuilder()",
+            "            .setMessage(foo)",
+            "            .setMessage(foo)",
+            "            .setMessage(foo)",
+            "            .setMultiField(0, bar)",
+            "            .setMultiField(1, foo)",
+            "            .setMultiField(1, bar);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "ProtoRedundantSetExpected.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "final class ProtoRedundantSetPositiveCases {",
+            "  private static final TestFieldProtoMessage foo =",
+            "      TestFieldProtoMessage.getDefaultInstance();",
+            "  private static final TestFieldProtoMessage bar =",
+            "      TestFieldProtoMessage.getDefaultInstance();",
+            "  private void singleField() {",
+            "    TestProtoMessage twice =",
+            "        TestProtoMessage.newBuilder()",
+            "            .addMultiField(bar)",
+            "            .setMessage(foo)",
+            "            .addMultiField(bar)",
+            "            .build();",
+            "  }",
+            "  private void repeatedField() {",
+            "    TestProtoMessage.Builder again =",
+            "        TestProtoMessage.newBuilder()",
+            "            .setMessage(foo)",
+            "            .setMultiField(0, bar)",
+            "            .setMultiField(1, foo)",
+            "            .setMultiField(1, bar);",
+            "  }",
+            "}")
         .doTest(TestMode.AST_MATCH);
   }
 }
