@@ -37,7 +37,7 @@ import org.checkerframework.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.dataflow.cfg.UnderlyingAST;
 
 /**
- * An interface to the "trusting" nullness analysis. This variant "trusts" {@code Nullabe}
+ * An interface to the "trusting" nullness analysis. This variant "trusts" {@code Nullable}
  * annotations, similar to how a modular nullness checker like the checkerframework's would, meaning
  * method parameters, fields, and method returns are assumed {@link Nullness#NULLABLE} only if
  * annotated so.
