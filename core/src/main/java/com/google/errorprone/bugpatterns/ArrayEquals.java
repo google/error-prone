@@ -20,10 +20,10 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.isArrayType;
+import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.predicates.TypePredicates.isArray;
 
 import com.google.errorprone.BugPattern;
@@ -34,8 +34,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
@@ -49,26 +47,11 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
   /** Matches when the equals instance method is used to compare two arrays. */
   private static final Matcher<MethodInvocationTree> instanceEqualsMatcher =
-      Matchers.allOf(
-          instanceMethod().onClass(isArray()).named("equals"),
-          argument(0, Matchers.<ExpressionTree>isArrayType()));
+      allOf(instanceMethod().onClass(isArray()).named("equals"), argument(0, isArrayType()));
 
-  /**
-   * Matches when the following methods compare two arrays:
-   *
-   * <ul>
-   *   <li>Android android.support.v4.util.ObjectsCompat#equals
-   *   <li>Guava com.google.common.base.Objects#equal
-   *   <li>JDK7 java.util.Objects#equals
-   */
+  /** Matches when {@link java.util.Objects#equals}-like methods compare two arrays. */
   private static final Matcher<MethodInvocationTree> staticEqualsMatcher =
-      allOf(
-          anyOf(
-              staticMethod().onClass("android.support.v4.util.ObjectsCompat").named("equals"),
-              staticMethod().onClass("com.google.common.base.Objects").named("equal"),
-              staticMethod().onClass("java.util.Objects").named("equals")),
-          argument(0, Matchers.<ExpressionTree>isArrayType()),
-          argument(1, Matchers.<ExpressionTree>isArrayType()));
+      allOf(staticEqualsInvocation(), argument(0, isArrayType()), argument(1, isArrayType()));
 
   /**
    * Suggests replacing with Arrays.equals(a, b). Also adds the necessary import statement for
