@@ -34,7 +34,12 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/** Bug checker to detect usage of {@code Set<T[]>} or {@code Map<T[], E>}. */
+/**
+ * Warns that users should not have an array as a key to a Set or Map
+ *
+ * @author siyuanl@google.com (Siyuan Liu)
+ * @author eleanorh@google.com (Eleanor Harris)
+ */
 @BugPattern(
     name = "ArrayAsKeyOfSetOrMap",
     summary =
@@ -43,13 +48,6 @@ import java.util.List;
             + "consider using a List instead. Otherwise, use IdentityHashMap/Set, "
             + "a Map from a library that handles object arrays, or an Iterable/List of pairs.",
     severity = WARNING)
-
-/**
- * Warns that users should not have an array as a key to a Set or Map
- *
- * @author siyuanl@google.com (Siyuan Liu)
- * @author eleanorh@google.com (Eleanor Harris)
- */
 public class ArrayAsKeyOfSetOrMap extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

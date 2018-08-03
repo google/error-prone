@@ -18,9 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
-import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -50,10 +49,8 @@ import java.util.Optional;
  */
 public abstract class AbstractReferenceEquality extends BugChecker implements BinaryTreeMatcher {
 
-  private static final Matcher<ExpressionTree> EQUALS_STATIC_METHODS =
-      anyOf(
-          staticMethod().onClass("com.google.common.base.Objects").named("equal"),
-          staticMethod().onClass("java.util.Objects").named("equals"));
+  private static final Matcher<MethodInvocationTree> EQUALS_STATIC_METHODS =
+      staticEqualsInvocation();
 
   private static final Matcher<ExpressionTree> OBJECT_INSTANCE_EQUALS =
       instanceMethod()
@@ -168,7 +165,7 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
     MethodInvocationTree other = (MethodInvocationTree) otherExpression;
 
     // a == b || Objects.equals(a, b) => Objects.equals(a, b)
-    if (EQUALS_STATIC_METHODS.matches(otherExpression, state)) {
+    if (EQUALS_STATIC_METHODS.matches(other, state)) {
       List<? extends ExpressionTree> arguments = other.getArguments();
       if (treesMatch(arguments.get(0), arguments.get(1), lhs, rhs)) {
         return Optional.of(SuggestedFix.replace(parent, state.getSourceForNode(otherExpression)));

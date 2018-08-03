@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -79,11 +80,8 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
           methodHasParameters(variableType(isSameType(OBJECT_TYPE))),
           not(isStatic()));
 
-  private static final Matcher<ExpressionTree> COMPARISON_METHOD =
-      anyOf(
-          staticMethod().onClass("java.util.Arrays").named("equals"),
-          staticMethod().onClass("com.google.common.base.Objects").named("equal"),
-          staticMethod().onClass("java.util.Objects").named("equals"));
+  private static final Matcher<MethodInvocationTree> COMPARISON_METHOD =
+      anyOf(staticMethod().onClass("java.util.Arrays").named("equals"), staticEqualsInvocation());
 
   private static final Matcher<ExpressionTree> EQUALS =
       instanceMethod().anyClass().named("equals").withParameters("java.lang.Object");
