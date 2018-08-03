@@ -106,7 +106,15 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
       return Description.NO_MATCH;
     }
     VariableTree parameter = getOnlyElement(methodTree.getParameters());
-    EqualsFixer fixer = new EqualsFixer(getSymbol(parameter), getSymbol(classTree), state);
+    ExpressionTree receiver = getReceiver(tree);
+    VarSymbol symbol = getSymbol(parameter);
+    if (symbol == null
+        || receiver == null
+        || receiver.getKind() != Kind.IDENTIFIER
+        || !symbol.equals(getSymbol(receiver))) {
+      return Description.NO_MATCH;
+    }
+    EqualsFixer fixer = new EqualsFixer(symbol, getSymbol(classTree), state);
     fixer.scan(methodTreePath, null);
     return describeMatch(methodTree, fixer.getFix());
   }
