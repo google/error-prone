@@ -3,6 +3,10 @@
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+# DeadException
+
+__Exception created but not thrown__
+
 <div style="float:right;"><table id="metadata">
 <tr><td>Severity</td><td>ERROR</td></tr>
 <tr><td>Tags</td><td>LikelyError</td></tr>
@@ -10,8 +14,6 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 <div class=".more-info" data-qualified-name=com.google.errorprone.bugpatterns.DeadException></div>
 </table></div>
 
-# DeadException
-__Exception created but not thrown__
 
 _Alternate names: ThrowableInstanceNeverThrown_
 
