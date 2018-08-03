@@ -47,7 +47,7 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
     if (state.getPath().getParentPath().getLeaf() instanceof StatementTree) {
       return NO_MATCH;
     }
-    if (ASTHelpers.requiresParentheses(expression)) {
+    if (ASTHelpers.requiresParentheses(expression, state)) {
       return NO_MATCH;
     }
     return describeMatch(
