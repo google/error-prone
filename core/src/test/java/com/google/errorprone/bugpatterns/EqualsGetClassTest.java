@@ -183,4 +183,20 @@ public final class EqualsGetClassTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negative_notOnParameter() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private Object a;",
+            "  @Override public boolean equals(Object o) {",
+            "    if (o == null) { return false; }",
+            "    if (!(o instanceof Test)) { return false; }",
+            "    return ((Test) o).a.getClass() == a.getClass();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
