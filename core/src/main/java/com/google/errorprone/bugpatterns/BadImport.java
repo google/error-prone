@@ -38,6 +38,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -175,9 +176,11 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           public IdentifierTree visitIdentifier(IdentifierTree node, Void aVoid) {
             Symbol nodeSymbol = ASTHelpers.getSymbol(node);
             if (symbols.contains(nodeSymbol) && !isSuppressed(node)) {
-              builder.prefixWith(node, enclosingReplacement);
-              moveTypeAnnotations(node);
-              return node;
+              if (getCurrentPath().getParentPath().getLeaf().getKind() != Kind.CASE) {
+                builder.prefixWith(node, enclosingReplacement);
+                moveTypeAnnotations(node);
+                return node;
+              }
             }
             return super.visitIdentifier(node, aVoid);
           }
