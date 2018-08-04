@@ -65,31 +65,60 @@ In the above example, `@AlsoNegation` is used to signal that the rule can also m
 
 ## Running the Refaster refactoring
 
-TIP: These instructions are valid as of Error Prone 2.1.0, and are subject to change.
+TIP: These instructions are valid as of Error Prone 2.3.1, and are subject to change.
 
-Use the Error Prone javac JAR and the Error Prone Refaster JAR to compile the Refaster template:
+Use the Error Prone javac JAR and the Error Prone Refaster JAR to compile the
+Refaster template, using JDK 9 or newer:
 
 ```shell
-wget http://repo1.maven.org/maven2/com/google/errorprone/javac/9-dev-r4023-3/javac-9-dev-r4023-3.jar
-wget http://repo1.maven.org/maven2/com/google/errorprone/error_prone_refaster/2.1.0/error_prone_refaster-2.1.0.jar
+wget http://repo1.maven.org/maven2/com/google/errorprone/error_prone_refaster/2.3.1/error_prone_refaster-2.3.1.jar
 
-java -Xbootclasspath/p:error_prone_refaster-2.1.0.jar:javac-9-dev-r4023-3.jar \
-  com.google.errorprone.refaster.RefasterRuleCompiler \
-  StringIsEmpty.java --out `pwd`/myrule.refaster
+javac \
+  -cp error_prone_refaster-2.3.1.jar \
+  "-Xplugin:RefasterRuleCompiler --out ${PWD}/myrule.refaster" \
+  StringIsEmpty.java
 ```
 
-You should see a file named `myrule.refaster` in your current directory. To use this to refactor your code, add the following flags to the Error Prone compiler (this is similar to [patching]):
+You should see a file named `myrule.refaster` in your current directory. To use
+this to refactor your code, add the following flags to the Error Prone compiler
+(this is similar to [patching]):
 
 ```
 -XepPatchChecks:refaster:/full/path/to/myrule.refaster
 -XepPatchLocation:/full/path/to/your/source/root
 ```
 
-This will generate a unified diff file named `error-prone.patch` that you can apply similarly to how you would apply other patches:
+Example:
 
-```shell
-cd /full/path/to/your/source/root
-patch -p0 -u -i error-prone.patch
+```java
+class Demo {
+  boolean isEmpty(String s) {
+    return s.length() == 0;
+  }
+}
+```
+
+```
+javac \
+  -XDcompilePolicy=byfile \
+  -processorpath error_prone_ant-2.3.1.jar \
+  "-Xplugin:ErrorProne -XepPatchChecks:refaster:${PWD}/myrule.refaster -XepPatchLocation:${PWD}" \
+  Demo.java
+```
+
+This will generate a unified diff file named `error-prone.patch` that you can
+apply similarly to how you would apply other patches:
+
+```
+$ cat error-prone.patch
+...
+ class Demo {
+   boolean isEmpty(String s) {
+-    return s.length() == 0;
++    return s.isEmpty();
+   }
+ }
+$ patch -p0 -u -i error-prone.patch
 ```
 
 ## Anatomy of a Refaster Rule
