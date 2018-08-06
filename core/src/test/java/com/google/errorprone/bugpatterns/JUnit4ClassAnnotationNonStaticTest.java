@@ -30,43 +30,47 @@ public class JUnit4ClassAnnotationNonStaticTest {
 
   @Test
   public void positive() throws Exception {
-    compilationHelper.addSourceLines(
-        "Test.java",
-        "import org.junit.runner.RunWith;",
-        "import org.junit.runners.JUnit4;",
-        "import org.junit.BeforeClass;",
-        "import org.junit.AfterClass;",
-        "@RunWith(JUnit4.class)",
-        "public class Test {",
-        "  @BeforeClass",
-        "  // BUG: Diagnostic contains: @BeforeClass can only be applied to static methods.",
-        "  public void shouldDoSomething() {}",
-        "",
-        "  @AfterClass",
-        "  // BUG: Diagnostic contains:  @AfterClass can only be applied to static methods.",
-        "  public void shouldDoSomethingElse() {}",
-        "",
-        "  @AfterClass @BeforeClass",
-        "  // BUG: Diagnostic contains:  @AfterClass and @BeforeClass can only be applied to",
-        "  public void shouldDoSomethingElseBlah() {}",
-        "}");
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "import org.junit.BeforeClass;",
+            "import org.junit.AfterClass;",
+            "@RunWith(JUnit4.class)",
+            "public class Test {",
+            "  @BeforeClass",
+            "  // BUG: Diagnostic contains: BeforeClass can only be applied to static methods.",
+            "  public void shouldDoSomething() {}",
+            "",
+            "  @AfterClass",
+            "  // BUG: Diagnostic contains:  AfterClass can only be applied to static methods.",
+            "  public void shouldDoSomethingElse() {}",
+            "",
+            "  @AfterClass @BeforeClass",
+            "  // BUG: Diagnostic contains:  AfterClass and BeforeClass can only be applied to",
+            "  public void shouldDoSomethingElseBlah() {}",
+            "}")
+        .doTest();
   }
 
   @Test
   public void negative() throws Exception {
-    compilationHelper.addSourceLines(
-        "Test.java",
-        "import org.junit.runner.RunWith;",
-        "import org.junit.runners.JUnit4;",
-        "import org.junit.BeforeClass;",
-        "import org.junit.AfterClass;",
-        "@RunWith(JUnit4.class)",
-        "public class Test {",
-        "  @BeforeClass",
-        "  public static void shouldDoSomething() {}",
-        "",
-        "  @AfterClass",
-        "  public static void shouldDoSomethingElse() {}",
-        "}");
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "import org.junit.BeforeClass;",
+            "import org.junit.AfterClass;",
+            "@RunWith(JUnit4.class)",
+            "public class Test {",
+            "  @BeforeClass",
+            "  public static void shouldDoSomething() {}",
+            "",
+            "  @AfterClass",
+            "  public static void shouldDoSomethingElse() {}",
+            "}")
+        .doTest();
   }
 }
