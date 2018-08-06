@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -24,6 +26,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ImportTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
@@ -94,38 +97,20 @@ public final class StaticImports {
       return null;
     }
     JCTree.JCFieldAccess access = (JCTree.JCFieldAccess) tree.getQualifiedIdentifier();
-    String importedName = access.toString();
-    Type result = state.getTypeFromString(importedName);
-    if (result == null) {
-      // If the full imported name isn't a type, it might be a field or
-      // method:
-      return tryAsStaticMember(access, state);
-    }
-    String canonicalName = state.getTypes().erasure(result).toString();
-    if (canonicalName == null) {
-      return null;
-    }
-    return StaticImportInfo.create(importedName, canonicalName);
-  }
-
-  /** Returns a {@code StaticImportInfo} for a static field or method import. */
-  private static StaticImportInfo tryAsStaticMember(
-      JCTree.JCFieldAccess access, VisitorState state) {
     Name identifier = access.getIdentifier();
     if (identifier.contentEquals("*")) {
       // Java doesn't allow non-canonical types inside wildcard imports,
       // so there's nothing to do here.
       return null;
     }
-    String importedTypeName = access.getExpression().toString();
-    Type importedType = state.getTypeFromString(importedTypeName);
+    Symbol importedType = ASTHelpers.getSymbol(access.getExpression());
     if (importedType == null) {
       return null;
     }
 
     Types types = state.getTypes();
 
-    Type canonicalType = types.erasure(importedType);
+    Type canonicalType = types.erasure(importedType.asType());
     if (canonicalType == null) {
       return null;
     }
@@ -157,8 +142,15 @@ public final class StaticImports {
     if (canonicalOwner == null) {
       return null;
     }
+
+    if (members.size() == 1 && getOnlyElement(members) instanceof ClassSymbol) {
+      return StaticImportInfo.create(access.toString(), getOnlyElement(members).toString());
+    }
     return StaticImportInfo.create(
-        importedTypeName, canonicalOwner.toString(), identifier.toString(), members);
+        access.getExpression().toString(),
+        canonicalOwner.toString(),
+        identifier.toString(),
+        members);
   }
 
   /**
