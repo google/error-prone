@@ -1542,7 +1542,18 @@ public class Matchers {
         staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
   }
 
-  /** Matches {@link equals} method declaration. */
+  /**
+   * Matches calls to the method {link org.junit.Assert#assertNotEquals} and corresponding methods
+   * in JUnit 3.x.
+   */
+  public static Matcher<ExpressionTree> assertNotEqualsInvocation() {
+    return anyOf(
+        staticMethod().onClass("org.junit.Assert").named("assertNotEquals"),
+        staticMethod().onClass("junit.framework.Assert").named("assertNotEquals"),
+        staticMethod().onClass("junit.framework.TestCase").named("assertNotEquals"));
+  }
+
+  /** Matches {@link Object#equals} method declaration. */
   public static Matcher<MethodTree> equalsMethodDeclaration() {
     return allOf(
         methodIsNamed("equals"),
@@ -1551,7 +1562,7 @@ public class Matchers {
         anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
   }
 
-  /** Matches {@link toString} method declaration. */
+  /** Matches {@link Object#toString} method declaration. */
   public static Matcher<MethodTree> toStringMethodDeclaration() {
     return allOf(
         methodIsNamed("toString"),
