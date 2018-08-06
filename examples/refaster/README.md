@@ -4,17 +4,7 @@ of java code.
 Compile this with:
 
 ```shell
-wget http://repo1.maven.org/maven2/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar
-
 javac \
-    -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
-    -J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
-    -J--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
-    -J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED \
-    -J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED \
-    -J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
-    -J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
-    -J--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED \
     -classpath error_prone_refaster-2.3.2-SNAPSHOT.jar \
     "-Xplugin:RefasterRuleCompiler --out `pwd`/refactoring.out" \
     StringLengthToEmpty.java
