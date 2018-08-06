@@ -61,7 +61,7 @@ public final class UndefinedEqualsTest {
             "import java.util.Objects;",
             "class Test {",
             "  void f(Collection a, Collection b) {",
-            "  // BUG: Diagnostic contains: java.util.Collection does not have",
+            "     // BUG: Diagnostic contains: java.util.Collection does not have",
             "    Objects.equals(a,b);",
             "  }",
             "}")
@@ -76,10 +76,15 @@ public final class UndefinedEqualsTest {
             "import java.util.List;",
             "import com.google.common.collect.Iterables;",
             "import static org.junit.Assert.assertEquals;",
+            "import static org.junit.Assert.assertNotEquals;",
             "class Test {",
             "  void test(List myList, List otherList) {",
-            "  // BUG: Diagnostic contains: java.lang.Iterable does not have",
+            "    // BUG: Diagnostic contains: java.lang.Iterable does not have",
             "    assertEquals(Iterables.skip(myList, 1), Iterables.skip(myList, 2));",
+            "    // BUG: Diagnostic contains: java.lang.Iterable does not have",
+            "    assertNotEquals(Iterables.skip(myList, 1), Iterables.skip(myList, 2));",
+            "    // BUG: Diagnostic contains: java.lang.Iterable does not have",
+            "    assertEquals(\"foo\", Iterables.skip(myList, 1), Iterables.skip(myList, 2));",
             "  }",
             "}")
         .doTest();
@@ -93,8 +98,26 @@ public final class UndefinedEqualsTest {
             "import java.util.Queue;",
             "class Test {",
             "  <T> void f(Queue<String> a, Queue<T> b) {",
-            "  // BUG: Diagnostic contains: java.util.Queue does not have",
+            "    // BUG: Diagnostic contains: java.util.Queue does not have",
             "    a.equals(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveTruth() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.util.Queue;",
+            "class Test {",
+            "  <T> void f(Queue<String> a, Queue<T> b) {",
+            "    // BUG: Diagnostic contains: java.util.Queue does not have",
+            "    assertThat(a).isEqualTo(b);",
+            "    // BUG: Diagnostic contains: java.util.Queue does not have",
+            "    assertThat(a).isNotEqualTo(b);",
             "  }",
             "}")
         .doTest();
