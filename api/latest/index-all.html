@@ -2724,6 +2724,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html#ExpectedExceptionChecker--">ExpectedExceptionChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ExpectedExceptionRefactoring.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ExpectedExceptionRefactoring</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ExpectedExceptionRefactoring.html#ExpectedExceptionRefactoring--">ExpectedExceptionRefactoring()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ExpectedExceptionRefactoring.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionRefactoring</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Template.html#expectedTypes-com.google.errorprone.refaster.Inliner-">expectedTypes(Inliner)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster">Template</a></dt>
 <dd>
 <div class="block">Returns a list of the expected types to be matched.</div>
@@ -4038,6 +4042,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getSymbolFromString-java.lang.String-">getSymbolFromString(String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getSymbolFromString-com.sun.tools.javac.code.Symbol.ModuleSymbol-com.sun.tools.javac.util.Name-">getSymbolFromString(Symbol.ModuleSymbol, Name)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getSymtab--">getSymtab()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugCheckerInfo.html#getTags--">getTags()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
@@ -4236,11 +4242,15 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-com.sun.source.tree.StatementTree-">handleMatch(MethodTree, VisitorState, List&lt;Tree&gt;, List&lt;StatementTree&gt;, StatementTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ExpectedExceptionRefactoring.html#handleMatch-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-java.util.List-com.sun.source.tree.StatementTree-">handleMatch(MethodTree, VisitorState, List&lt;Tree&gt;, List&lt;StatementTree&gt;, StatementTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ExpectedExceptionRefactoring.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionRefactoring</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractTestExceptionChecker.html#handleStatements-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.fixes.SuggestedFix-">handleStatements(MethodTree, VisitorState, JCTree.JCExpression, SuggestedFix)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractTestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractTestExceptionChecker</a></dt>
 <dd>
 <div class="block">Handle a method annotated with <code>@Test(expected=...</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html#handleStatements-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.fixes.SuggestedFix-">handleStatements(MethodTree, VisitorState, JCTree.JCExpression, SuggestedFix)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">TestExceptionChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TestExceptionRefactoring.html#handleStatements-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.fixes.SuggestedFix-">handleStatements(MethodTree, VisitorState, JCTree.JCExpression, SuggestedFix)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TestExceptionRefactoring.html" title="class in com.google.errorprone.bugpatterns">TestExceptionRefactoring</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/android/HardCodedSdCardPath.html" title="class in com.google.errorprone.bugpatterns.android"><span class="typeNameLink">HardCodedSdCardPath</span></a> - Class in <a href="com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a></dt>
 <dd>
@@ -4627,10 +4637,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#infer--">infer()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#inferModule-com.sun.tools.javac.util.Name-">inferModule(Name)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
-<dd>
-<div class="block">Infers a module symbol for the given flat class name.</div>
-</dd>
 <dt><a href="com/google/errorprone/bugpatterns/InfiniteRecursion.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">InfiniteRecursion</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/InfiniteRecursion.html#InfiniteRecursion--">InfiniteRecursion()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InfiniteRecursion.html" title="class in com.google.errorprone.bugpatterns">InfiniteRecursion</a></dt>
@@ -6454,6 +6460,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingFail.html#matchTry-com.sun.source.tree.TryTree-com.google.errorprone.VisitorState-">matchTry(TryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">MissingFail</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html#matchTry-com.sun.source.tree.TryTree-com.google.errorprone.VisitorState-">matchTry(TryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html" title="class in com.google.errorprone.bugpatterns">TryFailRefactoring</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TryFailThrowable.html#matchTry-com.sun.source.tree.TryTree-com.google.errorprone.VisitorState-">matchTry(TryTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TryFailThrowable.html" title="class in com.google.errorprone.bugpatterns">TryFailThrowable</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/BundleDeserializationCast.html#matchTypeCast-com.sun.source.tree.TypeCastTree-com.google.errorprone.VisitorState-">matchTypeCast(TypeCastTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/BundleDeserializationCast.html" title="class in com.google.errorprone.bugpatterns.android">BundleDeserializationCast</a></dt>
@@ -6497,6 +6505,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/DateFormatConstant.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DateFormatConstant.html" title="class in com.google.errorprone.bugpatterns">DateFormatConstant</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/DepAnn.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DepAnn.html" title="class in com.google.errorprone.bugpatterns">DepAnn</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ExpectedExceptionRefactoring.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ExpectedExceptionRefactoring.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionRefactoring</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/guice/InjectOnFinalField.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/InjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns.inject.guice">InjectOnFinalField</a></dt>
 <dd>&nbsp;</dd>
@@ -8691,6 +8701,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html#TestExceptionChecker--">TestExceptionChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">TestExceptionChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/TestExceptionRefactoring.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">TestExceptionRefactoring</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TestExceptionRefactoring.html#TestExceptionRefactoring--">TestExceptionRefactoring()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TestExceptionRefactoring.html" title="class in com.google.errorprone.bugpatterns">TestExceptionRefactoring</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#then--">then()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Choice.html#thenChoose-com.google.common.base.Function-">thenChoose(Function&lt;? super T, Choice&lt;R&gt;&gt;)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
@@ -8918,6 +8932,10 @@
 <dd>
 <div class="block">Returns a <a href="com/google/errorprone/bugpatterns/StaticImports.html" title="class in com.google.errorprone.bugpatterns"><code>StaticImports</code></a> if the given import is a static single-type import.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">TryFailRefactoring</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html#TryFailRefactoring--">TryFailRefactoring()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html" title="class in com.google.errorprone.bugpatterns">TryFailRefactoring</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TryFailThrowable.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">TryFailThrowable</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A bug checker for the following code pattern:</div>

@@ -892,6 +892,9 @@ Field name is CONSTANT_CASE, but field is not static and final
 __[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributions)__<br>
 @Multibinds is a more efficient and declarative mechanism for ensuring that a set multibinding is present in the graph.
 
+__[ExpectedExceptionRefactoring](bugpattern/ExpectedExceptionRefactoring)__<br>
+Prefer assertThrows to ExpectedException
+
 __[FieldCanBeFinal](bugpattern/FieldCanBeFinal)__<br>
 This field is only assigned during initialization; consider making it final
 
@@ -946,8 +949,14 @@ Scopes on modules have no function and will soon be an error.
 __[SwitchDefault](bugpattern/SwitchDefault)__<br>
 The default case of a switch should appear at the end of the last statement group
 
+__[TestExceptionRefactoring](bugpattern/TestExceptionRefactoring)__<br>
+Prefer assertThrows to @Test(expected=...)
+
 __[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
 Unchecked exceptions do not need to be declared in the method signature.
+
+__[TryFailRefactoring](bugpattern/TryFailRefactoring)__<br>
+Prefer assertThrows to try/fail
 
 __[TypeParameterNaming](bugpattern/TypeParameterNaming)__<br>
 Type parameters must be a single letter with an optional numeric suffix, or an UpperCamelCase name followed by the letter &#39;T&#39;.

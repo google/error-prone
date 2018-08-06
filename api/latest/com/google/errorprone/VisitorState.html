@@ -236,20 +236,25 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymbolFromString-java.lang.String-">getSymbolFromString</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;symStr)</code>&nbsp;</td>
 </tr>
 <tr id="i11" class="rowColor">
+<td class="colFirst"><code>com.sun.tools.javac.code.Symbol.ClassSymbol</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymbolFromString-com.sun.tools.javac.code.Symbol.ModuleSymbol-com.sun.tools.javac.util.Name-">getSymbolFromString</a></span>(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
+                   com.sun.tools.javac.util.Name&nbsp;name)</code>&nbsp;</td>
+</tr>
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Symtab</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymtab--">getSymtab</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTokensForNode-com.sun.source.tree.Tree-">getTokensForNode</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.tree.TreeMaker</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTreeMaker--">getTreeMaker</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getType-com.sun.tools.javac.code.Type-boolean-java.util.List-">getType</a></span>(com.sun.tools.javac.code.Type&nbsp;baseType,
        boolean&nbsp;isArray,
@@ -257,21 +262,15 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Build an instance of a Type.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTypeFromString-java.lang.String-">getTypeFromString</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;typeStr)</code>
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Types</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTypes--">getTypes</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i17" class="rowColor">
-<td class="colFirst"><code>com.sun.tools.javac.code.Symbol.ModuleSymbol</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#inferModule-com.sun.tools.javac.util.Name-">inferModule</a></span>(com.sun.tools.javac.util.Name&nbsp;flatName)</code>
-<div class="block">Infers a module symbol for the given flat class name.</div>
-</td>
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
@@ -467,16 +466,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </dl>
 </li>
 </ul>
-<a name="inferModule-com.sun.tools.javac.util.Name-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>inferModule</h4>
-<pre>public&nbsp;com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;inferModule(com.sun.tools.javac.util.Name&nbsp;flatName)</pre>
-<div class="block">Infers a module symbol for the given flat class name.</div>
-</li>
-</ul>
 <a name="getSymbolFromString-java.lang.String-">
 <!--   -->
 </a>
@@ -490,6 +479,16 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the Symbol object, or null if it cannot be found</dd>
 </dl>
+</li>
+</ul>
+<a name="getSymbolFromString-com.sun.tools.javac.code.Symbol.ModuleSymbol-com.sun.tools.javac.util.Name-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSymbolFromString</h4>
+<pre>public&nbsp;com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
+                                                                       com.sun.tools.javac.util.Name&nbsp;name)</pre>
 </li>
 </ul>
 <a name="getType-com.sun.tools.javac.code.Type-boolean-java.util.List-">
