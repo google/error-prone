@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,7 @@ public class VarTypeNameTest {
             "// BUG: Diagnostic contains:",
             "  public <var> void foo(var foo) {}",
             "}")
+        .setArgs(ImmutableList.of("-source", "8", "-target", "8"))
         .doTest();
   }
 
@@ -51,6 +53,7 @@ public class VarTypeNameTest {
             "class Test {",
             "  int var;",
             "}")
+        .setArgs(ImmutableList.of("-source", "8", "-target", "8"))
         .doTest();
   }
 }
