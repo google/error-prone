@@ -275,6 +275,9 @@ Access to a private protocol buffer field is forbidden. This protocol buffer car
 __[ProtoFieldNullComparison](bugpattern/ProtoFieldNullComparison)__<br>
 Protobuf fields cannot be null.
 
+__[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
+Comparing protobuf fields of type String using reference equality
+
 __[ProtocolBufferOrdinal](bugpattern/ProtocolBufferOrdinal)__<br>
 To get the tag number of a protocol buffer enum, use getNumber() instead.
 
@@ -773,9 +776,6 @@ Numeric comparison using reference equality instead of value equality
 
 __[ParameterPackage](bugpattern/ParameterPackage)__<br>
 Method parameter has wrong package
-
-__[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
-Comparing protobuf fields of type String using reference equality
 
 __[RestrictTo](bugpattern/RestrictTo)__<br>
 Use of method or class annotated with @RestrictTo

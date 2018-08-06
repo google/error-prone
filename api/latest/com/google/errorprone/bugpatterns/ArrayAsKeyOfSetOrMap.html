@@ -121,8 +121,10 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">ArrayAsKeyOfSetOrMap</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></pre>
-<div class="block">Bug checker to detect usage of <code>Set&lt;T[]&gt;</code> or <code>Map&lt;T[], E&gt;</code>.</div>
+<div class="block">Warns that users should not have an array as a key to a Set or Map</div>
 <dl>
+<dt><span class="simpleTagLabel">Author:</span></dt>
+<dd>siyuanl@google.com (Siyuan Liu), eleanorh@google.com (Eleanor Harris)</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap">Serialized Form</a></dd>
 </dl>

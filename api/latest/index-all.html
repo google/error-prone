@@ -676,7 +676,7 @@
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ArrayAsKeyOfSetOrMap</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
-<div class="block">Bug checker to detect usage of <code>Set&lt;T[]&gt;</code> or <code>Map&lt;T[], E&gt;</code>.</div>
+<div class="block">Warns that users should not have an array as a key to a Set or Map</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html#ArrayAsKeyOfSetOrMap--">ArrayAsKeyOfSetOrMap()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">ArrayAsKeyOfSetOrMap</a></dt>
 <dd>&nbsp;</dd>
@@ -746,6 +746,11 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#assertionWithCondition-com.google.errorprone.matchers.Matcher-">assertionWithCondition(Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an assertion AST node if the given matcher matches its condition.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#assertNotEqualsInvocation--">assertNotEqualsInvocation()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches calls to the method {link org.junit.Assert#assertNotEquals} and corresponding methods
+ in JUnit 3.x.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Asserts.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">Asserts</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
@@ -2529,7 +2534,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#equalsMethodDeclaration--">equalsMethodDeclaration()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
-<div class="block">Matches <code>equals</code> method declaration.</div>
+<div class="block">Matches <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang"><code>Object.equals(java.lang.Object)</code></a> method declaration.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/EqualsNaN.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">EqualsNaN</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
@@ -7994,7 +7999,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/RequiredModifiersChecker.html#RequiredModifiersChecker--">RequiredModifiersChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RequiredModifiersChecker.html" title="class in com.google.errorprone.bugpatterns">RequiredModifiersChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#requiresParentheses-com.sun.source.tree.ExpressionTree-">requiresParentheses(ExpressionTree)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#requiresParentheses-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">requiresParentheses(ExpressionTree, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#resolveClass-java.lang.CharSequence-">resolveClass(CharSequence)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
@@ -8854,7 +8859,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#toStringMethodDeclaration--">toStringMethodDeclaration()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
-<div class="block">Matches <code>toString</code> method declaration.</div>
+<div class="block">Matches <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang"><code>Object.toString()</code></a> method declaration.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/ToStringReturnsNull.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ToStringReturnsNull</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
