@@ -15,8 +15,8 @@
  */
 
 package com.google.errorprone;
-
 import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -27,6 +27,7 @@ import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Kinds.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
@@ -36,13 +37,13 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
@@ -183,17 +184,6 @@ public class VisitorState {
     }
   }
 
-  /** Infers a module symbol for the given flat class name. */
-  // TODO(cushon): decide how to provide actual -source 9 module support
-  public ModuleSymbol inferModule(Name flatName) {
-    Symtab symtab = getSymtab();
-    ModuleSymbol result = symtab.inferModule(Convert.packagePart(flatName));
-    if (result != null) {
-      return result;
-    }
-    return symtab.java_base == symtab.noModule ? symtab.noModule : symtab.unnamedModule;
-  }
-
   private Type getTypeFromStringInternal(String typeStr) {
     validateTypeStr(typeStr);
     if (isPrimitiveType(typeStr)) {
@@ -202,52 +192,97 @@ public class VisitorState {
     if (isVoidType(typeStr)) {
       return getVoidType();
     }
-    Name typeName = getName(typeStr);
-    try {
-      ClassSymbol typeSymbol = getSymtab().getClass(inferModule(typeName), typeName);
-      if (typeSymbol == null) {
-        JavaCompiler compiler = JavaCompiler.instance(context);
-        Symbol sym = compiler.resolveIdent(inferModule(typeName), typeStr);
-        if (!(sym instanceof ClassSymbol)) {
-          return null;
-        }
-        typeSymbol = (ClassSymbol) sym;
-      }
-      Type type = typeSymbol.asType();
-      // Throws CompletionFailure if the source/class file for this type is not available.
-      // This is hacky but the best way I can think of to handle this case.
-      type.complete();
-      if (type.isErroneous()) {
-        return null;
-      }
-      return type;
-    } catch (CompletionFailure failure) {
-      // Ignoring completion error is problematic in general, but in this case we're ignoring a
-      // completion error for a type that was directly requested, not one that was discovered
-      // during the compilation.
+    // Fast path if the type's symbol is available.
+    ClassSymbol classSymbol = (ClassSymbol) getSymbolFromString(typeStr);
+    if (classSymbol != null) {
+      return classSymbol.asType();
+    }
+    // Otherwise, fall back to JavaCompiler#resolveIdent.
+    // TODO(cushon): this isn't compatible with modular compilations.
+    return resolveIdent(typeStr);
+  }
+
+  private Type resolveIdent(String typeStr) {
+    JavaCompiler compiler = JavaCompiler.instance(context);
+    Symbol sym = compiler.resolveIdent(getSymtab().noModule, typeStr);
+    if (!(sym instanceof ClassSymbol)) {
       return null;
     }
+    Type type = ((ClassSymbol) sym).asType();
+    try {
+      type.complete();
+    } catch (CompletionFailure failure) {
+      return null;
+    }
+    if (type.isErroneous()) {
+      return null;
+    }
+    return type;
   }
 
   /**
    * @param symStr the string representation of a symbol
    * @return the Symbol object, or null if it cannot be found
    */
+  // TODO(cushon): deal with binary compat issues and return ClassSymbol
   public Symbol getSymbolFromString(String symStr) {
-    try {
-      Name symName = getName(symStr);
-      Symbol result = getSymtab().getClass(inferModule(symName), symName);
+    symStr = inferBinaryName(symStr);
+    Name name = getName(symStr);
+    Modules modules = Modules.instance(context);
+    boolean modular = modules.getDefaultModule() != getSymtab().noModule;
+    if (!modular) {
+      return getSymbolFromString(getSymtab().noModule, name);
+    }
+    for (ModuleSymbol msym : Modules.instance(context).allModules()) {
+      ClassSymbol result = getSymbolFromString(msym, name);
       if (result != null) {
-        // Force a completion failure if the type is not available.
-        result.complete();
+        // TODO(cushon): the path where we iterate over all modules is probably slow.
+        // Try to learn some lessons from JDK-8189747, and consider disallowing this case and
+        // requiring users to call the getSymbolFromString(ModuleSymbol, Name) overload instead.
         return result;
       }
+    }
+    return null;
+  }
+
+  public ClassSymbol getSymbolFromString(ModuleSymbol msym, Name name) {
+    ClassSymbol result = getSymtab().getClass(msym, name);
+    if (result == null || result.kind == Kind.ERR || !result.exists()) {
+      return null;
+    }
+    try {
+      result.complete();
     } catch (CompletionFailure failure) {
       // Ignoring completion error is problematic in general, but in this case we're ignoring a
       // completion error for a type that was directly requested, not one that was discovered
       // during the compilation.
+      return null;
     }
-    return null;
+    return result;
+  }
+
+  /**
+   * Given a canonical class name, infers the binary class name using case conventions. For example,
+   * give {@code com.example.Outer.Inner} returns {@code com.example.Outer$Inner}.
+   */
+  // TODO(cushon): consider migrating call sites to use binary names and removing this code.
+  // (But then we'd probably want error handling for probably-incorrect canonical names,
+  // so it may not end up being a performance win.)
+  private static String inferBinaryName(String classname) {
+    StringBuilder sb = new StringBuilder();
+    boolean first = true;
+    char sep = '.';
+    for (String bit : Splitter.on('.').split(classname)) {
+      if (!first) {
+        sb.append(sep);
+      }
+      sb.append(bit);
+      if (Character.isUpperCase(bit.charAt(0))) {
+        sep = '$';
+      }
+      first = false;
+    }
+    return sb.toString();
   }
 
   /** Build an instance of a Type. */

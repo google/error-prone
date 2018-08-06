@@ -640,11 +640,28 @@ public class ASTHelpers {
    * @return true if the symbol is annotated with given type.
    */
   public static boolean hasAnnotation(Symbol sym, String annotationClass, VisitorState state) {
+    if (sym == null) {
+      return false;
+    }
+    // normalize to non-binary names
+    annotationClass = annotationClass.replace('$', '.');
     Name annotationName = state.getName(annotationClass);
-    Symbol annotationSym;
-    synchronized (state.context) {
-      annotationSym =
-          state.getSymtab().enterClass(state.inferModule(annotationName), annotationName);
+    if (!isInherited(state, annotationClass)) {
+      return hasAttribute(sym, annotationName);
+    }
+    while (sym instanceof ClassSymbol) {
+      if (hasAttribute(sym, annotationName)) {
+        return true;
+      }
+      sym = ((ClassSymbol) sym).getSuperclass().tsym;
+    }
+    return false;
+  }
+
+  private static boolean isInherited(VisitorState state, String annotationName) {
+    Symbol annotationSym = state.getSymbolFromString(annotationName);
+    if (annotationSym == null) {
+      return false;
     }
     try {
       annotationSym.complete();
@@ -653,21 +670,13 @@ public class ASTHelpers {
       // if it's present directly
     }
     Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
+    return annotationSym.attribute(inheritedSym) != null;
+  }
 
-    if ((sym == null) || (annotationSym == null)) {
-      return false;
-    }
-    if ((sym instanceof ClassSymbol) && (annotationSym.attribute(inheritedSym) != null)) {
-      while (sym != null) {
-        if (sym.attribute(annotationSym) != null) {
-          return true;
-        }
-        sym = ((ClassSymbol) sym).getSuperclass().tsym;
-      }
-      return false;
-    } else {
-      return sym.attribute(annotationSym) != null;
-    }
+  private static boolean hasAttribute(Symbol sym, Name annotationName) {
+    return sym.getRawAttributes()
+        .stream()
+        .anyMatch(a -> a.type.tsym.getQualifiedName().equals(annotationName));
   }
 
   /**
