@@ -85,6 +85,7 @@ import com.google.errorprone.bugpatterns.EqualsReference;
 import com.google.errorprone.bugpatterns.EqualsUnsafeCast;
 import com.google.errorprone.bugpatterns.EqualsWrongThing;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
+import com.google.errorprone.bugpatterns.ExpectedExceptionRefactoring;
 import com.google.errorprone.bugpatterns.ExtendingJUnitAssert;
 import com.google.errorprone.bugpatterns.FallThrough;
 import com.google.errorprone.bugpatterns.FieldCanBeFinal;
@@ -227,6 +228,7 @@ import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
+import com.google.errorprone.bugpatterns.TestExceptionRefactoring;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
 import com.google.errorprone.bugpatterns.ThreadLocalUsage;
 import com.google.errorprone.bugpatterns.ThreeLetterTimeZoneID;
@@ -237,6 +239,7 @@ import com.google.errorprone.bugpatterns.ToStringReturnsNull;
 import com.google.errorprone.bugpatterns.TruthAssertExpected;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
+import com.google.errorprone.bugpatterns.TryFailRefactoring;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
 import com.google.errorprone.bugpatterns.TypeNameShadowing;
 import com.google.errorprone.bugpatterns.TypeParameterNaming;
@@ -618,18 +621,18 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
           AndroidJdkLibsChecker.class,
-          AutoFactoryAtInject.class,
           AnnotateFormatMethod.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,
+          AutoFactoryAtInject.class,
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
+          BooleanParameter.class,
           ClassName.class,
           ClassNamedLikeTypeParameter.class,
           ComparisonContractViolated.class,
           ConstantField.class,
-          BooleanParameter.class,
           ConstructorInvokesOverridable.class,
           ConstructorLeaksThis.class,
           DepAnn.class,
@@ -639,8 +642,9 @@ public class BuiltInCheckerSuppliers {
           EmptyTopLevelDeclaration.class,
           EqualsBrokenForNull.class,
           ExpectedExceptionChecker.class,
-          FieldMissingNullable.class,
+          ExpectedExceptionRefactoring.class,
           FieldCanBeFinal.class,
+          FieldMissingNullable.class,
           FunctionalInterfaceClash.class,
           FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
           HardCodedSdCardPath.class,
@@ -651,8 +655,8 @@ public class BuiltInCheckerSuppliers {
           InvalidTargetingOnScopingAnnotation.class,
           IterablePathParameter.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
-          JavaxInjectOnFinalField.class,
           Java7ApiChecker.class,
+          JavaxInjectOnFinalField.class,
           LambdaFunctionalInterface.class,
           LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
@@ -661,10 +665,10 @@ public class BuiltInCheckerSuppliers {
           MixedArrayDimensions.class,
           ModifiedButNotUsed.class,
           MoreThanOneQualifier.class,
-          MutableMethodReturnType.class,
           MultiVariableDeclaration.class,
           MultipleTopLevelClasses.class,
           MultipleUnaryOperatorsInMethodCall.class,
+          MutableMethodReturnType.class,
           NoAllocationChecker.class,
           NoFunctionalReturnType.class,
           NonCanonicalStaticMemberImport.class,
@@ -673,8 +677,8 @@ public class BuiltInCheckerSuppliers {
           ParameterComment.class,
           ParameterNotNullable.class,
           PrimitiveArrayPassedToVarargsMethod.class,
-          PrivateConstructorForUtilityClass.class,
           PrivateConstructorForNoninstantiableModule.class,
+          PrivateConstructorForUtilityClass.class,
           ProvidesFixChecker.class,
           QualifierWithTypeUse.class,
           RedundantThrows.class,
@@ -684,13 +688,15 @@ public class BuiltInCheckerSuppliers {
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOnModule.class,
           ScopeOrQualifierAnnotationRetention.class,
-          StaticQualifiedUsingExpression.class,
           StaticOrDefaultInterfaceMethod.class,
+          StaticQualifiedUsingExpression.class,
           StringEquality.class,
           SwitchDefault.class,
           SystemExitOutsideMain.class,
           TestExceptionChecker.class,
+          TestExceptionRefactoring.class,
           ThrowsUncheckedException.class,
+          TryFailRefactoring.class,
           TypeParameterNaming.class,
           UngroupedOverloads.class,
           UnlockMethodChecker.class,
