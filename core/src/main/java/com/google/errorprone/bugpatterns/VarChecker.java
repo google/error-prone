@@ -93,7 +93,7 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
 
   private Description handleLocalOrParam(VariableTree tree, VisitorState state, Symbol sym) {
     if (sym.getModifiers().contains(Modifier.FINAL)) {
-      if (Source.instance(state.context).allowEffectivelyFinalInInnerClasses()) {
+      if (Source.instance(state.context).compareTo(Source.lookup("1.8")) >= 0) {
         // In Java 8, the final modifier is never necessary on locals/parameters because
         // effectively final variables can be used anywhere a final variable is required.
         Optional<SuggestedFix> fix = SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL);

@@ -223,7 +223,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
   }
 
   private static boolean shouldUseGuavaHashCode(Context context) {
-    return Source.instance(context).compareTo(Source.JDK1_7) <= 0; // 7 or below
+    return Source.instance(context).compareTo(Source.lookup("1.7")) <= 0; // 7 or below
   }
 
   private String maybeCast(VisitorState state, Type type, Type argType) {
