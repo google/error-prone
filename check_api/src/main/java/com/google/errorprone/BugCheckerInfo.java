@@ -169,7 +169,7 @@ public class BugCheckerInfo implements Serializable {
         disableable);
   }
 
-  private static final String URL_FORMAT = "https://errorprone.info/bugpattern/%s.md";
+  private static final String URL_FORMAT = "https://errorprone.info/bugpattern/%s";
 
   private static String createLinkUrl(BugPattern pattern) {
     switch (pattern.linkType()) {

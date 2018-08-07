@@ -57,7 +57,7 @@ public class DescriptionTest {
     }
   }
 
-  private static final String URL = "  (see https://errorprone.info/bugpattern/DeadException.md)";
+  private static final String URL = "  (see https://errorprone.info/bugpattern/DeadException)";
 
   @Test
   public void testDescriptionFromBugPattern() {
