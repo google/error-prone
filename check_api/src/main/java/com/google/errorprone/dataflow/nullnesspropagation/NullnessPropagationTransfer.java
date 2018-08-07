@@ -1140,6 +1140,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   static final ImmutableSetMultimap<MemberName, Integer> NULL_IMPLIES_TRUE_PARAMETERS =
       new ImmutableSetMultimap.Builder<MemberName, Integer>()
           .put(member(Strings.class, "isNullOrEmpty"), 0)
+          .put(member("android.text.TextUtils", "isEmpty"), 0)
           .build();
 
   /**

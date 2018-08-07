@@ -66,6 +66,10 @@ public class NonNullAssumptionsTest {
       assertWithMessage(member.clazz + "#" + member.member + "()")
           .that(nullParameters)
           .isNotEmpty();
+      if (member.clazz.startsWith("android.")) {
+        // Can't load Android SDK classes.
+        continue;
+      }
       int found = 0;
       for (Method method : loadClass(member.clazz).getMethods()) {
         if (!method.getName().equals(member.member)) {
