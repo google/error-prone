@@ -274,7 +274,7 @@ public abstract class AbstractExpectedExceptionChecker extends BugChecker
       fix.prefixWith(throwingStatements.get(0), fixPrefix.toString());
       if (useExpressionLambda) {
         fix.postfixWith(((ExpressionStatementTree) throwingStatements.get(0)).getExpression(), ")");
-        fix.postfixWith(getLast(throwingStatements), Joiner.on('\n').join(newAsserts));
+        fix.postfixWith(getLast(throwingStatements), '\n' + Joiner.on('\n').join(newAsserts));
       } else {
         fix.postfixWith(getLast(throwingStatements), "});\n" + Joiner.on('\n').join(newAsserts));
       }
