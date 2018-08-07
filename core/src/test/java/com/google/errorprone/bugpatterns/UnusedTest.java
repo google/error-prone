@@ -27,24 +27,6 @@ public class UnusedTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(Unused.class, getClass());
 
-  @Test
-  public void exemptedByJaxbXmlElement() {
-    helper
-        .addSourceLines(
-            "ExemptedByJaxbXmlElement.java",
-            "package unusedvars;",
-            "import javax.xml.bind.annotation.XmlElement;",
-            "/** Sample class with JAXB annotations that should suppress unused warnings. */",
-            "public class ExemptedByJaxbXmlElement {",
-            "  @XmlElement",
-            "  public Object annotatedField;",
-            "  @XmlElement",
-            "  public Object annotatedMethod() {",
-            "    return null;",
-            "  }",
-            "}")
-        .doTest();
-  }
 
 
   @Test
