@@ -199,14 +199,18 @@ public class HeldLockAnalyzer {
 
     @Override
     public Void visitNewClass(NewClassTree tree, HeldLockSet locks) {
-      // Don't descend into anonymous class declarations; their method declarations
-      // will be analyzed separately.
+      scan(tree.getEnclosingExpression(), locks);
+      scan(tree.getIdentifier(), locks);
+      scan(tree.getTypeArguments(), locks);
+      scan(tree.getArguments(), locks);
+      // Don't descend into bodies of anonymous class declarations;
+      // their method declarations will be analyzed separately.
       return null;
     }
 
     @Override
     public Void visitLambdaExpression(LambdaExpressionTree node, HeldLockSet heldLockSet) {
-      // Don't descend into lambda; they will be analyzed separately.
+      // Don't descend into lambdas; they will be analyzed separately.
       return null;
     }
 
