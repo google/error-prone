@@ -16,6 +16,7 @@ com.google.errorprone.bugpatterns.overloading
 com.google.errorprone.bugpatterns.threadsafety
 com.google.errorprone.dataflow
 com.google.errorprone.dataflow.nullnesspropagation
+com.google.errorprone.dataflow.nullnesspropagation.inference
 com.google.errorprone.fixes
 com.google.errorprone.internal
 com.google.errorprone.matchers

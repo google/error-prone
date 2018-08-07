@@ -87,12 +87,16 @@
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.dataflow.nullnesspropagation.inference">com.google.errorprone.dataflow.nullnesspropagation.inference</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.matchers">com.google.errorprone.matchers</a></td>
 <td class="colLast">
 <div class="block">A predicate DSL for matching javac AST nodes.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></td>
 <td class="colLast">
 <div class="block">Utility code.</div>
@@ -167,6 +171,19 @@ the order they are declared.</div>
 </tbody>
 </table>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/package-summary.html">com.google.errorprone.dataflow.nullnesspropagation</a> that return types with arguments of type <a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Nullness.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#fromAnnotations-java.util.List-">fromAnnotations</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;annotations)</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
 <caption><span>Methods in <a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/package-summary.html">com.google.errorprone.dataflow.nullnesspropagation</a> with parameters of type <a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
@@ -180,6 +197,32 @@ the order they are declared.</div>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></td>
 <td class="colLast"><span class="typeNameLabel">Nullness.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#leastUpperBound-com.google.errorprone.dataflow.nullnesspropagation.Nullness-">leastUpperBound</a></span>(<a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&nbsp;other)</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.dataflow.nullnesspropagation.inference">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a> in <a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/inference/package-summary.html">com.google.errorprone.dataflow.nullnesspropagation.inference</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/inference/package-summary.html">com.google.errorprone.dataflow.nullnesspropagation.inference</a> that return types with arguments of type <a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">InferredNullability.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html#getExprNullness-com.sun.source.tree.ExpressionTree-">getExprNullness</a></span>(com.sun.source.tree.ExpressionTree&nbsp;exprTree)</code>
+<div class="block">Get inferred nullness qualifier for an expression, if possible.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.google.common.collect.ImmutableMap&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol,<a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">InferredNullability.</span><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html#getNullnessGenerics-com.sun.source.tree.MethodInvocationTree-">getNullnessGenerics</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;callsite)</code>
+<div class="block">Get inferred nullness qualifiers for method-generic type variables at a callsite.</div>
+</td>
 </tr>
 </tbody>
 </table>

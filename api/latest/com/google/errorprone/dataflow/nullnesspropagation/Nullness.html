@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":9};
+var methods = {"i0":10,"i1":9,"i2":10,"i3":10,"i4":10,"i5":9,"i6":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -180,24 +180,28 @@ implements org.checkerframework.dataflow.analysis.AbstractValue&lt;<a href="../.
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#greatestLowerBound-com.google.errorprone.dataflow.nullnesspropagation.Nullness-">greatestLowerBound</a></span>(<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&nbsp;other)</code>&nbsp;</td>
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#fromAnnotations-java.util.List-">fromAnnotations</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;annotations)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#leastUpperBound-com.google.errorprone.dataflow.nullnesspropagation.Nullness-">leastUpperBound</a></span>(<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&nbsp;other)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#greatestLowerBound-com.google.errorprone.dataflow.nullnesspropagation.Nullness-">greatestLowerBound</a></span>(<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&nbsp;other)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#leastUpperBound-com.google.errorprone.dataflow.nullnesspropagation.Nullness-">leastUpperBound</a></span>(<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&nbsp;other)</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#valueOf-java.lang.String-">valueOf</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</code>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#values--">values</a></span>()</code>
 <div class="block">Returns an array containing the constants of this enum type, in
@@ -375,6 +379,15 @@ not permitted.)</div>
  . Then <code>var1</code> must have a value in set of all values except <code>"bar"</code>. Since we don't
  know which value in the set <code>NONNULL var2</code> has, we union all possible complement sets to
  get the set of all values, or <code>NULLABLE</code>.</div>
+</li>
+</ul>
+<a name="fromAnnotations-java.util.List-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fromAnnotations</h4>
+<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../../com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&gt;&nbsp;fromAnnotations(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;annotations)</pre>
 </li>
 </ul>
 <a name="toString--">

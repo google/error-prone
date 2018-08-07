@@ -1598,6 +1598,8 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/dataflow/nullnesspropagation/package-summary.html">com.google.errorprone.dataflow.nullnesspropagation</a> - package com.google.errorprone.dataflow.nullnesspropagation</dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/package-summary.html">com.google.errorprone.dataflow.nullnesspropagation.inference</a> - package com.google.errorprone.dataflow.nullnesspropagation.inference</dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a> - package com.google.errorprone.fixes</dt>
 <dd>
 <div class="block">Support code for providing automated corrections for defects we find.</div>
@@ -3060,6 +3062,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/OperatorPrecedence.html#from-com.sun.source.tree.Tree.Kind-">from(Tree.Kind)</a></span> - Static method in enum com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum in com.google.errorprone.util">OperatorPrecedence</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#fromAnnotations-java.util.List-">fromAnnotations(List&lt;String&gt;)</a></span> - Static method in enum com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckerClasses-java.lang.Class...-">fromBugCheckerClasses(Class&lt;? extends BugChecker&gt;...)</a></span> - Static method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
 <div class="block">Returns a <a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with a specific list of <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> classes.</div>
@@ -3550,6 +3554,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UReturn.html#getExpression--">getExpression()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UReturn.html" title="class in com.google.errorprone.refaster">UReturn</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html#getExprNullness-com.sun.source.tree.ExpressionTree-">getExprNullness(ExpressionTree)</a></span> - Method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">InferredNullability</a></dt>
+<dd>
+<div class="block">Get inferred nullness qualifier for an expression, if possible.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/TrustingNullnessAnalysis.html#getFieldInitializerNullness-com.sun.source.util.TreePath-com.sun.tools.javac.util.Context-">getFieldInitializerNullness(TreePath, Context)</a></span> - Method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/TrustingNullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">TrustingNullnessAnalysis</a></dt>
 <dd>
 <div class="block">Returns <a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> of the initializer of the <code>VariableTree</code> at the leaf of the
@@ -3622,6 +3630,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/Fix.html#getImportsToRemove--">getImportsToRemove()</a></span> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.html#getImportsToRemove--">getImportsToRemove()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#getInferredNullability-com.sun.source.tree.MethodTree-">getInferredNullability(MethodTree)</a></span> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">NullnessQualifierInference</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getInheritedAnnotation-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">getInheritedAnnotation(Symbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
@@ -3880,6 +3890,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getNullnessAnalysis--">getNullnessAnalysis()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html#getNullnessGenerics-com.sun.source.tree.MethodInvocationTree-">getNullnessGenerics(MethodInvocationTree)</a></span> - Method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">InferredNullability</a></dt>
+<dd>
+<div class="block">Get inferred nullness qualifiers for method-generic type variables at a callsite.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#getNullnessValue-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis-">getNullnessValue(ExpressionTree, VisitorState, NullnessAnalysis)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Returns the <a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> for an expression as determined by the nullness dataflow analysis.</div>
@@ -4637,6 +4651,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#infer--">infer()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference"><span class="typeNameLink">InferredNullability</span></a> - Class in <a href="com/google/errorprone/dataflow/nullnesspropagation/inference/package-summary.html">com.google.errorprone.dataflow.nullnesspropagation.inference</a></dt>
+<dd>
+<div class="block">Results of running <code>NullnessQualifierInference</code> over a method.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/InfiniteRecursion.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">InfiniteRecursion</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/InfiniteRecursion.html#InfiniteRecursion--">InfiniteRecursion()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InfiniteRecursion.html" title="class in com.google.errorprone.bugpatterns">InfiniteRecursion</a></dt>
@@ -7167,6 +7185,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/NullnessMatcher.html#NullnessMatcher-com.google.errorprone.dataflow.nullnesspropagation.Nullness-">NullnessMatcher(Nullness)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/NullnessMatcher.html" title="class in com.google.errorprone.matchers">NullnessMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference"><span class="typeNameLink">NullnessQualifierInference</span></a> - Class in <a href="com/google/errorprone/dataflow/nullnesspropagation/inference/package-summary.html">com.google.errorprone.dataflow.nullnesspropagation.inference</a></dt>
+<dd>
+<div class="block">Eagerly traverse one <code>MethodTree</code> at a time and accumulate constraints between nullness
+ qualifiers.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/NullTernary.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">NullTernary</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NullTernary.html#NullTernary--">NullTernary()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NullTernary.html" title="class in com.google.errorprone.bugpatterns">NullTernary</a></dt>
@@ -9592,6 +9615,8 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitAssert-com.sun.source.tree.AssertTree-com.google.errorprone.VisitorState-">visitAssert(AssertTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#visitAssignment-com.sun.source.tree.AssignmentTree-java.lang.Void-">visitAssignment(AssignmentTree, Void)</a></span> - Method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">NullnessQualifierInference</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitAssignment-com.sun.source.tree.AssignmentTree-java.lang.Void-">visitAssignment(AssignmentTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitAssignment-com.sun.source.tree.AssignmentTree-com.google.errorprone.VisitorState-">visitAssignment(AssignmentTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
@@ -9682,6 +9707,8 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitIdent-com.sun.tools.javac.tree.JCTree.JCIdent-">visitIdent(JCTree.JCIdent)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#visitIdentifier-com.sun.source.tree.IdentifierTree-java.lang.Void-">visitIdentifier(IdentifierTree, Void)</a></span> - Method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">NullnessQualifierInference</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UFreeIdent.html#visitIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.refaster.Unifier-">visitIdentifier(IdentifierTree, Unifier)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UFreeIdent.html" title="class in com.google.errorprone.refaster">UFreeIdent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UMemberSelect.html#visitIdentifier-com.sun.source.tree.IdentifierTree-com.google.errorprone.refaster.Unifier-">visitIdentifier(IdentifierTree, Unifier)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UMemberSelect.html" title="class in com.google.errorprone.refaster">UMemberSelect</a></dt>
@@ -9738,6 +9765,8 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">visitMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#visitMethodInvocation-com.sun.source.tree.MethodInvocationTree-java.lang.Void-">visitMethodInvocation(MethodInvocationTree, Void)</a></span> - Method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">NullnessQualifierInference</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UMethodInvocation.html#visitMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.refaster.Unifier-">visitMethodInvocation(MethodInvocationTree, Unifier)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UMethodInvocation.html" title="class in com.google.errorprone.refaster">UMethodInvocation</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitMethodInvocation-com.sun.source.tree.MethodInvocationTree-java.lang.Void-">visitMethodInvocation(MethodInvocationTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
@@ -9787,6 +9816,8 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitPrimitiveType-com.sun.source.tree.PrimitiveTypeTree-com.google.errorprone.VisitorState-">visitPrimitiveType(PrimitiveTypeTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitReference-com.sun.tools.javac.tree.JCTree.JCMemberReference-">visitReference(JCTree.JCMemberReference)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#visitReturn-com.sun.source.tree.ReturnTree-java.lang.Void-">visitReturn(ReturnTree, Void)</a></span> - Method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">NullnessQualifierInference</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/ControlFlowVisitor.html#visitReturn-com.sun.source.tree.ReturnTree-com.google.errorprone.refaster.ControlFlowVisitor.BreakContext-">visitReturn(ReturnTree, ControlFlowVisitor.BreakContext)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></dt>
 <dd>&nbsp;</dd>
@@ -9845,6 +9876,8 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitUnionType-com.sun.source.tree.UnionTypeTree-java.lang.Void-">visitUnionType(UnionTypeTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ErrorProneScanner.html#visitUnionType-com.sun.source.tree.UnionTypeTree-com.google.errorprone.VisitorState-">visitUnionType(UnionTypeTree, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#visitVariable-com.sun.source.tree.VariableTree-java.lang.Void-">visitVariable(VariableTree, Void)</a></span> - Method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">NullnessQualifierInference</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTemplater.html#visitVariable-com.sun.source.tree.VariableTree-java.lang.Void-">visitVariable(VariableTree, Void)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
