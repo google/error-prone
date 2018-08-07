@@ -211,7 +211,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     if (!epOptions.patchingOptions().doRefactor()) {
       return ErrorProneAnalyzer.createByScanningForPlugins(scannerSupplier, epOptions, context);
     }
-    refactoringCollection[0] = RefactoringCollection.refactor(epOptions.patchingOptions());
+    refactoringCollection[0] = RefactoringCollection.refactor(epOptions.patchingOptions(), context);
 
     // Refaster refactorer or using builtin checks
     CodeTransformer codeTransformer =
