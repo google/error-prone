@@ -18,8 +18,11 @@ package com.google.errorprone;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticType;
+import com.sun.tools.javac.util.JCDiagnostic.Factory;
 import com.sun.tools.javac.util.Log;
 import javax.tools.JavaFileObject;
 
@@ -47,6 +50,8 @@ public class ErrorProneError extends Error {
     this.source = source;
   }
 
+  /** @deprecated prefer {@link #logFatalError(Log, Context)} */
+  @Deprecated
   public void logFatalError(Log log) {
     String version = ErrorProneVersion.loadVersionFromPom().or("unknown version");
     JavaFileObject prev = log.currentSourceFile();
@@ -56,6 +61,25 @@ public class ErrorProneError extends Error {
           pos, "error.prone.crash", Throwables.getStackTraceAsString(cause), version, checkName);
     } finally {
       log.useSource(prev);
+    }
+  }
+
+  public void logFatalError(Log log, Context context) {
+    String version = ErrorProneVersion.loadVersionFromPom().or("unknown version");
+    JavaFileObject originalSource = log.useSource(source);
+    Factory factory = Factory.instance(context);
+    try {
+      log.report(
+          factory.create(
+              DiagnosticType.ERROR,
+              log.currentSource(),
+              pos,
+              "error.prone.crash",
+              Throwables.getStackTraceAsString(cause),
+              version,
+              checkName));
+    } finally {
+      log.useSource(originalSource);
     }
   }
 

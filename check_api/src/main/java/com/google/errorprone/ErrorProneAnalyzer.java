@@ -62,7 +62,7 @@ public class ErrorProneAnalyzer implements TaskListener {
         scansPlugins(scannerSupplier, errorProneOptions, context),
         errorProneOptions,
         context,
-        JavacErrorDescriptionListener.provider());
+        JavacErrorDescriptionListener.provider(context));
   }
 
   private static Supplier<CodeTransformer> scansPlugins(
@@ -102,7 +102,7 @@ public class ErrorProneAnalyzer implements TaskListener {
         scansPlugins(scannerSupplier, errorProneOptions, context),
         errorProneOptions,
         context,
-        JavacErrorDescriptionListener.provider());
+        JavacErrorDescriptionListener.provider(context));
   }
 
   private ErrorProneAnalyzer(
@@ -152,7 +152,7 @@ public class ErrorProneAnalyzer implements TaskListener {
         transformer.get().apply(new TreePath(compilation), subContext, descriptionListener);
       }
     } catch (ErrorProneError e) {
-      e.logFatalError(log);
+      e.logFatalError(log, context);
       // let the exception propagate to javac's main, where it will cause the compilation to
       // terminate with Result.ABNORMAL
       throw e;
