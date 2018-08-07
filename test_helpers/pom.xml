@@ -157,7 +157,7 @@
         <version>2.19.1</version>
         <configuration>
           <!-- set heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
-          <argLine>-Xmx1024m</argLine>
+          <argLine>-Xmx1g</argLine>
         </configuration>
       </plugin>
     </plugins>
@@ -176,8 +176,9 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.19.1</version>
             <configuration>
+              <!-- set heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
               <!-- put javac.jar on bootclasspath when executing tests -->
-              <argLine>-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</argLine>
+              <argLine>-Xmx1g -Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</argLine>
             </configuration>
           </plugin>
         </plugins>
