@@ -16,6 +16,9 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import org.checkerframework.dataflow.analysis.AbstractValue;
 
 /**
@@ -116,6 +119,22 @@ public enum Nullness implements AbstractValue<Nullness> {
       default:
         throw new AssertionError("Inverse of " + this + " not defined");
     }
+  }
+
+  // TODO(bennostein): Support jsr305 @CheckForNull?
+  // See CF Manual 3.7.2 for discussion of its idiosyncracy/incompatibility
+  private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
+      Pattern.compile(".*\\.(Nullable(Decl)?|NotNull|Nonnull|NonNull)$").asPredicate();
+
+  private static final Predicate<String> NULLABLE_ANNOTATION =
+      Pattern.compile(".*\\.Nullable(Decl)?$").asPredicate();
+
+  public static java.util.Optional<Nullness> fromAnnotations(List<String> annotations) {
+    return annotations
+        .stream()
+        .filter(ANNOTATION_RELEVANT_TO_NULLNESS)
+        .map(annot -> NULLABLE_ANNOTATION.test(annot) ? NULLABLE : NONNULL)
+        .reduce(Nullness::greatestLowerBound);
   }
 
   @Override

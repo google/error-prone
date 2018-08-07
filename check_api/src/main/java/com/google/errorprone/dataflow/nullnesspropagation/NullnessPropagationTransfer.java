@@ -79,7 +79,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
@@ -359,7 +358,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
             .stream()
             .map(Object::toString)
             .collect(Collectors.toList());
-    return nullnessFromAnnotations(annotations)
+    return Nullness.fromAnnotations(annotations)
         .orElseGet(
             () -> hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand()));
   }
@@ -702,13 +701,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     java.util.Optional<Nullness> declaredNullness =
-        nullnessFromAnnotations(
+        Nullness.fromAnnotations(
             MoreAnnotations.getDeclarationAndTypeAttributes(accessed.symbol)
                 .map(Object::toString)
                 .collect(Collectors.toList()));
     return declaredNullness.orElseGet(
         () ->
-            nullnessFromAnnotations(inheritedAnnotations(accessed.symbol.type))
+            Nullness.fromAnnotations(inheritedAnnotations(accessed.symbol.type))
                 .orElse(defaultAssumption));
   }
 
@@ -716,7 +715,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (callee == null) {
       return defaultAssumption;
     }
-    java.util.Optional<Nullness> declaredNullness = nullnessFromAnnotations(callee.annotations);
+    java.util.Optional<Nullness> declaredNullness = Nullness.fromAnnotations(callee.annotations);
     if (declaredNullness.isPresent()) {
       return declaredNullness.get();
     }
@@ -737,23 +736,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
                     .collect(Collectors.toList()))
             .build();
 
-    return nullnessFromAnnotations(annotations)
+    return Nullness.fromAnnotations(annotations)
         .orElse(methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE);
-  }
-
-  // TODO(bennostein): Support jsr305 @CheckForNull?
-  // See CF Manual 3.7.2 for discussion of its idiosyncracy/incompatibility
-  private static final Pattern ANNOTATION_RELEVANT_TO_NULLNESS =
-      Pattern.compile(".*\\.(Nullable(Decl)?|NotNull|Nonnull|NonNull)$");
-
-  private static final Pattern NULLABLE_ANNOTATION = Pattern.compile(".*\\.Nullable(Decl)?$");
-
-  private static java.util.Optional<Nullness> nullnessFromAnnotations(List<String> annotations) {
-    return annotations
-        .stream()
-        .filter(annot -> ANNOTATION_RELEVANT_TO_NULLNESS.matcher(annot).matches())
-        .map(annot -> NULLABLE_ANNOTATION.matcher(annot).matches() ? NULLABLE : NONNULL)
-        .reduce(Nullness::greatestLowerBound);
   }
 
   /**
