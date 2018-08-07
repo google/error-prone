@@ -67,17 +67,12 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
-    Description.Builder description = buildDescription(tree);
     Optional<Fix> fix = buildFix(tree, state);
     if (!fix.isPresent()) {
       return NO_MATCH;
     }
-    if (state.getTypeFromString("com.google.common.base.Splitter") != null) {
-      description.addFix(fix.get());
-    } else {
-      description.addFix(SuggestedFix.postfixWith(getOnlyElement(tree.getArguments()), ", -1"));
-    }
-    return description.build();
+    // TODO(b/112270644): skip Splitter fix if guava isn't on the classpath
+    return describeMatch(tree, fix.get());
   }
 
   public Optional<Fix> buildFix(MethodInvocationTree tree, VisitorState state) {

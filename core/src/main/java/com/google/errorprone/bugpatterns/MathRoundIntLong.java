@@ -33,9 +33,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
 
 /**
  * Check for calls to Math's {@link Math#round} with an integer or long parameter.
@@ -87,43 +85,18 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
       return describeMatch(
           tree, SuggestedFix.replace(tree, state.getSourceForNode(tree.getArguments().get(0))));
     } else if (ROUND_CALLS_WITH_LONG_ARG.matches(tree, state)) {
-      if (state.getTypeFromString("com.google.common.primitives.Ints") != null) {
-        return describeMatch(
-            tree,
-            SuggestedFix.builder()
-                .addImport("com.google.common.primitives.Ints")
-                .prefixWith(tree, "Ints.saturatedCast(")
-                .replace(tree, state.getSourceForNode(tree.getArguments().get(0)))
-                .postfixWith(tree, ")")
-                .build());
-      } else {
-        return buildDescription(tree)
-            .setMessage(
-                "Calling Math.round() when the argument is an integer or a long can result "
-                    + "in a loss of information because it coerces the argument to a float before "
-                    + "rounding back to an int. We suggest replacing Math.round() with Guava's"
-                    + " Ints.saturatedCast(). Another suggestion is to cast to an integer but that "
-                    + " may cause other errors when dealing with large numbers.")
-            .addFix(
-                SuggestedFix.builder()
-                    .prefixWith(tree, castPrimitive(tree, state.getSourceForNode(tree)))
-                    .build())
-            .build();
-      }
+      // TODO(b/112270644): skip Ints.saturatedCast fix if guava isn't on the classpath
+      return describeMatch(
+          tree,
+          SuggestedFix.builder()
+              .addImport("com.google.common.primitives.Ints")
+              .prefixWith(tree, "Ints.saturatedCast(")
+              .replace(tree, state.getSourceForNode(tree.getArguments().get(0)))
+              .postfixWith(tree, ")")
+              .build());
     }
     throw new AssertionError("Unknown argument type to round call: " + tree);
   }
 
-  private static String castPrimitive(Tree tree, String sourceForNode) {
-    String openingBracket;
-    String closingBracket;
-    if (tree instanceof BinaryTree) {
-      openingBracket = "(";
-      closingBracket = ")";
-    } else {
-      openingBracket = closingBracket = "";
-    }
-    return String.format("%s%s%s", openingBracket, sourceForNode, closingBracket);
-  }
 
 }

@@ -38,7 +38,6 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Modules;
-import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -197,27 +196,7 @@ public class VisitorState {
     if (classSymbol != null) {
       return classSymbol.asType();
     }
-    // Otherwise, fall back to JavaCompiler#resolveIdent.
-    // TODO(cushon): this isn't compatible with modular compilations.
-    return resolveIdent(typeStr);
-  }
-
-  private Type resolveIdent(String typeStr) {
-    JavaCompiler compiler = JavaCompiler.instance(context);
-    Symbol sym = compiler.resolveIdent(getSymtab().noModule, typeStr);
-    if (!(sym instanceof ClassSymbol)) {
-      return null;
-    }
-    Type type = ((ClassSymbol) sym).asType();
-    try {
-      type.complete();
-    } catch (CompletionFailure failure) {
-      return null;
-    }
-    if (type.isErroneous()) {
-      return null;
-    }
-    return type;
+    return null;
   }
 
   /**

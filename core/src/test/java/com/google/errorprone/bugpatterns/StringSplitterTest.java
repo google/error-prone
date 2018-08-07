@@ -20,6 +20,7 @@ import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -293,6 +294,7 @@ public class StringSplitterTest {
         .doTest();
   }
 
+  @Ignore("b/112270644")
   @Test
   public void noSplitterOnClassPath() throws IOException {
     testHelper

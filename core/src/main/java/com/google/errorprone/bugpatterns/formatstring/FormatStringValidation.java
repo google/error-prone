@@ -185,25 +185,29 @@ public class FormatStringValidation {
           throw new AssertionError(type.getKind());
       }
     }
-    if (types.isSubtype(type, state.getSymtab().stringType)) {
+    if (isSubtype(types, type, state.getSymtab().stringType)) {
       return String.valueOf("string");
     }
-    if (types.isSubtype(type, state.getTypeFromString(BigDecimal.class.getName()))) {
+    if (isSubtype(types, type, state.getTypeFromString(BigDecimal.class.getName()))) {
       return BigDecimal.valueOf(42.0d);
     }
-    if (types.isSubtype(type, state.getTypeFromString(BigInteger.class.getName()))) {
+    if (isSubtype(types, type, state.getTypeFromString(BigInteger.class.getName()))) {
       return BigInteger.valueOf(43L);
     }
-    if (types.isSubtype(type, state.getTypeFromString(Date.class.getName()))) {
+    if (isSubtype(types, type, state.getTypeFromString(Date.class.getName()))) {
       return new Date();
     }
-    if (types.isSubtype(type, state.getTypeFromString(Calendar.class.getName()))) {
+    if (isSubtype(types, type, state.getTypeFromString(Calendar.class.getName()))) {
       return new GregorianCalendar();
     }
-    if (types.isSubtype(type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
+    if (isSubtype(types, type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
       return LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
     }
     return new Object();
+  }
+
+  private static boolean isSubtype(Types types, Type t, Type s) {
+    return s != null && types.isSubtype(t, s);
   }
 
   private static ValidationResult validate(String formatString, Iterable<Object> arguments) {

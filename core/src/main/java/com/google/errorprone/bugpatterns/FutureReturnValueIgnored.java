@@ -60,7 +60,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CompletionService;
@@ -110,8 +109,10 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
       new Matcher<ExpressionTree>() {
         @Override
         public boolean matches(ExpressionTree tree, VisitorState state) {
-          Type futureType =
-              Objects.requireNonNull(state.getTypeFromString("java.util.concurrent.Future"));
+          Type futureType = state.getTypeFromString("java.util.concurrent.Future");
+          if (futureType == null) {
+            return false;
+          }
           Symbol untypedSymbol = ASTHelpers.getSymbol(tree);
           if (!(untypedSymbol instanceof MethodSymbol)) {
             Type resultType = ASTHelpers.getResultType(tree);
@@ -160,8 +161,10 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
   }
 
   private Description checkLostType(MethodInvocationTree tree, VisitorState state) {
-    Type futureType =
-        Objects.requireNonNull(state.getTypeFromString("java.util.concurrent.Future"));
+    Type futureType = state.getTypeFromString("java.util.concurrent.Future");
+    if (futureType == null) {
+      return Description.NO_MATCH;
+    }
 
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
     Type returnType = ASTHelpers.getResultType(tree);
@@ -309,7 +312,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
    * void-returning functions silently ignore return values of any type.
    */
   private static boolean functionalInterfaceReturnsObject(Type interfaceType, VisitorState state) {
-    Type objectType = Objects.requireNonNull(state.getTypeFromString("java.lang.Object"));
+    Type objectType = state.getTypeFromString("java.lang.Object");
     return ASTHelpers.isSubtype(
         objectType,
         ASTHelpers.getUpperBound(
@@ -364,9 +367,11 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
    */
   @Override
   public Description matchReturn(ReturnTree tree, VisitorState state) {
-    Type objectType = Objects.requireNonNull(state.getTypeFromString("java.lang.Object"));
-    Type futureType =
-        Objects.requireNonNull(state.getTypeFromString("java.util.concurrent.Future"));
+    Type objectType = state.getTypeFromString("java.lang.Object");
+    Type futureType = state.getTypeFromString("java.util.concurrent.Future");
+    if (futureType == null) {
+      return Description.NO_MATCH;
+    }
     Type resultType = ASTHelpers.getResultType(tree.getExpression());
     if (resultType == null) {
       return Description.NO_MATCH;
