@@ -24,6 +24,8 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.EndPosTable;
+import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import java.io.IOError;
@@ -44,6 +46,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   private final Log log;
   private final JavaFileObject sourceFile;
   private final Function<Fix, AppliedFix> fixToAppliedFix;
+  private final Context context;
 
   // When we're trying to refactor using error prone fixes, any error halts compilation of other
   // files. We set this to true when refactoring so we can log every hit without breaking the
@@ -54,9 +57,10 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
   private JavacErrorDescriptionListener(
-      Log log, EndPosTable endPositions, JavaFileObject sourceFile, boolean dontUseErrors) {
+      Log log, EndPosTable endPositions, JavaFileObject sourceFile, Context context, boolean dontUseErrors) {
     this.log = log;
     this.sourceFile = sourceFile;
+    this.context = context;
     this.dontUseErrors = dontUseErrors;
     checkNotNull(endPositions);
     try {
@@ -81,26 +85,32 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     String message = messageForFixes(description, appliedFixes);
     // Swap the log's source and the current file's source; then be sure to swap them back later.
     JavaFileObject originalSource = log.useSource(sourceFile);
-    switch (description.severity) {
-      case ERROR:
-        if (dontUseErrors) {
-          log.warning((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
-        } else {
-          log.error((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
-        }
-        break;
-      case WARNING:
-        log.warning((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
-        break;
-      case SUGGESTION:
-        log.note((DiagnosticPosition) description.node, MESSAGE_BUNDLE_KEY, message);
-        break;
-      default:
-        break;
-    }
-
-    if (originalSource != null) {
-      log.useSource(originalSource);
+    try {
+      JCDiagnostic.Factory factory = JCDiagnostic.Factory.instance(context);
+      JCDiagnostic.DiagnosticType type = JCDiagnostic.DiagnosticType.ERROR;
+      DiagnosticPosition pos = (DiagnosticPosition) description.node;
+      switch (description.severity) {
+        case ERROR:
+          if (dontUseErrors) {
+            type = JCDiagnostic.DiagnosticType.WARNING;
+          } else {
+            type = JCDiagnostic.DiagnosticType.ERROR;
+          }
+          break;
+        case WARNING:
+          type = JCDiagnostic.DiagnosticType.WARNING;
+          break;
+        case SUGGESTION:
+          type = JCDiagnostic.DiagnosticType.NOTE;
+          break;
+        default:
+          break;
+      }
+      log.report(factory.create(type, log.currentSource(), pos, MESSAGE_BUNDLE_KEY, message));
+    } finally {
+      if (originalSource != null) {
+        log.useSource(originalSource);
+      }
     }
   }
 
@@ -137,15 +147,15 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     return messageBuilder.toString();
   }
 
-  static Factory provider() {
+  static Factory provider(Context context) {
     return (log, compilation) ->
         new JavacErrorDescriptionListener(
-            log, compilation.endPositions, compilation.getSourceFile(), false);
+            log, compilation.endPositions, compilation.getSourceFile(), context, false);
   }
 
-  static Factory providerForRefactoring() {
+  static Factory providerForRefactoring(Context context) {
     return (log, compilation) ->
         new JavacErrorDescriptionListener(
-            log, compilation.endPositions, compilation.getSourceFile(), true);
+            log, compilation.endPositions, compilation.getSourceFile(), context, true);
   }
 }
