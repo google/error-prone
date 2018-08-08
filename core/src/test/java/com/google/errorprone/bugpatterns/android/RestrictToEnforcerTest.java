@@ -36,6 +36,21 @@ public final class RestrictToEnforcerTest {
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper
+        .addSourceLines(
+            "android/support/annotation/RestrictTo.java",
+            "package android.support.annotation;",
+            "import static java.lang.annotation.ElementType.ANNOTATION_TYPE;",
+            "import static java.lang.annotation.ElementType.CONSTRUCTOR;",
+            "import static java.lang.annotation.ElementType.FIELD;",
+            "import static java.lang.annotation.ElementType.METHOD;",
+            "import static java.lang.annotation.ElementType.PACKAGE;",
+            "import static java.lang.annotation.ElementType.TYPE;",
+            "import java.lang.annotation.Target;",
+            "@Target({ANNOTATION_TYPE,TYPE,METHOD,CONSTRUCTOR,FIELD,PACKAGE})",
+            "public @interface RestrictTo {",
+            "  Scope[] value();",
+            "  enum Scope { LIBRARY, LIBRARY_GROUP, GROUP_ID, TESTS, SUBCLASSES }",
+            "}")
         .addSourceFile("RestrictToEnforcerPositiveCases.java")
         .addSourceFile("RestrictToEnforcerPositiveCasesApi.java")
         .doTest();
