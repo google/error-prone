@@ -41,14 +41,17 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.TreeInfo;
-import com.sun.tools.javac.util.List;
 import java.util.ArrayDeque;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Eagerly traverse one {@code MethodTree} at a time and accumulate constraints between nullness
@@ -106,7 +109,8 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
   private void generateConstraintsFromIdentifierUse(
       Type type, Tree sourceTree, ArrayDeque<Integer> argSelector) {
     List<Type> typeArguments = type.getTypeArguments();
-    for (int i = 0; i < typeArguments.length(); i++) {
+    int numberOfTypeArgs = typeArguments.size();
+    for (int i = 0; i < numberOfTypeArgs; i++) {
       argSelector.push(i);
       generateConstraintsFromIdentifierUse(typeArguments.get(i), sourceTree, argSelector);
       argSelector.pop();
@@ -146,13 +150,51 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     return super.visitReturn(node, unused);
   }
 
+  private static ImmutableList<Type> expandVarargsToArity(List<VarSymbol> formalArgs, int arity) {
+    ImmutableList.Builder<Type> result = ImmutableList.builderWithExpectedSize(arity);
+    int numberOfVarArgs = arity - formalArgs.size() + 1;
+
+    for (Iterator<VarSymbol> argsIterator = formalArgs.iterator(); argsIterator.hasNext(); ) {
+      VarSymbol arg = argsIterator.next();
+      if (argsIterator.hasNext()) {
+        // Not the variadic argument: just add to result
+        result.add(arg.type);
+      } else {
+        // Variadic argument: extract the type and add it to result the proper number of times
+        Type varArgType = ((ArrayType) arg.type).elemtype;
+        for (int idx = 0; idx < numberOfVarArgs; idx++) {
+          result.add(varArgType);
+        }
+      }
+    }
+
+    return result.build();
+  }
+
   @Override
   public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
     JCMethodInvocation sourceNode = (JCMethodInvocation) node;
     MethodSymbol callee = (MethodSymbol) TreeInfo.symbol(sourceNode.getMethodSelect());
 
-    // generate constraints for each formal <- actual write.
-    sourceNode.getArguments().forEach(arg -> generateConstraintsForWrite(arg.type, arg, node));
+    ImmutableList<Type> formalParameters =
+        callee.isVarArgs()
+            ? expandVarargsToArity(callee.getParameters(), sourceNode.args.size())
+            : callee
+                .getParameters()
+                .stream()
+                .map(var -> var.type)
+                .collect(ImmutableList.toImmutableList());
+
+    // generate constraints for each argument write.
+    Streams.forEachPair(
+        formalParameters.stream(),
+        sourceNode.getArguments().stream(),
+        (formal, actual) -> {
+          // formal parameter type
+          generateConstraintsForWrite(formal, actual, node);
+          // actual parameter type (i.e. after type variable substitution)
+          generateConstraintsForWrite(actual.type, actual, node);
+        });
 
     // if return type is parameterized by a generic type on receiver, collate references to that
     // generic between the receiver and the result/argument types.
@@ -169,10 +211,10 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
                     rcvrReferences.forEach(
                         rcvrRef -> qualifierConstraints.putEdge(resRef, rcvrRef)));
         Streams.forEachPair(
-            callee.getParameters().stream(),
+            formalParameters.stream(),
             node.getArguments().stream(),
             (formal, actual) ->
-                getReferencesToTypeVar(tvs, formal.type, actual)
+                getReferencesToTypeVar(tvs, formal, actual)
                     .forEach(
                         argRef ->
                             rcvrReferences.forEach(
@@ -180,18 +222,18 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       }
     }
 
+    // Get all references to each typeVar in the return type and formal parameters and relate them
+    // in the constraint graph; covariant in the return type, contravariant in the argument types.
     for (TypeVariableSymbol typeVar : callee.getTypeParameters()) {
-      // Get all references to typeVar in the return type and formal parameters and relate them in
-      // the constraint graph; covariant in the return type, contravariant in the argument types.
       InferenceVariable typeVarIV = TypeVariableInferenceVar.create(typeVar, node);
       for (InferenceVariable iv : getReferencesToTypeVar(typeVar, callee.getReturnType(), node)) {
         qualifierConstraints.putEdge(typeVarIV, iv);
       }
       Streams.forEachPair(
-          callee.getParameters().stream(),
+          formalParameters.stream(),
           node.getArguments().stream(),
           (formal, actual) -> {
-            for (InferenceVariable iv : getReferencesToTypeVar(typeVar, formal.type, actual)) {
+            for (InferenceVariable iv : getReferencesToTypeVar(typeVar, formal, actual)) {
               qualifierConstraints.putEdge(iv, typeVarIV);
             }
           });
@@ -214,7 +256,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       ImmutableSet.Builder<InferenceVariable> resultBuilder) {
 
     List<Type> typeArguments = type.getTypeArguments();
-    for (int i = 0; i < typeArguments.length(); i++) {
+    for (int i = 0; i < typeArguments.size(); i++) {
       partialSelector.push(i);
       getTypeVarReferences(
           typeVar, sourceNode, typeArguments.get(i), partialSelector, resultBuilder);
@@ -249,7 +291,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
   private void generateConstraintsForWrite(
       Type lType, ExpressionTree rVal, Tree sourceTree, ArrayDeque<Integer> argSelector) {
     List<Type> typeArguments = lType.getTypeArguments();
-    for (int i = 0; i < typeArguments.length(); i++) {
+    for (int i = 0; i < typeArguments.size(); i++) {
       argSelector.push(i);
       generateConstraintsForWrite(typeArguments.get(i), rVal, sourceTree, argSelector);
       argSelector.pop();
