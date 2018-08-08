@@ -162,28 +162,19 @@ For now, Eclipse users should use the Findbugs eclipse plugin instead, as it cat
 
 ## Command Line
 
-### Java 9
+### Java 9, 10, and 11
 
 Error Prone supports the
 [`com.sun.source.util.Plugin`](https://docs.oracle.com/javase/8/docs/jdk/api/javac/tree/com/sun/source/util/Plugin.html)
-API, and can be used with JDK 9 by adding Error Prone to the `-processorpath`
+API, and can be used with JDK 9, 10 and 11 by adding Error Prone to the `-processorpath`
 and setting the `-Xplugin` flag.
 
 Example:
 
 ```bash
-JAVA9_HOME=... # path to a JDK 9 installation
 ERROR_PRONE_JAR=... @ path to error_prone_ant-2.3.1.jar
-$JAVA9_HOME/bin/javac \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
-  -J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
+javac \
+  -XDcompilePolicy=simple \
   -processorpath $ERROR_PRONE_JAR \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
   ShortSet.java 
