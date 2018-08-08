@@ -28,6 +28,8 @@ message TestProtoMessage {
   optional TestFieldProtoMessage message = 1;
   repeated TestFieldProtoMessage multi_field = 2;
   optional int32 test_field_named_count = 3;
+
+  extensions 100 to 199;
 }
 
 enum TestEnum { TEST_ENUM_VAL = 1; }

@@ -150,4 +150,117 @@ public final class ProtoFieldNullComparisonTest {
         .expectErrorMessage("NO_FIX", input -> !input.contains("hasMyString()"))
         .doTest();
   }
+
+  @Test
+  public void testMessageOrBuilderGetField() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.Descriptors.FieldDescriptor;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "public class Test {",
+            "  public boolean doIt(TestProtoMessage mob, FieldDescriptor f) {",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
+            "    return mob.getField(f) == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testExtendableMessageGetExtension1param() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.ExtensionLite;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "public class Test {",
+            "  public void test(TestProtoMessage e, ExtensionLite extensionLite) {",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
+            "    boolean a = e.getExtension(extensionLite) == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMessageOrBuilderGetRepeatedField() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.Descriptors.FieldDescriptor;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "public class Test {",
+            "  public void doIt(TestProtoMessage mob, FieldDescriptor f) {",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
+            "    boolean a = mob.getRepeatedField(f, 0) == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testExtendableMessageGetExtension2param() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.ExtensionLite;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "public class Test {",
+            "  public void test(TestProtoMessage e, ExtensionLite extensionLite) {",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
+            "    boolean a = e.getExtension(extensionLite, 0) == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void repeated() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.ExtensionLite;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import java.util.List;",
+            "public class Test {",
+            " public void test(ExtensionLite<TestProtoMessage,",
+            "  List<TestFieldProtoMessage>> e, TestProtoMessage message) {",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
+            "    boolean y = message.getExtension(e) == null;",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void repeated2() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.Extension.MessageType;",
+            "import com.google.protobuf.ExtensionLite;",
+            "import com.google.protobuf.GeneratedMessage;",
+            "import com.sun.tools.javac.code.Type;",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.List;",
+            "public class Test {",
+            "public static <MessageType extends GeneratedMessage.ExtendableMessage<MessageType>,",
+            "Type extends GeneratedMessage>",
+            "List<Type> getRepeatedExtensionObjects(",
+            "GeneratedMessage.ExtendableMessage<MessageType> mob,",
+            " ExtensionLite<MessageType, List<Type>> extension) {",
+            " ImmutableList.Builder extensionList = ImmutableList.builder();",
+            " int extensionCount = mob.getExtensionCount(extension);",
+            " for (int extensionIndex = 0; extensionIndex < extensionCount; ++extensionIndex) {",
+            "  // BUG: Diagnostic contains: ProtoFieldNullComparison",
+            "  boolean y = mob.getExtension(extension) == null;",
+            "  extensionList.add(mob.getExtension(extension));",
+            " }",
+            " return extensionList.build();",
+            "}",
+            "}")
+        .doTest();
+  }
 }
