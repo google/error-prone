@@ -62,6 +62,10 @@ public final class DeprecatedThreadMethodsTest {
 
   @Test
   public void stopThrowableThread() throws Exception {
+    if (isJdk11OrLater()) {
+      // stop(Throwable) was removed in 11
+      return;
+    }
     compilationHelper
         .addSourceLines(
             "Test.java",

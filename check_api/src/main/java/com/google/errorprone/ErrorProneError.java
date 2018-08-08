@@ -24,6 +24,7 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticType;
 import com.sun.tools.javac.util.JCDiagnostic.Factory;
 import com.sun.tools.javac.util.Log;
+import java.lang.reflect.Method;
 import javax.tools.JavaFileObject;
 
 /**
@@ -57,8 +58,18 @@ public class ErrorProneError extends Error {
     JavaFileObject prev = log.currentSourceFile();
     try {
       log.useSource(source);
-      log.error(
-          pos, "error.prone.crash", Throwables.getStackTraceAsString(cause), version, checkName);
+      // use reflection since this overload of error doesn't exist in JDK >= 11
+      Method m =
+          Log.class.getMethod("error", DiagnosticPosition.class, String.class, Object[].class);
+      m.invoke(
+          log,
+          pos,
+          "error.prone.crash",
+          Throwables.getStackTraceAsString(cause),
+          version,
+          checkName);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
     } finally {
       log.useSource(prev);
     }

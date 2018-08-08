@@ -177,19 +177,29 @@ public class WildcardImportTest {
   public void doublePrefix() throws Exception {
     testHelper
         .addInputLines(
+            "foo/Foo.java", //
+            "package foo;",
+            "public class Foo {}")
+        .expectUnchanged()
+        .addInputLines(
+            "foo/bar/Bar.java", //
+            "package foo.bar;",
+            "public class Bar {}")
+        .expectUnchanged()
+        .addInputLines(
             "in/test/Test.java",
             "package test;",
-            "import java.*;",
-            "import java.util.*;",
+            "import foo.*;",
+            "import foo.bar.*;",
             "public class Test {",
-            "    void f(List c) {}",
+            "    void f(Bar c) {}",
             "}")
         .addOutputLines(
             "out/test/Test.java",
             "package test;",
-            "import java.util.List;",
+            "import foo.bar.Bar;",
             "public class Test {",
-            "    void f(List c) {}",
+            "    void f(Bar c) {}",
             "}")
         .doTest();
   }
