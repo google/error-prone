@@ -25,7 +25,14 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class MissingSuperCallTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(MissingSuperCall.class, getClass());
+      CompilationTestHelper.newInstance(MissingSuperCall.class, getClass())
+          .addSourceLines(
+              "android/support/annotation/CallSuper.java",
+              "package android.support.annotation;",
+              "import static java.lang.annotation.ElementType.METHOD;",
+              "import java.lang.annotation.Target;",
+              "@Target({METHOD})",
+              "public @interface CallSuper {}");
 
   @Test
   public void android() {
