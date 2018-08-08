@@ -18,8 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.PROTOBUF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.ErrorProneFlags;
@@ -43,6 +45,7 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -71,6 +74,27 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   private static final Set<Kind> COMPARISON_OPERATORS =
       EnumSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
+
+  private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_FIX =
+      Matchers.instanceMethod()
+          .onDescendantOf("com.google.protobuf.GeneratedMessage.ExtendableMessage")
+          .named("getExtension")
+          .withParameters("com.google.protobuf.ExtensionLite");
+
+  private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_NO_FIX =
+      anyOf(
+          Matchers.instanceMethod()
+              .onDescendantOf("com.google.protobuf.MessageOrBuilder")
+              .named("getRepeatedField")
+              .withParameters("com.google.protobuf.Descriptors.FieldDescriptor", "int"),
+          Matchers.instanceMethod()
+              .onDescendantOf("com.google.protobuf.GeneratedMessage.ExtendableMessage")
+              .named("getExtension")
+              .withParameters("com.google.protobuf.ExtensionLite", "int"),
+          Matchers.instanceMethod()
+              .onDescendantOf("com.google.protobuf.MessageOrBuilder")
+              .named("getField")
+              .withParameters("com.google.protobuf.Descriptors.FieldDescriptor"));
 
   private static boolean isNull(ExpressionTree tree) {
     return tree.getKind() == Kind.NULL_LITERAL;
@@ -235,7 +259,69 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return SuggestedFix.replace(
             binaryTree, binaryTree.getKind() == Kind.EQUAL_TO ? replacement : ("!" + replacement));
       }
+    },
+    EXTENSION_METHOD {
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (EXTENSION_METHODS_WITH_NO_FIX.matches(tree, state)) {
+          return emptyFix();
+        }
+        if (EXTENSION_METHODS_WITH_FIX.matches(tree, state)) {
+          // If the extension represents a repeated field (i.e.: it's an ExtensionLite<T, List<R>>),
+          // the suggested fix from get->has isn't appropriate,so we shouldn't suggest a replacement
+
+          MethodInvocationTree m = (MethodInvocationTree) tree;
+          Type argumentType = ASTHelpers.getType(Iterables.getOnlyElement(m.getArguments()));
+          Symbol extension = state.getSymbolFromString("com.google.protobuf.ExtensionLite");
+          Type genericsArgument = state.getTypes().asSuper(argumentType, extension);
+
+          // If there are not two arguments then it is a raw type
+          // We can't make a fix on a raw type because there is not a way to guarantee that
+          // it does not contain a repeated field
+          if (genericsArgument.getTypeArguments().size() != 2) {
+            return emptyFix();
+          }
+
+          // If the second element within the generic argument is a subtype of list,
+          // that means it is a repeated field and therefore we cannot make a fix.
+          if (ASTHelpers.isSubtype(
+              genericsArgument.getTypeArguments().get(1),
+              state.getTypeFromString("java.util.List"),
+              state)) {
+            return emptyFix();
+          }
+          // Now that it is guaranteed that there is not a repeated field, providing a fix is safe
+          return generateFix();
+        }
+        return null;
+      }
+
+      private Fixer generateFix() {
+        return (BinaryTree b, VisitorState s) -> {
+          ExpressionTree leftOperand = b.getLeftOperand();
+          ExpressionTree rightOperand = b.getRightOperand();
+          ExpressionTree methodInvocation;
+          if (isNull(leftOperand)) {
+            methodInvocation = rightOperand;
+          } else {
+            methodInvocation = leftOperand;
+          }
+          String methodName = getMethodName(methodInvocation);
+          String hasMethod = methodName.replaceFirst("get", "has");
+          String replacement = replaceLast(methodInvocation.toString(), methodName, hasMethod);
+          return SuggestedFix.replace(
+              b, b.getKind() == Kind.EQUAL_TO ? "!" + replacement : replacement);
+        };
+      }
     };
+
+    /**
+     * Returns a Fixer representing a situation where we don't have a fix, but want to mark a
+     * callsite as containing a bug.
+     */
+    private static Fixer emptyFix() {
+      return (b, s) -> SuggestedFix.builder().build();
+    }
 
     private static boolean isGetter(ExpressionTree expressionTree) {
       if (!(expressionTree instanceof JCFieldAccess)) {
