@@ -148,10 +148,6 @@
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">DeadException.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/DeadException.html#MATCHER">MATCHER</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">CatchFail.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/CatchFail.html#TEST_CASE">TEST_CASE</a></span></code>&nbsp;</td>
-</tr>
 </tbody>
 </table>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
@@ -560,18 +556,24 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">JUnitMatchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/JUnitMatchers.html#TEST_CASE">TEST_CASE</a></span></code>
+<div class="block">Matches a JUnit 3 or 4 test case.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">WaitMatchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/WaitMatchers.html#waitMethod">waitMethod</a></span></code>
 <div class="block">Matches any wait/await method.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">WaitMatchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/WaitMatchers.html#waitMethodWithTimeout">waitMethodWithTimeout</a></span></code>
 <div class="block">Matches wait/await methods that have a timeout.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">JUnitMatchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/JUnitMatchers.html#wouldRunInJUnit4">wouldRunInJUnit4</a></span></code>
 <div class="block">Matches a method annotated with @Test but not @Ignore.</div>

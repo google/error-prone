@@ -3062,7 +3062,9 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/OperatorPrecedence.html#from-com.sun.source.tree.Tree.Kind-">from(Tree.Kind)</a></span> - Static method in enum com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum in com.google.errorprone.util">OperatorPrecedence</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#fromAnnotations-java.util.List-">fromAnnotations(List&lt;String&gt;)</a></span> - Static method in enum com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#fromAnnotations-java.util.Collection-">fromAnnotations(Collection&lt;String&gt;)</a></span> - Static method in enum com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#fromAnnotationsOn-com.sun.tools.javac.code.Symbol-">fromAnnotationsOn(Symbol)</a></span> - Static method in enum com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckerClasses-java.lang.Class...-">fromBugCheckerClasses(Class&lt;? extends BugChecker&gt;...)</a></span> - Static method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
@@ -3631,7 +3633,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFix.html#getImportsToRemove--">getImportsToRemove()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#getInferredNullability-com.sun.source.tree.MethodTree-">getInferredNullability(MethodTree)</a></span> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">NullnessQualifierInference</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#getInferredNullability-com.sun.source.tree.Tree-">getInferredNullability(Tree)</a></span> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">NullnessQualifierInference</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getInheritedAnnotation-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">getInheritedAnnotation(Symbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
@@ -6073,6 +6075,8 @@
 <div class="block">Matches a method that overrides a method that has been annotated with <code>@CallSuper</code> et
  al., but does not call the super method.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingTestCall.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingTestCall.html" title="class in com.google.errorprone.bugpatterns">MissingTestCall</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MixedArrayDimensions.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MixedArrayDimensions.html" title="class in com.google.errorprone.bugpatterns">MixedArrayDimensions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dt>
@@ -6835,6 +6839,12 @@
 <dt><a href="com/google/errorprone/bugpatterns/MissingSuperCall.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MissingSuperCall</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingSuperCall.html#MissingSuperCall--">MissingSuperCall()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingSuperCall.html" title="class in com.google.errorprone.bugpatterns">MissingSuperCall</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/MissingTestCall.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MissingTestCall</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Matches test helpers which require a terminating method to be called.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingTestCall.html#MissingTestCall--">MissingTestCall()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingTestCall.html" title="class in com.google.errorprone.bugpatterns">MissingTestCall</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MisusedWeekYear.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MisusedWeekYear</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -8724,8 +8734,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/names/TermEditDistance.html#TermEditDistance--">TermEditDistance()</a></span> - Constructor for class com.google.errorprone.names.<a href="com/google/errorprone/names/TermEditDistance.html" title="class in com.google.errorprone.names">TermEditDistance</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CatchFail.html#TEST_CASE">TEST_CASE</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CatchFail.html" title="class in com.google.errorprone.bugpatterns">CatchFail</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/JUnitMatchers.html#TEST_CASE">TEST_CASE</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>
+<div class="block">Matches a JUnit 3 or 4 test case.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">TestExceptionChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html#TestExceptionChecker--">TestExceptionChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">TestExceptionChecker</a></dt>

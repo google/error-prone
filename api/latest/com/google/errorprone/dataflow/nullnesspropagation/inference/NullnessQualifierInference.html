@@ -147,7 +147,7 @@ extends com.sun.source.util.TreeScanner&lt;<a href="https://docs.oracle.com/java
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">InferredNullability</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#getInferredNullability-com.sun.source.tree.MethodTree-">getInferredNullability</a></span>(com.sun.source.tree.MethodTree&nbsp;method)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/inference/NullnessQualifierInference.html#getInferredNullability-com.sun.source.tree.Tree-">getInferredNullability</a></span>(com.sun.source.tree.Tree&nbsp;methodOrInitializerOrLambda)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a></code></td>
@@ -203,13 +203,13 @@ extends com.sun.source.util.TreeScanner&lt;<a href="https://docs.oracle.com/java
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getInferredNullability-com.sun.source.tree.MethodTree-">
+<a name="getInferredNullability-com.sun.source.tree.Tree-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getInferredNullability</h4>
-<pre>public static&nbsp;<a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">InferredNullability</a>&nbsp;getInferredNullability(com.sun.source.tree.MethodTree&nbsp;method)</pre>
+<pre>public static&nbsp;<a href="../../../../../../com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">InferredNullability</a>&nbsp;getInferredNullability(com.sun.source.tree.Tree&nbsp;methodOrInitializerOrLambda)</pre>
 </li>
 </ul>
 <a name="visitIdentifier-com.sun.source.tree.IdentifierTree-java.lang.Void-">

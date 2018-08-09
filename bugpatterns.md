@@ -212,6 +212,9 @@ Certain resources in `android.R.string` have names that do not match their conte
 __[MissingSuperCall](bugpattern/MissingSuperCall)__<br>
 Overriding method is missing a call to overridden super method
 
+__[MissingTestCall](bugpattern/MissingTestCall)__<br>
+A terminating method call is required for a test helper to have any effect.
+
 __[MisusedWeekYear](bugpattern/MisusedWeekYear)__<br>
 Use of &quot;YYYY&quot; (week year) in a date pattern without &quot;ww&quot; (week in year). You probably meant to use &quot;yyyy&quot; (year) instead.
 
