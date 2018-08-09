@@ -17,16 +17,10 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.dataflow.AccessPath;
-import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.dataflow.AccessPathValues;
-import com.google.errorprone.util.MoreAnnotations;
-import com.sun.tools.javac.code.Symbol;
 import java.util.List;
 import javax.annotation.Nullable;
-import org.checkerframework.dataflow.cfg.UnderlyingAST;
-import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 
 /**
  * Transfer function for {@link TrustingNullnessAnalysis}. It "trusts" annotations, meaning:
@@ -60,21 +54,6 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     super(Nullness.NONNULL, TrustReturnAnnotation.INSTANCE);
   }
 
-  @Override
-  public AccessPathStore<Nullness> initialStore(
-      UnderlyingAST underlyingAST, List<LocalVariableNode> parameters) {
-    if (parameters == null) {
-      // Documentation of this method states, "parameters is only set if the underlying AST is a
-      // method"
-      return AccessPathStore.empty();
-    }
-    AccessPathStore.Builder<Nullness> result = AccessPathStore.<Nullness>empty().toBuilder();
-    for (LocalVariableNode param : parameters) {
-      Nullness assumed = nullnessFromAnnotations((Symbol) param.getElement());
-      result.setInformation(AccessPath.fromLocalVariable(param), assumed);
-    }
-    return result.build();
-  }
 
   @Override
   Nullness fieldNullness(
@@ -85,42 +64,21 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
       return Nullness.NONNULL; // optimistically assume non-null if we can't resolve
     }
     // In the absence of annotations or dataflow information, this will do the right thing for
-    // things like primitives, array length, .class, etc.
-    Nullness defaultValue = nullnessFromAnnotations(accessed.symbol);
+    // things like primitives, array length, .class, etc.  The defaultAssumption for this trusting
+    // analysis is Nullness.NONNULL, as described in the class-level javadoc.
+    Nullness defaultValue =
+        Nullness.fromAnnotationsOn(accessed.symbol).orElse(this.defaultAssumption);
     return (path == null) ? defaultValue : store.valueOfAccessPath(path, defaultValue);
   }
 
-  // TODO(b/79270313): consolidate hard-coded names of @Nullable annotations
-  private static final ImmutableSet<String> NULLABLE_ANNOTATION_SIMPLE_NAMES =
-      ImmutableSet.of("Nullable", "NullableDecl");
-
-  /** Returns nullability based on the presence of a {@code Nullable} annotation. */
-  static Nullness nullnessFromAnnotations(Symbol symbol) {
-    if (MoreAnnotations.getDeclarationAndTypeAttributes(symbol)
-        .anyMatch(
-            c ->
-                NULLABLE_ANNOTATION_SIMPLE_NAMES.contains(
-                    c.getAnnotationType().asElement().getSimpleName().toString()))) {
-      return Nullness.NULLABLE;
-    }
-    return Nullness.NONNULL;
-  }
-
+  /** Return {@code true} for methods not explicitly annotated Nullable. */
   private enum TrustReturnAnnotation implements Predicate<MethodInfo> {
     INSTANCE;
 
-    /**
-     * Returns {@code true} where {@link #nullnessFromAnnotations} would return {@link
-     * Nullness#NONNULL}.
-     */
     @Override
     public boolean apply(MethodInfo input) {
-      for (String annotation : input.annotations()) {
-        if (annotation.endsWith(".Nullable") || annotation.endsWith(".NullableDecl")) {
-          return false;
-        }
-      }
-      return true;
+      return Nullness.fromAnnotations(input.annotations()).orElse(Nullness.NONNULL)
+          == Nullness.NONNULL;
     }
   }
 }

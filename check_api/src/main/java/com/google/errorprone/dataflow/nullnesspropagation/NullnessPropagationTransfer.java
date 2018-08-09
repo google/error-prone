@@ -16,6 +16,7 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.BOTTOM;
@@ -26,6 +27,7 @@ import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
 import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
+import static org.checkerframework.javacutil.TreeUtils.enclosingOfClass;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
@@ -44,11 +46,16 @@ import com.google.errorprone.dataflow.AccessPath;
 import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.dataflow.AccessPathValues;
 import com.google.errorprone.dataflow.LocalVariableValues;
+import com.google.errorprone.dataflow.nullnesspropagation.inference.InferredNullability;
+import com.google.errorprone.dataflow.nullnesspropagation.inference.NullnessQualifierInference;
 import com.google.errorprone.util.MoreAnnotations;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -79,7 +86,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -232,7 +238,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   private final transient Set<VarSymbol> traversed = new HashSet<>();
 
-  private final Nullness defaultAssumption;
+  protected final Nullness defaultAssumption;
   private final Predicate<MethodInfo> methodReturnsNonNull;
 
   /**
@@ -243,6 +249,55 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   /** Compilation unit to limit evaluating field initializers to. */
   private transient CompilationUnitTree compilationUnit;
+
+  /** Cached local inference results for nullability annotations on type parameters */
+  private transient @Nullable InferredNullability inferenceResults;
+
+  @Override
+  public AccessPathStore<Nullness> initialStore(
+      UnderlyingAST underlyingAST, List<LocalVariableNode> parameters) {
+    if (parameters == null) {
+      // Documentation of this method states, "parameters is only set if the underlying AST is a
+      // method"
+      return AccessPathStore.empty();
+    }
+    AccessPathStore.Builder<Nullness> result = AccessPathStore.<Nullness>empty().toBuilder();
+    for (LocalVariableNode param : parameters) {
+      Nullness declared =
+          Nullness.fromAnnotationsOn((Symbol) param.getElement()).orElse(defaultAssumption);
+      result.setInformation(AccessPath.fromLocalVariable(param), declared);
+    }
+    return result.build();
+  }
+
+  private Nullness getInferredNullness(MethodInvocationNode node) {
+
+    if (inferenceResults == null) {
+      // inferenceResults are per-procedure; if it is null that means this is the first query within
+      // the procedure tree containing this node.  A "procedure" is either a method, a lambda
+      // expression, an initializer block, or a field initializer.
+
+      TreePath pathToNode = node.getTreePath();
+      Tree procedureTree = enclosingOfClass(pathToNode, LambdaExpressionTree.class); // lambda
+      if (procedureTree == null) {
+        procedureTree = enclosingOfClass(pathToNode, MethodTree.class); // method
+      }
+      if (procedureTree == null) {
+        procedureTree = enclosingOfClass(pathToNode, BlockTree.class); // init block
+      }
+      if (procedureTree == null) {
+        procedureTree = enclosingOfClass(pathToNode, VariableTree.class); // field init
+      }
+
+      inferenceResults =
+          NullnessQualifierInference.getInferredNullability(
+              checkNotNull(
+                  procedureTree,
+                  "Call `%s` is not contained in an lambda, initializer or method.",
+                  node));
+    }
+    return inferenceResults.getExprNullness(node.getTree()).orElse(NULLABLE);
+  }
 
   /**
    * Constructs a {@link NullnessPropagationTransfer} instance with the built-in set of non-null
@@ -286,6 +341,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     this.context = context;
     // Clear traversed set just-in-case as this marks the beginning or end of analyzing a method
     this.traversed.clear();
+    // Null out local inference results when leaving a method
+    this.inferenceResults = null;
     return this;
   }
 
@@ -352,12 +409,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   @Override
   Nullness visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
-    List<String> annotations =
+    ImmutableList<String> annotations =
         node.getType()
             .getAnnotationMirrors()
             .stream()
             .map(Object::toString)
-            .collect(Collectors.toList());
+            .collect(ImmutableList.toImmutableList());
     return Nullness.fromAnnotations(annotations)
         .orElseGet(
             () -> hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand()));
@@ -704,7 +761,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         Nullness.fromAnnotations(
             MoreAnnotations.getDeclarationAndTypeAttributes(accessed.symbol)
                 .map(Object::toString)
-                .collect(Collectors.toList()));
+                .collect(ImmutableList.toImmutableList()));
     return declaredNullness.orElseGet(
         () ->
             Nullness.fromAnnotations(inheritedAnnotations(accessed.symbol.type))
@@ -725,7 +782,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
     // If there is no nullness annotation on the callee method declaration, look for applicable
     // annotations inherited from elsewhere.
-    List<String> annotations =
+    ImmutableList<String> annotations =
         ImmutableList.<String>builder()
             .addAll(inheritedAnnotations(node.getTarget().getMethod().getReturnType()))
             .addAll(
@@ -733,11 +790,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
                     .getAnnotationMirrors()
                     .stream()
                     .map(Object::toString)
-                    .collect(Collectors.toList()))
+                    .collect(ImmutableList.toImmutableList()))
             .build();
 
-    return Nullness.fromAnnotations(annotations)
-        .orElse(methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE);
+    return getInferredNullness(node)
+        .greatestLowerBound(
+            Nullness.fromAnnotations(annotations)
+                .orElse(methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE));
   }
 
   /**
@@ -750,7 +809,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    *   <li>bounds on the above, e.g. {@code class MyClass<T extends @Nullable MyOtherClass> {...} }
    * </ul>
    */
-  private static List<String> inheritedAnnotations(TypeMirror type) {
+  private static ImmutableList<String> inheritedAnnotations(TypeMirror type) {
     ImmutableSet.Builder<AnnotationMirror> inheritedAnnotations = ImmutableSet.builder();
 
     // Annotations on type parameters at use-site
@@ -775,7 +834,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         }
       }
     }
-    return inheritedAnnotations.build().stream().map(Object::toString).collect(Collectors.toList());
+    return inheritedAnnotations
+        .build()
+        .stream()
+        .map(Object::toString)
+        .collect(ImmutableList.toImmutableList());
   }
 
   @Nullable

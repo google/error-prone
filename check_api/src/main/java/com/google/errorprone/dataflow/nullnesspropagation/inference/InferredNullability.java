@@ -62,7 +62,8 @@ public class InferredNullability {
 
   /** Get inferred nullness qualifier for an expression, if possible. */
   public Optional<Nullness> getExprNullness(ExpressionTree exprTree) {
-    return getUpperBound(TypeArgInferenceVar.create(ImmutableList.of(), exprTree));
+    InferenceVariable iv = TypeArgInferenceVar.create(ImmutableList.of(), exprTree);
+    return constraintGraph.nodes().contains(iv) ? getUpperBound(iv) : Optional.empty();
   }
 
   private Optional<Nullness> getLowerBound(InferenceVariable iv) {

@@ -16,6 +16,8 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation.inference;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -25,9 +27,12 @@ import com.google.common.collect.Streams;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -45,6 +50,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCArrayAccess;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
@@ -62,33 +68,40 @@ import java.util.List;
  */
 public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
-  private static final LoadingCache<MethodTree, InferredNullability> inferenceCache =
+  private static final LoadingCache<Tree, InferredNullability> inferenceCache =
       CacheBuilder.newBuilder()
           .maximumSize(1)
           .build(
-              new CacheLoader<MethodTree, InferredNullability>() {
+              new CacheLoader<Tree, InferredNullability>() {
                 @Override
-                public InferredNullability load(MethodTree method) {
+                public InferredNullability load(Tree methodOrInitializer) {
                   NullnessQualifierInference inferenceEngine =
-                      new NullnessQualifierInference(method);
-                  inferenceEngine.scan(method, null);
+                      new NullnessQualifierInference(methodOrInitializer);
+                  inferenceEngine.scan(methodOrInitializer, null);
                   return new InferredNullability(inferenceEngine.qualifierConstraints);
                 }
               });
 
-  public static InferredNullability getInferredNullability(MethodTree method) {
+  public static InferredNullability getInferredNullability(Tree methodOrInitializerOrLambda) {
+    checkArgument(
+        methodOrInitializerOrLambda instanceof MethodTree
+            || methodOrInitializerOrLambda instanceof LambdaExpressionTree
+            || methodOrInitializerOrLambda instanceof BlockTree
+            || methodOrInitializerOrLambda instanceof VariableTree,
+        "Tree `%s` is not a lambda, initializer, or method.",
+        methodOrInitializerOrLambda);
     try {
-      return inferenceCache.getUnchecked(method);
+      return inferenceCache.getUnchecked(methodOrInitializerOrLambda);
     } catch (UncheckedExecutionException e) {
       throw e.getCause() instanceof CompletionFailure ? (CompletionFailure) e.getCause() : e;
     }
   }
 
   private final MutableGraph<InferenceVariable> qualifierConstraints;
-  private final MethodTree currentMethod;
+  private final Tree currentMethodOrInitializerOrLambda;
 
-  private NullnessQualifierInference(MethodTree currentMethod) {
-    this.currentMethod = currentMethod;
+  private NullnessQualifierInference(Tree currentMethodOrInitializerOrLambda) {
+    this.currentMethodOrInitializerOrLambda = currentMethodOrInitializerOrLambda;
     this.qualifierConstraints = GraphBuilder.directed().build();
 
     // Initialize graph with standard nullness lattice; see ASCII art diagram in
@@ -127,8 +140,11 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
   @Override
   public Void visitAssignment(AssignmentTree node, Void unused) {
-    generateConstraintsForWrite(
-        TreeInfo.symbol((JCTree) node.getVariable()).type, node.getExpression(), node);
+    Type lhsType =
+        node.getVariable() instanceof ArrayAccessTree
+            ? ((JCArrayAccess) node.getVariable()).getExpression().type
+            : TreeInfo.symbol((JCTree) node.getVariable()).type;
+    generateConstraintsForWrite(lhsType, node.getExpression(), node);
     return super.visitAssignment(node, unused);
   }
 
@@ -143,9 +159,11 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
   @Override
   public Void visitReturn(ReturnTree node, Void unused) {
-    if (node.getExpression() != null) {
-      MethodSymbol methodSymbol = (MethodSymbol) TreeInfo.symbolFor((JCTree) currentMethod);
-      generateConstraintsForWrite(methodSymbol.getReturnType(), node.getExpression(), node);
+    if (node.getExpression() != null && currentMethodOrInitializerOrLambda instanceof MethodTree) {
+      Type returnType =
+          ((MethodSymbol) TreeInfo.symbolFor((JCTree) currentMethodOrInitializerOrLambda))
+              .getReturnType();
+      generateConstraintsForWrite(returnType, node.getExpression(), node);
     }
     return super.visitReturn(node, unused);
   }
