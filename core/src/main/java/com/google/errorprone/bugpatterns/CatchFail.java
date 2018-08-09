@@ -20,11 +20,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_TEST_ANNOTATION;
-import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static java.util.stream.Collectors.joining;
 
@@ -83,9 +80,6 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
               staticMethod().onClass("org.junit.Assert").named("fail"),
               staticMethod().onClass("junit.framework.Assert").named("fail"),
               staticMethod().onClass("junit.framework.TestCase").named("fail")));
-
-  public static final Matcher<MethodTree> TEST_CASE =
-      anyOf(isJunit3TestCase, hasAnnotation(JUNIT4_TEST_ANNOTATION));
 
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {
@@ -202,7 +196,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
             .filter(t -> thrownTypes.stream().noneMatch(x -> types.isAssignable(t, x)))
             .collect(toImmutableList());
     if (!toThrow.isEmpty()) {
-      if (!TEST_CASE.matches(enclosing, state)) {
+      if (!JUnitMatchers.TEST_CASE.matches(enclosing, state)) {
         // Don't add throws declarations to methods that don't look like test cases, since it may
         // not be a safe local refactoring.
         return Optional.empty();
