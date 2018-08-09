@@ -195,6 +195,9 @@ public class JUnitMatchers {
           hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
           not(hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION)));
 
+  /** Matches a JUnit 3 or 4 test case. */
+  public static final Matcher<MethodTree> TEST_CASE =
+      anyOf(isJunit3TestCase, hasAnnotation(JUNIT4_TEST_ANNOTATION));
   /**
    * A list of test runners that this matcher should look for in the @RunWith annotation. Subclasses
    * of the test runners are also matched.

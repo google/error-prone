@@ -146,6 +146,7 @@ import com.google.errorprone.bugpatterns.MissingDefault;
 import com.google.errorprone.bugpatterns.MissingFail;
 import com.google.errorprone.bugpatterns.MissingOverride;
 import com.google.errorprone.bugpatterns.MissingSuperCall;
+import com.google.errorprone.bugpatterns.MissingTestCall;
 import com.google.errorprone.bugpatterns.MisusedWeekYear;
 import com.google.errorprone.bugpatterns.MixedArrayDimensions;
 import com.google.errorprone.bugpatterns.MockitoCast;
@@ -447,6 +448,7 @@ public class BuiltInCheckerSuppliers {
           MathRoundIntLong.class,
           MislabeledAndroidString.class,
           MissingSuperCall.class,
+          MissingTestCall.class,
           MisusedWeekYear.class,
           MockitoCast.class,
           MockitoUsage.class,
