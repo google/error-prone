@@ -47,6 +47,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
@@ -573,7 +574,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           state.reportMatch(
               buildDescription(unused)
                   .setMessage(String.format("%s '%s' is never read.", element, unusedVar.getName()))
-                  .addAllFixes(buildUnusedVarFixes(symbol, usageSites.get(symbol)))
+                  .addAllFixes(buildUnusedVarFixes(symbol, usageSites.get(symbol), state))
                   .build());
           break;
         case METHOD:
@@ -582,7 +583,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           }
           state.reportMatch(
               buildDescription(unused)
-                  .addFix(SuggestedFix.replace(unusedPath.getLeaf(), ""))
+                  .addFix(replaceWithComments(unusedPath, "", state))
                   .setMessage("Remove unused private method.")
                   .build());
           break;
@@ -608,7 +609,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
   }
 
   private static ImmutableList<SuggestedFix> buildUnusedVarFixes(
-      Symbol varSymbol, List<TreePath> usagePaths) {
+      Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
     ElementKind varKind = varSymbol.getKind();
     if (varKind != ElementKind.LOCAL_VARIABLE && varKind != ElementKind.FIELD) {
       return ImmutableList.of();
@@ -629,7 +630,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
                     "%s{ %s; }",
                     varSymbol.isStatic() ? "static " : "", variableTree.getInitializer());
           }
-          SuggestedFix replacement = SuggestedFix.replace(statement, newContent);
+          SuggestedFix replacement = replaceWithComments(usagePath, newContent, state);
           fix.merge(replacement);
           removeSideEffectsFix.merge(replacement);
         } else if (isEnhancedForLoopVar(usagePath)) {
@@ -643,8 +644,8 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           fix.replace(variableTree, newContent);
           removeSideEffectsFix.replace(variableTree, newContent);
         } else {
-          fix.replace(statement, "");
-          removeSideEffectsFix.replace(statement, "");
+          fix.merge(replaceWithComments(usagePath, "", state));
+          removeSideEffectsFix.merge(replaceWithComments(usagePath, "", state));
         }
         continue;
       } else if (statement.getKind() == Kind.EXPRESSION_STATEMENT) {
@@ -680,6 +681,45 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
     return encounteredSideEffects
         ? ImmutableList.of(fix.build(), removeSideEffectsFix.build())
         : ImmutableList.of(fix.build());
+  }
+
+  /**
+   * Replaces the tree at {@code path} along with any Javadocs/associated single-line comments.
+   *
+   * <p>This is the same as just deleting the tree for non-class members. For class members, we
+   * delete from the end of the previous member (or the start of the class, if it's the first).
+   */
+  private static SuggestedFix replaceWithComments(
+      TreePath path, String replacement, VisitorState state) {
+    Tree tree = path.getLeaf();
+    Tree parent = path.getParentPath().getLeaf();
+    if (parent instanceof ClassTree) {
+      Tree previousMember = null;
+      ClassTree classTree = (ClassTree) parent;
+      for (Tree member : classTree.getMembers()) {
+        if (member instanceof MethodTree
+            && ASTHelpers.isGeneratedConstructor((MethodTree) member)) {
+          continue;
+        }
+        if (member.equals(tree)) {
+          break;
+        }
+        previousMember = member;
+      }
+      if (previousMember != null) {
+        return SuggestedFix.replace(
+            state.getEndPosition(previousMember), state.getEndPosition(tree), replacement);
+      }
+      int startOfClass = ((JCTree) classTree).getStartPosition();
+      String source =
+          state
+              .getSourceCode()
+              .subSequence(startOfClass, ((JCTree) tree).getStartPosition())
+              .toString();
+      return SuggestedFix.replace(
+          startOfClass + source.indexOf("{") + 1, state.getEndPosition(tree), replacement);
+    }
+    return SuggestedFix.replace(tree, replacement);
   }
 
   private static boolean isEnhancedForLoopVar(TreePath variablePath) {
