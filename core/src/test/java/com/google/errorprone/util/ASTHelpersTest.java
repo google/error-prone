@@ -318,6 +318,42 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
+  @Test
+  public void testInheritedMethodAnnotation() {
+    writeFile(
+        "com/google/errorprone/util/InheritedAnnotation.java",
+        "package com.google.errorprone.util;",
+        "import java.lang.annotation.Inherited;",
+        "@Inherited",
+        "public @interface InheritedAnnotation {}");
+    writeFile(
+        "B.java",
+        "import com.google.errorprone.util.InheritedAnnotation;",
+        "public class B {",
+        "  @InheritedAnnotation",
+        "  void f() {}",
+        "}");
+    writeFile("C.java", "public class C extends B {}");
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitMethod(MethodTree tree, VisitorState state) {
+            if (tree.getName().contentEquals("f")) {
+              assertMatch(
+                  tree,
+                  state,
+                  (MethodTree t, VisitorState s) ->
+                      ASTHelpers.hasAnnotation(t, InheritedAnnotation.class, s));
+              setAssertionsComplete();
+            }
+            return super.visitMethod(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
   // verify that hasAnnotation(Symbol, String, VisitorState) uses binary names for inner classes
   @Test
   public void testInnerAnnotationType() {

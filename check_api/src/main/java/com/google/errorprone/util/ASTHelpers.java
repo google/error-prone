@@ -646,14 +646,16 @@ public class ASTHelpers {
     // normalize to non-binary names
     annotationClass = annotationClass.replace('$', '.');
     Name annotationName = state.getName(annotationClass);
-    if (!isInherited(state, annotationClass)) {
-      return hasAttribute(sym, annotationName);
+    if (hasAttribute(sym, annotationName)) {
+      return true;
     }
-    while (sym instanceof ClassSymbol) {
-      if (hasAttribute(sym, annotationName)) {
-        return true;
+    if (isInherited(state, annotationClass)) {
+      while (sym instanceof ClassSymbol) {
+        if (hasAttribute(sym, annotationName)) {
+          return true;
+        }
+        sym = ((ClassSymbol) sym).getSuperclass().tsym;
       }
-      sym = ((ClassSymbol) sym).getSuperclass().tsym;
     }
     return false;
   }
