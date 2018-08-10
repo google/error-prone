@@ -20,26 +20,26 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Type;
 
 /**
- * Warns that users should not have an array as a key to a Set or Map
+ * Check for usage of {@code Set<Proto>} or {@code Map<Proto, E>}.
  *
- * @author siyuanl@google.com (Siyuan Liu)
- * @author eleanorh@google.com (Eleanor Harris)
+ * @author seibelsabrina@google.com (Sabrina Seibel)
  */
 @BugPattern(
-    name = "ArrayAsKeyOfSetOrMap",
+    name = "ProtosAsKeyOfSetOrMap",
     summary =
-        "Arrays do not override equals() or hashCode, so comparisons will be done on"
-            + " reference equality only. If neither deduplication nor lookup are needed, "
-            + "consider using a List instead. Otherwise, use IdentityHashMap/Set, "
-            + "a Map from a library that handles object arrays, or an Iterable/List of pairs.",
+        "Protos should not be used as a key to a map, in a set, or in a contains method on a "
+            + "descendant of a collection. Protos have non deterministic ordering and proto "
+            + "equality is deep, which is a performance issue.",
     severity = WARNING)
-public class ArrayAsKeyOfSetOrMap extends AbstractAsKeyOfSetOrMap {
+public class ProtosAsKeyOfSetOrMap extends AbstractAsKeyOfSetOrMap {
 
   @Override
   protected boolean isBadType(Type type, VisitorState state) {
-    return type instanceof Type.ArrayType;
+    return ASTHelpers.isSubtype(
+        type, state.getTypeFromString("com.google.protobuf.GeneratedMessage"), state);
   }
 }
