@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -131,9 +132,16 @@ public class ProtoFieldPreconditionsCheckNotNull extends BugChecker
     return protoMessageReceiverMatcher.matches(((MethodInvocationTree) tree), state);
   }
 
+  private final boolean enabled;
+
+  public ProtoFieldPreconditionsCheckNotNull(ErrorProneFlags flags) {
+    // Disable this check when ProtoFieldNullComparison handles its cases.
+    enabled = !flags.getBoolean("ProtoFieldNullComparison:MatchCheckNotNull").orElse(false);
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!CHECK_NOT_NULL_MATCHER.matches(tree, state) || tree.getArguments().isEmpty()) {
+    if (!enabled || !CHECK_NOT_NULL_MATCHER.matches(tree, state) || tree.getArguments().isEmpty()) {
       return Description.NO_MATCH;
     }
 
