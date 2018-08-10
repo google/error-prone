@@ -201,6 +201,7 @@ import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoRedundantSet;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
+import com.google.errorprone.bugpatterns.ProtosAsKeyOfSetOrMap;
 import com.google.errorprone.bugpatterns.ProvidesFixChecker;
 import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
@@ -587,6 +588,7 @@ public class BuiltInCheckerSuppliers {
           PreconditionsInvalidPlaceholder.class,
           ProtoFieldPreconditionsCheckNotNull.class,
           ProtoRedundantSet.class,
+          ProtosAsKeyOfSetOrMap.class,
           QualifierOrScopeOnInjectMethod.class,
           ReachabilityFenceUsage.class,
           ReferenceEquality.class,
