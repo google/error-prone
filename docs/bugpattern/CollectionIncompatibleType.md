@@ -88,12 +88,12 @@ code. And we're not going to settle for "it occasionally saves users a cast."
 implementation.*
 
 (`equals` is actually just one example of the general problem, which arises with
-many uses of wildcards wildcards. Once you've read the following, consider the
-problem of implementing `Collection.removeAll(Collection<?>)` without
-`contains(Object)`. Then consider how the problem would exist even if the
-signature were `removeAll(Collection<? extends E>)`. The `removeAll` problem is
-at least "solvable" by changing the signature to `removeAll(Collection<E>)`, but
-that signature may reject useful calls.)
+many uses of wildcards. Once you've read the following, consider the problem of
+implementing `Collection.removeAll(Collection<?>)` without `contains(Object)`.
+Then consider how the problem would exist even if the signature were
+`removeAll(Collection<? extends E>)`. The `removeAll` problem is at least
+"solvable" by changing the signature to `removeAll(Collection<E>)`, but that
+signature may reject useful calls.)
 
 Here's how: `equals` necessarily accepts a plain `Object`. It can test whether
 that `Object` is a `Set`, but it can't know the element type it was originally
