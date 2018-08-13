@@ -102,12 +102,42 @@ public class EqualsBrokenForNullNegativeCases {
 
   // https://stackoverflow.com/questions/2950319/is-null-check-needed-before-calling-instanceof
   private class UsesInstanceOfWithoutNullCheck {
+    private int a;
+
     @Override
     public boolean equals(Object other) {
       if (other instanceof UsesInstanceOfWithoutNullCheck) {
-        return true;
+        UsesInstanceOfWithoutNullCheck that = (UsesInstanceOfWithoutNullCheck) other;
+        return that.a == a;
       }
       return false;
+    }
+  }
+
+  private class IntermediateBooleanVariable {
+    private int a;
+
+    @Override
+    public boolean equals(Object other) {
+      boolean isEqual = other instanceof IntermediateBooleanVariable;
+      if (isEqual) {
+        IntermediateBooleanVariable that = (IntermediateBooleanVariable) other;
+        return that.a == a;
+      }
+      return isEqual;
+    }
+  }
+
+  private class UnsafeCastWithNullCheck {
+    private int a;
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == null) {
+        return false;
+      }
+      UnsafeCastWithNullCheck that = (UnsafeCastWithNullCheck) o;
+      return that.a == a;
     }
   }
 }
