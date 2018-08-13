@@ -20,20 +20,11 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.isStatic;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
+import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
-import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -73,25 +64,15 @@ import javax.lang.model.element.ElementKind;
     severity = ERROR)
 public final class EqualsWrongThing extends BugChecker implements MethodTreeMatcher {
 
-  private static final Matcher<MethodTree> EQUALS_IMPLEMENTATION =
-      allOf(
-          methodIsNamed("equals"),
-          methodReturns(BOOLEAN_TYPE),
-          methodHasParameters(variableType(isSameType(OBJECT_TYPE))),
-          not(isStatic()));
-
   private static final Matcher<MethodInvocationTree> COMPARISON_METHOD =
       anyOf(staticMethod().onClass("java.util.Arrays").named("equals"), staticEqualsInvocation());
-
-  private static final Matcher<ExpressionTree> EQUALS =
-      instanceMethod().anyClass().named("equals").withParameters("java.lang.Object");
 
   private static final EnumSet<ElementKind> FIELD_TYPES =
       EnumSet.of(ElementKind.FIELD, ElementKind.METHOD);
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (!EQUALS_IMPLEMENTATION.matches(tree, state)) {
+    if (!equalsMethodDeclaration().matches(tree, state)) {
       return NO_MATCH;
     }
 
@@ -116,7 +97,7 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
                   classSymbol, node, node.getArguments().get(0), node.getArguments().get(1))
               .ifPresent(suspiciousComparisons::add);
         }
-        if (EQUALS.matches(node, state)) {
+        if (instanceEqualsInvocation().matches(node, state)) {
           ExpressionTree receiver = getReceiver(node);
           if (receiver != null) {
             // Special-case super, for odd cases like `super.equals(this)`.

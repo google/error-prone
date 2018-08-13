@@ -91,6 +91,7 @@ import javax.lang.model.type.TypeMirror;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class Matchers {
+
   private Matchers() {}
 
   /** A matcher that matches any AST node. */
@@ -1497,86 +1498,107 @@ public class Matchers {
     return compilationUnit.packge.fullname.toString();
   }
 
+  private static final Matcher<MethodInvocationTree> STATIC_EQUALS =
+      anyOf(
+          allOf(
+              staticMethod()
+                  .onClass("android.support.v4.util.ObjectsCompat")
+                  .named("equals")
+                  .withParameters("java.lang.Object", "java.lang.Object"),
+              isSameType(BOOLEAN_TYPE)),
+          allOf(
+              staticMethod()
+                  .onClass("java.util.Objects")
+                  .named("equals")
+                  .withParameters("java.lang.Object", "java.lang.Object"),
+              isSameType(BOOLEAN_TYPE)),
+          allOf(
+              staticMethod()
+                  .onClass("com.google.common.base.Objects")
+                  .named("equal")
+                  .withParameters("java.lang.Object", "java.lang.Object"),
+              isSameType(BOOLEAN_TYPE)));
+
   /**
    * Matches an invocation of a recognized static object equality method such as {@link
    * java.util.Objects#equals}. These are simple facades to {@link Object#equals} that accept null
    * for either argument.
    */
   public static Matcher<MethodInvocationTree> staticEqualsInvocation() {
-    return anyOf(
-        allOf(
-            staticMethod()
-                .onClass("android.support.v4.util.ObjectsCompat")
-                .named("equals")
-                .withParameters("java.lang.Object", "java.lang.Object"),
-            isSameType(BOOLEAN_TYPE)),
-        allOf(
-            staticMethod()
-                .onClass("java.util.Objects")
-                .named("equals")
-                .withParameters("java.lang.Object", "java.lang.Object"),
-            isSameType(BOOLEAN_TYPE)),
-        allOf(
-            staticMethod()
-                .onClass("com.google.common.base.Objects")
-                .named("equal")
-                .withParameters("java.lang.Object", "java.lang.Object"),
-            isSameType(BOOLEAN_TYPE)));
+    return STATIC_EQUALS;
   }
 
+  private static final Matcher<ExpressionTree> INSTANCE_EQUALS =
+      allOf(
+          instanceMethod().anyClass().named("equals").withParameters("java.lang.Object"),
+          isSameType(BOOLEAN_TYPE));
+
   /** Matches calls to the method {link Object#equals(Object)} or any override of that method. */
-  public static Matcher<MethodInvocationTree> instanceEqualsInvocation() {
-    return allOf(
-        instanceMethod().anyClass().named("equals").withParameters("java.lang.Object"),
-        isSameType(BOOLEAN_TYPE));
+  public static Matcher<ExpressionTree> instanceEqualsInvocation() {
+    return INSTANCE_EQUALS;
   }
+
+  private static final Matcher<ExpressionTree> ASSERT_EQUALS =
+      anyOf(
+          staticMethod().onClass("org.junit.Assert").named("assertEquals"),
+          staticMethod().onClass("junit.framework.Assert").named("assertEquals"),
+          staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
 
   /**
    * Matches calls to the method {link org.junit.Assert#assertEquals} and corresponding methods in
    * JUnit 3.x.
    */
   public static Matcher<ExpressionTree> assertEqualsInvocation() {
-    return anyOf(
-        staticMethod().onClass("org.junit.Assert").named("assertEquals"),
-        staticMethod().onClass("junit.framework.Assert").named("assertEquals"),
-        staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
+    return ASSERT_EQUALS;
   }
+
+  private static final Matcher<ExpressionTree> ASSERT_NOT_EQUALS =
+      anyOf(
+          staticMethod().onClass("org.junit.Assert").named("assertNotEquals"),
+          staticMethod().onClass("junit.framework.Assert").named("assertNotEquals"),
+          staticMethod().onClass("junit.framework.TestCase").named("assertNotEquals"));
 
   /**
    * Matches calls to the method {link org.junit.Assert#assertNotEquals} and corresponding methods
    * in JUnit 3.x.
    */
   public static Matcher<ExpressionTree> assertNotEqualsInvocation() {
-    return anyOf(
-        staticMethod().onClass("org.junit.Assert").named("assertNotEquals"),
-        staticMethod().onClass("junit.framework.Assert").named("assertNotEquals"),
-        staticMethod().onClass("junit.framework.TestCase").named("assertNotEquals"));
+    return ASSERT_NOT_EQUALS;
   }
+
+  private static final Matcher<MethodTree> EQUALS_DECLARATION =
+      allOf(
+          methodIsNamed("equals"),
+          methodHasVisibility(Visibility.PUBLIC),
+          methodHasParameters(variableType(isSameType("java.lang.Object"))),
+          anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
 
   /** Matches {@link Object#equals} method declaration. */
   public static Matcher<MethodTree> equalsMethodDeclaration() {
-    return allOf(
-        methodIsNamed("equals"),
-        methodHasVisibility(Visibility.PUBLIC),
-        methodHasParameters(variableType(isSameType("java.lang.Object"))),
-        anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
+    return EQUALS_DECLARATION;
   }
+
+  private static final Matcher<MethodTree> TO_STRING_DECLARATION =
+      allOf(
+          methodIsNamed("toString"),
+          methodHasVisibility(Visibility.PUBLIC),
+          methodHasParameters(),
+          methodReturns(STRING_TYPE));
 
   /** Matches {@link Object#toString} method declaration. */
   public static Matcher<MethodTree> toStringMethodDeclaration() {
-    return allOf(
-        methodIsNamed("toString"),
-        methodHasVisibility(Visibility.PUBLIC),
-        methodHasParameters(),
-        methodReturns(STRING_TYPE));
+    return TO_STRING_DECLARATION;
   }
 
-  /** Matches {@link hashCode} method declaration. */
+  private static final Matcher<MethodTree> HASH_CODE_DECLARATION =
+      allOf(
+          methodIsNamed("hashCode"),
+          methodHasVisibility(Visibility.PUBLIC),
+          methodHasParameters(),
+          methodReturns(INT_TYPE));
+
+  /** Matches {@code hashCode} method declaration. */
   public static Matcher<MethodTree> hashCodeMethodDeclaration() {
-    return allOf(
-        methodIsNamed("hashCode"),
-        methodHasVisibility(Visibility.PUBLIC),
-        methodHasParameters(),
-        methodReturns(INT_TYPE));
+    return HASH_CODE_DECLARATION;
   }
 }

@@ -20,16 +20,8 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.isStatic;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
-import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -79,13 +71,6 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
   private static final Matcher<ExpressionTree> GET_CLASS =
       instanceMethod().onDescendantOf("java.lang.Object").named("getClass");
 
-  private static final Matcher<MethodTree> IS_EQUALS =
-      allOf(
-          methodIsNamed("equals"),
-          methodReturns(BOOLEAN_TYPE),
-          methodHasParameters(variableType(isSameType(OBJECT_TYPE))),
-          not(isStatic()));
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!GET_CLASS.matches(tree, state)) {
@@ -102,7 +87,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
       return Description.NO_MATCH;
     }
     MethodTree methodTree = (MethodTree) methodTreePath.getLeaf();
-    if (!IS_EQUALS.matches(methodTree, state)) {
+    if (!equalsMethodDeclaration().matches(methodTree, state)) {
       return Description.NO_MATCH;
     }
     VariableTree parameter = getOnlyElement(methodTree.getParameters());
