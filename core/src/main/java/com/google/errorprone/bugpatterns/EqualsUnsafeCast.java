@@ -20,16 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.isStatic;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
-import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
+import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -40,7 +31,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -70,16 +60,9 @@ public final class EqualsUnsafeCast extends BugChecker implements MethodTreeMatc
 
   private static final String INSTANCEOF_CHECK = "if (!(%s instanceof %s)) { return false; }";
 
-  private static final Matcher<MethodTree> EQUALS_IMPLEMENTATION =
-      allOf(
-          methodIsNamed("equals"),
-          methodReturns(BOOLEAN_TYPE),
-          methodHasParameters(variableType(isSameType(OBJECT_TYPE))),
-          not(isStatic()));
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (!EQUALS_IMPLEMENTATION.matches(tree, state)) {
+    if (!equalsMethodDeclaration().matches(tree, state)) {
       return NO_MATCH;
     }
 
