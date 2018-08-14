@@ -23,6 +23,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ClassTree;
 
@@ -38,7 +39,8 @@ public class ClassNamedLikeTypeParameter extends BugChecker implements ClassTree
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    return TypeParameterNaming.matchesTypeParameterNamingScheme(tree.getSimpleName())
+    // Here, if a class is named like a Type Parameter, it's a bad thing.
+    return TypeParameterNamingClassification.classify(tree.getSimpleName().toString()).isValidName()
         ? describeMatch(tree)
         : Description.NO_MATCH;
   }
