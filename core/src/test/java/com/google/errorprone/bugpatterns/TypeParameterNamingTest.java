@@ -16,11 +16,16 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification.CLASS_NAME_WITH_T;
+import static com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification.LETTER_WITH_MAYBE_NUMERAL;
+import static com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification.NON_CLASS_NAME_WITH_T_SUFFIX;
+import static com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification.UNCLASSIFIED;
 
-import com.google.common.truth.BooleanSubject;
+import com.google.common.truth.Subject;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -240,6 +245,29 @@ public class TypeParameterNamingTest {
   }
 
   @Test
+  public void refactoring_TSuffixes() throws Exception {
+    refactoring
+        .addInputLines(
+            "in/Test.java",
+            "class Test<RESP> {",
+            "  public <FOOT, BART> void method(FOOT f) {",
+            "    BART bad = null;",
+            "    FOOT d = f;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test<RespT> {",
+            "  public <F, B> void method(F f) {",
+            "    B bad = null;",
+            "    F d = f;",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
   public void negativeCases() throws Exception {
     compilationHelper
         .addSourceLines(
@@ -254,31 +282,37 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void validate_className_positive() {
-    assertNameIsClassNameWithT("T").isTrue();
-    assertNameIsClassNameWithT("FooT").isTrue();
-    assertNameIsClassNameWithT("FooBarT").isTrue();
-    assertNameIsClassNameWithT("FoobarT").isTrue();
+  public void classifyTypeName_singleLetter() {
+    assertKindOfName("T").isEqualTo(LETTER_WITH_MAYBE_NUMERAL);
+    assertKindOfName("D").isEqualTo(LETTER_WITH_MAYBE_NUMERAL);
+    assertKindOfName("T9").isEqualTo(LETTER_WITH_MAYBE_NUMERAL);
+    assertKindOfName("X").isEqualTo(LETTER_WITH_MAYBE_NUMERAL);
   }
 
   @Test
-  public void validate_className_negative() {
-    assertNameIsClassNameWithT("D").isFalse();
-    assertNameIsClassNameWithT("FooD").isFalse();
-    assertNameIsClassNameWithT("somethingT").isFalse();
-    assertNameIsClassNameWithT("Some_TokenT").isFalse();
-
-    // Here, we don't tokenize LOUDT as L_O_U_D_T, but as one token
-    assertNameIsClassNameWithT("LOUDT").isFalse();
-    // Per google style guide, acronymns should be lowercase
-    assertNameIsClassNameWithT("HTTPHeaderT").isFalse();
-
-    // This is unfortunate, the first 'word' is a single character. Seems unlikely to be a
-    // problem though.
-    assertNameIsClassNameWithT("ACanalPanamaT").isFalse();
+  public void classifyTypeName_classT() {
+    assertKindOfName("FooT").isEqualTo(CLASS_NAME_WITH_T);
+    assertKindOfName("FooBarT").isEqualTo(CLASS_NAME_WITH_T);
+    assertKindOfName("FoobarT").isEqualTo(CLASS_NAME_WITH_T);
   }
 
-  private static BooleanSubject assertNameIsClassNameWithT(String s) {
-    return assertThat(TypeParameterNaming.matchesClassWithT(s)).named(s);
+  @Test
+  public void classifyTypeName_invalidTypeParameters() {
+    assertKindOfName("FooD").isEqualTo(UNCLASSIFIED);
+    assertKindOfName("somethingT").isEqualTo(NON_CLASS_NAME_WITH_T_SUFFIX);
+    assertKindOfName("Some_TokenT").isEqualTo(NON_CLASS_NAME_WITH_T_SUFFIX);
+
+    // Here, we don't tokenize LOUDT as L_O_U_D_T, but as one token
+    assertKindOfName("LOUDT").isEqualTo(NON_CLASS_NAME_WITH_T_SUFFIX);
+    // Per Google style guide, acronyms should be lowercase
+    assertKindOfName("HTTPHeaderT").isEqualTo(NON_CLASS_NAME_WITH_T_SUFFIX);
+
+    // This is unfortunate, the first 'word' is a single character, but falls into the same bin
+    // as above.
+    assertKindOfName("ACanalPanamaT").isEqualTo(NON_CLASS_NAME_WITH_T_SUFFIX);
+  }
+
+  private static Subject<?, TypeParameterNamingClassification> assertKindOfName(String s) {
+    return assertThat(TypeParameterNamingClassification.classify(s)).named(s);
   }
 }
