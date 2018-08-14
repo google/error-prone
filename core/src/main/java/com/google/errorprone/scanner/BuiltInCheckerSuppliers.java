@@ -37,6 +37,7 @@ import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadImport;
+import com.google.errorprone.bugpatterns.BadInstanceof;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
 import com.google.errorprone.bugpatterns.BooleanParameter;
@@ -513,6 +514,7 @@ public class BuiltInCheckerSuppliers {
           BadAnnotationImplementation.class,
           BadComparable.class,
           BadImport.class,
+          BadInstanceof.class,
           BigDecimalLiteralDouble.class,
           BoxedPrimitiveConstructor.class,
           ByteBufferBackingArray.class,
