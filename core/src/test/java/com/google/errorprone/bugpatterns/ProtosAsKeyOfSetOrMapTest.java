@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -32,6 +33,7 @@ public final class ProtosAsKeyOfSetOrMapTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ProtosAsKeyOfSetOrMap.class, getClass());
 
+  @Ignore("b/74365407 test proto sources are broken")
   @Test
   public void positive() {
     compilationHelper
