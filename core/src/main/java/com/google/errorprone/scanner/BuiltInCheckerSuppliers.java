@@ -326,6 +326,7 @@ import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMe
 import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
+import com.google.errorprone.bugpatterns.nullness.NullableDereference;
 import com.google.errorprone.bugpatterns.nullness.ParameterNotNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
@@ -677,6 +678,7 @@ public class BuiltInCheckerSuppliers {
           NoAllocationChecker.class,
           NoFunctionalReturnType.class,
           NonCanonicalStaticMemberImport.class,
+          NullableDereference.class,
           NumericEquality.class,
           PackageLocation.class,
           ParameterComment.class,
