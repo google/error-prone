@@ -1,6 +1,6 @@
 ---
 title: EqualsBrokenForNull
-summary: equals() implementation throws NullPointerException when given null
+summary: equals() implementation may throw NullPointerException when given null
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -194,6 +194,32 @@ public class EqualsBrokenForNullPositiveCases {
       return true;
     }
   }
+
+  private class UnsafeCastAndNoNullCheck {
+    private int a;
+
+    @Override
+    // BUG: Diagnostic contains: if (o == null) { return false; }
+    public boolean equals(Object o) {
+      UnsafeCastAndNoNullCheck that = (UnsafeCastAndNoNullCheck) o;
+      return that.a == a;
+    }
+  }
+
+  // Catch a buggy instanceof check that lets nulls through.
+  private class VerySillyInstanceofCheck {
+    private int a;
+
+    @Override
+    // BUG: Diagnostic contains: if (o == null) { return false; }
+    public boolean equals(Object o) {
+      if (o != null && !(o instanceof VerySillyInstanceofCheck)) {
+        return false;
+      }
+      VerySillyInstanceofCheck that = (VerySillyInstanceofCheck) o;
+      return that.a == a;
+    }
+  }
 }
 {% endhighlight %}
 
@@ -305,12 +331,42 @@ public class EqualsBrokenForNullNegativeCases {
 
   // https://stackoverflow.com/questions/2950319/is-null-check-needed-before-calling-instanceof
   private class UsesInstanceOfWithoutNullCheck {
+    private int a;
+
     @Override
     public boolean equals(Object other) {
       if (other instanceof UsesInstanceOfWithoutNullCheck) {
-        return true;
+        UsesInstanceOfWithoutNullCheck that = (UsesInstanceOfWithoutNullCheck) other;
+        return that.a == a;
       }
       return false;
+    }
+  }
+
+  private class IntermediateBooleanVariable {
+    private int a;
+
+    @Override
+    public boolean equals(Object other) {
+      boolean isEqual = other instanceof IntermediateBooleanVariable;
+      if (isEqual) {
+        IntermediateBooleanVariable that = (IntermediateBooleanVariable) other;
+        return that.a == a;
+      }
+      return isEqual;
+    }
+  }
+
+  private class UnsafeCastWithNullCheck {
+    private int a;
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == null) {
+        return false;
+      }
+      UnsafeCastWithNullCheck that = (UnsafeCastWithNullCheck) o;
+      return that.a == a;
     }
   }
 }

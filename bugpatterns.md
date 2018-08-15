@@ -388,6 +388,9 @@ Possible sign flip from narrowing conversion
 __[BadImport](bugpattern/BadImport)__<br>
 Importing nested classes/static methods/static fields with commonly-used names can make code harder to read, because it may not be clear from the context exactly which type is being referred to. Qualifying the name with that of the containing class can make the code clearer.
 
+__[BadInstanceof](bugpattern/BadInstanceof)__<br>
+instanceof used in a way that is equivalent to a null check.
+
 __[BigDecimalLiteralDouble](bugpattern/BigDecimalLiteralDouble)__<br>
 new BigDecimal(double) loses precision in this case.
 
@@ -816,7 +819,7 @@ __[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
 Empty top-level type declaration
 
 __[EqualsBrokenForNull](bugpattern/EqualsBrokenForNull)__<br>
-equals() implementation throws NullPointerException when given null
+equals() implementation may throw NullPointerException when given null
 
 __[ExpectedExceptionChecker](bugpattern/ExpectedExceptionChecker)__<br>
 Calls to ExpectedException#expect should always be followed by exactly one statement.
@@ -847,6 +850,9 @@ Static import of member uses non-canonical name
 
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
+
+__[ProtosAsKeyOfSetOrMap](bugpattern/ProtosAsKeyOfSetOrMap)__<br>
+Protos should not be used as a key to a map, in a set, or in a contains method on a descendant of a collection. Protos have non deterministic ordering and proto equality is deep, which is a performance issue.
 
 __[ProvidesFix](bugpattern/ProvidesFix)__<br>
 BugChecker has incorrect ProvidesFix tag, please update

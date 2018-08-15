@@ -121,8 +121,8 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">EqualsBrokenForNull</span>
 extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
-<div class="block"><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> adds a null check to equals() method implementations which don't satisfy the
- null contract of equals() method i.e. Object.equals(null) should return false.</div>
+<div class="block"><a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> adds a null check to <code>equals()</code> method implementations which don't
+ satisfy the null contract of <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang"><code>Object.equals(java.lang.Object)</code></a> i.e. <code>equals(null)</code> should return false.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>bhagwani@google.com (Sumit Bhagwani)</dd>

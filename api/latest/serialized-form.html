@@ -218,6 +218,11 @@
 <li class="blockList">
 <h2 title="Package">Package&nbsp;com.google.errorprone.bugpatterns</h2>
 <ul class="blockList">
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.AbstractAsKeyOfSetOrMap">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractAsKeyOfSetOrMap</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.AbstractExpectedExceptionChecker">
 <!--   -->
 </a>
@@ -281,7 +286,7 @@
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap">
 <!--   -->
 </a>
-<h3>Class <a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<h3>Class <a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap</a> extends <a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">AbstractAsKeyOfSetOrMap</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.ArrayEquals">
 <!--   -->
@@ -352,6 +357,11 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/BadImport.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BadImport</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.BadInstanceof">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/BadInstanceof.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BadInstanceof</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.BadShiftAmount">
 <!--   -->
@@ -1222,9 +1232,21 @@
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
-<li class="blockListLast">
+<li class="blockList">
+<h4>protoReceiver</h4>
+<pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; protoReceiver</pre>
+</li>
+<li class="blockList">
 <h4>trackAssignments</h4>
 <pre>boolean trackAssignments</pre>
+</li>
+<li class="blockList">
+<h4>matchCheckNotNull</h4>
+<pre>boolean matchCheckNotNull</pre>
+</li>
+<li class="blockListLast">
+<h4>matchTestAssertions</h4>
+<pre>boolean matchTestAssertions</pre>
 </li>
 </ul>
 </li>
@@ -1234,11 +1256,27 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/ProtoFieldPreconditionsCheckNotNull.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>enabled</h4>
+<pre>boolean enabled</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.ProtoRedundantSet">
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/ProtoRedundantSet.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ProtoRedundantSet</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.ProtosAsKeyOfSetOrMap">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/ProtosAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ProtosAsKeyOfSetOrMap</a> extends <a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">AbstractAsKeyOfSetOrMap</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality">
 <!--   -->
