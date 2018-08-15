@@ -17,27 +17,20 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * {@link ArrayAsKeyOfSetOrMap}Test
+ * {@link ProtosAsKeyOfSetOrMap}Test
  *
- * @author siyuanl@google.com (Siyuan Liu)
- * @author eleanorh@google.com (Eleanor Harris) /
- *     <p>/** {@link ArrayAsKeyOfSetOrMap}Test
+ * @author seibelsabrina@google.com (Sabrina Seibel)
  */
 @RunWith(JUnit4.class)
-public final class ArrayAsKeyOfSetOrMapTest {
+public final class ProtosAsKeyOfSetOrMapTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ArrayAsKeyOfSetOrMap.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ProtosAsKeyOfSetOrMap.class, getClass());
 
   @Test
   public void positive() {
@@ -48,6 +41,9 @@ public final class ArrayAsKeyOfSetOrMapTest {
             "import java.util.Set;",
             "import java.util.Map;",
             "import java.util.LinkedHashMap;",
+            "import java.util.HashMap;",
+            "import java.util.HashSet;",
+            "import java.util.Collection;",
             "import com.google.common.collect.Sets;",
             "import com.google.common.collect.Maps;",
             "import com.google.common.collect.HashMultiset;",
@@ -57,47 +53,52 @@ public final class ArrayAsKeyOfSetOrMapTest {
             "import com.google.common.collect.LinkedHashMultimap;",
             "import com.google.common.collect.ArrayListMultimap;",
             "import com.google.common.collect.LinkedListMultimap;",
-            "import java.util.HashMap;",
-            "import java.util.HashSet;",
-            "class Test{",
-            "  public static void main(String[] args) {",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    Map<String[], Integer> testNewMap = Maps.newHashMap();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    Set<String[]> testNewSet = Sets.newHashSet();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    HashMap<String[], Integer> testNewHashMap = Maps.newHashMap();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    HashSet<String[]> testNewHashSet = Sets.newHashSet();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    Map<String[], Integer> testMap = new HashMap<String[], Integer>();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    Set<String[]> testSet = new HashSet<String[]>();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    HashMap<String[], Integer> testHashMap = new HashMap<String[], Integer>();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    HashSet<String[]> testHashSet = new HashSet<String[]>();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    HashMultimap<String[], Integer> testHashMultimap = HashMultimap.create();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    ArrayListMultimap<String[], Integer> testArrayListMultimap"
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "import com.google.protobuf.InvalidProtocolBufferException;",
+            "import com.google.protobuf.ByteString;",
+            "class Test {",
+            "  void f(Collection<TestProtoMessage> x, TestProtoMessage m)"
+                + " throws InvalidProtocolBufferException {",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    Map<TestProtoMessage, Integer> testNewMap = Maps.newHashMap();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    Set<TestProtoMessage> testNewSet = Sets.newHashSet();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    HashMap<TestProtoMessage, Integer> testNewHashMap = Maps.newHashMap();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    HashSet<TestProtoMessage> testNewHashSet = Sets.newHashSet();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    Map<TestProtoMessage, Integer> testMap = new HashMap<TestProtoMessage,"
+                + "Integer>();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    Set<TestProtoMessage> testSet = new HashSet<TestProtoMessage>();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    HashMap<TestProtoMessage, Integer> testHashMap = new HashMap<TestProtoMessage,"
+                + "Integer>();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    HashSet<TestProtoMessage> testHashSet = new HashSet<TestProtoMessage>();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    HashMultimap<TestProtoMessage, Integer> testHashMultimap ="
+                + "HashMultimap.create();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    ArrayListMultimap<TestProtoMessage, Integer> testArrayListMultimap"
                 + " = ArrayListMultimap.create();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    LinkedHashMultimap<String[], Integer> testLinkedHashMultimap"
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    LinkedHashMultimap<TestProtoMessage, Integer> testLinkedHashMultimap"
                 + "= LinkedHashMultimap.create();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    LinkedListMultimap<String[], Integer> testLinkedListMultimap"
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    LinkedListMultimap<TestProtoMessage, Integer> testLinkedListMultimap"
                 + "= LinkedListMultimap.create();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    HashBiMap<String[], Integer> testHashBiMap = HashBiMap.create();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    LinkedHashMap<String[], Integer> testLinkedHashMap"
-                + "= new LinkedHashMap<String[], Integer>();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    HashMultiset<String[]> testHashMultiSet = HashMultiset.create();",
-            "    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap",
-            "    LinkedHashMultiset<String[]> testLinkedHashMultiSet"
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    HashBiMap<TestProtoMessage, Integer> testHashBiMap = HashBiMap.create();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    LinkedHashMap<TestProtoMessage, Integer> testLinkedHashMap"
+                + "= new LinkedHashMap<TestProtoMessage, Integer>();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    LinkedHashMultiset<TestProtoMessage> testLinkedHashMultiSet"
                 + "= LinkedHashMultiset.create();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    HashMultiset<TestProtoMessage> testHashMultiSet = HashMultiset.create();",
             "  }",
             "}")
         .doTest();

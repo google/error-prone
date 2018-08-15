@@ -37,6 +37,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
@@ -62,8 +63,7 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
   private static final Matcher<MethodInvocationTree> STATIC_EQUALS_MATCHER =
       staticEqualsInvocation();
 
-  private static final Matcher<MethodInvocationTree> INSTANCE_EQUALS_MATCHER =
-      instanceEqualsInvocation();
+  private static final Matcher<ExpressionTree> INSTANCE_EQUALS_MATCHER = instanceEqualsInvocation();
 
   private static final Matcher<Tree> ASSERT_FALSE_MATCHER =
       toType(

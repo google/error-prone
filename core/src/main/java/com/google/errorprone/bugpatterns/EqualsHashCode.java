@@ -20,17 +20,8 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
-import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
+import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
+import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -38,7 +29,6 @@ import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -64,16 +54,6 @@ import javax.lang.model.element.ElementKind;
     tags = StandardTags.FRAGILE_CODE)
 public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
 
-  private static final Matcher<ExpressionTree> EQUALS_MATCHER =
-      instanceMethod().anyClass().named("equals").withParameters("java.lang.Object");
-
-  private static final Matcher<MethodTree> EQUALS_DECL_MATCHER =
-      allOf(
-          methodIsNamed("equals"),
-          methodHasVisibility(PUBLIC),
-          methodReturns(BOOLEAN_TYPE),
-          methodHasParameters(variableType(isSameType(OBJECT_TYPE))));
-
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
 
@@ -88,7 +68,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
         continue;
       }
       MethodTree methodTree = (MethodTree) member;
-      if (EQUALS_DECL_MATCHER.matches(methodTree, state)) {
+      if (equalsMethodDeclaration().matches(methodTree, state)) {
         equals = methodTree;
       }
     }
@@ -128,6 +108,6 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
     if (expression == null) {
       return false;
     }
-    return EQUALS_MATCHER.matches(expression, state);
+    return instanceEqualsInvocation().matches(expression, state);
   }
 }

@@ -20,7 +20,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Ascii;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -66,32 +65,90 @@ import javax.lang.model.element.Name;
     link = "https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names"
     )
 public class TypeParameterNaming extends BugChecker implements TypeParameterTreeMatcher {
-  private static final Pattern SINGLE_PLUS_MAYBE_DIGIT = Pattern.compile("[A-Z]\\d?");
+
   private static final Pattern TRAILING_DIGIT_EXTRACTOR = Pattern.compile("^(.*?)(\\d+)$");
 
   private static String upperCamelToken(String s) {
     return "" + Ascii.toUpperCase(s.charAt(0)) + (s.length() == 1 ? "" : s.substring(1));
   }
 
+  /**
+   * An enum that classifies a String name into different types, based on the Google Java Style
+   * Guide's rules for Type Parameters.
+   */
+  public enum TypeParameterNamingClassification {
+    /** Examples: B, Q, R2, T1, A9 */
+    LETTER_WITH_MAYBE_NUMERAL(true),
+
+    /**
+     * A valid Type Parameter name, that follows the style guide rule:
+     *
+     * <p>Examples: DataTypeT, FooT, BarT
+     */
+    CLASS_NAME_WITH_T(true),
+
+    /**
+     * Names of the form which are not camel case, but nonetheless have a Capital T at the end and
+     * this shouldn't suggest to add more.
+     *
+     * <p>Examples; IDataT, CConverterT. BART, FOOT
+     */
+    NON_CLASS_NAME_WITH_T_SUFFIX(false),
+
+    /** Anything else. */
+    UNCLASSIFIED(false);
+
+    private static final Pattern SINGLE_PLUS_MAYBE_DIGIT = Pattern.compile("[A-Z]\\d?");
+    private final boolean isValidName;
+
+    TypeParameterNamingClassification(boolean isValidName) {
+      this.isValidName = isValidName;
+    }
+
+    public static TypeParameterNamingClassification classify(String name) {
+      if (SINGLE_PLUS_MAYBE_DIGIT.matcher(name).matches()) {
+        return LETTER_WITH_MAYBE_NUMERAL;
+      }
+
+      if (!name.endsWith("T")) {
+        return UNCLASSIFIED;
+      }
+
+      ImmutableList<String> tokens = NamingConventions.splitToLowercaseTerms(name);
+      // Combine the tokens back into UpperCamelTokens and make sure it matches the identifier
+      String reassembled =
+          tokens.stream().map(TypeParameterNaming::upperCamelToken).collect(Collectors.joining());
+
+      return name.equals(reassembled) ? CLASS_NAME_WITH_T : NON_CLASS_NAME_WITH_T_SUFFIX;
+    }
+
+    public boolean isValidName() {
+      return isValidName;
+    }
+  }
+
   @Override
   public Description matchTypeParameter(TypeParameterTree tree, VisitorState state) {
 
-    if (matchesTypeParameterNamingScheme(tree.getName())) {
+    TypeParameterNamingClassification classification =
+        TypeParameterNamingClassification.classify(tree.getName().toString());
+    if (classification.isValidName()) {
       return Description.NO_MATCH;
     }
 
-    return buildDescription(tree)
-        .setMessage(
-            String.format(
-                "Type Parameter %s must be a single letter with an optional numeric"
-                    + " suffix, or an UpperCamelCase name followed by the letter 'T'.",
-                tree.getName()))
-        .addFix(
-            TypeParameterShadowing.renameTypeVariable(
-                tree,
-                state.getPath().getParentPath().getLeaf(),
-                suggestedNameFollowedWithT(tree.getName().toString()),
-                state))
+    Description.Builder descriptionBuilder =
+        buildDescription(tree).setMessage(errorMessage(tree.getName(), classification));
+
+    if (classification != TypeParameterNamingClassification.NON_CLASS_NAME_WITH_T_SUFFIX) {
+      descriptionBuilder.addFix(
+          TypeParameterShadowing.renameTypeVariable(
+              tree,
+              state.getPath().getParentPath().getLeaf(),
+              suggestedNameFollowedWithT(tree.getName().toString()),
+              state));
+    }
+
+    return descriptionBuilder
         .addFix(
             TypeParameterShadowing.renameTypeVariable(
                 tree,
@@ -99,6 +156,22 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
                 suggestedSingleLetter(tree.getName().toString(), tree),
                 state))
         .build();
+  }
+
+  private static String errorMessage(Name name, TypeParameterNamingClassification classification) {
+    Preconditions.checkArgument(!classification.isValidName());
+
+    if (classification == TypeParameterNamingClassification.NON_CLASS_NAME_WITH_T_SUFFIX) {
+      return String.format(
+          "Type Parameters should be an UpperCamelCase name followed by the letter 'T'. "
+              + "%s ends in T, but is not a valid UpperCamelCase name",
+          name);
+    }
+
+    return String.format(
+        "Type Parameter %s must be a single letter with an optional numeric"
+            + " suffix, or an UpperCamelCase name followed by the letter 'T'.",
+        name);
   }
 
   // Get list of type params of every enclosing class
@@ -128,8 +201,8 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
     for (TypeVariableSymbol typeName : enclosingTypeSymbols) {
       char enclosingTypeFirstLetter = typeName.toString().charAt(0);
       if (enclosingTypeFirstLetter == firstLetter
-          && !matchesTypeParameterNamingScheme(typeName.name)) {
-        List<String> typeVarsInScope =
+          && !TypeParameterNamingClassification.classify(typeName.name.toString()).isValidName()) {
+        ImmutableList<String> typeVarsInScope =
             Streams.concat(enclosingTypeSymbols.stream(), sym.getTypeParameters().stream())
                 .map(v -> v.name.toString())
                 .collect(toImmutableList());
@@ -184,10 +257,6 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
     return replacementName;
   }
 
-  static boolean matchesTypeParameterNamingScheme(Name name) {
-    return SINGLE_PLUS_MAYBE_DIGIT.matcher(name).matches() || matchesClassWithT(name.toString());
-  }
-
   private static String suggestedNameFollowedWithT(String identifier) {
     Preconditions.checkArgument(!identifier.isEmpty());
 
@@ -226,17 +295,4 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
     return identifier + "T";
   }
 
-  @VisibleForTesting
-  static boolean matchesClassWithT(String identifier) {
-    if (!identifier.endsWith("T")) {
-      return false;
-    }
-
-    ImmutableList<String> tokens = NamingConventions.splitToLowercaseTerms(identifier);
-    // Combine the tokens back into UpperCamelTokens and make sure it matches the identifier
-    String reassembled =
-        tokens.stream().map(TypeParameterNaming::upperCamelToken).collect(Collectors.joining());
-
-    return identifier.equals(reassembled);
-  }
 }

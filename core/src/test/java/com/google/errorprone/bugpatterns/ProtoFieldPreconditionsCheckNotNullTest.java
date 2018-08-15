@@ -14,6 +14,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,24 @@ public class ProtoFieldPreconditionsCheckNotNullTest {
   public void testNegativeCase() throws Exception {
     compilationHelper
         .addSourceFile("ProtoFieldPreconditionsCheckNotNullNegativeCases.java")
+        .doTest();
+  }
+
+  @Test
+  public void disabled() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "    TestProtoMessage message = TestProtoMessage.newBuilder().build();",
+            "    checkNotNull(message.getMessage());",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:MatchCheckNotNull"))
         .doTest();
   }
 }

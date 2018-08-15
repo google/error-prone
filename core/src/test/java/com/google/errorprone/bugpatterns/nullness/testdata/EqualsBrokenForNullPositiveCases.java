@@ -168,4 +168,30 @@ public class EqualsBrokenForNullPositiveCases {
       return true;
     }
   }
+
+  private class UnsafeCastAndNoNullCheck {
+    private int a;
+
+    @Override
+    // BUG: Diagnostic contains: if (o == null) { return false; }
+    public boolean equals(Object o) {
+      UnsafeCastAndNoNullCheck that = (UnsafeCastAndNoNullCheck) o;
+      return that.a == a;
+    }
+  }
+
+  // Catch a buggy instanceof check that lets nulls through.
+  private class VerySillyInstanceofCheck {
+    private int a;
+
+    @Override
+    // BUG: Diagnostic contains: if (o == null) { return false; }
+    public boolean equals(Object o) {
+      if (o != null && !(o instanceof VerySillyInstanceofCheck)) {
+        return false;
+      }
+      VerySillyInstanceofCheck that = (VerySillyInstanceofCheck) o;
+      return that.a == a;
+    }
+  }
 }
