@@ -30,7 +30,6 @@ import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 import static org.checkerframework.javacutil.TreeUtils.enclosingOfClass;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -85,6 +84,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
@@ -177,7 +177,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
     private static final ImmutableSet<String> CLASSES_WITH_NON_NULLABLE_RETURNS =
         ImmutableSet.of(
-            Optional.class.getName(),
+            com.google.common.base.Optional.class.getName(),
             Preconditions.class.getName(),
             Verify.class.getName(),
             String.class.getName(),
@@ -296,7 +296,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
                   "Call `%s` is not contained in an lambda, initializer or method.",
                   node));
     }
-    return inferenceResults.getExprNullness(node.getTree()).orElse(NULLABLE);
+
+    // Baseline nullness information about this method, in case inference is unsuccessful.
+    Nullness baselineNullness =
+        methodReturnsNonNull.apply(tryGetMethodSymbol(node.getTree(), Types.instance(context)))
+            ? NONNULL
+            : NULLABLE;
+
+    return inferenceResults.getExprNullness(node.getTree()).orElse(baselineNullness);
   }
 
   /**
@@ -757,7 +764,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       return dataflowResult;
     }
 
-    java.util.Optional<Nullness> declaredNullness =
+    Optional<Nullness> declaredNullness =
         Nullness.fromAnnotations(
             MoreAnnotations.getDeclarationAndTypeAttributes(accessed.symbol)
                 .map(Object::toString)
@@ -772,7 +779,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (callee == null) {
       return defaultAssumption;
     }
-    java.util.Optional<Nullness> declaredNullness = Nullness.fromAnnotations(callee.annotations);
+    Optional<Nullness> declaredNullness = Nullness.fromAnnotations(callee.annotations);
     if (declaredNullness.isPresent()) {
       return declaredNullness.get();
     }
@@ -794,9 +801,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
             .build();
 
     return getInferredNullness(node)
-        .greatestLowerBound(
-            Nullness.fromAnnotations(annotations)
-                .orElse(methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE));
+        .greatestLowerBound(Nullness.fromAnnotations(annotations).orElse(NULLABLE));
   }
 
   /**
