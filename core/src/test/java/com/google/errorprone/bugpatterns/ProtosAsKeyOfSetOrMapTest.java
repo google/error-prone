@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
