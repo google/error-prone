@@ -30,6 +30,16 @@ public interface Fix {
 
   String toString(JCCompilationUnit compilationUnit);
 
+  /**
+   * A short description which can be attached to the Fix to differentiate multiple fixes provided
+   * to the user.
+   *
+   * <p>Empty string generates the default description.
+   */
+  default String getShortDescription() {
+    return "";
+  }
+
   Set<Replacement> getReplacements(EndPosTable endPositions);
 
   Collection<String> getImportsToAdd();
