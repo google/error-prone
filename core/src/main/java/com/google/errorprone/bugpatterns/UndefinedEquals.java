@@ -29,39 +29,36 @@ import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
-import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
- * Collection, Iterable, Multimap, and Queue do not have well-defined equals behavior.
+ * Flags types which do not have well-defined equals behavior.
  *
  * @author eleanorh@google.com (Eleanor Harris)
  */
 @BugPattern(
     name = "UndefinedEquals",
     summary = "Collection, Iterable, Multimap, and Queue do not have well-defined equals behavior",
-    severity = WARNING)
+    severity = WARNING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class UndefinedEquals extends BugChecker implements MethodInvocationTreeMatcher {
-
-  private static final ImmutableList<String> BAD_CLASS_LIST =
-      ImmutableList.of(
-          "com.google.common.collect.Multimap",
-          "java.lang.Iterable",
-          "java.util.Collection",
-          "java.util.Queue");
 
   private static final Matcher<MethodInvocationTree> ASSERT_THAT_EQUALS =
       allOf(
@@ -77,38 +74,94 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    Type receiverType;
-    Type argumentType;
+    Tree receiver;
+    Tree argument;
     List<? extends ExpressionTree> arguments = tree.getArguments();
 
     if (staticEqualsInvocation().matches(tree, state)
         || assertEqualsInvocation().matches(tree, state)
         || assertNotEqualsInvocation().matches(tree, state)) {
-      receiverType = getType(arguments.get(arguments.size() - 2));
-      argumentType = getType(getLast(arguments));
+      receiver = arguments.get(arguments.size() - 2);
+      argument = getLast(arguments);
     } else if (instanceEqualsInvocation().matches(tree, state)) {
-      receiverType = getReceiverType(tree);
-      argumentType = getType(arguments.get(0));
+      receiver = getReceiver(tree);
+      argument = arguments.get(0);
     } else if (ASSERT_THAT_EQUALS.matches(tree, state)) {
-      receiverType = getType(getOnlyElement(arguments));
-      argumentType =
-          getType(getOnlyElement(((MethodInvocationTree) getReceiver(tree)).getArguments()));
+      receiver = getOnlyElement(arguments);
+      argument = getOnlyElement(((MethodInvocationTree) getReceiver(tree)).getArguments());
     } else {
       return Description.NO_MATCH;
     }
 
-    return BAD_CLASS_LIST
-        .stream()
+    return Arrays.stream(BadClass.values())
         .filter(
-            t ->
-                isSameType(receiverType, state.getTypeFromString(t), state)
-                    || isSameType(argumentType, state.getTypeFromString(t), state))
+            b ->
+                isSameType(getType(receiver), b.type(state), state)
+                    || isSameType(getType(argument), b.type(state), state))
         .findFirst()
         .map(
             b ->
                 buildDescription(tree)
-                    .setMessage(b + " does not have well-defined equals behavior")
+                    .setMessage(b.typeName() + " does not have well-defined equals behavior")
+                    .addFix(b.generateFix(receiver, argument, state))
                     .build())
         .orElse(Description.NO_MATCH);
+  }
+
+  private enum BadClass {
+    MULTIMAP("com.google.common.collect.Multimap") {
+      @Override
+      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
+        return Optional.empty();
+      }
+    },
+    CHARSEQUENCE("java.lang.CharSequence") {
+      @Override
+      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
+        if (isSameType(getType(receiver), CHARSEQUENCE.type(state), state)
+            && isSameType(getType(argument), state.getSymtab().stringType, state)) {
+          return Optional.of(SuggestedFix.postfixWith(receiver, ".toString()"));
+        }
+        if (isSameType(getType(argument), CHARSEQUENCE.type(state), state)
+            && isSameType(getType(receiver), state.getSymtab().stringType, state)) {
+          return Optional.of(SuggestedFix.postfixWith(argument, ".toString()"));
+        }
+        return Optional.empty();
+      }
+    },
+    ITERABLE("java.lang.Iterable") {
+      @Override
+      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
+        return Optional.empty();
+      }
+    },
+    COLLECTION("java.util.Collection") {
+      @Override
+      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
+        return Optional.empty();
+      }
+    },
+    QUEUE("java.util.Queue") {
+      @Override
+      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
+        return Optional.empty();
+      }
+    };
+
+    private final String typeName;
+
+    BadClass(String typeName) {
+      this.typeName = typeName;
+    }
+
+    abstract Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state);
+
+    private Type type(VisitorState state) {
+      return state.getTypeFromString(typeName);
+    }
+
+    private String typeName() {
+      return typeName;
+    }
   }
 }
