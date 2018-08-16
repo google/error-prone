@@ -1531,4 +1531,11 @@ public class ASTHelpers {
   public static AnnotationMirror getAnnotationMirror(AnnotationTree annotationTree) {
     return ((JCAnnotation) annotationTree).attribute;
   }
+
+  /** Returns whether the given {@code tree} contains any comments in its source. */
+  public static boolean containsComments(Tree tree, VisitorState state) {
+    return ErrorProneTokens.getTokens(state.getSourceForNode(tree), state.context)
+        .stream()
+        .anyMatch(t -> !t.comments().isEmpty());
+  }
 }
