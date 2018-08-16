@@ -35,15 +35,16 @@ import javax.annotation.Nullable;
 /** @author alexeagle@google.com (Alex Eagle) */
 public class SuggestedFix implements Fix {
 
+  private final String shortDescription;
   private final ImmutableList<FixOperation> fixes;
   private final ImmutableList<String> importsToAdd;
   private final ImmutableList<String> importsToRemove;
 
-  private SuggestedFix(
-      List<FixOperation> fixes, List<String> importsToAdd, List<String> importsToRemove) {
-    this.fixes = ImmutableList.copyOf(fixes);
-    this.importsToAdd = ImmutableList.copyOf(importsToAdd);
-    this.importsToRemove = ImmutableList.copyOf(importsToRemove);
+  private SuggestedFix(SuggestedFix.Builder builder) {
+    this.shortDescription = builder.shortDescription;
+    this.fixes = ImmutableList.copyOf(builder.fixes);
+    this.importsToAdd = ImmutableList.copyOf(builder.importsToAdd);
+    this.importsToRemove = ImmutableList.copyOf(builder.importsToRemove);
   }
 
   @Override
@@ -71,6 +72,11 @@ public class SuggestedFix implements Fix {
               replacement.startPosition(), replacement.endPosition(), replacement.replaceWith()));
     }
     return result.toString();
+  }
+
+  @Override
+  public String getShortDescription() {
+    return shortDescription;
   }
 
   @Override
@@ -152,6 +158,7 @@ public class SuggestedFix implements Fix {
     private final List<FixOperation> fixes = new ArrayList<>();
     private final List<String> importsToAdd = new ArrayList<>();
     private final List<String> importsToRemove = new ArrayList<>();
+    private String shortDescription = "";
 
     protected Builder() {}
 
@@ -160,11 +167,22 @@ public class SuggestedFix implements Fix {
     }
 
     public SuggestedFix build() {
-      return new SuggestedFix(fixes, importsToAdd, importsToRemove);
+      return new SuggestedFix(this);
     }
 
     private Builder with(FixOperation fix) {
       fixes.add(fix);
+      return this;
+    }
+
+    /**
+     * Sets a custom short description for this fix. This is useful for differentiating multiple
+     * fixes from the same finding.
+     *
+     * <p>Should be limited to one sentence.
+     */
+    public Builder setShortDescription(String shortDescription) {
+      this.shortDescription = shortDescription;
       return this;
     }
 
@@ -277,6 +295,9 @@ public class SuggestedFix implements Fix {
       if (other == null) {
         return this;
       }
+      if (shortDescription.isEmpty()) {
+        shortDescription = other.shortDescription;
+      }
       fixes.addAll(other.fixes);
       importsToAdd.addAll(other.importsToAdd);
       importsToRemove.addAll(other.importsToRemove);
@@ -289,6 +310,9 @@ public class SuggestedFix implements Fix {
     public Builder merge(@Nullable SuggestedFix other) {
       if (other == null) {
         return this;
+      }
+      if (shortDescription.isEmpty()) {
+        shortDescription = other.getShortDescription();
       }
       fixes.addAll(other.fixes);
       importsToAdd.addAll(other.importsToAdd);
