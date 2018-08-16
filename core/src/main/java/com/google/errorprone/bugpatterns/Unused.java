@@ -88,6 +88,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
@@ -122,12 +123,17 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           allOf(methodIsNamed("writeReplace"), methodReturns(OBJECT)));
 
 
+  private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
+      ImmutableSet.of(
+          "com.google.inject.Provides",
+          "com.google.inject.Inject",
+          "javax.inject.Inject");
+
   /**
    * The set of annotation full names which exempt annotated element from being reported as unused.
    */
-  private static final ImmutableSet<String> EXEMPTING_ANNOTATION_FULL_NAMES =
+  private static final ImmutableSet<String> EXEMPTING_VARIABLE_ANNOTATIONS =
       ImmutableSet.of(
-          "javax.inject.Inject",
           "javax.persistence.Basic",
           "javax.persistence.Column",
           "javax.persistence.Id",
@@ -234,15 +240,14 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           return null;
         }
         // Return if the element is exempted by an annotation.
-        if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations(), state)) {
+        if (exemptedByAnnotation(
+            variableTree.getModifiers().getAnnotations(), EXEMPTING_VARIABLE_ANNOTATIONS, state)) {
           return null;
         }
         switch (symbol.getKind()) {
           case FIELD:
             // We are only interested in private fields and those which are not special.
-            if (variableTree.getModifiers().getFlags().contains(Modifier.PRIVATE)
-                && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString())
-                && !isLoggerField(variableTree)) {
+            if (isFieldEligibleForChecking(variableTree, symbol)) {
               unusedElements.put(symbol, getCurrentPath());
               usageSites.put(symbol, getCurrentPath());
             }
@@ -264,6 +269,16 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
             break;
         }
         return null;
+      }
+
+      private boolean isFieldEligibleForChecking(VariableTree variableTree, VarSymbol symbol) {
+        if (variableTree.getModifiers().getFlags().isEmpty()
+            && ASTHelpers.hasDirectAnnotationWithSimpleName(variableTree, "Inject")) {
+          return true;
+        }
+        return variableTree.getModifiers().getFlags().contains(Modifier.PRIVATE)
+            && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString())
+            && !isLoggerField(variableTree);
       }
 
       private boolean isLoggerField(VariableTree variableTree) {
@@ -334,7 +349,8 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           return false;
         }
         // Assume the method is called if annotated with a called-reflectively annotation.
-        if (exemptedByAnnotation(tree.getModifiers().getAnnotations(), state)) {
+        if (exemptedByAnnotation(
+            tree.getModifiers().getAnnotations(), EXEMPTING_METHOD_ANNOTATIONS, state)) {
           return false;
         }
         // Skip constructors and special methods.
@@ -376,7 +392,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
         return parent != null && parent.getKind() == Kind.EXPRESSION_STATEMENT;
       }
 
-      private boolean isUsed(Symbol symbol) {
+      private boolean isUsed(@Nullable Symbol symbol) {
         return symbol != null
             && (!leftHandSideAssignment
                 || inReturnStatement
@@ -397,7 +413,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       public Void visitIdentifier(IdentifierTree tree, Void unused) {
         Symbol symbol = getSymbol(tree);
         // Filtering out identifier symbol from vars map. These are real usages of identifiers.
-        if (symbol != null && isUsed(symbol)) {
+        if (isUsed(symbol)) {
           unusedElements.remove(symbol);
         }
         if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
@@ -425,7 +441,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
         super.visitMemberSelect(memberSelectTree, null);
         Symbol symbol = getSymbol(memberSelectTree);
-        if (symbol != null && isUsed(symbol)) {
+        if (isUsed(symbol)) {
           unusedElements.remove(symbol);
         } else {
           if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
@@ -444,7 +460,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
         super.visitMemberReference(tree, null);
         Symbol symbol = getSymbol(tree);
-        if (symbol != null && isUsed(symbol)) {
+        if (isUsed(symbol)) {
           unusedElements.remove(symbol);
         }
         if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
@@ -614,6 +630,11 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
     if (varKind != ElementKind.LOCAL_VARIABLE && varKind != ElementKind.FIELD) {
       return ImmutableList.of();
     }
+    // Don't suggest a fix for fields annotated @Inject: we can warn on them, but they *could* be
+    // used outside the class.
+    if (ASTHelpers.hasDirectAnnotationWithSimpleName(varSymbol, "Inject")) {
+      return ImmutableList.of();
+    }
     boolean encounteredSideEffects = false;
     SuggestedFix.Builder fix = SuggestedFix.builder();
     SuggestedFix.Builder removeSideEffectsFix = SuggestedFix.builder();
@@ -730,18 +751,17 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
   }
 
   /**
-   * Looks at the list of {@code annotations} and see if there is any annotation which exists in
-   * {@link #EXEMPTING_ANNOTATION_FULL_NAMES}.
-   *
-   * @return whether {@code annotations} contains an annotation that exempts a member from an unused
-   *     warning.
+   * Looks at the list of {@code annotations} and see if there is any annotation which exists {@code
+   * exemptingAnnotations}.
    */
   private static boolean exemptedByAnnotation(
-      List<? extends AnnotationTree> annotations, VisitorState state) {
+      List<? extends AnnotationTree> annotations,
+      Set<String> exemptingAnnotations,
+      VisitorState state) {
     for (AnnotationTree annotation : annotations) {
       if (((JCAnnotation) annotation).type != null) {
         TypeSymbol tsym = ((JCAnnotation) annotation).type.tsym;
-        if (EXEMPTING_ANNOTATION_FULL_NAMES.contains(tsym.getQualifiedName().toString())) {
+        if (exemptingAnnotations.contains(tsym.getQualifiedName().toString())) {
           return true;
         }
       }
