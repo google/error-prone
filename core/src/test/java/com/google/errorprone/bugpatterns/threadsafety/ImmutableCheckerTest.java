@@ -1419,8 +1419,8 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "Test.java",
             "import " + ClassPathTest.class.getCanonicalName() + ";",
-            "// BUG: Diagnostic contains: not annotated",
             "class Test extends ClassPathTest<String> {",
+            "  // BUG: Diagnostic contains: 'Test' has non-final field 'x'",
             "  int x;",
             "}")
         .setArgs(Arrays.asList("-cp", libJar.toString()))
