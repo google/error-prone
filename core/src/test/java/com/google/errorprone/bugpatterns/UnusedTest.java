@@ -627,4 +627,21 @@ public class UnusedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void unusedInject() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "import javax.inject.Inject;",
+            "public class Test {",
+            // Package-private @Inject fields are assumed to be only used within the class, and only
+            // visible for performance.
+            "  // BUG: Diagnostic contains:",
+            "  @Inject Object foo;",
+            "  @Inject public Object bar;",
+            "}")
+        .doTest();
+  }
 }
