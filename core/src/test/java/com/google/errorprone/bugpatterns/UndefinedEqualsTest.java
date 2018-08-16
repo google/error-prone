@@ -16,8 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,13 +29,8 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public final class UndefinedEqualsTest {
-
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(UndefinedEquals.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(UndefinedEquals.class, getClass());
 
   @Test
   public void positiveInstanceEquals() {
@@ -132,6 +127,30 @@ public final class UndefinedEqualsTest {
             "class Test {",
             "  void f(PriorityQueue a, PriorityQueue b) {",
             "    a.equals(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void charSequenceFix() throws Exception {
+    BugCheckerRefactoringTestHelper.newInstance(new UndefinedEquals(), getClass())
+        .addInputLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "class Test {",
+            "  void f(CharSequence a, String b) {",
+            "    assertThat(a).isEqualTo(b);",
+            "    assertThat(b).isEqualTo(a);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "class Test {",
+            "  void f(CharSequence a, String b) {",
+            "    assertThat(a.toString()).isEqualTo(b);",
+            "    assertThat(b).isEqualTo(a.toString());",
             "  }",
             "}")
         .doTest();
