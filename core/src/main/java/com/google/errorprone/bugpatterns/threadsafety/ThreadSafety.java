@@ -634,11 +634,10 @@ public final class ThreadSafety {
     if (sym == null) {
       return null;
     }
-    Symbol annosym = state.getSymbolFromString(annotation);
     Optional<Compound> attr =
-        sym.getAnnotationMirrors()
+        sym.getRawAttributes()
             .stream()
-            .filter(a -> a.getAnnotationType().asElement().equals(annosym))
+            .filter(a -> a.type.tsym.getQualifiedName().contentEquals(annotation))
             .findAny();
     if (attr.isPresent()) {
       ImmutableList<String> containerElements = containerOf(state, attr.get());
