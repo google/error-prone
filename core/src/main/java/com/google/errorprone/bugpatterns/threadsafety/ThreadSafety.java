@@ -71,6 +71,7 @@ import org.pcollections.ConsPStack;
  */
 public final class ThreadSafety {
   private final VisitorState state;
+  private final Purpose purpose;
   private final KnownTypes knownTypes;
   private final ImmutableSet<String> markerAnnotations;
   private final ImmutableSet<String> acceptedAnnotations;
@@ -85,16 +86,87 @@ public final class ThreadSafety {
     return new Builder();
   }
 
+  /**
+   * The {@link ThreadSafety} utility class can be used by either the bug checker that enforces
+   * immutability or by the bug checker that enforces thread-safety. Depending on which of these bug
+   * checkers is using this utility, different messages become appropriate.
+   */
+  public enum Purpose {
+
+    /** This is being used by the immutability bug checker */
+    FOR_IMMUTABLE_CHECKER {
+      @Override
+      String immutableOrThreadSafe() {
+        return "immutable";
+      }
+
+      @Override
+      String mutableOrNonThreadSafe() {
+        return "mutable";
+      }
+
+      @Override
+      String mutableOrNotThreadSafe() {
+        return "mutable";
+      }
+    },
+
+    /** This is being used by the thread-safety bug checker */
+    FOR_THREAD_SAFE_CHECKER {
+      @Override
+      String immutableOrThreadSafe() {
+        return "thread-safe";
+      }
+
+      @Override
+      String mutableOrNonThreadSafe() {
+        return "non-thread-safe";
+      }
+
+      @Override
+      String mutableOrNotThreadSafe() {
+        return "not thread-safe";
+      }
+    },
+    ;
+
+    /**
+     * Returns either the string {@code "immutable"} or {@code "thread-safe"} depending on the
+     * purpose.
+     */
+    abstract String immutableOrThreadSafe();
+
+    /**
+     * Returns either the string {@code "mutable"} or {@code "non-thread-safe"} depending on the
+     * purpose.
+     */
+    abstract String mutableOrNonThreadSafe();
+
+    /**
+     * Returns either the string {@code "mutable"} or {@code "not thread-safe"} depending on the
+     * purpose.
+     */
+    abstract String mutableOrNotThreadSafe();
+  }
+
   /** {@link ThreadSafety}Builder */
   public static class Builder {
+    
     private Builder() {}
 
+    private Purpose purpose = Purpose.FOR_IMMUTABLE_CHECKER;
     private KnownTypes knownTypes;
     private ImmutableSet<String> markerAnnotations;
     private ImmutableSet<String> acceptedAnnotations = ImmutableSet.of();
     private @Nullable Class<? extends Annotation> containerOfAnnotation;
     private @Nullable Class<? extends Annotation> suppressAnnotation;
     private @Nullable Class<? extends Annotation> typeParameterAnnotation;
+
+    /** See {@link Purpose}. */
+    public Builder setPurpose(Purpose purpose) {
+      this.purpose = purpose;
+      return this;
+    }
 
     /** Information about known types and whether they're known to be safe or unsafe. */
     public Builder knownTypes(KnownTypes knownTypes) {
@@ -158,6 +230,7 @@ public final class ThreadSafety {
       checkNotNull(markerAnnotations);
       return new ThreadSafety(
           state,
+          purpose,
           knownTypes,
           markerAnnotations,
           acceptedAnnotations,
@@ -196,7 +269,28 @@ public final class ThreadSafety {
       @Nullable Class<? extends Annotation> containerOfAnnotation,
       @Nullable Class<? extends Annotation> suppressAnnotation,
       @Nullable Class<? extends Annotation> typeParameterAnnotation) {
+    this(
+        state,
+        Purpose.FOR_IMMUTABLE_CHECKER,
+        knownTypes,
+        markerAnnotations,
+        acceptedAnnotations,
+        containerOfAnnotation,
+        suppressAnnotation,
+        typeParameterAnnotation);
+  }
+
+  private ThreadSafety(
+      VisitorState state,
+      Purpose purpose,
+      KnownTypes knownTypes,
+      Set<String> markerAnnotations,
+      Set<String> acceptedAnnotations,
+      @Nullable Class<? extends Annotation> containerOfAnnotation,
+      @Nullable Class<? extends Annotation> suppressAnnotation,
+      @Nullable Class<? extends Annotation> typeParameterAnnotation) {
     this.state = checkNotNull(state);
+    this.purpose = purpose;
     this.knownTypes = checkNotNull(knownTypes);
     this.markerAnnotations = ImmutableSet.copyOf(checkNotNull(markerAnnotations));
     this.acceptedAnnotations = ImmutableSet.copyOf(checkNotNull(acceptedAnnotations));
@@ -242,7 +336,7 @@ public final class ThreadSafety {
     /**
      * The list of steps in the explanation.
      *
-     * <p>Example: ["Foo has field 'xs' of type 'int[]'", "arrays are mutable"]
+     * <p>Example: ["Foo has field 'xs' of type 'int[]'", "arrays are not thread-safe"]
      */
     public abstract ConsPStack<String> path();
 
@@ -301,8 +395,10 @@ public final class ThreadSafety {
         if (info.isPresent()) {
           return info.plus(
               String.format(
-                  "'%s' was instantiated with mutable type for '%s'",
-                  getPrettyName(type.tsym), typaram.getSimpleName()));
+                  "'%s' was instantiated with %s type for '%s'",
+                  getPrettyName(type.tsym),
+                  purpose.mutableOrNonThreadSafe(),
+                  typaram.getSimpleName()));
         }
       }
     }
@@ -412,7 +508,7 @@ public final class ThreadSafety {
 
     @Override
     public Violation visitArrayType(ArrayType t, Void s) {
-      return Violation.of("arrays are mutable");
+      return Violation.of(String.format("arrays are %s", purpose.mutableOrNotThreadSafe()));
     }
 
     @Override
@@ -431,10 +527,15 @@ public final class ThreadSafety {
       } else if (!containerTypeParameters.isEmpty()) {
         message =
             String.format(
-                "'%s' is a mutable type variable (not in '%s')",
-                tyvar.getSimpleName(), Joiner.on(", ").join(containerTypeParameters));
+                "'%s' is a %s type variable (not in '%s')",
+                tyvar.getSimpleName(),
+                purpose.mutableOrNonThreadSafe(),
+                Joiner.on(", ").join(containerTypeParameters));
       } else {
-        message = String.format("'%s' is a mutable type variable", tyvar.getSimpleName());
+        message =
+            String.format(
+                "'%s' is a %s type variable",
+                tyvar.getSimpleName(), purpose.mutableOrNonThreadSafe());
       }
       return Violation.of(message);
     }
@@ -467,7 +568,9 @@ public final class ThreadSafety {
       }
       String nameStr = type.tsym.flatName().toString();
       if (knownTypes.getKnownUnsafeClasses().contains(nameStr)) {
-        return Violation.of(String.format("'%s' is mutable", type.tsym.getSimpleName()));
+        return Violation.of(
+            String.format(
+                "'%s' is %s", type.tsym.getSimpleName(), purpose.mutableOrNotThreadSafe()));
       }
       if (WellKnownMutability.isProto2MessageClass(state, type)) {
         if (WellKnownMutability.isProto2MutableMessageClass(state, type)) {
@@ -753,7 +856,9 @@ public final class ThreadSafety {
               if (!info.isPresent()) {
                 return Violation.absent();
               }
-              return info.plus(String.format("instantiation of '%s' is mutable", sym));
+              return info.plus(
+                  String.format(
+                      "instantiation of '%s' is %s", sym, purpose.mutableOrNotThreadSafe()));
             })
         .filter(Violation::isPresent)
         .findFirst()
