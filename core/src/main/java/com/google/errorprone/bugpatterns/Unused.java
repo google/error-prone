@@ -636,8 +636,9 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       return ImmutableList.of();
     }
     boolean encounteredSideEffects = false;
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    SuggestedFix.Builder removeSideEffectsFix = SuggestedFix.builder();
+    SuggestedFix.Builder fix = SuggestedFix.builder().setShortDescription("remove unused variable");
+    SuggestedFix.Builder removeSideEffectsFix =
+        SuggestedFix.builder().setShortDescription("remove unused variable and any side effects");
     for (TreePath usagePath : usagePaths) {
       StatementTree statement = (StatementTree) usagePath.getLeaf();
       if (statement.getKind() == Kind.VARIABLE) {
