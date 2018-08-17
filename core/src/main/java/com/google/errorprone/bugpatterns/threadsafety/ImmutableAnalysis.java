@@ -24,6 +24,7 @@ import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Purpose;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -66,6 +67,7 @@ public class ImmutableAnalysis {
     this.wellKnownMutability = wellKnownMutability;
     this.threadSafety =
         ThreadSafety.builder()
+            .setPurpose(Purpose.FOR_IMMUTABLE_CHECKER)
             .knownTypes(wellKnownMutability)
             .markerAnnotations(immutableAnnotations)
             .typeParameterAnnotation(ImmutableTypeParameter.class)
