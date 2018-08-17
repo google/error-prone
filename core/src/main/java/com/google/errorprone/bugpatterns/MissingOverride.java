@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -44,6 +45,18 @@ import javax.lang.model.element.Modifier;
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MissingOverride extends BugChecker implements MethodTreeMatcher {
+
+  /** if true, don't warn on missing {@code @Override} annotations inside interfaces */
+  private final boolean ignoreInterfaceOverrides;
+
+  public MissingOverride() {
+    this(ErrorProneFlags.empty());
+  }
+
+  public MissingOverride(ErrorProneFlags flags) {
+    this.ignoreInterfaceOverrides =
+        flags.getBoolean("MissingOverride:IgnoreInterfaceOverrides").orElse(false);
+  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -83,6 +96,10 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
    */
   private MethodSymbol getFirstOverride(Symbol sym, Types types) {
     ClassSymbol owner = sym.enclClass();
+    if (ignoreInterfaceOverrides && owner.isInterface()) {
+      // pretend the method does not override anything
+      return null;
+    }
     for (Type s : types.closure(owner.type)) {
       if (s == owner.type) {
         continue;
