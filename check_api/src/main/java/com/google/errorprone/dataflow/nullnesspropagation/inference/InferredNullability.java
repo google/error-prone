@@ -80,9 +80,7 @@ public class InferredNullability {
       lowerBoundMemoTable.put(iv, Optional.empty());
 
       result =
-          constraintGraph
-              .predecessors(iv)
-              .stream()
+          constraintGraph.predecessors(iv).stream()
               .map(this::getLowerBound)
               .filter(Optional::isPresent)
               .map(Optional::get)
@@ -108,9 +106,7 @@ public class InferredNullability {
     upperBoundMemoTable.put(iv, Optional.empty());
 
     result =
-        constraintGraph
-            .successors(iv)
-            .stream()
+        constraintGraph.successors(iv).stream()
             .map(this::getUpperBound)
             .filter(Optional::isPresent)
             .map(Optional::get)

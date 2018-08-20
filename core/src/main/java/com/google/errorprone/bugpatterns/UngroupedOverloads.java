@@ -147,8 +147,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     // the first overload
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     StringBuilder sb = new StringBuilder("\n");
-    overloads
-        .stream()
+    overloads.stream()
         .filter(o -> o != first)
         .forEach(
             o -> {
@@ -161,8 +160,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     SuggestedFix fix = fixBuilder.build();
     LineMap lineMap = state.getPath().getCompilationUnit().getLineMap();
     // emit findings for each overload
-    overloads
-        .stream()
+    overloads.stream()
         .limit(showFindingOnFirstOverloadOnly ? 1 : Long.MAX_VALUE)
         .forEach(
             o ->
@@ -180,8 +178,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
       LineMap lineMap,
       MemberWithIndex current) {
     String ungroupedLines =
-        overloads
-            .stream()
+        overloads.stream()
             .filter(o -> !groups.get(o).equals(groups.get(current)))
             .map(t -> lineMap.getLineNumber(((JCTree) t.tree()).getStartPosition()))
             .map(String::valueOf)

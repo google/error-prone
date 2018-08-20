@@ -63,8 +63,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
     }
 
     ImmutableMap<String, Symbol> fieldNamesMap =
-        fields
-            .stream()
+        fields.stream()
             .collect(
                 toImmutableMap(symbol -> symbol.toString().toLowerCase(), x -> x, (x, y) -> x));
     ImmutableMap<TreePath, Symbol> matchedParameters =

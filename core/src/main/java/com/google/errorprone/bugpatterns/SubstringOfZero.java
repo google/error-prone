@@ -67,6 +67,4 @@ public final class SubstringOfZero extends BugChecker implements MethodInvocatio
     ExpressionTree originalString = ASTHelpers.getReceiver(tree);
     return SuggestedFix.replace(tree, state.getSourceForNode(originalString));
   }
-
-
 }

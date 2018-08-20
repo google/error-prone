@@ -151,7 +151,7 @@ public final class ThreadSafety {
 
   /** {@link ThreadSafety}Builder */
   public static class Builder {
-    
+
     private Builder() {}
 
     private Purpose purpose = Purpose.FOR_IMMUTABLE_CHECKER;
@@ -381,9 +381,7 @@ public final class ThreadSafety {
           || immutableTypeParameter) {
         Type tyarg = type.getTypeArguments().get(i);
         if (suppressAnnotation != null
-            && tyarg
-                .getAnnotationMirrors()
-                .stream()
+            && tyarg.getAnnotationMirrors().stream()
                 .anyMatch(
                     a ->
                         ((ClassSymbol) a.getAnnotationType().asElement())
@@ -595,9 +593,7 @@ public final class ThreadSafety {
    */
   public boolean hasThreadSafeTypeParameterAnnotation(TypeVariableSymbol symbol) {
     return typeParameterAnnotation != null
-        && symbol
-            .getAnnotationMirrors()
-            .stream()
+        && symbol.getAnnotationMirrors().stream()
             .anyMatch(t -> t.type.tsym.flatName().contentEquals(typeParameterAnnotation.getName()));
   }
 
@@ -738,16 +734,14 @@ public final class ThreadSafety {
       return null;
     }
     Optional<Compound> attr =
-        sym.getRawAttributes()
-            .stream()
+        sym.getRawAttributes().stream()
             .filter(a -> a.type.tsym.getQualifiedName().contentEquals(annotation))
             .findAny();
     if (attr.isPresent()) {
       ImmutableList<String> containerElements = containerOf(state, attr.get());
       if (elementAnnotation != null && containerElements.isEmpty()) {
         containerElements =
-            sym.getTypeParameters()
-                .stream()
+            sym.getTypeParameters().stream()
                 .filter(p -> p.getAnnotation(elementAnnotation) != null)
                 .map(p -> p.getSimpleName().toString())
                 .collect(toImmutableList());

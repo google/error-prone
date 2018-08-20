@@ -203,9 +203,7 @@ public class SuggestedFixes {
             : ((JCTree) tree).getStartPosition();
     int base = ((JCTree) tree).getStartPosition();
     Optional<Integer> insert =
-        state
-            .getTokensForNode(tree)
-            .stream()
+        state.getTokensForNode(tree).stream()
             .map(token -> token.pos() + base)
             .filter(thisPos -> thisPos >= pos)
             .findFirst();
@@ -754,9 +752,7 @@ public class SuggestedFixes {
   }
 
   private static long countErrors(DiagnosticCollector<JavaFileObject> diagnosticCollector) {
-    return diagnosticCollector
-        .getDiagnostics()
-        .stream()
+    return diagnosticCollector.getDiagnostics().stream()
         .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
         .count();
   }
@@ -790,8 +786,7 @@ public class SuggestedFixes {
             if (t.getTypeArguments().nonEmpty()) {
               sb.append('<');
               sb.append(
-                  t.getTypeArguments()
-                      .stream()
+                  t.getTypeArguments().stream()
                       .map(a -> a.accept(this, null))
                       .collect(joining(", ")));
               sb.append(">");

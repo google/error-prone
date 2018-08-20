@@ -113,8 +113,7 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
 
   private static final Matcher<Tree> PROTO_TYPE =
       anyOf(
-          PROTO_CLASSES
-              .stream()
+          PROTO_CLASSES.stream()
               .map(p -> new IsSubtypeOf<>(p + ".Builder"))
               .collect(toImmutableList()));
 
@@ -123,38 +122,33 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
           constructor()
               .forClass(
                   new DescendantOfAny(
-                      GUAVA_IMMUTABLES
-                          .stream()
+                      GUAVA_IMMUTABLES.stream()
                           .map(i -> Suppliers.typeFromString(i + ".Builder"))
                           .collect(toImmutableList()))),
           staticMethod()
               .onClass(
                   new DescendantOfAny(
-                      GUAVA_IMMUTABLES
-                          .stream()
+                      GUAVA_IMMUTABLES.stream()
                           .map(Suppliers::typeFromString)
                           .collect(toImmutableList())))
               .withNameMatching(Pattern.compile("builder(WithExpectedSize)?")),
           constructor()
               .forClass(
                   new DescendantOfAny(
-                      PROTO_CLASSES
-                          .stream()
+                      PROTO_CLASSES.stream()
                           .map(c -> Suppliers.typeFromString(c + ".Builder"))
                           .collect(toImmutableList()))),
           staticMethod()
               .onClass(
                   new DescendantOfAny(
-                      PROTO_CLASSES
-                          .stream()
+                      PROTO_CLASSES.stream()
                           .map(Suppliers::typeFromString)
                           .collect(toImmutableList())))
               .named("newBuilder"),
           instanceMethod()
               .onClass(
                   new DescendantOfAny(
-                      PROTO_CLASSES
-                          .stream()
+                      PROTO_CLASSES.stream()
                           .map(Suppliers::typeFromString)
                           .collect(toImmutableList())))
               .withNameMatching(Pattern.compile("toBuilder|newBuilderForType")));
@@ -164,8 +158,7 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
           constructor()
               .forClass(
                   new DescendantOfAny(
-                      COLLECTIONS
-                          .stream()
+                      COLLECTIONS.stream()
                           .map(Suppliers::typeFromString)
                           .collect(toImmutableList()))),
           staticMethod()

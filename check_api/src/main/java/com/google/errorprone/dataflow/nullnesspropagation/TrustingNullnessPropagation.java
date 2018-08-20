@@ -54,7 +54,6 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     super(Nullness.NONNULL, TrustReturnAnnotation.INSTANCE);
   }
 
-
   @Override
   Nullness fieldNullness(
       @Nullable ClassAndField accessed,

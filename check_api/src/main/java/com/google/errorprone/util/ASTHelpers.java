@@ -292,8 +292,7 @@ public class ASTHelpers {
         return false;
       }
       // TODO(b/112139121): work around for javac's too-early constant string folding
-      return ErrorProneTokens.getTokens(state.getSourceForNode(expression), state.context)
-          .stream()
+      return ErrorProneTokens.getTokens(state.getSourceForNode(expression), state.context).stream()
           .anyMatch(t -> t.kind() == TokenKind.PLUS);
     }
     if (expression instanceof UnaryTree) {
@@ -569,9 +568,7 @@ public class ASTHelpers {
   private static Stream<MethodSymbol> findSuperMethods(
       MethodSymbol methodSymbol, Types types, boolean skipInterfaces) {
     TypeSymbol owner = (TypeSymbol) methodSymbol.owner;
-    return types
-        .closure(owner.type)
-        .stream()
+    return types.closure(owner.type).stream()
         .filter(closureTypes -> skipInterfaces ? !closureTypes.isInterface() : true)
         .map(type -> findSuperMethodInType(methodSymbol, type, types))
         .filter(Objects::nonNull);
@@ -676,8 +673,7 @@ public class ASTHelpers {
   }
 
   private static boolean hasAttribute(Symbol sym, Name annotationName) {
-    return sym.getRawAttributes()
-        .stream()
+    return sym.getRawAttributes().stream()
         .anyMatch(a -> a.type.tsym.getQualifiedName().equals(annotationName));
   }
 
@@ -1114,10 +1110,7 @@ public class ASTHelpers {
       return ImmutableSet.of();
     }
     Optional<Attribute> values =
-        c.get()
-            .getElementValues()
-            .entrySet()
-            .stream()
+        c.get().getElementValues().entrySet().stream()
             .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
             .map(e -> e.getValue())
             .findAny();
@@ -1534,8 +1527,7 @@ public class ASTHelpers {
 
   /** Returns whether the given {@code tree} contains any comments in its source. */
   public static boolean containsComments(Tree tree, VisitorState state) {
-    return ErrorProneTokens.getTokens(state.getSourceForNode(tree), state.context)
-        .stream()
+    return ErrorProneTokens.getTokens(state.getSourceForNode(tree), state.context).stream()
         .anyMatch(t -> !t.comments().isEmpty());
   }
 }

@@ -52,8 +52,7 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
                 javax.annotation.concurrent.Immutable.class.getName(),
                 com.google.errorprone.annotations.Immutable.class.getName()));
     Optional<? extends ImportTree> immutableImport =
-        tree.getImports()
-            .stream()
+        tree.getImports().stream()
             .filter(
                 i -> {
                   Symbol s = ASTHelpers.getSymbol(i.getQualifiedIdentifier());

@@ -44,8 +44,7 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
   @Override
   public boolean isAcceptableChange(
       Changes changes, Tree node, MethodSymbol symbol, VisitorState state) {
-    return findArgumentsForOtherInstances(symbol, node, state)
-        .stream()
+    return findArgumentsForOtherInstances(symbol, node, state).stream()
         .allMatch(arguments -> !anyArgumentsMatch(changes.changedPairs(), arguments));
   }
 
@@ -54,8 +53,7 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
    */
   private static boolean anyArgumentsMatch(
       List<ParameterPair> changedPairs, List<Parameter> arguments) {
-    return changedPairs
-        .stream()
+    return changedPairs.stream()
         .anyMatch(
             change ->
                 Objects.equals(

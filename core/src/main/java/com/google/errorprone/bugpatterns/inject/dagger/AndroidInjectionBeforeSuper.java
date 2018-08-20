@@ -150,9 +150,7 @@ public final class AndroidInjectionBeforeSuper extends BugChecker implements Met
         return Description.NO_MATCH;
       }
 
-      return methodBody
-          .getStatements()
-          .stream()
+      return methodBody.getStatements().stream()
           .map(tree -> tree.accept(this, null))
           .filter(notNull())
           .findFirst()

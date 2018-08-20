@@ -103,9 +103,9 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
                 }
                 if (NEW_THROWABLE.matches(tree.getExpression(), state)
                     && ((NewClassTree) tree.getExpression())
-                        .getArguments()
-                        .stream()
-                        .anyMatch(arg -> Objects.equals(parameter, ASTHelpers.getSymbol(arg)))) {
+                        .getArguments().stream()
+                            .anyMatch(
+                                arg -> Objects.equals(parameter, ASTHelpers.getSymbol(arg)))) {
                   return true;
                 }
                 return super.visitThrow(tree, null);
@@ -195,9 +195,7 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
 
   private static Optional<JCCatch> catchesType(
       JCTry tryStatement, Type assertionErrorType, VisitorState state) {
-    return tryStatement
-        .getCatches()
-        .stream()
+    return tryStatement.getCatches().stream()
         .filter(
             catchTree -> {
               Type type = ASTHelpers.getType(catchTree.getParameter());

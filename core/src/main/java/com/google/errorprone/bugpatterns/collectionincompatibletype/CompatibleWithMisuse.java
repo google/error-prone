@@ -71,9 +71,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
     // This restriction may need to be removed to allow more complex declaration hierarchies.
     for (MethodSymbol methodSymbol :
         ASTHelpers.findSuperMethods(declaredMethod, state.getTypes())) {
-      if (methodSymbol
-          .params()
-          .stream()
+      if (methodSymbol.params().stream()
           .anyMatch(p -> ASTHelpers.hasAnnotation(p, CompatibleWith.class, state))) {
         return describeWithMessage(
             annoTree,
@@ -99,8 +97,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
     }
 
     Set<String> validNames =
-        potentialTypeVars
-            .stream()
+        potentialTypeVars.stream()
             .map(TypeVariableSymbol::getSimpleName)
             .map(Object::toString)
             .collect(toImmutableSet());

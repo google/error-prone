@@ -49,10 +49,9 @@ public class DocGenTool {
     private String bugPatterns;
 
     @Parameter(
-      names = "-explanations",
-      description = "Path to side-car explanations",
-      required = true
-    )
+        names = "-explanations",
+        description = "Path to side-car explanations",
+        required = true)
     private String explanations;
 
     @Parameter(names = "-docs_repository", description = "Path to docs repository", required = true)
@@ -62,25 +61,22 @@ public class DocGenTool {
     private String examplesDir;
 
     @Parameter(
-      names = "-target",
-      description = "Whether to target the internal or external site",
-      converter = TargetEnumConverter.class,
-      required = true
-    )
+        names = "-target",
+        description = "Whether to target the internal or external site",
+        converter = TargetEnumConverter.class,
+        required = true)
     private Target target;
 
     @Parameter(
-      names = "-use_pygments_highlighting",
-      description = "Use pygments for highlighting",
-      arity = 1
-    )
+        names = "-use_pygments_highlighting",
+        description = "Use pygments for highlighting",
+        arity = 1)
     private boolean usePygments = true;
 
     @Parameter(
-      names = "-base_url",
-      description = "The base url for links to bugpatterns",
-      arity = 1
-    )
+        names = "-base_url",
+        description = "The base url for links to bugpatterns",
+        arity = 1)
     private String baseUrl = null;
   }
 

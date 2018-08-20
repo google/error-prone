@@ -45,8 +45,6 @@ import java.util.Objects;
     severity = ERROR)
 public class EqualsReference extends BugChecker implements MethodTreeMatcher {
 
-
-
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState visitorState) {
     if (Matchers.equalsMethodDeclaration().matches(methodTree, visitorState)) {

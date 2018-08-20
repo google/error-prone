@@ -117,8 +117,7 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
     ClassType arbitraryClassType = returnStatementsTypes.asList().get(0);
     ImmutableList<String> superTypes = getImmutableSuperTypesForClassType(arbitraryClassType);
 
-    return superTypes
-        .stream()
+    return superTypes.stream()
         .filter(areAllReturnStatementsAssignable(returnStatementsTypes))
         .findFirst();
   }
@@ -126,8 +125,7 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
   private static Predicate<String> areAllReturnStatementsAssignable(
       ImmutableSet<ClassType> returnStatementsTypes) {
     return s ->
-        returnStatementsTypes
-            .stream()
+        returnStatementsTypes.stream()
             .map(MutableMethodReturnType::getImmutableSuperTypesForClassType)
             .allMatch(c -> c.contains(s));
   }

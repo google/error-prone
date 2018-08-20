@@ -78,9 +78,7 @@ public class ParameterComment extends BugChecker
             symbol.getParameters().stream(),
             Stream.iterate(getLast(symbol.getParameters()), x -> x)),
         (commented, param) ->
-            commented
-                .afterComments()
-                .stream()
+            commented.afterComments().stream()
                 .filter(c -> matchingParamComment(c, param))
                 .findFirst()
                 .ifPresent(c -> fixParamComment(fix, commented, param, c)));

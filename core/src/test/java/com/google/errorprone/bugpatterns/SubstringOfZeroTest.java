@@ -146,7 +146,6 @@ public class SubstringOfZeroTest {
         .doTest();
   }
 
-
   @Test
   public void positiveStringLiteral() throws Exception {
     helper
@@ -168,5 +167,4 @@ public class SubstringOfZeroTest {
             "}")
         .doTest();
   }
-
 }

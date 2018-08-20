@@ -132,15 +132,9 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   private static final Matcher<ExpressionTree> SIZE_OR_LENGTH_STATIC_METHOD =
       anyOf(
           Streams.concat(
-                  STATIC_CLASSES
-                      .column(MethodName.SIZE)
-                      .keySet()
-                      .stream()
+                  STATIC_CLASSES.column(MethodName.SIZE).keySet().stream()
                       .map(className -> staticMethod().onClass(className).named("size")),
-                  STATIC_CLASSES
-                      .column(MethodName.LENGTH)
-                      .keySet()
-                      .stream()
+                  STATIC_CLASSES.column(MethodName.LENGTH).keySet().stream()
                       .map(className -> staticMethod().onClass(className).named("length")))
               .collect(toImmutableList()));
   private static final Matcher<MemberSelectTree> ARRAY_LENGTH_MATCHER =

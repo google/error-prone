@@ -148,8 +148,7 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
    */
   private ImmutableList<MethodTree> getClassTreeMethods(ClassTree classTree) {
     List<? extends Tree> members = classTree.getMembers();
-    return members
-        .stream()
+    return members.stream()
         .filter(MethodTree.class::isInstance)
         .map(MethodTree.class::cast)
         .filter(m -> !isSuppressed(m))

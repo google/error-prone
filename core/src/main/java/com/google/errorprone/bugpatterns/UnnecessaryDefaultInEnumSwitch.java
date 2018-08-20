@@ -79,8 +79,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
       return NO_MATCH;
     }
     Set<String> handledCases =
-        tree.getCases()
-            .stream()
+        tree.getCases().stream()
             .map(CaseTree::getExpression)
             .filter(IdentifierTree.class::isInstance)
             .map(p -> ((IdentifierTree) p).getName().toString())

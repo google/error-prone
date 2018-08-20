@@ -88,8 +88,7 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   @Override
   public ErrorProneScanner get() {
     return new ErrorProneScanner(
-        getEnabledChecks()
-            .stream()
+        getEnabledChecks().stream()
             .map(this::instantiateChecker)
             .collect(ImmutableSet.toImmutableSet()),
         severities);
@@ -112,9 +111,7 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
 
   @Override
   public ImmutableSet<BugCheckerInfo> getEnabledChecks() {
-    return getAllChecks()
-        .values()
-        .stream()
+    return getAllChecks().values().stream()
         .filter(input -> !disabled.contains(input.canonicalName()))
         .collect(ImmutableSet.toImmutableSet());
   }

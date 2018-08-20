@@ -109,8 +109,7 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
         return super.visitMethodInvocation(node, null);
       }
     }.scan(state.getPath(), null);
-    return Sets.difference(required, called)
-        .stream()
+    return Sets.difference(required, called).stream()
         .findFirst()
         .map(
             p ->

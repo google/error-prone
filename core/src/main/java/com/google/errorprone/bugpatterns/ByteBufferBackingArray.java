@@ -107,9 +107,7 @@ public class ByteBufferBackingArray extends BugChecker implements MethodInvocati
         return Description.NO_MATCH;
       }
       Optional<? extends Tree> validMemberTree =
-          enclosingClass
-              .getMembers()
-              .stream()
+          enclosingClass.getMembers().stream()
               .filter(
                   memberTree -> ValidByteBufferArrayScanner.scan(memberTree, state, bufferSymbol))
               .findFirst();

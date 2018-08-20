@@ -73,8 +73,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         continue;
       }
       MethodSymbol msym = (MethodSymbol) sym;
-      if (msym.getParameters()
-          .stream()
+      if (msym.getParameters().stream()
           .noneMatch(p -> maybeFunctionalInterface(p.type, types, state))) {
         continue;
       }
@@ -90,8 +89,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         continue;
       }
       MethodSymbol msym = getSymbol((MethodTree) member);
-      if (msym.getParameters()
-          .stream()
+      if (msym.getParameters().stream()
           .noneMatch(p -> maybeFunctionalInterface(p.type, types, state))) {
         continue;
       }
@@ -107,8 +105,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
       while (!worklist.isEmpty()) {
         MethodSymbol msym2 = worklist.removeFirst();
         ImmutableList<MethodSymbol> overrides =
-            clash
-                .stream()
+            clash.stream()
                 .filter(m -> msym2.overrides(m, origin, types, /*checkResult=*/ false))
                 .collect(toImmutableList());
         worklist.addAll(overrides);
@@ -119,8 +116,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
 
         // ignore if there are overridden clashing methods in class
         if (ASTHelpers.findSuperMethod(msym, types).isPresent()
-            && clash
-                .stream()
+            && clash.stream()
                 .anyMatch(
                     methodSymbol -> ASTHelpers.findSuperMethod(methodSymbol, types).isPresent())) {
           return NO_MATCH;
@@ -129,8 +125,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         String message =
             "When passing lambda arguments to this function, callers will need a cast to"
                 + " disambiguate with: "
-                + clash
-                    .stream()
+                + clash.stream()
                     .map(m -> Signatures.prettyMethodSignature(origin, m))
                     .collect(joining("\n    "));
         state.reportMatch(buildDescription(member).setMessage(message).build());
@@ -148,8 +143,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     return String.format(
         "%s(%s)",
         msym.getSimpleName(),
-        msym.getParameters()
-            .stream()
+        msym.getParameters().stream()
             .map(p -> functionalInterfaceSignature(state, p.type))
             .collect(joining(",")));
   }

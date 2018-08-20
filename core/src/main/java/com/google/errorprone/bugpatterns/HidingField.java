@@ -60,9 +60,7 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
   @Override
   public Description matchClass(ClassTree classTree, VisitorState visitorState) {
     List<VariableTree> originalClassMembers =
-        classTree
-            .getMembers()
-            .stream()
+        classTree.getMembers().stream()
             .filter(mem -> mem instanceof VariableTree)
             .map(mem -> (VariableTree) mem)
             .filter(
@@ -79,8 +77,7 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
       List<Symbol> parentElements = parentSymbol.getEnclosedElements();
 
       Map<Name, VarSymbol> parentMembers =
-          parentElements
-              .stream()
+          parentElements.stream()
               .filter(mem -> (mem instanceof VarSymbol))
               .map(mem -> (VarSymbol) mem)
               .filter(mem -> (!mem.isPrivate() && !mem.getModifiers().contains(Modifier.STATIC)))

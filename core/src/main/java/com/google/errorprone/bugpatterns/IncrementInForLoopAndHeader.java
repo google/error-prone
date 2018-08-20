@@ -57,8 +57,7 @@ public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTr
 
     // keep track of all the symbols that are updated in the for loop header
     final Set<Symbol> incrementedSymbols =
-        updates
-            .stream()
+        updates.stream()
             .filter(expStateTree -> expStateTree.getExpression() instanceof UnaryTree)
             .map(
                 expStateTree ->

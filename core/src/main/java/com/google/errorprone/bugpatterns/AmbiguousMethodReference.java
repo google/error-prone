@@ -100,8 +100,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
           String.format(
               "This method's reference is ambiguous, its name and functional interface type"
                   + " are the same as: %s",
-              clash
-                  .stream()
+              clash.stream()
                   .map(m -> Signatures.prettyMethodSignature(origin, m))
                   .collect(joining(", ")));
       state.reportMatch(buildDescription(member).setMessage(message).build());

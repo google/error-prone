@@ -53,9 +53,7 @@ public class OverrideThrowableToString extends BugChecker implements ClassTreeMa
     Symbol throwableClass = visitorState.getSymbolFromString("java.lang.Throwable");
     if (Objects.equals(ASTHelpers.getSymbol(classTree.getExtendsClause()), throwableClass)) {
       Optional<? extends Tree> methodTree =
-          classTree
-              .getMembers()
-              .stream()
+          classTree.getMembers().stream()
               .filter(
                   m ->
                       m instanceof MethodTree

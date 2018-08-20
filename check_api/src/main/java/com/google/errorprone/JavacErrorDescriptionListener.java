@@ -78,9 +78,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   @Override
   public void onDescribed(Description description) {
     List<AppliedFix> appliedFixes =
-        description
-            .fixes
-            .stream()
+        description.fixes.stream()
             .filter(f -> !shouldSkipImportTreeFix(description.node, f))
             .map(fixToAppliedFix)
             .filter(Objects::nonNull)

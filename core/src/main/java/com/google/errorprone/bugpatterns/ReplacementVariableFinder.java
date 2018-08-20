@@ -60,9 +60,7 @@ public final class ReplacementVariableFinder {
     Preconditions.checkState(input.getKind() == IDENTIFIER || input.getKind() == MEMBER_SELECT);
 
     ImmutableMultimap<Integer, JCVariableDecl> potentialReplacements =
-        ASTHelpers.findEnclosingNode(state.getPath(), JCClassDecl.class)
-            .getMembers()
-            .stream()
+        ASTHelpers.findEnclosingNode(state.getPath(), JCClassDecl.class).getMembers().stream()
             .filter(JCVariableDecl.class::isInstance)
             .map(JCVariableDecl.class::cast)
             .filter(validFieldPredicate)
@@ -87,9 +85,7 @@ public final class ReplacementVariableFinder {
     // find a method parameter matching the input predicate and similar name and suggest it
     // as the new argument
     Multimap<Integer, JCVariableDecl> potentialReplacements =
-        ASTHelpers.findEnclosingNode(state.getPath(), JCMethodDecl.class)
-            .getParameters()
-            .stream()
+        ASTHelpers.findEnclosingNode(state.getPath(), JCMethodDecl.class).getParameters().stream()
             .filter(validParameterPredicate)
             .collect(collectByEditDistanceTo(simpleNameOfIdentifierOrMemberAccess(input)));
 
@@ -106,9 +102,7 @@ public final class ReplacementVariableFinder {
 
     // Take all of the potential edit-distance replacements with the same minimum distance,
     // then suggest them as individual fixes.
-    return potentialReplacements
-        .get(Collections.min(potentialReplacements.keySet()))
-        .stream()
+    return potentialReplacements.get(Collections.min(potentialReplacements.keySet())).stream()
         .map(replacementFunction)
         .collect(toImmutableList());
   }

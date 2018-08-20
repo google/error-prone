@@ -90,10 +90,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
           .build();
 
   private static final ImmutableMap<String, TemporalUnit> METHOD_NAME_TO_UNIT =
-      FACTORIES
-          .rowMap()
-          .values()
-          .stream()
+      FACTORIES.rowMap().values().stream()
           .flatMap(x -> x.entrySet().stream())
           .collect(toImmutableMap(x -> x.getValue(), x -> x.getKey()));
 

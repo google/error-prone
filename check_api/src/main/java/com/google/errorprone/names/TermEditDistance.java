@@ -57,20 +57,17 @@ public class TermEditDistance {
 
     // costMatrix[s][t] is the edit distance between source term s and target term t
     double[][] costMatrix =
-        sourceTerms
-            .stream()
+        sourceTerms.stream()
             .map(s -> targetTerms.stream().mapToDouble(t -> editDistanceFn.apply(s, t)).toArray())
             .toArray(double[][]::new);
 
     // worstCaseMatrix[s][t] is the worst case distance between source term s and target term t
     double[][] worstCaseMatrix =
-        sourceTerms
-            .stream()
+        sourceTerms.stream()
             .map(s -> s.length())
             .map(
                 s ->
-                    targetTerms
-                        .stream()
+                    targetTerms.stream()
                         .map(t -> t.length())
                         .mapToDouble(t -> maxDistanceFn.apply(s, t))
                         .toArray())

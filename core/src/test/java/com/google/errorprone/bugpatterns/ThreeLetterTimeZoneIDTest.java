@@ -49,8 +49,7 @@ public class ThreeLetterTimeZoneIDTest {
     // IDs in TimeZone.getAvailableIDs() that aren't in ZoneId.getAvailableZoneIds(). Sanity check.
     Set<String> availableZoneIds = new HashSet<>(ZoneId.getAvailableZoneIds());
     Set<String> expectedIds =
-        Arrays.asList(TimeZone.getAvailableIDs())
-            .stream()
+        Arrays.asList(TimeZone.getAvailableIDs()).stream()
             .filter(s -> s.length() == 3)
             .filter(s -> !availableZoneIds.contains(s))
             .collect(Collectors.toSet());

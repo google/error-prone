@@ -58,5 +58,4 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
             .replace(state.getEndPosition(expression), state.getEndPosition(tree), "")
             .build());
   }
-
 }

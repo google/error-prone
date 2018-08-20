@@ -120,8 +120,7 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
     // matter.
     ImmutableSet<ComparisonPair> suspiciousPairs =
         suspiciousComparisons.stream().map(ComparisonSite::pair).collect(toImmutableSet());
-    suspiciousComparisons
-        .stream()
+    suspiciousComparisons.stream()
         .filter(p -> !suspiciousPairs.contains(p.pair().reversed()))
         .map(
             c ->

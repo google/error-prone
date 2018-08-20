@@ -89,9 +89,7 @@ public class BugPatternIndexWriter {
     Map<String, Object> templateData = new HashMap<>();
 
     List<Map<String, Object>> bugpatternData =
-        Multimaps.asMap(sorted)
-            .entrySet()
-            .stream()
+        Multimaps.asMap(sorted).entrySet().stream()
             .map(
                 e ->
                     ImmutableMap.of(

@@ -96,7 +96,6 @@ public class ImmutableChecker extends BugChecker
     this.immutableAnnotations = immutableAnnotations;
   }
 
-
   // check instantiations of `@ImmutableTypeParameter`s in method references
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
@@ -205,9 +204,7 @@ public class ImmutableChecker extends BugChecker
           .build();
     }
     ImmutableSet<String> immutableAndContainer =
-        typarams
-            .entrySet()
-            .stream()
+        typarams.entrySet().stream()
             .filter(
                 e ->
                     annotation.containerOf().contains(e.getKey())
@@ -342,8 +339,7 @@ public class ImmutableChecker extends BugChecker
       }
       // Don't use getImmutableAnnotation here: subtypes of trusted types are
       // also trusted, only check for explicitly annotated supertypes.
-      if (immutableAnnotations
-          .stream()
+      if (immutableAnnotations.stream()
           .anyMatch(annotation -> ASTHelpers.hasAnnotation(superType.tsym, annotation, state))) {
         return superType;
       }

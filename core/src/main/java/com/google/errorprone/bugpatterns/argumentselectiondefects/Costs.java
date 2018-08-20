@@ -55,8 +55,7 @@ class Costs {
   Changes computeAssignments() {
     int[] assignments = new HungarianAlgorithm(costMatrix).execute();
     ImmutableList<Parameter> formalsWithChange =
-        formals
-            .stream()
+        formals.stream()
             .filter(f -> assignments[f.index()] != f.index())
             .collect(toImmutableList());
 
@@ -65,20 +64,17 @@ class Costs {
     }
 
     ImmutableList<Double> originalCost =
-        formalsWithChange
-            .stream()
+        formalsWithChange.stream()
             .map(f2 -> costMatrix[f2.index()][f2.index()])
             .collect(toImmutableList());
 
     ImmutableList<Double> assignmentCost =
-        formalsWithChange
-            .stream()
+        formalsWithChange.stream()
             .map(f1 -> costMatrix[f1.index()][assignments[f1.index()]])
             .collect(toImmutableList());
 
     ImmutableList<ParameterPair> changes =
-        formalsWithChange
-            .stream()
+        formalsWithChange.stream()
             .map(f -> ParameterPair.create(f, actuals.get(assignments[f.index()])))
             .collect(toImmutableList());
 
@@ -92,8 +88,7 @@ class Costs {
    * pairings remain.
    */
   Stream<ParameterPair> viablePairs() {
-    return formals
-        .stream()
+    return formals.stream()
         .flatMap(f -> actuals.stream().map(a -> ParameterPair.create(f, a)))
         .filter(
             p -> costMatrix[p.formal().index()][p.actual().index()] != Double.POSITIVE_INFINITY);

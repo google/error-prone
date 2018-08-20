@@ -43,13 +43,12 @@ import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "TryFailRefactoring",
-  category = JUNIT,
-  summary = "Prefer assertThrows to try/fail",
-  severity = SUGGESTION,
-  tags = REFACTORING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "TryFailRefactoring",
+    category = JUNIT,
+    summary = "Prefer assertThrows to try/fail",
+    severity = SUGGESTION,
+    tags = REFACTORING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<StatementTree> FAIL_METHOD =
@@ -89,8 +88,9 @@ public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
         String.format(
             "assertThrows(%s.class, () -> ",
             state.getSourceForNode(catchTree.getParameter().getType())));
-    boolean useExpressionLambda = throwingStatements.size() == 1
-        && getOnlyElement(throwingStatements).getKind() == Kind.EXPRESSION_STATEMENT;
+    boolean useExpressionLambda =
+        throwingStatements.size() == 1
+            && getOnlyElement(throwingStatements).getKind() == Kind.EXPRESSION_STATEMENT;
     if (!useExpressionLambda) {
       fixPrefix.append("{");
     }

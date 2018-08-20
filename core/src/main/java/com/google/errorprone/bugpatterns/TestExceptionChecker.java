@@ -57,8 +57,7 @@ public class TestExceptionChecker extends AbstractTestExceptionChecker {
     }
     Description.Builder description = buildDescription(tree);
     List<SuggestedFix> fixes =
-        Lists.reverse(statements)
-            .stream()
+        Lists.reverse(statements).stream()
             .filter(t -> !JUnitMatchers.containsTestMethod(t))
             .map(
                 s ->

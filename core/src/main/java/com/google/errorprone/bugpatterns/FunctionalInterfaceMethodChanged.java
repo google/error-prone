@@ -68,9 +68,7 @@ public class FunctionalInterfaceMethodChanged extends BugChecker implements Meth
         && IS_FUNCTIONAL_INTERFACE.matches(enclosingClazz, state)) {
       Types types = Types.instance(state.context);
       Set<Symbol> functionalSuperInterfaceSams =
-          enclosingClazz
-              .getImplementsClause()
-              .stream()
+          enclosingClazz.getImplementsClause().stream()
               .filter(t -> IS_FUNCTIONAL_INTERFACE.matches(t, state))
               .map(ASTHelpers::getSymbol)
               .map(TypeSymbol.class::cast)

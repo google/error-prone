@@ -70,24 +70,20 @@ public final class ElementPredicates {
 
   private static List<ExecutableElement> getConstructorsWithAnnotations(
       Element exploringConstructor, List<String> annotations) {
-    return constructorsIn(exploringConstructor.getEnclosingElement().getEnclosedElements())
-        .stream()
+    return constructorsIn(exploringConstructor.getEnclosingElement().getEnclosedElements()).stream()
         .filter(constructor -> hasAnyOfAnnotation(constructor, annotations))
         .sorted(Comparator.comparing((e -> e.getSimpleName().toString())))
         .collect(toImmutableList());
   }
 
   private static boolean hasAnyOfAnnotation(ExecutableElement input, List<String> annotations) {
-    return input
-        .getAnnotationMirrors()
-        .stream()
+    return input.getAnnotationMirrors().stream()
         .map(annotationMirror -> asType(annotationMirror.getAnnotationType().asElement()))
         .anyMatch(type -> typeInAnnotations(type, annotations));
   }
 
   private static boolean typeInAnnotations(TypeElement t, List<String> annotations) {
-    return annotations
-        .stream()
+    return annotations.stream()
         .anyMatch(annotation -> t.getQualifiedName().contentEquals(annotation));
   }
 }

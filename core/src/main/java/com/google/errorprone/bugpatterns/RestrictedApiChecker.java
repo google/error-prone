@@ -87,8 +87,7 @@ public class RestrictedApiChecker extends BugChecker
 
     // Try each super method for @RestrictedApi
     Optional<MethodSymbol> superWithRestrictedApi =
-        ASTHelpers.findSuperMethods(methSymbol, state.getTypes())
-            .stream()
+        ASTHelpers.findSuperMethods(methSymbol, state.getTypes()).stream()
             .filter((t) -> ASTHelpers.hasAnnotation(t, RestrictedApi.class, state))
             .findFirst();
     if (!superWithRestrictedApi.isPresent()) {
