@@ -14,9 +14,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneFlags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,6 +29,8 @@ public class UnusedTest {
 
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(Unused.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new Unused(ErrorProneFlags.empty()), getClass());
 
 
 
@@ -93,7 +97,7 @@ public class UnusedTest {
 
   @Test
   public void unusedEnhancedForLoop() throws Exception {
-    BugCheckerRefactoringTestHelper.newInstance(new Unused(), getClass())
+    refactoringHelper
         .addInputLines(
             "UnusedEnhancedForLoop.java",
             "package unusedvars;",
@@ -384,7 +388,7 @@ public class UnusedTest {
 
   @Test
   public void refactoring() throws Exception {
-    BugCheckerRefactoringTestHelper.newInstance(new Unused(), getClass())
+    refactoringHelper
         .addInputLines(
             "Unuseds.java",
             "package unusedvars;",
@@ -524,7 +528,7 @@ public class UnusedTest {
 
   @Test
   public void unusedWithComment() throws Exception {
-    BugCheckerRefactoringTestHelper.newInstance(new Unused(), getClass())
+    refactoringHelper
         .addInputLines(
             "UnusedWithComment.java",
             "package unusedvars;",
@@ -587,7 +591,6 @@ public class UnusedTest {
         .addSourceLines(
             "Utf8Handling.java",
             "package unusedvars;",
-            "/** */",
             "public class Utf8Handling {",
             "  private int foo = 1;",
             "  public void test() {",
@@ -602,6 +605,23 @@ public class UnusedTest {
             "    return ++foo;",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodAnnotationsExemptingParameters() {
+    helper
+        .addSourceLines(
+            "A.java",
+            "package unusedvars;",
+            "class A {",
+            "  { foo(1); }",
+            "  @B",
+            "  private static void foo(int a) {}",
+            "}",
+            "@interface B {}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:Unused:methodAnnotationsExemptingParameters=unusedvars.B"))
         .doTest();
   }
 
