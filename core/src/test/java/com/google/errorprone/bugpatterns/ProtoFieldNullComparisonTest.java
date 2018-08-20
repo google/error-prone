@@ -67,8 +67,13 @@ public final class ProtoFieldNullComparisonTest {
             "    if (message.getMultiFieldList() != null) {}",
             "    // BUG: Diagnostic contains: message.getMultiFieldList().isEmpty()",
             "    if (null == message.getMultiFieldList()) {}",
+            "    // BUG: Diagnostic contains: message.getMultiFieldCount() > 1",
+            "    if (message.getMultiField(1) != null) {}",
+            "    // BUG: Diagnostic contains: message.getMultiFieldCount() <= 1",
+            "    if (message.getMultiField(1) == null) {}",
             "  }",
             "}")
+        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:MatchListGetters"))
         .doTest();
   }
 
