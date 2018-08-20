@@ -40,6 +40,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -143,6 +144,8 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           "org.openqa.selenium.support.FindBy",
           "org.openqa.selenium.support.FindBys");
 
+  private final ImmutableSet<String> methodAnnotationsExemptingParameters;
+
   /** The set of types exempting a type that is extending or implementing them. */
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES =
       ImmutableSet.of(
@@ -160,6 +163,14 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
   private static final ImmutableSet<String> LOGGER_TYPE_NAME = ImmutableSet.of("GoogleLogger");
 
   private static final ImmutableSet<String> LOGGER_VAR_NAME = ImmutableSet.of("logger");
+
+  public Unused(ErrorProneFlags flags) {
+    ImmutableSet.Builder<String> methodAnnotationsExemptingParameters = ImmutableSet.builder();
+    flags
+        .getList("Unused:methodAnnotationsExemptingParameters")
+        .ifPresent(methodAnnotationsExemptingParameters::addAll);
+    this.methodAnnotationsExemptingParameters = methodAnnotationsExemptingParameters.build();
+  }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -287,18 +298,19 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
             && LOGGER_VAR_NAME.contains(variableTree.getName().toString());
       }
 
-      /** Returns whether {@code sym} can be removed without updating callsites in other files. */
+      /** Returns whether {@code sym} can be removed without updating call sites in other files. */
       private boolean isParameterSubjectToAnalysis(Symbol sym) {
         checkArgument(sym.getKind() == ElementKind.PARAMETER);
         Symbol enclosingMethod = sym.owner;
 
-        if (enclosingMethod.getModifiers().contains(Modifier.PRIVATE)) {
-          // Parameter of private method.
-          return true;
+        for (String annotationName : methodAnnotationsExemptingParameters) {
+          if (ASTHelpers.hasAnnotation(enclosingMethod, annotationName, state)) {
+            return false;
+          }
         }
 
 
-        return false;
+        return enclosingMethod.getModifiers().contains(Modifier.PRIVATE);
       }
 
       @Override
