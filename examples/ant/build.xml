@@ -1,0 +1,37 @@
+<!--
+  Copyright 2018 The Error Prone Authors.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<project name="error prone example" default="compile">
+  <target name="compile">
+    <delete dir="build"/>
+    <mkdir dir="build"/>
+
+    <property name="error_prone_core.jar" location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.3.2-SNAPSHOT/error_prone_core-2.3.2-SNAPSHOT-with-dependencies.jar"/>
+    <property name="jformatstring.jar" location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
+    <property name="javac.jar" location="${user.home}/.m2/repository/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar"/>
+
+    <!-- using github.com/google/error-prone-javac is required when running on JDK 8 -->
+    <condition property="patch.javac" value="-XDempty" else="-J-Xbootclasspath/p:${javac.jar}">
+        <javaversion atleast="9"/>
+    </condition>
+
+    <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
+      <compilerarg value="${patch.javac}"/>
+      <compilerarg line="-XDcompilePolicy=simple"/>
+      <compilerarg line="-processorpath ${error_prone_core.jar}:${jformatstring.jar}"/>
+      <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
+    </javac>
+  </target>
+</project>
