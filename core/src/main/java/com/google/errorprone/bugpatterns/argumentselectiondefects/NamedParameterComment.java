@@ -165,7 +165,7 @@ public final class NamedParameterComment {
   }
 
   /**
-   * Generate comment text which @{code exactMatch} would consider to match the formal parameter
+   * Generate comment text which {@code exactMatch} would consider to match the formal parameter
    * name.
    */
   static String toCommentText(String formal) {
