@@ -110,10 +110,7 @@ public class ImmutableModification extends BugChecker implements MethodInvocatio
 
   static final Matcher<ExpressionTree> MATCHER =
       Matchers.anyOf(
-          ILLEGAL
-              .asMap()
-              .entrySet()
-              .stream()
+          ILLEGAL.asMap().entrySet().stream()
               .map(
                   e ->
                       instanceMethod()

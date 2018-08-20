@@ -294,5 +294,4 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
 
     return identifier + "T";
   }
-
 }

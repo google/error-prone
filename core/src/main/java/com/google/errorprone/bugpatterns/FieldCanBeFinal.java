@@ -56,12 +56,11 @@ import javax.lang.model.element.Modifier;
 
 /** @author Liam Miller-Cushon (cushon@google.com) */
 @BugPattern(
-  name = "FieldCanBeFinal",
-  category = JDK,
-  summary = "This field is only assigned during initialization; consider making it final",
-  severity = SUGGESTION,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "FieldCanBeFinal",
+    category = JDK,
+    summary = "This field is only assigned during initialization; consider making it final",
+    severity = SUGGESTION,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMatcher {
 
   /** Annotations that imply a field is non-constant. */

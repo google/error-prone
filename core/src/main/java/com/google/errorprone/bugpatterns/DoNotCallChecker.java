@@ -76,8 +76,7 @@ public class DoNotCallChecker extends BugChecker
           .addFix(SuggestedFixes.addModifiers(tree, state, Modifier.FINAL))
           .build();
     }
-    return findSuperMethods(symbol, state.getTypes())
-        .stream()
+    return findSuperMethods(symbol, state.getTypes()).stream()
         .filter(s -> hasAnnotation(s, DoNotCall.class, state))
         .findAny()
         .map(

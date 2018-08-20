@@ -50,9 +50,7 @@ public class MultipleUnaryOperatorsInMethodCall extends BugChecker
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
 
-    if (methodInvocationTree
-        .getArguments()
-        .stream()
+    if (methodInvocationTree.getArguments().stream()
         .filter(arg -> UNARY_OPERATORS.contains(arg.getKind()))
         .map(arg -> ASTHelpers.getSymbol(((UnaryTree) arg).getExpression()))
         .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))

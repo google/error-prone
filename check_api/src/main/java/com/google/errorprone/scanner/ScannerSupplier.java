@@ -162,17 +162,13 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     }
 
     if (errorProneOptions.isDropErrorsToWarnings()) {
-      getAllChecks()
-          .values()
-          .stream()
+      getAllChecks().values().stream()
           .filter(c -> c.defaultSeverity() == SeverityLevel.ERROR && c.disableable())
           .forEach(c -> severities.put(c.canonicalName(), SeverityLevel.WARNING));
     }
 
     if (errorProneOptions.isDisableAllChecks()) {
-      getAllChecks()
-          .values()
-          .stream()
+      getAllChecks().values().stream()
           .filter(c -> c.disableable())
           .forEach(c -> disabled.add(c.canonicalName()));
     }

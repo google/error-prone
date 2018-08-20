@@ -184,7 +184,6 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
    * Sets javac's {@code -XDcompilePolicy} flag to ensure that all classes in a file are attributed
    * before any of them are lowered. Error Prone depends on this behavior when analyzing files that
    * contain multiple top-level classes.
-   *
    */
   private static ImmutableList<String> setCompilePolicyToByFile(ImmutableList<String> args) {
     for (String arg : args) {

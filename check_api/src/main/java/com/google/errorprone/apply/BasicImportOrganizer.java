@@ -40,8 +40,7 @@ class BasicImportOrganizer implements ImportOrganizer {
 
     // Group into static and non-static. Each group is a set sorted by type.
     Map<Boolean, ImmutableSortedSet<Import>> partionedByStatic =
-        imports
-            .stream()
+        imports.stream()
             .collect(
                 Collectors.partitioningBy(
                     Import::isStatic, toImmutableSortedSet(Comparator.comparing(Import::getType))));

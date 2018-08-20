@@ -79,9 +79,7 @@ public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTre
     // Find the method that overrides the single-byte read. It should also override the multibyte
     // read.
     MethodTree readByteMethod =
-        classTree
-            .getMembers()
-            .stream()
+        classTree.getMembers().stream()
             .filter(MethodTree.class::isInstance)
             .map(MethodTree.class::cast)
             .filter(m -> READ_INT_METHOD.matches(m, state))

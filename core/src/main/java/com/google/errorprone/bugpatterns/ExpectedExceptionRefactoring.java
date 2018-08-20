@@ -40,13 +40,12 @@ import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-  name = "ExpectedExceptionRefactoring",
-  category = JUNIT,
-  summary = "Prefer assertThrows to ExpectedException",
-  severity = SUGGESTION,
-  tags = REFACTORING,
-  providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-)
+    name = "ExpectedExceptionRefactoring",
+    category = JUNIT,
+    summary = "Prefer assertThrows to ExpectedException",
+    severity = SUGGESTION,
+    tags = REFACTORING,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ExpectedExceptionRefactoring extends AbstractExpectedExceptionChecker
     implements VariableTreeMatcher {
   @Override

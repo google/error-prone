@@ -46,9 +46,7 @@ class NameInCommentHeuristic implements Heuristic {
     // change which matches the formal parameter
     ImmutableList<Commented<ExpressionTree>> comments = findCommentsForArguments(node, state);
 
-    return changes
-        .changedPairs()
-        .stream()
+    return changes.changedPairs().stream()
         .noneMatch(
             p -> {
               MatchType match =

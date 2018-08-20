@@ -92,8 +92,7 @@ public class Signatures {
     }
     sb.append(m.isConstructor() ? origin.getSimpleName() : m.getSimpleName()).append('(');
     sb.append(
-        m.getParameters()
-            .stream()
+        m.getParameters().stream()
             .map(v -> v.type.accept(PRETTY_TYPE_VISITOR, null))
             .collect(joining(", ")));
     sb.append(')');
@@ -124,8 +123,7 @@ public class Signatures {
           if (t.getTypeArguments().nonEmpty()) {
             sb.append('<');
             sb.append(
-                t.getTypeArguments()
-                    .stream()
+                t.getTypeArguments().stream()
                     .map(a -> a.accept(this, null))
                     .collect(joining(", ")));
             sb.append(">");

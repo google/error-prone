@@ -110,15 +110,13 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
             ((MethodInvocationTree) ((ExpressionStatementTree) statement).getExpression())
                 .getArguments());
       }
-      if (arguments
-          .stream()
+      if (arguments.stream()
           .flatMap(Collection::stream)
           .anyMatch(a -> a.getKind() == Kind.NULL_LITERAL)) {
         return Optional.empty();
       }
       List<String> args =
-          arguments
-              .stream()
+          arguments.stream()
               .map(
                   arg ->
                       arg.stream()
@@ -155,10 +153,9 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
         String typeArguments =
             tree.getIdentifier() instanceof ParameterizedTypeTree
                 ? ((ParameterizedTypeTree) tree.getIdentifier())
-                    .getTypeArguments()
-                    .stream()
-                    .map(state::getSourceForNode)
-                    .collect(joining(", ", "<", ">"))
+                    .getTypeArguments().stream()
+                        .map(state::getSourceForNode)
+                        .collect(joining(", ", "<", ">"))
                 : "";
         replacement =
             "ImmutableMap."
@@ -202,8 +199,7 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
       return NO_MATCH;
     }
     ImmutableList<? extends Tree> members =
-        body.getMembers()
-            .stream()
+        body.getMembers().stream()
             .filter(
                 m ->
                     !(m instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) m)))

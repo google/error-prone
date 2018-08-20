@@ -232,8 +232,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       }
 
       private boolean exemptedBySuperType(Type type, VisitorState state) {
-        return EXEMPTING_SUPER_TYPES
-            .stream()
+        return EXEMPTING_SUPER_TYPES.stream()
             .anyMatch(t -> isSubtype(type, Suppliers.typeFromString(t).get(state), state));
       }
 

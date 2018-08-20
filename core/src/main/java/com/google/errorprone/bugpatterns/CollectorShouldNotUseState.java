@@ -76,10 +76,7 @@ public class CollectorShouldNotUseState extends BugChecker implements MethodInvo
         return false;
       }
 
-      return newClassTree
-          .getClassBody()
-          .getMembers()
-          .stream()
+      return newClassTree.getClassBody().getMembers().stream()
           .filter(mem -> mem instanceof VariableTree)
           .anyMatch(mem -> !isFinal(mem));
     }

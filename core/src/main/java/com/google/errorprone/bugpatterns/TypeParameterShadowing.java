@@ -91,8 +91,7 @@ public class TypeParameterShadowing extends BugChecker
     List<TypeVariableSymbol> conflictingTypeSymbols = new ArrayList<>();
     typeParameters.forEach(
         param ->
-            enclosingTypeSymbols
-                .stream()
+            enclosingTypeSymbols.stream()
                 .filter(tvs -> tvs.name.contentEquals(param.getName()))
                 .findFirst()
                 .ifPresent(conflictingTypeSymbols::add));
@@ -104,8 +103,7 @@ public class TypeParameterShadowing extends BugChecker
     Description.Builder descriptionBuilder = buildDescription(tree);
     String message =
         "Found aliased type parameters: "
-            + conflictingTypeSymbols
-                .stream()
+            + conflictingTypeSymbols.stream()
                 .map(tvs -> tvs.name + " declared in " + tvs.owner.getSimpleName())
                 .collect(Collectors.joining("\n"));
 
@@ -117,8 +115,7 @@ public class TypeParameterShadowing extends BugChecker
             .map(v -> v.name.toString())
             .collect(toImmutableSet());
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    conflictingTypeSymbols
-        .stream()
+    conflictingTypeSymbols.stream()
         .map(
             v ->
                 renameTypeVariable(
@@ -135,8 +132,7 @@ public class TypeParameterShadowing extends BugChecker
   // Package-private for TypeNameShadowing
   static TypeParameterTree typeParameterInList(
       List<? extends TypeParameterTree> typeParameters, Symbol v) {
-    return typeParameters
-        .stream()
+    return typeParameters.stream()
         .filter(t -> t.getName().contentEquals(v.name))
         .collect(MoreCollectors.onlyElement());
   }

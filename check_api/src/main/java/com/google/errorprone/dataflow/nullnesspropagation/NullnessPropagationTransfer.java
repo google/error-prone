@@ -417,9 +417,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   @Override
   Nullness visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
     ImmutableList<String> annotations =
-        node.getType()
-            .getAnnotationMirrors()
-            .stream()
+        node.getType().getAnnotationMirrors().stream()
             .map(Object::toString)
             .collect(ImmutableList.toImmutableList());
     return Nullness.fromAnnotations(annotations)
@@ -793,9 +791,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         ImmutableList.<String>builder()
             .addAll(inheritedAnnotations(node.getTarget().getMethod().getReturnType()))
             .addAll(
-                node.getType()
-                    .getAnnotationMirrors()
-                    .stream()
+                node.getType().getAnnotationMirrors().stream()
                     .map(Object::toString)
                     .collect(ImmutableList.toImmutableList()))
             .build();
@@ -828,20 +824,17 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         Element genericElt = ((TypeParameterElement) typeVar.asElement()).getGenericElement();
         if (genericElt.getKind().isClass() || genericElt.getKind().isInterface()) {
           ((TypeElement) genericElt)
-              .getTypeParameters()
-              .stream()
-              .filter(
-                  typeParam ->
-                      typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
-              .findFirst()
-              // Annotations at class/interface type variable declaration
-              .ifPresent(decl -> inheritedAnnotations.addAll(decl.getAnnotationMirrors()));
+              .getTypeParameters().stream()
+                  .filter(
+                      typeParam ->
+                          typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
+                  .findFirst()
+                  // Annotations at class/interface type variable declaration
+                  .ifPresent(decl -> inheritedAnnotations.addAll(decl.getAnnotationMirrors()));
         }
       }
     }
-    return inheritedAnnotations
-        .build()
-        .stream()
+    return inheritedAnnotations.build().stream()
         .map(Object::toString)
         .collect(ImmutableList.toImmutableList());
   }

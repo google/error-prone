@@ -29,12 +29,11 @@ import com.sun.source.tree.ClassTree;
 
 /** @author glorioso@google.com */
 @BugPattern(
-  name = "ClassNamedLikeTypeParameter",
-  summary = "This class's name looks like a Type Parameter.",
-  category = JDK,
-  severity = SUGGESTION,
-  tags = StandardTags.STYLE
-)
+    name = "ClassNamedLikeTypeParameter",
+    summary = "This class's name looks like a Type Parameter.",
+    category = JDK,
+    severity = SUGGESTION,
+    tags = StandardTags.STYLE)
 public class ClassNamedLikeTypeParameter extends BugChecker implements ClassTreeMatcher {
 
   @Override

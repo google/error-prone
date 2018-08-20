@@ -144,7 +144,6 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
     }
   }
 
-
   @Override
   public boolean processLine(String line) throws IOException {
     BugPatternInstance pattern = new Gson().fromJson(line, BugPatternInstance.class);
@@ -238,8 +237,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
         findExamples(examplePaths, exampleDirBase, filter);
 
         List<ExampleInfo> exampleInfo =
-            examplePaths
-                .stream()
+            examplePaths.stream()
                 .map(new PathToExampleInfo(pattern.className))
                 .sorted(Comparator.comparing(ExampleInfo::name))
                 .collect(Collectors.toList());

@@ -125,9 +125,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
           anyOf(staticMethod(), Matchers.constructor()),
           (tree, state) -> {
             MethodInvocationTree methodTree = (MethodInvocationTree) tree;
-            return methodTree
-                .getArguments()
-                .stream()
+            return methodTree.getArguments().stream()
                 .allMatch(argument -> ASTHelpers.constValue(argument) != null);
           });
 

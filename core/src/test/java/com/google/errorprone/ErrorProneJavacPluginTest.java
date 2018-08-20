@@ -88,9 +88,7 @@ public class ErrorProneJavacPluginTest {
                 fileManager.getJavaFileObjects(source));
     assertThat(task.call()).isFalse();
     Diagnostic<? extends JavaFileObject> diagnostic =
-        diagnosticCollector
-            .getDiagnostics()
-            .stream()
+        diagnosticCollector.getDiagnostics().stream()
             .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
             .collect(onlyElement());
     assertThat(diagnostic.getMessage(ENGLISH)).contains("[CollectionIncompatibleType]");
@@ -195,8 +193,7 @@ public class ErrorProneJavacPluginTest {
         .named(Joiner.on('\n').join(diagnosticCollector.getDiagnostics()))
         .isTrue();
     assertThat(
-            Files.readAllLines(patchFile, UTF_8)
-                .stream()
+            Files.readAllLines(patchFile, UTF_8).stream()
                 .filter(l -> l.startsWith("--- "))
                 .map(l -> Paths.get(l.substring("--- ".length())).getFileName().toString())
                 .collect(toImmutableList()))

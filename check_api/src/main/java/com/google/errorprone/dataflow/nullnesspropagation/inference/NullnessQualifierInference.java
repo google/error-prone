@@ -197,9 +197,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     ImmutableList<Type> formalParameters =
         callee.isVarArgs()
             ? expandVarargsToArity(callee.getParameters(), sourceNode.args.size())
-            : callee
-                .getParameters()
-                .stream()
+            : callee.getParameters().stream()
                 .map(var -> var.type)
                 .collect(ImmutableList.toImmutableList());
 

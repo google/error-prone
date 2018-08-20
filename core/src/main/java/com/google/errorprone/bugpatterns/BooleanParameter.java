@@ -119,9 +119,7 @@ public class BooleanParameter extends BugChecker implements MethodInvocationTree
   }
 
   private static boolean hasParameterComment(ErrorProneToken token) {
-    return token
-        .comments()
-        .stream()
+    return token.comments().stream()
         .filter(c -> c.getStyle() == BLOCK)
         .anyMatch(
             c ->

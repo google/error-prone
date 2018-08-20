@@ -53,14 +53,11 @@ public class GuardedByUtils {
   }
 
   private static ImmutableSet<String> getAnnotationValueAsStrings(Symbol sym, String guardedBy) {
-    return sym.getRawAttributes()
-        .stream()
+    return sym.getRawAttributes().stream()
         .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals(guardedBy))
         .flatMap(
             a ->
-                a.getElementValues()
-                    .entrySet()
-                    .stream()
+                a.getElementValues().entrySet().stream()
                     .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
                     .map(Map.Entry::getValue)
                     .findFirst()

@@ -125,9 +125,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
 
     private boolean memberIsWhitelisted(Entry<String, ClassMemberKey> member) {
       return allowedMembers.containsEntry(member.getKey(), member.getValue())
-          || allowedMembers
-              .get(member.getKey())
-              .stream()
+          || allowedMembers.get(member.getKey()).stream()
               .anyMatch(
                   memberKey ->
                       memberKey.descriptor().isEmpty()

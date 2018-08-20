@@ -62,8 +62,7 @@ public class ComparableAndComparator extends BugChecker implements ClassTreeMatc
       superTypes.add(superClass);
     }
 
-    return superTypes
-        .stream()
+    return superTypes.stream()
         .anyMatch(superType -> COMPARABLE_AND_COMPARATOR_MATCHER.matches(superType, state));
   }
 

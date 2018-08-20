@@ -88,8 +88,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
     }
     // Find catch blocks that contain only a call to fail, and that ignore the caught exception.
     ImmutableList<CatchTree> catchBlocks =
-        tree.getCatches()
-            .stream()
+        tree.getCatches().stream()
             .filter(
                 c ->
                     c.getBlock().getStatements().size() == 1
@@ -184,8 +183,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
     Types types = state.getTypes();
     // Find all types in the deleted catch blocks that are not already in the throws declaration.
     ImmutableList<Type> toThrow =
-        catchBlocks
-            .stream()
+        catchBlocks.stream()
             .map(c -> ASTHelpers.getType(c.getParameter()))
             // convert multi-catch to a list of component types
             .flatMap(
@@ -202,8 +200,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
         return Optional.empty();
       }
       String throwsString =
-          toThrow
-              .stream()
+          toThrow.stream()
               .map(t -> SuggestedFixes.qualifyType(state, fix, t))
               .distinct()
               .collect(joining(", "));

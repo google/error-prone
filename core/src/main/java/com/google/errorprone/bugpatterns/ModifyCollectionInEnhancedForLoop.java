@@ -59,10 +59,7 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
-    if (state
-        .getTypes()
-        .closure(ASTHelpers.getSymbol(tree).enclClass().asType())
-        .stream()
+    if (state.getTypes().closure(ASTHelpers.getSymbol(tree).enclClass().asType()).stream()
         .anyMatch(
             s ->
                 s.asElement()

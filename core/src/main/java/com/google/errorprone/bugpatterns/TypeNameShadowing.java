@@ -126,8 +126,7 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
     Iterable<Symbol> enclosingTypes = typesInEnclosingScope(env, javaLang);
 
     List<Symbol> shadowedTypes =
-        typeParameters
-            .stream()
+        typeParameters.stream()
             .map(
                 param ->
                     Iterables.tryFind(
@@ -153,8 +152,7 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
             .collect(ImmutableSet.toImmutableSet());
 
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    shadowedTypes
-        .stream()
+    shadowedTypes.stream()
         .filter(tv -> TypeParameterNamingClassification.classify(tv.name.toString()).isValidName())
         .map(
             tv ->
@@ -171,8 +169,7 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
 
   private static String buildMessage(List<Symbol> shadowedTypes) {
     return "Found type parameters shadowing other declared types:\n\t"
-        + shadowedTypes
-            .stream()
+        + shadowedTypes.stream()
             .map(
                 sym ->
                     "Type parameter "

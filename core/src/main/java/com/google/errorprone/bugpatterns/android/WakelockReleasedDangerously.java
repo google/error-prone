@@ -150,9 +150,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
   /** Return whether the given try-tree will catch the given exception type. */
   private boolean tryCatchesException(TryTree tryTree, Type exceptionToCatch, VisitorState state) {
     Types types = state.getTypes();
-    return tryTree
-        .getCatches()
-        .stream()
+    return tryTree.getCatches().stream()
         .anyMatch(
             (CatchTree catchClause) -> {
               Type catchesException = getType(catchClause.getParameter().getType());
@@ -179,8 +177,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
     // Was acquired with timeout.
     return map.get("acquire").stream().anyMatch(m -> m.getArguments().size() == 1)
         // Is reference counted, i.e., referenceCounted not explicitly set to false.
-        && map.get("setReferenceCounted")
-            .stream()
+        && map.get("setReferenceCounted").stream()
             .noneMatch(
                 m -> Boolean.FALSE.equals(constValue(m.getArguments().get(0), Boolean.class)));
   }

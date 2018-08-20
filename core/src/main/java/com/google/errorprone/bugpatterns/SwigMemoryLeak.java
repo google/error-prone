@@ -33,11 +33,10 @@ import javax.lang.model.element.Name;
 
 /** @author irogers@google.com (Ian Rogers) */
 @BugPattern(
-  name = "SwigMemoryLeak",
-  summary = "SWIG generated code that can't call a C++ destructor will leak memory",
-  category = JDK,
-  severity = WARNING
-)
+    name = "SwigMemoryLeak",
+    summary = "SWIG generated code that can't call a C++ destructor will leak memory",
+    category = JDK,
+    severity = WARNING)
 public class SwigMemoryLeak extends BugChecker implements LiteralTreeMatcher {
   private static final Matcher<MethodTree> ENCLOSING_CLASS_HAS_FINALIZER =
       Matchers.enclosingClass(Matchers.hasMethod(Matchers.methodIsNamed("finalize")));

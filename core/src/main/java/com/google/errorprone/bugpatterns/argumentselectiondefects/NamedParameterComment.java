@@ -183,8 +183,7 @@ public final class NamedParameterComment {
    * available.
    */
   public static boolean containsSyntheticParameterName(MethodSymbol sym) {
-    return sym.getParameters()
-        .stream()
+    return sym.getParameters().stream()
         .anyMatch(p -> SYNTHETIC_PARAMETER_NAME.matcher(p.getSimpleName()).matches());
   }
 

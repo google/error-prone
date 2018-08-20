@@ -270,9 +270,7 @@ public class ErrorProneOptions {
     }
 
     public void setDropErrorsToWarnings(boolean dropErrorsToWarnings) {
-      severityMap
-          .entrySet()
-          .stream()
+      severityMap.entrySet().stream()
           .filter(e -> e.getValue() == Severity.ERROR)
           .forEach(e -> e.setValue(Severity.WARN));
       this.dropErrorsToWarnings = dropErrorsToWarnings;
@@ -280,9 +278,7 @@ public class ErrorProneOptions {
 
     public void setEnableAllChecksAsWarnings(boolean enableAllChecksAsWarnings) {
       // Checks manually disabled before this flag are reset to warning-level
-      severityMap
-          .entrySet()
-          .stream()
+      severityMap.entrySet().stream()
           .filter(e -> e.getValue() == Severity.OFF)
           .forEach(e -> e.setValue(Severity.WARN));
       this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;

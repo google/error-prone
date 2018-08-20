@@ -52,9 +52,7 @@ public final class MoreAnnotations {
     }
     return Streams.concat(
         sym.getRawAttributes().stream(),
-        typeAnnotationOwner
-            .getRawTypeAttributes()
-            .stream()
+        typeAnnotationOwner.getRawTypeAttributes().stream()
             .filter(anno -> isAnnotationOnType(sym, anno.position)));
   }
 

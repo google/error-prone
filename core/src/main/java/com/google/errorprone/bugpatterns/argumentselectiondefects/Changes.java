@@ -87,8 +87,7 @@ abstract class Changes {
 
   public String describe(InvocationInfo info) {
     return "The following arguments may have been swapped: "
-        + changedPairs()
-            .stream()
+        + changedPairs().stream()
             .map(
                 p ->
                     String.format(

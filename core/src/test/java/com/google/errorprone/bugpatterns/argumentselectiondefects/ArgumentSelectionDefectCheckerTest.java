@@ -313,9 +313,7 @@ public class ArgumentSelectionDefectCheckerTest {
       return buildDescription(tree)
           .setMessage(
               String.valueOf(
-                  ASTHelpers.getSymbol(tree)
-                      .getParameters()
-                      .stream()
+                  ASTHelpers.getSymbol(tree).getParameters().stream()
                       .noneMatch(p -> p.getSimpleName().toString().matches("arg[0-9]"))))
           .build();
     }

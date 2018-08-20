@@ -98,5 +98,4 @@ public class ExtendingJUnitAssert extends BugChecker implements ClassTreeMatcher
     int startPos = ((JCTree) tree).getStartPosition() + max;
     return fix.replace(startPos, endOfExtendsClause, "").build();
   }
-
 }

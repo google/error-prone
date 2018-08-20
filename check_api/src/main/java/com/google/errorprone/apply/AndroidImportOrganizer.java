@@ -89,8 +89,7 @@ class AndroidImportOrganizer implements ImportOrganizer {
   private void organizePartition(OrganizedImports organized, List<Import> imports) {
 
     Map<String, ImmutableSortedSet<Import>> groupedByRoot =
-        imports
-            .stream()
+        imports.stream()
             .collect(
                 Collectors.groupingBy(
                     // Group by root package.
@@ -102,9 +101,7 @@ class AndroidImportOrganizer implements ImportOrganizer {
 
     // Get the third party roots by removing the roots that are handled specially and sorting.
     Set<String> thirdParty =
-        groupedByRoot
-            .keySet()
-            .stream()
+        groupedByRoot.keySet().stream()
             .filter(r -> !SPECIAL_ROOTS.contains(r))
             .collect(toImmutableSortedSet(Ordering.natural()));
 

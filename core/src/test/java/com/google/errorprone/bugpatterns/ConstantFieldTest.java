@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;

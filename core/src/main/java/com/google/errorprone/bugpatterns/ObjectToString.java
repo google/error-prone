@@ -77,7 +77,6 @@ public class ObjectToString extends AbstractToString {
                         && m.overrides(toString, type.tsym, types, /* checkResult= */ false)));
   }
 
-
   @Override
   protected TypePredicate typePredicate() {
     return ObjectToString::finalNoOverrides;

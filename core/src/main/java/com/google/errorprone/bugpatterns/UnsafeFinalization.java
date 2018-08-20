@@ -81,13 +81,11 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
     // class. We're only looking for cases where the static native uses state of the enclosing class
     // that may become invalid after finalization.
     ImmutableList<Symbol> arguments =
-        tree.getArguments()
-            .stream()
+        tree.getArguments().stream()
             .map(ASTHelpers::getSymbol)
             .filter(x -> x != null)
             .collect(toImmutableList());
-    if (arguments
-        .stream()
+    if (arguments.stream()
         .filter(
             x ->
                 EnumSet.of(TypeKind.INT, TypeKind.LONG)
@@ -96,8 +94,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
       // no instance state is passed to the native method
       return NO_MATCH;
     }
-    if (arguments
-        .stream()
+    if (arguments.stream()
         .anyMatch(
             arg ->
                 arg.getSimpleName().contentEquals("this")
@@ -134,10 +131,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
   private static Symbol getFinalizer(VisitorState state, ClassSymbol enclosing) {
     Type finalizerType = state.getTypeFromString("com.google.common.labs.base.Finalizer");
     Optional<VarSymbol> finalizerField =
-        state
-            .getTypes()
-            .closure(enclosing.asType())
-            .stream()
+        state.getTypes().closure(enclosing.asType()).stream()
             .flatMap(s -> getFields(s.asElement()))
             .filter(s -> ASTHelpers.isSameType(finalizerType, s.asType(), state))
             .findFirst();

@@ -56,8 +56,7 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
       return Description.NO_MATCH;
     }
     ImmutableSet<String> handled =
-        tree.getCases()
-            .stream()
+        tree.getCases().stream()
             .map(CaseTree::getExpression)
             .filter(IdentifierTree.class::isInstance)
             .map(e -> ((IdentifierTree) e).getName().toString())

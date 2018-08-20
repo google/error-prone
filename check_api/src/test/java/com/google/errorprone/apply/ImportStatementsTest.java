@@ -523,4 +523,3 @@ public class ImportStatementsTest {
         "Expected 1 import(s) in the organized imports but it contained 0", exception.getMessage());
   }
 }
-

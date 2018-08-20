@@ -103,8 +103,7 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
     }
 
     SuggestedFix.Builder allFixes = SuggestedFix.builder();
-    throwTrees
-        .stream()
+    throwTrees.stream()
         .filter(badThrow -> badThrow.getExpression() instanceof NewClassTree)
         .forEach(
             badThrow ->
@@ -121,9 +120,7 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
     }
     ClassSymbol classSymbol = (ClassSymbol) symbol;
     ImmutableList<MethodSymbol> constructors =
-        classSymbol
-            .getEnclosedElements()
-            .stream()
+        classSymbol.getEnclosedElements().stream()
             .filter(Symbol::isConstructor)
             .map(e -> (MethodSymbol) e)
             .collect(toImmutableList());

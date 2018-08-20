@@ -109,8 +109,7 @@ public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
     }
     if (POW.matches(tree.getExpression(), state)) {
       MethodInvocationTree pow = (MethodInvocationTree) tree.getExpression();
-      if (pow.getArguments()
-          .stream()
+      if (pow.getArguments().stream()
           .map(ASTHelpers::getType)
           .filter(x -> x != null)
           .map(state.getTypes()::unboxedTypeOrType)

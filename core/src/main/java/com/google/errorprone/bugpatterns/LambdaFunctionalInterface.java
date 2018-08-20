@@ -155,8 +155,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
     }
 
     ImmutableList<Tree> params =
-        tree.getParameters()
-            .stream()
+        tree.getParameters().stream()
             .filter(param -> hasFunctionAsArg(param, state))
             .filter(
                 param ->
@@ -221,9 +220,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
     }
 
     for (MethodInvocationTree methodInvocationTree : methodCallMap.values()) {
-      if (methodInvocationTree
-          .getArguments()
-          .stream()
+      if (methodInvocationTree.getArguments().stream()
           .filter(a -> Kind.LAMBDA_EXPRESSION.equals(a.getKind()))
           .filter(a -> hasFunctionAsArg(a, state))
           .noneMatch(

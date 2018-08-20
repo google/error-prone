@@ -80,8 +80,7 @@ public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatc
         allOf(
             kindIs(CLASS),
             anyOf(
-                fragmentClasses
-                    .stream()
+                fragmentClasses.stream()
                     .map(fragmentClass -> isSubtypeOf(fragmentClass))
                     .collect(Collectors.toList())));
   }

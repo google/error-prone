@@ -62,8 +62,7 @@ public class ExpectedExceptionChecker extends AbstractExpectedExceptionChecker {
     // provide fixes to wrap each of the trailing statements in a lambda
     // skip statements that look like assertions
     ImmutableList<Fix> fixes =
-        Lists.reverse(suffix)
-            .stream()
+        Lists.reverse(suffix).stream()
             .filter(t -> !JUnitMatchers.containsTestMethod(t))
             .map(t -> baseFix.build(ImmutableList.of(t)))
             .collect(toImmutableList());

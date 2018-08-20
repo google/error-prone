@@ -959,11 +959,11 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   /** A {@link BugChecker} that prints the target type of a parameterized type. */
   @BugPattern(
-    name = "TargetTypeCheckerParentTypeNotMatched",
-    category = Category.ONE_OFF,
-    severity = SeverityLevel.ERROR,
-    summary = "Prints the target type for ParameterizedTypeTree, which is not handled explicitly."
-  )
+      name = "TargetTypeCheckerParentTypeNotMatched",
+      category = Category.ONE_OFF,
+      severity = SeverityLevel.ERROR,
+      summary =
+          "Prints the target type for ParameterizedTypeTree, which is not handled explicitly.")
   public static class TargetTypeCheckerParentTypeNotMatched extends BugChecker
       implements ParameterizedTypeTreeMatcher {
 
@@ -1038,9 +1038,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         JavacElements.instance(tool.getContext()).getTypeElement(Lib.class.getCanonicalName());
     VarSymbol field =
         (VarSymbol)
-            element
-                .getEnclosedElements()
-                .stream()
+            element.getEnclosedElements().stream()
                 .filter(e -> e.getSimpleName().contentEquals("field"))
                 .findAny()
                 .get();
@@ -1051,9 +1049,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
     MethodSymbol method =
         (MethodSymbol)
-            element
-                .getEnclosedElements()
-                .stream()
+            element.getEnclosedElements().stream()
                 .filter(e -> e.getSimpleName().contentEquals("method"))
                 .findAny()
                 .get();
