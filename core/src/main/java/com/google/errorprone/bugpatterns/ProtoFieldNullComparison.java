@@ -26,6 +26,8 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -133,6 +135,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   private final Matcher<ExpressionTree> protoReceiver;
   private final boolean trackAssignments;
+  private final boolean matchListGetters;
   private final boolean matchCheckNotNull;
   private final boolean matchTestAssertions;
 
@@ -143,6 +146,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             ? instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, PROTO_LITE_SUPER_CLASS)
             : instanceMethod().onDescendantOf(PROTO_SUPER_CLASS);
     trackAssignments = flags.getBoolean("ProtoFieldNullComparison:TrackAssignments").orElse(false);
+    matchListGetters = flags.getBoolean("ProtoFieldNullComparison:MatchListGetters").orElse(false);
     matchCheckNotNull =
         flags.getBoolean("ProtoFieldNullComparison:MatchCheckNotNull").orElse(false);
     matchTestAssertions =
@@ -238,6 +242,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return Optional.empty();
       }
       return Arrays.stream(GetterTypes.values())
+          .filter(g -> matchListGetters || g != GetterTypes.VECTOR_INDEXED)
           .map(type -> type.match(resolvedTree, state))
           .filter(Objects::nonNull)
           .findFirst();
@@ -272,6 +277,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   }
 
   private enum GetterTypes {
+    /** {@code proto.getField()} */
     SCALAR {
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
@@ -300,7 +306,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             ASTHelpers.findMatchingMethods(
                 state.getName(hasMethod),
                 ms -> ms.params().isEmpty(),
-                ASTHelpers.getType(getReceiver(methodInvocation)),
+                getType(getReceiver(methodInvocation)),
                 state.getTypes());
         if (hasMethods.isEmpty()) {
           return Optional.empty();
@@ -315,6 +321,36 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return builder.replace(lastIndexOf, lastIndexOf + pattern.length(), replacement).toString();
       }
     },
+    /** {@code proto.getRepeatedField(index)} */
+    VECTOR_INDEXED {
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (tree.getKind() != Kind.METHOD_INVOCATION) {
+          return null;
+        }
+        MethodInvocationTree method = (MethodInvocationTree) tree;
+        if (method.getArguments().size() != 1 || !isGetter(method.getMethodSelect())) {
+          return null;
+        }
+        if (!isSameType(
+            getType(getOnlyElement(method.getArguments())), state.getSymtab().intType, state)) {
+          return null;
+        }
+        return (n, s) -> Optional.of(generateFix(method, n));
+      }
+
+      private String generateFix(MethodInvocationTree methodInvocation, boolean negated) {
+        String methodName = ASTHelpers.getSymbol(methodInvocation).getQualifiedName().toString();
+        String countMethod = methodName + "Count";
+        return String.format(
+            "%s.%s() %s %s",
+            getReceiver(methodInvocation).toString(),
+            countMethod,
+            negated ? "<=" : ">",
+            getOnlyElement(methodInvocation.getArguments()).toString());
+      }
+    },
+    /** {@code proto.getRepeatedFieldList()} */
     VECTOR {
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
@@ -337,6 +373,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return negated ? replacement : ("!" + replacement);
       }
     },
+    /** {@code proto.getField(f)} or {@code proto.getExtension(outer, extension)}; */
     EXTENSION_METHOD {
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
@@ -405,6 +442,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   }
 
   private enum ProblemUsage {
+    /** Matches direct comparisons to null. */
     COMPARISON {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
@@ -414,6 +452,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             .orElse(SuggestedFix.builder().build());
       }
     },
+    /** Matches comparisons with Truth, i.e. {@code assertThat(proto.getField()).isNull()}. */
     TRUTH {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
@@ -433,6 +472,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             .orElse(SuggestedFix.builder().build());
       }
     },
+    /** Matches comparisons with JUnit, i.e. {@code assertNotNull(proto.getField())}. */
     JUNIT {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
@@ -450,6 +490,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             .orElse(SuggestedFix.builder().build());
       }
     },
+    /** Matches precondition checks, i.e. {@code checkNotNull(proto.getField())}. */
     CHECK_NOT_NULL {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
