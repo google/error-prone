@@ -65,7 +65,7 @@ public class InjectedConstructorAnnotations extends BugChecker implements Method
 
   /**
    * Matches injected constructors annotated with @Inject(optional=true) or binding annotations.
-   * Suggests fixes to remove the argument @code{optional=true} or binding annotations.
+   * Suggests fixes to remove the argument {@code optional=true} or binding annotations.
    */
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {

@@ -1533,7 +1533,7 @@ public class Matchers {
           instanceMethod().anyClass().named("equals").withParameters("java.lang.Object"),
           isSameType(BOOLEAN_TYPE));
 
-  /** Matches calls to the method {link Object#equals(Object)} or any override of that method. */
+  /** Matches calls to the method {@link Object#equals(Object)} or any override of that method. */
   public static Matcher<ExpressionTree> instanceEqualsInvocation() {
     return INSTANCE_EQUALS;
   }
@@ -1545,7 +1545,7 @@ public class Matchers {
           staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
 
   /**
-   * Matches calls to the method {link org.junit.Assert#assertEquals} and corresponding methods in
+   * Matches calls to the method {@link org.junit.Assert#assertEquals} and corresponding methods in
    * JUnit 3.x.
    */
   public static Matcher<ExpressionTree> assertEqualsInvocation() {
@@ -1559,7 +1559,7 @@ public class Matchers {
           staticMethod().onClass("junit.framework.TestCase").named("assertNotEquals"));
 
   /**
-   * Matches calls to the method {link org.junit.Assert#assertNotEquals} and corresponding methods
+   * Matches calls to the method {@link org.junit.Assert#assertNotEquals} and corresponding methods
    * in JUnit 3.x.
    */
   public static Matcher<ExpressionTree> assertNotEqualsInvocation() {
