@@ -354,6 +354,8 @@
                 <includes>
                   <include>com.github.kevinstern:software-and-algorithms</include>
                   <include>com.google.errorprone:error_prone_annotation</include>
+                  <include>com.google.errorprone:error_prone_annotations</include>
+                  <include>com.google.errorprone:error_prone_type_annotations</include>
                   <include>com.google.errorprone:error_prone_check_api</include>
                   <include>com.github.stephenc.jcip:jcip-annotations</include>
                   <include>org.pcollections:pcollections</include>
