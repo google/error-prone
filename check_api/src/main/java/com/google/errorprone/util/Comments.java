@@ -20,6 +20,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
+import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.Commented.Position;
 import com.sun.source.tree.BlockTree;
@@ -121,6 +123,11 @@ public class Comments {
     // The token position of the end of the method invocation
     int invocationEnd = state.getEndPosition(tree) - startPosition;
 
+    // Ignore comments nested inside arguments.
+    TreeRangeSet<Integer> exclude = TreeRangeSet.create();
+    arguments.forEach(
+        a -> exclude.add(Range.closed(((JCTree) a).getStartPosition(), state.getEndPosition(a))));
+
     ErrorProneTokens errorProneTokens = new ErrorProneTokens(source.toString(), state.context);
     ImmutableList<ErrorProneToken> tokens = errorProneTokens.getTokens();
     LineMap lineMap = errorProneTokens.getLineMap();
@@ -136,6 +143,9 @@ public class Comments {
         // if the token is at the start of a line it could still have a comment attached which was
         // on the previous line
         for (Comment c : token.comments()) {
+          if (exclude.intersects(Range.closedOpen(token.pos(), token.endPos()))) {
+            continue;
+          }
           if (tokenTracker.isCommentOnPreviousLine(c)
               && token.pos() <= argumentTracker.currentArgumentStartPosition
               && argumentTracker.isPreviousArgumentOnPreviousLine()) {
