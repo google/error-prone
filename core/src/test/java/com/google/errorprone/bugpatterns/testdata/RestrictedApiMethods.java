@@ -20,7 +20,7 @@ import com.google.errorprone.annotations.RestrictedApi;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-/** Example for @link{com.google.errorprone.bugpatterns.RestrictedApiCheckerTest}. */
+/** Example for {@link com.google.errorprone.bugpatterns.RestrictedApiCheckerTest}. */
 public class RestrictedApiMethods implements IFaceWithRestriction {
 
   public int normalMethod() {

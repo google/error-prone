@@ -314,8 +314,8 @@ public class GuardedByBinder {
         }
 
         /**
-         * Returns the owner if the given member is declared in a lexically enclosing scope,
-         * and @{code null} otherwise.
+         * Returns the owner if the given member is declared in a lexically enclosing scope, and
+         * {@code null} otherwise.
          */
         private ClassSymbol isEnclosedIn(ClassSymbol startingClass, Symbol member, Types types) {
           for (ClassSymbol scope = startingClass.owner.enclClass();
