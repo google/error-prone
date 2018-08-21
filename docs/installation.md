@@ -41,74 +41,61 @@ INFO: Elapsed time: 1.989s, Critical Path: 1.69s
 Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
 
 ```xml
-<profiles>
-  <profile>
-    <id>jdk8</id>
-    <activation>
-      <jdk>1.8</jdk>
-    </activation>
-    <build>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-          <configuration>
-            <forceJavacCompilerUse>true</forceJavacCompilerUse>
-            <fork>true</fork>
-            <source>8</source>
-            <target>8</target>
-            <compilerArgs>
-              <!-- Using github.com/google/error-prone-javac is required when running on JDK 8. -->
-              <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</arg>
-              <arg>-XDcompilePolicy=simple</arg>
-              <arg>-Xplugin:ErrorProne</arg>
-            </compilerArgs>
-            <annotationProcessorPaths>
-              <path>
-                <groupId>com.google.errorprone</groupId>
-                <artifactId>error_prone_core</artifactId>
-                <version>2.3.1</version>
-              </path>
-            </annotationProcessorPaths>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
-  <profile>
-    <id>jdk9</id>
-    <activation>
-      <jdk>[9,)</jdk>
-    </activation>
-    <build>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-          <configuration>
-            <forceJavacCompilerUse>true</forceJavacCompilerUse>
-            <fork>true</fork>
-            <source>8</source>
-            <target>8</target>
-            <compilerArgs>
-              <arg>-XDcompilePolicy=simple</arg>
-              <arg>-Xplugin:ErrorProne</arg>
-            </compilerArgs>
-            <annotationProcessorPaths>
-              <path>
-                <groupId>com.google.errorprone</groupId>
-                <artifactId>error_prone_core</artifactId>
-                <version>2.3.1</version>
-              </path>
-            </annotationProcessorPaths>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
-</profiles>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+          <compilerArgs>
+            <arg>-XDcompilePolicy=simple</arg>
+            <arg>-Xplugin:ErrorProne</arg>
+          </compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.errorprone</groupId>
+              <artifactId>error_prone_core</artifactId>
+              <version>2.3.2-SNAPSHOT</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+```
+
+Using the `error-prone-javac` is required when running on JDK 8, but using the
+`-J-Xbootclasspath/p:` flag to override the system javac is not supported on JDK
+9 and up. To support building with JDK 8, use the following profile for JDK 8
+support:
+
+```xml
+  <!-- using github.com/google/error-prone-javac is required when running on JDK 8 -->
+  <profiles>
+    <profile>
+      <id>jdk8</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <fork>true</fork>
+              <compilerArgs combine.children="append">
+                <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</arg>
+              </compilerArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 ```
 
 See the
@@ -132,24 +119,7 @@ directory for a working example:
 ## Gradle
 
 The gradle plugin is an external contribution. The documentation and code is at
-[tbroyer/gradle-errorprone-plugin](https://github.com/tbroyer/gradle-errorprone-javacplugin-plugin).
-
-See the
-[examples/gradle](https://github.com/google/error-prone/tree/master/examples/gradle)
-directory for a working example:
-
-```
-$ gradle compileJava
-.../examples/gradle/src/main/java/Main.java:20: error: [DeadException] Exception created but not thrown
-    new Exception();
-    ^
-    (see http://errorprone.info/bugpattern/DeadException)
-  Did you mean 'throw new Exception();'?
-1 error
-:compileJava FAILED
-
-FAILURE: Build failed with an exception.
-```
+[tbroyer/gradle-errorprone-plugin](https://github.com/tbroyer/gradle-errorprone-plugin).
 
 ## Ant
 
@@ -162,21 +132,22 @@ Download the following artifacts from maven:
 and add the following javac task to your project's `build.xml` file:
 
 ```xml
-    <property name="error_prone_core.jar" location="error_prone_core-2.3.2-SNAPSHOT-with-dependencies.jar"/>
-    <property name="jformatstring.jar" location="jFormatString-3.0.0.jar"/>
-    <property name="javac.jar" location="javac-9+181-r4173-1.jar"/>
+    <property name="error_prone_core.jar" location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.3.2-SNAPSHOT/error_prone_core-2.3.2-SNAPSHOT-with-dependencies.jar"/>
+    <property name="jformatstring.jar" location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
+    <property name="javac.jar" location="${user.home}/.m2/repository/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar"/>
 
     <!-- using github.com/google/error-prone-javac is required when running on JDK 8 -->
-    <condition property="patch.javac" value="-XDempty" else="-J-Xbootclasspath/p:${javac.jar}">
-        <javaversion atleast="9"/>
+    <condition property="jdk9orlater">
+      <javaversion atleast="9"/>
     </condition>
 
     <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
-      <compilerarg value="${patch.javac}"/>
+      <compilerarg value="-J-Xbootclasspath/p:${javac.jar}" unless:set="jdk9orlater"/>
       <compilerarg line="-XDcompilePolicy=simple"/>
       <compilerarg line="-processorpath ${error_prone_core.jar}:${jformatstring.jar}"/>
       <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
     </javac>
+  </target>
 ```
 
 See
