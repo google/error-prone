@@ -94,17 +94,6 @@ public class ErrorProneAnalyzer implements TaskListener {
         descriptionListenerFactory);
   }
 
-  // Used by Bazel still
-  @SuppressWarnings("unused")
-  public ErrorProneAnalyzer(
-      ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context) {
-    this(
-        scansPlugins(scannerSupplier, errorProneOptions, context),
-        errorProneOptions,
-        context,
-        JavacErrorDescriptionListener.provider(context));
-  }
-
   private ErrorProneAnalyzer(
       Supplier<CodeTransformer> transformer,
       ErrorProneOptions errorProneOptions,
