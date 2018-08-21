@@ -40,7 +40,8 @@ import java.util.function.Function;
  * If another permutation of the arguments produces a lower distance then it is possible that the
  * programmer has accidentally reordered them.
  *
- * <p>TODO(andrewrice) add reference to paper here when we have a name
+ * <p>Rice, Andrew, et al. <a href="https://ai.google/research/pubs/pub46317">"Detecting argument
+ * selection defects"</a>. Proceedings of the ACM on Programming Languages OOPSLA (2017).
  *
  * <p>Terminology:
  *
