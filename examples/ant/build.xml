@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<project name="error prone example" default="compile">
+<project name="error prone example" default="compile" xmlns:unless="ant:unless">
   <target name="compile">
     <delete dir="build"/>
     <mkdir dir="build"/>
@@ -23,12 +23,12 @@
     <property name="javac.jar" location="${user.home}/.m2/repository/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar"/>
 
     <!-- using github.com/google/error-prone-javac is required when running on JDK 8 -->
-    <condition property="patch.javac" value="-XDempty" else="-J-Xbootclasspath/p:${javac.jar}">
-        <javaversion atleast="9"/>
+    <condition property="jdk9orlater">
+      <javaversion atleast="9"/>
     </condition>
 
     <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
-      <compilerarg value="${patch.javac}"/>
+      <compilerarg value="-J-Xbootclasspath/p:${javac.jar}" unless:set="jdk9orlater"/>
       <compilerarg line="-XDcompilePolicy=simple"/>
       <compilerarg line="-processorpath ${error_prone_core.jar}:${jformatstring.jar}"/>
       <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
