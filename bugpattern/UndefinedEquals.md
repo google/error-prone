@@ -4,7 +4,7 @@ summary: Collection, Iterable, Multimap, and Queue do not have well-defined equa
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -914,6 +914,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/LiteByteStringUtf8.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.LiteByteStringUtf8</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.LockNotBeforeTry">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/LockNotBeforeTry.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.LockNotBeforeTry</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.LogicalAssignment">
 <!--   -->
 </a>
@@ -963,6 +968,18 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/MissingOverride.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.MissingOverride</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>ignoreInterfaceOverrides</h4>
+<pre>boolean ignoreInterfaceOverrides</pre>
+<div class="block">if true, don't warn on missing <code>@Override</code> annotations inside interfaces</div>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.MissingSuperCall">
 <!--   -->
@@ -1239,6 +1256,10 @@
 <li class="blockList">
 <h4>trackAssignments</h4>
 <pre>boolean trackAssignments</pre>
+</li>
+<li class="blockList">
+<h4>matchListGetters</h4>
+<pre>boolean matchListGetters</pre>
 </li>
 <li class="blockList">
 <h4>matchCheckNotNull</h4>
@@ -1578,6 +1599,17 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/Unused.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.Unused</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>methodAnnotationsExemptingParameters</h4>
+<pre>com.google.common.collect.ImmutableSet&lt;E&gt; methodAnnotationsExemptingParameters</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.UnusedAnonymousClass">
 <!--   -->
@@ -2179,6 +2211,11 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/nullness/FieldMissingNullable.html" title="class in com.google.errorprone.bugpatterns.nullness">com.google.errorprone.bugpatterns.nullness.FieldMissingNullable</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.nullness.NullableDereference">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/nullness/NullableDereference.html" title="class in com.google.errorprone.bugpatterns.nullness">com.google.errorprone.bugpatterns.nullness.NullableDereference</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.nullness.ParameterNotNullable">
 <!--   -->

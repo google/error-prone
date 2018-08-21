@@ -535,6 +535,9 @@ Never reuse class names from java.lang
 __[JdkObsolete](bugpattern/JdkObsolete)__<br>
 Suggests alternatives to obsolete JDK classes.
 
+__[LockNotBeforeTry](bugpattern/LockNotBeforeTry)__<br>
+Calls to Lock#lock should be immediately followed by a try block which releases the lock.
+
 __[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
 Assignment where a boolean expression was expected; use == if this assignment wasn&#39;t expected or add parentheses for clarity.
 
@@ -847,6 +850,9 @@ Instead of returning a functional type, return the actual type that the returned
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
+
+__[NullableDereference](bugpattern/NullableDereference)__<br>
+Dereference of possibly-null value
 
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
