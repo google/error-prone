@@ -45,12 +45,12 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import java.io.ByteArrayOutputStream;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -458,7 +458,7 @@ public class ErrorProneJavaCompilerTest {
     try {
       fileManager.close();
     } catch (IOException e) {
-      throw new IOError(e);
+      throw new UncheckedIOException(e);
     }
     return new CompilationResult(task.call(), diagnosticHelper);
   }

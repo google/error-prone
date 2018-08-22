@@ -28,8 +28,8 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
-import java.io.IOError;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -71,7 +71,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
       CharSequence sourceFileContent = sourceFile.getCharContent(true);
       fixToAppliedFix = fix -> AppliedFix.fromSource(sourceFileContent, endPositions).apply(fix);
     } catch (IOException e) {
-      throw new IOError(e);
+      throw new UncheckedIOException(e);
     }
   }
 

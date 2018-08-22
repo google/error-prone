@@ -33,7 +33,6 @@ import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.main.Main.Result;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -268,7 +267,7 @@ public class CompilationTestHelper {
           diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(
               source, lookForCheckNameInDiagnostic);
         } catch (IOException e) {
-          throw new IOError(e);
+          throw new UncheckedIOException(e);
         }
       }
       assertTrue(

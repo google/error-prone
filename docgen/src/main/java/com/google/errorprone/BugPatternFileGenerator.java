@@ -30,9 +30,9 @@ import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ExampleInfo.ExampleKind;
 import com.google.gson.Gson;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.file.DirectoryStream;
 import java.nio.file.DirectoryStream.Filter;
@@ -137,7 +137,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
       try {
         code = new String(Files.readAllBytes(path), UTF_8).trim();
       } catch (IOException e) {
-        throw new IOError(e);
+        throw new UncheckedIOException(e);
       }
 
       return ExampleInfo.create(posOrNeg, checkerClass, fileName, code);
