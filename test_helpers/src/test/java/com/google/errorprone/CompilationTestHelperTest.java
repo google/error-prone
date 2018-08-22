@@ -332,9 +332,9 @@ public class CompilationTestHelperTest {
 
   @Test
   public void failureWithErrorAndNoDiagnosticFails() {
-    AssertionError expected =
+    InvalidCommandLineOptionException expected =
         assertThrows(
-            AssertionError.class,
+            InvalidCommandLineOptionException.class,
             () ->
                 compilationHelper
                     .expectNoDiagnostics()
@@ -343,11 +343,9 @@ public class CompilationTestHelperTest {
                         ImmutableList.of("-Xep:ReturnTreeChecker:Squirrels")) // Bad flag crashes.
                     .ignoreJavacErrors()
                     .doTest());
-    assertThat(expected.getMessage())
-        .contains(
-            "Expected compilation result to be OK, but was CMDERR. No diagnostics were"
-                + " emitted.");
-    assertThat(expected.getMessage()).contains("InvalidCommandLineOptionException");
+    assertThat(expected)
+        .hasMessageThat()
+        .contains("invalid flag: -Xep:ReturnTreeChecker:Squirrels");
   }
 
   @Test
