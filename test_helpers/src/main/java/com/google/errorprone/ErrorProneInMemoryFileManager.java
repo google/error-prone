@@ -131,4 +131,8 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
   public boolean exists(String fileName) {
     return Files.exists(resolvePath(fileName));
   }
+
+  public FileSystem fileSystem() {
+    return fileSystem;
+  }
 }
