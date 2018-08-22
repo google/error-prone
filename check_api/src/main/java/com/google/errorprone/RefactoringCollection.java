@@ -37,8 +37,8 @@ import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
-import java.io.IOError;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -176,7 +176,7 @@ class RefactoringCollection implements DescriptionListener.Factory {
         try {
           Files.deleteIfExists(patchFilePatch);
         } catch (IOException e) {
-          throw new IOError(e);
+          throw new UncheckedIOException(e);
         }
       }
       Files.write(patchFilePatch, patchFile.getBytes(UTF_8), APPEND, CREATE);

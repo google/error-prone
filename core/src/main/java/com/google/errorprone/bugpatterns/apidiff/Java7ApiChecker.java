@@ -21,8 +21,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.io.Resources;
 import com.google.errorprone.BugPattern;
-import java.io.IOError;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 /** Checks for uses of classes, fields, or methods that are not compatible with JDK 7 */
 @BugPattern(
@@ -68,7 +68,7 @@ public class Java7ApiChecker extends ApiDiffChecker {
                                       "(Ljava/lang/Object;Ljava/lang/Object;)Z"))));
       return ApiDiff.fromProto(diffBuilder.build());
     } catch (IOException e) {
-      throw new IOError(e);
+      throw new UncheckedIOException(e);
     }
   }
 

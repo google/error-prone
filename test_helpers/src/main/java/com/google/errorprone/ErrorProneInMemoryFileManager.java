@@ -27,9 +27,9 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -84,7 +84,7 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
       Files.createDirectories(path.getParent());
       Files.copy(is, path);
     } catch (IOException e) {
-      throw new IOError(e);
+      throw new UncheckedIOException(e);
     }
     return Iterables.getOnlyElement(getJavaFileObjects(path));
   }

@@ -24,10 +24,10 @@ import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.main.CommandLine;
 import com.sun.tools.javac.main.Main.Result;
 import java.io.BufferedWriter;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +92,7 @@ public class BaseErrorProneCompiler {
     try {
       argv = CommandLine.parse(argv);
     } catch (IOException e) {
-      throw new IOError(e);
+      throw new UncheckedIOException(e);
     }
     List<String> javacOpts = new ArrayList<>();
     List<String> sources = new ArrayList<>();
