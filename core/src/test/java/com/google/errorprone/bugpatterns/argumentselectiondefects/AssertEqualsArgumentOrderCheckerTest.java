@@ -35,7 +35,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_makesNoSuggestion_withOrderExpectedActual() throws Exception {
+  public void assertEqualsCheck_makesNoSuggestion_withOrderExpectedActual() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -49,8 +49,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_makesNoSuggestion_withOrderExpectedActualAndMessage()
-      throws Exception {
+  public void assertEqualsCheck_makesNoSuggestion_withOrderExpectedActualAndMessage() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -64,7 +63,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_swapsArguments_withOrderActualExpected() throws Exception {
+  public void assertEqualsCheck_swapsArguments_withOrderActualExpected() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -80,8 +79,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_swapsArguments_withOrderActualExpectedAndMessage()
-      throws Exception {
+  public void assertEqualsCheck_swapsArguments_withOrderActualExpectedAndMessage() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -96,7 +94,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_swapsArguments_withOnlyExpectedAsPrefix() throws Exception {
+  public void assertEqualsCheck_swapsArguments_withOnlyExpectedAsPrefix() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -112,7 +110,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_swapsArguments_withLiteralForActual() throws Exception {
+  public void assertEqualsCheck_swapsArguments_withLiteralForActual() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -127,7 +125,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_doesntSwap_withLiteralForExpected() throws Exception {
+  public void assertEqualsCheck_doesntSwap_withLiteralForExpected() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -141,7 +139,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_makeNoChange_withLiteralForBoth() throws Exception {
+  public void assertEqualsCheck_makeNoChange_withLiteralForBoth() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -155,7 +153,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_makeNoChange_ifSwapCreatesDuplicateCall() throws Exception {
+  public void assertEqualsCheck_makeNoChange_ifSwapCreatesDuplicateCall() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -170,7 +168,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_makesNoChange_withNothingMatching() throws Exception {
+  public void assertEqualsCheck_makesNoChange_withNothingMatching() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -184,7 +182,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_makesNoChange_whenArgumentExtendsThrowable() throws Exception {
+  public void assertEqualsCheck_makesNoChange_whenArgumentExtendsThrowable() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -202,7 +200,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_makesNoChange_whenArgumentIsEnumMember() throws Exception {
+  public void assertEqualsCheck_makesNoChange_whenArgumentIsEnumMember() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -219,7 +217,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_makesNoChange_withReturnedEnum() throws Exception {
+  public void assertEqualsCheck_makesNoChange_withReturnedEnum() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
@@ -235,7 +233,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
   }
 
   @Test
-  public void assertEqualsCheck_makesNoChange_withCommentedNames() throws Exception {
+  public void assertEqualsCheck_makesNoChange_withCommentedNames() {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",

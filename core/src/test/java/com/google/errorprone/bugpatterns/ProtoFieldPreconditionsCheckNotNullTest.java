@@ -31,20 +31,20 @@ public class ProtoFieldPreconditionsCheckNotNullTest {
   private CompilationTestHelper compilationHelper;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     compilationHelper =
         CompilationTestHelper.newInstance(ProtoFieldPreconditionsCheckNotNull.class, getClass());
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
         .addSourceFile("ProtoFieldPreconditionsCheckNotNullPositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper
         .addSourceFile("ProtoFieldPreconditionsCheckNotNullNegativeCases.java")
         .doTest();

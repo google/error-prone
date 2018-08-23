@@ -34,7 +34,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void evilCastImpl() throws Exception {
+  public void evilCastImpl() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -47,7 +47,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void leadingParam() throws Exception {
+  public void leadingParam() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -60,7 +60,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void trailingParam() throws Exception {
+  public void trailingParam() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -73,7 +73,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void leadingAndTrailingParam() throws Exception {
+  public void leadingAndTrailingParam() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -86,7 +86,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void superBound() throws Exception {
+  public void superBound() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -99,7 +99,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void okFBound() throws Exception {
+  public void okFBound() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -112,7 +112,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void wildbound() throws Exception {
+  public void wildbound() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -126,7 +126,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void okGenericFactory() throws Exception {
+  public void okGenericFactory() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -138,7 +138,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void okWithParam() throws Exception {
+  public void okWithParam() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -150,7 +150,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void okNotMyParam() throws Exception {
+  public void okNotMyParam() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -162,7 +162,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void abstractMethod() throws Exception {
+  public void abstractMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -174,7 +174,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void objectCast() throws Exception {
+  public void objectCast() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -186,7 +186,7 @@ public class TypeParameterUnusedInFormalsTest {
   }
 
   @Test
-  public void issue343() throws Exception {
+  public void issue343() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -206,7 +206,7 @@ public class TypeParameterUnusedInFormalsTest {
 
   // regression test for b/28055418
   @Test
-  public void classTypeParameter() throws Exception {
+  public void classTypeParameter() {
     compilationHelper
         .addSourceLines("Test.java", "abstract class Test<T> {", "  abstract T get(String s);", "}")
         .doTest();
@@ -214,7 +214,7 @@ public class TypeParameterUnusedInFormalsTest {
 
   // regression test for b/35385704
   @Test
-  public void typeAnnotation() throws Exception {
+  public void typeAnnotation() {
     compilationHelper
         .addSourceLines(
             "A.java",

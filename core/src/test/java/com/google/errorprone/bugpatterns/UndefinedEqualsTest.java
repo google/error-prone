@@ -133,7 +133,7 @@ public final class UndefinedEqualsTest {
   }
 
   @Test
-  public void charSequenceFix() throws Exception {
+  public void charSequenceFix() {
     BugCheckerRefactoringTestHelper.newInstance(new UndefinedEquals(), getClass())
         .addInputLines(
             "Test.java",

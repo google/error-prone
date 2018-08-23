@@ -34,7 +34,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void defaultAnswerOk() throws Exception {
+  public void defaultAnswerOk() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -56,7 +56,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void mockAnnotationWithUnsupportedAnswer() throws Exception {
+  public void mockAnnotationWithUnsupportedAnswer() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -79,7 +79,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void varInitializedWithUnsupportedAnswer() throws Exception {
+  public void varInitializedWithUnsupportedAnswer() {
     compilationHelper
         .addSourceLines("Box.java", "public class Box<T> {", "  T f() { return null; }", "}")
         .addSourceLines(
@@ -96,7 +96,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void constructorInitialization() throws Exception {
+  public void constructorInitialization() {
     compilationHelper
         .addSourceLines("Box.java", "public class Box<T> {", "  T f() { return null; }", "}")
         .addSourceLines(
@@ -116,7 +116,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void chainedCallOnUnsupportedMock() throws Exception {
+  public void chainedCallOnUnsupportedMock() {
     compilationHelper
         .addSourceLines(
             "Foo.java", "public class Foo {", "  Bar<Boolean> bar() { return null; }", "}")
@@ -137,7 +137,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void concreteSubclassOfGenericType() throws Exception {
+  public void concreteSubclassOfGenericType() {
     compilationHelper
         .addSourceLines("Super.java", "public class Super<T> {", "  T f() { return null; }", "}")
         .addSourceLines("Sub.java", "public class Sub extends Super<Boolean> {", "}")
@@ -157,7 +157,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void mockedFieldInstantiationOfGenericType() throws Exception {
+  public void mockedFieldInstantiationOfGenericType() {
     compilationHelper
         .addSourceLines("Super.java", "public class Super<T> {", "  T f() { return null; }", "}")
         .addSourceLines("Sub.java", "public class Sub extends Super<Boolean> {", "}")
@@ -177,7 +177,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void erasureIsNotObject() throws Exception {
+  public void erasureIsNotObject() {
     compilationHelper
         .addSourceLines(
             "Super.java",
@@ -200,7 +200,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void uiField() throws Exception {
+  public void uiField() {
     compilationHelper
         .addSourceLines(
             "com/google/gwt/uibinder/client/UiField.java",
@@ -228,7 +228,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void qualifiedTypeNameHandling() throws Exception {
+  public void qualifiedTypeNameHandling() {
     compilationHelper
         .addSourceLines(
             "pkg/Bound.java",
@@ -259,7 +259,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void imported() throws Exception {
+  public void imported() {
     compilationHelper
         .addSourceLines(
             "pkg/Bound.java",
@@ -292,7 +292,7 @@ public class MockitoCastTest {
   }
 
   @Test
-  public void rawCast() throws Exception {
+  public void rawCast() {
     compilationHelper
         .addSourceLines(
             "Foo.java",

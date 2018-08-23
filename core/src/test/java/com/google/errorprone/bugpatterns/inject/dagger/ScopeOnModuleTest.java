@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +33,7 @@ public class ScopeOnModuleTest {
   }
 
   @Test
-  public void removeScope() throws IOException {
+  public void removeScope() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -69,7 +68,7 @@ public class ScopeOnModuleTest {
   }
 
   @Test
-  public void customScope() throws IOException {
+  public void customScope() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -108,7 +107,7 @@ public class ScopeOnModuleTest {
   }
 
   @Test
-  public void notAScope() throws IOException {
+  public void notAScope() {
     testHelper
         .addInputLines(
             "in/Test.java",

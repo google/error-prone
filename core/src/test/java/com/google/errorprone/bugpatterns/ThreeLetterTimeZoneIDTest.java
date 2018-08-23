@@ -73,7 +73,7 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -97,7 +97,7 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testPositiveCaseJodaTime() throws Exception {
+  public void testPositiveCaseJodaTime() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -127,7 +127,7 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",

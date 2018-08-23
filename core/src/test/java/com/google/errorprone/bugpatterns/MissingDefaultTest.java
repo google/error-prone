@@ -20,7 +20,6 @@ import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEX
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -33,7 +32,7 @@ public class MissingDefaultTest {
       CompilationTestHelper.newInstance(MissingDefault.class, getClass());
 
   @Test
-  public void positive() throws IOException {
+  public void positive() {
     BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -64,7 +63,7 @@ public class MissingDefaultTest {
   }
 
   @Test
-  public void positiveBreak() throws IOException {
+  public void positiveBreak() {
     BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -148,7 +147,7 @@ public class MissingDefaultTest {
   }
 
   @Test
-  public void emptyNoComment() throws IOException {
+  public void emptyNoComment() {
     BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -178,7 +177,7 @@ public class MissingDefaultTest {
   }
 
   @Test
-  public void interiorEmptyNoComment() throws IOException {
+  public void interiorEmptyNoComment() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -195,7 +194,7 @@ public class MissingDefaultTest {
   }
 
   @Test
-  public void multipleStatementsInGroup() throws IOException {
+  public void multipleStatementsInGroup() {
     BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
         .addInputLines(
             "in/Test.java",

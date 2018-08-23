@@ -34,17 +34,17 @@ public class SelfAssignmentTest {
   }
 
   @Test
-  public void testPositiveCases1() throws Exception {
+  public void testPositiveCases1() {
     compilationHelper.addSourceFile("SelfAssignmentPositiveCases1.java").doTest();
   }
 
   @Test
-  public void testPositiveCases2() throws Exception {
+  public void testPositiveCases2() {
     compilationHelper.addSourceFile("SelfAssignmentPositiveCases2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("SelfAssignmentNegativeCases.java").doTest();
   }
 }

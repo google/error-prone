@@ -33,7 +33,7 @@ public class UnusedAnonymousClassTest {
   }
 
   @Test
-  public void deadObject() throws Exception {
+  public void deadObject() {
     compilationHelper
         .addSourceLines(
             "a/One.java",
@@ -48,7 +48,7 @@ public class UnusedAnonymousClassTest {
 
   // Thread has a known side-effect free constructor
   @Test
-  public void deadThread() throws Exception {
+  public void deadThread() {
     compilationHelper
         .addSourceLines(
             "a/One.java",
@@ -65,7 +65,7 @@ public class UnusedAnonymousClassTest {
   }
 
   @Test
-  public void liveObject() throws Exception {
+  public void liveObject() {
     compilationHelper
         .addSourceLines(
             "a/One.java",
@@ -79,7 +79,7 @@ public class UnusedAnonymousClassTest {
   }
 
   @Test
-  public void deadCallable() throws Exception {
+  public void deadCallable() {
     compilationHelper
         .addSourceLines(
             "a/One.java",
@@ -99,7 +99,7 @@ public class UnusedAnonymousClassTest {
   }
 
   @Test
-  public void liveCallable() throws Exception {
+  public void liveCallable() {
     compilationHelper
         .addSourceLines(
             "a/One.java",
@@ -118,7 +118,7 @@ public class UnusedAnonymousClassTest {
   }
 
   @Test
-  public void liveCallableViaCinit() throws Exception {
+  public void liveCallableViaCinit() {
     compilationHelper
         .addSourceLines(
             "a/One.java",
@@ -140,7 +140,7 @@ public class UnusedAnonymousClassTest {
   }
 
   @Test
-  public void deadCallableWithField() throws Exception {
+  public void deadCallableWithField() {
     compilationHelper
         .addSourceLines(
             "a/One.java",
@@ -162,7 +162,7 @@ public class UnusedAnonymousClassTest {
   }
 
   @Test
-  public void liveCallableViaField() throws Exception {
+  public void liveCallableViaField() {
     compilationHelper
         .addSourceLines(
             "a/One.java",

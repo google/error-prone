@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,7 +30,7 @@ public class ParameterCommentTest {
       BugCheckerRefactoringTestHelper.newInstance(new ParameterComment(), getClass());
 
   @Test
-  public void positive() throws IOException {
+  public void positive() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -55,7 +54,7 @@ public class ParameterCommentTest {
   }
 
   @Test
-  public void negative() throws IOException {
+  public void negative() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -71,7 +70,7 @@ public class ParameterCommentTest {
   }
 
   @Test
-  public void varargs() throws IOException {
+  public void varargs() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -99,7 +98,7 @@ public class ParameterCommentTest {
   }
 
   @Test
-  public void noParams() throws IOException {
+  public void noParams() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -114,7 +113,7 @@ public class ParameterCommentTest {
   }
 
   @Test
-  public void positiveConstructor() throws IOException {
+  public void positiveConstructor() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -138,7 +137,7 @@ public class ParameterCommentTest {
   }
 
   @Test
-  public void parameterComment_doesNotChange_whenNestedComment() throws IOException {
+  public void parameterComment_doesNotChange_whenNestedComment() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -162,7 +161,7 @@ public class ParameterCommentTest {
   }
 
   @Test
-  public void parameterComment_NestedComment() throws IOException {
+  public void parameterComment_NestedComment() {
     testHelper
         .addInputLines(
             "in/Test.java",

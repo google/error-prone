@@ -33,7 +33,7 @@ public class CloseableProvidesPositiveCases {
 
   @Provides
   // BUG: Diagnostic contains: CloseableProvides
-  ImplementsClosable providesImplementsClosable() throws Exception {
+  ImplementsClosable providesImplementsClosable() {
     return new ImplementsClosable();
   }
 

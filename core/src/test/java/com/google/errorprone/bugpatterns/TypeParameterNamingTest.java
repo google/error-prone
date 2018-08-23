@@ -59,7 +59,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_trailing() throws Exception {
+  public void refactoring_trailing() {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -82,7 +82,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_single() throws Exception {
+  public void refactoring_single() {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -105,7 +105,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_single_number() throws Exception {
+  public void refactoring_single_number() {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -128,7 +128,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_single_number_enclosing() throws Exception {
+  public void refactoring_single_number_enclosing() {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -153,7 +153,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_single_number_within_scope() throws Exception {
+  public void refactoring_single_number_within_scope() {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -176,7 +176,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_single_number_many_ok() throws Exception {
+  public void refactoring_single_number_many_ok() {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -199,7 +199,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_single_number_ok_after() throws Exception {
+  public void refactoring_single_number_ok_after() {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -222,7 +222,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_newNames() throws Exception {
+  public void refactoring_newNames() {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -245,7 +245,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_TSuffixes() throws Exception {
+  public void refactoring_TSuffixes() {
     refactoring
         .addInputLines(
             "in/Test.java",
@@ -268,7 +268,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void negativeCases() throws Exception {
+  public void negativeCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",

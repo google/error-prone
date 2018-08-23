@@ -37,7 +37,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void positiveClass() throws Exception {
+  public void positiveClass() {
     compilationHelper
         .addSourceLines(
             "T.java",
@@ -54,7 +54,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void positiveNestedClass() throws Exception {
+  public void positiveNestedClass() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -71,7 +71,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void positiveNestedStaticClass() throws Exception {
+  public void positiveNestedStaticClass() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -88,7 +88,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void positiveNestedGeneric() throws Exception {
+  public void positiveNestedGeneric() {
     compilationHelper
         .addSourceLines(
             "T.java",
@@ -107,7 +107,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void positiveOtherNestedClass() throws Exception {
+  public void positiveOtherNestedClass() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -127,7 +127,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void positiveMultipleParamsOneCollides() throws Exception {
+  public void positiveMultipleParamsOneCollides() {
     compilationHelper
         .addSourceLines(
             "T.java",
@@ -144,7 +144,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void positiveMultipleParamsBothCollide() throws Exception {
+  public void positiveMultipleParamsBothCollide() {
     compilationHelper
         .addSourceLines(
             "T.java",
@@ -170,7 +170,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void positiveJavaLangCollision() throws Exception {
+  public void positiveJavaLangCollision() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -182,7 +182,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void negativeClass() throws Exception {
+  public void negativeClass() {
     compilationHelper
         .addSourceLines(
             "T.java",
@@ -198,7 +198,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void negativeNestedClass() throws Exception {
+  public void negativeNestedClass() {
     compilationHelper
         .addSourceLines(
             "T.java",
@@ -212,7 +212,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void negativeOtherNestedClass() throws Exception {
+  public void negativeOtherNestedClass() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -230,7 +230,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void negativeStarImport() throws Exception {
+  public void negativeStarImport() {
     compilationHelper
         .addSourceLines(
             "a/T.java",
@@ -247,7 +247,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void refactorSingle() throws Exception {
+  public void refactorSingle() {
     refactoring
         .addInputLines(
             "Foo.java",
@@ -265,7 +265,7 @@ public class TypeNameShadowingTest {
   }
 
   @Test
-  public void refactorMultiple() throws Exception {
+  public void refactorMultiple() {
     refactoring
         .addInputLines(
             "in/Foo.java",
@@ -290,7 +290,7 @@ public class TypeNameShadowingTest {
    * Input program here is alpha-equivalent to the refactorMultiple test case; output only fixes T
    */
   @Test
-  public void fixOnlyWellNamedVariables() throws Exception {
+  public void fixOnlyWellNamedVariables() {
     refactoring
         .addInputLines(
             "in/Foo.java",

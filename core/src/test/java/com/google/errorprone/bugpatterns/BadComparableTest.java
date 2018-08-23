@@ -33,12 +33,12 @@ public class BadComparableTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("BadComparablePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("BadComparableNegativeCases.java").doTest();
   }
 }

@@ -35,7 +35,7 @@ public class StaticGuardedByInstanceTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -54,7 +54,7 @@ public class StaticGuardedByInstanceTest {
   }
 
   @Test
-  public void positive_twoWrites() throws Exception {
+  public void positive_twoWrites() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -76,7 +76,7 @@ public class StaticGuardedByInstanceTest {
   }
 
   @Test
-  public void negative_staticLock() throws Exception {
+  public void negative_staticLock() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -93,7 +93,7 @@ public class StaticGuardedByInstanceTest {
   }
 
   @Test
-  public void negative_instanceVar() throws Exception {
+  public void negative_instanceVar() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -110,7 +110,7 @@ public class StaticGuardedByInstanceTest {
   }
 
   @Test
-  public void negative_method() throws Exception {
+  public void negative_method() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -126,7 +126,7 @@ public class StaticGuardedByInstanceTest {
   }
 
   @Test
-  public void negative_nested() throws Exception {
+  public void negative_nested() {
     compilationHelper
         .addSourceLines(
             "Test.java",

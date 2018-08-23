@@ -44,7 +44,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("CheckReturnValuePositiveCases.java").doTest();
   }
 
@@ -97,12 +97,12 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("CheckReturnValueNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPackageAnnotation() throws Exception {
+  public void testPackageAnnotation() {
     compilationHelper
         .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
         .addSourceLines(
@@ -123,7 +123,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testClassAnnotation() throws Exception {
+  public void testClassAnnotation() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -145,7 +145,7 @@ public class CheckReturnValueTest {
 
   // Don't match void-returning methods in packages with @CRV
   @Test
-  public void testVoidReturningMethodInAnnotatedPackage() throws Exception {
+  public void testVoidReturningMethodInAnnotatedPackage() {
     compilationHelper
         .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
         .addSourceLines(
@@ -159,7 +159,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void badCRVOnProcedure() throws Exception {
+  public void badCRVOnProcedure() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -174,7 +174,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void badCRVOnPseudoProcedure() throws Exception {
+  public void badCRVOnPseudoProcedure() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -192,7 +192,7 @@ public class CheckReturnValueTest {
 
   // Don't match methods invoked through {@link org.mockito.Mockito}.
   @Test
-  public void testIgnoreCRVOnMockito() throws Exception {
+  public void testIgnoreCRVOnMockito() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -221,7 +221,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testPackageAnnotationButCanIgnoreReturnValue() throws Exception {
+  public void testPackageAnnotationButCanIgnoreReturnValue() {
     compilationHelper
         .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
         .addSourceLines(
@@ -236,7 +236,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testClassAnnotationButCanIgnoreReturnValue() throws Exception {
+  public void testClassAnnotationButCanIgnoreReturnValue() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -251,7 +251,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void badCanIgnoreReturnValueOnProcedure() throws Exception {
+  public void badCanIgnoreReturnValueOnProcedure() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -266,7 +266,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testNestedClassAnnotation() throws Exception {
+  public void testNestedClassAnnotation() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -291,7 +291,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testNestedClassWithCanIgnoreAnnotation() throws Exception {
+  public void testNestedClassWithCanIgnoreAnnotation() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -316,7 +316,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testPackageWithCanIgnoreAnnotation() throws Exception {
+  public void testPackageWithCanIgnoreAnnotation() {
     compilationHelper
         .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
         .addSourceLines(
@@ -331,7 +331,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void errorBothClass() throws Exception {
+  public void errorBothClass() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -344,7 +344,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void errorBothMethod() throws Exception {
+  public void errorBothMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -360,7 +360,7 @@ public class CheckReturnValueTest {
 
   // Don't match Void-returning methods in packages with @CRV
   @Test
-  public void testJavaLangVoidReturningMethodInAnnotatedPackage() throws Exception {
+  public void testJavaLangVoidReturningMethodInAnnotatedPackage() {
     compilationHelper
         .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
         .addSourceLines(
@@ -376,7 +376,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void ignoreInTests() throws Exception {
+  public void ignoreInTests() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -408,7 +408,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void ignoreInTestsWithRule() throws Exception {
+  public void ignoreInTestsWithRule() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -431,7 +431,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void ignoreInTestsWithFailureMessage() throws Exception {
+  public void ignoreInTestsWithFailureMessage() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -463,7 +463,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void ignoreInThrowingRunnables() throws Exception {
+  public void ignoreInThrowingRunnables() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -505,7 +505,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void ignoreTruthFailure() throws Exception {
+  public void ignoreTruthFailure() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -530,7 +530,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void onlyIgnoreWithEnclosingTryCatch() throws Exception {
+  public void onlyIgnoreWithEnclosingTryCatch() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -560,7 +560,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void ignoreInOrderVerification() throws Exception {
+  public void ignoreInOrderVerification() {
     compilationHelper
         .addSourceLines(
             "Lib.java",

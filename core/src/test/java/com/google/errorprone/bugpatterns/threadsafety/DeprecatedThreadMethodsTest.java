@@ -40,7 +40,7 @@ public final class DeprecatedThreadMethodsTest {
   }
 
   @Test
-  public void stopThread() throws Exception {
+  public void stopThread() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -61,7 +61,7 @@ public final class DeprecatedThreadMethodsTest {
   }
 
   @Test
-  public void stopThrowableThread() throws Exception {
+  public void stopThrowableThread() {
     if (isJdk11OrLater()) {
       // stop(Throwable) was removed in 11
       return;
@@ -86,7 +86,7 @@ public final class DeprecatedThreadMethodsTest {
   }
 
   @Test
-  public void countStackFramesThread() throws Exception {
+  public void countStackFramesThread() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -107,7 +107,7 @@ public final class DeprecatedThreadMethodsTest {
   }
 
   @Test
-  public void destroyThread() throws Exception {
+  public void destroyThread() {
     if (isJdk11OrLater()) {
       // destroy was removed in 11
       return;
@@ -132,7 +132,7 @@ public final class DeprecatedThreadMethodsTest {
   }
 
   @Test
-  public void resumeThread() throws Exception {
+  public void resumeThread() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -153,7 +153,7 @@ public final class DeprecatedThreadMethodsTest {
   }
 
   @Test
-  public void suspendThread() throws Exception {
+  public void suspendThread() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -174,7 +174,7 @@ public final class DeprecatedThreadMethodsTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "Test.java",

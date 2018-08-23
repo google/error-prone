@@ -34,12 +34,12 @@ public class NumericEqualityTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("NumericEqualityPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("NumericEqualityNegativeCases.java").doTest();
   }
 

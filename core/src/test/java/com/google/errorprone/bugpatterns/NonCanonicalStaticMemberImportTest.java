@@ -35,7 +35,7 @@ public class NonCanonicalStaticMemberImportTest {
   }
 
   @Test
-  public void positiveMethod() throws Exception {
+  public void positiveMethod() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -54,7 +54,7 @@ public class NonCanonicalStaticMemberImportTest {
   }
 
   @Test
-  public void positiveField() throws Exception {
+  public void positiveField() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -75,7 +75,7 @@ public class NonCanonicalStaticMemberImportTest {
   // We can't test e.g. a.B.Inner.CONST (a double non-canonical reference), because
   // they're illegal.
   @Test
-  public void positiveClassAndField() throws Exception {
+  public void positiveClassAndField() {
     compilationHelper
         .addSourceLines(
             "a/Super.java",
@@ -100,7 +100,7 @@ public class NonCanonicalStaticMemberImportTest {
   }
 
   @Test
-  public void negativeMethod() throws Exception {
+  public void negativeMethod() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -114,7 +114,7 @@ public class NonCanonicalStaticMemberImportTest {
   }
 
   @Test
-  public void negativeField() throws Exception {
+  public void negativeField() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -128,7 +128,7 @@ public class NonCanonicalStaticMemberImportTest {
   }
 
   @Test
-  public void negativeClassAndField() throws Exception {
+  public void negativeClassAndField() {
     compilationHelper
         .addSourceLines(
             "a/Super.java",

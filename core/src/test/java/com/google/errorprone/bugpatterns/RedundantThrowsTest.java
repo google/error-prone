@@ -30,7 +30,7 @@ public final class RedundantThrowsTest {
       CompilationTestHelper.newInstance(RedundantThrows.class, getClass());
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -47,7 +47,7 @@ public final class RedundantThrowsTest {
   }
 
   @Test
-  public void positiveTwoSubtypes() throws Exception {
+  public void positiveTwoSubtypes() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -62,7 +62,7 @@ public final class RedundantThrowsTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -74,7 +74,7 @@ public final class RedundantThrowsTest {
   }
 
   @Test
-  public void transitiveSuper() throws Exception {
+  public void transitiveSuper() {
     BugCheckerRefactoringTestHelper.newInstance(new RedundantThrows(), getClass())
         .addInputLines(
             "in/Test.java",

@@ -36,7 +36,7 @@ public class ComparableAndComparatorTest {
   }
 
   @Test
-  public void testCases() throws Exception {
+  public void testCases() {
     compilationHelper.addSourceFile("ComparableAndComparatorPositiveCases.java").doTest();
     compilationHelper.addSourceFile("ComparableAndComparatorNegativeCases.java").doTest();
   }

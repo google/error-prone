@@ -48,7 +48,7 @@ public final class UseCorrectAssertInTestsTest {
       BugCheckerRefactoringTestHelper.newInstance(new UseCorrectAssertInTests(), getClass());
 
   @Test
-  public void correctAssertInTest() throws Exception {
+  public void correctAssertInTest() {
     helper
         .addInputLines(
             INPUT, inputWithExpressionAndImport("assertThat(true).isTrue();", ASSERT_THAT_IMPORT))
@@ -57,17 +57,17 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void noAssertInTestsFound() throws Exception {
+  public void noAssertInTestsFound() {
     helper.addInputLines(INPUT, inputWithExpression("int a = 1;")).expectUnchanged().doTest();
   }
 
   @Test
-  public void assertInNonTestMethod() throws Exception {
+  public void assertInNonTestMethod() {
     helper.addInputLines(INPUT, INPUT_SRC_NO_TEST).expectUnchanged().doTest();
   }
 
   @Test
-  public void wrongAssertInTestWithParentheses() throws Exception {
+  public void wrongAssertInTestWithParentheses() {
     helper
         .addInputLines(INPUT, inputWithExpression("assert (true);"))
         .addOutputLines(
@@ -76,7 +76,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertInTestWithoutParentheses() throws Exception {
+  public void wrongAssertInTestWithoutParentheses() {
     helper
         .addInputLines(INPUT, inputWithExpression("assert true;"))
         .addOutputLines(
@@ -85,7 +85,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertInTestWithDetailString() throws Exception {
+  public void wrongAssertInTestWithDetailString() {
     helper
         .addInputLines(INPUT, inputWithExpression("assert (true) : \"description\";"))
         .addOutputLines(
@@ -97,7 +97,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertInTestWithDetailStringVariable() throws Exception {
+  public void wrongAssertInTestWithDetailStringVariable() {
     helper
         .addInputLines(
             INPUT, inputWithExpressions("String desc = \"description\";", "assert (true) : desc;"))
@@ -111,7 +111,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertInTestWithDetailNonStringVariable() throws Exception {
+  public void wrongAssertInTestWithDetailNonStringVariable() {
     helper
         .addInputLines(INPUT, inputWithExpressions("Integer desc = 1;", "assert (true) : desc;"))
         .addOutputLines(
@@ -124,7 +124,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertFalseCase() throws Exception {
+  public void wrongAssertFalseCase() {
     helper
         .addInputLines(INPUT, inputWithExpressions("boolean a = false;", "assert (!a);"))
         .addOutputLines(
@@ -135,7 +135,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertEqualsCase() throws Exception {
+  public void wrongAssertEqualsCase() {
     helper
         .addInputLines(
             INPUT, inputWithExpressions("String a = \"test\";", "assert a.equals(\"test\");"))
@@ -147,7 +147,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertEqualsNullCase() throws Exception {
+  public void wrongAssertEqualsNullCase() {
     helper
         .addInputLines(INPUT, inputWithExpressions("Integer a = null;", "assert a == null;"))
         .addOutputLines(
@@ -158,7 +158,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertEqualsNullCaseLeftSide() throws Exception {
+  public void wrongAssertEqualsNullCaseLeftSide() {
     helper
         .addInputLines(INPUT, inputWithExpressions("Integer a = null;", "assert null == a;"))
         .addOutputLines(
@@ -169,7 +169,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertEqualsNullCaseWithDetail() throws Exception {
+  public void wrongAssertEqualsNullCaseWithDetail() {
     helper
         .addInputLines(
             INPUT, inputWithExpressions("Integer a = null;", "assert a == null : \"detail\";"))
@@ -183,7 +183,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertNotEqualsNullCase() throws Exception {
+  public void wrongAssertNotEqualsNullCase() {
     helper
         .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert a != null;"))
         .addOutputLines(
@@ -194,7 +194,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertReferenceSameCase() throws Exception {
+  public void wrongAssertReferenceSameCase() {
     helper
         .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert a == 1;"))
         .addOutputLines(
@@ -205,7 +205,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertReferenceWithParensCase() throws Exception {
+  public void wrongAssertReferenceWithParensCase() {
     helper
         .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert (a == 1);"))
         .addOutputLines(
@@ -216,7 +216,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertReferenceNotSameCase() throws Exception {
+  public void wrongAssertReferenceNotSameCase() {
     helper
         .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert a != 1;"))
         .addOutputLines(
@@ -227,7 +227,7 @@ public final class UseCorrectAssertInTestsTest {
   }
 
   @Test
-  public void wrongAssertReferenceSameCaseWithDetailCase() throws Exception {
+  public void wrongAssertReferenceSameCaseWithDetailCase() {
     helper
         .addInputLines(INPUT, inputWithExpressions("int a = 1;", "assert a == 1 : \"detail\";"))
         .addOutputLines(

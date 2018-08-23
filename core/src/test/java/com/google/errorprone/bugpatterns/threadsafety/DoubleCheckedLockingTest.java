@@ -28,7 +28,7 @@ public class DoubleCheckedLockingTest {
       CompilationTestHelper.newInstance(DoubleCheckedLocking.class, getClass());
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -50,7 +50,7 @@ public class DoubleCheckedLockingTest {
   }
 
   @Test
-  public void positiveNoFix() throws Exception {
+  public void positiveNoFix() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -72,7 +72,7 @@ public class DoubleCheckedLockingTest {
   }
 
   @Test
-  public void positiveTmpVar() throws Exception {
+  public void positiveTmpVar() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -96,7 +96,7 @@ public class DoubleCheckedLockingTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -117,7 +117,7 @@ public class DoubleCheckedLockingTest {
   }
 
   @Test
-  public void immutable_Integer() throws Exception {
+  public void immutable_Integer() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -138,7 +138,7 @@ public class DoubleCheckedLockingTest {
   }
 
   @Test
-  public void immutable_String() throws Exception {
+  public void immutable_String() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -159,7 +159,7 @@ public class DoubleCheckedLockingTest {
   }
 
   @Test
-  public void b37896333() throws Exception {
+  public void b37896333() {
     compilationHelper
         .addSourceLines(
             "tTest.java",

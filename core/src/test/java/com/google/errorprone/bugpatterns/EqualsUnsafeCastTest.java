@@ -33,7 +33,7 @@ public final class EqualsUnsafeCastTest {
       CompilationTestHelper.newInstance(EqualsUnsafeCast.class, getClass());
 
   @Test
-  public void fixes() throws Exception {
+  public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(new EqualsUnsafeCast(), getClass())
         .addInputLines(
             "Test.java",
@@ -58,7 +58,7 @@ public final class EqualsUnsafeCastTest {
   }
 
   @Test
-  public void fixesInlineCheck() throws Exception {
+  public void fixesInlineCheck() {
     BugCheckerRefactoringTestHelper.newInstance(new EqualsUnsafeCast(), getClass())
         .addInputLines(
             "Test.java",

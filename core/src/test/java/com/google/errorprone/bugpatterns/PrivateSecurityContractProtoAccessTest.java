@@ -33,14 +33,14 @@ public class PrivateSecurityContractProtoAccessTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
         .addSourceFile("PrivateSecurityContractProtoAccessPositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper
         .addSourceFile("PrivateSecurityContractProtoAccessNegativeCases.java")
         .doTest();

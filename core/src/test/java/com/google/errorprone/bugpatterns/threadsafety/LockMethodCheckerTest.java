@@ -33,7 +33,7 @@ public class LockMethodCheckerTest {
   }
 
   @Test
-  public void testLocked() throws Exception {
+  public void testLocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -54,7 +54,7 @@ public class LockMethodCheckerTest {
   }
 
   @Test
-  public void testLockedAndUnlocked() throws Exception {
+  public void testLockedAndUnlocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -77,7 +77,7 @@ public class LockMethodCheckerTest {
   }
 
   @Test
-  public void testLockedRWLock() throws Exception {
+  public void testLockedRWLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -99,7 +99,7 @@ public class LockMethodCheckerTest {
   }
 
   @Test
-  public void testLockedMonitor() throws Exception {
+  public void testLockedMonitor() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -117,7 +117,7 @@ public class LockMethodCheckerTest {
   }
 
   @Test
-  public void testNotLocked() throws Exception {
+  public void testNotLocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -135,7 +135,7 @@ public class LockMethodCheckerTest {
   }
 
   @Test
-  public void testNotLockedRWLock() throws Exception {
+  public void testNotLockedRWLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -151,7 +151,7 @@ public class LockMethodCheckerTest {
   }
 
   @Test
-  public void testNotLockedMonitor() throws Exception {
+  public void testNotLockedMonitor() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -167,7 +167,7 @@ public class LockMethodCheckerTest {
   }
 
   @Test
-  public void testBadLockExpression() throws Exception {
+  public void testBadLockExpression() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",

@@ -34,7 +34,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void testPositive1() throws Exception {
+  public void testPositive1() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -50,7 +50,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void testPositive2() throws Exception {
+  public void testPositive2() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -67,7 +67,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void testPositive3() throws Exception {
+  public void testPositive3() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -83,7 +83,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void testNegative() throws Exception {
+  public void testNegative() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -98,7 +98,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void negative_lazyInit() throws Exception {
+  public void negative_lazyInit() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -114,7 +114,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void negative_Writer() throws Exception {
+  public void negative_Writer() {
     compilationHelper
         .addSourceLines(
             "Test.java",

@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class ParameterNotNullableTest {
 
   @Test
-  public void testMethodInvocationOnParameter() throws Exception {
+  public void testMethodInvocationOnParameter() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
@@ -42,7 +42,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testMethodInvocationOnParameter_alternativeAnnotation() throws Exception {
+  public void testMethodInvocationOnParameter_alternativeAnnotation() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
@@ -62,7 +62,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testMethodInvocationOnParameter_typeAnnotation() throws Exception {
+  public void testMethodInvocationOnParameter_typeAnnotation() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
@@ -85,7 +85,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testMethodInvocationOnParameter_nullableArrayTypeAnnotation() throws Exception {
+  public void testMethodInvocationOnParameter_nullableArrayTypeAnnotation() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
@@ -108,7 +108,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testFieldDereferenceOnParameter() throws Exception {
+  public void testFieldDereferenceOnParameter() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
@@ -125,7 +125,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testArrayAccessOnParameter() throws Exception {
+  public void testArrayAccessOnParameter() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
@@ -141,7 +141,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testDereferenceInLambda() throws Exception {
+  public void testDereferenceInLambda() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
@@ -157,7 +157,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testNegativeCases_parameterNotNullable() throws Exception {
+  public void testNegativeCases_parameterNotNullable() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
@@ -172,7 +172,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testNegativeCases_arrayParameterWithNullableElements() throws Exception {
+  public void testNegativeCases_arrayParameterWithNullableElements() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
@@ -194,7 +194,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testNegativeCases_checkedForNull() throws Exception {
+  public void testNegativeCases_checkedForNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
@@ -209,7 +209,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testNegativeCases_this() throws Exception {
+  public void testNegativeCases_this() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
@@ -224,7 +224,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testNegativeCases_super() throws Exception {
+  public void testNegativeCases_super() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
@@ -239,7 +239,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testNegativeCases_local() throws Exception {
+  public void testNegativeCases_local() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",
@@ -255,7 +255,7 @@ public class ParameterNotNullableTest {
   }
 
   @Test
-  public void testNegativeCases_field() throws Exception {
+  public void testNegativeCases_field() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ParameterDereferenceTest.java",

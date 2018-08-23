@@ -36,7 +36,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void chainOffStatic() throws Exception {
+  public void chainOffStatic() {
     testHelper
         .addInputLines(
             "a/One.java",
@@ -70,7 +70,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void classLiteral() throws Exception {
+  public void classLiteral() {
     testHelper
         .addInputLines("a/A.java", "package a;", "public class A {", "}")
         .expectUnchanged()
@@ -96,7 +96,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void staticMethod() throws Exception {
+  public void staticMethod() {
     testHelper
         .addInputLines(
             "a/A.java", //
@@ -127,7 +127,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void enumTest() throws Exception {
+  public void enumTest() {
     testHelper
         .addInputLines(
             "in/test/Test.java",
@@ -151,7 +151,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     testHelper
         .addInputLines(
             "in/test/Test.java",
@@ -174,7 +174,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void doublePrefix() throws Exception {
+  public void doublePrefix() {
     testHelper
         .addInputLines(
             "foo/Foo.java", //
@@ -205,7 +205,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void positiveClassSelect() throws Exception {
+  public void positiveClassSelect() {
     testHelper
         .addInputLines(
             "in/test/Test.java",
@@ -229,7 +229,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void positiveInnerClass() throws Exception {
+  public void positiveInnerClass() {
     testHelper
         .addInputLines(
             "in/test/Test.java",
@@ -253,7 +253,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void dontImportRuntime() throws Exception {
+  public void dontImportRuntime() {
     testHelper
         .addInputLines(
             "in/test/Test.java", //
@@ -271,7 +271,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void dontImportSelf() throws Exception {
+  public void dontImportSelf() {
     testHelper
         .addInputLines(
             "in/test/Test.java",
@@ -290,7 +290,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void dontImportSelfPrivate() throws Exception {
+  public void dontImportSelfPrivate() {
     testHelper
         .addInputLines(
             "in/test/Test.java",
@@ -317,7 +317,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void dontImportSelfNested() throws Exception {
+  public void dontImportSelfNested() {
     testHelper
         .addInputLines(
             "in/test/Test.java",
@@ -340,7 +340,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void importSamePackage() throws Exception {
+  public void importSamePackage() {
     testHelper
         .addInputLines(
             "test/A.java",
@@ -367,7 +367,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void negativeNoWildcard() throws Exception {
+  public void negativeNoWildcard() {
     CompilationTestHelper.newInstance(WildcardImport.class, getClass())
         .addSourceLines(
             "test/Test.java",
@@ -382,7 +382,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void sameUnitWithSpuriousWildImport() throws Exception {
+  public void sameUnitWithSpuriousWildImport() {
     testHelper
         .addInputLines(
             "in/test/Test.java",
@@ -406,7 +406,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void nonCanonical() throws Exception {
+  public void nonCanonical() {
     testHelper
         .addInputLines(
             "a/One.java", //
@@ -439,7 +439,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void memberImport() throws Exception {
+  public void memberImport() {
     testHelper
         .addInputLines(
             "in/test/Test.java",
@@ -461,7 +461,7 @@ public class WildcardImportTest {
   }
 
   @Test
-  public void qualifyMembersFix() throws Exception {
+  public void qualifyMembersFix() {
     String[] enumLines = {
       "package e;",
       "public enum E {",

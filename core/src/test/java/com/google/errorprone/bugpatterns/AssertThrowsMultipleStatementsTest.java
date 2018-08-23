@@ -29,7 +29,7 @@ public class AssertThrowsMultipleStatementsTest {
       BugCheckerRefactoringTestHelper.newInstance(new AssertThrowsMultipleStatements(), getClass());
 
   @Test
-  public void ignoreInThrowingRunnables() throws Exception {
+  public void ignoreInThrowingRunnables() {
     compilationHelper
         .addInputLines(
             "Test.java",

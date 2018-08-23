@@ -29,7 +29,7 @@ public class ObjectsHashCodePrimitiveTest {
       BugCheckerRefactoringTestHelper.newInstance(new ObjectsHashCodePrimitive(), getClass());
 
   @Test
-  public void hashCodeIntLiteral() throws Exception {
+  public void hashCodeIntLiteral() {
     helper
         .addInputLines(
             "Test.java", //
@@ -51,7 +51,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeByte() throws Exception {
+  public void hashCodeByte() {
     helper
         .addInputLines(
             "Test.java", //
@@ -75,7 +75,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeShort() throws Exception {
+  public void hashCodeShort() {
     helper
         .addInputLines(
             "Test.java", //
@@ -99,7 +99,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeInt() throws Exception {
+  public void hashCodeInt() {
     helper
         .addInputLines(
             "Test.java", //
@@ -123,7 +123,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeLong() throws Exception {
+  public void hashCodeLong() {
     helper
         .addInputLines(
             "Test.java", //
@@ -147,7 +147,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeFloat() throws Exception {
+  public void hashCodeFloat() {
     helper
         .addInputLines(
             "Test.java", //
@@ -171,7 +171,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeDouble() throws Exception {
+  public void hashCodeDouble() {
     helper
         .addInputLines(
             "Test.java", //
@@ -195,7 +195,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeChar() throws Exception {
+  public void hashCodeChar() {
     helper
         .addInputLines(
             "Test.java", //
@@ -219,7 +219,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeBoolean() throws Exception {
+  public void hashCodeBoolean() {
     helper
         .addInputLines(
             "Test.java", //
@@ -243,7 +243,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeClassVariable() throws Exception {
+  public void hashCodeClassVariable() {
     helper
         .addInputLines(
             "Test.java", //
@@ -267,7 +267,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeObjectNegative() throws Exception {
+  public void hashCodeObjectNegative() {
     helper
         .addInputLines(
             "Test.java", //
@@ -283,7 +283,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeBoxedPrimitiveNegative() throws Exception {
+  public void hashCodeBoxedPrimitiveNegative() {
     helper
         .addInputLines(
             "Test.java", //
@@ -299,7 +299,7 @@ public class ObjectsHashCodePrimitiveTest {
   }
 
   @Test
-  public void hashCodeOtherMethodNegative() throws Exception {
+  public void hashCodeOtherMethodNegative() {
     helper
         .addInputLines(
             "Test.java", //

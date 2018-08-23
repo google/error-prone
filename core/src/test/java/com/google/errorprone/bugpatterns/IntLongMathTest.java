@@ -29,7 +29,7 @@ public final class IntLongMathTest {
       CompilationTestHelper.newInstance(IntLongMath.class, getClass());
 
   @Test
-  public void ignoreNonWideningAssignments() throws Exception {
+  public void ignoreNonWideningAssignments() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -52,7 +52,7 @@ public final class IntLongMathTest {
   }
 
   @Test
-  public void lambda() throws Exception {
+  public void lambda() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -70,7 +70,7 @@ public final class IntLongMathTest {
   }
 
   @Test
-  public void refactoring() throws Exception {
+  public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(new IntLongMath(), getClass())
         .addInputLines(
             "in/Test.java",

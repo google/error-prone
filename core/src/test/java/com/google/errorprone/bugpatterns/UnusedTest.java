@@ -96,7 +96,7 @@ public class UnusedTest {
   }
 
   @Test
-  public void unusedEnhancedForLoop() throws Exception {
+  public void unusedEnhancedForLoop() {
     refactoringHelper
         .addInputLines(
             "UnusedEnhancedForLoop.java",
@@ -387,7 +387,7 @@ public class UnusedTest {
   }
 
   @Test
-  public void refactoring() throws Exception {
+  public void refactoring() {
     refactoringHelper
         .addInputLines(
             "Unuseds.java",
@@ -527,7 +527,7 @@ public class UnusedTest {
   }
 
   @Test
-  public void unusedWithComment() throws Exception {
+  public void unusedWithComment() {
     refactoringHelper
         .addInputLines(
             "UnusedWithComment.java",

@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -93,7 +92,7 @@ public class StreamResourceLeakTest {
   }
 
   @Test
-  public void fix() throws IOException {
+  public void fix() {
     BugCheckerRefactoringTestHelper.newInstance(new StreamResourceLeak(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -124,7 +123,7 @@ public class StreamResourceLeakTest {
   }
 
   @Test
-  public void fixVariable() throws IOException {
+  public void fixVariable() {
     BugCheckerRefactoringTestHelper.newInstance(new StreamResourceLeak(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -227,7 +226,7 @@ public class StreamResourceLeakTest {
   }
 
   @Test
-  public void moreRefactorings() throws IOException {
+  public void moreRefactorings() {
     BugCheckerRefactoringTestHelper.newInstance(new StreamResourceLeak(), getClass())
         .addInputLines(
             "in/Test.java",

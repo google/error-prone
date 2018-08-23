@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class ExpectedExceptionCheckerTest {
 
   @Test
-  public void expect() throws IOException {
+  public void expect() {
     BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
         .addInputLines(
             "in/ExceptionTest.java",
@@ -92,7 +91,7 @@ public class ExpectedExceptionCheckerTest {
   }
 
   @Test
-  public void noExceptionType() throws IOException {
+  public void noExceptionType() {
     BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
         .addInputLines(
             "in/ExceptionTest.java",
@@ -139,7 +138,7 @@ public class ExpectedExceptionCheckerTest {
   }
 
   @Test
-  public void noExpectations() throws IOException {
+  public void noExpectations() {
     BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
         .addInputLines(
             "in/ExceptionTest.java",
@@ -183,7 +182,7 @@ public class ExpectedExceptionCheckerTest {
   }
 
   @Test
-  public void nonExpressionStatement() throws IOException {
+  public void nonExpressionStatement() {
     BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
         .addInputLines(
             "in/ExceptionTest.java",
@@ -229,7 +228,7 @@ public class ExpectedExceptionCheckerTest {
 
   // https://github.com/hamcrest/JavaHamcrest/issues/27
   @Test
-  public void isA_hasCauseThat() throws IOException {
+  public void isA_hasCauseThat() {
     BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
         .addInputLines(
             "in/ExceptionTest.java",
@@ -282,7 +281,7 @@ public class ExpectedExceptionCheckerTest {
   }
 
   @Test
-  public void typedMatcher() throws IOException {
+  public void typedMatcher() {
     BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
         .addInputLines(
             "in/ExceptionTest.java",
@@ -332,7 +331,7 @@ public class ExpectedExceptionCheckerTest {
   }
 
   @Test
-  public void nothingButAsserts() throws IOException {
+  public void nothingButAsserts() {
     BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
         .addInputLines(
             "in/ExceptionTest.java",
@@ -368,7 +367,7 @@ public class ExpectedExceptionCheckerTest {
   }
 
   @Test
-  public void removeExplicitFail() throws IOException {
+  public void removeExplicitFail() {
     BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass())
         .addInputLines(
             "in/ExceptionTest.java",

@@ -19,7 +19,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,7 +67,7 @@ public final class EmptySetMultibindingContributionsTest {
   }
 
   @Test
-  public void elementsIntoSetMethod_emptySet() throws IOException {
+  public void elementsIntoSetMethod_emptySet() {
     testHelper
         .addInputLines(
             "in/Test.java",

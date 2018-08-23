@@ -72,7 +72,7 @@ public class DiagnosticKindTest {
   }
 
   @Test
-  public void testError() throws Exception {
+  public void testError() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ErrorChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
     Result result =
@@ -99,7 +99,7 @@ public class DiagnosticKindTest {
   }
 
   @Test
-  public void testWarning() throws Exception {
+  public void testWarning() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(WarningChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
     Result result =
@@ -127,7 +127,7 @@ public class DiagnosticKindTest {
   }
 
   @Test
-  public void testSuggestion() throws Exception {
+  public void testSuggestion() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(SuggestionChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
     Result result =

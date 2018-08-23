@@ -39,7 +39,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void test_SuppressWarningsDoesntWork() throws Exception {
+  public void test_SuppressWarningsDoesntWork() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -55,7 +55,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_fieldAccessFailsWithNonConstant() throws Exception {
+  public void testMatches_fieldAccessFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -70,7 +70,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_fieldAccessFailsWithNonConstantExpression() throws Exception {
+  public void testMatches_fieldAccessFailsWithNonConstantExpression() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -85,7 +85,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_fieldAccessSucceedsWithLiteral() throws Exception {
+  public void testMatches_fieldAccessSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -99,7 +99,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_fieldAccessSucceedsWithStaticFinal() throws Exception {
+  public void testMatches_fieldAccessSucceedsWithStaticFinal() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -114,7 +114,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_fieldAccessSucceedsWithConstantConcatenation() throws Exception {
+  public void testMatches_fieldAccessSucceedsWithConstantConcatenation() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -129,7 +129,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_identCallFailsWithNonConstant() throws Exception {
+  public void testMatches_identCallFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -144,7 +144,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_identCallSucceedsWithLiteral() throws Exception {
+  public void testMatches_identCallSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -159,7 +159,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_staticCallFailsWithNonConstant() throws Exception {
+  public void testMatches_staticCallFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -174,7 +174,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_staticCallSucceedsWithLiteral() throws Exception {
+  public void testMatches_staticCallSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -188,7 +188,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_qualifiedStaticCallFailsWithNonConstant() throws Exception {
+  public void testMatches_qualifiedStaticCallFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -205,7 +205,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_qualifiedStaticCallSucceedsWithLiteral() throws Exception {
+  public void testMatches_qualifiedStaticCallSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -221,7 +221,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_ctorSucceedsWithLiteral() throws Exception {
+  public void testMatches_ctorSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -238,7 +238,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_ctorFailsWithNonConstant() throws Exception {
+  public void testMatches_ctorFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -256,7 +256,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_identCallSucceedsWithinCtorWithLiteral() throws Exception {
+  public void testMatches_identCallSucceedsWithinCtorWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -274,7 +274,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_varargsFail() throws Exception {
+  public void testMatches_varargsFail() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -289,7 +289,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_varargsSuccess() throws Exception {
+  public void testMatches_varargsSuccess() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -308,7 +308,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_effectivelyFinalCompileTimeConstantParam() throws Exception {
+  public void testMatches_effectivelyFinalCompileTimeConstantParam() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -324,7 +324,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_nonFinalCompileTimeConstantParam() throws Exception {
+  public void testMatches_nonFinalCompileTimeConstantParam() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",

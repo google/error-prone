@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class NullableDereferenceTest {
 
   @Test
-  public void testAnnotatedFormal() throws Exception {
+  public void testAnnotatedFormal() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/AnnotatedFormalTest.java",
@@ -47,7 +47,7 @@ public class NullableDereferenceTest {
   }
 
   @Test
-  public void testDataflow() throws Exception {
+  public void testDataflow() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/DataflowTest.java",
@@ -66,7 +66,7 @@ public class NullableDereferenceTest {
   }
 
   @Test
-  public void testInference() throws Exception {
+  public void testInference() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/InferenceTest.java",
@@ -88,7 +88,7 @@ public class NullableDereferenceTest {
   }
 
   @Test
-  public void testNullLiteral() throws Exception {
+  public void testNullLiteral() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullLiteralTest.java",
@@ -103,7 +103,7 @@ public class NullableDereferenceTest {
   }
 
   @Test
-  public void testStatics() throws Exception {
+  public void testStatics() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/StaticsTest.java",

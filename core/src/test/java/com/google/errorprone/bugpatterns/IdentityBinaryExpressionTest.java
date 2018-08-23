@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -109,7 +108,7 @@ public class IdentityBinaryExpressionTest {
   }
 
   @Test
-  public void fixes() throws IOException {
+  public void fixes() {
     compilationHelper
         .addSourceLines(
             "in/Test.java", //

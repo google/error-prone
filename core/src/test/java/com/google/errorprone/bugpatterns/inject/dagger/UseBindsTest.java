@@ -21,7 +21,6 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.producers.ProducerModule;
 import dagger.producers.Produces;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Before;
@@ -58,7 +57,7 @@ public class UseBindsTest {
   }
 
   @Test
-  public void staticProvidesMethod() throws IOException {
+  public void staticProvidesMethod() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -84,7 +83,7 @@ public class UseBindsTest {
   }
 
   @Test
-  public void intoSetMethod() throws IOException {
+  public void intoSetMethod() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -112,7 +111,7 @@ public class UseBindsTest {
   }
 
   @Test
-  public void instanceProvidesMethod() throws IOException {
+  public void instanceProvidesMethod() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -138,7 +137,7 @@ public class UseBindsTest {
   }
 
   @Test
-  public void multipleBindsMethods() throws IOException {
+  public void multipleBindsMethods() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -169,7 +168,7 @@ public class UseBindsTest {
   }
 
   @Test
-  public void instanceProvidesMethodWithInstanceSibling() throws IOException {
+  public void instanceProvidesMethodWithInstanceSibling() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -191,7 +190,7 @@ public class UseBindsTest {
   }
 
   @Test
-  public void instanceProvidesMethodWithStaticSibling() throws IOException {
+  public void instanceProvidesMethodWithStaticSibling() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -225,7 +224,7 @@ public class UseBindsTest {
   }
 
   @Test
-  public void notABindsMethod() throws IOException {
+  public void notABindsMethod() {
     testHelper
         .addInputLines(
             "in/Test.java",

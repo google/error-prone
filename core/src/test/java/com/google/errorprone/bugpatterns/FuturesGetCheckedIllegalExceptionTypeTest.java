@@ -32,14 +32,14 @@ public class FuturesGetCheckedIllegalExceptionTypeTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
         .addSourceFile("FuturesGetCheckedIllegalExceptionTypePositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper
         .addSourceFile("FuturesGetCheckedIllegalExceptionTypeNegativeCases.java")
         .doTest();

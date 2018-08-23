@@ -30,7 +30,7 @@ public class HidingFieldTest {
   CompilationTestHelper compilationHelper;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     compilationHelper = CompilationTestHelper.newInstance(HidingField.class, getClass());
   }
 

@@ -40,7 +40,7 @@ public class CompilerBasedAbstractTest {
   final List<FileToCompile> filesToCompile = new ArrayList<>();
 
   @After
-  public void clearSourceFiles() throws Exception {
+  public void clearSourceFiles() {
     filesToCompile.clear();
   }
 

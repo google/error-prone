@@ -44,21 +44,21 @@ public class FragmentNotInstantiableTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     createCompilationTestHelper(FragmentNotInstantiable.class)
         .addSourceFile("FragmentNotInstantiablePositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     createCompilationTestHelper(FragmentNotInstantiable.class)
         .addSourceFile("FragmentNotInstantiableNegativeCases.java")
         .doTest();
   }
 
   @Test
-  public void testPositiveCases_custom() throws Exception {
+  public void testPositiveCases_custom() {
     createCompilationTestHelper(CustomFragmentNotInstantiable.class)
         .addSourceFile("FragmentNotInstantiablePositiveCases.java")
         .addSourceFile("CustomFragment.java")
@@ -67,7 +67,7 @@ public class FragmentNotInstantiableTest {
   }
 
   @Test
-  public void testNegativeCase_custom() throws Exception {
+  public void testNegativeCase_custom() {
     createCompilationTestHelper(CustomFragmentNotInstantiable.class)
         .addSourceFile("FragmentNotInstantiableNegativeCases.java")
         .addSourceFile("CustomFragment.java")

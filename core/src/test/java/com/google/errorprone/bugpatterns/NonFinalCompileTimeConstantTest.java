@@ -35,7 +35,7 @@ public class NonFinalCompileTimeConstantTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -50,7 +50,7 @@ public class NonFinalCompileTimeConstantTest {
   }
 
   @Test
-  public void positiveTwoParams() throws Exception {
+  public void positiveTwoParams() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -65,7 +65,7 @@ public class NonFinalCompileTimeConstantTest {
   }
 
   @Test
-  public void positiveOneOfTwoParams() throws Exception {
+  public void positiveOneOfTwoParams() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -82,7 +82,7 @@ public class NonFinalCompileTimeConstantTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -94,7 +94,7 @@ public class NonFinalCompileTimeConstantTest {
   }
 
   @Test
-  public void negativeEffectivelyFinal() throws Exception {
+  public void negativeEffectivelyFinal() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -106,7 +106,7 @@ public class NonFinalCompileTimeConstantTest {
   }
 
   @Test
-  public void negativeInterface() throws Exception {
+  public void negativeInterface() {
     compilationHelper
         .addSourceLines(
             "Test.java",

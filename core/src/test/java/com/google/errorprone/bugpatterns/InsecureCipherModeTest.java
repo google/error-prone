@@ -33,12 +33,12 @@ public class InsecureCipherModeTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("InsecureCipherModePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("InsecureCipherModeNegativeCases.java").doTest();
   }
 }

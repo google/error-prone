@@ -32,7 +32,7 @@ public class MultiVariableDeclarationTest {
       CompilationTestHelper.newInstance(MultiVariableDeclaration.class, getClass());
 
   @Test
-  public void positivePosition() throws Exception {
+  public void positivePosition() {
     compilationHelper
         .addSourceLines(
             "A.java", //
@@ -46,7 +46,7 @@ public class MultiVariableDeclarationTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     BugCheckerRefactoringTestHelper.newInstance(new MultiVariableDeclaration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -64,7 +64,7 @@ public class MultiVariableDeclarationTest {
   }
 
   @Test
-  public void positiveWithNeighbours() throws Exception {
+  public void positiveWithNeighbours() {
     BugCheckerRefactoringTestHelper.newInstance(new MultiVariableDeclaration(), getClass())
         .addInputLines(
             "in/A.java",
@@ -86,7 +86,7 @@ public class MultiVariableDeclarationTest {
   }
 
   @Test
-  public void positiveWithNeighbouringScopes() throws Exception {
+  public void positiveWithNeighbouringScopes() {
     BugCheckerRefactoringTestHelper.newInstance(new MultiVariableDeclaration(), getClass())
         .addInputLines(
             "in/A.java",
@@ -116,7 +116,7 @@ public class MultiVariableDeclarationTest {
   }
 
   @Test
-  public void positiveCinit() throws Exception {
+  public void positiveCinit() {
     BugCheckerRefactoringTestHelper.newInstance(new MultiVariableDeclaration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -134,7 +134,7 @@ public class MultiVariableDeclarationTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "a/A.java", //
@@ -147,7 +147,7 @@ public class MultiVariableDeclarationTest {
   }
 
   @Test
-  public void negativeForLoop() throws Exception {
+  public void negativeForLoop() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -161,7 +161,7 @@ public class MultiVariableDeclarationTest {
   }
 
   @Test
-  public void positiveAnnotation() throws Exception {
+  public void positiveAnnotation() {
     BugCheckerRefactoringTestHelper.newInstance(new MultiVariableDeclaration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -184,7 +184,7 @@ public class MultiVariableDeclarationTest {
   }
 
   @Test
-  public void positiveArrayDimensions() throws Exception {
+  public void positiveArrayDimensions() {
     BugCheckerRefactoringTestHelper.newInstance(new MultiVariableDeclaration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -202,7 +202,7 @@ public class MultiVariableDeclarationTest {
   }
 
   @Test
-  public void positiveNoInitializer() throws Exception {
+  public void positiveNoInitializer() {
     BugCheckerRefactoringTestHelper.newInstance(new MultiVariableDeclaration(), getClass())
         .addInputLines(
             "in/A.java", //

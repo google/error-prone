@@ -39,14 +39,14 @@ import org.junit.runners.JUnit4;
 public class ErrorProneOptionsTest {
 
   @Test
-  public void nonErrorProneFlagsPlacedInRemainingArgs() throws Exception {
+  public void nonErrorProneFlagsPlacedInRemainingArgs() {
     String[] args = {"-nonErrorProneFlag", "value"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     assertThat(options.getRemainingArgs()).isEqualTo(args);
   }
 
   @Test
-  public void malformedOptionThrowsProperException() throws Exception {
+  public void malformedOptionThrowsProperException() {
     List<String> badArgs =
         Arrays.asList(
             "-Xep:Foo:WARN:jfkdlsdf", // too many parts
@@ -64,7 +64,7 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
-  public void handlesErrorProneSeverityFlags() throws Exception {
+  public void handlesErrorProneSeverityFlags() {
     String[] args1 = {"-Xep:Check1"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args1);
     Map<String, Severity> expectedSeverityMap =
@@ -83,7 +83,7 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
-  public void handlesErrorProneCustomFlags() throws Exception {
+  public void handlesErrorProneCustomFlags() {
     String[] args = {"-XepOpt:Flag1", "-XepOpt:Flag2=Value2", "-XepOpt:Flag3=a,b,c"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     Map<String, String> expectedFlagsMap =
@@ -96,7 +96,7 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
-  public void combineErrorProneFlagsWithNonErrorProneFlags() throws Exception {
+  public void combineErrorProneFlagsWithNonErrorProneFlags() {
     String[] args = {
       "-classpath",
       "/this/is/classpath",
@@ -119,7 +119,7 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
-  public void lastSeverityFlagWins() throws Exception {
+  public void lastSeverityFlagWins() {
     String[] args = {"-Xep:Check1:ERROR", "-Xep:Check1:OFF"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     Map<String, Severity> expectedSeverityMap =

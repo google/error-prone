@@ -47,32 +47,32 @@ public class MissingFailTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("MissingFailPositiveCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCases2() throws Exception {
+  public void testPositiveCases2() {
     compilationHelper.addSourceFile("MissingFailPositiveCases2.java").doTest();
   }
 
   @Test
-  public void testPositiveCases3() throws Exception {
+  public void testPositiveCases3() {
     compilationHelper.addSourceFile("MissingFailPositiveCases3.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() throws Exception {
+  public void testNegativeCases() {
     compilationHelper.addSourceFile("MissingFailNegativeCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases2() throws Exception {
+  public void testNegativeCases2() {
     compilationHelper.addSourceFile("MissingFailNegativeCases2.java").doTest();
   }
 
   @Test
-  public void testFailImport() throws Exception {
+  public void testFailImport() {
     TestScanner scanner = new TestScanner();
     CompilationTestHelper compilationHelper =
         CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner), getClass());
@@ -100,7 +100,7 @@ public class MissingFailTest {
   }
 
   @Test
-  public void testFailMessageMultiCatch() throws Exception {
+  public void testFailMessageMultiCatch() {
     TestScanner scanner = new TestScanner();
     CompilationTestHelper compilationHelper =
         CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner), getClass());
@@ -125,7 +125,7 @@ public class MissingFailTest {
 
   // verify that exceptions not named 'expected' are ignored
   @Test
-  public void testToleratedException() throws Exception {
+  public void testToleratedException() {
     compilationHelper
         .addSourceLines(
             "test/A.java",
@@ -143,7 +143,7 @@ public class MissingFailTest {
 
   // verify that exceptions not named 'expected' are ignored
   @Test
-  public void testToleratedExceptionWithAssert() throws Exception {
+  public void testToleratedExceptionWithAssert() {
     compilationHelper
         .addSourceLines(
             "test/A.java",

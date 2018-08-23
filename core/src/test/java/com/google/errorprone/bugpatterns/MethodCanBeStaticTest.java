@@ -273,7 +273,7 @@ public class MethodCanBeStaticTest {
   }
 
   @Test
-  public void methodReference() throws Exception {
+  public void methodReference() {
     BugCheckerRefactoringTestHelper.newInstance(new MethodCanBeStatic(), getClass())
         .addInputLines(
             "in/Test.java",

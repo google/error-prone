@@ -29,7 +29,7 @@ public class ExtendingJUnitAssertTest {
       BugCheckerRefactoringTestHelper.newInstance(new ExtendingJUnitAssert(), getClass());
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     refactoringTestHelper
         .addInputLines(
             "in/Foo.java",
@@ -52,7 +52,7 @@ public class ExtendingJUnitAssertTest {
   }
 
   @Test
-  public void positiveWithGenerics() throws Exception {
+  public void positiveWithGenerics() {
     refactoringTestHelper
         .addInputLines(
             "in/Foo.java",
@@ -81,7 +81,7 @@ public class ExtendingJUnitAssertTest {
   }
 
   @Test
-  public void positiveWithImplements() throws Exception {
+  public void positiveWithImplements() {
     refactoringTestHelper
         .addInputLines(
             "in/Foo.java",

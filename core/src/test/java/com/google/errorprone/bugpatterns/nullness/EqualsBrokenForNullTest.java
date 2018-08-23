@@ -34,12 +34,12 @@ public class EqualsBrokenForNullTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("EqualsBrokenForNullPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("EqualsBrokenForNullNegativeCases.java").doTest();
   }
 }

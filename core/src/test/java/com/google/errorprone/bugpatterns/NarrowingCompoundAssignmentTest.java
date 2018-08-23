@@ -34,7 +34,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -62,7 +62,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testAllOps() throws Exception {
+  public void testAllOps() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -91,7 +91,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testDeficientRightShift() throws Exception {
+  public void testDeficientRightShift() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -105,7 +105,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -123,7 +123,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testFloatFloat() throws Exception {
+  public void testFloatFloat() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -141,7 +141,7 @@ public class NarrowingCompoundAssignmentTest {
 
   // bit twiddling deficient types with masks of the same width is fine
   @Test
-  public void testBitTwiddle() throws Exception {
+  public void testBitTwiddle() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -170,7 +170,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void allowsBinopsOfDeficientTypes() throws Exception {
+  public void allowsBinopsOfDeficientTypes() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -199,7 +199,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testPreservePrecedence() throws Exception {
+  public void testPreservePrecedence() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -214,7 +214,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testPreservePrecedence2() throws Exception {
+  public void testPreservePrecedence2() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -261,7 +261,7 @@ public class NarrowingCompoundAssignmentTest {
     testPrecedence("|", "|", /* parens= */ true);
   }
 
-  private void testPrecedence(String opA, String opB, boolean parens) throws Exception {
+  private void testPrecedence(String opA, String opB, boolean parens) {
     String rhs = String.format("1 %s 2", opB);
     if (parens) {
       rhs = "(" + rhs + ")";
@@ -284,7 +284,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testDoubleLong() throws Exception {
+  public void testDoubleLong() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -300,7 +300,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testDoubleInt() throws Exception {
+  public void testDoubleInt() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -316,7 +316,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testFloatLong() throws Exception {
+  public void testFloatLong() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -332,7 +332,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testFloatInt() throws Exception {
+  public void testFloatInt() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -348,7 +348,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void exhaustiveTypes() throws Exception {
+  public void exhaustiveTypes() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -432,7 +432,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testBoxing() throws Exception {
+  public void testBoxing() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -447,7 +447,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testStringConcat() throws Exception {
+  public void testStringConcat() {
     compilationHelper
         .addSourceLines(
             "Test.java",

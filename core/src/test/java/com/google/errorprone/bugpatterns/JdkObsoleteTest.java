@@ -115,7 +115,7 @@ public class JdkObsoleteTest {
   }
 
   @Test
-  public void refactoring() throws IOException {
+  public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(new JdkObsolete(), getClass())
         .addInputLines(
             "in/Test.java", //
@@ -149,7 +149,7 @@ public class JdkObsoleteTest {
   }
 
   @Test
-  public void stringBufferRefactoringTest() throws IOException {
+  public void stringBufferRefactoringTest() {
     BugCheckerRefactoringTestHelper.newInstance(new JdkObsolete(), getClass())
         .addInputLines(
             "in/Test.java", //
@@ -209,7 +209,7 @@ public class JdkObsoleteTest {
   }
 
   @Test
-  public void additionalRefactorings() throws IOException {
+  public void additionalRefactorings() {
     BugCheckerRefactoringTestHelper.newInstance(new JdkObsolete(), getClass())
         .addInputLines(
             "in/Test.java", //

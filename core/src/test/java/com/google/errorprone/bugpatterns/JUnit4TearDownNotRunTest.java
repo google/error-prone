@@ -34,22 +34,22 @@ public class JUnit4TearDownNotRunTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCase_customAnnotation() throws Exception {
+  public void testPositiveCase_customAnnotation() {
     compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCaseCustomAfter.java").doTest();
   }
 
   @Test
-  public void testPositiveCase_customAnnotationDifferentName() throws Exception {
+  public void testPositiveCase_customAnnotationDifferentName() {
     compilationHelper.addSourceFile("JUnit4TearDownNotRunPositiveCaseCustomAfter2.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() throws Exception {
+  public void testNegativeCases() {
     compilationHelper.addSourceFile("JUnit4TearDownNotRunNegativeCases.java").doTest();
   }
 }

@@ -34,7 +34,7 @@ public class ClassNameTest {
   }
 
   @Test
-  public void twoClasses() throws Exception {
+  public void twoClasses() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -46,7 +46,7 @@ public class ClassNameTest {
   }
 
   @Test
-  public void packageInfo() throws Exception {
+  public void packageInfo() {
     compilationHelper
         .addSourceLines("a/package-info.java", "/** Documentation for our package */", "package a;")
         .addSourceLines(
@@ -58,7 +58,7 @@ public class ClassNameTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines("a/A.java", "package a;", "class A {}")
         .addSourceLines("b/B.java", "package b;", "class B {}")
@@ -66,7 +66,7 @@ public class ClassNameTest {
   }
 
   @Test
-  public void negativeMultipleTopLevel() throws Exception {
+  public void negativeMultipleTopLevel() {
     compilationHelper
         .addSourceLines("a/A.java", "package a;", "class A {}")
         .addSourceLines("b/B.java", "package b;", "class B {}", "class C {}")
@@ -74,33 +74,33 @@ public class ClassNameTest {
   }
 
   @Test
-  public void negativeInnerClass() throws Exception {
+  public void negativeInnerClass() {
     compilationHelper
         .addSourceLines("b/B.java", "package b;", "class B {", "  static class Inner {}", "}")
         .doTest();
   }
 
   @Test
-  public void negativeInterface() throws Exception {
+  public void negativeInterface() {
     compilationHelper
         .addSourceLines("b/B.java", "package b;", "interface B {", "  static class Inner {}", "}")
         .doTest();
   }
 
   @Test
-  public void negativeEnum() throws Exception {
+  public void negativeEnum() {
     compilationHelper.addSourceLines("b/B.java", "package b;", "enum B {", "  ONE;", "}").doTest();
   }
 
   @Test
-  public void negativeAnnotation() throws Exception {
+  public void negativeAnnotation() {
     compilationHelper
         .addSourceLines("b/B.java", "package b;", "public @interface B {", "}")
         .doTest();
   }
 
   @Test
-  public void negativeIsPublic() throws Exception {
+  public void negativeIsPublic() {
     compilationHelper
         .addSourceLines(
             "b/B.java",
@@ -114,7 +114,7 @@ public class ClassNameTest {
   }
 
   @Test
-  public void suppression() throws Exception {
+  public void suppression() {
     compilationHelper
         .addSourceLines(
             "b/Test.java", //

@@ -64,7 +64,7 @@ public class BugPatternValidatorTest {
   }
 
   @Test
-  public void linkTypeNoneButIncludesLink() throws Exception {
+  public void linkTypeNoneButIncludesLink() {
     @BugPattern(
         name = "LinkTypeNoneButIncludesLink",
         summary = "linkType none but includes link",
@@ -96,7 +96,7 @@ public class BugPatternValidatorTest {
   }
 
   @Test
-  public void linkTypeCustomButNoLink() throws Exception {
+  public void linkTypeCustomButNoLink() {
     @BugPattern(
         name = "LinkTypeCustomButNoLink",
         summary = "linkType custom but no link",

@@ -20,7 +20,6 @@ import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEX
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,7 +29,7 @@ import org.junit.runners.JUnit4;
 public class MixedArrayDimensionsTest {
 
   @Test
-  public void positiveVariable() throws IOException {
+  public void positiveVariable() {
     BugCheckerRefactoringTestHelper.newInstance(new MixedArrayDimensions(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -52,7 +51,7 @@ public class MixedArrayDimensionsTest {
   }
 
   @Test
-  public void positiveMethod() throws IOException {
+  public void positiveMethod() {
     BugCheckerRefactoringTestHelper.newInstance(new MixedArrayDimensions(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -74,7 +73,7 @@ public class MixedArrayDimensionsTest {
   }
 
   @Test
-  public void negative() throws IOException {
+  public void negative() {
     CompilationTestHelper.newInstance(MixedArrayDimensions.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -90,7 +89,7 @@ public class MixedArrayDimensionsTest {
   }
 
   @Test
-  public void comment() throws IOException {
+  public void comment() {
     CompilationTestHelper.newInstance(MixedArrayDimensions.class, getClass())
         .addSourceLines(
             "Test.java", //

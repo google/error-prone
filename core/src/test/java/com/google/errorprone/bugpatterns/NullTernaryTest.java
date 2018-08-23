@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,7 +29,7 @@ public class NullTernaryTest {
       CompilationTestHelper.newInstance(NullTernary.class, getClass());
 
   @Test
-  public void positive() throws IOException {
+  public void positive() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -58,7 +57,7 @@ public class NullTernaryTest {
   }
 
   @Test
-  public void negative() throws IOException {
+  public void negative() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -79,7 +78,7 @@ public class NullTernaryTest {
   }
 
   @Test
-  public void lambdas() throws IOException {
+  public void lambdas() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -108,7 +107,7 @@ public class NullTernaryTest {
   }
 
   @Test
-  public void conditionalInCondition() throws IOException {
+  public void conditionalInCondition() {
     testHelper
         .addSourceLines(
             "Test.java",

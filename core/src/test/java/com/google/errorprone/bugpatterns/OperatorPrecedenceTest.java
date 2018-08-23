@@ -75,7 +75,7 @@ public class OperatorPrecedenceTest {
   }
 
   @Test
-  public void positiveNotSpecialParenthesisCase() throws Exception {
+  public void positiveNotSpecialParenthesisCase() {
     helper
         .addInputLines(
             "Test.java",
@@ -113,7 +113,7 @@ public class OperatorPrecedenceTest {
   }
 
   @Test
-  public void extraParenthesis() throws Exception {
+  public void extraParenthesis() {
     helper
         .addInputLines(
             "Test.java", //
@@ -133,7 +133,7 @@ public class OperatorPrecedenceTest {
   }
 
   @Test
-  public void rightAndParenthesis() throws Exception {
+  public void rightAndParenthesis() {
     helper
         .addInputLines(
             "Test.java", //
@@ -153,7 +153,7 @@ public class OperatorPrecedenceTest {
   }
 
   @Test
-  public void leftAndParenthesis() throws Exception {
+  public void leftAndParenthesis() {
     helper
         .addInputLines(
             "Test.java", //
@@ -173,7 +173,7 @@ public class OperatorPrecedenceTest {
   }
 
   @Test
-  public void aLotOfParenthesis() throws Exception {
+  public void aLotOfParenthesis() {
     helper
         .addInputLines(
             "Test.java", //

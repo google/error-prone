@@ -29,17 +29,17 @@ public class EqualsHashCodeTest {
       CompilationTestHelper.newInstance(EqualsHashCode.class, getClass());
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("EqualsHashCodeTestPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("EqualsHashCodeTestNegativeCases.java").doTest();
   }
 
   @Test
-  public void superClassWithoutHashCode() throws Exception {
+  public void superClassWithoutHashCode() {
     compilationHelper
         .addSourceLines("Super.java", "abstract class Super {}")
         .addSourceLines(
@@ -52,7 +52,7 @@ public class EqualsHashCodeTest {
   }
 
   @Test
-  public void inherited() throws Exception {
+  public void inherited() {
     compilationHelper
         .addSourceLines(
             "Super.java",
@@ -70,14 +70,14 @@ public class EqualsHashCodeTest {
   }
 
   @Test
-  public void interfaceEquals() throws Exception {
+  public void interfaceEquals() {
     compilationHelper
         .addSourceLines("I.java", "interface I {", "  boolean equals(Object o);", "}")
         .doTest();
   }
 
   @Test
-  public void abstractHashCode() throws Exception {
+  public void abstractHashCode() {
     compilationHelper
         .addSourceLines(
             "Super.java",
@@ -89,7 +89,7 @@ public class EqualsHashCodeTest {
   }
 
   @Test
-  public void abstractNoHashCode() throws Exception {
+  public void abstractNoHashCode() {
     compilationHelper
         .addSourceLines(
             "Super.java",
@@ -101,7 +101,7 @@ public class EqualsHashCodeTest {
   }
 
   @Test
-  public void suppressOnEquals() throws Exception {
+  public void suppressOnEquals() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -113,7 +113,7 @@ public class EqualsHashCodeTest {
   }
 
   @Test
-  public void nopEquals() throws Exception {
+  public void nopEquals() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -126,7 +126,7 @@ public class EqualsHashCodeTest {
   }
 
   @Test
-  public void nopEqualsWithNullable() throws Exception {
+  public void nopEqualsWithNullable() {
     compilationHelper
         .addSourceLines(
             "Test.java",

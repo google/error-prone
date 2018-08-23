@@ -29,7 +29,7 @@ public class VariableNameSameAsTypeTest {
       CompilationTestHelper.newInstance(VariableNameSameAsType.class, getClass());
 
   @Test
-  public void positiveInsideMethod() throws Exception {
+  public void positiveInsideMethod() {
     helper
         .addSourceLines(
             "Test.java",
@@ -43,7 +43,7 @@ public class VariableNameSameAsTypeTest {
   }
 
   @Test
-  public void positiveLambda() throws Exception {
+  public void positiveLambda() {
     helper
         .addSourceLines(
             "Test.java",
@@ -58,7 +58,7 @@ public class VariableNameSameAsTypeTest {
   }
 
   @Test
-  public void positiveInitialized() throws Exception {
+  public void positiveInitialized() {
     helper
         .addSourceLines(
             "Test.java",
@@ -72,7 +72,7 @@ public class VariableNameSameAsTypeTest {
   }
 
   @Test
-  public void positiveInitializedSeparate() throws Exception {
+  public void positiveInitializedSeparate() {
     helper
         .addSourceLines(
             "Test.java",
@@ -87,7 +87,7 @@ public class VariableNameSameAsTypeTest {
   }
 
   @Test
-  public void positiveField() throws Exception {
+  public void positiveField() {
     helper
         .addSourceLines(
             "Test.java",
@@ -101,7 +101,7 @@ public class VariableNameSameAsTypeTest {
   }
 
   @Test
-  public void negativeLowerCase() throws Exception {
+  public void negativeLowerCase() {
     helper
         .addSourceLines(
             "Test.java", //
@@ -114,7 +114,7 @@ public class VariableNameSameAsTypeTest {
   }
 
   @Test
-  public void negativeInitializedLowerCase() throws Exception {
+  public void negativeInitializedLowerCase() {
     helper
         .addSourceLines(
             "Test.java", //
@@ -127,7 +127,7 @@ public class VariableNameSameAsTypeTest {
   }
 
   @Test
-  public void negativeInitializedSeparate() throws Exception {
+  public void negativeInitializedSeparate() {
     helper
         .addSourceLines(
             "Test.java",
@@ -141,7 +141,7 @@ public class VariableNameSameAsTypeTest {
   }
 
   @Test
-  public void negativeOther() throws Exception {
+  public void negativeOther() {
     helper
         .addSourceLines(
             "Test.java", //

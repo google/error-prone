@@ -34,12 +34,12 @@ public class CloseableProvidesTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("CloseableProvidesPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("CloseableProvidesNegativeCases.java").doTest();
   }
 }

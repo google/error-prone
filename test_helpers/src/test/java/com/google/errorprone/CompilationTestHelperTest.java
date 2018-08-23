@@ -231,7 +231,7 @@ public class CompilationTestHelperTest {
   }
 
   @Test
-  public void fileWithSyntaxErrorFails() throws Exception {
+  public void fileWithSyntaxErrorFails() {
     AssertionError expected =
         assertThrows(
             AssertionError.class,

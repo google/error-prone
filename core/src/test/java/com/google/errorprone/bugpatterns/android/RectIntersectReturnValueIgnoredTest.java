@@ -35,12 +35,12 @@ public class RectIntersectReturnValueIgnoredTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("RectIntersectReturnValueIgnoredPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("RectIntersectReturnValueIgnoredNegativeCases.java").doTest();
   }
 }

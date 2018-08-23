@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,7 +27,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DateFormatConstantTest {
   @Test
-  public void positive() throws IOException {
+  public void positive() {
     CompilationTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -46,7 +45,7 @@ public class DateFormatConstantTest {
   }
 
   @Test
-  public void negative() throws IOException {
+  public void negative() {
     CompilationTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -72,7 +71,7 @@ public class DateFormatConstantTest {
   }
 
   @Test
-  public void threadLocalFix() throws IOException {
+  public void threadLocalFix() {
     BugCheckerRefactoringTestHelper.newInstance(new DateFormatConstant(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -102,7 +101,7 @@ public class DateFormatConstantTest {
   }
 
   @Test
-  public void lowerCamelCaseFix() throws IOException {
+  public void lowerCamelCaseFix() {
     BugCheckerRefactoringTestHelper.newInstance(new DateFormatConstant(), getClass())
         .addInputLines(
             "in/Test.java",

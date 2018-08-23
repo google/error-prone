@@ -34,7 +34,7 @@ public class GetClassOnEnumTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -49,7 +49,7 @@ public class GetClassOnEnumTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "Test.java",

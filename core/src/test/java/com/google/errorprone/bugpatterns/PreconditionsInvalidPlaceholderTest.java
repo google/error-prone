@@ -35,12 +35,12 @@ public class PreconditionsInvalidPlaceholderTest {
   }
 
   @Test
-  public void testPositiveCase1() throws Exception {
+  public void testPositiveCase1() {
     compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testNegativeCase1() throws Exception {
+  public void testNegativeCase1() {
     compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderNegativeCase1.java").doTest();
   }
 }

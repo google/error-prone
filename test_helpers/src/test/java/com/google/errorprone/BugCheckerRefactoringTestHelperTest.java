@@ -33,7 +33,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +50,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testNoMatch() throws IOException {
+  public void testNoMatch() {
     helper
         .addInputLines("in/Test.java", "public class Test {}")
         .addOutputLines("out/Test.java", "public class Test {}")
@@ -59,7 +58,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testReplace() throws IOException {
+  public void testReplace() {
     helper
         .addInputLines(
             "in/Test.java",
@@ -81,7 +80,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test(expected = AssertionError.class)
-  public void testReplaceFail() throws IOException {
+  public void testReplaceFail() {
     helper
         .addInputLines(
             "in/Test.java",
@@ -103,7 +102,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testReplaceTextMatch() throws IOException {
+  public void testReplaceTextMatch() {
     helper
         .addInputLines(
             "in/Test.java",
@@ -125,7 +124,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testIgnoreWhitespace() throws IOException {
+  public void testIgnoreWhitespace() {
     helper
         .addInputLines(
             "in/Test.java",
@@ -144,7 +143,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test(expected = AssertionError.class)
-  public void testReplaceTextMatchFail() throws IOException {
+  public void testReplaceTextMatchFail() {
     helper
         .addInputLines(
             "in/Test.java",
@@ -166,7 +165,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void compilationErrorFail() throws IOException {
+  public void compilationErrorFail() {
     try {
       helper
           .addInputLines("syntax_error.java", "public clazz Bar { ! this should fail }")
@@ -180,7 +179,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testAnnotationFullName() throws IOException {
+  public void testAnnotationFullName() {
     BugCheckerRefactoringTestHelper.newInstance(new RemoveAnnotationRefactoring(), getClass())
         .addInputLines("bar/Foo.java", "package bar;", "public @interface Foo {", "};")
         .expectUnchanged()
@@ -208,7 +207,8 @@ public class BugCheckerRefactoringTestHelperTest {
       summary = "Mock refactoring that removes all annotations declared in package bar ",
       explanation = "For test purposes only.",
       category = JDK,
-      severity = SUGGESTION)
+      severity = SUGGESTION,
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
   public static class RemoveAnnotationRefactoring extends BugChecker
       implements AnnotationTreeMatcher {
 
@@ -222,7 +222,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void compilationError() throws Exception {
+  public void compilationError() {
     try {
       helper
           .addInputLines("Test.java", "public class Test extends NoSuch {}")
@@ -236,7 +236,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void staticLastImportOrder() throws Exception {
+  public void staticLastImportOrder() {
     BugCheckerRefactoringTestHelper.newInstance(new ImportArrayList(), getClass())
         .setImportOrder("static-last")
         .addInputLines("pkg/A.java", "import static java.lang.Math.min;", "class A {", "}")

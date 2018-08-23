@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,12 +29,12 @@ public class FallThroughTest {
       CompilationTestHelper.newInstance(FallThrough.class, getClass());
 
   @Test
-  public void positive() throws IOException {
+  public void positive() {
     testHelper.addSourceFile("FallThroughPositiveCases.java").doTest();
   }
 
   @Test
-  public void negative() throws IOException {
+  public void negative() {
     testHelper.addSourceFile("FallThroughNegativeCases.java").doTest();
   }
 
@@ -58,7 +57,7 @@ public class FallThroughTest {
   }
 
   @Test
-  public void commentInBlock() throws IOException {
+  public void commentInBlock() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -81,7 +80,7 @@ public class FallThroughTest {
   }
 
   @Test
-  public void emptyBlock() throws IOException {
+  public void emptyBlock() {
     testHelper
         .addSourceLines(
             "Test.java",

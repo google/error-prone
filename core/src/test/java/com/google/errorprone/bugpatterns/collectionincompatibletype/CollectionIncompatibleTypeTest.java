@@ -22,7 +22,6 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType.FixType;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -84,7 +83,7 @@ public class CollectionIncompatibleTypeTest {
   }
 
   @Test
-  public void testSuppressWarningsFix() throws IOException {
+  public void testSuppressWarningsFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(
             new CollectionIncompatibleType(FixType.SUPPRESS_WARNINGS), getClass());

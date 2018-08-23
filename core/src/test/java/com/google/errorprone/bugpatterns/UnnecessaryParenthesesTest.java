@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,7 +31,7 @@ public class UnnecessaryParenthesesTest {
       CompilationTestHelper.newInstance(UnnecessaryParentheses.class, getClass());
 
   @Test
-  public void test() throws IOException {
+  public void test() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -52,7 +51,7 @@ public class UnnecessaryParenthesesTest {
   }
 
   @Test
-  public void anonymousClass() throws IOException {
+  public void anonymousClass() {
     testHelper
         .addInputLines(
             "in/Test.java",

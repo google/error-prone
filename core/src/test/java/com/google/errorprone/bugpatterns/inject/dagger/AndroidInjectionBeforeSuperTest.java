@@ -42,7 +42,7 @@ public final class AndroidInjectionBeforeSuperTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
         .addSourceFile("AndroidInjectionBeforeSuperPositiveCases.java")
         .addSourceFile("AndroidInjection.java")
@@ -50,7 +50,7 @@ public final class AndroidInjectionBeforeSuperTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper
         .addSourceFile("AndroidInjectionBeforeSuperNegativeCases.java")
         .addSourceFile("AndroidInjection.java")

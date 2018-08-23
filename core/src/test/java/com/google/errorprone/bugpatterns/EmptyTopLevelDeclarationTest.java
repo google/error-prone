@@ -35,12 +35,12 @@ public class EmptyTopLevelDeclarationTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper.addSourceLines("a/A.java", "package a;", "class One {}").doTest();
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "a/A.java",

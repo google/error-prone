@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.inject;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +54,7 @@ public class QualifierOrScopeOnInjectMethodTest {
   }
 
   @Test
-  public void testPositiveCase_InjectConstructor() throws IOException {
+  public void testPositiveCase_InjectConstructor() {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",

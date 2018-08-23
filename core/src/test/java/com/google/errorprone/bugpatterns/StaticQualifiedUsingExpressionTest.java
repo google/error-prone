@@ -36,22 +36,22 @@ public class StaticQualifiedUsingExpressionTest {
   }
 
   @Test
-  public void testPositiveCase1() throws Exception {
+  public void testPositiveCase1() {
     compilationHelper.addSourceFile("StaticQualifiedUsingExpressionPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() throws Exception {
+  public void testPositiveCase2() {
     compilationHelper.addSourceFile("StaticQualifiedUsingExpressionPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() throws Exception {
+  public void testNegativeCases() {
     compilationHelper.addSourceFile("StaticQualifiedUsingExpressionNegativeCases.java").doTest();
   }
 
   @Test
-  public void clash() throws Exception {
+  public void clash() {
     BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass())
         .addInputLines(
             "a/Lib.java", //
@@ -83,7 +83,7 @@ public class StaticQualifiedUsingExpressionTest {
   }
 
   @Test
-  public void expr() throws Exception {
+  public void expr() {
     BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass())
         .addInputLines(
             "I.java", //
@@ -113,7 +113,7 @@ public class StaticQualifiedUsingExpressionTest {
   }
 
   @Test
-  public void superAccess() throws Exception {
+  public void superAccess() {
     BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass())
         .addInputLines(
             "I.java", //

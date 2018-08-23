@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,7 +30,7 @@ public class ConditionalExpressionNumericPromotionTest {
           new ConditionalExpressionNumericPromotion(), getClass());
 
   @Test
-  public void positive() throws IOException {
+  public void positive() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -97,7 +96,7 @@ public class ConditionalExpressionNumericPromotionTest {
   }
 
   @Test
-  public void negative() throws IOException {
+  public void negative() {
     testHelper
         .addInputLines(
             "Test.java",

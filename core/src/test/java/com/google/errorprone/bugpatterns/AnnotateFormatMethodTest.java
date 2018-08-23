@@ -48,7 +48,7 @@ public final class AnnotateFormatMethodTest {
   }
 
   @Test
-  public void refactoring() throws Exception {
+  public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(new AnnotateFormatMethod(), getClass())
         .addInputLines(
             "AnnotateFormatMethodPositiveCases.java",

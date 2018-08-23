@@ -45,7 +45,7 @@ public class ThreadJoinLoopTest {
   }
 
   @Test
-  public void testFixes() throws Exception {
+  public void testFixes() {
     BugCheckerRefactoringTestHelper.newInstance(new ThreadJoinLoop(), getClass())
         .addInput("ThreadJoinLoopPositiveCases.java")
         .addOutput("ThreadJoinLoopPositiveCases_expected.java")

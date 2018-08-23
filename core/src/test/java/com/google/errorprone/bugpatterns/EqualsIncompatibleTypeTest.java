@@ -34,22 +34,22 @@ public class EqualsIncompatibleTypeTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("EqualsIncompatibleTypePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("EqualsIncompatibleTypeNegativeCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase_recursive() throws Exception {
+  public void testNegativeCase_recursive() {
     compilationHelper.addSourceFile("EqualsIncompatibleTypeRecursiveTypes.java").doTest();
   }
 
   @Test
-  public void testPrimitiveBoxingIntoObject() throws Exception {
+  public void testPrimitiveBoxingIntoObject() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -63,7 +63,7 @@ public class EqualsIncompatibleTypeTest {
   }
 
   @Test
-  public void i547() throws Exception {
+  public void i547() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -78,7 +78,7 @@ public class EqualsIncompatibleTypeTest {
   }
 
   @Test
-  public void prettyNameForConflicts() throws Exception {
+  public void prettyNameForConflicts() {
     compilationHelper
         .addSourceLines(
             "Test.java",

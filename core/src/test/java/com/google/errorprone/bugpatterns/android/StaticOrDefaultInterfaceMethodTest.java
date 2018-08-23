@@ -35,7 +35,7 @@ public final class StaticOrDefaultInterfaceMethodTest {
   }
 
   @Test
-  public void testPositiveCaseDefault() throws Exception {
+  public void testPositiveCaseDefault() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -47,7 +47,7 @@ public final class StaticOrDefaultInterfaceMethodTest {
   }
 
   @Test
-  public void testPositiveCaseStatic() throws Exception {
+  public void testPositiveCaseStatic() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -59,12 +59,12 @@ public final class StaticOrDefaultInterfaceMethodTest {
   }
 
   @Test
-  public void testNegativeCaseNoBody() throws Exception {
+  public void testNegativeCaseNoBody() {
     compilationHelper.addSourceLines("Test.java", "interface Test { void test(); }").doTest();
   }
 
   @Test
-  public void testNegativeCaseClass() throws Exception {
+  public void testNegativeCaseClass() {
     compilationHelper
         .addSourceLines("Test.java", "class Test {  static void test() { System.out.println(); } }")
         .doTest();

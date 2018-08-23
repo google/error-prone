@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -185,7 +184,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void guavaReader() throws IOException {
+  public void guavaReader() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -213,7 +212,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void guavaWriterImportAppend() throws IOException {
+  public void guavaWriterImportAppend() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -243,7 +242,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void guavaWriter() throws IOException {
+  public void guavaWriter() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -271,7 +270,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void androidReader() throws IOException {
+  public void androidReader() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -288,7 +287,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void androidWriter() throws IOException {
+  public void androidWriter() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -305,7 +304,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void variableFix() throws IOException {
+  public void variableFix() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -333,7 +332,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void variableFixAtADistance() throws IOException {
+  public void variableFixAtADistance() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -365,7 +364,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void printWriter() throws IOException {
+  public void printWriter() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -400,7 +399,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void byteString() throws IOException {
+  public void byteString() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -422,7 +421,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void byteStringDefaultCharset() throws IOException {
+  public void byteStringDefaultCharset() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
@@ -446,7 +445,7 @@ public class DefaultCharsetTest {
   }
 
   @Test
-  public void scannerDefaultCharset() throws IOException {
+  public void scannerDefaultCharset() {
     refactoringTest()
         .addInputLines(
             "in/Test.java",

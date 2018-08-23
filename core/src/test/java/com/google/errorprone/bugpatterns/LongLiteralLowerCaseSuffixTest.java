@@ -40,23 +40,23 @@ public class LongLiteralLowerCaseSuffixTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixPositiveCase1.java").doTest();
   }
 
   /** Test for Java 7 integer literals that include underscores. */
   @Test
-  public void testJava7PositiveCase() throws Exception {
+  public void testJava7PositiveCase() {
     compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixNegativeCases.java").doTest();
   }
 
   @Test
-  public void testDisableable() throws Exception {
+  public void testDisableable() {
     compilationHelper
         .setArgs(ImmutableList.of("-Xep:LongLiteralLowerCaseSuffix:OFF"))
         .expectNoDiagnostics()

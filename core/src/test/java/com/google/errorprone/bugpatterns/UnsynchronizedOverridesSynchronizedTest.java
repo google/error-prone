@@ -35,7 +35,7 @@ public class UnsynchronizedOverridesSynchronizedTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "test/Super.java", "package test;", "class Super {", "  synchronized void f() {}", "}")
@@ -54,7 +54,7 @@ public class UnsynchronizedOverridesSynchronizedTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "test/Super.java", //
@@ -75,7 +75,7 @@ public class UnsynchronizedOverridesSynchronizedTest {
   }
 
   @Test
-  public void ignoreInputStream() throws Exception {
+  public void ignoreInputStream() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -92,7 +92,7 @@ public class UnsynchronizedOverridesSynchronizedTest {
   }
 
   @Test
-  public void callsSuperWithOtherStatements() throws Exception {
+  public void callsSuperWithOtherStatements() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -117,7 +117,7 @@ public class UnsynchronizedOverridesSynchronizedTest {
   }
 
   @Test
-  public void ignoreDelegatesToSuper() throws Exception {
+  public void ignoreDelegatesToSuper() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -138,7 +138,7 @@ public class UnsynchronizedOverridesSynchronizedTest {
   }
 
   @Test
-  public void ignoreEmptyOverride() throws Exception {
+  public void ignoreEmptyOverride() {
     compilationHelper
         .addSourceLines(
             "test/Lib.java",

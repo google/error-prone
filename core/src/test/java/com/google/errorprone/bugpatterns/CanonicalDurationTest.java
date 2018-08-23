@@ -29,7 +29,7 @@ import org.junit.runners.JUnit4;
 public class CanonicalDurationTest {
 
   @Test
-  public void refactoringJavaTime() throws Exception {
+  public void refactoringJavaTime() {
     BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -63,7 +63,7 @@ public class CanonicalDurationTest {
   }
 
   @Test
-  public void refactoringJoda() throws Exception {
+  public void refactoringJoda() {
     BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -97,7 +97,7 @@ public class CanonicalDurationTest {
   }
 
   @Test
-  public void refactoringJavaTimeStaticImport() throws Exception {
+  public void refactoringJavaTimeStaticImport() {
     BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -127,7 +127,7 @@ public class CanonicalDurationTest {
   }
 
   @Test
-  public void refactoringJodaStaticImport() throws Exception {
+  public void refactoringJodaStaticImport() {
     BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
         .addInputLines(
             "in/A.java", //
@@ -156,7 +156,7 @@ public class CanonicalDurationTest {
   }
 
   @Test
-  public void blacklist() throws Exception {
+  public void blacklist() {
     CompilationTestHelper.newInstance(CanonicalDuration.class, getClass())
         .addSourceLines(
             "A.java",

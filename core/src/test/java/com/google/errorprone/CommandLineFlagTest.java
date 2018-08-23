@@ -117,7 +117,7 @@ public class CommandLineFlagTest {
   /* Tests for new-style ("-Xep:") flags */
 
   @Test
-  public void malformedFlag() throws Exception {
+  public void malformedFlag() {
     ErrorProneTestCompiler compiler = builder.build();
 
     List<String> badArgs =
@@ -137,7 +137,7 @@ public class CommandLineFlagTest {
   // We have to use one of the built-in checkers for the following two tests because there is no
   // way to specify a custom checker and have it be off by default.
   @Test
-  public void canEnableWithDefaultSeverity() throws Exception {
+  public void canEnableWithDefaultSeverity() {
     ErrorProneTestCompiler compiler = builder.build();
     List<JavaFileObject> sources =
         compiler
@@ -153,7 +153,7 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void canEnableWithOverriddenSeverity() throws Exception {
+  public void canEnableWithOverriddenSeverity() {
     ErrorProneTestCompiler compiler = builder.build();
     List<JavaFileObject> sources =
         compiler
@@ -172,7 +172,7 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void canPromoteToError() throws Exception {
+  public void canPromoteToError() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(WarningChecker.class)).build();
     List<JavaFileObject> sources =
@@ -187,7 +187,7 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void canDemoteToWarning() throws Exception {
+  public void canDemoteToWarning() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(ErrorChecker.class)).build();
     List<JavaFileObject> sources =
@@ -203,7 +203,7 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void canDisable() throws Exception {
+  public void canDisable() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(DisableableChecker.class)).build();
     List<JavaFileObject> sources =
@@ -219,7 +219,7 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void cantDisableNondisableableCheck() throws Exception {
+  public void cantDisableNondisableableCheck() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(NondisableableChecker.class)).build();
     List<JavaFileObject> sources =
@@ -231,7 +231,7 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void cantOverrideNonexistentCheck() throws Exception {
+  public void cantOverrideNonexistentCheck() {
     ErrorProneTestCompiler compiler = builder.build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
@@ -250,7 +250,7 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void cantOverrideByAltname() throws Exception {
+  public void cantOverrideByAltname() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(DisableableChecker.class)).build();
     List<JavaFileObject> sources =
@@ -262,7 +262,7 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void ignoreUnknownChecksFlagAllowsOverridingUnknownCheck() throws Exception {
+  public void ignoreUnknownChecksFlagAllowsOverridingUnknownCheck() {
     ErrorProneTestCompiler compiler = builder.build();
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");

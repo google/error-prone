@@ -35,7 +35,7 @@ public class MultipleTopLevelClassesTest {
   }
 
   @Test
-  public void twoClasses() throws Exception {
+  public void twoClasses() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -47,7 +47,7 @@ public class MultipleTopLevelClassesTest {
   }
 
   @Test
-  public void packageInfo() throws Exception {
+  public void packageInfo() {
     compilationHelper
         .addSourceLines(
             "a/package-info.java", //
@@ -57,7 +57,7 @@ public class MultipleTopLevelClassesTest {
   }
 
   @Test
-  public void defaultPackage() throws Exception {
+  public void defaultPackage() {
     compilationHelper
         .addSourceLines(
             "a/A.java", //
@@ -68,7 +68,7 @@ public class MultipleTopLevelClassesTest {
   }
 
   @Test
-  public void suppression() throws Exception {
+  public void suppression() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -79,12 +79,12 @@ public class MultipleTopLevelClassesTest {
   }
 
   @Test
-  public void emptyDeclaration() throws Exception {
+  public void emptyDeclaration() {
     compilationHelper.addSourceLines("a/A.java", "package a;", "class Test {};").doTest();
   }
 
   @Test
-  public void semiInImportList() throws Exception {
+  public void semiInImportList() {
     compilationHelper
         .addSourceLines(
             "a/A.java",

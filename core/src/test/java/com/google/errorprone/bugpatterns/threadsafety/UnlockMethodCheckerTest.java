@@ -33,7 +33,7 @@ public class UnlockMethodCheckerTest {
   }
 
   @Test
-  public void testUnlocked() throws Exception {
+  public void testUnlocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -53,7 +53,7 @@ public class UnlockMethodCheckerTest {
   }
 
   @Test
-  public void testUnlockedAndLocked() throws Exception {
+  public void testUnlockedAndLocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -76,7 +76,7 @@ public class UnlockMethodCheckerTest {
   }
 
   @Test
-  public void testUnlockedRWLock() throws Exception {
+  public void testUnlockedRWLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -98,7 +98,7 @@ public class UnlockMethodCheckerTest {
   }
 
   @Test
-  public void testUnlockedMonitor() throws Exception {
+  public void testUnlockedMonitor() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -116,7 +116,7 @@ public class UnlockMethodCheckerTest {
   }
 
   @Test
-  public void testNotUnlocked() throws Exception {
+  public void testNotUnlocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -134,7 +134,7 @@ public class UnlockMethodCheckerTest {
   }
 
   @Test
-  public void testNotUnlockedRWLock() throws Exception {
+  public void testNotUnlockedRWLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -150,7 +150,7 @@ public class UnlockMethodCheckerTest {
   }
 
   @Test
-  public void testNotUnlockedMonitor() throws Exception {
+  public void testNotUnlockedMonitor() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -166,7 +166,7 @@ public class UnlockMethodCheckerTest {
   }
 
   @Test
-  public void testBadLockExpression() throws Exception {
+  public void testBadLockExpression() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
