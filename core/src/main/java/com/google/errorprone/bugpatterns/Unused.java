@@ -102,7 +102,8 @@ import javax.lang.model.element.Name;
     altNames = {"unused", "UnusedParameters"},
     summary = "Unused.",
     providesFix = REQUIRES_HUMAN_ATTENTION,
-    severity = WARNING)
+    severity = WARNING,
+    documentSuppression = false)
 public final class Unused extends BugChecker implements CompilationUnitTreeMatcher {
   private static final String GWT_JAVASCRIPT_OBJECT = "com.google.gwt.core.client.JavaScriptObject";
   private static final String EXEMPT_PREFIX = "unused";
