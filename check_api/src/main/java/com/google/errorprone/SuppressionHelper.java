@@ -32,9 +32,13 @@ import java.util.Set;
 
 /**
  * Encapsulates the logic of handling suppressions, both via {@code @SuppressWarnings} and via
- * custom suppression annotations. To do this we have to maintains 2 sets of suppression info: 1) A
- * set of the suppression strings in all {@code @Suppresswarnings} annotations down this path of the
- * AST. 2) A set of all custom suppression annotations down this path of the AST.
+ * custom suppression annotations. To do this we have to maintains 2 sets of suppression info:
+ *
+ * <ol>
+ *   <li>A set of the suppression strings in all {@code @SuppressWarnings} annotations down this
+ *       path of the AST.
+ *   <li>A set of all custom suppression annotations down this path of the AST.
+ * </ol>
  */
 public class SuppressionHelper {
 
