@@ -34,22 +34,22 @@ public class FinallyTest {
   }
 
   @Test
-  public void testPositiveCase1() throws Exception {
+  public void testPositiveCase1() {
     compilationHelper.addSourceFile("FinallyPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() throws Exception {
+  public void testPositiveCase2() {
     compilationHelper.addSourceFile("FinallyPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase1() throws Exception {
+  public void testNegativeCase1() {
     compilationHelper.addSourceFile("FinallyNegativeCase1.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() throws Exception {
+  public void testNegativeCase2() {
     compilationHelper.addSourceFile("FinallyNegativeCase2.java").doTest();
   }
 

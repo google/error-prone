@@ -34,7 +34,7 @@ public class WrongParameterPackageTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
         .addSourceFile("WrongParameterPackageNegativeCases.java") // used as a dependency
         .addSourceFile("WrongParameterPackagePositiveCases.java")
@@ -42,13 +42,13 @@ public class WrongParameterPackageTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("WrongParameterPackageNegativeCases.java").doTest();
   }
 
   // regression test for https://github.com/google/error-prone/issues/330
   @Test
-  public void testNPE() throws Exception {
+  public void testNPE() {
     compilationHelper
         .addSourceLines(
             "foo/Bar.java", "package foo;", "public interface Bar {", "    void bar();", "}")
@@ -57,7 +57,7 @@ public class WrongParameterPackageTest {
 
   // regression test for https://github.com/google/error-prone/issues/356
   @Test
-  public void testCompleteParams() throws Exception {
+  public void testCompleteParams() {
     compilationHelper
         .addSourceLines(
             "Test.java",

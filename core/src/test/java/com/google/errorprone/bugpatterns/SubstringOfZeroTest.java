@@ -28,7 +28,7 @@ public class SubstringOfZeroTest {
       BugCheckerRefactoringTestHelper.newInstance(new SubstringOfZero(), getClass());
 
   @Test
-  public void positiveJustVars() throws Exception {
+  public void positiveJustVars() {
     helper
         .addInputLines(
             "Test.java",
@@ -50,7 +50,7 @@ public class SubstringOfZeroTest {
   }
 
   @Test
-  public void positiveVarsWithMethods() throws Exception {
+  public void positiveVarsWithMethods() {
     helper
         .addInputLines(
             "Test.java",
@@ -72,7 +72,7 @@ public class SubstringOfZeroTest {
   }
 
   @Test
-  public void negativeJustVarsOneArg() throws Exception {
+  public void negativeJustVarsOneArg() {
     helper
         .addInputLines(
             "Test.java",
@@ -87,7 +87,7 @@ public class SubstringOfZeroTest {
   }
 
   @Test
-  public void negativeJustVarsTwoArg() throws Exception {
+  public void negativeJustVarsTwoArg() {
     helper
         .addInputLines(
             "Test.java",
@@ -102,7 +102,7 @@ public class SubstringOfZeroTest {
   }
 
   @Test
-  public void negativeVarsWithMethodsOneArg() throws Exception {
+  public void negativeVarsWithMethodsOneArg() {
     helper
         .addInputLines(
             "Test.java",
@@ -117,7 +117,7 @@ public class SubstringOfZeroTest {
   }
 
   @Test
-  public void negativeVarsWithMethodsTwoArg() throws Exception {
+  public void negativeVarsWithMethodsTwoArg() {
     helper
         .addInputLines(
             "Test.java",
@@ -132,7 +132,7 @@ public class SubstringOfZeroTest {
   }
 
   @Test
-  public void negativeVarsWithDifferentMethod() throws Exception {
+  public void negativeVarsWithDifferentMethod() {
     helper
         .addInputLines(
             "Test.java",
@@ -147,7 +147,7 @@ public class SubstringOfZeroTest {
   }
 
   @Test
-  public void positiveStringLiteral() throws Exception {
+  public void positiveStringLiteral() {
     helper
         .addInputLines(
             "Test.java",

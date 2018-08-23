@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,7 +28,7 @@ import org.junit.runners.JUnit4;
 public class LogicalAssignmentTest {
 
   @Test
-  public void positive() throws IOException {
+  public void positive() {
     BugCheckerRefactoringTestHelper.newInstance(new LogicalAssignment(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -55,7 +54,7 @@ public class LogicalAssignmentTest {
   }
 
   @Test
-  public void negative() throws IOException {
+  public void negative() {
     CompilationTestHelper.newInstance(LogicalAssignment.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -75,7 +74,7 @@ public class LogicalAssignmentTest {
   }
 
   @Test
-  public void positive_equalityFix() throws IOException {
+  public void positive_equalityFix() {
     BugCheckerRefactoringTestHelper.newInstance(new LogicalAssignment(), getClass())
         .addInputLines(
             "in/Test.java",

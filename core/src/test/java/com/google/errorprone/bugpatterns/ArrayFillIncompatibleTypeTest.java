@@ -29,7 +29,7 @@ public class ArrayFillIncompatibleTypeTest {
       CompilationTestHelper.newInstance(ArrayFillIncompatibleType.class, getClass());
 
   @Test
-  public void testPrimitiveBoxingIntoObject() throws Exception {
+  public void testPrimitiveBoxingIntoObject() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -44,7 +44,7 @@ public class ArrayFillIncompatibleTypeTest {
   }
 
   @Test
-  public void testPositive() throws Exception {
+  public void testPositive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -63,7 +63,7 @@ public class ArrayFillIncompatibleTypeTest {
   }
 
   @Test
-  public void testTernary() throws Exception {
+  public void testTernary() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -81,7 +81,7 @@ public class ArrayFillIncompatibleTypeTest {
   }
 
   @Test
-  public void testBoxing() throws Exception {
+  public void testBoxing() {
     compilationHelper
         .addSourceLines(
             "Test.java",

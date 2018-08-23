@@ -38,27 +38,27 @@ public final class UngroupedOverloadsTest {
           new UngroupedOverloads(ErrorProneFlags.empty()), getClass());
 
   @Test
-  public void ungroupedOverloadsPositiveCasesSingle() throws Exception {
+  public void ungroupedOverloadsPositiveCasesSingle() {
     compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesSingle.java").doTest();
   }
 
   @Test
-  public void ungroupedOverloadsPositiveCasesMultiple() throws Exception {
+  public void ungroupedOverloadsPositiveCasesMultiple() {
     compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesMultiple.java").doTest();
   }
 
   @Test
-  public void ungroupedOverloadsPositiveCasesInterleaved() throws Exception {
+  public void ungroupedOverloadsPositiveCasesInterleaved() {
     compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesInterleaved.java").doTest();
   }
 
   @Test
-  public void ungroupedOverloadsPositiveCasesCovering() throws Exception {
+  public void ungroupedOverloadsPositiveCasesCovering() {
     compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesCovering.java").doTest();
   }
 
   @Test
-  public void ungroupedOverloadsPositiveCasesCoveringOnlyFirstOverload() throws Exception {
+  public void ungroupedOverloadsPositiveCasesCoveringOnlyFirstOverload() {
     compilationHelper
         .addSourceFile("UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst.java")
         .setArgs(ImmutableList.of("-XepOpt:UngroupedOverloads:FindingsOnFirstOverload"))
@@ -66,12 +66,12 @@ public final class UngroupedOverloadsTest {
   }
 
   @Test
-  public void ungroupedOverloadsNegativeCases() throws Exception {
+  public void ungroupedOverloadsNegativeCases() {
     compilationHelper.addSourceFile("UngroupedOverloadsNegativeCases.java").doTest();
   }
 
   @Test
-  public void ungroupedOverloadsRefactoringComments() throws Exception {
+  public void ungroupedOverloadsRefactoringComments() {
     refactoringHelper
         .addInput("UngroupedOverloadsRefactoringComments.java")
         .addOutput("UngroupedOverloadsRefactoringComments_expected.java")
@@ -79,7 +79,7 @@ public final class UngroupedOverloadsTest {
   }
 
   @Test
-  public void ungroupedOverloadsRefactoringMultiple() throws Exception {
+  public void ungroupedOverloadsRefactoringMultiple() {
     refactoringHelper
         .addInput("UngroupedOverloadsRefactoringMultiple.java")
         .addOutput("UngroupedOverloadsRefactoringMultiple_expected.java")
@@ -87,7 +87,7 @@ public final class UngroupedOverloadsTest {
   }
 
   @Test
-  public void ungroupedOverloadsRefactoringInterleaved() throws Exception {
+  public void ungroupedOverloadsRefactoringInterleaved() {
     refactoringHelper
         .addInput("UngroupedOverloadsRefactoringInterleaved.java")
         .addOutput("UngroupedOverloadsRefactoringInterleaved_expected.java")
@@ -95,7 +95,7 @@ public final class UngroupedOverloadsTest {
   }
 
   @Test
-  public void ungroupedOverloadsRefactoringBelowCutoffLimit() throws Exception {
+  public void ungroupedOverloadsRefactoringBelowCutoffLimit() {
     // Here we have 4 methods so refactoring should be applied.
     refactoringHelper
         .addInputLines(
@@ -118,7 +118,7 @@ public final class UngroupedOverloadsTest {
   }
 
   @Test
-  public void ungroupedOverloadsRefactoring_fiveMethods() throws Exception {
+  public void ungroupedOverloadsRefactoring_fiveMethods() {
     refactoringHelper
         .addInputLines(
             "in/AboveLimit.java",
@@ -143,7 +143,7 @@ public final class UngroupedOverloadsTest {
 
   @Ignore // TODO(b/71818169): fix and re-enable
   @Test
-  public void staticAndNonStatic() throws Exception {
+  public void staticAndNonStatic() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -157,7 +157,7 @@ public final class UngroupedOverloadsTest {
   }
 
   @Test
-  public void staticAndNonStaticInterspersed() throws Exception {
+  public void staticAndNonStaticInterspersed() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -170,7 +170,7 @@ public final class UngroupedOverloadsTest {
   }
 
   @Test
-  public void suppressOnAnyMethod() throws Exception {
+  public void suppressOnAnyMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -183,7 +183,7 @@ public final class UngroupedOverloadsTest {
   }
 
   @Test
-  public void javadoc() throws Exception {
+  public void javadoc() {
     refactoringHelper
         .addInputLines(
             "in/Test.java",

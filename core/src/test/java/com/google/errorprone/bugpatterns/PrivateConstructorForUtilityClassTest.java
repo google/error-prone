@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +35,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void emptyClassesGetLeftAlone() throws IOException {
+  public void emptyClassesGetLeftAlone() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -46,7 +45,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void privateClassesGetLeftAlone() throws IOException {
+  public void privateClassesGetLeftAlone() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -61,7 +60,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void subClassesGetLeftAlone() throws IOException {
+  public void subClassesGetLeftAlone() {
     testHelper
         .addInputLines(
             "in/Foo.java", //
@@ -82,7 +81,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void implementingClassesGetLeftAlone() throws IOException {
+  public void implementingClassesGetLeftAlone() {
     testHelper
         .addInputLines(
             "in/Foo.java", //
@@ -104,7 +103,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void privateScopedClassesGetLeftAlone() throws IOException {
+  public void privateScopedClassesGetLeftAlone() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -121,7 +120,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void utilityClassesGetAPrivateConstructor_onlyFields() throws IOException {
+  public void utilityClassesGetAPrivateConstructor_onlyFields() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -140,7 +139,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void utilityClassesGetAPrivateConstructor_onlyMethods() throws IOException {
+  public void utilityClassesGetAPrivateConstructor_onlyMethods() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -158,7 +157,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void utilityClassesGetAPrivateConstructor_onlyNestedClasses() throws IOException {
+  public void utilityClassesGetAPrivateConstructor_onlyNestedClasses() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -176,7 +175,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void utilityClassesGetAPrivateConstructor_onlyStaticInitializer() throws IOException {
+  public void utilityClassesGetAPrivateConstructor_onlyStaticInitializer() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -193,7 +192,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void utilityClassesWithAConstructorGetLeftAlone() throws IOException {
+  public void utilityClassesWithAConstructorGetLeftAlone() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -206,7 +205,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void otherClassesGetLeftAlone_field() throws IOException {
+  public void otherClassesGetLeftAlone_field() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -218,7 +217,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void otherClassesGetLeftAlone_method() throws IOException {
+  public void otherClassesGetLeftAlone_method() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -230,7 +229,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void otherClassesGetLeftAlone_innerClass() throws IOException {
+  public void otherClassesGetLeftAlone_innerClass() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -242,7 +241,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void otherClassesGetLeftAlone_initializer() throws IOException {
+  public void otherClassesGetLeftAlone_initializer() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -254,7 +253,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void otherClassesGetLeftAlone_constructor() throws IOException {
+  public void otherClassesGetLeftAlone_constructor() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -266,7 +265,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void otherClassesGetLeftAlone_interface() throws IOException {
+  public void otherClassesGetLeftAlone_interface() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -278,7 +277,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void otherClassesGetLeftAlone_enum() throws IOException {
+  public void otherClassesGetLeftAlone_enum() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -290,7 +289,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void b30170662() throws IOException {
+  public void b30170662() {
     CompilationTestHelper.newInstance(PrivateConstructorForUtilityClass.class, getClass())
         .addSourceLines(
             "Foo.java",

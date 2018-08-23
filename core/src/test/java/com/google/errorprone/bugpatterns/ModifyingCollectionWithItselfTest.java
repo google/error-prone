@@ -35,12 +35,12 @@ public class ModifyingCollectionWithItselfTest {
   }
 
   @Test
-  public void testPositiveCases1() throws Exception {
+  public void testPositiveCases1() {
     compilationHelper.addSourceFile("ModifyingCollectionWithItselfPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("ModifyingCollectionWithItselfNegativeCases.java").doTest();
   }
 }

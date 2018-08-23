@@ -35,27 +35,27 @@ public class PreconditionsCheckNotNullTest {
   }
 
   @Test
-  public void testPositiveCase1() throws Exception {
+  public void testPositiveCase1() {
     compilationHelper.addSourceFile("PreconditionsCheckNotNullPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() throws Exception {
+  public void testPositiveCase2() {
     compilationHelper.addSourceFile("PreconditionsCheckNotNullPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testPositiveCase3() throws Exception {
+  public void testPositiveCase3() {
     compilationHelper.addSourceFile("PreconditionsCheckNotNullPositiveCase3.java").doTest();
   }
 
   @Test
-  public void testNegativeCase1() throws Exception {
+  public void testNegativeCase1() {
     compilationHelper.addSourceFile("PreconditionsCheckNotNullNegativeCase1.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() throws Exception {
+  public void testNegativeCase2() {
     compilationHelper.addSourceFile("PreconditionsCheckNotNullNegativeCase2.java").doTest();
   }
 }

@@ -37,17 +37,17 @@ public class CannotMockFinalClassTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("CannotMockFinalClassPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("CannotMockFinalClassNegativeCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() throws Exception {
+  public void testNegativeCase2() {
     compilationHelper.addSourceFile("CannotMockFinalClassNegativeCases2.java").doTest();
   }
 }

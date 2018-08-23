@@ -35,7 +35,7 @@ public class AutoValueConstructorOrderCheckerTest {
   }
 
   @Test
-  public void autoValueChecker_detectsSwap_withExactNames() throws Exception {
+  public void autoValueChecker_detectsSwap_withExactNames() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -58,7 +58,7 @@ public class AutoValueConstructorOrderCheckerTest {
   }
 
   @Test
-  public void autoValueChecker_ignoresSwap_withInexactNames() throws Exception {
+  public void autoValueChecker_ignoresSwap_withInexactNames() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -80,7 +80,7 @@ public class AutoValueConstructorOrderCheckerTest {
   }
 
   @Test
-  public void autoValueChecker_makesNoSuggestion_withCorrectOrder() throws Exception {
+  public void autoValueChecker_makesNoSuggestion_withCorrectOrder() {
     compilationHelper
         .addSourceLines(
             "Test.java",

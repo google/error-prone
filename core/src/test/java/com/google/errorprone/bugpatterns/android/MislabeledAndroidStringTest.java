@@ -29,7 +29,7 @@ import org.junit.runners.JUnit4;
 public class MislabeledAndroidStringTest {
 
   @Test
-  public void testMatchFullyQualified() throws Exception {
+  public void testMatchFullyQualified() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/android/MatchFullyQualifiedTest.java",
@@ -45,7 +45,7 @@ public class MislabeledAndroidStringTest {
   }
 
   @Test
-  public void testMatchWithImport() throws Exception {
+  public void testMatchWithImport() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/android/MatchWithImportTest.java",
@@ -63,7 +63,7 @@ public class MislabeledAndroidStringTest {
   }
 
   @Test
-  public void testUseInField() throws Exception {
+  public void testUseInField() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/android/MatchUseInFieldTest.java",
@@ -77,7 +77,7 @@ public class MislabeledAndroidStringTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/android/FineStringTest.java",
@@ -96,7 +96,7 @@ public class MislabeledAndroidStringTest {
    * for generating readable diagnostic messages.
    */
   @Test
-  public void testAssumedMeanings() throws Exception {
+  public void testAssumedMeanings() {
     for (Map.Entry<String, String> label : MislabeledAndroidString.MISLEADING.entrySet()) {
       assertThat(MislabeledAndroidString.ASSUMED_MEANINGS).containsKey(label.getKey());
       assertThat(MislabeledAndroidString.ASSUMED_MEANINGS).containsKey(label.getValue());

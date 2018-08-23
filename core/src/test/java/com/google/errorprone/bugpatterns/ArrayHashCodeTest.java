@@ -34,18 +34,18 @@ public class ArrayHashCodeTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("ArrayHashCodePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("ArrayHashCodeNegativeCases.java").doTest();
   }
 
   /** Tests java.util.Objects hashCode methods, which are only in JDK 7 and above. */
   @Test
-  public void testJava7NegativeCase() throws Exception {
+  public void testJava7NegativeCase() {
     compilationHelper.addSourceFile("ArrayHashCodeNegativeCases2.java").doTest();
   }
 }

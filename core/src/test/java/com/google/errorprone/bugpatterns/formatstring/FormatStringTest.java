@@ -33,7 +33,7 @@ public class FormatStringTest {
     compilationHelper = CompilationTestHelper.newInstance(FormatString.class, getClass());
   }
 
-  private void testFormat(String expected, String formatString) throws Exception {
+  private void testFormat(String expected, String formatString) {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -128,7 +128,7 @@ public class FormatStringTest {
   }
 
   @Test
-  public void missingArguments() throws Exception {
+  public void missingArguments() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -145,7 +145,7 @@ public class FormatStringTest {
   }
 
   @Test
-  public void extraArguments() throws Exception {
+  public void extraArguments() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -164,7 +164,7 @@ public class FormatStringTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -206,7 +206,7 @@ public class FormatStringTest {
   }
 
   @Test
-  public void nullArgument() throws Exception {
+  public void nullArgument() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -219,7 +219,7 @@ public class FormatStringTest {
   }
 
   @Test
-  public void javaUtilTime() throws Exception {
+  public void javaUtilTime() {
     compilationHelper
         .addSourceLines(
             "Test.java",

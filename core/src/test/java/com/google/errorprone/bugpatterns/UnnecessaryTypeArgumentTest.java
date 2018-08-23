@@ -35,7 +35,7 @@ public class UnnecessaryTypeArgumentTest {
   }
 
   @Test
-  public void positiveCall() throws Exception {
+  public void positiveCall() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -51,7 +51,7 @@ public class UnnecessaryTypeArgumentTest {
   }
 
   @Test
-  public void positiveThis() throws Exception {
+  public void positiveThis() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -70,7 +70,7 @@ public class UnnecessaryTypeArgumentTest {
   }
 
   @Test
-  public void positiveSuper() throws Exception {
+  public void positiveSuper() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -91,7 +91,7 @@ public class UnnecessaryTypeArgumentTest {
   }
 
   @Test
-  public void positiveInstantiation() throws Exception {
+  public void positiveInstantiation() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -109,7 +109,7 @@ public class UnnecessaryTypeArgumentTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -124,7 +124,7 @@ public class UnnecessaryTypeArgumentTest {
   }
 
   @Test
-  public void negativeGenericSuper() throws Exception {
+  public void negativeGenericSuper() {
     compilationHelper
         .addSourceLines(
             "Super.java", "public class Super {", "  public <T> T f(T x) { return x; }", "}")
@@ -145,7 +145,7 @@ public class UnnecessaryTypeArgumentTest {
   }
 
   @Test
-  public void whitespaceFix() throws Exception {
+  public void whitespaceFix() {
     compilationHelper
         .addSourceLines(
             "Test.java",

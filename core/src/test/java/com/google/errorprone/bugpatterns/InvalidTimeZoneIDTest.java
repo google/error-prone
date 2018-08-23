@@ -34,7 +34,7 @@ public class InvalidTimeZoneIDTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -73,7 +73,7 @@ public class InvalidTimeZoneIDTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",

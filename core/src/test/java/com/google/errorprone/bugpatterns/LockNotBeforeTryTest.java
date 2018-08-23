@@ -94,7 +94,7 @@ public final class LockNotBeforeTryTest {
   }
 
   @Test
-  public void refactorToBefore() throws Exception {
+  public void refactorToBefore() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -126,7 +126,7 @@ public final class LockNotBeforeTryTest {
   }
 
   @Test
-  public void refactorIntermediate() throws Exception {
+  public void refactorIntermediate() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -160,7 +160,7 @@ public final class LockNotBeforeTryTest {
   }
 
   @Test
-  public void refactorUnlockOutsideTry() throws Exception {
+  public void refactorUnlockOutsideTry() {
     refactoringHelper
         .addInputLines(
             "Test.java",

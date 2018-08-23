@@ -35,7 +35,7 @@ public class MissingOverrideTest {
   }
 
   @Test
-  public void simple() throws Exception {
+  public void simple() {
     compilationHelper
         .addSourceLines("Super.java", "public class Super {", "  void f() {}", "}")
         .addSourceLines(
@@ -48,7 +48,7 @@ public class MissingOverrideTest {
   }
 
   @Test
-  public void abstractMethod() throws Exception {
+  public void abstractMethod() {
     compilationHelper
         .addSourceLines("Super.java", "public abstract class Super {", "  abstract void f();", "}")
         .addSourceLines(
@@ -61,7 +61,7 @@ public class MissingOverrideTest {
   }
 
   @Test
-  public void interfaceMethod() throws Exception {
+  public void interfaceMethod() {
     compilationHelper
         .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
         .addSourceLines(
@@ -74,7 +74,7 @@ public class MissingOverrideTest {
   }
 
   @Test
-  public void bothStatic() throws Exception {
+  public void bothStatic() {
     compilationHelper
         .addSourceLines("Super.java", "public class Super {", "  static void f() {}", "}")
         .addSourceLines(
@@ -83,7 +83,7 @@ public class MissingOverrideTest {
   }
 
   @Test
-  public void deprecatedMethod() throws Exception {
+  public void deprecatedMethod() {
     compilationHelper
         .addSourceLines("Super.java", "public class Super {", "  @Deprecated void f() {}", "}")
         .addSourceLines(
@@ -92,7 +92,7 @@ public class MissingOverrideTest {
   }
 
   @Test
-  public void interfaceOverride() throws Exception {
+  public void interfaceOverride() {
     compilationHelper
         .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
         .addSourceLines(
@@ -105,7 +105,7 @@ public class MissingOverrideTest {
   }
 
   @Test
-  public void ignoreInterfaceOverride() throws Exception {
+  public void ignoreInterfaceOverride() {
     compilationHelper
         .setArgs(ImmutableList.of("-XepOpt:MissingOverride:IgnoreInterfaceOverrides=true"))
         .addSourceLines("Super.java", "interface Super {", "  void f();", "}")

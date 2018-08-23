@@ -32,6 +32,7 @@ import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -56,7 +57,6 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
@@ -87,7 +87,8 @@ public class SuggestedFixesTest {
       name = "EditModifiers",
       category = ONE_OFF,
       summary = "Edits modifiers",
-      severity = ERROR)
+      severity = ERROR,
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
   public static class EditModifiersChecker extends BugChecker
       implements VariableTreeMatcher, MethodTreeMatcher {
 
@@ -135,7 +136,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void addAtBeginningOfLine() throws IOException {
+  public void addAtBeginningOfLine() {
     BugCheckerRefactoringTestHelper.newInstance(new EditModifiersChecker(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -445,7 +446,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyType_alreadyImported() throws Exception {
+  public void qualifyType_alreadyImported() {
     AddAnnotation.testHelper(getClass())
         .addInputLines(
             "in/AddAnnotation.java",
@@ -465,7 +466,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyType_importType() throws Exception {
+  public void qualifyType_importType() {
     AddAnnotation.testHelper(getClass())
         .addInputLines(
             "in/AddAnnotation.java", "class AddAnnotation {", "  Void foo() { return null; }", "}")
@@ -479,7 +480,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyType_someOtherNullable() throws Exception {
+  public void qualifyType_someOtherNullable() {
     AddAnnotation.testHelper(getClass())
         .addInputLines("in/SomeAnnotation.java", "@interface SomeAnnotation {}")
         .expectUnchanged()
@@ -497,7 +498,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyType_nestedNullable() throws Exception {
+  public void qualifyType_nestedNullable() {
     AddAnnotation.testHelper(getClass())
         .addInputLines(
             "in/AddAnnotation.java",
@@ -515,7 +516,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyType_deeplyNestedNullable() throws Exception {
+  public void qualifyType_deeplyNestedNullable() {
     AddAnnotation.testHelper(getClass())
         .addInputLines(
             "in/AddAnnotation.java",
@@ -540,7 +541,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyType_someOtherNullableSomeOtherPackage() throws Exception {
+  public void qualifyType_someOtherNullableSomeOtherPackage() {
     AddAnnotation.testHelper(getClass())
         .addInputLines(
             "in/SomeAnnotation.java", "package foo.bar;", "public @interface SomeAnnotation {}")
@@ -561,7 +562,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyType_typeVariable() throws Exception {
+  public void qualifyType_typeVariable() {
     AddAnnotation.testHelper(getClass())
         .addInputLines(
             "in/AddAnnotation.java",
@@ -601,7 +602,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyType_nestedType() throws Exception {
+  public void qualifyType_nestedType() {
     BugCheckerRefactoringTestHelper.newInstance(
             new ReplaceReturnType("pkg.Outer.Inner"), getClass())
         .addInputLines(
@@ -626,7 +627,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyType_deeplyNestedType() throws Exception {
+  public void qualifyType_deeplyNestedType() {
     BugCheckerRefactoringTestHelper.newInstance(
             new ReplaceReturnType("pkg.Outer.Inner.Innermost"), getClass())
         .addInputLines(
@@ -685,7 +686,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyJavadocTest() throws Exception {
+  public void qualifyJavadocTest() {
     BugCheckerRefactoringTestHelper.newInstance(new JavadocQualifier(), getClass())
         .addInputLines(
             "in/Test.java", //
@@ -728,7 +729,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void testSuppressWarningsFix() throws IOException {
+  public void testSuppressWarningsFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(new SuppressMe(), getClass());
     refactorTestHelper
@@ -784,7 +785,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void testSuppressWarningsWithCommentFix() throws IOException {
+  public void testSuppressWarningsWithCommentFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(
             new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
@@ -807,7 +808,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void testSuppressWarningsWithCommentFix_existingComment() throws IOException {
+  public void testSuppressWarningsWithCommentFix_existingComment() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(
             new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
@@ -836,7 +837,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void testSuppressWarningsWithCommentFix_commentHasToBeLineWrapped() throws IOException {
+  public void testSuppressWarningsWithCommentFix_commentHasToBeLineWrapped() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(
             new SuppressMeWithComment(
@@ -874,7 +875,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void compilesWithFixTest() throws IOException {
+  public void compilesWithFixTest() {
     BugCheckerRefactoringTestHelper.newInstance(new CompilesWithFixChecker(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -924,7 +925,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void deleteExceptionsRemoveFirstCheckerTest() throws IOException {
+  public void deleteExceptionsRemoveFirstCheckerTest() {
     BugCheckerRefactoringTestHelper.newInstance(new RemovesExceptionsChecker(0), getClass())
         .addInputLines(
             "in/Test.java",
@@ -956,7 +957,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void deleteExceptionsRemoveSecondCheckerTest() throws IOException {
+  public void deleteExceptionsRemoveSecondCheckerTest() {
     BugCheckerRefactoringTestHelper.newInstance(new RemovesExceptionsChecker(1), getClass())
         .addInputLines(
             "in/Test.java",
@@ -988,7 +989,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void unusedImportInPackageInfo() throws IOException {
+  public void unusedImportInPackageInfo() {
     CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
         .addSourceLines(
             "in/com/example/package-info.java",
@@ -1027,7 +1028,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void renameVariable_renamesLocalVariable_withNestedScope() throws IOException {
+  public void renameVariable_renamesLocalVariable_withNestedScope() {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
@@ -1056,7 +1057,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void renameVariable_ignoresMatchingNames_whenNotInScopeOfReplacement() throws IOException {
+  public void renameVariable_ignoresMatchingNames_whenNotInScopeOfReplacement() {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
@@ -1087,7 +1088,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void renameVariable_renamesMethodParameter() throws IOException {
+  public void renameVariable_renamesMethodParameter() {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
@@ -1108,7 +1109,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void renameVariable_renamesTryWithResourcesParameter() throws IOException {
+  public void renameVariable_renamesTryWithResourcesParameter() {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", AutoCloseable.class), getClass())
         .addInputLines(
@@ -1137,7 +1138,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void renameVariable_renamesLambdaParameter_explicitlyTyped() throws IOException {
+  public void renameVariable_renamesLambdaParameter_explicitlyTyped() {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
@@ -1156,7 +1157,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void renameVariable_renamesLambdaParameter_notExplicitlyTyped() throws IOException {
+  public void renameVariable_renamesLambdaParameter_notExplicitlyTyped() {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
@@ -1175,7 +1176,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void renameVariable_renamesCatchParameter() throws IOException {
+  public void renameVariable_renamesCatchParameter() {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Throwable.class), getClass())
         .addInputLines(
@@ -1222,7 +1223,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void removeAddModifier_rangesCompatible() throws IOException {
+  public void removeAddModifier_rangesCompatible() {
     BugCheckerRefactoringTestHelper.newInstance(new RemoveAddModifier(), getClass())
         .addInputLines("in/Test.java", "public class Test {}")
         .addOutputLines("out/Test.java", "abstract class Test {}")

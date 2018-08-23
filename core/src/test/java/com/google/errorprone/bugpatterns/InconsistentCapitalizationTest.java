@@ -37,7 +37,7 @@ public class InconsistentCapitalizationTest {
   }
 
   @Test
-  public void correctsInconsistentVariableNameInMethodDefinitionToFieldCase() throws Exception {
+  public void correctsInconsistentVariableNameInMethodDefinitionToFieldCase() {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
@@ -59,8 +59,7 @@ public class InconsistentCapitalizationTest {
   }
 
   @Test
-  public void correctsInconsistentVariableNameInConstructorDefinitionToFieldCase()
-      throws Exception {
+  public void correctsInconsistentVariableNameInConstructorDefinitionToFieldCase() {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
@@ -82,7 +81,7 @@ public class InconsistentCapitalizationTest {
   }
 
   @Test
-  public void correctsInconsistentVariableNameInLambdaDefinitionToFieldCase() throws Exception {
+  public void correctsInconsistentVariableNameInLambdaDefinitionToFieldCase() {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
@@ -113,8 +112,7 @@ public class InconsistentCapitalizationTest {
 
   @Test
   public void
-      correctsInconsistentVariableNameInConstructorDefinitionWithMultipleOccurrencesToFieldCase()
-          throws Exception {
+      correctsInconsistentVariableNameInConstructorDefinitionWithMultipleOccurrencesToFieldCase() {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
@@ -144,7 +142,7 @@ public class InconsistentCapitalizationTest {
   }
 
   @Test
-  public void correctsInconsistentVariableNameToFieldCaseAndQualifiesField() throws Exception {
+  public void correctsInconsistentVariableNameToFieldCaseAndQualifiesField() {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
@@ -170,8 +168,7 @@ public class InconsistentCapitalizationTest {
   }
 
   @Test
-  public void correctsInconsistentVariableNameToFieldCaseAndQualifiesNestedClassField()
-      throws Exception {
+  public void correctsInconsistentVariableNameToFieldCaseAndQualifiesNestedClassField() {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
@@ -207,8 +204,7 @@ public class InconsistentCapitalizationTest {
   }
 
   @Test
-  public void correctsInconsistentVariableNameToFieldCaseAndQualifiesNestedChildClassField()
-      throws Exception {
+  public void correctsInconsistentVariableNameToFieldCaseAndQualifiesNestedChildClassField() {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
@@ -245,8 +241,7 @@ public class InconsistentCapitalizationTest {
 
   @Test
   public void
-      correctsInconsistentVariableNameToFieldCaseInAnonymousClassAndQualifiesNestedChildClassField()
-          throws Exception {
+      correctsInconsistentVariableNameToFieldCaseInAnonymousClassAndQualifiesNestedChildClassField() {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
@@ -277,7 +272,7 @@ public class InconsistentCapitalizationTest {
 
   // regression test for https://github.com/google/error-prone/issues/999
   @Test
-  public void clash() throws Exception {
+  public void clash() {
     refactoringHelper
         .addInputLines(
             "Test.java",

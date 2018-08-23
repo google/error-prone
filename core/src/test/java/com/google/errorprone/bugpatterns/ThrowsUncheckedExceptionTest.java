@@ -36,17 +36,17 @@ public final class ThrowsUncheckedExceptionTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("ThrowsUncheckedExceptionPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("ThrowsUncheckedExceptionNegativeCases.java").doTest();
   }
 
   @Test
-  public void deleteAll() throws Exception {
+  public void deleteAll() {
     BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -64,7 +64,7 @@ public final class ThrowsUncheckedExceptionTest {
   }
 
   @Test
-  public void deleteLeft() throws Exception {
+  public void deleteLeft() {
     BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -84,7 +84,7 @@ public final class ThrowsUncheckedExceptionTest {
   }
 
   @Test
-  public void deleteRight() throws Exception {
+  public void deleteRight() {
     BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -104,7 +104,7 @@ public final class ThrowsUncheckedExceptionTest {
   }
 
   @Test
-  public void preserveOrder() throws Exception {
+  public void preserveOrder() {
     BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
         .addInputLines(
             "in/Test.java",

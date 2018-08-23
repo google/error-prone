@@ -37,7 +37,7 @@ public class GuardedByLockMethodTest {
   }
 
   @Test
-  public void testSimple() throws Exception {
+  public void testSimple() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",

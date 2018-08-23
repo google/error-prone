@@ -51,7 +51,7 @@ public final class UnusedExceptionTest {
   }
 
   @Test
-  public void refactoring() throws Exception {
+  public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -172,7 +172,7 @@ public final class UnusedExceptionTest {
   }
 
   @Test
-  public void anonymousClass() throws Exception {
+  public void anonymousClass() {
     BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass())
         .addInputLines(
             "in/Test.java",

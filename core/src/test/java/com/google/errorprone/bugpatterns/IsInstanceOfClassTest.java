@@ -33,7 +33,7 @@ public class IsInstanceOfClassTest {
   }
 
   @Test
-  public void positive_clazz_enclosingClass() throws Exception {
+  public void positive_clazz_enclosingClass() {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
@@ -47,7 +47,7 @@ public class IsInstanceOfClassTest {
   }
 
   @Test
-  public void positive_enclosingClass_clazz() throws Exception {
+  public void positive_enclosingClass_clazz() {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
@@ -61,7 +61,7 @@ public class IsInstanceOfClassTest {
   }
 
   @Test
-  public void positive_getClass_getClass() throws Exception {
+  public void positive_getClass_getClass() {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
@@ -75,7 +75,7 @@ public class IsInstanceOfClassTest {
   }
 
   @Test
-  public void positive_getClass_literal() throws Exception {
+  public void positive_getClass_literal() {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
@@ -89,7 +89,7 @@ public class IsInstanceOfClassTest {
   }
 
   @Test
-  public void positive_literal_getClass() throws Exception {
+  public void positive_literal_getClass() {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
@@ -103,7 +103,7 @@ public class IsInstanceOfClassTest {
   }
 
   @Test
-  public void positive_literal_literal() throws Exception {
+  public void positive_literal_literal() {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
@@ -117,7 +117,7 @@ public class IsInstanceOfClassTest {
   }
 
   @Test
-  public void positive_clazz_getClass() throws Exception {
+  public void positive_clazz_getClass() {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
@@ -131,7 +131,7 @@ public class IsInstanceOfClassTest {
   }
 
   @Test
-  public void positive_getClass_clazz() throws Exception {
+  public void positive_getClass_clazz() {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
@@ -145,7 +145,7 @@ public class IsInstanceOfClassTest {
   }
 
   @Test
-  public void positive_clazz_clazz() throws Exception {
+  public void positive_clazz_clazz() {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",

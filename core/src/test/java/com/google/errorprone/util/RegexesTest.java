@@ -16,7 +16,6 @@
 
 package com.google.errorprone.util;
 
-import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 
 import org.junit.Test;
@@ -28,14 +27,14 @@ import org.junit.runners.JUnit4;
 public final class RegexesTest {
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     assertThat(Regexes.convertRegexToLiteral("hello")).hasValue("hello");
     assertThat(Regexes.convertRegexToLiteral("\\t\\n\\f\\r")).hasValue("\t\n\f\r");
     assertThat(Regexes.convertRegexToLiteral("\\Q.\\E")).hasValue(".");
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     assertThat(Regexes.convertRegexToLiteral("[a-z]+")).isEmpty();
   }
 }

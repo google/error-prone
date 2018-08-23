@@ -29,7 +29,7 @@ public class ProtoStringFieldReferenceEqualityTest {
       CompilationTestHelper.newInstance(ProtoStringFieldReferenceEquality.class, getClass());
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "com/google/protobuf/GeneratedMessage.java",
@@ -58,7 +58,7 @@ public class ProtoStringFieldReferenceEqualityTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "com/google/protobuf/GeneratedMessage.java",

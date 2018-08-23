@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,7 +29,7 @@ public class ImmutableRefactoringTest {
       BugCheckerRefactoringTestHelper.newInstance(new ImmutableRefactoring(), getClass());
 
   @Test
-  public void positive() throws IOException {
+  public void positive() {
     compilationHelper
         .addInputLines(
             "Test.java",
@@ -50,7 +49,7 @@ public class ImmutableRefactoringTest {
   }
 
   @Test
-  public void negative() throws IOException {
+  public void negative() {
     compilationHelper
         .addInputLines(
             "Test.java",

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -117,7 +116,7 @@ public class AssertionFailureIgnoredTest {
   }
 
   @Test
-  public void refactoring() throws IOException {
+  public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(new AssertionFailureIgnored(), getClass())
         .addInputLines(
             "in/Test.java", //
@@ -182,7 +181,7 @@ public class AssertionFailureIgnoredTest {
   }
 
   @Test
-  public void refactoringStatements() throws IOException {
+  public void refactoringStatements() {
     BugCheckerRefactoringTestHelper.newInstance(new AssertionFailureIgnored(), getClass())
         .addInputLines(
             "in/Test.java", //

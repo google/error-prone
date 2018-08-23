@@ -50,7 +50,7 @@ public class MultipleParallelOrSequentialCallsTest {
   }
 
   @Test
-  public void testFixes() throws Exception {
+  public void testFixes() {
     BugCheckerRefactoringTestHelper.newInstance(new MultipleParallelOrSequentialCalls(), getClass())
         .addInput("MultipleParallelOrSequentialCallsPositiveCases.java")
         .addOutput("MultipleParallelOrSequentialCallsPositiveCases_expected.java")

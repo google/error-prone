@@ -157,7 +157,7 @@ public final class ProtoFieldNullComparisonTest {
   }
 
   @Test
-  public void testMessageOrBuilderGetField() throws Exception {
+  public void testMessageOrBuilderGetField() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -173,7 +173,7 @@ public final class ProtoFieldNullComparisonTest {
   }
 
   @Test
-  public void testExtendableMessageGetExtension1param() throws Exception {
+  public void testExtendableMessageGetExtension1param() {
     compilationHelper
         .addSourceLines(
             "Test.java",

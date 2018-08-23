@@ -51,17 +51,17 @@ public class JUnit4SetUpNotRunTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCase_customBefore() throws Exception {
+  public void testPositiveCase_customBefore() {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCaseCustomBefore.java").doTest();
   }
 
   @Test
-  public void customBefore_refactoring() throws Exception {
+  public void customBefore_refactoring() {
     refactoringTestHelper
         .addInputLines("Before.java", "  @interface Before {}")
         .expectUnchanged()
@@ -92,12 +92,12 @@ public class JUnit4SetUpNotRunTest {
   }
 
   @Test
-  public void testPositiveCase_customBeforeDifferentName() throws Exception {
+  public void testPositiveCase_customBeforeDifferentName() {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCaseCustomBefore2.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() throws Exception {
+  public void testNegativeCases() {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunNegativeCases.java").doTest();
   }
 

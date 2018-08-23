@@ -30,7 +30,7 @@ public class CatchFailTest {
       BugCheckerRefactoringTestHelper.newInstance(new CatchFail(), getClass());
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     testHelper
         .addInputLines(
             "in/Foo.java",
@@ -66,7 +66,7 @@ public class CatchFailTest {
   }
 
   @Test
-  public void positive_failFail() throws Exception {
+  public void positive_failFail() {
     testHelper
         .addInputLines(
             "in/Foo.java",
@@ -94,7 +94,7 @@ public class CatchFailTest {
   }
 
   @Test
-  public void positive_finally() throws Exception {
+  public void positive_finally() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -124,7 +124,7 @@ public class CatchFailTest {
   }
 
   @Test
-  public void positive_otherCatch() throws Exception {
+  public void positive_otherCatch() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -150,7 +150,7 @@ public class CatchFailTest {
   }
 
   @Test
-  public void negative_nonTest() throws Exception {
+  public void negative_nonTest() {
     testHelper
         .addInputLines(
             "in/Foo.java",
@@ -170,7 +170,7 @@ public class CatchFailTest {
   }
 
   @Test
-  public void useException() throws Exception {
+  public void useException() {
     testHelper
         .addInputLines(
             "in/Foo.java",
@@ -189,7 +189,7 @@ public class CatchFailTest {
   }
 
   @Test
-  public void failVariations() throws Exception {
+  public void failVariations() {
     testHelper
         .addInputLines(
             "in/Foo.java",
@@ -227,7 +227,7 @@ public class CatchFailTest {
   }
 
   @Test
-  public void testExpected() throws Exception {
+  public void testExpected() {
     testHelper
         .addInputLines(
             "in/Foo.java",

@@ -39,7 +39,7 @@ public final class ThreadPriorityCheckTest {
   }
 
   @Test
-  public void yieldThread() throws Exception {
+  public void yieldThread() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -60,7 +60,7 @@ public final class ThreadPriorityCheckTest {
   }
 
   @Test
-  public void setPriority() throws Exception {
+  public void setPriority() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -81,7 +81,7 @@ public final class ThreadPriorityCheckTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "Test.java",

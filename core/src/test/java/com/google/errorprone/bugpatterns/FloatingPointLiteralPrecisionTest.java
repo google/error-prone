@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,7 +27,7 @@ import org.junit.runners.JUnit4;
 public class FloatingPointLiteralPrecisionTest {
 
   @Test
-  public void positive() throws IOException {
+  public void positive() {
     BugCheckerRefactoringTestHelper.newInstance(new FloatingPointLiteralPrecision(), getClass())
         .addInputLines(
             "in/Test.java",

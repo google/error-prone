@@ -36,17 +36,17 @@ public class FutureReturnValueIgnoredTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("FutureReturnValueIgnoredPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("FutureReturnValueIgnoredNegativeCases.java").doTest();
   }
 
   @Test
-  public void testClassAnnotationButCanIgnoreReturnValue() throws Exception {
+  public void testClassAnnotationButCanIgnoreReturnValue() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",

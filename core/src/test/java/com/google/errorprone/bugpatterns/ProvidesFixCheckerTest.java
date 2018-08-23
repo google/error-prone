@@ -30,7 +30,7 @@ public class ProvidesFixCheckerTest {
       CompilationTestHelper.newInstance(ProvidesFixChecker.class, getClass());
 
   @Test
-  public void noFixes() throws Exception {
+  public void noFixes() {
     testHelper
         .addSourceLines(
             "ExampleChecker.java",
@@ -51,7 +51,7 @@ public class ProvidesFixCheckerTest {
   }
 
   @Test
-  public void findingOnAnnotation() throws Exception {
+  public void findingOnAnnotation() {
     testHelper
         .addSourceLines(
             "ExampleChecker.java",
@@ -76,7 +76,7 @@ public class ProvidesFixCheckerTest {
   }
 
   @Test
-  public void addsArgument() throws Exception {
+  public void addsArgument() {
     refactoringTestHelper
         .addInputLines(
             "in/ExampleChecker.java",
@@ -120,7 +120,7 @@ public class ProvidesFixCheckerTest {
   }
 
   @Test
-  public void replacesExistingInPlace() throws Exception {
+  public void replacesExistingInPlace() {
     refactoringTestHelper
         .addInputLines(
             "in/ExampleChecker.java",
@@ -168,7 +168,7 @@ public class ProvidesFixCheckerTest {
   }
 
   @Test
-  public void alreadyHasFixTag() throws Exception {
+  public void alreadyHasFixTag() {
     testHelper
         .addSourceLines(
             "ExampleChecker.java",
@@ -195,7 +195,7 @@ public class ProvidesFixCheckerTest {
   }
 
   @Test
-  public void erroneousFixTag() throws Exception {
+  public void erroneousFixTag() {
     testHelper
         .addSourceLines(
             "ExampleChecker.java",

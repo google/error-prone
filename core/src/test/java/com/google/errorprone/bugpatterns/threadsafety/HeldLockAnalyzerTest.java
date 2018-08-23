@@ -44,7 +44,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testInstance() throws Exception {
+  public void testInstance() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -68,7 +68,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testTwoInstances() throws Exception {
+  public void testTwoInstances() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -93,7 +93,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testSynchronizedMethod() throws Exception {
+  public void testSynchronizedMethod() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -112,7 +112,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testSynchronizedThis() throws Exception {
+  public void testSynchronizedThis() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -133,7 +133,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testSynchronizedField() throws Exception {
+  public void testSynchronizedField() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -156,7 +156,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testSynchronizedClass() throws Exception {
+  public void testSynchronizedClass() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -178,7 +178,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testLocked() throws Exception {
+  public void testLocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -209,7 +209,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testLockMethodEnclosingAccess() throws Exception {
+  public void testLockMethodEnclosingAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",

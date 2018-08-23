@@ -34,12 +34,12 @@ public class ConstructorLeaksThisTest {
   }
 
   @Test
-  public void positiveCases() throws Exception {
+  public void positiveCases() {
     compilationHelper.addSourceFile("ConstructorLeaksThisPositiveCases.java").doTest();
   }
 
   @Test
-  public void negativeCases() throws Exception {
+  public void negativeCases() {
     compilationHelper.addSourceFile("ConstructorLeaksThisNegativeCases.java").doTest();
   }
 }

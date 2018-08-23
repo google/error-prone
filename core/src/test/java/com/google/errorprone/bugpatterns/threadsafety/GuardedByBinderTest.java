@@ -49,7 +49,7 @@ public class GuardedByBinderTest {
   private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
 
   @Test
-  public void testInherited() throws Exception {
+  public void testInherited() {
     assertEquals(
         "(SELECT (THIS) slock)",
         bind(
@@ -66,7 +66,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void testFinal() throws Exception {
+  public void testFinal() {
     assertEquals(
         "(SELECT (THIS) lock)",
         bind(
@@ -81,7 +81,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void testMethod() throws Exception {
+  public void testMethod() {
     assertEquals(
         "(SELECT (SELECT (SELECT (SELECT (SELECT (SELECT " + "(THIS) s) f) g()) f) g()) lock)",
         bind(
@@ -102,7 +102,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void testBadSuperAccess() throws Exception {
+  public void testBadSuperAccess() {
     bindFail(
         "Test",
         "Super.this.lock",
@@ -117,7 +117,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void namedClass_this() throws Exception {
+  public void namedClass_this() {
     assertEquals(
         "(CLASS_LITERAL threadsafety.Test)",
         bind(
@@ -128,7 +128,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void namedClass_super() throws Exception {
+  public void namedClass_super() {
     assertEquals(
         "(CLASS_LITERAL threadsafety.Super)",
         bind(
@@ -142,7 +142,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void namedClass_nonLiteral() throws Exception {
+  public void namedClass_nonLiteral() {
     bindFail(
         "Test",
         "t.class",
@@ -157,7 +157,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void namedClass_none() throws Exception {
+  public void namedClass_none() {
     bindFail(
         "Test",
         "Super.class",
@@ -169,7 +169,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void namedThis_none() throws Exception {
+  public void namedThis_none() {
     bindFail(
         "Test",
         "Segment.this",
@@ -181,7 +181,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void outer_lock() throws Exception {
+  public void outer_lock() {
     assertEquals(
         "(SELECT (SELECT (THIS) outer$threadsafety.Outer) lock)",
         bind(
@@ -197,7 +197,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void outer_lock_simpleName() throws Exception {
+  public void outer_lock_simpleName() {
     assertEquals(
         "(SELECT (SELECT (THIS) outer$threadsafety.Outer) lock)",
         bind(
@@ -214,7 +214,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void otherClass() throws Exception {
+  public void otherClass() {
     assertEquals(
         "(SELECT (TYPE_LITERAL threadsafety.Other) lock)",
         bind(
@@ -231,7 +231,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void simpleName() throws Exception {
+  public void simpleName() {
     assertEquals(
         "(SELECT (TYPE_LITERAL threadsafety.Other) lock)",
         bind(
@@ -249,7 +249,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void simpleNameClass() throws Exception {
+  public void simpleNameClass() {
     assertEquals(
         "(CLASS_LITERAL threadsafety.Other)",
         bind(
@@ -267,7 +267,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void simpleFieldName() throws Exception {
+  public void simpleFieldName() {
     assertEquals(
         "(SELECT (THIS) Other)",
         bind(
@@ -285,7 +285,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void staticFieldGuard() throws Exception {
+  public void staticFieldGuard() {
     assertEquals(
         "(SELECT (TYPE_LITERAL threadsafety.Test) lock)",
         bind(
@@ -300,7 +300,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void staticMethodGuard() throws Exception {
+  public void staticMethodGuard() {
     assertEquals(
         "(SELECT (TYPE_LITERAL threadsafety.Test) lock())",
         bind(
@@ -315,7 +315,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void staticOnStatic() throws Exception {
+  public void staticOnStatic() {
     assertEquals(
         "(SELECT (TYPE_LITERAL threadsafety.Test) lock)",
         bind(
@@ -330,7 +330,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void instanceOnStatic() throws Exception {
+  public void instanceOnStatic() {
     bindFail(
         "Test",
         "Test.lock",
@@ -343,7 +343,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void instanceMethodOnStatic() throws Exception {
+  public void instanceMethodOnStatic() {
     bindFail(
         "Test",
         "Test.lock()",
@@ -356,7 +356,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void explicitThisOuterClass() throws Exception {
+  public void explicitThisOuterClass() {
     assertEquals(
         "(SELECT (SELECT (THIS) outer$threadsafety.Outer) lock)",
         bind(
@@ -374,7 +374,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void implicitThisOuterClass() throws Exception {
+  public void implicitThisOuterClass() {
     assertEquals(
         "(SELECT (SELECT (THIS) outer$threadsafety.Outer) lock)",
         bind(
@@ -392,7 +392,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void implicitThisOuterClassMethod() throws Exception {
+  public void implicitThisOuterClassMethod() {
     assertEquals(
         "(SELECT (SELECT (SELECT (THIS) outer$threadsafety.Outer) endpoint()) lock())",
         bind(
@@ -413,7 +413,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void explicitThisSameClass() throws Exception {
+  public void explicitThisSameClass() {
     assertEquals(
         "(THIS)",
         bind(
@@ -425,7 +425,7 @@ public class GuardedByBinderTest {
 
   // regression test for issue 387
   @Test
-  public void enclosingBlockScope() throws Exception {
+  public void enclosingBlockScope() {
     assertEquals(
         "(SELECT (SELECT (THIS) outer$threadsafety.Test) mu)",
         bind(
@@ -453,7 +453,7 @@ public class GuardedByBinderTest {
   // TODO(cushon): disallow non-final lock expressions
   @Ignore
   @Test
-  public void nonFinalStatic() throws Exception {
+  public void nonFinalStatic() {
     bindFail(
         "Test",
         "Other.lock",
@@ -471,7 +471,7 @@ public class GuardedByBinderTest {
   // TODO(cushon): disallow non-final lock expressions
   @Ignore
   @Test
-  public void nonFinal() throws Exception {
+  public void nonFinal() {
     bindFail(
         "Test",
         "lock",

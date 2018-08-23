@@ -28,7 +28,7 @@ public class MathRoundIntLongTest {
       BugCheckerRefactoringTestHelper.newInstance(new MathRoundIntLong(), getClass());
 
   @Test
-  public void deleteRoundMethodInt() throws Exception {
+  public void deleteRoundMethodInt() {
     helper
         .addInputLines(
             "Test.java", //
@@ -48,7 +48,7 @@ public class MathRoundIntLongTest {
   }
 
   @Test
-  public void deleteRoundMethodIntClass() throws Exception {
+  public void deleteRoundMethodIntClass() {
     helper
         .addInputLines(
             "Test.java", //
@@ -70,7 +70,7 @@ public class MathRoundIntLongTest {
   }
 
   @Test
-  public void replaceRoundMethodLong() throws Exception {
+  public void replaceRoundMethodLong() {
     helper
         .addInputLines(
             "Test.java", //
@@ -93,7 +93,7 @@ public class MathRoundIntLongTest {
   }
 
   @Test
-  public void replaceRoundMethodLongClass() throws Exception {
+  public void replaceRoundMethodLongClass() {
     helper
         .addInputLines(
             "Test.java", //
@@ -116,7 +116,7 @@ public class MathRoundIntLongTest {
   }
 
   @Test
-  public void roundingFloatNegative() throws Exception {
+  public void roundingFloatNegative() {
     helper
         .addInputLines(
             "Test.java", //
@@ -131,7 +131,7 @@ public class MathRoundIntLongTest {
   }
 
   @Test
-  public void roundingDoubleNegative() throws Exception {
+  public void roundingDoubleNegative() {
     helper
         .addInputLines(
             "Test.java", //
@@ -146,7 +146,7 @@ public class MathRoundIntLongTest {
   }
 
   @Test
-  public void replaceRoundMethodAddParenthesis() throws Exception {
+  public void replaceRoundMethodAddParenthesis() {
     helper
         .addInputLines(
             "Test.java", //
@@ -172,7 +172,7 @@ public class MathRoundIntLongTest {
   }
 
   @Test
-  public void removeMathRoundLeaveParenthesisIfUnary() throws Exception {
+  public void removeMathRoundLeaveParenthesisIfUnary() {
     helper
         .addInputLines(
             "Test.java", //

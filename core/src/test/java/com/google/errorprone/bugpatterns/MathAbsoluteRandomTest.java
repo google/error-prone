@@ -29,7 +29,7 @@ public class MathAbsoluteRandomTest {
       CompilationTestHelper.newInstance(MathAbsoluteRandom.class, getClass());
 
   @Test
-  public void math() throws Exception {
+  public void math() {
     helper
         .addSourceLines(
             "Test.java",
@@ -43,7 +43,7 @@ public class MathAbsoluteRandomTest {
   }
 
   @Test
-  public void random() throws Exception {
+  public void random() {
     helper
         .addSourceLines(
             "Test.java",
@@ -60,7 +60,7 @@ public class MathAbsoluteRandomTest {
 
 
   @Test
-  public void negativeNumber() throws Exception {
+  public void negativeNumber() {
     helper
         .addSourceLines(
             "Test.java", //
@@ -73,7 +73,7 @@ public class MathAbsoluteRandomTest {
   }
 
   @Test
-  public void negativeMethod() throws Exception {
+  public void negativeMethod() {
     helper
         .addSourceLines(
             "Test.java", //
@@ -86,7 +86,7 @@ public class MathAbsoluteRandomTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     helper
         .addSourceLines(
             "Test.java",

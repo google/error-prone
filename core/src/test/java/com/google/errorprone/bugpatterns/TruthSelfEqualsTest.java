@@ -37,18 +37,18 @@ public class TruthSelfEqualsTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("TruthSelfEqualsPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("TruthSelfEqualsNegativeCases.java").doTest();
   }
 
   // regression test for b/32107126
   @Test
-  public void customReceiver() throws Exception {
+  public void customReceiver() {
     compilationHelper
         .addSourceLines(
             "Test.java",

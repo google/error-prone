@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -136,7 +135,7 @@ public class ConstantOverflowTest {
   }
 
   @Test
-  public void longOverflow() throws IOException {
+  public void longOverflow() {
     BugCheckerRefactoringTestHelper.newInstance(new ConstantOverflow(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -158,7 +157,7 @@ public class ConstantOverflowTest {
   }
 
   @Test
-  public void onlyFixIntegers() throws Exception {
+  public void onlyFixIntegers() {
     BugCheckerRefactoringTestHelper.newInstance(new ConstantOverflow(), getClass())
         .addInputLines("in/Test.java", "class Test {", "  int a = 'a' + Integer.MAX_VALUE;", "}")
         .addOutputLines("out/Test.java", "class Test {", "  int a = 'a' + Integer.MAX_VALUE;", "}")

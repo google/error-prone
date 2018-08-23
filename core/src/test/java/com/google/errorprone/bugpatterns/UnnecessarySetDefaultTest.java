@@ -22,7 +22,6 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.testing.ArbitraryInstances;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +35,7 @@ public class UnnecessarySetDefaultTest {
       BugCheckerRefactoringTestHelper.newInstance(new UnnecessarySetDefault(), getClass());
 
   @Test
-  public void refactoring() throws IOException {
+  public void refactoring() {
     testHelper
         .addInputLines(
             "in/Test.java",

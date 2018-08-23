@@ -34,7 +34,7 @@ public class OptionalEqualityTest {
   }
 
   @Test
-  public void testPositiveCase_equal() throws Exception {
+  public void testPositiveCase_equal() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -49,7 +49,7 @@ public class OptionalEqualityTest {
   }
 
   @Test
-  public void testPositiveCase_notEqual() throws Exception {
+  public void testPositiveCase_notEqual() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -64,7 +64,7 @@ public class OptionalEqualityTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -78,7 +78,7 @@ public class OptionalEqualityTest {
   }
 
   @Test
-  public void maybeNull() throws Exception {
+  public void maybeNull() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -95,7 +95,7 @@ public class OptionalEqualityTest {
   }
 
   @Test
-  public void definitelyNull() throws Exception {
+  public void definitelyNull() {
     compilationHelper
         .addSourceLines(
             "Test.java",

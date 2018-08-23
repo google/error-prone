@@ -35,12 +35,12 @@ public class ConstructorInvokesOverridableTest {
   }
 
   @Test
-  public void positiveCases() throws Exception {
+  public void positiveCases() {
     compilationHelper.addSourceFile("ConstructorInvokesOverridablePositiveCases.java").doTest();
   }
 
   @Test
-  public void negativeCases() throws Exception {
+  public void negativeCases() {
     compilationHelper.addSourceFile("ConstructorInvokesOverridableNegativeCases.java").doTest();
   }
 }

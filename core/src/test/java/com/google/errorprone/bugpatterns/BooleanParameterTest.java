@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,7 +28,7 @@ import org.junit.runners.JUnit4;
 public class BooleanParameterTest {
 
   @Test
-  public void refactoring() throws IOException {
+  public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(new BooleanParameter(), getClass())
         .addInputLines(
             "in/Test.java",

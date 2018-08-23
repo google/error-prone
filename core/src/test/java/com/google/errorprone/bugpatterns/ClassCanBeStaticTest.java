@@ -34,27 +34,27 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("ClassCanBeStaticNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCase1() throws Exception {
+  public void testPositiveCase1() {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() throws Exception {
+  public void testPositiveCase2() {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testPositiveCase3() throws Exception {
+  public void testPositiveCase3() {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase3.java").doTest();
   }
 
   @Test
-  public void positiveReference() throws Exception {
+  public void positiveReference() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -68,7 +68,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void nonMemberField() throws Exception {
+  public void nonMemberField() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -90,7 +90,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void qualifiedThis() throws Exception {
+  public void qualifiedThis() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -111,7 +111,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void referencesSibling() throws Exception {
+  public void referencesSibling() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -131,7 +131,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void referenceInAnonymousClass() throws Exception {
+  public void referenceInAnonymousClass() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -150,7 +150,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void extendsInnerClass() throws Exception {
+  public void extendsInnerClass() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -167,7 +167,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void ctorParametricInnerClass() throws Exception {
+  public void ctorParametricInnerClass() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -187,7 +187,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void extendsParametricInnerClass() throws Exception {
+  public void extendsParametricInnerClass() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -203,7 +203,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void referencesTypeParameter() throws Exception {
+  public void referencesTypeParameter() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -217,7 +217,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void referencesTypeParameterImplicit() throws Exception {
+  public void referencesTypeParameterImplicit() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -236,7 +236,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void negative_referencesTypeParameterImplicit() throws Exception {
+  public void negative_referencesTypeParameterImplicit() {
     compilationHelper
         .addSourceLines(
             "One.java",
@@ -261,7 +261,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void qualifiedSuperReference() throws Exception {
+  public void qualifiedSuperReference() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -276,7 +276,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void annotationMethod() throws Exception {
+  public void annotationMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -291,7 +291,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void extendsHiddenInnerClass() throws Exception {
+  public void extendsHiddenInnerClass() {
     compilationHelper
         .addSourceLines(
             "A.java", //
@@ -311,7 +311,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void nestedInAnonymous() throws Exception {
+  public void nestedInAnonymous() {
     compilationHelper
         .addSourceLines(
             "A.java", //
@@ -327,7 +327,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void nestedInLocal() throws Exception {
+  public void nestedInLocal() {
     compilationHelper
         .addSourceLines(
             "A.java", //
@@ -343,7 +343,7 @@ public class ClassCanBeStaticTest {
   }
 
   @Test
-  public void innerClassMethodReference() throws Exception {
+  public void innerClassMethodReference() {
     compilationHelper
         .addSourceLines(
             "T.java", //

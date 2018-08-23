@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -33,12 +32,12 @@ public class JUnit3TestNotRunTest {
       BugCheckerRefactoringTestHelper.newInstance(new JUnit3TestNotRun(), getClass());
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("JUnit3TestNotRunPositiveCases.java").doTest();
   }
 
   @Test
-  public void misspelledTest() throws IOException {
+  public void misspelledTest() {
     refactorHelper
         .addInputLines(
             "in/PositiveCases.java",
@@ -78,7 +77,7 @@ public class JUnit3TestNotRunTest {
   }
 
   @Test
-  public void substitutionShouldBeWellFormed() throws IOException {
+  public void substitutionShouldBeWellFormed() {
     refactorHelper
         .addInputLines(
             "in/PositiveCases.java",
@@ -129,7 +128,7 @@ public class JUnit3TestNotRunTest {
   }
 
   @Test
-  public void hasModifiersAndThrows() throws IOException {
+  public void hasModifiersAndThrows() {
     refactorHelper
         .addInputLines(
             "in/DoesStuffTest.java",
@@ -149,7 +148,7 @@ public class JUnit3TestNotRunTest {
   }
 
   @Test
-  public void noModifiers() throws IOException {
+  public void noModifiers() {
     refactorHelper
         .addInputLines(
             "in/DoesStuffTest.java",
@@ -169,27 +168,27 @@ public class JUnit3TestNotRunTest {
   }
 
   @Test
-  public void testNegativeCase1() throws Exception {
+  public void testNegativeCase1() {
     compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase1.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() throws Exception {
+  public void testNegativeCase2() {
     compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase3() throws Exception {
+  public void testNegativeCase3() {
     compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase3.java").doTest();
   }
 
   @Test
-  public void testNegativeCase4() throws Exception {
+  public void testNegativeCase4() {
     compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase4.java").doTest();
   }
 
   @Test
-  public void testNegativeCase5() throws Exception {
+  public void testNegativeCase5() {
     compilationHelper
         .addSourceFile("JUnit3TestNotRunNegativeCase3.java") // needed as a dependency
         .addSourceFile("JUnit3TestNotRunNegativeCase5.java")

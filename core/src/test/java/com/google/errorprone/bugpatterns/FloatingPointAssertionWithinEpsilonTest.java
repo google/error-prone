@@ -48,7 +48,7 @@ public final class FloatingPointAssertionWithinEpsilonTest {
   }
 
   @Test
-  public void testFixes() throws Exception {
+  public void testFixes() {
     BugCheckerRefactoringTestHelper.newInstance(
             new FloatingPointAssertionWithinEpsilon(), getClass())
         .addInput("FloatingPointAssertionWithinEpsilonPositiveCases.java")

@@ -65,7 +65,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithIncompatibleModifierOnClassFails() throws Exception {
+  public void testAnnotationWithIncompatibleModifierOnClassFails() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
@@ -79,7 +79,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithIncompatibleModifierOnFieldFails() throws Exception {
+  public void testAnnotationWithIncompatibleModifierOnFieldFails() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
@@ -94,7 +94,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithIncompatibleModifierOnMethodFails() throws Exception {
+  public void testAnnotationWithIncompatibleModifierOnMethodFails() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
@@ -109,7 +109,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithTwoIncompatibleModifiersFails() throws Exception {
+  public void testAnnotationWithTwoIncompatibleModifiersFails() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
@@ -124,7 +124,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithCompatibleModifiersSucceeds() throws Exception {
+  public void testAnnotationWithCompatibleModifiersSucceeds() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
@@ -135,7 +135,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testGuavaAnnotation() throws Exception {
+  public void testGuavaAnnotation() {
     compilationHelper
         .addSourceLines(
             "com/google/common/annotations/IncompatibleModifiers.java",
@@ -167,7 +167,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testGuavaAnnotationOK() throws Exception {
+  public void testGuavaAnnotationOK() {
     compilationHelper
         .addSourceLines(
             "com/google/common/annotations/IncompatibleModifiers.java",
@@ -198,7 +198,7 @@ public class IncompatibleModifiersCheckerTest {
 
   // Regression test for #313
   @Test
-  public void negativeNestedAnnotations() throws Exception {
+  public void negativeNestedAnnotations() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -215,7 +215,7 @@ public class IncompatibleModifiersCheckerTest {
 
   // Regression test for #313
   @Test
-  public void negativePackageAnnotation() throws Exception {
+  public void negativePackageAnnotation() {
     compilationHelper
         .addSourceLines(
             "testdata/Anno.java",

@@ -35,7 +35,7 @@ public class UnnecessaryStaticImportTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "b/B.java", "package b;", "public class B {", "  public static class Inner {}", "}")
@@ -48,7 +48,7 @@ public class UnnecessaryStaticImportTest {
   }
 
   @Test
-  public void positiveRename() throws Exception {
+  public void positiveRename() {
     compilationHelper
         .addSourceLines(
             "a/A.java", "package a;", "public class A {", "  public static class Inner {}", "}")
@@ -63,7 +63,7 @@ public class UnnecessaryStaticImportTest {
   }
 
   @Test
-  public void negativeStaticMethod() throws Exception {
+  public void negativeStaticMethod() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -79,7 +79,7 @@ public class UnnecessaryStaticImportTest {
   }
 
   @Test
-  public void negativeGenericTypeStaticMethod() throws Exception {
+  public void negativeGenericTypeStaticMethod() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -95,7 +95,7 @@ public class UnnecessaryStaticImportTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "a/A.java", "package a;", "public class A {", "  public static class Inner {}", "}")

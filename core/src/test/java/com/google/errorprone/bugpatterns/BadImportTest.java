@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +63,7 @@ public final class BadImportTest {
   }
 
   @Test
-  public void positive_static_locallyDefinedMethod() throws IOException {
+  public void positive_static_locallyDefinedMethod() {
     BugCheckerRefactoringTestHelper.newInstance(new BadImport(), getClass())
         .addInputLines(
             "in/Test.java",
@@ -196,7 +195,7 @@ public final class BadImportTest {
   }
 
   @Test
-  public void test_nested_fixes() throws Exception {
+  public void test_nested_fixes() {
     BugCheckerRefactoringTestHelper.newInstance(new BadImport(), getClass())
         .addInput("BadImportPositiveCases.java")
         .addOutput("BadImportPositiveCases_expected.java")
@@ -204,7 +203,7 @@ public final class BadImportTest {
   }
 
   @Test
-  public void test_nested_typeUseAnnotation() throws Exception {
+  public void test_nested_typeUseAnnotation() {
     BugCheckerRefactoringTestHelper.newInstance(new BadImport(), getClass())
         .addInputLines(
             "input/TypeUseAnnotation.java",

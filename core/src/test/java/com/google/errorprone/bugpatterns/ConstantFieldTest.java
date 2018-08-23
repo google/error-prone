@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -88,7 +87,7 @@ public class ConstantFieldTest {
   }
 
   @Test
-  public void skipStaticFixOnInners() throws Exception {
+  public void skipStaticFixOnInners() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -129,7 +128,7 @@ public class ConstantFieldTest {
   }
 
   @Test
-  public void renameUsages() throws IOException {
+  public void renameUsages() {
     BugCheckerRefactoringTestHelper.newInstance(new ConstantField(), getClass())
         .addInputLines(
             "in/Test.java",

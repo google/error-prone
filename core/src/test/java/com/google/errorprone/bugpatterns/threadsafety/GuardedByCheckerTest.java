@@ -34,7 +34,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testLocked() throws Exception {
+  public void testLocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -67,7 +67,7 @@ public class GuardedByCheckerTest {
 
   /** "static synchronized method() { ... }" == "synchronized (MyClass.class) { ... }" */
   @Test
-  public void testStaticLocked() throws Exception {
+  public void testStaticLocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -85,7 +85,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testMonitor() throws Exception {
+  public void testMonitor() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -115,7 +115,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testWrongLock() throws Exception {
+  public void testWrongLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -142,7 +142,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testGuardedStaticFieldAccess_1() throws Exception {
+  public void testGuardedStaticFieldAccess_1() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -162,7 +162,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testGuardedStaticFieldAccess_2() throws Exception {
+  public void testGuardedStaticFieldAccess_2() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -182,7 +182,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testGuardedStaticFieldAccess_3() throws Exception {
+  public void testGuardedStaticFieldAccess_3() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -202,7 +202,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testGuardedStaticFieldAccess_EnclosingClass() throws Exception {
+  public void testGuardedStaticFieldAccess_EnclosingClass() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -219,7 +219,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testBadStaticFieldAccess() throws Exception {
+  public void testBadStaticFieldAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -239,7 +239,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testBadGuard() throws Exception {
+  public void testBadGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -253,7 +253,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testErrorProneAnnotation() throws Exception {
+  public void testErrorProneAnnotation() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -267,7 +267,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testUnheldInstanceGuard() throws Exception {
+  public void testUnheldInstanceGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -288,7 +288,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testUnheldItselfGuard() throws Exception {
+  public void testUnheldItselfGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -307,7 +307,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void i541() throws Exception {
+  public void i541() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -331,7 +331,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testCtor() throws Exception {
+  public void testCtor() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -347,7 +347,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testBadGuardMethodAccess() throws Exception {
+  public void testBadGuardMethodAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -364,7 +364,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testTransitiveGuardMethodAccess() throws Exception {
+  public void testTransitiveGuardMethodAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -381,7 +381,7 @@ public class GuardedByCheckerTest {
 
   @Ignore // TODO(cushon): support read/write lock copies
   @Test
-  public void testReadWriteLockCopy() throws Exception {
+  public void testReadWriteLockCopy() {
     compilationHelper
         .addSourceLines(
             "threadsafety.Test",
@@ -415,7 +415,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testReadWriteLock() throws Exception {
+  public void testReadWriteLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -447,7 +447,7 @@ public class GuardedByCheckerTest {
 
   // Test that ReadWriteLocks are currently ignored.
   @Test
-  public void testReadWriteLockIsIgnored() throws Exception {
+  public void testReadWriteLockIsIgnored() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -468,7 +468,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testInnerClass_enclosingClassLock() throws Exception {
+  public void testInnerClass_enclosingClassLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -494,7 +494,7 @@ public class GuardedByCheckerTest {
 
   // notice lexically enclosing owner, use NamedThis!
   @Test
-  public void testInnerClass_thisLock() throws Exception {
+  public void testInnerClass_thisLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -514,7 +514,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testAnonymousClass() throws Exception {
+  public void testAnonymousClass() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -537,7 +537,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testInheritedLock() throws Exception {
+  public void testInheritedLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -558,7 +558,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testEnclosingSuperAccess() throws Exception {
+  public void testEnclosingSuperAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -582,7 +582,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testSuperAccess_this() throws Exception {
+  public void testSuperAccess_this() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -601,7 +601,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testSuperAccess_lock() throws Exception {
+  public void testSuperAccess_lock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -625,7 +625,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testSuperAccess_staticLock() throws Exception {
+  public void testSuperAccess_staticLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -649,7 +649,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testOtherClass_bad_staticLock() throws Exception {
+  public void testOtherClass_bad_staticLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -679,7 +679,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testOtherClass_bad_staticLock_alsoSub() throws Exception {
+  public void testOtherClass_bad_staticLock_alsoSub() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -709,7 +709,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testOtherClass_staticLock() throws Exception {
+  public void testOtherClass_staticLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -730,7 +730,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void instanceAccess_instanceGuard() throws Exception {
+  public void instanceAccess_instanceGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -758,7 +758,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void instanceAccess_lexicalGuard() throws Exception {
+  public void instanceAccess_lexicalGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -785,7 +785,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void lexicalAccess_instanceGuard() throws Exception {
+  public void lexicalAccess_instanceGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -812,7 +812,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void lexicalAccess_lexicalGuard() throws Exception {
+  public void lexicalAccess_lexicalGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -841,7 +841,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void instanceAccess_thisGuard() throws Exception {
+  public void instanceAccess_thisGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -867,7 +867,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void instanceAccess_namedThisGuard() throws Exception {
+  public void instanceAccess_namedThisGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -893,7 +893,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void lexicalAccess_thisGuard() throws Exception {
+  public void lexicalAccess_thisGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -919,7 +919,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void lexicalAccess_namedThisGuard() throws Exception {
+  public void lexicalAccess_namedThisGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -950,7 +950,7 @@ public class GuardedByCheckerTest {
   // Note: there's currently no way to use @GuardedBy to specify that the guard is a specific array
   // element.
   @Test
-  public void complexLockExpression() throws Exception {
+  public void complexLockExpression() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -968,7 +968,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void wrongInnerClassInstance() throws Exception {
+  public void wrongInnerClassInstance() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -995,7 +995,7 @@ public class GuardedByCheckerTest {
   // understands why this example is safe.)
   @Ignore // TODO(cushon): support try-with-resources
   @Test
-  public void tryWithResources() throws Exception {
+  public void tryWithResources() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1030,7 +1030,7 @@ public class GuardedByCheckerTest {
   // finally blocks are checked.
   // TODO(cushon): support try-with-resources block.
   @Test
-  public void tryWithResourcesAreNotFullyUnsupported() throws Exception {
+  public void tryWithResourcesAreNotFullyUnsupported() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1070,7 +1070,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testLexicalScopingExampleOne() throws Exception {
+  public void testLexicalScopingExampleOne() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1100,7 +1100,7 @@ public class GuardedByCheckerTest {
 
   // TODO(cushon): allowing @GuardedBy on overridden methods is unsound.
   @Test
-  public void testLexicalScopingExampleTwo() throws Exception {
+  public void testLexicalScopingExampleTwo() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1129,7 +1129,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testAliasing() throws Exception {
+  public void testAliasing() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1152,7 +1152,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testMonitorGuard() throws Exception {
+  public void testMonitorGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1175,7 +1175,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testSemaphore() throws Exception {
+  public void testSemaphore() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1205,7 +1205,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void synchronizedOnLockMethod_negative() throws Exception {
+  public void synchronizedOnLockMethod_negative() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1227,7 +1227,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void suppressLocalVariable() throws Exception {
+  public void suppressLocalVariable() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1248,7 +1248,7 @@ public class GuardedByCheckerTest {
 
   // regression test for issue 387
   @Test
-  public void enclosingBlockScope() throws Exception {
+  public void enclosingBlockScope() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1272,7 +1272,7 @@ public class GuardedByCheckerTest {
 
   @Ignore("b/26834754") // fix resolution of qualified type names
   @Test
-  public void qualfiedType() throws Exception {
+  public void qualifiedType() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -1300,7 +1300,7 @@ public class GuardedByCheckerTest {
 
   @Ignore("b/26834754") // fix resolution of qualified type names
   @Test
-  public void innerClassTypeQualifier() throws Exception {
+  public void innerClassTypeQualifier() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -1328,7 +1328,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void instanceInitializersAreUnchecked() throws Exception {
+  public void instanceInitializersAreUnchecked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1351,7 +1351,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void classInitializersAreUnchecked() throws Exception {
+  public void classInitializersAreUnchecked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1374,7 +1374,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void staticFieldInitializersAreUnchecked() throws Exception {
+  public void staticFieldInitializersAreUnchecked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1389,7 +1389,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void instanceFieldInitializersAreUnchecked() throws Exception {
+  public void instanceFieldInitializersAreUnchecked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1404,7 +1404,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void innerClassMethod() throws Exception {
+  public void innerClassMethod() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1433,7 +1433,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void innerClassMethod_classBoundary() throws Exception {
+  public void innerClassMethod_classBoundary() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Outer.java",
@@ -1473,7 +1473,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void regression_b27686620() throws Exception {
+  public void regression_b27686620() {
     compilationHelper
         .addSourceLines(
             "A.java", //
@@ -1501,7 +1501,7 @@ public class GuardedByCheckerTest {
 
   @Ignore // TODO(cushon): clean up existing instances and re-enable
   @Test
-  public void qualifiedMethod() throws Exception {
+  public void qualifiedMethod() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1522,7 +1522,7 @@ public class GuardedByCheckerTest {
 
   // regression test for #426
   @Test
-  public void noSuchMethod() throws Exception {
+  public void noSuchMethod() {
     compilationHelper
         .addSourceLines(
             "Foo.java", //
@@ -1540,7 +1540,7 @@ public class GuardedByCheckerTest {
 
   // regression test for b/34251959
   @Test
-  public void lambda() throws Exception {
+  public void lambda() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -1558,7 +1558,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void multipleLocks() throws Exception {
+  public void multipleLocks() {
     compilationHelper
         .addSourceLines(
             "GuardedBy.java", //
@@ -1592,7 +1592,7 @@ public class GuardedByCheckerTest {
   // Ensure sure outer instance handling doesn't accidentally include enclosing classes of
   // static member classes.
   @Test
-  public void testStaticMemberClass_enclosingInstanceLock() throws Exception {
+  public void testStaticMemberClass_enclosingInstanceLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1616,7 +1616,7 @@ public class GuardedByCheckerTest {
   // Ensure sure outer instance handling doesn't accidentally include enclosing classes of
   // static member classes.
   @Test
-  public void testStaticMemberClass_staticOuterClassLock() throws Exception {
+  public void testStaticMemberClass_staticOuterClassLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",

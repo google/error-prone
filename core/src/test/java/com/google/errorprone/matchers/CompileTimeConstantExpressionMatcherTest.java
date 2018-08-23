@@ -41,7 +41,7 @@ import org.junit.runners.JUnit4;
 public class CompileTimeConstantExpressionMatcherTest {
 
   @Test
-  public void testMatches_matchesLiteralsAndStaticFinals() throws Exception {
+  public void testMatches_matchesLiteralsAndStaticFinals() {
     String[] lines = {
       "package test;",
       "import com.google.errorprone.annotations.CompileTimeConstant;",
@@ -67,7 +67,7 @@ public class CompileTimeConstantExpressionMatcherTest {
   }
 
   @Test
-  public void testMatches_nullLiteral() throws Exception {
+  public void testMatches_nullLiteral() {
     String[] lines = {
       "package test;",
       "import com.google.errorprone.annotations.CompileTimeConstant;",
@@ -89,7 +89,7 @@ public class CompileTimeConstantExpressionMatcherTest {
   }
 
   @Test
-  public void testMatches_doesNotMatchNonLiterals() throws Exception {
+  public void testMatches_doesNotMatchNonLiterals() {
     String[] lines = {
       "package test;",
       "import com.google.errorprone.annotations.CompileTimeConstant;",
@@ -114,7 +114,7 @@ public class CompileTimeConstantExpressionMatcherTest {
   }
 
   @Test
-  public void testMatches_finalCompileTimeConstantMethodParameters() throws Exception {
+  public void testMatches_finalCompileTimeConstantMethodParameters() {
     String[] lines = {
       "package test;",
       "import com.google.errorprone.annotations.CompileTimeConstant;",
@@ -143,7 +143,7 @@ public class CompileTimeConstantExpressionMatcherTest {
   }
 
   @Test
-  public void testMatches_finalCompileTimeConstantConstructorParameters() throws Exception {
+  public void testMatches_finalCompileTimeConstantConstructorParameters() {
     String[] lines = {
       "package test;",
       "import com.google.errorprone.annotations.CompileTimeConstant;",
@@ -180,13 +180,13 @@ public class CompileTimeConstantExpressionMatcherTest {
   // and assignments to such variables are compile-time-constant.
   // For now, the annotation's target is restricted to ElementType.PARAMETER.
   @Test
-  public void testCompileTimeConstantAnnotationOnlyAllowedOnParameter() throws Exception {
+  public void testCompileTimeConstantAnnotationOnlyAllowedOnParameter() {
     Truth.assertThat(CompileTimeConstant.class.getAnnotation(Target.class).value())
         .isEqualTo(new ElementType[] {ElementType.PARAMETER});
   }
 
   @Test
-  public void conditionalExpression() throws Exception {
+  public void conditionalExpression() {
     String[] lines = {
       "package test;",
       "abstract class CompileTimeConstantExpressionMatcherTestCase {",

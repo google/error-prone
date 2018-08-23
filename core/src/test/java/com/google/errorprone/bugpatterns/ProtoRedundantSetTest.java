@@ -141,7 +141,7 @@ public final class ProtoRedundantSetTest {
   }
 
   @Test
-  public void testFixes() throws Exception {
+  public void testFixes() {
     BugCheckerRefactoringTestHelper.newInstance(new ProtoRedundantSet(), getClass())
         .addInputLines(
             "ProtoRedundantSetPositiveCases.java",

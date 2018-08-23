@@ -159,7 +159,7 @@ public class ScannerSupplierTest {
   public static class OtherArrayEquals extends BugChecker {}
 
   @Test
-  public void plusDisallowsDuplicates() throws Exception {
+  public void plusDisallowsDuplicates() {
     ScannerSupplier ss1 = ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class);
     ScannerSupplier ss2 = ScannerSupplier.fromBugCheckerClasses(OtherArrayEquals.class);
 
@@ -230,7 +230,7 @@ public class ScannerSupplierTest {
                 new SimpleJavaFileObject(
                     URI.create(name.replace('.', '/') + ".java"), Kind.SOURCE) {
                   @Override
-                  public CharSequence getCharContent(boolean b) throws IOException {
+                  public CharSequence getCharContent(boolean b) {
                     return Joiner.on('\n').join(lines);
                   }
                 }));
@@ -251,7 +251,7 @@ public class ScannerSupplierTest {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void applyOverridesWorksOnEmptySeverityMap() throws Exception {
+  public void applyOverridesWorksOnEmptySeverityMap() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ChainingConstructorIgnoresParameter.class,
@@ -268,7 +268,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void applyOverridesWorksOnEmptyFlagsMap() throws Exception {
+  public void applyOverridesWorksOnEmptyFlagsMap() {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses();
     ErrorProneOptions epOptions = ErrorProneOptions.processArgs(Collections.emptyList());
 
@@ -292,7 +292,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void applyOverridesEnablesCheck() throws Exception {
+  public void applyOverridesEnablesCheck() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
                 ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class)
@@ -306,7 +306,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void applyOverridesEnableAllChecks() throws Exception {
+  public void applyOverridesEnableAllChecks() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
                 ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class)
@@ -336,7 +336,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void applyOverridesDisableAllChecks() throws Exception {
+  public void applyOverridesDisableAllChecks() {
     // Create new scanner.
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
@@ -462,7 +462,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void applyOverridesDisablesChecks() throws Exception {
+  public void applyOverridesDisablesChecks() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ChainingConstructorIgnoresParameter.class,
@@ -478,7 +478,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void applyOverridesThrowsExceptionWhenDisablingNonDisablableCheck() throws Exception {
+  public void applyOverridesThrowsExceptionWhenDisablingNonDisablableCheck() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ErrorProneJavaCompilerTest.UnsuppressibleArrayEquals.class);
@@ -491,7 +491,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void applyOverridesThrowsExceptionWhenDemotingNonDisablableCheck() throws Exception {
+  public void applyOverridesThrowsExceptionWhenDemotingNonDisablableCheck() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             ErrorProneJavaCompilerTest.UnsuppressibleArrayEquals.class);
@@ -504,8 +504,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void applyOverridesSucceedsWhenDisablingUnknownCheckAndIgnoreUnknownCheckNamesIsSet()
-      throws Exception {
+  public void applyOverridesSucceedsWhenDisablingUnknownCheckAndIgnoreUnknownCheckNamesIsSet() {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(ArrayEquals.class);
     ErrorProneOptions epOptions =
         ErrorProneOptions.processArgs(
@@ -515,7 +514,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void applyOverridesSetsSeverity() throws Exception {
+  public void applyOverridesSetsSeverity() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
             BadShiftAmount.class, ChainingConstructorIgnoresParameter.class, StringEquality.class);
@@ -555,7 +554,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void allChecksAsWarningsWorks() throws Exception {
+  public void allChecksAsWarningsWorks() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
                 BadShiftAmount.class,
@@ -604,7 +603,7 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void disablingPackageLocation_suppressible() throws Exception {
+  public void disablingPackageLocation_suppressible() {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(PackageLocation.class);
     ErrorProneOptions epOptions =
         ErrorProneOptions.processArgs(ImmutableList.of("-Xep:PackageLocation:OFF"));
@@ -624,7 +623,7 @@ public class ScannerSupplierTest {
   public static class UnsuppressiblePackageLocation extends PackageLocation {}
 
   @Test
-  public void disablingPackageLocation_unsuppressible() throws Exception {
+  public void disablingPackageLocation_unsuppressible() {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(UnsuppressiblePackageLocation.class);
     ErrorProneOptions epOptions =
         ErrorProneOptions.processArgs(ImmutableList.of("-Xep:PackageLocation:OFF"));

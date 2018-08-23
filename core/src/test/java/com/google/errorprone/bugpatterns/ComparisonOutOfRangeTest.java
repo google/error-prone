@@ -34,12 +34,12 @@ public class ComparisonOutOfRangeTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("ComparisonOutOfRangePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() throws Exception {
+  public void testNegativeCases() {
     compilationHelper.addSourceFile("ComparisonOutOfRangeNegativeCases.java").doTest();
   }
 }

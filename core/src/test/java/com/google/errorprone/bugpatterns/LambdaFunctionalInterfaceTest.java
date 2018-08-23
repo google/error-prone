@@ -39,17 +39,17 @@ public class LambdaFunctionalInterfaceTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("LambdaFunctionalInterfacePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("LambdaFunctionalInterfaceNegativeCases.java").doTest();
   }
 
   @Test
-  public void testRefactoringTwo() throws Exception {
+  public void testRefactoringTwo() {
     refactoringHelper
         .addInputLines(
             "in/TwoLambdaFunctions.java",
@@ -90,7 +90,7 @@ public class LambdaFunctionalInterfaceTest {
   }
 
   @Test
-  public void testRefactoringInteger() throws Exception {
+  public void testRefactoringInteger() {
     refactoringHelper
         .addInputLines(
             "in/TwoLambdaFunctions.java",
@@ -131,7 +131,7 @@ public class LambdaFunctionalInterfaceTest {
   }
 
   @Test
-  public void testRefactoringPrimitiveToGeneric() throws Exception {
+  public void testRefactoringPrimitiveToGeneric() {
     refactoringHelper
         .addInputLines(
             "in/NumbertoT.java",
@@ -187,7 +187,7 @@ public class LambdaFunctionalInterfaceTest {
   }
 
   @Test
-  public void testRefactoringGenericToPrimitive() throws Exception {
+  public void testRefactoringGenericToPrimitive() {
     refactoringHelper
         .addInputLines(
             "in/NumbertoT.java",

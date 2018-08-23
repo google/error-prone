@@ -34,12 +34,12 @@ public class ByteBufferBackingArrayTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("ByteBufferBackingArrayPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() throws Exception {
+  public void testNegativeCases() {
     compilationHelper.addSourceFile("ByteBufferBackingArrayNegativeCases.java").doTest();
   }
 

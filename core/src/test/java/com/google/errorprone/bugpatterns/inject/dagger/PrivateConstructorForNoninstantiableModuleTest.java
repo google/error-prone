@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +34,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   }
 
   @Test
-  public void emptyModuleGetsLeftAlone() throws IOException {
+  public void emptyModuleGetsLeftAlone() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -46,7 +45,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   }
 
   @Test
-  public void onlyStaticMethods() throws IOException {
+  public void onlyStaticMethods() {
     testHelper
         .addInputLines(
             "in/TestModule.java", //
@@ -69,7 +68,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   }
 
   @Test
-  public void onlyStaticMethods_withConstructorGetsLeftAlone() throws IOException {
+  public void onlyStaticMethods_withConstructorGetsLeftAlone() {
     testHelper
         .addInputLines(
             "in/TestModule.java", //
@@ -85,7 +84,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   }
 
   @Test
-  public void abstractClassWithStaticAndAbstractMethods() throws IOException {
+  public void abstractClassWithStaticAndAbstractMethods() {
     testHelper
         .addInputLines(
             "in/TestModule.java",
@@ -114,8 +113,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   }
 
   @Test
-  public void abstractClassWithStaticAndAbstractMethods_withConstructorGetsLeftAlone()
-      throws IOException {
+  public void abstractClassWithStaticAndAbstractMethods_withConstructorGetsLeftAlone() {
     testHelper
         .addInputLines(
             "in/TestModule.java",
@@ -134,7 +132,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   }
 
   @Test
-  public void onlyAbstractMethods() throws IOException {
+  public void onlyAbstractMethods() {
     testHelper
         .addInputLines(
             "in/TestModule.java",
@@ -157,7 +155,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   }
 
   @Test
-  public void onlyAbstractMethods_withConstructorGetsLeftAlone() throws IOException {
+  public void onlyAbstractMethods_withConstructorGetsLeftAlone() {
     testHelper
         .addInputLines(
             "in/TestModule.java",
@@ -173,7 +171,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   }
 
   @Test
-  public void interfaceModuleGetsLeftAlone() throws IOException {
+  public void interfaceModuleGetsLeftAlone() {
     testHelper
         .addInputLines(
             "in/TestModule.java",

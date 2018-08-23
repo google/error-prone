@@ -35,7 +35,7 @@ public class NonCanonicalStaticImportTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "a/A.java", "package a;", "public class A {", "  public static class Inner {}", "}")
@@ -50,7 +50,7 @@ public class NonCanonicalStaticImportTest {
   }
 
   @Test
-  public void negativeStaticMethod() throws Exception {
+  public void negativeStaticMethod() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -66,7 +66,7 @@ public class NonCanonicalStaticImportTest {
   }
 
   @Test
-  public void negativeGenericTypeStaticMethod() throws Exception {
+  public void negativeGenericTypeStaticMethod() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -82,7 +82,7 @@ public class NonCanonicalStaticImportTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "a/A.java", "package a;", "public class A {", "  public static class Inner {}", "}")
@@ -92,7 +92,7 @@ public class NonCanonicalStaticImportTest {
   }
 
   @Test
-  public void negativeOnDemand() throws Exception {
+  public void negativeOnDemand() {
     compilationHelper
         .addSourceLines(
             "a/A.java", "package a;", "public class A {", "  public static class Inner {}", "}")

@@ -52,12 +52,12 @@ public class ObjectToStringTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("ObjectToStringPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("ObjectToStringNegativeCases.java").doTest();
   }
 

@@ -29,7 +29,7 @@ public class DoubleBraceInitializationTest {
       BugCheckerRefactoringTestHelper.newInstance(new DoubleBraceInitialization(), getClass());
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     CompilationTestHelper.newInstance(DoubleBraceInitialization.class, getClass())
         .addSourceLines(
             "Test.java", //
@@ -58,7 +58,7 @@ public class DoubleBraceInitializationTest {
   }
 
   @Test
-  public void positiveNoFix() throws Exception {
+  public void positiveNoFix() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -75,7 +75,7 @@ public class DoubleBraceInitializationTest {
   }
 
   @Test
-  public void list() throws Exception {
+  public void list() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -103,7 +103,7 @@ public class DoubleBraceInitializationTest {
   }
 
   @Test
-  public void set() throws Exception {
+  public void set() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -131,7 +131,7 @@ public class DoubleBraceInitializationTest {
   }
 
   @Test
-  public void collection() throws Exception {
+  public void collection() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -163,7 +163,7 @@ public class DoubleBraceInitializationTest {
   }
 
   @Test
-  public void map() throws Exception {
+  public void map() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -217,7 +217,7 @@ public class DoubleBraceInitializationTest {
   }
 
   @Test
-  public void nulls() throws Exception {
+  public void nulls() {
     testHelper
         .addInputLines(
             "in/Test.java", //

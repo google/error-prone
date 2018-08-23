@@ -47,7 +47,7 @@ public class ReferenceEqualityTest {
 
   @Ignore("b/74365407 test proto sources are broken")
   @Test
-  public void protoGetter_nonnull() throws Exception {
+  public void protoGetter_nonnull() {
     compilationHelper
         .addSourceLines(
             "in/Foo.java",
@@ -64,7 +64,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_const() throws Exception {
+  public void negative_const() {
     compilationHelper
         .addSourceLines(
             "Foo.java", //
@@ -86,7 +86,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_extends_equalsObject() throws Exception {
+  public void negative_extends_equalsObject() {
     compilationHelper
         .addSourceLines(
             "Sup.java", //
@@ -107,7 +107,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void positive_extendsAbstract_equals() throws Exception {
+  public void positive_extendsAbstract_equals() {
     compilationHelper
         .addSourceLines(
             "Sup.java", //
@@ -127,7 +127,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_implementsInterface_equals() throws Exception {
+  public void negative_implementsInterface_equals() {
     compilationHelper
         .addSourceLines(
             "Sup.java", //
@@ -146,7 +146,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_noEquals() throws Exception {
+  public void negative_noEquals() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -160,7 +160,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void positive_equal() throws Exception {
+  public void positive_equal() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -175,7 +175,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void positive_equalWithOr() throws Exception {
+  public void positive_equalWithOr() {
     refactoringTestHelper
         .addInputLines(
             "in/Test.java",
@@ -197,7 +197,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void positive_equalWithOr_objectsEquals() throws Exception {
+  public void positive_equalWithOr_objectsEquals() {
     refactoringTestHelper
         .addInputLines(
             "in/Test.java",
@@ -223,7 +223,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void positive_notEqual() throws Exception {
+  public void positive_notEqual() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -238,7 +238,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_impl() throws Exception {
+  public void negative_impl() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -251,7 +251,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_enum() throws Exception {
+  public void negative_enum() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -265,7 +265,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void test_customEnum() throws Exception {
+  public void test_customEnum() {
     compilationHelper
         .addSourceLines(
             "Kind.java",
@@ -285,7 +285,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_null() throws Exception {
+  public void negative_null() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -299,7 +299,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_abstractEq() throws Exception {
+  public void negative_abstractEq() {
     compilationHelper
         .addSourceLines(
             "Sup.java", //
@@ -318,7 +318,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negativeCase_class() throws Exception {
+  public void negativeCase_class() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -331,7 +331,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void transitiveEquals() throws Exception {
+  public void transitiveEquals() {
     compilationHelper
         .addSourceLines(
             "Super.java",
@@ -394,7 +394,7 @@ public class ReferenceEqualityTest {
 
   // regression test for #423
   @Test
-  public void typaram() throws Exception {
+  public void typaram() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -414,7 +414,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_compareTo() throws Exception {
+  public void negative_compareTo() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -427,7 +427,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void positive_compareTo() throws Exception {
+  public void positive_compareTo() {
     compilationHelper
         .addSourceLines(
             "Test.java",

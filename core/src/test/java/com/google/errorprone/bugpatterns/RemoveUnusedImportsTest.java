@@ -19,7 +19,6 @@ import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEX
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +36,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void basicUsageTest() throws IOException {
+  public void basicUsageTest() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -94,7 +93,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void useInSelect() throws IOException {
+  public void useInSelect() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -113,7 +112,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void useInJavadocSee() throws IOException {
+  public void useInJavadocSee() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -125,7 +124,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void useInJavadocSeeSelect() throws IOException {
+  public void useInJavadocSeeSelect() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -137,7 +136,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void useInJavadocLink() throws IOException {
+  public void useInJavadocLink() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -149,7 +148,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void useInJavadocLink_selfReferenceDoesNotBreak() throws IOException {
+  public void useInJavadocLink_selfReferenceDoesNotBreak() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -162,7 +161,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void useInJavadocLinkSelect() throws IOException {
+  public void useInJavadocLinkSelect() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -174,7 +173,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void diagnosticPosition() throws IOException {
+  public void diagnosticPosition() {
     CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -190,7 +189,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void useInJavadocParameter() throws IOException {
+  public void useInJavadocParameter() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -203,7 +202,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void qualifiedJavadoc() throws IOException {
+  public void qualifiedJavadoc() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -221,7 +220,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void parameterErasure() throws IOException {
+  public void parameterErasure() {
     testHelper
         .addInputLines(
             "in/A.java",
@@ -243,7 +242,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void atSee() throws IOException {
+  public void atSee() {
     testHelper
         .addInputLines(
             "Lib.java",
@@ -264,7 +263,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void multipleTopLevelClasses() throws IOException {
+  public void multipleTopLevelClasses() {
     CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
         .addSourceLines(
             "MultipleTopLevelClasses.java",
@@ -276,7 +275,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void unusedInPackageInfo() throws IOException {
+  public void unusedInPackageInfo() {
     testHelper
         .addInputLines(
             "in/com/example/package-info.java", "package com.example;", "import java.util.Map;")
@@ -288,7 +287,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void b69984547() throws IOException {
+  public void b69984547() {
     testHelper
         .addInputLines(
             "android/app/PendingIntent.java",
@@ -313,7 +312,7 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  public void b70690930() throws IOException {
+  public void b70690930() {
     testHelper
         .addInputLines(
             "a/One.java", //

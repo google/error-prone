@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 public class FieldMissingNullableTest {
 
   @Test
-  public void testLiteralNullAssignment() throws Exception {
+  public void testLiteralNullAssignment() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
@@ -43,7 +43,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testDefiniteNullAssignment() throws Exception {
+  public void testDefiniteNullAssignment() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
@@ -59,7 +59,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testMaybeNullAssignment() throws Exception {
+  public void testMaybeNullAssignment() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
@@ -75,7 +75,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testAssignNullableMethodResult() throws Exception {
+  public void testAssignNullableMethodResult() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableMethodCallTest.java",
@@ -97,7 +97,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testAssignNullableMethodCall_alternativeAnnotation() throws Exception {
+  public void testAssignNullableMethodCall_alternativeAnnotation() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
@@ -122,7 +122,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testAssignNullableMethodCall_typeAnnotation() throws Exception {
+  public void testAssignNullableMethodCall_typeAnnotation() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
@@ -150,7 +150,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testAssignNullableField() throws Exception {
+  public void testAssignNullableField() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableFieldTest.java",
@@ -169,7 +169,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testAssignNullableParameter() throws Exception {
+  public void testAssignNullableParameter() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
@@ -186,7 +186,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testInitializeWithNullableParameter() throws Exception {
+  public void testInitializeWithNullableParameter() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
@@ -203,7 +203,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNullInitializer() throws Exception {
+  public void testNullInitializer() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
@@ -217,7 +217,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testMaybeNullAssignmentInLambda() throws Exception {
+  public void testMaybeNullAssignmentInLambda() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
@@ -235,7 +235,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_alreadyAnnotated() throws Exception {
+  public void testNegativeCases_alreadyAnnotated() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
@@ -251,7 +251,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_alreadyTypeAnnotated() throws Exception {
+  public void testNegativeCases_alreadyTypeAnnotated() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
@@ -274,7 +274,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_initializeWithNonNullLiteral() throws Exception {
+  public void testNegativeCases_initializeWithNonNullLiteral() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
@@ -289,7 +289,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nonNullInitializer() throws Exception {
+  public void testNegativeCases_nonNullInitializer() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
@@ -301,7 +301,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_lambdaInitializer() throws Exception {
+  public void testNegativeCases_lambdaInitializer() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
@@ -321,7 +321,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nonNullMethod() throws Exception {
+  public void testNegativeCases_nonNullMethod() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullMethodTest.java",
@@ -336,7 +336,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nonNullField() throws Exception {
+  public void testNegativeCases_nonNullField() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullFieldTest.java",
@@ -352,7 +352,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nonNullParameter() throws Exception {
+  public void testNegativeCases_nonNullParameter() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullParameterTest.java",
@@ -367,7 +367,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_this() throws Exception {
+  public void testNegativeCases_this() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ThisTest.java",
@@ -386,7 +386,7 @@ public class FieldMissingNullableTest {
    * bug, of course, but we're not trying to find those bugs in this check.
    */
   @Test
-  public void testNegativeCases_primitiveFieldType() throws Exception {
+  public void testNegativeCases_primitiveFieldType() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/PrimitiveReturnTest.java",
@@ -398,7 +398,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_initializeWithLambda() throws Exception {
+  public void testNegativeCases_initializeWithLambda() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
@@ -428,7 +428,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testSuggestNonJsr305Nullable() throws Exception {
+  public void testSuggestNonJsr305Nullable() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
@@ -448,7 +448,7 @@ public class FieldMissingNullableTest {
   }
 
   @Test
-  public void testNonAnnotationNullable() throws Exception {
+  public void testNonAnnotationNullable() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",

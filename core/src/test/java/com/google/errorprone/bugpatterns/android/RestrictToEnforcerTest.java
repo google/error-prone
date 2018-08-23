@@ -34,7 +34,7 @@ public final class RestrictToEnforcerTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper
         .addSourceLines(
             "android/support/annotation/RestrictTo.java",

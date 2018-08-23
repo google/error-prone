@@ -34,12 +34,12 @@ public class EqualsNaNTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("EqualsNaNPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("EqualsNaNNegativeCases.java").doTest();
   }
 }

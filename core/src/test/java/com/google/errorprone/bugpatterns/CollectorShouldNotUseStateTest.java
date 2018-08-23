@@ -33,12 +33,12 @@ public class CollectorShouldNotUseStateTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("CollectorShouldNotUseStatePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() throws Exception {
+  public void testNegativeCases() {
     compilationHelper.addSourceFile("CollectorShouldNotUseStateNegativeCases.java").doTest();
   }
 }

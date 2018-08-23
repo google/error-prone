@@ -34,7 +34,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void differentHandles() throws Exception {
+  public void differentHandles() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -68,7 +68,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void existingRoeCase() throws Exception {
+  public void existingRoeCase() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -98,7 +98,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -128,7 +128,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void positiveUnion() throws Exception {
+  public void positiveUnion() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -156,7 +156,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void positiveROE() throws Exception {
+  public void positiveROE() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -184,7 +184,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void throwsException() throws Exception {
+  public void throwsException() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -204,7 +204,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void throwsROE() throws Exception {
+  public void throwsROE() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -224,7 +224,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void throwsIndividual() throws Exception {
+  public void throwsIndividual() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -248,7 +248,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -262,7 +262,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void catchesDoesntThrow() throws Exception {
+  public void catchesDoesntThrow() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -288,7 +288,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void negativeThrows() throws Exception {
+  public void negativeThrows() {
     testHelper
         .addInputLines(
             "Test.java",
@@ -302,7 +302,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void mergeWhitespace() throws Exception {
+  public void mergeWhitespace() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -332,7 +332,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void overlap() throws Exception {
+  public void overlap() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -353,7 +353,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void inCatch() throws Exception {
+  public void inCatch() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -381,7 +381,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void withFinally() throws Exception {
+  public void withFinally() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -405,7 +405,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void inCatchRepeated() throws Exception {
+  public void inCatchRepeated() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -441,7 +441,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void additionalCatchClause() throws Exception {
+  public void additionalCatchClause() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -481,7 +481,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void catchAndThrows() throws Exception {
+  public void catchAndThrows() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -513,7 +513,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void mixedMulticatch() throws Exception {
+  public void mixedMulticatch() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -545,7 +545,7 @@ public class ClassNewInstanceTest {
   }
 
   @Test
-  public void freshVar() throws Exception {
+  public void freshVar() {
     testHelper
         .addInputLines(
             "in/Test.java",

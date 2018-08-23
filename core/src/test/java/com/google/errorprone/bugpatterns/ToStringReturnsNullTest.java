@@ -37,7 +37,7 @@ public final class ToStringReturnsNullTest {
   }
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -51,7 +51,7 @@ public final class ToStringReturnsNullTest {
   }
 
   @Test
-  public void returnsNonNullString() throws Exception {
+  public void returnsNonNullString() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -64,7 +64,7 @@ public final class ToStringReturnsNullTest {
   }
 
   @Test
-  public void nonToStringMethod() throws Exception {
+  public void nonToStringMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -77,7 +77,7 @@ public final class ToStringReturnsNullTest {
   }
 
   @Test
-  public void nestedReturnNull() throws Exception {
+  public void nestedReturnNull() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -95,7 +95,7 @@ public final class ToStringReturnsNullTest {
   }
 
   @Test
-  public void lambdaReturnNull() throws Exception {
+  public void lambdaReturnNull() {
     compilationHelper
         .addSourceLines(
             "Test.java",

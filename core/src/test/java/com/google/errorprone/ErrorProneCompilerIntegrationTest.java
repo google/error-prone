@@ -106,7 +106,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void fileWithError() throws Exception {
+  public void fileWithError() {
     Result exitCode =
         compiler.compile(
             compiler
@@ -122,7 +122,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void fileWithWarning() throws Exception {
+  public void fileWithWarning() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(NonAtomicVolatileUpdate.class));
     compiler = compilerBuilder.build();
     Result exitCode =
@@ -142,7 +142,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void fileWithMultipleTopLevelClasses() throws Exception {
+  public void fileWithMultipleTopLevelClasses() {
     Result exitCode =
         compiler.compile(
             compiler
@@ -152,7 +152,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void fileWithMultipleTopLevelClassesExtends() throws Exception {
+  public void fileWithMultipleTopLevelClassesExtends() {
     Result exitCode =
         compiler.compile(
             compiler
@@ -169,7 +169,7 @@ public class ErrorProneCompilerIntegrationTest {
    * in the matchers.
    */
   @Test
-  public void fileWithMultipleTopLevelClassesExtendsWithError() throws Exception {
+  public void fileWithMultipleTopLevelClassesExtendsWithError() {
     Result exitCode =
         compiler.compile(
             compiler
@@ -196,7 +196,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void unhandledExceptionsAreReportedWithoutBugParadeLink() throws Exception {
+  public void unhandledExceptionsAreReportedWithoutBugParadeLink() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(Throwing.class));
     compiler = compilerBuilder.build();
     Result exitCode =
@@ -221,7 +221,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   /** Regression test for Issue 188, error-prone doesn't work with annotation processors. */
   @Test
-  public void annotationProcessingWorks() throws Exception {
+  public void annotationProcessingWorks() {
     Result exitCode =
         compiler.compile(
             compiler
@@ -233,7 +233,7 @@ public class ErrorProneCompilerIntegrationTest {
 
   /** Test that if javac does dataflow on a class twice error-prone only analyses it once. */
   @Test
-  public void reportReadyForAnalysisOnce() throws Exception {
+  public void reportReadyForAnalysisOnce() {
     Result exitCode =
         compiler.compile(
             compiler
@@ -263,7 +263,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void ignoreGeneratedConstructors() throws Exception {
+  public void ignoreGeneratedConstructors() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ConstructorMatcher.class));
     compiler = compilerBuilder.build();
     Result exitCode =
@@ -305,7 +305,7 @@ public class ErrorProneCompilerIntegrationTest {
   // TODO(cushon) - how can we distinguish between synthetic super() calls and real ones?
   @Ignore
   @Test
-  public void ignoreGeneratedSuperInvocations() throws Exception {
+  public void ignoreGeneratedSuperInvocations() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(SuperCallMatcher.class));
     compiler = compilerBuilder.build();
     Result exitCode =
@@ -326,7 +326,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void invalidFlagCausesCmdErrResult() throws Exception {
+  public void invalidFlagCausesCmdErrResult() {
     String[] args = {"-Xep:"};
     Result exitCode =
         compiler.compile(
@@ -342,7 +342,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void flagEnablesCheck() throws Exception {
+  public void flagEnablesCheck() {
     String[] testFile = {"public class Test {", "  public Test() {", "    if (true);", "  }", "}"};
 
     Result exitCode =
@@ -368,7 +368,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void severityIsResetOnNextCompilation() throws Exception {
+  public void severityIsResetOnNextCompilation() {
     String[] testFile = {"public class Test {", "  void doIt (int i) {", "    i = i;", "  }", "}"};
 
     String[] args = {"-Xep:SelfAssignment:WARN"};
@@ -392,7 +392,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void maturityIsResetOnNextCompilation() throws Exception {
+  public void maturityIsResetOnNextCompilation() {
     String[] testFile = {"public class Test {", "  public Test() {", "    if (true);", "  }", "}"};
 
     String[] args = {"-Xep:EmptyIf"};
@@ -417,7 +417,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void suppressGeneratedWarning() throws Exception {
+  public void suppressGeneratedWarning() {
     String[] generatedFile = {
       "@javax.annotation.Generated(\"Foo\")",
       "class Generated {",
@@ -457,7 +457,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void suppressGeneratedWarningJava9() throws Exception {
+  public void suppressGeneratedWarningJava9() {
     assumeTrue(StandardSystemProperty.JAVA_VERSION.value().startsWith("9"));
     String[] generatedFile = {
       "@javax.annotation.processing.Generated(\"Foo\")",
@@ -498,7 +498,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void cannotSuppressGeneratedError() throws Exception {
+  public void cannotSuppressGeneratedError() {
     String[] generatedFile = {
       "@javax.annotation.Generated(\"Foo\")",
       "class Generated {",
@@ -534,7 +534,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void crashSourcePosition() throws Exception {
+  public void crashSourcePosition() {
     compiler =
         compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(CrashOnReturn.class)).build();
     Result exitCode =
@@ -562,7 +562,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void compilePolicy_bytodo() throws Exception {
+  public void compilePolicy_bytodo() {
     Result exitCode =
         compiler.compile(
             new String[] {"-XDcompilePolicy=bytodo"}, Collections.<JavaFileObject>emptyList());
@@ -572,7 +572,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void compilePolicy_byfile() throws Exception {
+  public void compilePolicy_byfile() {
     Result exitCode =
         compiler.compile(
             new String[] {"-XDcompilePolicy=byfile"},
@@ -582,7 +582,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void compilePolicy_simple() throws Exception {
+  public void compilePolicy_simple() {
     Result exitCode =
         compiler.compile(
             new String[] {"-XDcompilePolicy=simple"},
@@ -605,7 +605,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void compilationWithError() throws Exception {
+  public void compilationWithError() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(CPSChecker.class));
     compiler = compilerBuilder.build();
     compiler.compile(
@@ -791,7 +791,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void checkerWithFlags() throws Exception {
+  public void checkerWithFlags() {
     String[] args = {
       "-XepOpt:Forbidden=xylophone",
     };
@@ -815,7 +815,7 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
-  public void flagsAreResetOnNextCompilation() throws Exception {
+  public void flagsAreResetOnNextCompilation() {
     String[] args = {"-XepOpt:Forbidden=bananas"};
     List<JavaFileObject> sources =
         Arrays.asList(

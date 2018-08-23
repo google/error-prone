@@ -33,12 +33,12 @@ public class HardCodedSdCardPathTest {
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper.addSourceFile("HardCodedSdCardPathPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("HardCodedSdCardPathNegativeCases.java").doTest();
   }
 }

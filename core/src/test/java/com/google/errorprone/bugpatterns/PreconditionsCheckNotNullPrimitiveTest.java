@@ -49,14 +49,14 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
   }
 
   @Test
-  public void testPositiveCases() throws Exception {
+  public void testPositiveCases() {
     compilationHelper
         .addSourceFile("PreconditionsCheckNotNullPrimitivePositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testNegativeCase1() throws Exception {
+  public void testNegativeCase1() {
     compilationHelper
         .addSourceFile("PreconditionsCheckNotNullPrimitiveNegativeCases.java")
         .doTest();

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,7 +28,7 @@ public class SwitchDefaultTest {
       BugCheckerRefactoringTestHelper.newInstance(new SwitchDefault(), getClass());
 
   @Test
-  public void refactoring_groupAndCase() throws IOException {
+  public void refactoring_groupAndCase() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -61,7 +60,7 @@ public class SwitchDefaultTest {
   }
 
   @Test
-  public void refactoring_case() throws IOException {
+  public void refactoring_case() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -95,7 +94,7 @@ public class SwitchDefaultTest {
   }
 
   @Test
-  public void refactoring_group() throws IOException {
+  public void refactoring_group() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -127,7 +126,7 @@ public class SwitchDefaultTest {
   }
 
   @Test
-  public void refactoring_fallthrough() throws IOException {
+  public void refactoring_fallthrough() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -162,7 +161,7 @@ public class SwitchDefaultTest {
   }
 
   @Test
-  public void refactoring_fallthroughEmpty() throws IOException {
+  public void refactoring_fallthroughEmpty() {
     testHelper
         .addInputLines(
             "in/Test.java", //

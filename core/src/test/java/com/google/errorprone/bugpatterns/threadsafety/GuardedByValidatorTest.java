@@ -33,7 +33,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testPositive() throws Exception {
+  public void testPositive() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -51,7 +51,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testNegative() throws Exception {
+  public void testNegative() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -75,7 +75,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testItself() throws Exception {
+  public void testItself() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -88,7 +88,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testBadInstanceAccess() throws Exception {
+  public void testBadInstanceAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -104,7 +104,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testClassName() throws Exception {
+  public void testClassName() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -119,7 +119,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void anonymousClassTypo() throws Exception {
+  public void anonymousClassTypo() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -149,7 +149,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void anonymousClassPrivateAccess() throws Exception {
+  public void anonymousClassPrivateAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -179,7 +179,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testStaticGuardedByInstance() throws Exception {
+  public void testStaticGuardedByInstance() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -194,7 +194,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testStaticGuardedByInstanceMethod() throws Exception {
+  public void testStaticGuardedByInstanceMethod() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -211,7 +211,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testStaticGuardedByStatic() throws Exception {
+  public void testStaticGuardedByStatic() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -224,7 +224,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testNonExistantMethod() throws Exception {
+  public void testNonExistantMethod() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",

@@ -33,7 +33,7 @@ public final class BadInstanceofTest {
       CompilationTestHelper.newInstance(BadInstanceof.class, getClass());
 
   @Test
-  public void refactoring() throws Exception {
+  public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(new BadInstanceof(), getClass())
         .addInputLines(
             "Test.java",

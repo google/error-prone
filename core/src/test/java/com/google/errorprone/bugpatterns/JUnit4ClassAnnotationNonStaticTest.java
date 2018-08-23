@@ -29,7 +29,7 @@ public class JUnit4ClassAnnotationNonStaticTest {
       CompilationTestHelper.newInstance(JUnit4ClassAnnotationNonStatic.class, getClass());
 
   @Test
-  public void positive() throws Exception {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -55,7 +55,7 @@ public class JUnit4ClassAnnotationNonStaticTest {
   }
 
   @Test
-  public void negative() throws Exception {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "Test.java",

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,7 +30,7 @@ public class TryFailRefactoringTest {
       BugCheckerRefactoringTestHelper.newInstance(new TryFailRefactoring(), getClass());
 
   @Test
-  public void catchBlock() throws IOException {
+  public void catchBlock() {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
@@ -88,7 +87,7 @@ public class TryFailRefactoringTest {
   }
 
   @Test
-  public void emptyCatch() throws IOException {
+  public void emptyCatch() {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",

@@ -34,12 +34,12 @@ public class WaitNotInLoopTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("WaitNotInLoopPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("WaitNotInLoopNegativeCases.java").doTest();
   }
 }

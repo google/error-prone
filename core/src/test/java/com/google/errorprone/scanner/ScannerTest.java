@@ -39,7 +39,7 @@ public class ScannerTest {
       CompilationTestHelper.newInstance(ShouldNotUseFoo.class, getClass());
 
   @Test
-  public void notSuppressedByAnnotationOnType() throws Exception {
+  public void notSuppressedByAnnotationOnType() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -52,7 +52,7 @@ public class ScannerTest {
   }
 
   @Test
-  public void notSuppressedByAnnotationOnParameterizedType() throws Exception {
+  public void notSuppressedByAnnotationOnParameterizedType() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -65,7 +65,7 @@ public class ScannerTest {
   }
 
   @Test
-  public void suppressedByAnnotationOnUsage() throws Exception {
+  public void suppressedByAnnotationOnUsage() {
     compilationHelper
         .addSourceLines(
             "Test.java",

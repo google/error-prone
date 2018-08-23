@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.android;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,7 +35,7 @@ public class WakelockReleasedDangerouslyTest {
           .addSourceFile("testdata/stubs/android/os/PowerManager.java");
 
   @Test
-  public void dangerousWakelockRelease_refactoring() throws IOException {
+  public void dangerousWakelockRelease_refactoring() {
     refactoringHelper
         .addInputLines(
             "in/TestApp.java",
@@ -76,7 +75,7 @@ public class WakelockReleasedDangerouslyTest {
   }
 
   @Test
-  public void doesNotRemoveIsHeldOnDifferentSymbol() throws IOException {
+  public void doesNotRemoveIsHeldOnDifferentSymbol() {
     refactoringHelper
         .addInputLines(
             "in/TestApp.java",
@@ -109,7 +108,7 @@ public class WakelockReleasedDangerouslyTest {
   }
 
   @Test
-  public void dangerousWakelockRelease_lambda_refactoring() throws IOException {
+  public void dangerousWakelockRelease_lambda_refactoring() {
     refactoringHelper
         .addInputLines(
             "in/TestApp.java",

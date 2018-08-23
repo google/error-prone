@@ -34,7 +34,7 @@ public final class EqualsGetClassTest {
       CompilationTestHelper.newInstance(EqualsGetClass.class, getClass());
 
   @Test
-  public void fixes_inline() throws Exception {
+  public void fixes_inline() {
     BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass())
         .addInputLines(
             "Test.java",
@@ -56,7 +56,7 @@ public final class EqualsGetClassTest {
   }
 
   @Test
-  public void fixes_extraParens() throws Exception {
+  public void fixes_extraParens() {
     BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass())
         .addInputLines(
             "Test.java",
@@ -78,7 +78,7 @@ public final class EqualsGetClassTest {
   }
 
   @Test
-  public void fixes_separateNullCheck() throws Exception {
+  public void fixes_separateNullCheck() {
     BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass())
         .addInputLines(
             "Test.java",

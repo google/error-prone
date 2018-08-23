@@ -34,17 +34,17 @@ public class ArrayToStringTest {
   }
 
   @Test
-  public void testPositiveCase() throws Exception {
+  public void testPositiveCase() {
     compilationHelper.addSourceFile("ArrayToStringPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() throws Exception {
+  public void testNegativeCase() {
     compilationHelper.addSourceFile("ArrayToStringNegativeCases.java").doTest();
   }
 
   @Test
-  public void stringConcat() throws Exception {
+  public void stringConcat() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -61,7 +61,7 @@ public class ArrayToStringTest {
   }
 
   @Test
-  public void printString() throws Exception {
+  public void printString() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -80,7 +80,7 @@ public class ArrayToStringTest {
   }
 
   @Test
-  public void negativePrintString() throws Exception {
+  public void negativePrintString() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -93,7 +93,7 @@ public class ArrayToStringTest {
   }
 
   @Test
-  public void stringBuilder() throws Exception {
+  public void stringBuilder() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -107,22 +107,22 @@ public class ArrayToStringTest {
   }
 
   @Test
-  public void testPositiveCompoundAssignment() throws Exception {
+  public void testPositiveCompoundAssignment() {
     compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCompoundAssignment() throws Exception {
+  public void testNegativeCompoundAssignment() {
     compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPositiveConcat() throws Exception {
+  public void testPositiveConcat() {
     compilationHelper.addSourceFile("ArrayStringConcatenationPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeConcat() throws Exception {
+  public void testNegativeConcat() {
     compilationHelper.addSourceFile("ArrayStringConcatenationNegativeCases.java").doTest();
   }
 }
