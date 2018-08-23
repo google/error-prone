@@ -86,6 +86,10 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
     if (classTree == null || classTree.getModifiers().getFlags().contains(Modifier.FINAL)) {
       return Description.NO_MATCH;
     }
+    ClassSymbol classSymbol = getSymbol(classTree);
+    if (classSymbol == null || classSymbol.isAnonymous()) {
+      return Description.NO_MATCH;
+    }
     MethodTree methodTree = (MethodTree) methodTreePath.getLeaf();
     if (!equalsMethodDeclaration().matches(methodTree, state)) {
       return Description.NO_MATCH;
