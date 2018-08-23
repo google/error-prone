@@ -44,6 +44,7 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -177,13 +178,17 @@ public class BugCheckerRefactoringTestHelper {
     return this;
   }
 
-  public void doTest() throws IOException {
+  public void doTest() {
     this.doTest(TestMode.AST_MATCH);
   }
 
-  public void doTest(TestMode testMode) throws IOException {
+  public void doTest(TestMode testMode) {
     for (Map.Entry<JavaFileObject, JavaFileObject> entry : sources.entrySet()) {
-      runTestOnPair(entry.getKey(), entry.getValue(), testMode);
+      try {
+        runTestOnPair(entry.getKey(), entry.getValue(), testMode);
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
     }
   }
 
@@ -284,11 +289,10 @@ public class BugCheckerRefactoringTestHelper {
       this.input = input;
     }
 
-    public BugCheckerRefactoringTestHelper addOutputLines(String path, String... output)
-        throws IOException {
+    public BugCheckerRefactoringTestHelper addOutputLines(String path, String... output) {
       String outputPath = getPath("out/", path);
       if (fileManager.exists(outputPath)) {
-        throw new FileAlreadyExistsException(outputPath);
+        throw new UncheckedIOException(new FileAlreadyExistsException(outputPath));
       }
       return addInputAndOutput(input, fileManager.forSourceLines(outputPath, output));
     }
