@@ -185,6 +185,22 @@ public final class EqualsGetClassTest {
   }
 
   @Test
+  public void negative_anonymous() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  Object foo = new Object() {",
+            "    @Override public boolean equals(Object o) {",
+            "      if (o == null) { return false; }",
+            "      return o.getClass() == getClass();",
+            "    }",
+            "  };",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative_notOnParameter() {
     helper
         .addSourceLines(
