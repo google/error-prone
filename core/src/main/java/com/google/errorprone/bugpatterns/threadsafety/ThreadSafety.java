@@ -178,6 +178,11 @@ public final class ThreadSafety {
      * Annotations that will cause a class to be tested with this {@link ThreadSafety} instance; for
      * example, when testing a class for immutability, this should be @Immutable.
      */
+    public Builder markerAnnotations(Set<String> markerAnnotations) {
+      return markerAnnotations(ImmutableSet.copyOf(markerAnnotations));
+    }
+
+    // TODO(ringwalt): Remove this constructor. We need it for binary compatibility.
     public Builder markerAnnotations(ImmutableSet<String> markerAnnotations) {
       checkNotNull(markerAnnotations);
       this.markerAnnotations = markerAnnotations;
@@ -190,6 +195,11 @@ public final class ThreadSafety {
      * annotation, @Immutable would be included in this list, as an immutable class is by definition
      * thread-safe.
      */
+    public Builder acceptedAnnotations(Set<String> acceptedAnnotations) {
+      return acceptedAnnotations(ImmutableSet.copyOf(acceptedAnnotations));
+    }
+
+    // TODO(ringwalt): Remove this constructor. We need it for binary compatibility.
     public Builder acceptedAnnotations(ImmutableSet<String> acceptedAnnotations) {
       checkNotNull(acceptedAnnotations);
       this.acceptedAnnotations = acceptedAnnotations;
