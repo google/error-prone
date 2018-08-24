@@ -343,7 +343,6 @@ public class Matchers {
     return new ConstructorOfClass(matchType, constructorMatcher);
   }
 
-  // TODO(cushon): expunge
   public static Matcher<MethodInvocationTree> methodSelect(
       Matcher<ExpressionTree> methodSelectMatcher) {
     return new MethodInvocationMethodSelect(methodSelectMatcher);
@@ -911,7 +910,6 @@ public class Matchers {
    *
    * @param methodName The name of the method to match, e.g., "equals"
    */
-  // TODO(cushon): expunge
   public static Matcher<MethodTree> methodIsNamed(final String methodName) {
     return new Matcher<MethodTree>() {
       @Override
@@ -1126,7 +1124,9 @@ public class Matchers {
    *     "java.util.Map"
    * @param methodName The name of the method to match, including arguments, e.g.,
    *     "get(java.lang.Object)"
+   * @deprecated prefer {@link MethodMatchers#instanceMethod}
    */
+  @Deprecated
   // TODO(cushon): expunge
   public static Matcher<ExpressionTree> isDescendantOfMethod(
       String fullClassName, String methodName) {
