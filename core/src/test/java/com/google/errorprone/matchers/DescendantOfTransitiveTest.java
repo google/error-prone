@@ -16,20 +16,23 @@
 
 package com.google.errorprone.matchers;
 
-import static org.hamcrest.CoreMatchers.is;
+import static com.google.common.truth.Truth.assertThat;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Locale.ENGLISH;
 
-import com.google.errorprone.BaseErrorProneCompiler;
+import com.google.common.collect.ImmutableList;
+import com.google.errorprone.BaseErrorProneJavaCompiler;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-import com.sun.tools.javac.main.Main.Result;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.StandardLocation;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,10 +41,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * NOTE(cushon): This test does two rounds of compilation and relies on the first round producing
- * classes that appear on the second round's class path. I'm not aware of any good ways to do this
- * without creating actual files on disk.
- *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
@@ -62,17 +61,23 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
     filesToCompile.add(source.getAbsolutePath());
   }
 
-  private void assertCompilesWithLocalDisk(Scanner scanner) {
-    List<String> args = new ArrayList<String>();
-    args.add("-cp");
-    args.add(tempDir.getRoot().getAbsolutePath());
-    args.add("-d");
-    args.add(tempDir.getRoot().getAbsolutePath());
-    args.addAll(filesToCompile);
-
-    BaseErrorProneCompiler compiler =
-        BaseErrorProneCompiler.builder().report(ScannerSupplier.fromScanner(scanner)).build();
-    Assert.assertThat(compiler.run(args.toArray(new String[0])), is(Result.OK));
+  private void assertCompilesWithLocalDisk(Scanner scanner) throws IOException {
+    BaseErrorProneJavaCompiler compiler =
+        new BaseErrorProneJavaCompiler(ScannerSupplier.fromScanner(scanner));
+    StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, ENGLISH, UTF_8);
+    fileManager.setLocation(StandardLocation.CLASS_PATH, ImmutableList.of(tempDir.getRoot()));
+    fileManager.setLocation(StandardLocation.CLASS_OUTPUT, ImmutableList.of(tempDir.getRoot()));
+    assertThat(
+            compiler
+                .getTask(
+                    /* out= */ null,
+                    fileManager,
+                    /* diagnosticListener= */ null,
+                    /* options= */ ImmutableList.of(),
+                    /* classes= */ null,
+                    fileManager.getJavaFileObjects(filesToCompile.toArray(new String[0])))
+                .call())
+        .isTrue();
   }
 
   @Override
@@ -101,8 +106,17 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
 
   @Test
   public void shouldMatchTransitively() throws Exception {
-    writeFileToLocalDisk("I1.java", "package i;", "public interface I1 {", "  void count();", "}");
-    writeFileToLocalDisk("I2.java", "package i;", "public interface I2 extends I1 {", "}");
+    writeFileToLocalDisk(
+        "I1.java", //
+        "package i;",
+        "public interface I1 {",
+        "  void count();",
+        "}");
+    writeFileToLocalDisk(
+        "I2.java", //
+        "package i;",
+        "public interface I2 extends I1 {",
+        "}");
     writeFileToLocalDisk(
         "B.java",
         "package b;",
@@ -113,7 +127,12 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
     assertCompilesWithLocalDisk(new Scanner());
     clearSourceFiles();
     writeFileToLocalDisk(
-        "C.java", "public class C {", "  public void test(b.B b) {", "    b.count();", "  }", "}");
+        "C.java", //
+        "public class C {",
+        "  public void test(b.B b) {",
+        "    b.count();",
+        "  }",
+        "}");
     assertCompilesWithLocalDisk(
         memberSelectMatches(/* shouldMatch= */ true, new DescendantOf("i.I1", "count()")));
   }
