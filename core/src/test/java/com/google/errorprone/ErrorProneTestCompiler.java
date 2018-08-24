@@ -23,45 +23,56 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
+import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 
-/** Wraps {@link com.google.errorprone.ErrorProneCompiler}. */
+/** Wraps {@link com.google.errorprone.ErrorProneJavaCompiler}. */
 public class ErrorProneTestCompiler {
 
-  /** Wraps {@link com.google.errorprone.ErrorProneCompiler.Builder} */
+  /** {@link ErrorProneTestCompiler.Builder} */
   public static class Builder {
 
-    final BaseErrorProneCompiler.Builder wrappedCompilerBuilder = BaseErrorProneCompiler.builder();
+    private DiagnosticListener<? super JavaFileObject> listener;
+    private ScannerSupplier scannerSupplier;
+    private PrintWriter printWriter;
 
     public ErrorProneTestCompiler build() {
-      return new ErrorProneTestCompiler(wrappedCompilerBuilder.build());
+      return new ErrorProneTestCompiler(listener, scannerSupplier, printWriter);
     }
 
     public Builder listenToDiagnostics(DiagnosticListener<? super JavaFileObject> listener) {
-      wrappedCompilerBuilder.listenToDiagnostics(listener);
+      this.listener = listener;
       return this;
     }
 
     public Builder report(ScannerSupplier scannerSupplier) {
-      wrappedCompilerBuilder.report(scannerSupplier);
+      this.scannerSupplier = scannerSupplier;
       return this;
     }
 
     public Builder redirectOutputTo(PrintWriter printWriter) {
-      wrappedCompilerBuilder.redirectOutputTo(printWriter);
+      this.printWriter = printWriter;
       return this;
     }
   }
 
-  private final BaseErrorProneCompiler compiler;
+  private final DiagnosticListener<? super JavaFileObject> listener;
+  private final ScannerSupplier scannerSupplier;
+  private final PrintWriter printWriter;
+
   private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
+
+  public ErrorProneTestCompiler(
+      DiagnosticListener<? super JavaFileObject> listener,
+      ScannerSupplier scannerSupplier,
+      PrintWriter printWriter) {
+    this.listener = listener;
+    this.scannerSupplier = scannerSupplier;
+    this.printWriter = printWriter;
+  }
 
   public ErrorProneInMemoryFileManager fileManager() {
     return fileManager;
-  }
-
-  private ErrorProneTestCompiler(BaseErrorProneCompiler compiler) {
-    this.compiler = compiler;
   }
 
   public Result compile(List<JavaFileObject> sources) {
@@ -83,6 +94,12 @@ public class ErrorProneTestCompiler {
           CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
       args = processedArgs.toArray(new String[0]);
     }
-    return compiler.run(args, fileManager, sources, processors);
+    CompilationTask task =
+        new BaseErrorProneJavaCompiler(scannerSupplier)
+            .getTask(printWriter, fileManager, listener, Arrays.asList(args), null, sources);
+    if (processors != null) {
+      task.setProcessors(processors);
+    }
+    return task.call() ? Result.OK : Result.ERROR;
   }
 }

@@ -20,6 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static org.junit.Assert.assertThrows;
 
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -126,11 +127,13 @@ public class CommandLineFlagTest {
             "-Xep:", // no check name
             "-Xep:Foo:FJDKFJSD"); // nonexistent severity level
 
-    Result exitCode;
     for (String badArg : badArgs) {
-      exitCode = compiler.compile(new String[] {badArg}, Collections.<JavaFileObject>emptyList());
-      assertThat(exitCode).isEqualTo(Result.CMDERR);
-      assertThat(output.toString()).contains("invalid flag");
+      InvalidCommandLineOptionException expected =
+          assertThrows(
+              InvalidCommandLineOptionException.class,
+              () ->
+                  compiler.compile(new String[] {badArg}, Collections.<JavaFileObject>emptyList()));
+      assertThat(expected).hasMessageThat().contains("invalid flag");
     }
   }
 
@@ -225,9 +228,11 @@ public class CommandLineFlagTest {
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
-    Result exitCode = compiler.compile(new String[] {"-Xep:NondisableableChecker:OFF"}, sources);
-    assertThat(output.toString()).contains("NondisableableChecker may not be disabled");
-    assertThat(exitCode).isEqualTo(Result.CMDERR);
+    InvalidCommandLineOptionException expected =
+        assertThrows(
+            InvalidCommandLineOptionException.class,
+            () -> compiler.compile(new String[] {"-Xep:NondisableableChecker:OFF"}, sources));
+    assertThat(expected).hasMessageThat().contains("NondisableableChecker may not be disabled");
   }
 
   @Test
@@ -243,9 +248,11 @@ public class CommandLineFlagTest {
             "-Xep:BogusChecker");
 
     for (String badOption : badOptions) {
-      Result exitCode = compiler.compile(new String[] {badOption}, sources);
-      assertThat(exitCode).isEqualTo(Result.CMDERR);
-      assertThat(output.toString()).contains("BogusChecker is not a valid checker name");
+      InvalidCommandLineOptionException expected =
+          assertThrows(
+              InvalidCommandLineOptionException.class,
+              () -> compiler.compile(new String[] {badOption}, sources));
+      assertThat(expected).hasMessageThat().contains("BogusChecker is not a valid checker name");
     }
   }
 
@@ -256,9 +263,11 @@ public class CommandLineFlagTest {
     List<JavaFileObject> sources =
         compiler.fileManager().forResources(getClass(), "CommandLineFlagTestFile.java");
 
-    Result exitCode = compiler.compile(new String[] {"-Xep:foo:OFF"}, sources);
-    assertThat(exitCode).isEqualTo(Result.CMDERR);
-    assertThat(output.toString()).contains("foo is not a valid checker name");
+    InvalidCommandLineOptionException expected =
+        assertThrows(
+            InvalidCommandLineOptionException.class,
+            () -> compiler.compile(new String[] {"-Xep:foo:OFF"}, sources));
+    assertThat(expected).hasMessageThat().contains("foo is not a valid checker name");
   }
 
   @Test
