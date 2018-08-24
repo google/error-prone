@@ -39,7 +39,13 @@ import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 
-/** An Error Prone compiler that matches the interface of {@link com.sun.tools.javac.Main}. */
+/**
+ * An Error Prone compiler that matches the interface of {@link com.sun.tools.javac.Main}.
+ *
+ * @deprecated prefer {@link BaseErrorProneJavaCompiler}, which implements the standard {@code
+ *     javax.tools.JavacCompiler} interface.
+ */
+@Deprecated
 public class BaseErrorProneCompiler {
 
   private final DiagnosticListener<? super JavaFileObject> diagnosticListener;

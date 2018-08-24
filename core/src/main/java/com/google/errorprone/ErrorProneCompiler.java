@@ -31,7 +31,10 @@ import javax.tools.JavaFileObject;
  * <p>Used by plexus-java-compiler-errorprone.
  *
  * @author alexeagle@google.com (Alex Eagle)
+ * @deprecated prefer {@link ErrorProneJavaCompiler}, which implements the standard {@code
+ *     javax.tools.JavacCompiler} interface.
  */
+@Deprecated
 public class ErrorProneCompiler {
 
   /**
