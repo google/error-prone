@@ -41,7 +41,7 @@ import java.util.List;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "AssertThrowsMultipleStatements",
-    summary = "The lambda passed to assertThows should contain exactly one statement",
+    summary = "The lambda passed to assertThrows should contain exactly one statement",
     severity = SeverityLevel.WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AssertThrowsMultipleStatements extends BugChecker
