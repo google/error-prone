@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,8 @@ import org.junit.Ignore;
 public final class ModifiedButNotUsedTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ModifiedButNotUsed.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new ModifiedButNotUsed(), getClass());
 
   @Test
   public void positive() {
@@ -50,6 +53,39 @@ public final class ModifiedButNotUsedTest {
             "    bar = new ArrayList<>();",
             "    bar.add(1);",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void sideEffectFreeRefactoring() throws Exception {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "    List<Integer> foo = new ArrayList<>();",
+            "    foo.add(1);",
+            "    List<Integer> bar = new ArrayList<>();",
+            "    bar.add(sideEffects());",
+            "    List<Integer> baz;",
+            "    baz = new ArrayList<>();",
+            "    bar.add(sideEffects());",
+            "  }",
+            "  int sideEffects() { return 1; }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "    sideEffects();",
+            "    sideEffects();",
+            "  }",
+            "  int sideEffects() { return 1; }",
             "}")
         .doTest();
   }
@@ -155,6 +191,36 @@ public final class ModifiedButNotUsedTest {
             "        // BUG: Diagnostic contains:",
             "        TestProtoMessage.getDefaultInstance().toBuilder().clearMessage();",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  @Ignore("b/74365407 test proto sources are broken")
+  public void protoSideEffects() throws Exception {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void foo() {",
+            "    TestProtoMessage.Builder proto = TestProtoMessage.newBuilder();",
+            "    TestFieldProtoMessage.Builder builder = TestFieldProtoMessage.newBuilder();",
+            "    proto.setMessage(builder).setMessage(sideEffects());",
+            "  }",
+            "  TestFieldProtoMessage sideEffects() { throw new UnsupportedOperationException(); }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void foo() {",
+            "    TestFieldProtoMessage.Builder builder = TestFieldProtoMessage.newBuilder();",
+            "    sideEffects();",
+            "  }",
+            "  TestFieldProtoMessage sideEffects() { throw new UnsupportedOperationException(); }",
             "}")
         .doTest();
   }

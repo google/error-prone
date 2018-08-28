@@ -16,6 +16,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -26,18 +27,23 @@ import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static java.util.stream.Collectors.joining;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.IsSubtypeOf;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.type.DescendantOfAny;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SideEffectAnalysis;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -45,11 +51,12 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -213,27 +220,38 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
     if (!COLLECTION_TYPE.matches(tree, state) && !PROTO_TYPE.matches(tree, state)) {
       return NO_MATCH;
     }
-    List<ExpressionTree> initializers = new ArrayList<>();
+    List<TreePath> initializers = new ArrayList<>();
     if (tree.getInitializer() == null) {
-      new TreeScanner<Void, Void>() {
+      new TreePathScanner<Void, Void>() {
         @Override
         public Void visitAssignment(AssignmentTree node, Void aVoid) {
           if (symbol.equals(getSymbol(node.getVariable()))) {
-            initializers.add(node.getExpression());
+            initializers.add(new TreePath(getCurrentPath(), node.getExpression()));
           }
           return super.visitAssignment(node, aVoid);
         }
-      }.scan(state.getPath().getParentPath().getLeaf(), null);
+      }.scan(state.getPath().getParentPath(), null);
     } else {
-      initializers.add(tree.getInitializer());
+      initializers.add(new TreePath(state.getPath(), tree.getInitializer()));
     }
-    initializers.removeIf(i -> !NEW_COLLECTION.matches(i, state) && !newFluentChain(i, state));
-    if (initializers.isEmpty()) {
+    if (initializers.size() != 1) {
+      return NO_MATCH;
+    }
+    TreePath initializerPath = getOnlyElement(initializers);
+    ExpressionTree initializer = (ExpressionTree) initializerPath.getLeaf();
+    if (!NEW_COLLECTION.matches(initializer, state) && !newFluentChain(initializer, state)) {
       return NO_MATCH;
     }
     UnusedScanner isUnusedScanner = new UnusedScanner(symbol, state, getMatcher(tree, state));
     isUnusedScanner.scan(state.getPath().getParentPath(), null);
-    return isUnusedScanner.isUnused ? describeMatch(initializers.get(0)) : NO_MATCH;
+    if (isUnusedScanner.isUsed) {
+      return NO_MATCH;
+    }
+    ImmutableList<TreePath> removals =
+        tree.getInitializer() == null
+            ? ImmutableList.of(state.getPath(), initializerPath)
+            : ImmutableList.of(initializerPath);
+    return buildDescription(initializer).addAllFixes(isUnusedScanner.buildFixes(removals)).build();
   }
 
   private static Matcher<IdentifierTree> getMatcher(Tree tree, VisitorState state) {
@@ -247,7 +265,9 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
     private final VisitorState state;
     private final Matcher<IdentifierTree> matcher;
 
-    private boolean isUnused = true;
+    private final List<TreePath> usageSites = new ArrayList<>();
+
+    private boolean isUsed = false;
 
     private UnusedScanner(Symbol symbol, VisitorState state, Matcher<IdentifierTree> matcher) {
       this.symbol = symbol;
@@ -256,33 +276,74 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
     }
 
     @Override
-    public Void visitIdentifier(IdentifierTree identifierTree, Void aVoid) {
+    public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
       if (!Objects.equals(getSymbol(identifierTree), symbol)) {
         return null;
       }
       if (matcher.matches(identifierTree, state.withPath(getCurrentPath()))) {
-        isUnused = false;
+        isUsed = true;
         return null;
       }
+      usageSites.add(getCurrentPath());
       return null;
     }
 
     @Override
-    public Void visitVariable(VariableTree variableTree, Void aVoid) {
+    public Void visitVariable(VariableTree variableTree, Void unused) {
       // Don't count the declaration of the variable as a usage.
       if (Objects.equals(getSymbol(variableTree), symbol)) {
         return null;
       }
-      return super.visitVariable(variableTree, aVoid);
+      return super.visitVariable(variableTree, null);
     }
 
     @Override
-    public Void visitAssignment(AssignmentTree assignmentTree, Void aVoid) {
+    public Void visitAssignment(AssignmentTree assignmentTree, Void unused) {
       // Don't count the LHS of the assignment to the variable as a usage.
       if (Objects.equals(getSymbol(assignmentTree.getVariable()), symbol)) {
-        return scan(assignmentTree.getExpression(), aVoid);
+        return scan(assignmentTree.getExpression(), null);
       }
-      return super.visitAssignment(assignmentTree, aVoid);
+      return super.visitAssignment(assignmentTree, null);
+    }
+
+    private ImmutableList<SuggestedFix> buildFixes(List<TreePath> removals) {
+      boolean encounteredSideEffects = false;
+      SuggestedFix.Builder withoutSideEffects =
+          SuggestedFix.builder().setShortDescription("remove unused variable and any side effects");
+      SuggestedFix.Builder withSideEffects =
+          SuggestedFix.builder().setShortDescription("remove unused variable");
+      for (TreePath usageSite : Iterables.concat(removals, usageSites)) {
+        List<String> keepingSideEffects = new ArrayList<>();
+        for (TreePath path = usageSite;
+            !(path.getLeaf() instanceof StatementTree);
+            path = path.getParentPath()) {
+          List<? extends ExpressionTree> arguments;
+          if (path.getLeaf() instanceof MethodInvocationTree) {
+            arguments = ((MethodInvocationTree) path.getLeaf()).getArguments();
+          } else if (path.getLeaf() instanceof NewClassTree) {
+            arguments = ((NewClassTree) path.getLeaf()).getArguments();
+          } else {
+            continue;
+          }
+          arguments.stream()
+              .filter(SideEffectAnalysis::hasSideEffect)
+              .map(e -> state.getSourceForNode(e) + ";")
+              .forEach(keepingSideEffects::add);
+        }
+        StatementTree enclosingStatement =
+            state.withPath(usageSite).findEnclosing(StatementTree.class);
+        if (!keepingSideEffects.isEmpty()) {
+          encounteredSideEffects = true;
+          withSideEffects.replace(
+              enclosingStatement, keepingSideEffects.stream().collect(joining("")));
+        } else {
+          withSideEffects.replace(enclosingStatement, "");
+        }
+        withoutSideEffects.replace(enclosingStatement, "");
+      }
+      return encounteredSideEffects
+          ? ImmutableList.of(withSideEffects.build(), withoutSideEffects.build())
+          : ImmutableList.of(withoutSideEffects.build());
     }
   }
 
