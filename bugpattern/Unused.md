@@ -15,7 +15,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: unused, UnusedParameters_
 
 ## The problem
-
+The presence of an unused declaration may indicate a bug.
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("Unused")` to the enclosing element.
+
+Suppress false positives by adding the suppression annotation
+`@SuppressWarnings("unused")` to the enclosing element.
+

@@ -112,9 +112,13 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">SuppressionHelper</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">Encapsulates the logic of handling suppressions, both via <code>@SuppressWarnings</code> and via
- custom suppression annotations. To do this we have to maintains 2 sets of suppression info: 1) A
- set of the suppression strings in all <code>@Suppresswarnings</code> annotations down this path of the
- AST. 2) A set of all custom suppression annotations down this path of the AST.</div>
+ custom suppression annotations. To do this we have to maintains 2 sets of suppression info:
+
+ <ol>
+   <li>A set of the suppression strings in all <code>@SuppressWarnings</code> annotations down this
+       path of the AST.
+   <li>A set of all custom suppression annotations down this path of the AST.
+ </ol></div>
 </li>
 </ul>
 </div>

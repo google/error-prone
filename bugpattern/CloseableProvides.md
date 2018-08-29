@@ -166,7 +166,7 @@ public class CloseableProvidesPositiveCases {
 
   @Provides
   // BUG: Diagnostic contains: CloseableProvides
-  ImplementsClosable providesImplementsClosable() throws Exception {
+  ImplementsClosable providesImplementsClosable() {
     return new ImplementsClosable();
   }
 
@@ -214,13 +214,13 @@ public class CloseableProvidesNegativeCases {
   }
 
   @Provides
-  DoesNotImplementsClosable providesDoesNotImplementsClosable() throws Exception {
+  DoesNotImplementsClosable providesDoesNotImplementsClosable() {
     return new DoesNotImplementsClosable();
   }
 
   @Provides
   @Singleton
-  Object providesObject() throws Exception {
+  Object providesObject() {
     return new Object();
   }
 }

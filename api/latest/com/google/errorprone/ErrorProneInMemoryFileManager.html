@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -225,26 +225,30 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneInMemoryFileManager.html#exists-java.lang.String-">exists</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html?is-external=true" title="class or interface in java.nio.file">FileSystem</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneInMemoryFileManager.html#fileSystem--">fileSystem</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneInMemoryFileManager.html#forResource-java.lang.Class-java.lang.String-">forResource</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;clazz,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)</code>
 <div class="block">Loads a resource of the provided class into a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools"><code>JavaFileObject</code></a>.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneInMemoryFileManager.html#forResource-java.lang.String-">forResource</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)</code>
 <div class="block">Loads a resource of the class passed into the constructor into a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools"><code>JavaFileObject</code></a>.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneInMemoryFileManager.html#forResources-java.lang.Class-java.lang.String...-">forResources</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;clazz,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;fileNames)</code>
 <div class="block">Loads resources of the provided class into <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools"><code>JavaFileObject</code></a>s.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneInMemoryFileManager.html#forSourceLines-java.lang.String-java.lang.String...-">forSourceLines</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName,
               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;lines)</code>
@@ -384,10 +388,19 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <a name="exists-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>exists</h4>
 <pre>public&nbsp;boolean&nbsp;exists(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)</pre>
+</li>
+</ul>
+<a name="fileSystem--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>fileSystem</h4>
+<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html?is-external=true" title="class or interface in java.nio.file">FileSystem</a>&nbsp;fileSystem()</pre>
 </li>
 </ul>
 </li>
