@@ -166,7 +166,9 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
   private static final ImmutableSet<String> LOGGER_VAR_NAME = ImmutableSet.of("logger");
 
   public Unused(ErrorProneFlags flags) {
-    ImmutableSet.Builder<String> methodAnnotationsExemptingParameters = ImmutableSet.builder();
+    ImmutableSet.Builder<String> methodAnnotationsExemptingParameters =
+        ImmutableSet.<String>builder()
+            .add("org.robolectric.annotation.Implementation");
     flags
         .getList("Unused:methodAnnotationsExemptingParameters")
         .ifPresent(methodAnnotationsExemptingParameters::addAll);
