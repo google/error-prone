@@ -18,8 +18,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":10};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":41,"i1":41,"i2":41,"i3":41,"i4":41,"i5":42};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -108,8 +108,12 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <hr>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">prefer <a href="../../../com/google/errorprone/ErrorProneJavaCompiler.html" title="class in com.google.errorprone"><code>ErrorProneJavaCompiler</code></a>, which implements the standard <code>javax.tools.JavacCompiler</code> interface.</span></div>
+</div>
 <br>
-<pre>public class <span class="typeNameLabel">ErrorProneCompiler</span>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
+public class <span class="typeNameLabel">ErrorProneCompiler</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">An Error Prone compiler that matches the interface of <code>Main</code>.
 
@@ -140,7 +144,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></span></code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -152,25 +158,29 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="../../../com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#builder--">builder</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#builder--">builder</a></span>()</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static com.sun.tools.javac.main.Main.Result</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#compile-javax.tools.DiagnosticListener-java.lang.String:A-">compile</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/DiagnosticListener.html?is-external=true" title="class or interface in javax.tools">DiagnosticListener</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;listener,
        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Compiles in-process.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.main.Main.Result</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#compile-java.lang.String:A-">compile</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Programmatic interface to the error-prone Java compiler.</div>
 </td>
 </tr>
@@ -178,18 +188,22 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colFirst"><code>static com.sun.tools.javac.main.Main.Result</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#compile-java.lang.String:A-java.io.PrintWriter-">compile</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args,
        <a href="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html?is-external=true" title="class or interface in java.io">PrintWriter</a>&nbsp;out)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Programmatic interface to the error-prone Java compiler.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#main-java.lang.String:A-">main</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Entry point for compiling Java code with error-prone enabled.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.main.Main.Result</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#run-java.lang.String:A-">run</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneCompiler.html#run-java.lang.String:A-">run</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -220,6 +234,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>main</h4>
 <pre>public static&nbsp;void&nbsp;main(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Entry point for compiling Java code with error-prone enabled. All default checks are run, and
  the compile fails if they find a bug.</div>
 <dl>
@@ -236,6 +251,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h4>compile</h4>
 <pre>public static&nbsp;com.sun.tools.javac.main.Main.Result&nbsp;compile(<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/DiagnosticListener.html?is-external=true" title="class or interface in javax.tools">DiagnosticListener</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&gt;&nbsp;listener,
                                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Compiles in-process.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -253,6 +269,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>compile</h4>
 <pre>public static&nbsp;com.sun.tools.javac.main.Main.Result&nbsp;compile(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Programmatic interface to the error-prone Java compiler.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -270,6 +287,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h4>compile</h4>
 <pre>public static&nbsp;com.sun.tools.javac.main.Main.Result&nbsp;compile(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args,
                                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html?is-external=true" title="class or interface in java.io">PrintWriter</a>&nbsp;out)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Programmatic interface to the error-prone Java compiler.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -287,6 +305,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>builder</h4>
 <pre>public static&nbsp;<a href="../../../com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a>&nbsp;builder()</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </li>
 </ul>
 <a name="run-java.lang.String:A-">
@@ -296,6 +315,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>run</h4>
 <pre>public&nbsp;com.sun.tools.javac.main.Main.Result&nbsp;run(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;args)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </li>
 </ul>
 </li>

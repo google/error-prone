@@ -1,6 +1,6 @@
 ---
 title: AssertThrowsMultipleStatements
-summary: The lambda passed to assertThows should contain exactly one statement
+summary: The lambda passed to assertThrows should contain exactly one statement
 layout: bugpattern
 tags: ''
 severity: WARNING

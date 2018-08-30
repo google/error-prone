@@ -151,13 +151,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UVariableDecl.html#accept-com.sun.source.tree.TreeVisitor-D-">accept(TreeVisitor&lt;R, D&gt;, D)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations-com.google.common.collect.ImmutableSet-">acceptedAnnotations(ImmutableSet&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations-java.util.Set-">acceptedAnnotations(Set&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">Annotations that do *not* cause a class to be tested, but which are treated as valid
  annotations to pass the test; for example, if @ThreadSafe is the marker
  annotation, @Immutable would be included in this list, as an immutable class is by definition
  thread-safe.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations-com.google.common.collect.ImmutableSet-">acceptedAnnotations(ImmutableSet&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow"><span class="typeNameLink">AccessPath</span></a> - Class in <a href="com/google/errorprone/dataflow/package-summary.html">com.google.errorprone.dataflow</a></dt>
 <dd>
 <div class="block">A sequence of field names or autovalue accessors, along with a receiver: either a variable or a
@@ -880,10 +882,13 @@
 </dd>
 <dt><a href="com/google/errorprone/BaseErrorProneCompiler.html" title="class in com.google.errorprone"><span class="typeNameLink">BaseErrorProneCompiler</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
-<div class="block">An Error Prone compiler that matches the interface of <code>Main</code>.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone"><code>BaseErrorProneJavaCompiler</code></a>, which implements the standard <code>javax.tools.JavacCompiler</code> interface.</span></div>
+</div>
 </dd>
 <dt><a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html" title="class in com.google.errorprone"><span class="typeNameLink">BaseErrorProneCompiler.Builder</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">A <a href="com/google/errorprone/BaseErrorProneCompiler.html" title="class in com.google.errorprone"><code>BaseErrorProneCompiler</code></a> builder.</div>
 </dd>
 <dt><a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone"><span class="typeNameLink">BaseErrorProneJavaCompiler</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
@@ -1144,7 +1149,9 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPatternValidator.html#BugPatternValidator--">BugPatternValidator()</a></span> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/BugPatternValidator.html" title="class in com.google.errorprone">BugPatternValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html" title="class in com.google.errorprone">BaseErrorProneCompiler.Builder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.BaseFix.html#build-java.util.List-">build(List&lt;? extends StatementTree&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractExpectedExceptionChecker.BaseFix.html" title="class in com.google.errorprone.bugpatterns">AbstractExpectedExceptionChecker.BaseFix</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.Builder</a></dt>
@@ -1164,7 +1171,9 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/LocalStore.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/LocalStore.Builder.html" title="class in com.google.errorprone.dataflow">LocalStore.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneFlags.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.Builder.html" title="class in com.google.errorprone">ErrorProneFlags.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#build--">build()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
@@ -1190,14 +1199,19 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.html#builder--">builder()</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.html" title="class in com.google.errorprone">BaseErrorProneCompiler</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Returns a <a href="com/google/errorprone/BaseErrorProneCompiler.html" title="class in com.google.errorprone"><code>BaseErrorProneCompiler</code></a> builder.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html#Builder--">Builder()</a></span> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html" title="class in com.google.errorprone">BaseErrorProneCompiler.Builder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#builder--">builder()</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.html#builder--">builder()</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone">ErrorProneCompiler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#Builder--">Builder()</a></span> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -1702,14 +1716,17 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.html#compile-javax.tools.DiagnosticListener-java.lang.String:A-">compile(DiagnosticListener&lt;JavaFileObject&gt;, String[])</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone">ErrorProneCompiler</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Compiles in-process.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.html#compile-java.lang.String:A-">compile(String[])</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone">ErrorProneCompiler</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Programmatic interface to the error-prone Java compiler.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.html#compile-java.lang.String:A-java.io.PrintWriter-">compile(String[], PrintWriter)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone">ErrorProneCompiler</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Programmatic interface to the error-prone Java compiler.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-">compilesWithFix(Fix, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
@@ -2573,10 +2590,14 @@
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone"><span class="typeNameLink">ErrorProneCompiler</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
-<div class="block">An Error Prone compiler that matches the interface of <code>Main</code>.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/ErrorProneJavaCompiler.html" title="class in com.google.errorprone"><code>ErrorProneJavaCompiler</code></a>, which implements the standard <code>javax.tools.JavacCompiler</code> interface.</span></div>
+</div>
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone"><span class="typeNameLink">ErrorProneCompiler.Builder</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneError.html" title="class in com.google.errorprone"><span class="typeNameLink">ErrorProneError</span></a> - Error in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">Wraps an unrecoverable error that occurs during analysis with the source position that triggered
@@ -4908,8 +4929,9 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isDescendantOfMethod-java.lang.String-java.lang.String-">isDescendantOfMethod(String, String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
-<div class="block">Matches an instance method that is a descendant of the instance method specified by the class
- name and method name.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/matchers/method/MethodMatchers.html#instanceMethod--"><code>MethodMatchers.instanceMethod()</code></a></span></div>
+</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#isDirectImplementationOf-java.lang.String-">isDirectImplementationOf(String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -5397,9 +5419,13 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.html#linkUrl--">linkUrl()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html#listenToDiagnostics-javax.tools.DiagnosticListener-">listenToDiagnostics(DiagnosticListener&lt;? super JavaFileObject&gt;)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html" title="class in com.google.errorprone">BaseErrorProneCompiler.Builder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#listenToDiagnostics-javax.tools.DiagnosticListener-">listenToDiagnostics(DiagnosticListener&lt;? super JavaFileObject&gt;)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/LiteByteStringUtf8.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">LiteByteStringUtf8</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/LiteByteStringUtf8.html#LiteByteStringUtf8--">LiteByteStringUtf8()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LiteByteStringUtf8.html" title="class in com.google.errorprone.bugpatterns">LiteByteStringUtf8</a></dt>
@@ -5495,15 +5521,18 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone">ErrorProneCompiler</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Entry point for compiling Java code with error-prone enabled.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#maker--">maker()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations-com.google.common.collect.ImmutableSet-">markerAnnotations(ImmutableSet&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations-java.util.Set-">markerAnnotations(Set&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">Annotations that will cause a class to be tested with this <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> instance; for
  example, when testing a class for immutability, this should be @Immutable.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations-com.google.common.collect.ImmutableSet-">markerAnnotations(ImmutableSet&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/MaskedClassLoader.html" title="class in com.google.errorprone"><span class="typeNameLink">MaskedClassLoader</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">A classloader that allows plugins to access the Error Prone classes from the compiler classpath.</div>
@@ -7868,9 +7897,13 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/RectIntersectReturnValueIgnored.html#RectIntersectReturnValueIgnored--">RectIntersectReturnValueIgnored()</a></span> - Constructor for class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/RectIntersectReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns.android">RectIntersectReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html#redirectOutputTo-java.io.PrintWriter-">redirectOutputTo(PrintWriter)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html" title="class in com.google.errorprone">BaseErrorProneCompiler.Builder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#redirectOutputTo-java.io.PrintWriter-">redirectOutputTo(PrintWriter)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/RedundantThrows.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">RedundantThrows</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/RedundantThrows.html#RedundantThrows--">RedundantThrows()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RedundantThrows.html" title="class in com.google.errorprone.bugpatterns">RedundantThrows</a></dt>
@@ -8037,11 +8070,15 @@
 <div class="block">The source text to appear in the output.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html#report-com.google.errorprone.scanner.ScannerSupplier-">report(ScannerSupplier)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.Builder.html" title="class in com.google.errorprone">BaseErrorProneCompiler.Builder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html#report-com.sun.source.tree.Tree-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation-java.util.Optional-">report(Tree, ThreadSafety.Violation, Optional&lt;SuggestedFix&gt;)</a></span> - Method in interface com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis.ViolationReporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.Builder.html#report-com.google.errorprone.scanner.ScannerSupplier-">report(ScannerSupplier)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.Builder.html" title="class in com.google.errorprone">ErrorProneCompiler.Builder</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/Scanner.html#reportMatch-com.google.errorprone.matchers.Description-com.google.errorprone.VisitorState-">reportMatch(Description, VisitorState)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#reportMatch-com.google.errorprone.matchers.Description-">reportMatch(Description)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
@@ -8144,15 +8181,23 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.TypeCompatibilityReport.html#rhs--">rhs()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.TypeCompatibilityReport.html" title="class in com.google.errorprone.bugpatterns">EqualsIncompatibleType.TypeCompatibilityReport</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.html#run-java.lang.String:A-">run(String[])</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.html" title="class in com.google.errorprone">BaseErrorProneCompiler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.html#run-java.lang.String:A-java.util.List-">run(String[], List&lt;JavaFileObject&gt;)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.html" title="class in com.google.errorprone">BaseErrorProneCompiler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneCompiler.html#run-java.lang.String:A-javax.tools.JavaFileManager-java.util.List-java.lang.Iterable-">run(String[], JavaFileManager, List&lt;JavaFileObject&gt;, Iterable&lt;? extends Processor&gt;)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneCompiler.html" title="class in com.google.errorprone">BaseErrorProneCompiler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BaseErrorProneJavaCompiler.html#run-java.io.InputStream-java.io.OutputStream-java.io.OutputStream-java.lang.String...-">run(InputStream, OutputStream, OutputStream, String...)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneCompiler.html#run-java.lang.String:A-">run(String[])</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone">ErrorProneCompiler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 </dl>
 <a name="I:S">
 <!--   -->

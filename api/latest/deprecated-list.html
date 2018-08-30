@@ -73,12 +73,38 @@
 <h1 title="Deprecated API" class="title">Deprecated API</h1>
 <h2 title="Contents">Contents</h2>
 <ul>
+<li><a href="#class">Deprecated Classes</a></li>
 <li><a href="#method">Deprecated Methods</a></li>
 <li><a href="#constructor">Deprecated Constructors</a></li>
 <li><a href="#annotation.type.member">Deprecated Annotation Type Elements</a></li>
 </ul>
 </div>
-<div class="contentContainer"><a name="method">
+<div class="contentContainer"><a name="class">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<table class="deprecatedSummary" border="0" cellpadding="3" cellspacing="0" summary="Deprecated Classes table, listing deprecated classes, and an explanation">
+<caption><span>Deprecated Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="com/google/errorprone/BaseErrorProneCompiler.html" title="class in com.google.errorprone">com.google.errorprone.BaseErrorProneCompiler</a>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone"><code>BaseErrorProneJavaCompiler</code></a>, which implements the standard <code>javax.tools.JavacCompiler</code> interface.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="com/google/errorprone/ErrorProneCompiler.html" title="class in com.google.errorprone">com.google.errorprone.ErrorProneCompiler</a>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/ErrorProneJavaCompiler.html" title="class in com.google.errorprone"><code>ErrorProneJavaCompiler</code></a>, which implements the standard <code>javax.tools.JavacCompiler</code> interface.</span></div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<a name="method">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -95,16 +121,21 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="com/google/errorprone/matchers/Matchers.html#isDescendantOfMethod-java.lang.String-java.lang.String-">com.google.errorprone.matchers.Matchers.isDescendantOfMethod(String, String)</a>
+<div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/matchers/method/MethodMatchers.html#instanceMethod--"><code>MethodMatchers.instanceMethod()</code></a></span></div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-java.util.Set-com.sun.tools.javac.code.Type-">com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.isThreadSafeType(Set&lt;String&gt;, Type)</a>
 <div class="block"><span class="deprecationComment">use <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType-boolean-java.util.Set-com.sun.tools.javac.code.Type-"><code>ThreadSafety.isThreadSafeType(boolean, Set, Type)</code></a> instead.</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="com/google/errorprone/ErrorProneError.html#logFatalError-com.sun.tools.javac.util.Log-">com.google.errorprone.ErrorProneError.logFatalError(Log)</a>
 <div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/ErrorProneError.html#logFatalError-com.sun.tools.javac.util.Log-com.sun.tools.javac.util.Context-"><code>ErrorProneError.logFatalError(Log, Context)</code></a></span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.DiffCase.html#valueOf-int-">com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.ClassDiff.DiffCase.valueOf(int)</a>
 <div class="block"><span class="deprecationComment">Use <a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.DiffCase.html#forNumber-int-"><code>ApiDiffProto.ClassDiff.DiffCase.forNumber(int)</code></a> instead.</span></div>
 </td>

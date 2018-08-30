@@ -371,7 +371,7 @@ __[AssertEqualsArgumentOrderChecker](bugpattern/AssertEqualsArgumentOrderChecker
 Arguments are swapped in assertEquals-like call
 
 __[AssertThrowsMultipleStatements](bugpattern/AssertThrowsMultipleStatements)__<br>
-The lambda passed to assertThows should contain exactly one statement
+The lambda passed to assertThrows should contain exactly one statement
 
 __[AssertionFailureIgnored](bugpattern/AssertionFailureIgnored)__<br>
 This assertion throws an AssertionError if it fails, which will be caught by an enclosing try block.

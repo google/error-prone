@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -136,49 +136,57 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations-com.google.common.collect.ImmutableSet-">acceptedAnnotations</a></span>(com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations-com.google.common.collect.ImmutableSet-">acceptedAnnotations</a></span>(com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations-java.util.Set-">acceptedAnnotations</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations)</code>
 <div class="block">Annotations that do *not* cause a class to be tested, but which are treated as valid
  annotations to pass the test; for example, if @ThreadSafe is the marker
  annotation, @Immutable would be included in this list, as an immutable class is by definition
  thread-safe.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#build-com.google.errorprone.VisitorState-">build</a></span>(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#containerOfAnnotation-java.lang.Class-">containerOfAnnotation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;containerOfAnnotation)</code>
 <div class="block">An annotation which marks a generic parameter as a container type.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#knownTypes-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes-">knownTypes</a></span>(<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a>&nbsp;knownTypes)</code>
 <div class="block">Information about known types and whether they're known to be safe or unsafe.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations-com.google.common.collect.ImmutableSet-">markerAnnotations</a></span>(com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations-com.google.common.collect.ImmutableSet-">markerAnnotations</a></span>(com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations)</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations-java.util.Set-">markerAnnotations</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations)</code>
 <div class="block">Annotations that will cause a class to be tested with this <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> instance; for
  example, when testing a class for immutability, this should be @Immutable.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#setPurpose-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Purpose-">setPurpose</a></span>(<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Purpose.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Purpose</a>&nbsp;purpose)</code>
 <div class="block">See <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Purpose.html" title="enum in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Purpose</code></a>.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#suppressAnnotation-java.lang.Class-">suppressAnnotation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;suppressAnnotation)</code>
 <div class="block">An annotation which, when found on a class, should suppress the test</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#typeParameterAnnotation-java.lang.Class-">typeParameterAnnotation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;typeParameterAnnotation)</code>
 <div class="block">An annotation which, when found on a type parameter, indicates that the type parameter may
@@ -227,6 +235,17 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Information about known types and whether they're known to be safe or unsafe.</div>
 </li>
 </ul>
+<a name="markerAnnotations-java.util.Set-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>markerAnnotations</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a>&nbsp;markerAnnotations(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations)</pre>
+<div class="block">Annotations that will cause a class to be tested with this <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> instance; for
+ example, when testing a class for immutability, this should be @Immutable.</div>
+</li>
+</ul>
 <a name="markerAnnotations-com.google.common.collect.ImmutableSet-">
 <!--   -->
 </a>
@@ -234,8 +253,19 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>markerAnnotations</h4>
 <pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a>&nbsp;markerAnnotations(com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;markerAnnotations)</pre>
-<div class="block">Annotations that will cause a class to be tested with this <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> instance; for
- example, when testing a class for immutability, this should be @Immutable.</div>
+</li>
+</ul>
+<a name="acceptedAnnotations-java.util.Set-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>acceptedAnnotations</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a>&nbsp;acceptedAnnotations(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations)</pre>
+<div class="block">Annotations that do *not* cause a class to be tested, but which are treated as valid
+ annotations to pass the test; for example, if @ThreadSafe is the marker
+ annotation, @Immutable would be included in this list, as an immutable class is by definition
+ thread-safe.</div>
 </li>
 </ul>
 <a name="acceptedAnnotations-com.google.common.collect.ImmutableSet-">
@@ -245,10 +275,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>acceptedAnnotations</h4>
 <pre>public&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a>&nbsp;acceptedAnnotations(com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;acceptedAnnotations)</pre>
-<div class="block">Annotations that do *not* cause a class to be tested, but which are treated as valid
- annotations to pass the test; for example, if @ThreadSafe is the marker
- annotation, @Immutable would be included in this list, as an immutable class is by definition
- thread-safe.</div>
 </li>
 </ul>
 <a name="containerOfAnnotation-java.lang.Class-">
