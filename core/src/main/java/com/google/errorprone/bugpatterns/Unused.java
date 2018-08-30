@@ -659,16 +659,20 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
         VariableTree variableTree = (VariableTree) statement;
         if (hasSideEffect(((VariableTree) statement).getInitializer())) {
           encounteredSideEffects = true;
-          String newContent = "";
           if (varKind == ElementKind.FIELD) {
-            newContent =
+            String newContent =
                 String.format(
                     "%s{ %s; }",
-                    varSymbol.isStatic() ? "static " : "", variableTree.getInitializer());
+                    varSymbol.isStatic() ? "static " : "",
+                    state.getSourceForNode(variableTree.getInitializer()));
+            fix.merge(replaceWithComments(usagePath, newContent, state));
+            removeSideEffectsFix.replace(statement, "");
+          } else {
+            fix.replace(
+                statement,
+                String.format("%s;", state.getSourceForNode(variableTree.getInitializer())));
+            removeSideEffectsFix.replace(statement, "");
           }
-          SuggestedFix replacement = replaceWithComments(usagePath, newContent, state);
-          fix.merge(replacement);
-          removeSideEffectsFix.merge(replacement);
         } else if (isEnhancedForLoopVar(usagePath)) {
           String newContent =
               String.format(

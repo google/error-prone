@@ -16,6 +16,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.ErrorProneFlags;
@@ -662,6 +663,54 @@ public class UnusedTest {
             "  @Inject Object foo;",
             "  @Inject public Object bar;",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void variableKeepingSideEffects() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  private final ImmutableList<Integer> foo = ImmutableList.of();",
+            "  void test() {",
+            "     ImmutableList<Integer> foo = ImmutableList.of();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  { ImmutableList.of(); }",
+            "  void test() {",
+            "     ImmutableList.of();",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void variableRemovingSideEffects() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  private final ImmutableList<Integer> foo = ImmutableList.of();",
+            "  void test() {",
+            "     ImmutableList<Integer> foo = ImmutableList.of();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  void test() {",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 }
