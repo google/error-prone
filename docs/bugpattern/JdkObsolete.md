@@ -37,8 +37,8 @@ If a synchronized collection is necessary, use a data structure from
 `java.util.concurrent`.
 
 When migrating from `Stack` to `Deque`, note that the `Stack` methods
-`push`/`pop`/`peek` correspond to the `Deque` methods
-`addFirst`/`removeFirst`/`peekFirst`.
+`push`/`pop`/`peek`/`add`/`iterator` correspond to the `Deque` methods
+`addFirst`/`removeFirst`/`peekFirst`/`addFirst`/`descendingIterator`.
 
 ## `StringBuffer`
 
