@@ -713,4 +713,16 @@ public class UnusedTest {
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
+
+  @Test
+  public void exemptedFieldsByType() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import org.junit.rules.TestRule;",
+            "class Test {",
+            "  private TestRule rule;",
+            "}")
+        .doTest();
+  }
 }
