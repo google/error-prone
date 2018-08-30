@@ -3,7 +3,7 @@ calling `getClass()` returns a synthetic subclass of the enum. To retrieve
 the type of the enum, use `getDeclaringClass()`.
 
 In the following example, `Binop.MULT.getClass()` returns the anonymous class
-`Binop$2`, while `Binop.MULTI.getDeclaringClass()` returns the class `Binop`.
+`Binop$2`, while `Binop.MULT.getDeclaringClass()` returns the class `Binop`.
 
 ```java
 enum Binop {
