@@ -20,6 +20,7 @@ import static com.google.common.collect.Multimaps.toMultimap;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static java.util.stream.Collectors.joining;
 
@@ -56,6 +57,7 @@ import javax.lang.model.element.Name;
     category = JDK,
     severity = SUGGESTION,
     linkType = CUSTOM,
+    tags = STYLE,
     link = "https://google.github.io/styleguide/javaguide.html#s3.4.2.1-overloads-never-split"
     )
 public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
