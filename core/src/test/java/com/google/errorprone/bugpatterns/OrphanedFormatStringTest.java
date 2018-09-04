@@ -42,7 +42,7 @@ public class OrphanedFormatStringTest {
             "    // BUG: Diagnostic contains:",
             "    new StringBuilder(\"%s\");",
             "    // BUG: Diagnostic contains:",
-            "    new StringBuilder().append(\"%s\");",
+            "    new StringBuilder().append(\"%s\", 0, 0);",
             "  }",
             "}")
         .doTest();
@@ -63,6 +63,9 @@ public class OrphanedFormatStringTest {
             "    String s = \"%s\";",
             "    new FormatException(\"%s\");",
             "    System.err.printf(\"%s\");",
+            "  }",
+            "  void appendToStringBuilder(StringBuilder b) {",
+            "    b.append(\"%s\");",
             "  }",
             "}")
         .doTest();
