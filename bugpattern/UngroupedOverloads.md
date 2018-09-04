@@ -2,7 +2,7 @@
 title: UngroupedOverloads
 summary: Constructors and methods with the same name should appear sequentially with no other code in between. Please re-order or re-name methods.
 layout: bugpattern
-tags: ''
+tags: Style
 severity: SUGGESTION
 providesFix: NO_FIX
 ---

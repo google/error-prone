@@ -391,6 +391,9 @@ Importing nested classes/static methods/static fields with commonly-used names c
 __[BadInstanceof](bugpattern/BadInstanceof)__<br>
 instanceof used in a way that is equivalent to a null check.
 
+__[BigDecimalEquals](bugpattern/BigDecimalEquals)__<br>
+BigDecimal#equals has surprising behavior: it also compares scale.
+
 __[BigDecimalLiteralDouble](bugpattern/BigDecimalLiteralDouble)__<br>
 new BigDecimal(double) loses precision in this case.
 
