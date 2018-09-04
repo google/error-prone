@@ -17,6 +17,7 @@
 package com.google.errorprone.scanner;
 
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.SuppressionHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
@@ -48,9 +49,9 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   // not be available until after the subclass's constructor has run.
   private SuppressionHelper suppressionHelper;
 
-  private void initSuppressionHelper(VisitorState state) {
+  private void initSuppressionHelper() {
     if (suppressionHelper == null) {
-      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations(), state);
+      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
     }
   }
 
@@ -96,7 +97,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     SuppressionHelper.SuppressionInfo prevSuppressionInfo =
         new SuppressionHelper.SuppressionInfo(suppressions, customSuppressions, inGeneratedCode);
 
-    initSuppressionHelper(state);
+    initSuppressionHelper();
 
     Symbol sym = ASTHelpers.getDeclaredSymbol(tree);
     if (sym != null) {
@@ -123,10 +124,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   /**
    * Returns true if this checker should be suppressed on the current tree path.
    *
-   * @param suppressible holds information about the suppressibilty of a checker
+   * @param suppressible holds information about the suppressibility of a checker
    */
-  protected boolean isSuppressed(Suppressible suppressible, VisitorState state) {
-    initSuppressionHelper(state);
+  protected boolean isSuppressed(Suppressible suppressible, ErrorProneOptions errorProneOptions) {
+    initSuppressionHelper();
 
     return SuppressionHelper.isSuppressed(
         suppressible,
@@ -134,7 +135,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
         customSuppressions,
         severityMap().get(suppressible.canonicalName()),
         inGeneratedCode,
-        state.errorProneOptions().disableWarningsInGeneratedCode());
+        errorProneOptions.disableWarningsInGeneratedCode());
   }
 
   /**
