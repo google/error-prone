@@ -332,14 +332,6 @@ public class UnusedTest {
             "  private void notUsedMethod() {}",
             "  // BUG: Diagnostic contains:",
             "  private static void staticNotUsedMethod() {}",
-            "  // BUG: Diagnostic contains:",
-            "  private void writeObject(java.io.ObjectOutputStream out) throws IOException {",
-            "    out.writeInt(123);",
-            "  }",
-            "  private Object readResolve() {",
-            "    return null;",
-            "  }",
-            "  private void readObjectNoData() throws ObjectStreamException {}",
             "  void memberSelectUpdate1() {",
             "    List<Unuseds> l = null;",
             "    // `u` should not be reported as unused.",
@@ -383,6 +375,29 @@ public class UnusedTest {
             "      int local;",
             "    }",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void exemptedMethods() {
+    helper
+        .addSourceLines(
+            "Unuseds.java",
+            "package unusedvars;",
+            "import java.io.IOException;",
+            "import java.io.ObjectStreamException;",
+            "public class Unuseds {",
+            "  private void readObject(java.io.ObjectInputStream in) throws IOException {",
+            "    in.hashCode();",
+            "  }",
+            "  private void writeObject(java.io.ObjectOutputStream out) throws IOException {",
+            "    out.writeInt(123);",
+            "  }",
+            "  private Object readResolve() {",
+            "    return null;",
+            "  }",
+            "  private void readObjectNoData() throws ObjectStreamException {}",
             "}")
         .doTest();
   }

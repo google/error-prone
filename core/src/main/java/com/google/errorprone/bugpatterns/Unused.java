@@ -22,7 +22,9 @@ import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENT
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.isVoidType;
+import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -112,14 +114,15 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
 
   private static final Supplier<Type> OBJECT = Suppliers.typeFromString("java.lang.Object");
 
-  private static final Supplier<Type> OBJECT_OUTPUT_STREAM =
-      Suppliers.typeFromString("java.io.ObjectOutputStream");
-
   /** Method signature of special methods. */
   private static final Matcher<MethodTree> SPECIAL_METHODS =
       anyOf(
-          allOf(methodIsNamed("readObject"), methodReturns(OBJECT_OUTPUT_STREAM)),
-          allOf(methodIsNamed("writeObject"), methodReturns(OBJECT_OUTPUT_STREAM)),
+          allOf(
+              methodIsNamed("readObject"),
+              methodHasParameters(isSameType("java.io.ObjectInputStream"))),
+          allOf(
+              methodIsNamed("writeObject"),
+              methodHasParameters(isSameType("java.io.ObjectOutputStream"))),
           allOf(methodIsNamed("readObjectNoData"), methodReturns(isVoidType())),
           allOf(methodIsNamed("readResolve"), methodReturns(OBJECT)),
           allOf(methodIsNamed("writeReplace"), methodReturns(OBJECT)));
