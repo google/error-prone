@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -34,6 +35,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.method.MethodMatchers.ConstructorMatcher;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
@@ -56,6 +58,7 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
 
   private static final Matcher<MethodTree> AUTO_CLOSEABLE_CONSTRUCTOR_MATCHER =
       allOf(methodIsConstructor(), enclosingClass(isSubtypeOf("java.lang.AutoCloseable")));
+  public static final ConstructorMatcher CONSTRUCTOR = constructor();
 
   /**
    * Check that the {@link MustBeClosed} annotation is only used for constructors of AutoCloseables
@@ -90,6 +93,9 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!HAS_MUST_BE_CLOSED_ANNOTATION.matches(tree, state)) {
+      return NO_MATCH;
+    }
+    if (CONSTRUCTOR.matches(tree, state)) {
       return NO_MATCH;
     }
     return matchNewClassOrMethodInvocation(tree, state);
