@@ -45,10 +45,13 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -128,21 +131,35 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
       // check the enclosing context: calls to Collections.unmodifiable* are now redundant, and
       // if there's an enclosing constant variable declaration we can rewrite its type to Immutable*
       Tree unmodifiable = null;
-      VariableTree enclosingVariable = null;
       boolean constant = false;
+      Tree typeTree = null;
+      Tree toReplace = null;
 
-      for (Tree enclosing : state.getPath().getParentPath()) {
+      for (TreePath path = state.getPath().getParentPath();
+          path != null;
+          path = path.getParentPath()) {
+        Tree enclosing = path.getLeaf();
         if (unmodifiableMatcher.matches(enclosing, state)) {
           unmodifiable = enclosing;
           continue;
         }
+        if (enclosing instanceof ParenthesizedTree) {
+          continue;
+        }
         if (enclosing instanceof VariableTree) {
-          enclosingVariable = (VariableTree) enclosing;
+          VariableTree enclosingVariable = (VariableTree) enclosing;
+          toReplace = enclosingVariable.getInitializer();
+          typeTree = enclosingVariable.getType();
           VarSymbol symbol = ASTHelpers.getSymbol(enclosingVariable);
           constant =
               symbol.isStatic()
                   && symbol.getModifiers().contains(Modifier.FINAL)
                   && symbol.getKind() == ElementKind.FIELD;
+        }
+        if (enclosing instanceof ReturnTree) {
+          toReplace = ((ReturnTree) enclosing).getExpression();
+          MethodTree enclosingMethod = ASTHelpers.findEnclosingNode(path, MethodTree.class);
+          typeTree = enclosingMethod == null ? null : enclosingMethod.getReturnType();
         }
         break;
       }
@@ -172,14 +189,13 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
       if (unmodifiable != null || constant) {
         // there's an enclosing unmodifiable* call, or we're in the initializer of a constant,
         // so rewrite the variable's type to be immutable and drop the unmodifiable* method
-        Tree typeType = enclosingVariable.getType();
-        if (typeType instanceof ParameterizedTypeTree) {
-          typeType = ((ParameterizedTypeTree) typeType).getType();
+        if (typeTree instanceof ParameterizedTypeTree) {
+          typeTree = ((ParameterizedTypeTree) typeTree).getType();
         }
-        fix.replace(typeType, immutableType)
-            .replace(
-                unmodifiable != null ? unmodifiable : enclosingVariable.getInitializer(),
-                replacement);
+        if (typeTree != null) {
+          fix.replace(typeTree, immutableType);
+        }
+        fix.replace(unmodifiable == null ? toReplace : unmodifiable, replacement);
       } else {
         // the result may need to be mutable, so rewrite e.g.
         // `new ArrayList<>() {{ add(1); }}` -> `new ArrayList<>(ImmutableList.of(1));`

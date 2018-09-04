@@ -32,7 +32,7 @@ public class DoubleBraceInitializationTest {
   public void negative() {
     CompilationTestHelper.newInstance(DoubleBraceInitialization.class, getClass())
         .addSourceLines(
-            "Test.java", //
+            "Test.java",
             "import java.util.ArrayList;",
             "import java.util.List;",
             "class Test {",
@@ -61,7 +61,7 @@ public class DoubleBraceInitializationTest {
   public void positiveNoFix() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
+            "in/Test.java",
             "import java.util.ArrayList;",
             "import java.util.List;",
             "// BUG: Diagnostic contains:",
@@ -78,7 +78,7 @@ public class DoubleBraceInitializationTest {
   public void list() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
+            "in/Test.java",
             "import java.util.ArrayList;",
             "import java.util.Collections;",
             "import java.util.List;",
@@ -89,7 +89,7 @@ public class DoubleBraceInitializationTest {
             "  List<Integer> c = new ArrayList<Integer>() {{ add(1); add(2); }};",
             "}")
         .addOutputLines(
-            "out/Test.java", //
+            "out/Test.java",
             "import com.google.common.collect.ImmutableList;",
             "import java.util.ArrayList;",
             "import java.util.Collections;",
@@ -106,7 +106,7 @@ public class DoubleBraceInitializationTest {
   public void set() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
+            "in/Test.java",
             "import java.util.Collections;",
             "import java.util.HashSet;",
             "import java.util.Set;",
@@ -117,7 +117,7 @@ public class DoubleBraceInitializationTest {
             "  Set<Integer> c = new HashSet<Integer>() {{ add(1); add(2); }};",
             "}")
         .addOutputLines(
-            "out/Test.java", //
+            "out/Test.java",
             "import com.google.common.collect.ImmutableSet;",
             "import java.util.Collections;",
             "import java.util.HashSet;",
@@ -134,7 +134,7 @@ public class DoubleBraceInitializationTest {
   public void collection() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
+            "in/Test.java",
             "import java.util.ArrayDeque;",
             "import java.util.Collection;",
             "import java.util.Collections;",
@@ -147,7 +147,7 @@ public class DoubleBraceInitializationTest {
             "  Deque<Integer> c = new ArrayDeque<Integer>() {{ add(1); add(2); }};",
             "}")
         .addOutputLines(
-            "out/Test.java", //
+            "out/Test.java",
             "import com.google.common.collect.ImmutableCollection;",
             "import com.google.common.collect.ImmutableList;",
             "import java.util.ArrayDeque;",
@@ -166,7 +166,7 @@ public class DoubleBraceInitializationTest {
   public void map() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
+            "in/Test.java",
             "import java.util.Collections;",
             "import java.util.HashMap;",
             "import java.util.Map;",
@@ -191,7 +191,7 @@ public class DoubleBraceInitializationTest {
             "  }};",
             "}")
         .addOutputLines(
-            "out/Test.java", //
+            "out/Test.java",
             "import com.google.common.collect.ImmutableMap;",
             "import java.util.Collections;",
             "import java.util.HashMap;",
@@ -220,7 +220,7 @@ public class DoubleBraceInitializationTest {
   public void nulls() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
+            "in/Test.java",
             "import java.util.*;",
             "// BUG: Diagnostic contains:",
             "class Test {",
@@ -230,6 +230,95 @@ public class DoubleBraceInitializationTest {
             "      new HashMap<String, Integer>() {{ put(null, null); }};",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void returned() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "import java.util.HashMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  private Map<String, Object> test() {",
+            "    return Collections.unmodifiableMap(new HashMap<String, Object>() {",
+            "      {}",
+            "    });",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "import java.util.Collections;",
+            "import java.util.HashMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  private ImmutableMap<String, Object> test() {",
+            "    return ImmutableMap.of();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lambda() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "import java.util.HashMap;",
+            "import java.util.Map;",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  private Supplier<Map<String, Object>> test() {",
+            "    return () -> Collections.unmodifiableMap(new HashMap<String, Object>() {",
+            "      {}",
+            "    });",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "import java.util.Collections;",
+            "import java.util.HashMap;",
+            "import java.util.Map;",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  private Supplier<Map<String, Object>> test() {",
+            "    return () -> ImmutableMap.of();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void statement() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "import java.util.HashMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  private void test() {",
+            "    Collections.unmodifiableMap(new HashMap<String, Object>() {",
+            "      {}",
+            "    });",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "import java.util.Collections;",
+            "import java.util.HashMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  private void test() {",
+            "    ImmutableMap.of();",
+            "  }",
+            "}")
         .doTest();
   }
 }
