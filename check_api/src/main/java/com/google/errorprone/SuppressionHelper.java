@@ -51,10 +51,8 @@ public class SuppressionHelper {
   /**
    * @param customSuppressionAnnotations The set of custom suppression annotations that this
    *     SuppressionHelper should look for.
-   * @param state the {@link VisitorState} of the current analysis.
    */
-  public SuppressionHelper(
-      Set<Class<? extends Annotation>> customSuppressionAnnotations, VisitorState state) {
+  public SuppressionHelper(Set<Class<? extends Annotation>> customSuppressionAnnotations) {
     if (customSuppressionAnnotations == null) {
       throw new IllegalArgumentException("customSuppressionAnnotations must be non-null");
     }
