@@ -69,7 +69,7 @@ public class CanBeStaticAnalyzer extends TreeScanner {
   public void visitIdent(JCTree.JCIdent tree) {
     // check for unqualified references to instance members (fields and methods) declared
     // in an enclosing scope
-    if (tree.sym.isStatic()) {
+    if (tree.sym == null || tree.sym.isStatic()) {
       return;
     }
     switch (tree.sym.getKind()) {
