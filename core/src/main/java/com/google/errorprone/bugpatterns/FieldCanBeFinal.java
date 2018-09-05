@@ -101,6 +101,14 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
   private static final ImmutableSet<String> IMPLICIT_VAR_ANNOTATION_SIMPLE_NAMES =
       ImmutableSet.of("NonFinalForTesting", "NotFinalForTesting");
 
+  /** Unary operator kinds that implicitly assign to their operand. */
+  private static final EnumSet<Kind> UNARY_ASSIGNMENT =
+      EnumSet.of(
+          Kind.PREFIX_DECREMENT,
+          Kind.POSTFIX_DECREMENT,
+          Kind.PREFIX_INCREMENT,
+          Kind.POSTFIX_INCREMENT);
+
   /** The initalization context where an assignment occurred. */
   enum InitializationContext {
     /** A class (static) initializer. */
@@ -242,7 +250,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
   }
 
   /** Record assignments to possibly-final variables in a compilation unit. */
-  private static class FinalScanner extends TreePathScanner<Void, InitializationContext> {
+  private class FinalScanner extends TreePathScanner<Void, InitializationContext> {
 
     private final VariableAssignmentRecords writes;
     private final Context context;
@@ -255,7 +263,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     @Override
     public Void visitVariable(VariableTree node, InitializationContext init) {
       VarSymbol sym = ASTHelpers.getSymbol(node);
-      if (sym.getKind() == ElementKind.FIELD) {
+      if (sym.getKind() == ElementKind.FIELD && !isSuppressed(node)) {
         writes.recordDeclaration(sym, node);
       }
       return super.visitVariable(node, InitializationContext.NONE);
@@ -308,7 +316,10 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     public Void visitClass(ClassTree node, InitializationContext init) {
       VisitorState state = new VisitorState(context).withPath(getCurrentPath());
 
-
+      if (isSuppressed(node))
+      {
+        return null;
+      }
       for (String annotation : IMPLICIT_VAR_CLASS_ANNOTATIONS) {
         if (ASTHelpers.hasAnnotation(getSymbol(node), annotation, state)) {
           return null;
@@ -325,14 +336,6 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       writes.recordAssignment(node.getVariable(), init);
       return super.visitCompoundAssignment(node, init);
     }
-
-    /** Unary operator kinds that implicitly assign to their operand. */
-    private static final EnumSet<Kind> UNARY_ASSIGNMENT =
-        EnumSet.of(
-            Kind.PREFIX_DECREMENT,
-            Kind.POSTFIX_DECREMENT,
-            Kind.PREFIX_INCREMENT,
-            Kind.POSTFIX_INCREMENT);
 
     @Override
     public Void visitUnary(UnaryTree node, InitializationContext init) {
