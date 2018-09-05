@@ -18,8 +18,6 @@
     <delete dir="build"/>
     <mkdir dir="build"/>
 
-    <property name="error_prone_core.jar" location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.3.2-SNAPSHOT/error_prone_core-2.3.2-SNAPSHOT-with-dependencies.jar"/>
-    <property name="jformatstring.jar" location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
     <property name="javac.jar" location="${user.home}/.m2/repository/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar"/>
 
     <!-- using github.com/google/error-prone-javac is required when running on JDK 8 -->
@@ -27,10 +25,17 @@
       <javaversion atleast="9"/>
     </condition>
 
+    <path id="processorpath.ref">
+      <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.3.2-SNAPSHOT/error_prone_core-2.3.2-SNAPSHOT-with-dependencies.jar"/>
+      <pathelement location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
+      <!-- Add annotation processors and Error Prone custom checks here if needed -->
+    </path>
+
     <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
       <compilerarg value="-J-Xbootclasspath/p:${javac.jar}" unless:set="jdk9orlater"/>
       <compilerarg line="-XDcompilePolicy=simple"/>
-      <compilerarg line="-processorpath ${error_prone_core.jar}:${jformatstring.jar}"/>
+      <compilerarg value="-processorpath"/>
+      <compilerarg pathref="processorpath.ref"/>
       <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
     </javac>
   </target>
