@@ -200,7 +200,6 @@ import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
 import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.PrivateSecurityContractProtoAccess;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
-import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoRedundantSet;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
@@ -593,7 +592,6 @@ public class BuiltInCheckerSuppliers {
           OverrideThrowableToString.class,
           ParameterName.class,
           PreconditionsInvalidPlaceholder.class,
-          ProtoFieldPreconditionsCheckNotNull.class,
           ProtoRedundantSet.class,
           QualifierOrScopeOnInjectMethod.class,
           ReachabilityFenceUsage.class,

@@ -320,10 +320,7 @@ public final class ProtoFieldNullComparisonTest {
             "    TestFieldProtoMessage fieldCopy = requireNonNull(field);",
             "  }",
             "}")
-        .setArgs(
-            ImmutableList.of(
-                "-XepOpt:ProtoFieldNullComparison:TrackAssignments",
-                "-XepOpt:ProtoFieldNullComparison:MatchCheckNotNull"))
+        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:TrackAssignments"))
         .doTest();
   }
 
@@ -348,27 +345,6 @@ public final class ProtoFieldNullComparisonTest {
             "  }",
             "}")
         .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:MatchTestAssertions"))
-        .doTest();
-  }
-
-  @Test
-  public void preconditions_negative() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import java.util.List;",
-            "class Test {",
-            "  void test() {",
-            "    TestProtoMessage message = TestProtoMessage.newBuilder().build();",
-            "    TestFieldProtoMessage field = message.getMessage();",
-            "    Preconditions.checkNotNull(field);",
-            "  }",
-            "}",
-            "class Preconditions {",
-            "  static void checkNotNull(Object o) {}",
-            "}")
         .doTest();
   }
 
