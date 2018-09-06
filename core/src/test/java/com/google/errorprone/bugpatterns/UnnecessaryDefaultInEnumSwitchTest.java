@@ -663,4 +663,46 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void messageMovedAssertion() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "class Test {",
+            "  enum Case { ONE }",
+            "  boolean m(Case c) {",
+            "    switch (c) {",
+            "      case ONE:",
+            "        return true;",
+            "      // BUG: Diagnostic contains: after the switch statement",
+            "      default:",
+            "        throw new AssertionError(c);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void messageRemovedAssertion() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "class Test {",
+            "  enum Case { ONE }",
+            "  void m(Case c) {",
+            "    int i = 0;",
+            "    switch (c) {",
+            "      case ONE:",
+            "        i = 1;",
+            "        break;",
+            "      // BUG: Diagnostic contains: case can be omitted",
+            "      default:",
+            "        throw new AssertionError();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
