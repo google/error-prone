@@ -54,7 +54,6 @@ import javax.lang.model.element.Name;
 /** @author awturner@google.com (Andy Turner) */
 @BugPattern(
     name = "BadImport",
-    altNames = {"BadNestedImport"},
     summary =
         "Importing nested classes/static methods/static fields with commonly-used names can make "
             + "code harder to read, because it may not be clear from the context exactly which "
