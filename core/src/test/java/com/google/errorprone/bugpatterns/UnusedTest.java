@@ -740,4 +740,23 @@ public class UnusedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void findingBaseSymbol() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  int a;",
+            "  void test() {",
+            "    Test o = new Test();",
+            "    ((Test) o).a = 1;",
+            "    (((o))).a = 1;",
+            "    Test p = new Test();",
+            "    id(p).a = 1;",
+            "  }",
+            "  Test id(Test t) { return t; }",
+            "}")
+        .doTest();
+  }
 }
