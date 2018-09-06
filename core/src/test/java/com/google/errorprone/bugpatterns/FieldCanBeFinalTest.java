@@ -104,6 +104,36 @@ public class FieldCanBeFinalTest {
         .doTest();
   }
 
+  @Test
+  public void suppressionOnField() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @SuppressWarnings(\"FieldCanBeFinal\")",
+            "  private int x;",
+            "  Test() {",
+            "    x = 42;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressionOnClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "@SuppressWarnings(\"FieldCanBeFinal\") ",
+            "class Test {",
+            "  private int x;",
+            "  Test() {",
+            "    x = 42;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   // the nullary constructor doesn't set x directly, but that's OK
   @Test
   public void constructorChaining() {
