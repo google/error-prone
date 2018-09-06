@@ -28,6 +28,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.Tree;
@@ -47,31 +48,27 @@ import com.sun.source.tree.Tree.Kind;
 public final class BadInstanceof extends BugChecker implements InstanceOfTreeMatcher {
 
   private static final String NON_NULL =
-      "`%s` is non-null and a subtype of `%s`, so this check is always true.";
+      "`%s` is a non-null instance of %s which is a subtype of %s, so this check is always true.";
 
   private static final String NULLABLE =
-      "`%s` is a subtype of `%s`, so this is equivalent to a null check.";
+      "`%s` is an instance of %s which is a subtype of %s, so this is equivalent to a null check.";
 
   @Override
   public Description matchInstanceOf(InstanceOfTree tree, VisitorState state) {
     if (!isSubtype(getType(tree.getExpression()), getType(tree.getType()), state)) {
       return NO_MATCH;
     }
+    String subType =
+        SuggestedFixes.prettyType(state, /* fix= */ null, getType(tree.getExpression()));
+    String expression = state.getSourceForNode(tree.getExpression());
+    String superType = state.getSourceForNode(tree.getType());
     if (isNonNull().matches(tree.getExpression(), state)) {
       return buildDescription(tree)
-          .setMessage(
-              String.format(
-                  NON_NULL,
-                  state.getSourceForNode(tree.getExpression()),
-                  state.getSourceForNode(tree.getType())))
+          .setMessage(String.format(NON_NULL, expression, subType, superType))
           .build();
     }
     return buildDescription(tree)
-        .setMessage(
-            String.format(
-                NULLABLE,
-                state.getSourceForNode(tree.getExpression()),
-                state.getSourceForNode(tree.getType())))
+        .setMessage(String.format(NULLABLE, expression, subType, superType))
         .addFix(getFix(tree, state))
         .build();
   }
