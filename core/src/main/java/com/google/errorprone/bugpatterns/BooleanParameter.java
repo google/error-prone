@@ -28,6 +28,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterComment;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -37,6 +38,8 @@ import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -51,24 +54,39 @@ import java.util.List;
     summary = "Use parameter comments to document ambiguous literals",
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
-public class BooleanParameter extends BugChecker implements MethodInvocationTreeMatcher {
+public class BooleanParameter extends BugChecker
+    implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
+
+  private static final ImmutableSet<String> EXCLUDED_NAMES =
+      ImmutableSet.of("default", "defValue", "value");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    List<? extends ExpressionTree> arguments = tree.getArguments();
-    if (arguments.size() < 2) {
+    handleArguments(tree, tree.getArguments(), state);
+    return NO_MATCH;
+  }
+
+  @Override
+  public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    handleArguments(tree, tree.getArguments(), state);
+    return NO_MATCH;
+  }
+
+  private void handleArguments(
+      Tree tree, List<? extends ExpressionTree> arguments, VisitorState state) {
+    if (arguments.size() < 2 && tree instanceof MethodInvocationTree) {
       // single-argument methods are often self-documentating
-      return NO_MATCH;
+      return;
     }
     if (arguments.stream().noneMatch(BooleanParameter::isBooleanLiteral)) {
-      return NO_MATCH;
+      return;
     }
-    MethodSymbol sym = ASTHelpers.getSymbol(tree);
+    MethodSymbol sym = (MethodSymbol) ASTHelpers.getSymbol(tree);
     if (NamedParameterComment.containsSyntheticParameterName(sym)) {
-      return NO_MATCH;
+      return;
     }
     int start = ((JCTree) tree).getStartPosition();
-    int end = state.getEndPosition(getLast(tree.getArguments()));
+    int end = state.getEndPosition(getLast(arguments));
     String source = state.getSourceCode().subSequence(start, end).toString();
     Deque<ErrorProneToken> tokens =
         new ArrayDeque<>(ErrorProneTokens.getTokens(source, state.context));
@@ -76,10 +94,7 @@ public class BooleanParameter extends BugChecker implements MethodInvocationTree
         sym.getParameters().stream(),
         arguments.stream(),
         (p, c) -> checkParameter(p, c, start, tokens, state));
-    return NO_MATCH;
   }
-
-  private static final ImmutableSet<String> BLACKLIST = ImmutableSet.of("value");
 
   private void checkParameter(
       VarSymbol paramSym,
@@ -95,7 +110,7 @@ public class BooleanParameter extends BugChecker implements MethodInvocationTree
       // single-character parameter names aren't helpful
       return;
     }
-    if (BLACKLIST.contains(name)) {
+    if (EXCLUDED_NAMES.contains(name)) {
       return;
     }
     while (!tokens.isEmpty()
