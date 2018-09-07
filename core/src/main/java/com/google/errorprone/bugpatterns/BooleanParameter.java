@@ -43,6 +43,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -75,7 +76,7 @@ public class BooleanParameter extends BugChecker
   private void handleArguments(
       Tree tree, List<? extends ExpressionTree> arguments, VisitorState state) {
     if (arguments.size() < 2 && tree instanceof MethodInvocationTree) {
-      // single-argument methods are often self-documentating
+      // single-argument methods are often self-documenting
       return;
     }
     if (arguments.stream().noneMatch(BooleanParameter::isBooleanLiteral)) {
@@ -103,6 +104,10 @@ public class BooleanParameter extends BugChecker
       Deque<ErrorProneToken> tokens,
       VisitorState state) {
     if (!isBooleanLiteral(a)) {
+      return;
+    }
+    if (state.getTypes().unboxedTypeOrType(paramSym.type).getTag() != TypeTag.BOOLEAN) {
+      // don't suggest on non-boolean (e.g., generic) parameters)
       return;
     }
     String name = paramSym.getSimpleName().toString();
