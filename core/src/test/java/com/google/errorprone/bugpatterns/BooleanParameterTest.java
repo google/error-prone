@@ -33,6 +33,7 @@ public class BooleanParameterTest {
         .addInputLines(
             "in/Test.java",
             "class Test {",
+            "  Test(boolean foo) {}",
             "  void f(boolean foo) {}",
             "  void f(boolean foo, boolean bar) {}",
             "  void g(boolean p, boolean q) {}",
@@ -44,11 +45,13 @@ public class BooleanParameterTest {
             "    f(false, false);",
             "    g(false, false); // single-char",
             "    h(false, false); // synthetic",
+            "    new Test(false);",
             "  }",
             "}")
         .addOutputLines(
             "out/Test.java",
             "class Test {",
+            "  Test(boolean foo) {}",
             "  void f(boolean foo) {}",
             "  void f(boolean foo, boolean bar) {}",
             "  void g(boolean p, boolean q) {}",
@@ -60,6 +63,7 @@ public class BooleanParameterTest {
             "    f(/* foo= */ false, /* bar= */ false);",
             "    g(false, false); // single-char",
             "    h(false, false); // synthetic",
+            "    new Test(/* foo= */ false);",
             "  }",
             "}")
         .doTest(TEXT_MATCH);
