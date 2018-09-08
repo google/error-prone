@@ -52,7 +52,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
           <target>8</target>
           <compilerArgs>
             <arg>-XDcompilePolicy=simple</arg>
-            <arg>-Xplugin:ErrorProne</arg>
+            <arg>-Xplugin:ErrorProne -Xep:DeadException:ERROR</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>
