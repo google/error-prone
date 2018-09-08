@@ -34,10 +34,12 @@ public class ParcelableCreatorTest {
           .addSourceFile("testdata/stubs/android/os/Parcelable.java");
 
   @Test
-  public void testCases() {
-    compilationHelper
-        .addSourceFile("ParcelableCreatorPositiveCases.java")
-        .addSourceFile("ParcelableCreatorNegativeCases.java")
-        .doTest();
+  public void positive() {
+    compilationHelper.addSourceFile("ParcelableCreatorPositiveCases.java").doTest();
+  }
+
+  @Test
+  public void negative() {
+    compilationHelper.addSourceFile("ParcelableCreatorNegativeCases.java").doTest();
   }
 }
