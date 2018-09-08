@@ -107,8 +107,9 @@ public class MyChecker extends BugChecker implements SomeTreeMatcher {
 ## Maven
 
 To pass Error Prone flags to Maven, use the `compilerArgs` parameter in the
-plugin's configuration. To enable warnings, the `showWarnings` parameter must
-also be set:
+plugin's configuration. The flags must be appended to the `arg` entry
+containing `-Xplugin:ErrorProne`. To enable warnings, the `showWarnings`
+parameter must also be set:
 
 ```xml
 <project>
@@ -117,15 +118,27 @@ also be set:
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <compilerId>javac-with-errorprone</compilerId>
           <showWarnings>true</showWarnings>
           <compilerArgs>
-            <arg>-Xep:DeadException:WARN</arg>
-            <arg>-Xep:GuardedBy:OFF</arg>
+            <arg>-XDcompilePolicy=simple</arg>
+            <arg>-Xplugin:ErrorProne -Xep:DeadException:WARN -Xep:GuardedBy:OFF</arg>
           </compilerArgs>
         </configuration>
       </build>
     </plugins>
   </plugin>
 </project>
+```
+
+Be aware that when running on JDK 8 the flags cannot be wrapped across multiple
+lines. JDK 9 and above do allow the flags to be separated by newlines. That is,
+the second `<arg>` element above can also be formatted as follows on JDK 9+,
+but *not* on JDK 8:
+
+```xml
+<arg>
+  -Xplugin:ErrorProne
+  -Xep:DeadException:WARN
+  -Xep:GuardedBy:OFF
+</arg>
 ```

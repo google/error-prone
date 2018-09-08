@@ -120,6 +120,9 @@ directory for a working example:
 [INFO] ------------------------------------------------------------------------
 ```
 
+See the [flags documentation](http://errorprone.info/docs/flags#maven) for details on
+how to customize the plugin's behavior.
+
 ## Gradle
 
 The gradle plugin is an external contribution. The documentation and code is at
