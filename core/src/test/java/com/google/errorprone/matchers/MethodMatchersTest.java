@@ -20,15 +20,18 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.method.MethodMatchers;
+import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -45,7 +48,8 @@ public class MethodMatchersTest {
       name = "ConstructorDeleter",
       category = JDK,
       summary = "Deletes constructors",
-      severity = ERROR)
+      severity = ERROR,
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
   public static class ConstructorDeleter extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher, BugChecker.NewClassTreeMatcher {
 
@@ -154,6 +158,56 @@ public class MethodMatchersTest {
             "class Test {",
             "  void f(Lib l) {",
             "    l.f(42);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  /** Test BugChecker for namedAnyOf(...) */
+  @BugPattern(name = "FlagMethodNames", summary = "", severity = ERROR)
+  public static class FlagMethodNamesChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    private static final MethodNameMatcher INSTANCE_MATCHER =
+        instanceMethod().anyClass().namedAnyOf("foo", "bar");
+    private static final MethodNameMatcher STATIC_MATCHER =
+        staticMethod().anyClass().namedAnyOf("fizz", "buzz");
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (INSTANCE_MATCHER.matches(tree, state)) {
+        return buildDescription(tree).setMessage("instance varargs").build();
+      }
+      if (STATIC_MATCHER.matches(tree, state)) {
+        return buildDescription(tree).setMessage("static varargs").build();
+      }
+      return NO_MATCH;
+    }
+  }
+
+  @Test
+  public void namedAnyOfTest() {
+    CompilationTestHelper.newInstance(FlagMethodNamesChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo() {}",
+            "  void bar() {}",
+            "  static void fizz() {}",
+            "  static void buzz() {}",
+            "  void anotherMethod() {}",
+            "  static void yetAnother() {}",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: instance varargs",
+            "    this.foo();",
+            "    // BUG: Diagnostic contains: instance varargs",
+            "    this.bar();",
+            "    // BUG: Diagnostic contains: static varargs",
+            "    Test.fizz();",
+            "    // BUG: Diagnostic contains: static varargs",
+            "    Test.buzz();",
+            "    // These ones are ok",
+            "    this.anotherMethod();",
+            "    Test.yetAnother();",
             "  }",
             "}")
         .doTest();

@@ -85,6 +85,12 @@ public class MethodMatchers {
     /** Match methods with the given name. (e.g. {@code toString}) */
     MethodNameMatcher named(String name);
 
+    /** Match methods with any of the given names. */
+    MethodNameMatcher namedAnyOf(String... names);
+
+    /** Match methods with any of the given names. */
+    MethodNameMatcher namedAnyOf(Iterable<String> names);
+
     /** Match methods with any name. */
     MethodNameMatcher withAnyName();
 
