@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers.method;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
@@ -48,6 +49,16 @@ class MethodClassMatcherImpl extends AbstractChainedMatcher<MatchState, MatchSta
   @Override
   public MethodNameMatcher named(String name) {
     return new MethodNameMatcherImpl.Exact(this, name);
+  }
+
+  @Override
+  public MethodNameMatcher namedAnyOf(String... names) {
+    return namedAnyOf(ImmutableList.copyOf(names));
+  }
+
+  @Override
+  public MethodNameMatcher namedAnyOf(Iterable<String> names) {
+    return new MethodNameMatcherImpl.AnyOf(this, names);
   }
 
   @Override
