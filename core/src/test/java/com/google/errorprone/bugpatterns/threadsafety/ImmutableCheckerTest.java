@@ -1030,7 +1030,11 @@ public class ImmutableCheckerTest {
             "  public int x = 0;",
             "}")
         .addSourceLines(
-            "threadsafety/J.java", "package threadsafety;", "interface J extends I {", "}")
+            "threadsafety/J.java", //
+            "package threadsafety;",
+            "// BUG: Diagnostic contains: extends @Immutable",
+            "interface J extends I {",
+            "}")
         .doTest();
   }
 

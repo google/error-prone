@@ -21,7 +21,7 @@ import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ENGLISH;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.StandardSystemProperty;
@@ -217,14 +217,10 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of("-Xplugin:ErrorProne"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(source));
-    try {
-      task.call();
-      fail();
-    } catch (Throwable expected) {
-      assertThat(expected)
-          .hasMessageThat()
-          .contains("The default compilation policy (by-todo) is not supported");
-    }
+    Throwable expected = assertThrows(Throwable.class, () -> task.call());
+    assertThat(expected)
+        .hasMessageThat()
+        .contains("The default compilation policy (by-todo) is not supported");
   }
 
   @Test
@@ -244,11 +240,62 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of("-XDcompilePolicy=bytodo", "-Xplugin:ErrorProne"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(source));
-    try {
-      task.call();
-      fail();
-    } catch (Throwable expected) {
-      assertThat(expected).hasMessageThat().contains("-XDcompilePolicy=bytodo is not supported");
-    }
+    Throwable expected = assertThrows(Throwable.class, () -> task.call());
+    assertThat(expected).hasMessageThat().contains("-XDcompilePolicy=bytodo is not supported");
+  }
+
+  @Test
+  public void stopOnErrorPolicy() throws IOException {
+    FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    Path one = fileSystem.getPath("One.java");
+    Path two = fileSystem.getPath("Two.java");
+    Files.write(
+        one,
+        ImmutableList.of(
+            "import java.util.HashSet;",
+            "import java.util.Set;",
+            "class One {",
+            "  public static void main(String[] args) {",
+            "    Set<Short> s = new HashSet<>();",
+            "    for (short i = 0; i < 100; i++) {",
+            "      s.add(i);",
+            "      s.remove(i - 1);",
+            "    }",
+            "    System.out.println(s.size());",
+            "  }",
+            "}"),
+        UTF_8);
+    Files.write(
+        two,
+        ImmutableList.of(
+            "class Two {",
+            "  public static void main(String[] args) {",
+            "    new Exception();",
+            "  }",
+            "}"),
+        UTF_8);
+    JavacFileManager fileManager = new JavacFileManager(new Context(), false, UTF_8);
+    DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
+    JavacTask task =
+        JavacTool.create()
+            .getTask(
+                null,
+                fileManager,
+                diagnosticCollector,
+                ImmutableList.of(
+                    "-Xplugin:ErrorProne",
+                    "-XDcompilePolicy=byfile",
+                    "--should-stop:ifError=LOWER"),
+                ImmutableList.of(),
+                fileManager.getJavaFileObjects(one, two));
+    assertThat(task.call()).isFalse();
+    ImmutableList<String> diagnostics =
+        diagnosticCollector.getDiagnostics().stream()
+            .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
+            .map(d -> d.getMessage(ENGLISH))
+            .collect(toImmutableList());
+    assertThat(diagnostics).hasSize(2);
+    assertThat(diagnostics.get(0)).contains("[CollectionIncompatibleType]");
+    assertThat(diagnostics.get(1)).contains("[DeadException]");
   }
 }
