@@ -87,7 +87,8 @@ public class SuggestedFix implements Fix {
     }
     Replacements replacements = new Replacements();
     for (FixOperation fix : fixes) {
-      replacements.add(fix.getReplacement(endPositions));
+      replacements.add(
+          fix.getReplacement(endPositions), Replacements.CoalescePolicy.EXISTING_FIRST);
     }
     return replacements.descending();
   }

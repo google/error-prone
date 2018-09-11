@@ -57,6 +57,7 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
@@ -1227,6 +1228,40 @@ public class SuggestedFixesTest {
     BugCheckerRefactoringTestHelper.newInstance(new RemoveAddModifier(), getClass())
         .addInputLines("in/Test.java", "public class Test {}")
         .addOutputLines("out/Test.java", "abstract class Test {}")
+        .doTest();
+  }
+
+  /** A bugchecker for testing suggested fixes. */
+  @BugPattern(
+      name = "PrefixAddImportCheck",
+      summary = "A bugchecker for testing suggested fixes.",
+      severity = ERROR,
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  public static class PrefixAddImportCheck extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return describeMatch(
+          tree,
+          SuggestedFix.builder()
+              .prefixWith(tree, "@Deprecated\n")
+              .addImport("java.util.List")
+              .build());
+    }
+  }
+
+  @Test
+  public void prefixAddImport() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new PrefixAddImportCheck(), getClass())
+        .addInputLines(
+            "in/Test.java", //
+            "package p;",
+            "class Test {}")
+        .addOutputLines(
+            "out/Test.java", //
+            "package p;",
+            "import java.util.List;",
+            "@Deprecated",
+            "class Test {}")
         .doTest();
   }
 }

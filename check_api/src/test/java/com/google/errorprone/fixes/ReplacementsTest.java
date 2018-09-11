@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
+import com.google.errorprone.fixes.Replacements.CoalescePolicy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -96,22 +97,52 @@ public class ReplacementsTest {
   }
 
   @Test
-  public void multipleInsertionsAtSamePointAreCoalescedInOrder() {
+  public void coalesceExistingFirst() {
     // A replacement of an empty region represents an insertion.
     // Multiple, differing insertions at the same insertion point are allowed, and will be
     // coalesced into a single Replacement at that insertion point.
     assertThat(
             new Replacements()
                 .add(Replacement.create(42, 42, "hello;"))
-                .add(Replacement.create(42, 42, "goodbye;"))
+                .add(Replacement.create(42, 42, "goodbye;"), CoalescePolicy.EXISTING_FIRST)
                 .descending())
         .containsExactly(Replacement.create(42, 42, "hello;goodbye;"));
     assertThat(
             new Replacements()
                 .add(Replacement.create(42, 42, "goodbye;"))
-                .add(Replacement.create(42, 42, "hello;"))
+                .add(Replacement.create(42, 42, "hello;"), CoalescePolicy.EXISTING_FIRST)
                 .descending())
         .containsExactly(Replacement.create(42, 42, "goodbye;hello;"));
+  }
+
+  @Test
+  public void coalesceReplacementFirst() {
+    // A replacement of an empty region represents an insertion.
+    // Multiple, differing insertions at the same insertion point are allowed, and will be
+    // coalesced into a single Replacement at that insertion point.
+    assertThat(
+            new Replacements()
+                .add(Replacement.create(42, 42, "hello;"))
+                .add(Replacement.create(42, 42, "goodbye;"), CoalescePolicy.REPLACEMENT_FIRST)
+                .descending())
+        .contains(Replacement.create(42, 42, "goodbye;hello;"));
+    assertThat(
+            new Replacements()
+                .add(Replacement.create(42, 42, "goodbye;"))
+                .add(Replacement.create(42, 42, "hello;"), CoalescePolicy.REPLACEMENT_FIRST)
+                .descending())
+        .containsExactly(Replacement.create(42, 42, "hello;goodbye;"));
+  }
+
+  @Test
+  public void coalesceReject() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            new Replacements()
+                .add(Replacement.create(42, 42, "hello;"))
+                .add(Replacement.create(42, 42, "goodbye;"), CoalescePolicy.REJECT)
+                .descending());
   }
 
   @Test
