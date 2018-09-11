@@ -32,12 +32,18 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.doctree.ParamTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
+import com.sun.source.util.DocSourcePositions;
+import com.sun.source.util.DocTreeScanner;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
+import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
 import java.util.ArrayList;
@@ -199,6 +205,33 @@ public class TypeParameterShadowing extends BugChecker
                 }
               }
             });
+    DCDocComment docCommentTree =
+        (DCDocComment) JavacTrees.instance(state.context).getDocCommentTree(state.getPath());
+    if (docCommentTree != null) {
+      docCommentTree.accept(
+          new DocTreeScanner<Void, Void>() {
+            @Override
+            public Void visitParam(ParamTree paramTree, Void unused) {
+              if (paramTree.isTypeParameter()
+                  && paramTree.getName().getName().contentEquals(name)) {
+                DocSourcePositions positions =
+                    JavacTrees.instance(state.context).getSourcePositions();
+                CompilationUnitTree compilationUnitTree = state.getPath().getCompilationUnit();
+                int startPos =
+                    (int)
+                        positions.getStartPosition(
+                            compilationUnitTree, docCommentTree, paramTree.getName());
+                int endPos =
+                    (int)
+                        positions.getEndPosition(
+                            compilationUnitTree, docCommentTree, paramTree.getName());
+                fixBuilder.replace(startPos, endPos, typeVarReplacement);
+              }
+              return super.visitParam(paramTree, null);
+            }
+          },
+          null);
+    }
     return fixBuilder.build();
   }
 
