@@ -47,7 +47,7 @@ import java.util.stream.Stream;
 @BugPattern(
     name = "ParameterComment",
     category = JDK,
-    summary = "Non-standard parameter comment; prefer `/*paramName=*/ arg`",
+    summary = "Non-standard parameter comment; prefer `/* paramName= */ arg`",
     severity = SUGGESTION,
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -77,17 +77,27 @@ public class ParameterComment extends BugChecker
         Stream.concat(
             symbol.getParameters().stream(),
             Stream.iterate(getLast(symbol.getParameters()), x -> x)),
-        (commented, param) ->
-            commented.afterComments().stream()
-                .filter(c -> matchingParamComment(c, param))
-                .findFirst()
-                .ifPresent(c -> fixParamComment(fix, commented, param, c)));
+        (commented, param) -> {
+          ImmutableList<Comment> comments =
+              commented.afterComments().isEmpty()
+                  ? commented.beforeComments()
+                  : commented.afterComments();
+          boolean matchStandardForm = !commented.afterComments().isEmpty();
+          comments.stream()
+              .filter(c -> matchingParamComment(c, param, matchStandardForm))
+              .findFirst()
+              .ifPresent(c -> fixParamComment(fix, commented, param, c));
+        });
     return fix.isEmpty() ? NO_MATCH : describeMatch(tree, fix.build());
   }
 
-  private static boolean matchingParamComment(Comment c, VarSymbol param) {
+  private static boolean matchingParamComment(
+      Comment c, VarSymbol param, boolean matchStandardForm) {
     String text = Comments.getTextFromComment(c).trim();
     if (text.endsWith("=")) {
+      if (!matchStandardForm) {
+        return false;
+      }
       text = text.substring(0, text.length() - "=".length()).trim();
     }
     return param.getSimpleName().contentEquals(text);

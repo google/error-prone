@@ -136,7 +136,6 @@ public class Comments {
     TokenTracker tokenTracker = new TokenTracker(lineMap);
 
     argumentTracker.advance();
-    tokenLoop:
     for (ErrorProneToken token : tokens) {
       tokenTracker.advance(token);
       if (tokenTracker.atStartOfLine() && !tokenTracker.wasPreviousLineEmpty()) {
@@ -176,7 +175,7 @@ public class Comments {
         // We are between arguments so wait for a (lexed) comma to delimit them
         if (token.kind() == TokenKind.COMMA) {
           if (!argumentTracker.hasMoreArguments()) {
-            break tokenLoop;
+            break;
           }
           argumentTracker.advance();
         }
