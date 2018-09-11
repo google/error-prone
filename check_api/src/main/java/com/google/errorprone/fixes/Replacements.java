@@ -53,7 +53,46 @@ public class Replacements {
   private final RangeMap<Integer, Replacement> overlaps = TreeRangeMap.create();
   private final TreeSet<Integer> zeroLengthRanges = new TreeSet<>();
 
+  /** A policy for handling overlapping insertions. */
+  public enum CoalescePolicy {
+    /** Reject overlapping insertions and throw an {@link IllegalArgumentException}. */
+    REJECT {
+      @Override
+      public String coalesce(String replacement, String existing) {
+        throw new IllegalArgumentException(
+            String.format("%s conflicts with existing replacement %s", replacement, existing));
+      }
+    },
+    /** Accept overlapping insertions, with the new insertion before the existing one. */
+    REPLACEMENT_FIRST {
+      @Override
+      public String coalesce(String replacement, String existing) {
+        return replacement + existing;
+      }
+    },
+    /** Accept overlapping insertions, with the existing insertion before the new one. */
+    EXISTING_FIRST {
+      @Override
+      public String coalesce(String replacement, String existing) {
+        return existing + replacement;
+      }
+    };
+
+    /**
+     * Handle an overlapping insert.
+     *
+     * @param replacement the replacement being added.
+     * @param existing the existing insert at this range.
+     * @return the coalesced replacement.
+     */
+    public abstract String coalesce(String replacement, String existing);
+  }
+
   public Replacements add(Replacement replacement) {
+    return add(replacement, CoalescePolicy.REJECT);
+  }
+
+  public Replacements add(Replacement replacement, CoalescePolicy coalescePolicy) {
     if (replacements.containsKey(replacement.range())) {
       Replacement existing = replacements.get(replacement.range());
       if (!existing.equals(replacement)) {
@@ -64,7 +103,7 @@ public class Replacements {
               Replacement.create(
                   existing.startPosition(),
                   existing.endPosition(),
-                  existing.replaceWith() + replacement.replaceWith());
+                  coalescePolicy.coalesce(replacement.replaceWith(), existing.replaceWith()));
         } else {
           throw new IllegalArgumentException(
               String.format("%s conflicts with existing replacement %s", replacement, existing));
