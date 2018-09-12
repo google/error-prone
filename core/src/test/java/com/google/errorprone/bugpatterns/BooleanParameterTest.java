@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -91,5 +92,17 @@ public class BooleanParameterTest {
             "}")
         .expectUnchanged()
         .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void considerAtomicBooleanSelfDocumenting() {
+    CompilationTestHelper.newInstance(BooleanParameter.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicBoolean;",
+            "class Test {",
+            "  private static final AtomicBoolean b = new AtomicBoolean(false);",
+            "}")
+        .doTest();
   }
 }

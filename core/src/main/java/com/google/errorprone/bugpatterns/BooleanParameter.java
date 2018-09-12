@@ -59,7 +59,7 @@ public class BooleanParameter extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
   private static final ImmutableSet<String> EXCLUDED_NAMES =
-      ImmutableSet.of("default", "defValue", "value");
+      ImmutableSet.of("default", "defValue", "defaultValue", "value");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -75,7 +75,7 @@ public class BooleanParameter extends BugChecker
 
   private void handleArguments(
       Tree tree, List<? extends ExpressionTree> arguments, VisitorState state) {
-    if (arguments.size() < 2 && tree instanceof MethodInvocationTree) {
+    if (arguments.size() < 2 && areSingleArgumentsSelfDocumenting(tree)) {
       // single-argument methods are often self-documenting
       return;
     }
@@ -148,7 +148,16 @@ public class BooleanParameter extends BugChecker
                     .matches());
   }
 
-  private static boolean isBooleanLiteral(ExpressionTree a) {
-    return a.getKind() == Kind.BOOLEAN_LITERAL;
+  private static boolean isBooleanLiteral(ExpressionTree tree) {
+    return tree.getKind() == Kind.BOOLEAN_LITERAL;
+  }
+
+  private static boolean areSingleArgumentsSelfDocumenting(Tree tree) {
+    // Consider single-argument booleans for classes whose names contain "Boolean" to be self-
+    // documenting. This is aimed at classes like AtomicBoolean which simply wrap a value.
+    if (tree instanceof NewClassTree) {
+      return ((NewClassTree) tree).getIdentifier().toString().toLowerCase().contains("boolean");
+    }
+    return true;
   }
 }
