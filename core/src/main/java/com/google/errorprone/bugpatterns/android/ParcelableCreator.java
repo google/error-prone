@@ -110,7 +110,8 @@ public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
     }
     List<Type> typeArguments = superType.getTypeArguments();
     if (typeArguments.isEmpty()) {
-      return false;
+      // raw creator
+      return true;
     }
     return ASTHelpers.isSubtype(classType, Iterables.getOnlyElement(typeArguments), state);
   }

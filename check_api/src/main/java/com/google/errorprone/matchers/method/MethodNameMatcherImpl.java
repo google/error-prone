@@ -19,11 +19,13 @@ package com.google.errorprone.matchers.method;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.util.Name;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -54,7 +56,7 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
       this.name = name;
       checkArgument(
           !name.contains("(") && !name.contains(")"),
-          "method name (%s) cannot contain parentheses; use \"getBytes\" instead of \"getBytes()\"",
+          "method name (%s) cannot contain parentheses. e.g., use \"foo\" instead of \"foo()\"",
           name);
     }
 
@@ -98,6 +100,26 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
         return Optional.absent();
       }
       return Optional.of(method);
+    }
+  }
+
+  /** Matches on any of the given method names. */
+  static class AnyOf extends MethodNameMatcherImpl {
+
+    private final ImmutableList<String> names;
+
+    AnyOf(AbstractSimpleMatcher<MatchState> baseMatcher, Iterable<String> names) {
+      super(baseMatcher);
+      this.names = ImmutableList.copyOf(names);
+    }
+
+    @Override
+    protected Optional<MatchState> matchResult(
+        ExpressionTree item, MatchState method, VisitorState state) {
+      Name symbolName = method.sym().getSimpleName();
+      return names.stream().anyMatch(symbolName::contentEquals)
+          ? Optional.of(method)
+          : Optional.absent();
     }
   }
 }

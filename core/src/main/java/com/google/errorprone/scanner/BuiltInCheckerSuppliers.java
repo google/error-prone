@@ -85,6 +85,7 @@ import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
 import com.google.errorprone.bugpatterns.EqualsReference;
 import com.google.errorprone.bugpatterns.EqualsUnsafeCast;
+import com.google.errorprone.bugpatterns.EqualsUsingHashCode;
 import com.google.errorprone.bugpatterns.EqualsWrongThing;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.ExpectedExceptionRefactoring;
@@ -110,6 +111,7 @@ import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.ImmutableModification;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InconsistentCapitalization;
+import com.google.errorprone.bugpatterns.InconsistentHashCode;
 import com.google.errorprone.bugpatterns.IncrementInForLoopAndHeader;
 import com.google.errorprone.bugpatterns.IndexOfChar;
 import com.google.errorprone.bugpatterns.InexactVarargsConditional;
@@ -200,7 +202,6 @@ import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
 import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.PrivateSecurityContractProtoAccess;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
-import com.google.errorprone.bugpatterns.ProtoFieldPreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.ProtoRedundantSet;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
@@ -541,6 +542,7 @@ public class BuiltInCheckerSuppliers {
           EqualsHashCode.class,
           EqualsIncompatibleType.class,
           EqualsUnsafeCast.class,
+          EqualsUsingHashCode.class,
           ExtendingJUnitAssert.class,
           FallThrough.class,
           Finally.class,
@@ -556,6 +558,7 @@ public class BuiltInCheckerSuppliers {
           ImmutableEnumChecker.class,
           IncompatibleModifiersChecker.class,
           InconsistentCapitalization.class,
+          InconsistentHashCode.class,
           IncrementInForLoopAndHeader.class,
           InjectOnConstructorOfAbstractClass.class,
           InputStreamSlowMultibyteRead.class,
@@ -593,7 +596,6 @@ public class BuiltInCheckerSuppliers {
           OverrideThrowableToString.class,
           ParameterName.class,
           PreconditionsInvalidPlaceholder.class,
-          ProtoFieldPreconditionsCheckNotNull.class,
           ProtoRedundantSet.class,
           QualifierOrScopeOnInjectMethod.class,
           ReachabilityFenceUsage.class,

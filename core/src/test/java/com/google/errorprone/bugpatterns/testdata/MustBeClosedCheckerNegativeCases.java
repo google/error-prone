@@ -101,4 +101,25 @@ public class MustBeClosedCheckerNegativeCases {
     } catch (NullPointerException e) {
     }
   }
+
+  abstract class ParentWithNoArgument implements AutoCloseable {
+    @MustBeClosed
+    ParentWithNoArgument() {}
+  }
+
+  abstract class ChildOfParentWithNoArgument extends ParentWithNoArgument {
+    // Use a default constructor.
+  }
+
+  abstract class ParentWithArgument implements AutoCloseable {
+    @MustBeClosed
+    ParentWithArgument(int i) {}
+  }
+
+  abstract class ChildOfParentWithArgument extends ParentWithArgument {
+    @MustBeClosed
+    ChildOfParentWithArgument() {
+      super(0);
+    }
+  }
 }

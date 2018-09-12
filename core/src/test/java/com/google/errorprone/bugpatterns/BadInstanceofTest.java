@@ -66,14 +66,15 @@ public final class BadInstanceofTest {
         .addSourceLines(
             "Test.java",
             "class A {",
-            "  // BUG: Diagnostic contains: `new C()` is non-null and a subtype of `A`",
+            "  // BUG: Diagnostic contains: `new C()` is a non-null instance of C "
+                + "which is a subtype of A",
             "  boolean t = new C() instanceof A;",
             "  boolean foo(C c) {",
-            "    // BUG: Diagnostic contains: `c` is a subtype of `A`",
+            "    // BUG: Diagnostic contains: `c` is an instance of C which is a subtype of A",
             "    return c instanceof A;",
             "  }",
             "  boolean notFoo(C c) {",
-            "    // BUG: Diagnostic contains: `c` is a subtype of `A`",
+            "    // BUG: Diagnostic contains: `c` is an instance of C which is a subtype of A",
             "    return !(c instanceof A);",
             "  }",
             "}",

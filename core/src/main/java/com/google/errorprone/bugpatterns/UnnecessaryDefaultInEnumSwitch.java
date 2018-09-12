@@ -30,7 +30,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -51,12 +50,22 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "UnnecessaryDefaultInEnumSwitch",
     summary =
-        "Switch handles all enum values; an explicit default case is unnecessary and defeats error"
+        "Switch handles all enum values: an explicit default case is unnecessary and defeats error"
             + " checking for non-exhaustive switches.",
     category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
+
+  private static final String DESCRIPTION_MOVED_DEFAULT =
+      "Switch handles all enum values: move code from the default case to execute after the "
+          + "switch statement to enable checking for non-exhaustive switches. "
+          + "That is, prefer: `switch (...) { ... } throw new AssertionError();` to "
+          + "`switch (...) { ... default: throw new AssertionError(); }`";
+
+  private static final String DESCRIPTION_REMOVED_DEFAULT =
+      "Switch handles all enum values: the default case can be omitted to enable enforcement "
+          + "at compile-time that the switch statement is exhaustive.";
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
@@ -75,7 +84,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
         caseBeforeDefault = caseTree;
       }
     }
-    if (defaultCase == null) {
+    if (caseBeforeDefault == null || defaultCase == null) {
       return NO_MATCH;
     }
     Set<String> handledCases =
@@ -96,106 +105,91 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
         return NO_MATCH;
       }
     }
-    Fix fix;
     List<? extends StatementTree> defaultStatements = defaultCase.getStatements();
     if (trivialDefault(defaultStatements)) {
       // deleting `default:` or `default: break;` is a no-op
-      if (unrecognized) {
-        fix = SuggestedFix.replace(defaultCase, "case UNRECOGNIZED: \n // continue below");
-      } else {
-        fix = SuggestedFix.delete(defaultCase);
-      }
-    } else {
-      String defaultSource =
-          state
-              .getSourceCode()
-              .subSequence(
-                  ((JCTree) defaultStatements.get(0)).getStartPosition(),
-                  state.getEndPosition(getLast(defaultStatements)))
-              .toString();
-      String initialComments = comments(state, defaultCase, defaultStatements);
-      if (!canCompleteNormally(tree)) {
-        // if the switch statement cannot complete normally, then deleting the default
-        // and moving its statements to after the switch statement is a no-op
-        if (unrecognized) {
-          fix =
-              SuggestedFix.builder()
-                  .replace(defaultCase, "case UNRECOGNIZED: \n break;")
-                  .postfixWith(tree, initialComments + defaultSource)
-                  .build();
-        } else {
-          fix =
-              SuggestedFix.builder()
-                  .delete(defaultCase)
-                  .postfixWith(tree, initialComments + defaultSource)
-                  .build();
-        }
-      } else {
-        // The switch is already exhaustive, we want to delete the default.
-        // There are a few modes we need to handle:
-        // 1) switch (..) {
-        //      case FOO:
-        //      default: doWork();
-        //    }
-        //    In this mode, we need to lift the statements from 'default' into FOO, otherwise
-        //    we change the code.  This mode also captures any variation of statements in FOO
-        //    where any of them would fall-through (e.g, if (!bar)  { break; } ) -- if bar is
-        //    true then we'd fall through.
-        //
-        //  2) switch (..) {
-        //       case FOO: break;
-        //       default: doDefault();
-        //     }
-        //     In this mode, we can safely delete 'default'.
-        //
-        //  3) var x;
-        //     switch (..) {
-        //       case FOO: x = 1; break;
-        //       default: x = 2;
-        //     }
-        //     doWork(x);
-        //     In this mode, we can't delete 'default' because javac analysis requires that 'x'
-        //     must be set before using it.
+      SuggestedFix fix =
+          SuggestedFix.replace(
+              defaultCase, unrecognized ? "case UNRECOGNIZED: \n // continue below" : "");
+      return buildDescription(defaultCase)
+          .setMessage(DESCRIPTION_REMOVED_DEFAULT)
+          .addFix(fix)
+          .build();
+    }
+    String defaultSource =
+        state
+            .getSourceCode()
+            .subSequence(
+                ((JCTree) defaultStatements.get(0)).getStartPosition(),
+                state.getEndPosition(getLast(defaultStatements)))
+            .toString();
+    String initialComments = comments(state, defaultCase, defaultStatements);
+    if (!canCompleteNormally(tree)) {
+      // if the switch statement cannot complete normally, then deleting the default
+      // and moving its statements to after the switch statement is a no-op
+      SuggestedFix fix =
+          SuggestedFix.builder()
+              .replace(defaultCase, unrecognized ? "case UNRECOGNIZED: \n break;" : "")
+              .postfixWith(tree, initialComments + defaultSource)
+              .build();
+      return buildDescription(defaultCase)
+          .setMessage(DESCRIPTION_MOVED_DEFAULT)
+          .addFix(fix)
+          .build();
+    }
+    // The switch is already exhaustive, we want to delete the default.
+    // There are a few modes we need to handle:
+    // 1) switch (..) {
+    //      case FOO:
+    //      default: doWork();
+    //    }
+    //    In this mode, we need to lift the statements from 'default' into FOO, otherwise
+    //    we change the code.  This mode also captures any variation of statements in FOO
+    //    where any of them would fall-through (e.g, if (!bar)  { break; } ) -- if bar is
+    //    true then we'd fall through.
+    //
+    //  2) switch (..) {
+    //       case FOO: break;
+    //       default: doDefault();
+    //     }
+    //     In this mode, we can safely delete 'default'.
+    //
+    //  3) var x;
+    //     switch (..) {
+    //       case FOO: x = 1; break;
+    //       default: x = 2;
+    //     }
+    //     doWork(x);
+    //     In this mode, we can't delete 'default' because javac analysis requires that 'x'
+    //     must be set before using it.
 
-        //  To solve this, we take the approach of:
-        //  Try deleting the code entirely.  If it fails to compile, we've broken (3) -> no match.
-        //  Try lifting the code to the prior case statement.  If it fails to compile, we had (2)
-        //  and the code is unreachable -- so use (2) as the strategy.  Otherwise, use (1).
-        if (!SuggestedFixes.compilesWithFix(SuggestedFix.delete(defaultCase), state)) {
-          return NO_MATCH; // case (3)
-        }
-        if (!canCompleteNormally(caseBeforeDefault)) {
-          // case (2) -- If the case before the default can't complete normally,
-          // it's OK to to delete the default.
-          fix = SuggestedFix.delete(defaultCase);
-        } else {
-          // case (1) -- If it can complete, we need to merge the default into it.
-          if (unrecognized) {
-            fix =
-                SuggestedFix.builder()
-                    .prefixWith(defaultCase, "case UNRECOGNIZED:")
-                    .delete(defaultCase)
-                    .postfixWith(defaultCase, initialComments + defaultSource)
-                    .build();
-          } else {
-            fix =
-                SuggestedFix.builder()
-                    .delete(defaultCase)
-                    .postfixWith(caseBeforeDefault, initialComments + defaultSource)
-                    .build();
-          }
-        }
-      }
+    //  To solve this, we take the approach of:
+    //  Try deleting the code entirely.  If it fails to compile, we've broken (3) -> no match.
+    //  Try lifting the code to the prior case statement.  If it fails to compile, we had (2)
+    //  and the code is unreachable -- so use (2) as the strategy.  Otherwise, use (1).
+    if (!SuggestedFixes.compilesWithFix(SuggestedFix.delete(defaultCase), state)) {
+      return NO_MATCH; // case (3)
     }
-    Description.Builder description = buildDescription(defaultCase).addFix(fix);
-    if (!trivialDefault(defaultStatements)) {
-      description.setMessage(
-          "Switch handles all enum values: move code from the default case to execute after the "
-              + "switch statement, to enable checking for non-exhaustive switches. "
-              + "That is, prefer: `switch (...) { ... } throw new AssertionError();` to: "
-              + "`switch (...) { ... default: throw new AssertionError(); }`");
+    if (!canCompleteNormally(caseBeforeDefault)) {
+      // case (2) -- If the case before the default can't complete normally,
+      // it's OK to to delete the default.
+      return buildDescription(defaultCase)
+          .setMessage(DESCRIPTION_REMOVED_DEFAULT)
+          .addFix(SuggestedFix.delete(defaultCase))
+          .build();
     }
-    return description.build();
+    // case (1) -- If it can complete, we need to merge the default into it.
+    SuggestedFix.Builder fix = SuggestedFix.builder().delete(defaultCase);
+    if (unrecognized) {
+      fix.prefixWith(defaultCase, "case UNRECOGNIZED:")
+          .postfixWith(defaultCase, initialComments + defaultSource);
+    } else {
+      fix.postfixWith(caseBeforeDefault, initialComments + defaultSource);
+    }
+    return buildDescription(defaultCase)
+        .setMessage(DESCRIPTION_REMOVED_DEFAULT)
+        .addFix(fix.build())
+        .build();
   }
 
   /** Returns true if the default is empty, or contains only a break statement. */

@@ -22,7 +22,9 @@ import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENT
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.isVoidType;
+import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -58,7 +60,6 @@ import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ErroneousTree;
 import com.sun.source.tree.ExpressionStatementTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -112,14 +113,15 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
 
   private static final Supplier<Type> OBJECT = Suppliers.typeFromString("java.lang.Object");
 
-  private static final Supplier<Type> OBJECT_OUTPUT_STREAM =
-      Suppliers.typeFromString("java.io.ObjectOutputStream");
-
   /** Method signature of special methods. */
   private static final Matcher<MethodTree> SPECIAL_METHODS =
       anyOf(
-          allOf(methodIsNamed("readObject"), methodReturns(OBJECT_OUTPUT_STREAM)),
-          allOf(methodIsNamed("writeObject"), methodReturns(OBJECT_OUTPUT_STREAM)),
+          allOf(
+              methodIsNamed("readObject"),
+              methodHasParameters(isSameType("java.io.ObjectInputStream"))),
+          allOf(
+              methodIsNamed("writeObject"),
+              methodHasParameters(isSameType("java.io.ObjectOutputStream"))),
           allOf(methodIsNamed("readObjectNoData"), methodReturns(isVoidType())),
           allOf(methodIsNamed("readResolve"), methodReturns(OBJECT)),
           allOf(methodIsNamed("writeReplace"), methodReturns(OBJECT)));
@@ -467,20 +469,18 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
 
       @Override
       public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
-        super.visitMemberSelect(memberSelectTree, null);
         Symbol symbol = getSymbol(memberSelectTree);
         if (isUsed(symbol)) {
           unusedElements.remove(symbol);
-        } else {
-          if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
-            usageSites.put(symbol, currentExpressionStatement);
-          }
+        } else if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
+          usageSites.put(symbol, currentExpressionStatement);
         }
-        // Removing the base symbol of this select tree from unused variables:
-        Symbol baseSymbol = extractBaseSymbol(memberSelectTree);
-        if (baseSymbol != null) {
-          unusedElements.remove(baseSymbol);
-        }
+        // Clear leftHandSideAssignment and descend down the tree to catch any variables in the
+        // receiver of this member select, which _are_ considered used.
+        boolean wasLeftHandAssignment = leftHandSideAssignment;
+        leftHandSideAssignment = false;
+        super.visitMemberSelect(memberSelectTree, null);
+        leftHandSideAssignment = wasLeftHandAssignment;
         return null;
       }
 
@@ -495,26 +495,6 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           usageSites.put(symbol, currentExpressionStatement);
         }
         return null;
-      }
-
-      /**
-       * Extracts the base symbol of a member select expression. The base symbol is the first symbol
-       * appeared in the select expression. For instance, if the select expression is {@code a.b.c},
-       * the base symbol is {@code a}. If the base is not a variable but a method, this function
-       * returns null.
-       *
-       * @return the symbol for the base reference or null if the base is not a variable
-       */
-      @Nullable
-      private Symbol extractBaseSymbol(ExpressionTree access) {
-        switch (access.getKind()) {
-          case MEMBER_SELECT:
-            return extractBaseSymbol(((MemberSelectTree) access).getExpression());
-          case IDENTIFIER:
-            return getSymbol(access);
-          default:
-            return null;
-        }
       }
 
       @Override

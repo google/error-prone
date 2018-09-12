@@ -72,7 +72,14 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
               instanceMethod()
                   .onDescendantOf("java.io.PrintWriter")
                   .withNameMatching(Pattern.compile("print|println")),
-              instanceMethod().onExactClass("java.lang.StringBuilder").named("append")));
+              instanceMethod()
+                  .onExactClass("java.lang.StringBuilder")
+                  .named("append")
+                  .withParameters("java.lang.CharSequence", "int", "int"),
+              instanceMethod()
+                  .onExactClass("java.lang.StringBuilder")
+                  .named("append")
+                  .withParameters("char[]", "int", "int")));
 
 
   @Override

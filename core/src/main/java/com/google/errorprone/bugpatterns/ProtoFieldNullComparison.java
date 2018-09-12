@@ -136,7 +136,6 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   private final Matcher<ExpressionTree> protoReceiver;
   private final boolean trackAssignments;
   private final boolean matchListGetters;
-  private final boolean matchCheckNotNull;
   private final boolean matchTestAssertions;
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
@@ -147,8 +146,6 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             : instanceMethod().onDescendantOf(PROTO_SUPER_CLASS);
     trackAssignments = flags.getBoolean("ProtoFieldNullComparison:TrackAssignments").orElse(false);
     matchListGetters = flags.getBoolean("ProtoFieldNullComparison:MatchListGetters").orElse(false);
-    matchCheckNotNull =
-        flags.getBoolean("ProtoFieldNullComparison:MatchCheckNotNull").orElse(false);
     matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
   }
@@ -213,7 +210,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
       VisitorState subState = state.withPath(getCurrentPath());
       ExpressionTree argument;
       ProblemUsage problemType;
-      if (matchCheckNotNull && CHECK_NOT_NULL.matches(node, subState)) {
+      if (CHECK_NOT_NULL.matches(node, subState)) {
         argument = node.getArguments().get(0);
         problemType = ProblemUsage.CHECK_NOT_NULL;
       } else if (matchTestAssertions && ASSERT_NOT_NULL.matches(node, subState)) {

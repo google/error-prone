@@ -332,14 +332,6 @@ public class UnusedTest {
             "  private void notUsedMethod() {}",
             "  // BUG: Diagnostic contains:",
             "  private static void staticNotUsedMethod() {}",
-            "  // BUG: Diagnostic contains:",
-            "  private void writeObject(java.io.ObjectOutputStream out) throws IOException {",
-            "    out.writeInt(123);",
-            "  }",
-            "  private Object readResolve() {",
-            "    return null;",
-            "  }",
-            "  private void readObjectNoData() throws ObjectStreamException {}",
             "  void memberSelectUpdate1() {",
             "    List<Unuseds> l = null;",
             "    // `u` should not be reported as unused.",
@@ -383,6 +375,29 @@ public class UnusedTest {
             "      int local;",
             "    }",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void exemptedMethods() {
+    helper
+        .addSourceLines(
+            "Unuseds.java",
+            "package unusedvars;",
+            "import java.io.IOException;",
+            "import java.io.ObjectStreamException;",
+            "public class Unuseds {",
+            "  private void readObject(java.io.ObjectInputStream in) throws IOException {",
+            "    in.hashCode();",
+            "  }",
+            "  private void writeObject(java.io.ObjectOutputStream out) throws IOException {",
+            "    out.writeInt(123);",
+            "  }",
+            "  private Object readResolve() {",
+            "    return null;",
+            "  }",
+            "  private void readObjectNoData() throws ObjectStreamException {}",
             "}")
         .doTest();
   }
@@ -722,6 +737,25 @@ public class UnusedTest {
             "import org.junit.rules.TestRule;",
             "class Test {",
             "  private TestRule rule;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void findingBaseSymbol() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  int a;",
+            "  void test() {",
+            "    Test o = new Test();",
+            "    ((Test) o).a = 1;",
+            "    (((o))).a = 1;",
+            "    Test p = new Test();",
+            "    id(p).a = 1;",
+            "  }",
+            "  Test id(Test t) { return t; }",
             "}")
         .doTest();
   }

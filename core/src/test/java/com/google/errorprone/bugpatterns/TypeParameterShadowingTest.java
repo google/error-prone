@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -118,15 +119,17 @@ public class TypeParameterShadowingTest {
             "in/Test.java",
             "package foo.bar;",
             "class Test<T> {",
+            "  /** @param <T> foo */",
             "  <T> void something(T t) { T other = t;}",
             "}")
         .addOutputLines(
             "out/Test.java",
             "package foo.bar;",
             "class Test<T> {",
+            "  /** @param <T2> foo */",
             "  <T2> void something(T2 t) { T2 other = t;}",
             "}")
-        .doTest();
+        .doTest(TestMode.TEXT_MATCH);
   }
 
   @Test

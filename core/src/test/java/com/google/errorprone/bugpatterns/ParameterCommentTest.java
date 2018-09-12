@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,6 +26,9 @@ import org.junit.runners.JUnit4;
 /** {@link ParameterComment}Test */
 @RunWith(JUnit4.class)
 public class ParameterCommentTest {
+
+  private final CompilationTestHelper compilationTestHelper =
+      CompilationTestHelper.newInstance(ParameterComment.class, getClass());
 
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(new ParameterComment(), getClass());
@@ -39,6 +43,9 @@ public class ParameterCommentTest {
             "  {",
             "    f(0/*x*/, 1/*y=*/);",
             "    f(0/*x*/, 1); // y",
+            "    f(/* x */ 0, /* y */ 1);",
+            "    f(0 /* x */, /* y */ 1);",
+            "    f(/* x */ 0, 1 /* y */);",
             "  }",
             "}")
         .addOutputLines(
@@ -47,7 +54,10 @@ public class ParameterCommentTest {
             "  void f(int x, int y) {}",
             "  {",
             "    f(/* x= */ 0, /* y= */ 1);",
-            "    f(/* x= */ 0, /* y= */ 1); ",
+            "    f(/* x= */ 0, /* y= */ 1);",
+            "    f(/* x= */ 0, /* y= */ 1);",
+            "    f(/* x= */ 0, /* y= */ 1);",
+            "    f(/* x= */ 0, /* y= */ 1);",
             "  }",
             "}")
         .doTest(TestMode.TEXT_MATCH);
@@ -55,8 +65,8 @@ public class ParameterCommentTest {
 
   @Test
   public void negative() {
-    testHelper
-        .addInputLines(
+    compilationTestHelper
+        .addSourceLines(
             "in/Test.java",
             "class Test {",
             "  void f(int x, int y) {}",
@@ -65,8 +75,7 @@ public class ParameterCommentTest {
             "    f(0 /*y=*/, 1 /*x=*/); ",
             "  }",
             "}")
-        .expectUnchanged()
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test

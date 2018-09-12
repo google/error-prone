@@ -57,6 +57,7 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
@@ -603,33 +604,50 @@ public class SuggestedFixesTest {
 
   @Test
   public void qualifyType_nestedType() {
-    BugCheckerRefactoringTestHelper.newInstance(
-            new ReplaceReturnType("pkg.Outer.Inner"), getClass())
-        .addInputLines(
-            "in/pkg/Outer.java",
-            "package pkg;",
-            "public class Outer {",
-            "  public class Inner {}",
-            "}")
-        .expectUnchanged()
-        .addInputLines(
-            "in/ReplaceReturnType.java",
-            "class ReplaceReturnType {",
-            "  Void foo() { return null; }",
-            "}")
-        .addOutputLines(
-            "out/ReplaceReturnType.java",
-            "import pkg.Outer;",
-            "class ReplaceReturnType {",
-            "  Outer.Inner foo() { return null; }",
-            "}")
-        .doTest();
+    qualifyNestedType(new ReplaceReturnType("pkg.Outer.Inner"));
   }
 
   @Test
   public void qualifyType_deeplyNestedType() {
-    BugCheckerRefactoringTestHelper.newInstance(
-            new ReplaceReturnType("pkg.Outer.Inner.Innermost"), getClass())
+    qualifyDeeplyNestedType(new ReplaceReturnType("pkg.Outer.Inner.Innermost"));
+  }
+
+  /** A test check that replaces all methods' return types with a given type. */
+  @BugPattern(
+      name = "ReplaceReturnTypeString",
+      category = Category.JDK,
+      summary = "Change the method return type",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
+  public static class ReplaceReturnTypeString extends BugChecker
+      implements BugChecker.MethodTreeMatcher {
+    private final String newReturnType;
+
+    public ReplaceReturnTypeString(String newReturnType) {
+      this.newReturnType = newReturnType;
+    }
+
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      SuggestedFix.Builder builder = SuggestedFix.builder();
+      String qualifiedName = SuggestedFixes.qualifyType(state, builder, newReturnType);
+      return describeMatch(
+          tree.getReturnType(), builder.replace(tree.getReturnType(), qualifiedName).build());
+    }
+  }
+
+  @Test
+  public void qualifyTypeString_nestedType() {
+    qualifyNestedType(new ReplaceReturnTypeString("pkg.Outer.Inner"));
+  }
+
+  @Test
+  public void qualifyTypeString_deeplyNestedType() {
+    qualifyDeeplyNestedType(new ReplaceReturnTypeString("pkg.Outer.Inner.Innermost"));
+  }
+
+  private void qualifyDeeplyNestedType(BugChecker bugChecker) {
+    BugCheckerRefactoringTestHelper.newInstance(bugChecker, getClass())
         .addInputLines(
             "in/pkg/Outer.java",
             "package pkg;",
@@ -649,6 +667,29 @@ public class SuggestedFixesTest {
             "import pkg.Outer;",
             "class ReplaceReturnType {",
             "  Outer.Inner.Innermost foo() { return null; }",
+            "}")
+        .doTest();
+  }
+
+  private void qualifyNestedType(BugChecker bugChecker) {
+    BugCheckerRefactoringTestHelper.newInstance(bugChecker, getClass())
+        .addInputLines(
+            "in/pkg/Outer.java",
+            "package pkg;",
+            "public class Outer {",
+            "  public class Inner {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/ReplaceReturnType.java",
+            "class ReplaceReturnType {",
+            "  Void foo() { return null; }",
+            "}")
+        .addOutputLines(
+            "out/ReplaceReturnType.java",
+            "import pkg.Outer;",
+            "class ReplaceReturnType {",
+            "  Outer.Inner foo() { return null; }",
             "}")
         .doTest();
   }
@@ -1227,6 +1268,40 @@ public class SuggestedFixesTest {
     BugCheckerRefactoringTestHelper.newInstance(new RemoveAddModifier(), getClass())
         .addInputLines("in/Test.java", "public class Test {}")
         .addOutputLines("out/Test.java", "abstract class Test {}")
+        .doTest();
+  }
+
+  /** A bugchecker for testing suggested fixes. */
+  @BugPattern(
+      name = "PrefixAddImportCheck",
+      summary = "A bugchecker for testing suggested fixes.",
+      severity = ERROR,
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  public static class PrefixAddImportCheck extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return describeMatch(
+          tree,
+          SuggestedFix.builder()
+              .prefixWith(tree, "@Deprecated\n")
+              .addImport("java.util.List")
+              .build());
+    }
+  }
+
+  @Test
+  public void prefixAddImport() throws IOException {
+    BugCheckerRefactoringTestHelper.newInstance(new PrefixAddImportCheck(), getClass())
+        .addInputLines(
+            "in/Test.java", //
+            "package p;",
+            "class Test {}")
+        .addOutputLines(
+            "out/Test.java", //
+            "package p;",
+            "import java.util.List;",
+            "@Deprecated",
+            "class Test {}")
         .doTest();
   }
 }

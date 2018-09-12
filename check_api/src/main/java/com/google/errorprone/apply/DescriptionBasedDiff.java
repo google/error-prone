@@ -99,7 +99,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
     importsToRemove.addAll(fix.getImportsToRemove());
     for (Replacement replacement : fix.getReplacements(endPositions)) {
       try {
-        replacements.add(replacement);
+        replacements.add(replacement, Replacements.CoalescePolicy.EXISTING_FIRST);
       } catch (IllegalArgumentException iae) {
         if (!ignoreOverlappingFixes) {
           throw iae;
@@ -119,7 +119,8 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
             Replacement.create(
                 importStatements.getStartPos(),
                 importStatements.getEndPos(),
-                importStatements.toString()));
+                importStatements.toString()),
+            Replacements.CoalescePolicy.REPLACEMENT_FIRST);
       }
     }
     for (Replacement replacement : replacements.descending()) {

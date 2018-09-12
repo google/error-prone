@@ -38,6 +38,12 @@ All known `Queue` implementations besides [`LinkedList`] use reference equality
 instead of value-based equality. *Some* of the workarounds discussed above may
 apply.
 
+## For [`CharSequence`]
+
+When comparing a `String` to a `CharSequence`, prefer `String#contentEquals`.
+When comparing the content of two `CharSequence`s, you may want to compare the
+string representation: `lhs.toString().contentEquals(rhs)`.
+
 [`Collection`]: https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html
 [`Iterable`]: https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
 [`Iterables.elementsEqual`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/Iterables.html#elementsEqual-java.lang.Iterable-java.lang.Iterable-
@@ -47,3 +53,4 @@ apply.
 [`Multiset`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/Multiset.html
 [`SetMultimap`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/SetMultimap.html
 [`Queue`]: http://docs.oracle.com/javase/8/docs/api/java/util/Queue.html
+[`CharSequence`]: http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html
