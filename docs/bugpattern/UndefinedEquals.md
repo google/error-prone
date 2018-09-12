@@ -22,8 +22,8 @@ widely in your code.
 
 On the other hand, if you might be mixing a `List` and a non-`List`, etc., you
 are at risk. If you can't correct that situation, one alternative solution is to
-use [`Iterables.elementsEqual`] (which checks for *order-dependent* equality,
-like `List.equals`).
+use [`Iterables.elementsEqual`] \(which checks for *order-dependent* equality,
+like `List.equals`\).
 
 ## For [`Multimap`]
 
