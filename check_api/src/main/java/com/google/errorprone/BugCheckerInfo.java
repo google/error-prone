@@ -185,10 +185,9 @@ public class BugCheckerInfo implements Serializable {
         return pattern.link();
       case NONE:
         return null;
-      default:
-        throw new IllegalStateException(
-            "Unexpected value for linkType element of @BugPattern: " + pattern.linkType());
     }
+    throw new AssertionError(
+        "Unexpected value for linkType element of @BugPattern: " + pattern.linkType());
   }
 
   /**

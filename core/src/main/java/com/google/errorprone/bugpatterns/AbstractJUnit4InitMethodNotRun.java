@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.not;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -131,7 +130,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
   }
 
   private void makeProtectedPublic(
-      MethodTree methodTree, VisitorState state, Builder suggestedFix) {
+      MethodTree methodTree, VisitorState state, SuggestedFix.Builder suggestedFix) {
     if (Matchers.<MethodTree>hasModifier(Modifier.PROTECTED).matches(methodTree, state)) {
       ModifiersTree modifiers = methodTree.getModifiers();
       CharSequence modifiersSource = state.getSourceForNode(modifiers);

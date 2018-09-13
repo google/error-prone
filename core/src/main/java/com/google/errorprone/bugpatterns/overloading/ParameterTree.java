@@ -71,7 +71,7 @@ abstract class ParameterTree {
   }
 
   @Override
-  public String toString() {
+  public final String toString() {
     String type = getType().toString();
     String name = getName().toString();
 
