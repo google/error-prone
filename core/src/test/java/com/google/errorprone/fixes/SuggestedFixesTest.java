@@ -16,6 +16,7 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
@@ -59,6 +60,7 @@ import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.lang.annotation.Retention;
+import java.net.URI;
 import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 import org.junit.Test;
@@ -1303,5 +1305,13 @@ public class SuggestedFixesTest {
             "@Deprecated",
             "class Test {}")
         .doTest();
+  }
+
+  @Test
+  public void sourceURITest() throws Exception {
+    assertThat(SuggestedFixes.sourceURI(URI.create("file:/com/google/Foo.java")))
+        .isEqualTo(URI.create("file:/com/google/Foo.java"));
+    assertThat(SuggestedFixes.sourceURI(URI.create("jar:file:sources.jar!/com/google/Foo.java")))
+        .isEqualTo(URI.create("file:/com/google/Foo.java"));
   }
 }

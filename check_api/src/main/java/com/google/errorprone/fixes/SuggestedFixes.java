@@ -28,6 +28,7 @@ import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
 import static java.util.stream.Collectors.joining;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicates;
@@ -79,8 +80,11 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Options;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
+import java.net.JarURLConnection;
+import java.net.URI;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -751,7 +755,7 @@ public class SuggestedFixes {
         diff.applyDifferences(fixSource);
         fileObjects.set(
             i,
-            new SimpleJavaFileObject(modifiedFile.toUri(), Kind.SOURCE) {
+            new SimpleJavaFileObject(sourceURI(modifiedFile.toUri()), Kind.SOURCE) {
               @Override
               public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
                 return fixSource.getAsSequence();
@@ -780,6 +784,20 @@ public class SuggestedFixes {
       return false; // ¯\_(ツ)_/¯
     }
     return countErrors(diagnosticListener) == 0;
+  }
+
+  /** Create a plausible URI to use in {@link #compilesWithFix}. */
+  @VisibleForTesting
+  static URI sourceURI(URI uri) {
+    if (!uri.getScheme().equals("jar")) {
+      return uri;
+    }
+    try {
+      return URI.create(
+          "file:/" + ((JarURLConnection) uri.toURL().openConnection()).getEntryName());
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   private static long countErrors(DiagnosticCollector<JavaFileObject> diagnosticCollector) {
