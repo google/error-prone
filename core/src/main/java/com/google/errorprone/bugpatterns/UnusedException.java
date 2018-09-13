@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
@@ -62,6 +63,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
             + " symbol rather than setting it as a cause. This can make debugging harder.",
     severity = WARNING,
     tags = StandardTags.STYLE,
+    linkType = CUSTOM,
+    link = "https://google.github.io/styleguide/javaguide.html#s6.2-caught-exceptions",
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class UnusedException extends BugChecker implements CatchTreeMatcher {
 
