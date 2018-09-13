@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +46,6 @@ import org.junit.runners.JUnit4;
 public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
 
   @Rule public final TemporaryFolder tempDir = new TemporaryFolder();
-  final List<ScannerTest> tests = new ArrayList<ScannerTest>();
   final List<String> filesToCompile = new ArrayList<String>();
 
   private void writeFileToLocalDisk(String fileName, String... lines) throws IOException {
@@ -94,14 +92,6 @@ public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
         "    return 2;",
         "  }",
         "}");
-  }
-
-  @Override
-  @After
-  public void tearDown() {
-    for (ScannerTest test : tests) {
-      test.assertDone();
-    }
   }
 
   @Test

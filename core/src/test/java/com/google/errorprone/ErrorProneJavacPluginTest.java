@@ -217,7 +217,7 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of("-Xplugin:ErrorProne"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(source));
-    Throwable expected = assertThrows(Throwable.class, () -> task.call());
+    RuntimeException expected = assertThrows(RuntimeException.class, () -> task.call());
     assertThat(expected)
         .hasMessageThat()
         .contains("The default compilation policy (by-todo) is not supported");
@@ -240,7 +240,7 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of("-XDcompilePolicy=bytodo", "-Xplugin:ErrorProne"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(source));
-    Throwable expected = assertThrows(Throwable.class, () -> task.call());
+    RuntimeException expected = assertThrows(RuntimeException.class, () -> task.call());
     assertThat(expected).hasMessageThat().contains("-XDcompilePolicy=bytodo is not supported");
   }
 

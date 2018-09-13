@@ -39,7 +39,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodTree;
@@ -129,7 +128,7 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
   }
 
   private static Fix mergeFixes(List<SuggestedFix> fixesToMerge) {
-    Builder builderForResult = SuggestedFix.builder();
+    SuggestedFix.Builder builderForResult = SuggestedFix.builder();
     for (SuggestedFix fix : fixesToMerge) {
       if (fix != null) {
         builderForResult.merge(fix);

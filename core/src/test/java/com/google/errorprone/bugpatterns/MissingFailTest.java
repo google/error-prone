@@ -28,7 +28,7 @@ import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.tree.TryTree;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -169,7 +169,7 @@ public class MissingFailTest {
 
   private static class TestScanner extends Scanner {
 
-    final List<Description> suggestedChanges = new LinkedList<>();
+    final List<Description> suggestedChanges = new ArrayList<>();
 
     @Override
     public Void visitTry(TryTree node, VisitorState visitorState) {
