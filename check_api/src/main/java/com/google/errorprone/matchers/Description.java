@@ -21,14 +21,14 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.fixes.Fix;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -47,8 +47,8 @@ public class Description {
 
   private static final String UNDEFINED_CHECK_NAME = "Undefined";
 
-  /** The AST node that matched. */
-  public final Tree node;
+  /** The position of the match. */
+  public final DiagnosticPosition position;
 
   /** The name of the check that produced the match. */
   public final String checkName;
@@ -58,6 +58,7 @@ public class Description {
 
   /** The raw link URL for the check. May be null if there is no link. */
   @Nullable private final String linkUrl;
+
   /**
    * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
    * order of decreasing preference, from most preferred to least preferred.
@@ -97,20 +98,23 @@ public class Description {
   @Deprecated
   public Description(
       Tree node, String message, Fix suggestedFix, BugPattern.SeverityLevel severity) {
-    this(node, UNDEFINED_CHECK_NAME, message, message, ImmutableList.of(suggestedFix), severity);
-    if (suggestedFix == null) {
-      throw new IllegalArgumentException("suggestedFix must not be null.");
-    }
+    this(
+        (DiagnosticPosition) node,
+        UNDEFINED_CHECK_NAME,
+        message,
+        message,
+        ImmutableList.of(suggestedFix),
+        severity);
   }
 
   private Description(
-      Tree node,
+      DiagnosticPosition position,
       String checkName,
       String rawMessage,
       String linkUrl,
       ImmutableList<Fix> fixes,
       SeverityLevel severity) {
-    this.node = node;
+    this.position = position;
     this.checkName = checkName;
     this.rawMessage = rawMessage;
     this.linkUrl = linkUrl;
@@ -121,18 +125,7 @@ public class Description {
   /** Internal-only. Has no effect if applied to a Description within a BugChecker. */
   @CheckReturnValue
   public Description applySeverityOverride(SeverityLevel severity) {
-    return new Description(node, checkName, rawMessage, linkUrl, fixes, severity);
-  }
-
-  @CheckReturnValue
-  public Description filterFixes(Predicate<? super Fix> predicate) {
-    return new Description(
-        node,
-        checkName,
-        rawMessage,
-        linkUrl,
-        ImmutableList.copyOf(Iterables.filter(fixes, predicate)),
-        severity);
+    return new Description(position, checkName, rawMessage, linkUrl, fixes, severity);
   }
 
   /**
@@ -146,12 +139,28 @@ public class Description {
   /** Returns a new builder for {@link Description}s. */
   public static Builder builder(
       Tree node, String name, @Nullable String link, SeverityLevel severity, String message) {
-    return new Builder(node, name, link, severity, message);
+    return new Builder((DiagnosticPosition) node, name, link, severity, message);
+  }
+
+  /** Returns a new builder for {@link Description}s. */
+  public static Builder builder(
+      DiagnosticPosition position,
+      String name,
+      @Nullable String link,
+      SeverityLevel severity,
+      String message) {
+    return new Builder(position, name, link, severity, message);
+  }
+
+  /** Returns a new builder for {@link Description}s. */
+  public static Builder builder(
+      JCTree tree, String name, @Nullable String link, SeverityLevel severity, String message) {
+    return new Builder(tree, name, link, severity, message);
   }
 
   /** Builder for {@code Description}s. */
   public static class Builder {
-    private final Tree node;
+    private final DiagnosticPosition position;
     private final String name;
     private final String linkUrl;
     private final SeverityLevel severity;
@@ -159,12 +168,12 @@ public class Description {
     private String rawMessage;
 
     private Builder(
-        Tree node,
+        DiagnosticPosition position,
         String name,
         @Nullable String linkUrl,
         SeverityLevel severity,
         String rawMessage) {
-      this.node = Preconditions.checkNotNull(node);
+      this.position = Preconditions.checkNotNull(position);
       this.name = Preconditions.checkNotNull(name);
       this.linkUrl = linkUrl;
       this.severity = Preconditions.checkNotNull(severity);
@@ -228,7 +237,7 @@ public class Description {
     }
 
     public Description build() {
-      return new Description(node, name, rawMessage, linkUrl, fixListBuilder.build(), severity);
+      return new Description(position, name, rawMessage, linkUrl, fixListBuilder.build(), severity);
     }
   }
 }

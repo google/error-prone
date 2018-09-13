@@ -25,6 +25,9 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
+import com.sun.tools.javac.tree.EndPosTable;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -33,7 +36,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DescriptionTest {
 
-  private static class MockTree implements Tree {
+  private static class MockTree implements Tree, DiagnosticPosition {
     @Override
     public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1) {
       return null;
@@ -42,6 +45,26 @@ public class DescriptionTest {
     @Override
     public Kind getKind() {
       return null;
+    }
+
+    @Override
+    public JCTree getTree() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getStartPosition() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getPreferredPosition() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getEndPosition(EndPosTable endPosTable) {
+      throw new UnsupportedOperationException();
     }
   }
 
@@ -72,7 +95,7 @@ public class DescriptionTest {
   @Test
   public void testCustomDescription() {
     Description description =
-        BugChecker.buildDescriptionFromChecker(new MockTree(), new MyChecker())
+        BugChecker.buildDescriptionFromChecker((DiagnosticPosition) new MockTree(), new MyChecker())
             .setMessage("custom message")
             .build();
     assertEquals("DeadException", description.checkName);
@@ -97,7 +120,8 @@ public class DescriptionTest {
   @Test
   public void testCustomLink() {
     Description description =
-        BugChecker.buildDescriptionFromChecker(new MockTree(), new CustomLinkChecker())
+        BugChecker.buildDescriptionFromChecker(
+                (DiagnosticPosition) new MockTree(), new CustomLinkChecker())
             .setMessage("custom message")
             .build();
     assertEquals(
