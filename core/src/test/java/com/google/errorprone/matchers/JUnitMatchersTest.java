@@ -66,6 +66,7 @@ public final class JUnitMatchersTest {
         .doTest();
   }
 
+  @Test
   public void beforeAfterAnnotations_notRecognized() {
     compilationHelper
         .addSourceLines(
@@ -112,12 +113,14 @@ public final class JUnitMatchersTest {
         .doTest();
   }
 
+  @Test
   public void ignoreClassAnnotation_notRecognized() {
     compilationHelper
         .addSourceLines(
             "TestIgnoreAnnotation.java",
             "import org.junit.Ignore;",
-            "// BUG: Diagnostic contains: Version:JUnit4",
+            // Uncomment this line if we decide to recognize @Ignored classes as JUnit4
+            // "// BUG: Diagnostic contains: Version:JUnit4",
             "@Ignore public class TestIgnoreAnnotation {}")
         .doTest();
   }
