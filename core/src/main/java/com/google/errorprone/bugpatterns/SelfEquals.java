@@ -48,7 +48,6 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import java.util.List;
-import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 /** @author bhagwani@google.com (Sumit Bhagwani) */
@@ -63,7 +62,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
   private static final Matcher<Tree> ASSERTION =
       toType(
           MethodInvocationTree.class,
-          staticMethod().anyClass().withNameMatching(Pattern.compile("assertTrue|assertThat")));
+          staticMethod().anyClass().namedAnyOf("assertTrue", "assertThat"));
 
   private static final Matcher<MethodInvocationTree> INSTANCE_MATCHER =
       allOf(

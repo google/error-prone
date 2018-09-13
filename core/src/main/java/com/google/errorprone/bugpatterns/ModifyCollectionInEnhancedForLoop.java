@@ -36,7 +36,6 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /** @author anishvisaria98@gmail.com (Anish Visaria) */
 @BugPattern(
@@ -52,7 +51,7 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
   private static final Matcher<ExpressionTree> MATCHER =
       instanceMethod()
           .onDescendantOf("java.util.Collection")
-          .withNameMatching(Pattern.compile("add|addAll|clear|remove|removeAll|retainAll"));
+          .namedAnyOf("add", "addAll", "clear", "remove", "removeAll", "retainAll");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

@@ -41,7 +41,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
-import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 /**
@@ -103,9 +102,12 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
       anyOf(
           instanceMethod()
               .onDescendantOf("com.google.common.truth.Subject")
-              .withNameMatching(
-                  Pattern.compile(
-                      "isEqualTo|isNotEqualTo|isSameAs|isNotSameAs|containsExactlyElementsIn")),
+              .namedAnyOf(
+                  "isEqualTo",
+                  "isNotEqualTo",
+                  "isSameAs",
+                  "isNotSameAs",
+                  "containsExactlyElementsIn"),
           instanceMethod()
               .onDescendantOf("com.google.common.truth.MapSubject")
               .named("containsExactlyEntriesIn"),

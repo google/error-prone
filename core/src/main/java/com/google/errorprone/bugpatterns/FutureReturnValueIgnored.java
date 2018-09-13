@@ -103,7 +103,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
               .withNameMatching(Pattern.compile("addListeners?")),
           instanceMethod()
               .onExactClass("java.util.concurrent.CompletableFuture")
-              .withNameMatching(Pattern.compile("completeAsync|orTimeout|completeOnTimeout")));
+              .namedAnyOf("completeAsync", "orTimeout", "completeOnTimeout"));
 
   private static final Matcher<ExpressionTree> MATCHER =
       new Matcher<ExpressionTree>() {
