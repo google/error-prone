@@ -63,7 +63,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 /** Matches comparison of proto fields to {@code null}. */
@@ -96,9 +95,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
           instanceMethod().onDescendantOf("com.google.common.truth.Subject").named("isNotNull"),
           receiverOfInvocation(
               anyOf(
-                  staticMethod()
-                      .onClass("com.google.common.truth.Truth")
-                      .withNameMatching(Pattern.compile("assertThat")),
+                  staticMethod().onClass("com.google.common.truth.Truth").namedAnyOf("assertThat"),
                   instanceMethod()
                       .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
                       .named("that"))));

@@ -35,7 +35,6 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.tools.javac.code.Type;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 import javax.lang.model.type.TypeKind;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -49,9 +48,7 @@ public class RandomCast extends BugChecker implements MethodInvocationTreeMatche
 
   private static final Matcher<ExpressionTree> MATCHER =
       anyOf(
-          instanceMethod()
-              .onExactClass("java.util.Random")
-              .withNameMatching(Pattern.compile("nextFloat|nextDouble")),
+          instanceMethod().onExactClass("java.util.Random").namedAnyOf("nextFloat", "nextDouble"),
           staticMethod().onClass("java.lang.Math").named("random"));
 
   private static final Set<TypeKind> INTEGRAL = EnumSet.of(TypeKind.LONG, TypeKind.INT);

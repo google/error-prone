@@ -95,10 +95,19 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
   private static final Matcher<ExpressionTree> COLLECTION_SETTER =
       instanceMethod()
           .onDescendantOfAny(COLLECTIONS)
-          .withNameMatching(
-              Pattern.compile(
-                  "add|addAll|clear|put|putAll|remove|removeAll|removeIf|replaceAll|"
-                      + "retainAll|set|sort"));
+          .namedAnyOf(
+              "add",
+              "addAll",
+              "clear",
+              "put",
+              "putAll",
+              "remove",
+              "removeAll",
+              "removeIf",
+              "replaceAll",
+              "retainAll",
+              "set",
+              "sort");
 
   private static final ImmutableSet<String> PROTO_CLASSES =
       ImmutableSet.of(
@@ -158,7 +167,7 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
                       PROTO_CLASSES.stream()
                           .map(Suppliers::typeFromString)
                           .collect(toImmutableList())))
-              .withNameMatching(Pattern.compile("toBuilder|newBuilderForType")));
+              .namedAnyOf("toBuilder", "newBuilderForType"));
 
   private static final Matcher<ExpressionTree> NEW_COLLECTION =
       anyOf(

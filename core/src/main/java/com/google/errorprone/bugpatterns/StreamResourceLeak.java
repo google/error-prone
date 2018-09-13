@@ -45,7 +45,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -63,7 +62,7 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker
   public static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.staticMethod()
           .onClass("java.nio.file.Files")
-          .withNameMatching(Pattern.compile("lines|newDirectoryStream|list|walk|find"));
+          .namedAnyOf("lines", "newDirectoryStream", "list", "walk", "find");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -51,9 +50,7 @@ public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMa
   private static final Matcher<Tree> ASSERTION =
       toType(
           ExpressionTree.class,
-          staticMethod()
-              .anyClass()
-              .withNameMatching(Pattern.compile("assertTrue|assertFalse|assertThat")));
+          staticMethod().anyClass().namedAnyOf("assertTrue", "assertFalse", "assertThat"));
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {

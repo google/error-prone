@@ -82,7 +82,7 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
               REFACTORING_HELPER.named("doTest")),
           MethodPairing.of(
               "CompilationTestHelper",
-              COMPILATION_HELPER.withNameMatching(Pattern.compile("addSourceLines|addSourceFile")),
+              COMPILATION_HELPER.namedAnyOf("addSourceLines", "addSourceFile"),
               COMPILATION_HELPER.named("doTest")));
 
   @Override

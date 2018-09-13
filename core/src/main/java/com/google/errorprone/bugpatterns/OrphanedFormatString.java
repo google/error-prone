@@ -44,7 +44,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import edu.umd.cs.findbugs.formatStringChecker.Formatter;
 import edu.umd.cs.findbugs.formatStringChecker.MissingFormatArgumentException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -66,12 +65,8 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
                     Symbol sym = ASTHelpers.getSymbol(tree);
                     return sym instanceof MethodSymbol && !((MethodSymbol) sym).isVarArgs();
                   }),
-              instanceMethod()
-                  .onDescendantOf("java.io.PrintStream")
-                  .withNameMatching(Pattern.compile("print|println")),
-              instanceMethod()
-                  .onDescendantOf("java.io.PrintWriter")
-                  .withNameMatching(Pattern.compile("print|println")),
+              instanceMethod().onDescendantOf("java.io.PrintStream").namedAnyOf("print", "println"),
+              instanceMethod().onDescendantOf("java.io.PrintWriter").namedAnyOf("print", "println"),
               instanceMethod()
                   .onExactClass("java.lang.StringBuilder")
                   .named("append")

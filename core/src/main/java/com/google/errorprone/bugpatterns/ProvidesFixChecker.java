@@ -42,7 +42,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
-import java.util.regex.Pattern;
 
 @BugPattern(
     name = "ProvidesFix",
@@ -57,7 +56,7 @@ public class ProvidesFixChecker extends BugChecker implements ClassTreeMatcher {
       anyOf(
           MethodMatchers.instanceMethod()
               .onDescendantOf("com.google.errorprone.matchers.Description.Builder")
-              .withNameMatching(Pattern.compile("addFix|addAllFixes")),
+              .namedAnyOf("addFix", "addAllFixes"),
           MethodMatchers.instanceMethod()
               .onDescendantOf("com.google.errorprone.bugpatterns.BugChecker")
               .named("describeMatch")
