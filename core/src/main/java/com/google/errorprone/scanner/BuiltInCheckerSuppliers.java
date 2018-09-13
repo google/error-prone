@@ -327,10 +327,6 @@ import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
-import com.google.errorprone.bugpatterns.javadoc.InvalidParam;
-import com.google.errorprone.bugpatterns.javadoc.InvalidTag;
-import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
-import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.NullableDereference;
@@ -672,10 +668,6 @@ public class BuiltInCheckerSuppliers {
           IterablePathParameter.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           Java7ApiChecker.class,
-          InvalidTag.class,
-          InvalidParam.class,
-          ReturnFromVoid.class,
-          InvalidThrows.class,
           JavaxInjectOnFinalField.class,
           LambdaFunctionalInterface.class,
           LockMethodChecker.class,
