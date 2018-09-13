@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.util.Context;
@@ -79,7 +78,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   public void onDescribed(Description description) {
     List<AppliedFix> appliedFixes =
         description.fixes.stream()
-            .filter(f -> !shouldSkipImportTreeFix(description.node, f))
+            .filter(f -> !shouldSkipImportTreeFix(description.position, f))
             .map(fixToAppliedFix)
             .filter(Objects::nonNull)
             .collect(Collectors.toCollection(ArrayList::new));
@@ -90,7 +89,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     try {
       JCDiagnostic.Factory factory = JCDiagnostic.Factory.instance(context);
       JCDiagnostic.DiagnosticType type = JCDiagnostic.DiagnosticType.ERROR;
-      DiagnosticPosition pos = (DiagnosticPosition) description.node;
+      DiagnosticPosition pos = description.position;
       switch (description.severity) {
         case ERROR:
           if (dontUseErrors) {
@@ -117,8 +116,8 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   // b/79407644: Because AppliedFix doesn't consider imports, just don't display a
   // suggested fix to an ImportTree when the fix reports imports to remove/add. Imports can still
   // be fixed if they were specified via SuggestedFix.replace, for example.
-  private static boolean shouldSkipImportTreeFix(Tree node, Fix f) {
-    if (node == null || node.getKind() != Kind.IMPORT) {
+  private static boolean shouldSkipImportTreeFix(DiagnosticPosition position, Fix f) {
+    if (position.getTree() != null && position.getTree().getKind() != Kind.IMPORT) {
       return false;
     }
 

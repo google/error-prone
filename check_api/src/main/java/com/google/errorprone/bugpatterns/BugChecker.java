@@ -80,6 +80,8 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -133,6 +135,25 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   /**
+   * Returns a Description builder, which allows you to customize the diagnostic with a custom
+   * message or multiple fixes.
+   */
+  @CheckReturnValue
+  protected Description.Builder buildDescription(DiagnosticPosition position) {
+    return buildDescriptionFromChecker(position, this);
+  }
+
+  /**
+   * Returns a Description builder, which allows you to customize the diagnostic with a custom
+   * message or multiple fixes.
+   */
+  // This overload exists purely to disambiguate for JCTree.
+  @CheckReturnValue
+  protected Description.Builder buildDescription(JCTree tree) {
+    return buildDescriptionFromChecker((DiagnosticPosition) tree, this);
+  }
+
+  /**
    * Returns a new builder for {@link Description}s.
    *
    * @param node the node where the error is
@@ -142,6 +163,39 @@ public abstract class BugChecker implements Suppressible, Serializable {
   public static Description.Builder buildDescriptionFromChecker(Tree node, BugChecker checker) {
     return Description.builder(
         Preconditions.checkNotNull(node),
+        checker.canonicalName(),
+        checker.linkUrl(),
+        checker.defaultSeverity(),
+        checker.message());
+  }
+
+  /**
+   * Returns a new builder for {@link Description}s.
+   *
+   * @param position the position of the error
+   * @param checker the {@code BugChecker} instance that is producing this {@code Description}
+   */
+  @CheckReturnValue
+  public static Description.Builder buildDescriptionFromChecker(
+      DiagnosticPosition position, BugChecker checker) {
+    return Description.builder(
+        position,
+        checker.canonicalName(),
+        checker.linkUrl(),
+        checker.defaultSeverity(),
+        checker.message());
+  }
+
+  /**
+   * Returns a new builder for {@link Description}s.
+   *
+   * @param tree the tree where the error is
+   * @param checker the {@code BugChecker} instance that is producing this {@code Description}
+   */
+  @CheckReturnValue
+  public static Description.Builder buildDescriptionFromChecker(JCTree tree, BugChecker checker) {
+    return Description.builder(
+        (DiagnosticPosition) tree,
         checker.canonicalName(),
         checker.linkUrl(),
         checker.defaultSeverity(),
