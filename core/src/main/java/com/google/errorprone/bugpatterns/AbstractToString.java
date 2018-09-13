@@ -128,6 +128,9 @@ public abstract class AbstractToString extends BugChecker
     if (type instanceof MethodType) {
       type = type.getReturnType();
     }
+    if (!typePredicate().apply(type, state)) {
+      return NO_MATCH;
+    }
     Tree parent = state.getPath().getParentPath().getLeaf();
     ToStringKind toStringKind = isToString(parent, tree, state);
     if (toStringKind == ToStringKind.NONE) {
@@ -143,9 +146,6 @@ public abstract class AbstractToString extends BugChecker
         break;
       default:
         throw new AssertionError(toStringKind);
-    }
-    if (!typePredicate().apply(type, state)) {
-      return NO_MATCH;
     }
     return maybeFix(tree, state, type, fix);
   }
