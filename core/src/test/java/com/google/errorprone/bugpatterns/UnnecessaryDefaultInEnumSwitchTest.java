@@ -323,6 +323,8 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "        break;",
             "      case THREE:",
             "        return true;",
+            "      case UNRECOGNIZED:",
+            "        throw new AssertionError(c);",
             "    }",
             "    return false;",
             "  }",
@@ -704,5 +706,47 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void switchCompletesUnrecognized() {
+    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE, UNRECOGNIZED }",
+            "  void m(Case c) {",
+            "    switch (c) {",
+            "      case ONE:",
+            "        break;",
+            "      case TWO:",
+            "        break;",
+            "      case THREE:",
+            "        break;",
+            "      default:",
+            "        // This is a comment",
+            "        throw new AssertionError(c);",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE, UNRECOGNIZED }",
+            "  void m(Case c) {",
+            "    switch (c) {",
+            "      case ONE:",
+            "        break;",
+            "      case TWO:",
+            "        break;",
+            "      case THREE:",
+            "        break;",
+            "      case UNRECOGNIZED:",
+            "        // This is a comment",
+            "        throw new AssertionError(c);",
+            "    }",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 }

@@ -175,7 +175,12 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
       // it's OK to to delete the default.
       return buildDescription(defaultCase)
           .setMessage(DESCRIPTION_REMOVED_DEFAULT)
-          .addFix(SuggestedFix.delete(defaultCase))
+          .addFix(
+              unrecognized
+                  ? SuggestedFix.builder()
+                      .replace(defaultCase, "case UNRECOGNIZED:" + initialComments + defaultSource)
+                      .build()
+                  : SuggestedFix.delete(defaultCase))
           .build();
     }
     // case (1) -- If it can complete, we need to merge the default into it.
