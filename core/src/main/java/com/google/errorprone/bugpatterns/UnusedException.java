@@ -22,6 +22,8 @@ import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -49,6 +51,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.lang.model.element.Modifier;
 
 /**
  * Bugpattern for catch blocks which catch an exception but throw another one without wrapping the
@@ -67,6 +70,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
     link = "https://google.github.io/styleguide/javaguide.html#s6.2-caught-exceptions",
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class UnusedException extends BugChecker implements CatchTreeMatcher {
+
+  private static final ImmutableSet<Modifier> VISIBILITY_MODIFIERS =
+      ImmutableSet.of(Modifier.PRIVATE, Modifier.PROTECTED, Modifier.PUBLIC);
 
   @Override
   public Description matchCatch(CatchTree tree, VisitorState state) {
@@ -135,6 +141,14 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
     for (MethodSymbol proposedConstructor : constructors) {
       List<Type> proposedTypes = getParameterTypes(proposedConstructor);
       if (proposedTypes.size() != types.size() + 1) {
+        continue;
+      }
+      Set<Modifier> constructorVisibility =
+          Sets.intersection(constructorSymbol.getModifiers(), VISIBILITY_MODIFIERS);
+      Set<Modifier> replacementVisibility =
+          Sets.intersection(proposedConstructor.getModifiers(), VISIBILITY_MODIFIERS);
+      if (constructor.getClassBody() == null
+          && !constructorVisibility.equals(replacementVisibility)) {
         continue;
       }
       if (typesEqual(proposedTypes.subList(0, types.size()), types, state)
