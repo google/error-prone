@@ -194,6 +194,31 @@ public final class UnusedExceptionTest {
             "    }",
             "  }",
             "}")
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
+  }
+
+  @Test
+  public void replacementNotVisible() {
+    BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass())
+        .addInputLines(
+            "in/MyException.java",
+            "class MyException extends RuntimeException {",
+            "  public MyException(int a) {}",
+            "  protected MyException(int a, Throwable th) {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void test() {",
+            "    try {",
+            "    } catch (Exception e) {",
+            // Not refactored as MyException(int, Throwable) isn't visible.
+            "      throw new MyException(1);",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
   }
 }
