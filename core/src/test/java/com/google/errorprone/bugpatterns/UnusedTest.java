@@ -678,6 +678,21 @@ public class UnusedTest {
             "  @Inject Object foo;",
             "  @Inject public Object bar;",
             "}")
+        .setArgs(ImmutableList.of("-XepOpt:Unused:ReportInjectedFields"))
+        .doTest();
+  }
+
+  @Test
+  public void unusedInject_notByDefault() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "import javax.inject.Inject;",
+            "public class Test {",
+            "  @Inject Object foo;",
+            "  @Inject public Object bar;",
+            "}")
         .doTest();
   }
 

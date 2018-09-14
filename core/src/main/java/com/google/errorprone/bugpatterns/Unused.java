@@ -171,6 +171,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
   private static final ImmutableSet<String> LOGGER_TYPE_NAME = ImmutableSet.of("GoogleLogger");
 
   private static final ImmutableSet<String> LOGGER_VAR_NAME = ImmutableSet.of("logger");
+  private final boolean reportInjectedFields;
 
   public Unused(ErrorProneFlags flags) {
     ImmutableSet.Builder<String> methodAnnotationsExemptingParameters =
@@ -180,6 +181,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
         .getList("Unused:methodAnnotationsExemptingParameters")
         .ifPresent(methodAnnotationsExemptingParameters::addAll);
     this.methodAnnotationsExemptingParameters = methodAnnotationsExemptingParameters.build();
+    this.reportInjectedFields = flags.getBoolean("Unused:ReportInjectedFields").orElse(false);
   }
 
   @Override
@@ -301,7 +303,8 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       }
 
       private boolean isFieldEligibleForChecking(VariableTree variableTree, VarSymbol symbol) {
-        if (variableTree.getModifiers().getFlags().isEmpty()
+        if (reportInjectedFields
+            && variableTree.getModifiers().getFlags().isEmpty()
             && ASTHelpers.hasDirectAnnotationWithSimpleName(variableTree, "Inject")) {
           return true;
         }
