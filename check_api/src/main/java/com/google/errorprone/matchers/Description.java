@@ -63,7 +63,7 @@ public class Description {
    * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
    * order of decreasing preference, from most preferred to least preferred.
    */
-  public final ImmutableList<Fix> fixes;
+  public final List<Fix> fixes;
 
   /** Is this a warning, error, etc.? */
   public final BugPattern.SeverityLevel severity;
@@ -112,13 +112,13 @@ public class Description {
       String checkName,
       String rawMessage,
       String linkUrl,
-      ImmutableList<Fix> fixes,
+      List<Fix> fixes,
       SeverityLevel severity) {
     this.position = position;
     this.checkName = checkName;
     this.rawMessage = rawMessage;
     this.linkUrl = linkUrl;
-    this.fixes = fixes;
+    this.fixes = ImmutableList.copyOf(fixes);
     this.severity = severity;
   }
 
