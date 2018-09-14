@@ -228,6 +228,9 @@ public class ASTHelpers {
     if (tree instanceof ParameterizedTypeTree) {
       return getSymbol(((ParameterizedTypeTree) tree).getType());
     }
+    if (tree instanceof ClassTree) {
+      return getSymbol((ClassTree) tree);
+    }
 
     return getDeclaredSymbol(tree);
   }
