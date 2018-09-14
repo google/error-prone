@@ -186,8 +186,8 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="https://docs.oracle.com/
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/Scanner.html#isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.VisitorState-">isSuppressed</a></span>(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
-            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/Scanner.html#isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.ErrorProneOptions-">isSuppressed</a></span>(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
+            <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>
 <div class="block">Returns true if this checker should be suppressed on the current tree path.</div>
 </td>
 </tr>
@@ -299,18 +299,18 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="https://docs.oracle.com/
 </dl>
 </li>
 </ul>
-<a name="isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.VisitorState-">
+<a name="isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.ErrorProneOptions-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>isSuppressed</h4>
 <pre>protected&nbsp;boolean&nbsp;isSuppressed(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
-                               <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+                               <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
 <div class="block">Returns true if this checker should be suppressed on the current tree path.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>suppressible</code> - holds information about the suppressibilty of a checker</dd>
+<dd><code>suppressible</code> - holds information about the suppressibility of a checker</dd>
 </dl>
 </li>
 </ul>

@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/fixes/Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/fixes/Replacements.html" target="_top">Frames</a></li>
@@ -74,7 +74,7 @@ var activeTableTab = "activeTableTab";
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -118,6 +118,27 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="nested.class.summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Nested Class Summary table, listing nested classes, and an explanation">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a></span></code>
+<div class="block">A policy for handling overlapping insertions.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.summary">
@@ -152,12 +173,17 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/Replacements.html#add-com.google.errorprone.fixes.Replacement-">add</a></span>(<a href="../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&nbsp;replacement)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/fixes/Replacements.html" title="class in com.google.errorprone.fixes">Replacements</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/Replacements.html#add-com.google.errorprone.fixes.Replacement-com.google.errorprone.fixes.Replacements.CoalescePolicy-">add</a></span>(<a href="../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&nbsp;replacement,
+   <a href="../../../../com/google/errorprone/fixes/Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a>&nbsp;coalescePolicy)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/Replacements.html#descending--">descending</a></span>()</code>
 <div class="block">Non-overlapping replacements, sorted in descending order by position.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/Replacements.html#isEmpty--">isEmpty</a></span>()</code>&nbsp;</td>
 </tr>
@@ -209,6 +235,16 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/Replacements.html" title="class in com.google.errorprone.fixes">Replacements</a>&nbsp;add(<a href="../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&nbsp;replacement)</pre>
 </li>
 </ul>
+<a name="add-com.google.errorprone.fixes.Replacement-com.google.errorprone.fixes.Replacements.CoalescePolicy-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>add</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/fixes/Replacements.html" title="class in com.google.errorprone.fixes">Replacements</a>&nbsp;add(<a href="../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&nbsp;replacement,
+                        <a href="../../../../com/google/errorprone/fixes/Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a>&nbsp;coalescePolicy)</pre>
+</li>
+</ul>
 <a name="descending--">
 <!--   -->
 </a>
@@ -257,7 +293,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/fixes/Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/fixes/Replacements.html" target="_top">Frames</a></li>
@@ -281,7 +317,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

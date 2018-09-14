@@ -12,8 +12,6 @@ providesFix: REQUIRES_HUMAN_ATTENTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-_Alternate names: BadNestedImport_
-
 ## The problem
 
 

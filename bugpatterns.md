@@ -460,6 +460,9 @@ An equality test between objects with incompatible types always returns false
 __[EqualsUnsafeCast](bugpattern/EqualsUnsafeCast)__<br>
 The contract of #equals states that it should return false for incompatible types, while this implementation may throw ClassCastException.
 
+__[EqualsUsingHashCode](bugpattern/EqualsUsingHashCode)__<br>
+Implementing #equals by just comparing hashCodes is fragile. Hashes collide frequently, and this will lead to false positives in #equals.
+
 __[ExtendingJUnitAssert](bugpattern/ExtendingJUnitAssert)__<br>
 When only using JUnit Assert&#39;s static methods, you should import statically instead of extending.
 
@@ -504,6 +507,9 @@ This annotation has incompatible modifiers as specified by its @IncompatibleModi
 
 __[InconsistentCapitalization](bugpattern/InconsistentCapitalization)__<br>
 It is confusing to have a field and a parameter under the same scope that differ only in capitalization.
+
+__[InconsistentHashCode](bugpattern/InconsistentHashCode)__<br>
+Including fields in hashCode which are not compared in equals violates the contract of hashCode.
 
 __[IncrementInForLoopAndHeader](bugpattern/IncrementInForLoopAndHeader)__<br>
 This for loop increments the same variable in the header and in the body
@@ -615,9 +621,6 @@ Detects `/* name= */`-style comments on actual parameters where the name doesn&#
 
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
-
-__[ProtoFieldPreconditionsCheckNotNull](bugpattern/ProtoFieldPreconditionsCheckNotNull)__<br>
-Protobuf fields cannot be null, so this check is redundant
 
 __[ProtoRedundantSet](bugpattern/ProtoRedundantSet)__<br>
 A field on a protocol buffer was set twice in the same chained expression.
@@ -839,6 +842,15 @@ Hardcoded reference to /sdcard
 __[InconsistentOverloads](bugpattern/InconsistentOverloads)__<br>
 The ordering of parameters in overloaded methods should be as consistent as possible (when viewed from left to right)
 
+__[InvalidParam](bugpattern/InvalidParam)__<br>
+This @param tag doesn&#39;t refer to a parameter of the method.
+
+__[InvalidTag](bugpattern/InvalidTag)__<br>
+This tag is invalid.
+
+__[InvalidThrows](bugpattern/InvalidThrows)__<br>
+The documented method doesn&#39;t actually throw this checked exception.
+
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
 
@@ -872,6 +884,9 @@ Injection frameworks currently don&#39;t understand Qualifiers in TYPE_PARAMETER
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
 
+__[ReturnFromVoid](bugpattern/ReturnFromVoid)__<br>
+Void methods should not have a @return tag.
+
 __[StaticQualifiedUsingExpression](bugpattern/StaticQualifiedUsingExpression)__<br>
 A static variable or method should be qualified with a class name, not expression
 
@@ -885,7 +900,7 @@ __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
 
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
-Switch handles all enum values; an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
+Switch handles all enum values: an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
 
 __[Unused](bugpattern/Unused)__<br>
 Unused.
@@ -944,7 +959,7 @@ __[PackageLocation](bugpattern/PackageLocation)__<br>
 Package names should match the directory they are declared in
 
 __[ParameterComment](bugpattern/ParameterComment)__<br>
-Non-standard parameter comment; prefer `/*paramName=*/ arg`
+Non-standard parameter comment; prefer `/* paramName= */ arg`
 
 __[ParameterNotNullable](bugpattern/ParameterNotNullable)__<br>
 Method parameters that aren&#39;t checked for null shouldn&#39;t be annotated @Nullable
