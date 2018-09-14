@@ -1165,4 +1165,26 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testDeprecatedClassDeclaration() {
+    writeFile(
+        "A.java", //
+        "@Deprecated",
+        "public class A {",
+        "}");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitClass(ClassTree node, VisitorState visitorState) {
+            // we specifically want to test getSymbol(Tree), not getSymbol(ClassTree)
+            Tree tree = node;
+            assertThat(ASTHelpers.getSymbol(tree).isDeprecated()).isTrue();
+            setAssertionsComplete();
+            return super.visitClass(node, visitorState);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
 }
