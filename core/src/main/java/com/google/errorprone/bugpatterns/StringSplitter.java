@@ -77,24 +77,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
 
   public Optional<Fix> buildFix(MethodInvocationTree tree, VisitorState state) {
     Tree arg = getOnlyElement(tree.getArguments());
-    String value = ASTHelpers.constValue(arg, String.class);
-    boolean maybeRegex = false;
-    if (value != null) {
-      Optional<String> regexAsLiteral = convertRegexToLiteral(value);
-      if (regexAsLiteral.isPresent()) {
-        value = SourceCodeEscapers.javaCharEscaper().escape(regexAsLiteral.get());
-        if (value.length() == 1) {
-          value = String.format("'%s'", value.charAt(0));
-        } else {
-          value = String.format("\"%s\"", value);
-        }
-      } else {
-        maybeRegex = true;
-        value = state.getSourceForNode(arg);
-      }
-    } else {
-      value = state.getSourceForNode(arg);
-    }
+    String methodAndArgument = getMethodAndArgument(arg, state);
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof EnhancedForLoopTree
         && ((EnhancedForLoopTree) parent).getExpression().equals(tree)) {
@@ -103,10 +86,9 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
           replaceWithSplitter(
                   SuggestedFix.builder(),
                   tree,
-                  value,
+                  methodAndArgument,
                   state,
                   "split",
-                  maybeRegex,
                   /* mutableList= */ false)
               .build());
     }
@@ -132,7 +114,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
                   ")");
       return Optional.of(
           replaceWithSplitter(
-                  fix, tree, value, state, "split", maybeRegex, /* mutableList= */ false)
+                  fix, tree, methodAndArgument, state, "split", /* mutableList= */ false)
               .build());
     }
     // If the result of split is assigned to a variable, try to fix all uses of the variable in the
@@ -226,21 +208,47 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     }
     if (needsList[0]) {
       fix.replace((varTree).getType(), "List<String>").addImport("java.util.List");
-      replaceWithSplitter(fix, tree, value, state, "splitToList", maybeRegex, needsMutableList[0]);
+      replaceWithSplitter(fix, tree, methodAndArgument, state, "splitToList", needsMutableList[0]);
     } else {
       fix.replace((varTree).getType(), "Iterable<String>");
-      replaceWithSplitter(fix, tree, value, state, "split", maybeRegex, needsMutableList[0]);
+      replaceWithSplitter(fix, tree, methodAndArgument, state, "split", needsMutableList[0]);
     }
     return Optional.of(fix.build());
+  }
+
+  private static String getMethodAndArgument(Tree origArg, VisitorState state) {
+    String argSource = state.getSourceForNode(origArg);
+    Tree arg = ASTHelpers.stripParentheses(origArg);
+    if (arg.getKind() != Tree.Kind.STRING_LITERAL) {
+      // Even if the regex is a constant, it still needs to be treated as a regex, since the
+      // value comes from the symbol and/or a concatenation; the values of the subexpressions may be
+      // changed subsequently.
+      return String.format("onPattern(%s)", argSource);
+    }
+    String constValue = ASTHelpers.constValue(arg, String.class);
+    if (constValue == null) {
+      // Not a constant value, so we can't assume anything about pattern: have to treat it as a
+      // regex.
+      return String.format("onPattern(%s)", argSource);
+    }
+    Optional<String> regexAsLiteral = convertRegexToLiteral(constValue);
+    if (!regexAsLiteral.isPresent()) {
+      // Can't convert the regex to a literal string: have to treat it as a regex.
+      return String.format("onPattern(%s)", argSource);
+    }
+    String escaped = SourceCodeEscapers.javaCharEscaper().escape(regexAsLiteral.get());
+    if (regexAsLiteral.get().length() == 1) {
+      return String.format("on('%s')", escaped);
+    }
+    return String.format("on(\"%s\")", escaped);
   }
 
   private SuggestedFix.Builder replaceWithSplitter(
       SuggestedFix.Builder fix,
       MethodInvocationTree tree,
-      String text,
+      String methodAndArgument,
       VisitorState state,
       String splitMethod,
-      boolean maybeRegex,
       boolean mutableList) {
     ExpressionTree receiver = ASTHelpers.getReceiver(tree);
     if (mutableList) {
@@ -250,11 +258,8 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
         .prefixWith(
             receiver,
             String.format(
-                "%sSplitter.%s(%s).%s(",
-                (mutableList ? "new ArrayList<>(" : ""),
-                (maybeRegex ? "onPattern" : "on"),
-                text,
-                splitMethod))
+                "%sSplitter.%s.%s(",
+                (mutableList ? "new ArrayList<>(" : ""), methodAndArgument, splitMethod))
         .replace(
             state.getEndPosition(receiver),
             state.getEndPosition(tree),

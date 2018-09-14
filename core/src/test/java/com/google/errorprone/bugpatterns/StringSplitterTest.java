@@ -52,6 +52,104 @@ public class StringSplitterTest {
   }
 
   @Test
+  public void positive_patternIsSymbol() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  static final String NON_REGEX_PATTERN_STRING = \":\";",
+            "  static final String REGEX_PATTERN_STRING = \".*\";",
+            "  static final String CONVERTIBLE_PATTERN_STRING = \"\\\\Q\\\\E:\";",
+            "  void f() {",
+            "    for (String s : \"\".split(NON_REGEX_PATTERN_STRING)) {}",
+            "    for (String s : \"\".split(REGEX_PATTERN_STRING)) {}",
+            "    for (String s : \"\".split(CONVERTIBLE_PATTERN_STRING)) {}",
+            "    for (String s : \"\".split((CONVERTIBLE_PATTERN_STRING))) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Splitter;",
+            "class Test {",
+            "  static final String NON_REGEX_PATTERN_STRING = \":\";",
+            "  static final String REGEX_PATTERN_STRING = \".*\";",
+            "  static final String CONVERTIBLE_PATTERN_STRING = \"\\\\Q\\\\E:\";",
+            "  void f() {",
+            "    for (String s : Splitter.onPattern(NON_REGEX_PATTERN_STRING).split(\"\")) {}",
+            "    for (String s : Splitter.onPattern(REGEX_PATTERN_STRING).split(\"\")) {}",
+            "    for (String s : Splitter.onPattern(CONVERTIBLE_PATTERN_STRING).split(\"\")) {}",
+            "    for (String s : Splitter.onPattern((CONVERTIBLE_PATTERN_STRING)).split(\"\")) {}",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void positive_patternIsConcatenation() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    for (String s : \"\".split(\":\" + 0)) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Splitter;",
+            "class Test {",
+            "  void f() {",
+            "    for (String s : Splitter.onPattern(\":\" + 0).split(\"\")) {}",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void positive_patternNotConstant() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    String pattern = \":\";",
+            "    for (String s : \"\".split(pattern)) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Splitter;",
+            "class Test {",
+            "  void f() {",
+            "    String pattern = \":\";",
+            "    for (String s : Splitter.onPattern(pattern).split(\"\")) {}",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void positive_singleEscapedCharacter() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    for (String s : \"\".split(\"\\u0000\")) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Splitter;",
+            "class Test {",
+            "  void f() {",
+            "    for (String s : Splitter.on('\\u0000').split(\"\")) {}",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void varLoop() {
     testHelper
         .addInputLines(
