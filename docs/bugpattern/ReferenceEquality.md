@@ -15,12 +15,6 @@ Well, no, because some tricky client can always generate a new instance with
 `new Boolean(true)`. Comparing with `equals` always works; comparing with `==`
 doesn't.
 
-### But `enum` values are always unique, so can't I compare _them_ with `==`?
-
-Yes, _but_ that might confuse the reader, who must understand that your type has
-special properties because it's an `enum`. Using `equals` everywhere can work
-the same everywhere; special-casing for enums isn't worth it.
-
 ### How about a reference equality comparison before a more expensive content equality comparison?
 
 The check allows implementations of `Object#equals()` to perform reference
