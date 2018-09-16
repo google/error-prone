@@ -611,7 +611,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           state.reportMatch(
               buildDescription(unused)
                   .addFix(replaceWithComments(unusedPath, "", state))
-                  .setMessage("Remove unused private method.")
+                  .setMessage("Unused private method.")
                   .build());
           break;
         default:
