@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
@@ -66,7 +67,10 @@ public final class ReturnFromVoid extends BugChecker implements MethodTreeMatche
     @Override
     public Void visitReturn(ReturnTree returnTree, Void unused) {
       if (isSameType(getType(methodTree.getReturnType()), state.getSymtab().voidType, state)) {
-        state.reportMatch(describeMatch(methodTree, Utils.replace(returnTree, "", state)));
+        state.reportMatch(
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
+                .addFix(Utils.replace(returnTree, "", state))
+                .build());
       }
       return super.visitReturn(returnTree, null);
     }

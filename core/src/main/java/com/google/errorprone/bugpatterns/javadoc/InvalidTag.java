@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -39,7 +40,6 @@ import com.sun.source.doctree.UnknownBlockTagTree;
 import com.sun.source.doctree.UnknownInlineTagTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
@@ -142,7 +142,7 @@ public final class InvalidTag extends BugChecker
     DocTreePath path = Utils.getDocTreePath(state);
     if (path != null) {
       ImmutableSet<String> parameters = ImmutableSet.of();
-      new InvalidTagChecker(state, classTree, VALID_CLASS_TAGS, parameters).scan(path, null);
+      new InvalidTagChecker(state, VALID_CLASS_TAGS, parameters).scan(path, null);
     }
     return Description.NO_MATCH;
   }
@@ -155,7 +155,7 @@ public final class InvalidTag extends BugChecker
           methodTree.getParameters().stream()
               .map(v -> v.getName().toString())
               .collect(toImmutableSet());
-      new InvalidTagChecker(state, methodTree, VALID_METHOD_TAGS, parameters).scan(path, null);
+      new InvalidTagChecker(state, VALID_METHOD_TAGS, parameters).scan(path, null);
     }
     return Description.NO_MATCH;
   }
@@ -164,8 +164,7 @@ public final class InvalidTag extends BugChecker
   public Description matchVariable(VariableTree variableTree, VisitorState state) {
     DocTreePath path = Utils.getDocTreePath(state);
     if (path != null) {
-      new InvalidTagChecker(
-              state, variableTree, VALID_VARIABLE_TAGS, /* parameters= */ ImmutableSet.of())
+      new InvalidTagChecker(state, VALID_VARIABLE_TAGS, /* parameters= */ ImmutableSet.of())
           .scan(path, null);
     }
     return Description.NO_MATCH;
@@ -173,7 +172,6 @@ public final class InvalidTag extends BugChecker
 
   private final class InvalidTagChecker extends DocTreePathScanner<Void, Void> {
     private final VisitorState state;
-    private final Tree tree;
 
     private final ImmutableSet<String> validTags;
     private final ImmutableSet<String> parameters;
@@ -183,11 +181,9 @@ public final class InvalidTag extends BugChecker
 
     private InvalidTagChecker(
         VisitorState state,
-        Tree tree,
         ImmutableSet<String> validTags,
         ImmutableSet<String> parameters) {
       this.state = state;
-      this.tree = tree;
       this.validTags = validTags;
       this.parameters = parameters;
     }
@@ -219,7 +215,7 @@ public final class InvalidTag extends BugChecker
                   "@param cannot be used inline to refer to parameters; {@code %s} is recommended",
                   parameterName);
           state.reportMatch(
-              buildDescription(tree)
+              buildDescription(diagnosticPosition(getCurrentPath(), state))
                   .setMessage(message)
                   .addFix(
                       Utils.replace(
@@ -242,7 +238,7 @@ public final class InvalidTag extends BugChecker
         String message =
             String.format("@%s is not a valid block tag. Did you mean to escape it?", tagName);
         state.reportMatch(
-            buildDescription(tree)
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)
                 .addFix(SuggestedFix.replace(startPos, startPos + 1, "{@literal @}"))
                 .build());
@@ -257,7 +253,7 @@ public final class InvalidTag extends BugChecker
                     + "Use {@code %1%s} to refer to parameter names inline.",
                 tagName);
         state.reportMatch(
-            buildDescription(tree)
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)
                 .addFix(SuggestedFix.replace(startPos, startPos + 1, "@param "))
                 .build());
@@ -278,7 +274,7 @@ public final class InvalidTag extends BugChecker
                     + "Use {@code %1$s} to refer to parameters.",
                 name);
         state.reportMatch(
-            buildDescription(tree)
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)
                 .addFix(
                     Utils.replace(unknownInlineTagTree, String.format("{@code %s}", name), state))
@@ -294,7 +290,7 @@ public final class InvalidTag extends BugChecker
                     + "to the type %1$s correctly. Prefer {@link %1$s}.",
                 name);
         state.reportMatch(
-            buildDescription(tree)
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)
                 .addFix(SuggestedFix.replace(startPos, startPos + 2, "{@link "))
                 .build());
@@ -320,12 +316,12 @@ public final class InvalidTag extends BugChecker
           bestMatch
               .map(
                   bm ->
-                      buildDescription(tree)
+                      buildDescription(diagnosticPosition(getCurrentPath(), state))
                           .setMessage(message + String.format(" Did you mean tag `%s`?", bm))
                           .addFix(SuggestedFix.replace(pos, pos + tagName.length(), bm))
                           .build())
               .orElse(
-                  buildDescription(tree)
+                  buildDescription(diagnosticPosition(getCurrentPath(), state))
                       .setMessage(
                           message
                               + " If this is a commonly-used custom tag, please "
@@ -352,7 +348,7 @@ public final class InvalidTag extends BugChecker
         String message =
             String.format("The block tag @%s is not allowed on this type of element.", tagName);
         state.reportMatch(
-            buildDescription(tree)
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)
                 .addFix(Utils.replace(docTree, "", state))
                 .build());

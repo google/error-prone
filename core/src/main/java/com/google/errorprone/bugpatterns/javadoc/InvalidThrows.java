@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -76,7 +77,10 @@ public final class InvalidThrows extends BugChecker implements MethodTreeMatcher
                   .asType();
       if (type != null && isCheckedException(type)) {
         if (methodTree.getThrows().stream().noneMatch(t -> isSubtype(type, getType(t), state))) {
-          state.reportMatch(describeMatch(methodTree, Utils.replace(throwsTree, "", state)));
+          state.reportMatch(
+              buildDescription(diagnosticPosition(getCurrentPath(), state))
+                  .addFix(Utils.replace(throwsTree, "", state))
+                  .build());
         }
       }
       return super.visitThrows(throwsTree, null);
