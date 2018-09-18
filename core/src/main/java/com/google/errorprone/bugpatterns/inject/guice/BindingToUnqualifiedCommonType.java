@@ -48,7 +48,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import java.math.BigDecimal;
-import java.util.regex.Pattern;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
@@ -81,7 +80,7 @@ public class BindingToUnqualifiedCommonType extends BugChecker
       allOf(
           instanceMethod()
               .onDescendantOf("com.google.inject.binder.LinkedBindingBuilder")
-              .withNameMatching(Pattern.compile("to(Instance|Provider|Constructor)?")),
+              .namedAnyOf("to", "toInstance", "toProvider", "toConstructor"),
           receiverOfInvocation(
               methodInvocation(
                   anyOf(

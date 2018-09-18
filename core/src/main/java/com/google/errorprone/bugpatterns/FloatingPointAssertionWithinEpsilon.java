@@ -41,7 +41,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /**
  * Detects usages of {@code Float,DoubleSubject.isWithin(TOLERANCE).of(EXPECTED)} where there are no
@@ -151,7 +150,7 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
               Matchers.receiverOfInvocation(
                   instanceMethod()
                       .onDescendantOf(subjectClass)
-                      .withNameMatching(Pattern.compile("is(Not)?Within"))
+                      .namedAnyOf("isWithin", "isNotWithin")
                       .withParameters(typeName)));
       MethodNameMatcher junitAssert =
           staticMethod().onClass("org.junit.Assert").named("assertEquals");

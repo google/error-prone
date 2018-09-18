@@ -64,7 +64,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ForkJoinTask;
-import java.util.regex.Pattern;
 import javax.lang.model.type.TypeKind;
 
 /** See BugPattern annotation. */
@@ -100,7 +99,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
           // future execution should be dealt by the listener(s).
           instanceMethod()
               .onDescendantOf("io.netty.channel.ChannelFuture")
-              .withNameMatching(Pattern.compile("addListeners?")),
+              .namedAnyOf("addListener", "addListeners"),
           instanceMethod()
               .onExactClass("java.util.concurrent.CompletableFuture")
               .namedAnyOf("completeAsync", "orTimeout", "completeOnTimeout"));

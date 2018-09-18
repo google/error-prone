@@ -122,7 +122,7 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
           instanceMethod()
               .onDescendantOfAny(
                   GUAVA_IMMUTABLES.stream().map(c -> c + ".Builder").collect(toImmutableSet()))
-              .withNameMatching(Pattern.compile("(add|put)(All)?")));
+              .namedAnyOf("add", "addAll", "put", "putAll"));
 
   private static final Matcher<Tree> COLLECTION_TYPE =
       anyOf(COLLECTIONS.stream().map(IsSubtypeOf::new).collect(toImmutableList()));
@@ -147,7 +147,7 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
                       GUAVA_IMMUTABLES.stream()
                           .map(Suppliers::typeFromString)
                           .collect(toImmutableList())))
-              .withNameMatching(Pattern.compile("builder(WithExpectedSize)?")),
+              .namedAnyOf("builder", "builderWithExpectedSize"),
           constructor()
               .forClass(
                   new DescendantOfAny(
