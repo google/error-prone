@@ -111,7 +111,7 @@ public final class FindIdentifiers {
    * appears first in iteration order is the one you get if you use the bare name in the source
    * code.
    *
-   * <p>We do not report variables that would require a qualfied access. We also do not handle
+   * <p>We do not report variables that would require a qualified access. We also do not handle
    * wildcard imports.
    */
   public static LinkedHashSet<VarSymbol> findAllIdents(VisitorState state) {
