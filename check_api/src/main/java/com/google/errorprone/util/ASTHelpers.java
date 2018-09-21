@@ -82,8 +82,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
-import com.sun.tools.javac.code.TypeAnnotations;
-import com.sun.tools.javac.code.TypeAnnotations.AnnotationType;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Enter;
@@ -1015,24 +1013,6 @@ public class ASTHelpers {
       return false;
     }
     return simpleName.contentEquals(name);
-  }
-
-  /**
-   * Returns whether {@code anno} corresponds to a type annotation, or {@code null} if it could not
-   * be determined.
-   */
-  @Nullable
-  public static AnnotationType getAnnotationType(
-      AnnotationTree anno, @Nullable Symbol target, VisitorState state) {
-    if (target == null) {
-      return null;
-    }
-    Symbol annoSymbol = getSymbol(anno);
-    if (annoSymbol == null) {
-      return null;
-    }
-    Compound compound = target.attribute(annoSymbol);
-    return TypeAnnotations.instance(state.context).annotationTargetType(compound, target);
   }
 
   private static final CharMatcher BACKSLASH_MATCHER = CharMatcher.is('\\');

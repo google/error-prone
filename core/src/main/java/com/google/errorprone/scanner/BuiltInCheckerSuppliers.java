@@ -22,7 +22,6 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
 import com.google.errorprone.bugpatterns.AnnotateFormatMethod;
-import com.google.errorprone.bugpatterns.AnnotationPosition;
 import com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayFillIncompatibleType;
@@ -639,7 +638,6 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           AndroidJdkLibsChecker.class,
           AnnotateFormatMethod.class,
-          AnnotationPosition.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,
