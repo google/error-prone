@@ -24,7 +24,7 @@
     <version>2.3.2-SNAPSHOT</version>
   </parent>
 
-  <name>Documention tool for generating Error Prone bugpattern documentation</name>
+  <name>Documentation tool for generating Error Prone bugpattern documentation</name>
   <artifactId>error_prone_docgen</artifactId>
 
   <licenses>
