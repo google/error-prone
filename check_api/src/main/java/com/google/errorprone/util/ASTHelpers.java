@@ -70,6 +70,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
+import com.sun.tools.javac.code.Attribute.TypeCompound;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
@@ -82,6 +83,8 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
+import com.sun.tools.javac.code.TypeAnnotations;
+import com.sun.tools.javac.code.TypeAnnotations.AnnotationType;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Enter;
@@ -1013,6 +1016,35 @@ public class ASTHelpers {
       return false;
     }
     return simpleName.contentEquals(name);
+  }
+
+  /**
+   * Returns whether {@code anno} corresponds to a type annotation, or {@code null} if it could not
+   * be determined.
+   */
+  @Nullable
+  public static AnnotationType getAnnotationType(
+      AnnotationTree anno, @Nullable Symbol target, VisitorState state) {
+    if (target == null) {
+      return null;
+    }
+    Symbol annoSymbol = getSymbol(anno);
+    if (annoSymbol == null) {
+      return null;
+    }
+    Compound compound = target.attribute(annoSymbol);
+    if (compound == null) {
+      for (TypeCompound typeCompound : target.getRawTypeAttributes()) {
+        if (typeCompound.type.tsym.equals(annoSymbol)) {
+          compound = typeCompound;
+          break;
+        }
+      }
+    }
+    if (compound == null) {
+      return null;
+    }
+    return TypeAnnotations.instance(state.context).annotationTargetType(compound, target);
   }
 
   private static final CharMatcher BACKSLASH_MATCHER = CharMatcher.is('\\');
