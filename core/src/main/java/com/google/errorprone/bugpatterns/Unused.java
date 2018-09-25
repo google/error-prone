@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -598,10 +599,22 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
               element = "Variable";
               break;
           }
+          ImmutableList<SuggestedFix> fixes;
+          switch (symbol.getKind()) {
+            case LOCAL_VARIABLE:
+            case FIELD:
+              fixes = buildUnusedVarFixes(symbol, usageSites.get(symbol), state);
+              break;
+            case PARAMETER:
+              fixes = buildUnusedParameterFixes(symbol, usageSites.get(symbol), state);
+              break;
+            default:
+              fixes = ImmutableList.of();
+          }
           state.reportMatch(
               buildDescription(unused)
                   .setMessage(String.format("%s '%s' is never read.", element, unusedVar.getName()))
-                  .addAllFixes(buildUnusedVarFixes(symbol, usageSites.get(symbol), state))
+                  .addAllFixes(fixes)
                   .build());
           break;
         case METHOD:
@@ -637,15 +650,12 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
 
   private static ImmutableList<SuggestedFix> buildUnusedVarFixes(
       Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
-    ElementKind varKind = varSymbol.getKind();
-    if (varKind != ElementKind.LOCAL_VARIABLE && varKind != ElementKind.FIELD) {
-      return ImmutableList.of();
-    }
     // Don't suggest a fix for fields annotated @Inject: we can warn on them, but they *could* be
     // used outside the class.
     if (ASTHelpers.hasDirectAnnotationWithSimpleName(varSymbol, "Inject")) {
       return ImmutableList.of();
     }
+    ElementKind varKind = varSymbol.getKind();
     boolean encounteredSideEffects = false;
     SuggestedFix.Builder fix = SuggestedFix.builder().setShortDescription("remove unused variable");
     SuggestedFix.Builder removeSideEffectsFix =
@@ -718,6 +728,54 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
     return encounteredSideEffects
         ? ImmutableList.of(fix.build(), removeSideEffectsFix.build())
         : ImmutableList.of(fix.build());
+  }
+
+  private static ImmutableList<SuggestedFix> buildUnusedParameterFixes(
+      Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
+    MethodSymbol methodSymbol = (MethodSymbol) varSymbol.owner;
+    int index = methodSymbol.params.indexOf(varSymbol);
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    for (TreePath path : usagePaths) {
+      fix.delete(path.getLeaf());
+    }
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        if (getSymbol(tree).equals(methodSymbol)) {
+          removeByIndex(tree.getArguments());
+        }
+        return super.visitMethodInvocation(tree, null);
+      }
+
+      @Override
+      public Void visitMethod(MethodTree tree, Void unused) {
+        if (getSymbol(tree).equals(methodSymbol)) {
+          removeByIndex(tree.getParameters());
+        }
+        return super.visitMethod(tree, null);
+      }
+
+      private void removeByIndex(List<? extends Tree> trees) {
+        if (trees.size() == 1) {
+          fix.delete(getOnlyElement(trees));
+          return;
+        }
+        int startPos;
+        int endPos;
+        if (index >= 1) {
+          startPos = state.getEndPosition(trees.get(index - 1));
+          endPos = state.getEndPosition(trees.get(index));
+        } else {
+          startPos = ((JCTree) trees.get(index)).getStartPosition();
+          endPos = ((JCTree) trees.get(index + 1)).getStartPosition();
+        }
+        if (index == methodSymbol.params().size() - 1 && methodSymbol.isVarArgs()) {
+          endPos = state.getEndPosition(getLast(trees));
+        }
+        fix.replace(startPos, endPos, "");
+      }
+    }.scan(state.getPath().getCompilationUnit(), null);
+    return ImmutableList.of(fix.build());
   }
 
   /**
