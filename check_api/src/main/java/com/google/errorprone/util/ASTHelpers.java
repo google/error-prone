@@ -18,7 +18,6 @@ package com.google.errorprone.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 
@@ -1466,7 +1465,16 @@ public class ASTHelpers {
         return null;
       }
       if (type.getParameterTypes().size() <= idx) {
-        checkState(sym.isVarArgs());
+        if (!sym.isVarArgs()) {
+          if ((sym.flags() & Flags.HYPOTHETICAL) != 0) {
+            // HYPOTHETICAL is also used for signature-polymorphic methods
+            return null;
+          }
+          throw new IllegalStateException(
+              String.format(
+                  "saw %d formal parameters and %d actual parameters on non-varargs method %s\n",
+                  type.getParameterTypes().size(), arguments.size(), sym));
+        }
         idx = type.getParameterTypes().size() - 1;
       }
       Type argType = type.getParameterTypes().get(idx);
