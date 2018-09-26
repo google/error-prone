@@ -555,6 +555,26 @@ public class ReturnMissingNullableTest {
         .doTest();
   }
 
+  // Regression test for b/113123074
+  @Test
+  public void testNegativeCases_delegate() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "import java.util.Optional;",
+            "public class MissingNullableReturnTest {",
+            "  public String get() {",
+            "    return getInternal(true, null);",
+            "  }",
+            "  private String getInternal(boolean flag, @Nullable Integer i) {",
+            "    return \"hello\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   @Test
   public void testSuggestNonJsr305Nullable() {
     createRefactoringTestHelper()

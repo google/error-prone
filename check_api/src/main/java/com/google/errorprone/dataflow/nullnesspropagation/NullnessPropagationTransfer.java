@@ -64,6 +64,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
@@ -270,8 +271,16 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return result.build();
   }
 
-  private Nullness getInferredNullness(MethodInvocationNode node) {
+  private Nullness getInferredNullness(MethodInvocationNode node, ClassAndMethod callee) {
+    // Baseline nullness information about this method, in case inference is unsuccessful.
+    Nullness baselineNullness = methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
+    if (!callee.isGenericResult) {
+      // We only care about inference results for generic methods that return one of their type
+      // parameters.
+      return baselineNullness;
+    }
 
+    // Method has a generic result, so ask inference to infer a qualifier for that type parameter
     if (inferenceResults == null) {
       // inferenceResults are per-procedure; if it is null that means this is the first query within
       // the procedure tree containing this node.  A "procedure" is either a method, a lambda
@@ -296,13 +305,6 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
                   "Call `%s` is not contained in an lambda, initializer or method.",
                   node));
     }
-
-    // Baseline nullness information about this method, in case inference is unsuccessful.
-    Nullness baselineNullness =
-        methodReturnsNonNull.apply(tryGetMethodSymbol(node.getTree(), Types.instance(context)))
-            ? NONNULL
-            : NULLABLE;
-
     return inferenceResults.getExprNullness(node.getTree()).orElse(baselineNullness);
   }
 
@@ -593,7 +595,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         callee,
         Types.instance(context),
         Symtab.instance(context));
-    return returnValueNullness(callee, node);
+    return returnValueNullness(node, callee);
   }
 
   @Override
@@ -773,7 +775,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
                 .orElse(defaultAssumption));
   }
 
-  private Nullness returnValueNullness(@Nullable ClassAndMethod callee, MethodInvocationNode node) {
+  private Nullness returnValueNullness(MethodInvocationNode node, @Nullable ClassAndMethod callee) {
     if (callee == null) {
       return defaultAssumption;
     }
@@ -796,7 +798,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
                     .collect(ImmutableList.toImmutableList()))
             .build();
 
-    return getInferredNullness(node)
+    return getInferredNullness(node, callee)
         .greatestLowerBound(Nullness.fromAnnotations(annotations).orElse(NULLABLE));
   }
 
@@ -1030,6 +1032,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     final boolean isStatic;
     final boolean isPrimitive;
     final boolean isBoolean;
+    final boolean isGenericResult;
     final boolean isNonNullReturning;
 
     private ClassAndMethod(
@@ -1039,6 +1042,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         boolean isStatic,
         boolean isPrimitive,
         boolean isBoolean,
+        boolean isGenericResult,
         boolean isNonNullReturning) {
       this.clazz = clazz;
       this.method = method;
@@ -1046,6 +1050,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       this.isStatic = isStatic;
       this.isPrimitive = isPrimitive;
       this.isBoolean = isBoolean;
+      this.isGenericResult = isGenericResult;
       this.isNonNullReturning = isNonNullReturning;
     }
 
@@ -1065,7 +1070,22 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
           methodSymbol.isStatic(),
           methodSymbol.getReturnType().isPrimitive(),
           methodSymbol.getReturnType().getTag() == BOOLEAN,
+          hasGenericResult(methodSymbol),
           knownNonNullMethod(methodSymbol, clazzSymbol, types));
+    }
+
+    /**
+     * Returns {@code true} for {@link MethodSymbol}s of generic methods where one of the method's
+     * type parameters <b>is</b> the result type, {@code false} otherwise.
+     */
+    private static boolean hasGenericResult(MethodSymbol methodSymbol) {
+      Type resultType = methodSymbol.getReturnType();
+      for (TypeVariableSymbol var : methodSymbol.getTypeParameters()) {
+        if (resultType.tsym.equals(var)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     private static boolean knownNonNullMethod(
