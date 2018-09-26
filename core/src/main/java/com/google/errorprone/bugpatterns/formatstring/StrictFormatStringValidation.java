@@ -67,6 +67,7 @@ public class StrictFormatStringValidation {
     // so don't bother with annotations and just check if the parameters match the format string.
     if (formatStringValues != null) {
       return FormatStringValidation.validate(
+          /* formatMethodSymbol= */ null,
           ImmutableList.<ExpressionTree>builder().add(formatStringTree).addAll(args).build(),
           state);
     }
@@ -247,7 +248,9 @@ public class StrictFormatStringValidation {
               formatStringAssignment));
     } else {
       return FormatStringValidation.validate(
-          ImmutableList.<ExpressionTree>builder().add(formatStringRhs).addAll(args).build(), state);
+          /* formatMethodSymbol= */ null,
+          ImmutableList.<ExpressionTree>builder().add(formatStringRhs).addAll(args).build(),
+          state);
     }
   }
 
