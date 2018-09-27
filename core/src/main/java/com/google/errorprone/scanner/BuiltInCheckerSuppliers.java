@@ -303,6 +303,7 @@ import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameCon
 import com.google.errorprone.bugpatterns.inject.AutoFactoryAtInject;
 import com.google.errorprone.bugpatterns.inject.CloseableProvides;
 import com.google.errorprone.bugpatterns.inject.InjectOnConstructorOfAbstractClass;
+import com.google.errorprone.bugpatterns.inject.InjectOnMemberAndConstructor;
 import com.google.errorprone.bugpatterns.inject.InjectedConstructorAnnotations;
 import com.google.errorprone.bugpatterns.inject.InvalidTargetingOnScopingAnnotation;
 import com.google.errorprone.bugpatterns.inject.JavaxInjectOnAbstractMethod;
@@ -566,6 +567,7 @@ public class BuiltInCheckerSuppliers {
           InconsistentHashCode.class,
           IncrementInForLoopAndHeader.class,
           InjectOnConstructorOfAbstractClass.class,
+          InjectOnMemberAndConstructor.class,
           InputStreamSlowMultibyteRead.class,
           InstanceOfAndCastMatchWrongType.class,
           IntLongMath.class,
