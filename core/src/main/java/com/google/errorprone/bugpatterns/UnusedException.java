@@ -62,8 +62,8 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "UnusedException",
     summary =
-        "This catch block catches an symbol and re-throws another, but swallows the caught"
-            + " symbol rather than setting it as a cause. This can make debugging harder.",
+        "This catch block catches an exception and re-throws another, but swallows the caught"
+            + " exception rather than setting it as a cause. This can make debugging harder.",
     severity = WARNING,
     tags = StandardTags.STYLE,
     linkType = CUSTOM,
