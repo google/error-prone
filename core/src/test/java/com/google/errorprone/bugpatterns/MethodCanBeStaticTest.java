@@ -16,8 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneFlags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,6 +30,10 @@ public class MethodCanBeStaticTest {
   private final CompilationTestHelper testHelper =
       CompilationTestHelper.newInstance(MethodCanBeStatic.class, getClass());
 
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(
+          new MethodCanBeStatic(ErrorProneFlags.empty()), getClass());
+
   @Test
   public void positive() {
     testHelper
@@ -37,6 +43,90 @@ public class MethodCanBeStaticTest {
             "  // BUG: Diagnostic contains: private static int add(",
             "  private int add(int x, int y) {",
             "    return x + y;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveCycle() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private int a(int x) {",
+            "    return b(x);",
+            "  }",
+            "  private int b(int x) {",
+            "    return a(x);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private static int a(int x) {",
+            "    return b(x);",
+            "  }",
+            "  private static int b(int x) {",
+            "    return a(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeCycle() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public int f(int x) {",
+            "    return x;",
+            "  }",
+            "  private int a(int x) {",
+            "    return b(x) + f(x);",
+            "  }",
+            "  private int b(int x) {",
+            "    return a(x) + f(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveChain() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private static final int FOO = 1;",
+            "  private int a() { return FOO; }",
+            "  private int b() { return a(); }",
+            "  private int c() { return b(); }",
+            "  private int d() { return c(); }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private static final int FOO = 1;",
+            "  private static int a() { return FOO; }",
+            "  private static int b() { return a(); }",
+            "  private static int c() { return b(); }",
+            "  private static int d() { return c(); }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveRecursive() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", "class Test {", "  private int a(int x) {", "    return a(x);", "  }", "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private static int a(int x) {",
+            "    return a(x);",
             "  }",
             "}")
         .doTest();
@@ -251,6 +341,15 @@ public class MethodCanBeStaticTest {
   }
 
   @Test
+  public void negative_baseClass() {
+    testHelper
+        .addSourceLines("A.java", "class A {", "  void foo() {}", "}")
+        .addSourceLines(
+            "B.java", "class B extends A {", "  private void bar() {", "    foo();", "  }", "}")
+        .doTest();
+  }
+
+  @Test
   public void serialization() {
     testHelper
         .addSourceLines(
@@ -274,7 +373,7 @@ public class MethodCanBeStaticTest {
 
   @Test
   public void methodReference() {
-    BugCheckerRefactoringTestHelper.newInstance(new MethodCanBeStatic(), getClass())
+    refactoringHelper
         .addInputLines(
             "in/Test.java",
             "import java.util.function.ToIntBiFunction;",
@@ -295,6 +394,25 @@ public class MethodCanBeStaticTest {
             "  ToIntBiFunction<Integer, Integer> f = Test::add;",
             "  ToIntBiFunction<Integer, Integer> g = (x, y) -> Test.add(x, y);",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void multipleReports() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static",
+            "  private int a(int x) {",
+            "    return b(x);",
+            "  }",
+            "  // BUG: Diagnostic contains: static",
+            "  private int b(int x) {",
+            "    return a(x);",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:MethodCanBeStatic:FindingPerSite"))
         .doTest();
   }
 }

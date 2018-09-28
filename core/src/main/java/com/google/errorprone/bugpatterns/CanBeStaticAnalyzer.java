@@ -16,12 +16,15 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
@@ -30,6 +33,8 @@ import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Names;
+import java.util.HashSet;
+import java.util.Set;
 
 /** Analyzes trees for references to their enclosing instance. */
 public class CanBeStaticAnalyzer extends TreeScanner {
@@ -38,14 +43,21 @@ public class CanBeStaticAnalyzer extends TreeScanner {
   public static boolean referencesOuter(Tree tree, Symbol owner, VisitorState state) {
     CanBeStaticAnalyzer scanner = new CanBeStaticAnalyzer(owner, state);
     ((JCTree) tree).accept(scanner);
-    return scanner.referencesOuter;
+    return !scanner.canPossiblyBeStatic || !scanner.outerReferences.isEmpty();
+  }
+
+  public static CanBeStaticResult canBeStaticResult(Tree tree, Symbol owner, VisitorState state) {
+    CanBeStaticAnalyzer scanner = new CanBeStaticAnalyzer(owner, state);
+    ((JCTree) tree).accept(scanner);
+    return CanBeStaticResult.of(scanner.canPossiblyBeStatic, scanner.outerReferences);
   }
 
   private final Names names;
   private final Symbol owner;
   private final VisitorState state;
 
-  private boolean referencesOuter = false;
+  private boolean canPossiblyBeStatic = true;
+  private final Set<MethodSymbol> outerReferences = new HashSet<>();
 
   private CanBeStaticAnalyzer(Symbol owner, VisitorState state) {
     this.owner = owner;
@@ -67,9 +79,13 @@ public class CanBeStaticAnalyzer extends TreeScanner {
         // TODO(cushon): consider making the suggestion anyways, maybe with a fix?
         // fall through
       case FIELD:
+        if (!isOwnedBy(tree.sym, owner, state.getTypes())) {
+          canPossiblyBeStatic = false;
+        }
+        break;
       case METHOD:
         if (!isOwnedBy(tree.sym, owner, state.getTypes())) {
-          referencesOuter = true;
+          outerReferences.add((MethodSymbol) tree.sym);
         }
         break;
       case CLASS:
@@ -105,7 +121,7 @@ public class CanBeStaticAnalyzer extends TreeScanner {
   private class TypeVariableScanner extends Types.SimpleVisitor<Void, Void> {
     @Override
     public Void visitTypeVar(Type.TypeVar t, Void aVoid) {
-      referencesOuter = true;
+      canPossiblyBeStatic = false;
       return null;
     }
 
@@ -131,7 +147,7 @@ public class CanBeStaticAnalyzer extends TreeScanner {
     super.visitSelect(tree);
     // check for qualified this/super references
     if (tree.name == names._this || tree.name == names._super) {
-      referencesOuter = true;
+      canPossiblyBeStatic = false;
     }
   }
 
@@ -145,7 +161,7 @@ public class CanBeStaticAnalyzer extends TreeScanner {
       return;
     }
     if (memberOfEnclosing(owner, state, type.tsym)) {
-      referencesOuter = true;
+      canPossiblyBeStatic = false;
     }
   }
 
@@ -156,12 +172,12 @@ public class CanBeStaticAnalyzer extends TreeScanner {
       return;
     }
     if (memberOfEnclosing(owner, state, tree.expr.type.tsym)) {
-      referencesOuter = true;
+      canPossiblyBeStatic = false;
     }
   }
 
   /** Is sym a non-static member of an enclosing class of currentClass? */
-  static boolean memberOfEnclosing(Symbol owner, VisitorState state, Symbol sym) {
+  private static boolean memberOfEnclosing(Symbol owner, VisitorState state, Symbol sym) {
     if (sym == null || !sym.hasOuterInstance()) {
       return false;
     }
@@ -178,5 +194,24 @@ public class CanBeStaticAnalyzer extends TreeScanner {
   @Override
   public void visitAnnotation(JCAnnotation tree) {
     // skip annotations; the keys of key/value pairs look like unqualified method invocations
+  }
+
+  /** Stores the result of a can-be-static query. */
+  @AutoValue
+  public abstract static class CanBeStaticResult {
+    /**
+     * Whether the method could *possibly* be static: i.e., this is false if it references an
+     * instance field.
+     */
+    public abstract boolean canPossiblyBeStatic();
+
+    /** Set of instance methods referenced by the method under inspection. */
+    public abstract ImmutableSet<MethodSymbol> methodsReferenced();
+
+    public static CanBeStaticResult of(
+        boolean canPossiblyBeStatic, Set<MethodSymbol> methodsReferenced) {
+      return new AutoValue_CanBeStaticAnalyzer_CanBeStaticResult(
+          canPossiblyBeStatic, ImmutableSet.copyOf(methodsReferenced));
+    }
   }
 }
