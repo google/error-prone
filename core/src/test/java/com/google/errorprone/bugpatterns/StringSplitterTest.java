@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
+import com.google.common.base.StandardSystemProperty;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
@@ -46,6 +49,29 @@ public class StringSplitterTest {
             "class Test {",
             "  void f() {",
             "    for (String s : Splitter.on(':').split(\"\")) {}",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  // Regression test for issue #1124
+  @Test
+  public void positive_localVarTypeInference() {
+    assumeTrue(isJdk10OrGreater());
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    var lines = \"\".split(\":\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Splitter;",
+            "class Test {",
+            "  void f() {",
+            "    var lines = Splitter.on(':').split(\"\");",
             "  }",
             "}")
         .doTest(TestMode.TEXT_MATCH);
@@ -411,5 +437,15 @@ public class StringSplitterTest {
             "}")
         .setArgs("-cp", ":")
         .doTest(TestMode.TEXT_MATCH);
+  }
+
+  private static boolean isJdk10OrGreater() {
+    try {
+      int majorVersion = Integer.parseInt(StandardSystemProperty.JAVA_VERSION.value());
+      return majorVersion >= 10;
+    } catch (NumberFormatException e) {
+      // OpenJDK versions <= 8 return something like "1.8.0"
+      return false;
+    }
   }
 }
