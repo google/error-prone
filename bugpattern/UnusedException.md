@@ -1,6 +1,6 @@
 ---
 title: UnusedException
-summary: This catch block catches an symbol and re-throws another, but swallows the caught symbol rather than setting it as a cause. This can make debugging harder.
+summary: This catch block catches an exception and re-throws another, but swallows the caught exception rather than setting it as a cause. This can make debugging harder.
 layout: bugpattern
 tags: Style
 severity: WARNING

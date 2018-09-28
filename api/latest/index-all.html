@@ -477,6 +477,12 @@
 <dd>
 <div class="block">Utilities for matching annotations.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/AnnotationPosition.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">AnnotationPosition</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Checks annotation positioning, and orphaned Javadocs.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AnnotationPosition.html#AnnotationPosition--">AnnotationPosition()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationPosition.html" title="class in com.google.errorprone.bugpatterns">AnnotationPosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html#annotationReplacements--">annotationReplacements()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4SetUpNotRun</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html#annotationReplacements--">annotationReplacements()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TearDownNotRun</a></dt>
@@ -1321,6 +1327,14 @@
 <dd>
 <div class="block">Analyzes trees for references to their enclosing instance.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">CanBeStaticAnalyzer.CanBeStaticResult</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Stores the result of a can-be-static query.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#canBeStaticResult-com.sun.source.tree.Tree-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">canBeStaticResult(Tree, Symbol, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html#CanBeStaticResult--">CanBeStaticResult()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer.CanBeStaticResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/Reachability.html#canCompleteNormally-com.sun.source.tree.StatementTree-">canCompleteNormally(StatementTree)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.html" title="class in com.google.errorprone.util">Reachability</a></dt>
 <dd>
 <div class="block">Returns true if the given statement can complete normally, as defined by JLS 14.21.</div>
@@ -1352,6 +1366,11 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Suppressible.html#canonicalName--">canonicalName()</a></span> - Method in interface com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></dt>
 <dd>
 <div class="block">The canonical name of the check.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html#canPossiblyBeStatic--">canPossiblyBeStatic()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer.CanBeStaticResult</a></dt>
+<dd>
+<div class="block">Whether the method could *possibly* be static: i.e., this is false if it references an
+ instance field.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/CatchAndPrintStackTrace.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">CatchAndPrintStackTrace</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
@@ -3266,6 +3285,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotationName-com.sun.source.tree.AnnotationTree-">getAnnotationName(AnnotationTree)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotationType-com.sun.source.tree.AnnotationTree-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">getAnnotationType(AnnotationTree, Symbol, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns whether <code>anno</code> corresponds to a type annotation, or <code>null</code> if it could not
+ be determined.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotationWithSimpleName-java.util.List-java.lang.String-">getAnnotationWithSimpleName(List&lt;? extends AnnotationTree&gt;, String)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Returns an <code>AnnotationTree</code> with the given simple name, or <code>null</code>.</div>
@@ -4753,6 +4777,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/guice/InjectOnFinalField.html#InjectOnFinalField--">InjectOnFinalField()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/InjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns.inject.guice">InjectOnFinalField</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/inject/InjectOnMemberAndConstructor.html" title="class in com.google.errorprone.bugpatterns.inject"><span class="typeNameLink">InjectOnMemberAndConstructor</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
+<dd>
+<div class="block">Checks if class constructor and members are both annotated as @Inject.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/InjectOnMemberAndConstructor.html#InjectOnMemberAndConstructor--">InjectOnMemberAndConstructor()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/InjectOnMemberAndConstructor.html" title="class in com.google.errorprone.bugpatterns.inject">InjectOnMemberAndConstructor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/StringName.html#inline-com.google.errorprone.refaster.Inliner-">inline(Inliner)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/StringName.html" title="class in com.google.errorprone.refaster">StringName</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UAnyOf.html#inline-com.google.errorprone.refaster.Inliner-">inline(Inliner)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UAnyOf.html" title="class in com.google.errorprone.refaster">UAnyOf</a></dt>
@@ -5759,6 +5789,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/ParcelableCreator.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/ParcelableCreator.html" title="class in com.google.errorprone.bugpatterns.android">ParcelableCreator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AnnotationPosition.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationPosition.html" title="class in com.google.errorprone.bugpatterns">AnnotationPosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AutoValueFinalMethods.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AutoValueFinalMethods.html" title="class in com.google.errorprone.bugpatterns">AutoValueFinalMethods</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BadAnnotationImplementation.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BadAnnotationImplementation.html" title="class in com.google.errorprone.bugpatterns">BadAnnotationImplementation</a></dt>
@@ -5799,6 +5831,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/dagger/ScopeOnModule.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.dagger.<a href="com/google/errorprone/bugpatterns/inject/dagger/ScopeOnModule.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">ScopeOnModule</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/guice/AssistedInjectScoping.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/AssistedInjectScoping.html" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedInjectScoping</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/InjectOnMemberAndConstructor.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/InjectOnMemberAndConstructor.html" title="class in com.google.errorprone.bugpatterns.inject">InjectOnMemberAndConstructor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/inject/InvalidTargetingOnScopingAnnotation.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/InvalidTargetingOnScopingAnnotation.html" title="class in com.google.errorprone.bugpatterns.inject">InvalidTargetingOnScopingAnnotation</a></dt>
 <dd>&nbsp;</dd>
@@ -5857,6 +5891,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/EmptyTopLevelDeclaration.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EmptyTopLevelDeclaration.html" title="class in com.google.errorprone.bugpatterns">EmptyTopLevelDeclaration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/FieldCanBeFinal.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FieldCanBeFinal.html" title="class in com.google.errorprone.bugpatterns">FieldCanBeFinal</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MethodCanBeStatic.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MethodCanBeStatic.html" title="class in com.google.errorprone.bugpatterns">MethodCanBeStatic</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MockitoCast.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MockitoCast.html" title="class in com.google.errorprone.bugpatterns">MockitoCast</a></dt>
 <dd>&nbsp;</dd>
@@ -6098,6 +6134,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/android/StaticOrDefaultInterfaceMethod.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/StaticOrDefaultInterfaceMethod.html" title="class in com.google.errorprone.bugpatterns.android">StaticOrDefaultInterfaceMethod</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AnnotationPosition.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationPosition.html" title="class in com.google.errorprone.bugpatterns">AnnotationPosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html" title="class in com.google.errorprone.bugpatterns">ChainingConstructorIgnoresParameter</a></dt>
@@ -6190,8 +6228,6 @@
 <dd>
 <div class="block">Identifies methods with parameters that have a generic argument with Int, Long, or Double.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MethodCanBeStatic.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MethodCanBeStatic.html" title="class in com.google.errorprone.bugpatterns">MethodCanBeStatic</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingOverride.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingOverride.html" title="class in com.google.errorprone.bugpatterns">MissingOverride</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MissingSuperCall.html#matchMethod-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingSuperCall.html" title="class in com.google.errorprone.bugpatterns">MissingSuperCall</a></dt>
@@ -6654,6 +6690,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.UnionTypeTreeMatcher.html#matchUnionType-com.sun.source.tree.UnionTypeTree-com.google.errorprone.VisitorState-">matchUnionType(UnionTypeTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.UnionTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.UnionTypeTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/AnnotationPosition.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationPosition.html" title="class in com.google.errorprone.bugpatterns">AnnotationPosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CannotMockFinalClass.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns">CannotMockFinalClass</a></dt>
@@ -6813,7 +6851,7 @@
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/MethodCanBeStatic.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">MethodCanBeStatic</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MethodCanBeStatic.html#MethodCanBeStatic--">MethodCanBeStatic()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MethodCanBeStatic.html" title="class in com.google.errorprone.bugpatterns">MethodCanBeStatic</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/MethodCanBeStatic.html#MethodCanBeStatic-com.google.errorprone.ErrorProneFlags-">MethodCanBeStatic(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MethodCanBeStatic.html" title="class in com.google.errorprone.bugpatterns">MethodCanBeStatic</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#methodHasArity-int-">methodHasArity(int)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -6933,6 +6971,10 @@
 <dt><a href="com/google/errorprone/matchers/method/MethodSignatureMatcherImpl.html" title="class in com.google.errorprone.matchers.method"><span class="typeNameLink">MethodSignatureMatcherImpl</span></a> - Class in <a href="com/google/errorprone/matchers/method/package-summary.html">com.google.errorprone.matchers.method</a></dt>
 <dd>
 <div class="block">Matches on method signature.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html#methodsReferenced--">methodsReferenced()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer.CanBeStaticResult</a></dt>
+<dd>
+<div class="block">Set of instance methods referenced by the method under inspection.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/MethodVisibility.html" title="class in com.google.errorprone.matchers"><span class="typeNameLink">MethodVisibility</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
@@ -7380,6 +7422,8 @@
  won't produce meaningful output.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ObjectToString.html#ObjectToString--">ObjectToString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ObjectToString.html" title="class in com.google.errorprone.bugpatterns">ObjectToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html#of-boolean-java.util.Set-">of(boolean, Set&lt;Symbol.MethodSymbol&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer.CanBeStaticResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html#of-java.lang.String-">of(String)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></dt>
 <dd>
@@ -8090,6 +8134,10 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#renameMethod-com.sun.source.tree.MethodTree-java.lang.String-com.google.errorprone.VisitorState-">renameMethod(MethodTree, String, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
 <div class="block">Be warned, only changes method name at the declaration.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#renameMethodInvocation-com.sun.source.tree.MethodInvocationTree-java.lang.String-com.google.errorprone.VisitorState-">renameMethodInvocation(MethodInvocationTree, String, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Replaces the name of the method being invoked in <code>tree</code> with <code>replacement</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#renameVariable-com.sun.source.tree.VariableTree-java.lang.String-com.google.errorprone.VisitorState-">renameVariable(VariableTree, String, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
@@ -9560,7 +9608,7 @@
 </a>
 <h2 class="title">V</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html#validate-java.util.Collection-com.google.errorprone.VisitorState-">validate(Collection&lt;? extends ExpressionTree&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html#validate-com.sun.tools.javac.code.Symbol.MethodSymbol-java.util.Collection-com.google.errorprone.VisitorState-">validate(Symbol.MethodSymbol, Collection&lt;? extends ExpressionTree&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/formatstring/StrictFormatStringValidation.html#validate-com.sun.source.tree.ExpressionTree-java.util.List-com.google.errorprone.VisitorState-">validate(ExpressionTree, List&lt;? extends ExpressionTree&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/StrictFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">StrictFormatStringValidation</a></dt>
 <dd>&nbsp;</dd>

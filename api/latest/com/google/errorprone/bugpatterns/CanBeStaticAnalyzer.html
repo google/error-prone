@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var methods = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/bugpatterns/ByteBufferBackingArray.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html" target="_top">Frames</a></li>
@@ -74,7 +74,7 @@ var activeTableTab = "activeTableTab";
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -128,6 +128,27 @@ extends com.sun.tools.javac.tree.TreeScanner</pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="nested.class.summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Nested Class Summary table, listing nested classes, and an explanation">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer.CanBeStaticResult</a></span></code>
+<div class="block">Stores the result of a can-be-static query.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ========== METHOD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.summary">
@@ -141,6 +162,12 @@ extends com.sun.tools.javac.tree.TreeScanner</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer.CanBeStaticResult</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#canBeStaticResult-com.sun.source.tree.Tree-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">canBeStaticResult</a></span>(com.sun.source.tree.Tree&nbsp;tree,
+                 com.sun.tools.javac.code.Symbol&nbsp;owner,
+                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#referencesOuter-com.sun.source.tree.Tree-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">referencesOuter</a></span>(com.sun.source.tree.Tree&nbsp;tree,
                com.sun.tools.javac.code.Symbol&nbsp;owner,
@@ -148,23 +175,23 @@ extends com.sun.tools.javac.tree.TreeScanner</pre>
 <div class="block">Returns true if the tree references its enclosing class.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitAnnotation-com.sun.tools.javac.tree.JCTree.JCAnnotation-">visitAnnotation</a></span>(com.sun.tools.javac.tree.JCTree.JCAnnotation&nbsp;tree)</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitIdent-com.sun.tools.javac.tree.JCTree.JCIdent-">visitIdent</a></span>(com.sun.tools.javac.tree.JCTree.JCIdent&nbsp;tree)</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitNewClass-com.sun.tools.javac.tree.JCTree.JCNewClass-">visitNewClass</a></span>(com.sun.tools.javac.tree.JCTree.JCNewClass&nbsp;tree)</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitReference-com.sun.tools.javac.tree.JCTree.JCMemberReference-">visitReference</a></span>(com.sun.tools.javac.tree.JCTree.JCMemberReference&nbsp;tree)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html#visitSelect-com.sun.tools.javac.tree.JCTree.JCFieldAccess-">visitSelect</a></span>(com.sun.tools.javac.tree.JCTree.JCFieldAccess&nbsp;tree)</code>&nbsp;</td>
 </tr>
@@ -207,6 +234,17 @@ extends com.sun.tools.javac.tree.TreeScanner</pre>
                                       com.sun.tools.javac.code.Symbol&nbsp;owner,
                                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Returns true if the tree references its enclosing class.</div>
+</li>
+</ul>
+<a name="canBeStaticResult-com.sun.source.tree.Tree-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>canBeStaticResult</h4>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer.CanBeStaticResult</a>&nbsp;canBeStaticResult(com.sun.source.tree.Tree&nbsp;tree,
+                                                                      com.sun.tools.javac.code.Symbol&nbsp;owner,
+                                                                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 </li>
 </ul>
 <a name="visitIdent-com.sun.tools.javac.tree.JCTree.JCIdent-">
@@ -303,7 +341,7 @@ extends com.sun.tools.javac.tree.TreeScanner</pre>
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../com/google/errorprone/bugpatterns/ByteBufferBackingArray.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../com/google/errorprone/bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.html" target="_top">Frames</a></li>
@@ -327,7 +365,7 @@ extends com.sun.tools.javac.tree.TreeScanner</pre>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

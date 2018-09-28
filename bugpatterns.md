@@ -517,6 +517,9 @@ This for loop increments the same variable in the header and in the body
 __[InjectOnConstructorOfAbstractClass](bugpattern/InjectOnConstructorOfAbstractClass)__<br>
 Constructors on abstract classes are never directly @Injected, only the constructors of their subclasses can be @Inject&#39;ed.
 
+__[InjectOnMemberAndConstructor](bugpattern/InjectOnMemberAndConstructor)__<br>
+Members shouldn&#39;t be annotated with @Inject if constructor is already annotated @Inject
+
 __[InputStreamSlowMultibyteRead](bugpattern/InputStreamSlowMultibyteRead)__<br>
 Please also override int read(byte[], int, int), otherwise multi-byte reads from this input stream are likely to be slow.
 
@@ -561,6 +564,9 @@ Not calling fail() when expecting an exception masks bugs
 
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
+
+__[ModifiedButNotUsed](bugpattern/ModifiedButNotUsed)__<br>
+A collection or proto builder was created, but its values were never accessed.
 
 __[ModifyCollectionInEnhancedForLoop](bugpattern/ModifyCollectionInEnhancedForLoop)__<br>
 Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown.
@@ -806,6 +812,9 @@ This method does not acquire the locks specified by its @UnlockMethod annotation
 __[AnnotateFormatMethod](bugpattern/AnnotateFormatMethod)__<br>
 This method passes a pair of parameters through to String.format, but the enclosing method wasn&#39;t annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.
 
+__[AnnotationPosition](bugpattern/AnnotationPosition)__<br>
+Annotations should be positioned after Javadocs, but before modifiers..
+
 __[AssertFalse](bugpattern/AssertFalse)__<br>
 Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead
 
@@ -853,9 +862,6 @@ The documented method doesn&#39;t actually throw this checked exception.
 
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
-
-__[ModifiedButNotUsed](bugpattern/ModifiedButNotUsed)__<br>
-A collection or proto builder was created, but its values were never accessed.
 
 __[MutableMethodReturnType](bugpattern/MutableMethodReturnType)__<br>
 Method return type should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
@@ -906,7 +912,7 @@ __[Unused](bugpattern/Unused)__<br>
 Unused.
 
 __[UnusedException](bugpattern/UnusedException)__<br>
-This catch block catches an symbol and re-throws another, but swallows the caught symbol rather than setting it as a cause. This can make debugging harder.
+This catch block catches an exception and re-throws another, but swallows the caught exception rather than setting it as a cause. This can make debugging harder.
 
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
