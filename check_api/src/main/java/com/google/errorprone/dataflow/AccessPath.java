@@ -102,7 +102,7 @@ public abstract class AccessPath {
         && // annotated @AutoValue
         MoreAnnotations.getDeclarationAndTypeAttributes(rcvrType.tsym)
             .map(Object::toString)
-            .anyMatch(("@" + AutoValue.class.getCanonicalName())::equals);
+            .anyMatch("@com.google.auto.value.AutoValue"::equals);
   }
 
   /**
