@@ -31,9 +31,9 @@ enum StaticOrder {
    */
   STATIC_LAST(ImmutableList.of(Boolean.FALSE, Boolean.TRUE));
 
-  private final Iterable<Boolean> groupOrder;
+  private final ImmutableList<Boolean> groupOrder;
 
-  StaticOrder(Iterable<Boolean> groupOrder) {
+  StaticOrder(ImmutableList<Boolean> groupOrder) {
     this.groupOrder = groupOrder;
   }
 

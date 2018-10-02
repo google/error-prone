@@ -53,6 +53,9 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.NewArrayTree;
@@ -458,6 +461,24 @@ public class SuggestedFixes {
     }
     // Method name not found.
     throw new AssertionError();
+  }
+
+  /** Replaces the name of the method being invoked in {@code tree} with {@code replacement}. */
+  public static SuggestedFix renameMethodInvocation(
+      MethodInvocationTree tree, String replacement, VisitorState state) {
+    Tree methodSelect = tree.getMethodSelect();
+    int startPos;
+    String extra = "";
+    if (methodSelect instanceof MemberSelectTree) {
+      startPos = state.getEndPosition(((MemberSelectTree) methodSelect).getExpression());
+      extra = ".";
+    } else if (methodSelect instanceof IdentifierTree) {
+      startPos = ((JCTree) tree).getStartPosition();
+    } else {
+      return SuggestedFix.builder().build();
+    }
+    int endPos = state.getEndPosition(methodSelect);
+    return SuggestedFix.replace(startPos, endPos, extra + replacement);
   }
 
   /** Deletes the given exceptions from a method's throws clause. */

@@ -774,4 +774,67 @@ public class UnusedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void fixPrivateMethod_usagesToo() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  int a = foo(1);",
+            "  private int foo(int b) {",
+            "    b = 1;",
+            "    return 1;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  int a = foo();",
+            "  private int foo() {",
+            "    return 1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fixPrivateMethod_parameterLocations() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  int a = foo(1, 2, 3) + bar(1, 2, 3) + baz(1, 2, 3);",
+            "  private int foo(int a, int b, int c) { return a * b; }",
+            "  private int bar(int a, int b, int c) { return b * c; }",
+            "  private int baz(int a, int b, int c) { return a * c; }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  int a = foo(1, 2) + bar(2, 3) + baz(1, 3);",
+            "  private int foo(int a, int b) { return a * b; }",
+            "  private int bar(int b, int c) { return b * c; }",
+            "  private int baz(int a, int c) { return a * c; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fixPrivateMethod_varArgs() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  int a = foo(1, 2, 3, 4);",
+            "  private int foo(int a, int... b) { return a; }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  int a = foo(1);",
+            "  private int foo(int a) { return a; }",
+            "}")
+        .doTest();
+  }
 }

@@ -28,8 +28,10 @@ import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.DocTreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
@@ -70,6 +72,35 @@ final class Utils {
     DocSourcePositions positions = JavacTrees.instance(state.context).getSourcePositions();
     CompilationUnitTree compilationUnitTree = state.getPath().getCompilationUnit();
     return (int) positions.getStartPosition(compilationUnitTree, getDocCommentTree(state), docTree);
+  }
+
+  /**
+   * Gets a {@link DiagnosticPosition} for the {@link DocTree} pointed to by {@code path}, attached
+   * to the {@link Tree} which it documents.
+   */
+  static DiagnosticPosition diagnosticPosition(DocTreePath path, VisitorState state) {
+    int startPosition = getStartPosition(path.getLeaf(), state);
+    return new DiagnosticPosition() {
+      @Override
+      public JCTree getTree() {
+        return (JCTree) path.getTreePath().getLeaf();
+      }
+
+      @Override
+      public int getStartPosition() {
+        return startPosition;
+      }
+
+      @Override
+      public int getPreferredPosition() {
+        return startPosition;
+      }
+
+      @Override
+      public int getEndPosition(EndPosTable endPosTable) {
+        return startPosition;
+      }
+    };
   }
 
   @Nullable

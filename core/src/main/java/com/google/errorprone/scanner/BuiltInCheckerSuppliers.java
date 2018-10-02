@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
 import com.google.errorprone.bugpatterns.AnnotateFormatMethod;
+import com.google.errorprone.bugpatterns.AnnotationPosition;
 import com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayFillIncompatibleType;
@@ -302,6 +303,7 @@ import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameCon
 import com.google.errorprone.bugpatterns.inject.AutoFactoryAtInject;
 import com.google.errorprone.bugpatterns.inject.CloseableProvides;
 import com.google.errorprone.bugpatterns.inject.InjectOnConstructorOfAbstractClass;
+import com.google.errorprone.bugpatterns.inject.InjectOnMemberAndConstructor;
 import com.google.errorprone.bugpatterns.inject.InjectedConstructorAnnotations;
 import com.google.errorprone.bugpatterns.inject.InvalidTargetingOnScopingAnnotation;
 import com.google.errorprone.bugpatterns.inject.JavaxInjectOnAbstractMethod;
@@ -565,6 +567,7 @@ public class BuiltInCheckerSuppliers {
           InconsistentHashCode.class,
           IncrementInForLoopAndHeader.class,
           InjectOnConstructorOfAbstractClass.class,
+          InjectOnMemberAndConstructor.class,
           InputStreamSlowMultibyteRead.class,
           InstanceOfAndCastMatchWrongType.class,
           IntLongMath.class,
@@ -580,6 +583,7 @@ public class BuiltInCheckerSuppliers {
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
           MissingOverride.class,
+          ModifiedButNotUsed.class,
           ModifyCollectionInEnhancedForLoop.class,
           MultipleParallelOrSequentialCalls.class,
           MutableConstantField.class,
@@ -638,6 +642,7 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           AndroidJdkLibsChecker.class,
           AnnotateFormatMethod.class,
+          AnnotationPosition.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AssistedInjectAndInjectOnSameConstructor.class,
@@ -683,7 +688,6 @@ public class BuiltInCheckerSuppliers {
           MethodCanBeStatic.class,
           MissingDefault.class,
           MixedArrayDimensions.class,
-          ModifiedButNotUsed.class,
           MoreThanOneQualifier.class,
           MultiVariableDeclaration.class,
           MultipleTopLevelClasses.class,

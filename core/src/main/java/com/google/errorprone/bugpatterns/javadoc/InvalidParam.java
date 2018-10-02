@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getBestMatch;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocComment;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocTreePath;
@@ -97,7 +98,6 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
 
     private final ImmutableSet<String> parameters;
     private final ImmutableSet<String> typeParameters;
-    private final Tree tree;
 
     private ParamsChecker(
         VisitorState state,
@@ -105,7 +105,6 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
         ImmutableSet<String> parameters,
         ImmutableSet<String> typeParameters) {
       this.state = state;
-      this.tree = tree;
       DCDocComment dcDocComment = getDocComment(state, tree);
       this.documentedParameters =
           extractDocumentedParams(dcDocComment, /* isTypeParameter= */ false);
@@ -130,12 +129,12 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
             bestMatch
                 .map(
                     bm ->
-                        buildDescription(tree)
+                        buildDescription(diagnosticPosition(getCurrentPath(), state))
                             .setMessage(message + String.format(" Did you mean %s?", bm))
                             .addFix(replace(paramTree.getName(), bm, state))
                             .build())
                 .orElse(
-                    buildDescription(tree)
+                    buildDescription(diagnosticPosition(getCurrentPath(), state))
                         .setMessage(message)
                         .addFix(replace(paramTree, "", state))
                         .build()));

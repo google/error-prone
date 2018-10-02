@@ -115,8 +115,7 @@ public class RestrictedApiChecker extends BugChecker
       }
     }
     boolean warn =
-        Matchers.enclosingNode(shouldAllowWithWarning(restriction))
-                .matches(where, state) ;
+        Matchers.enclosingNode(shouldAllowWithWarning(restriction)).matches(where, state);
 
     boolean allow = Matchers.enclosingNode(shouldAllow(restriction)).matches(where, state);
     if (warn && allow) {

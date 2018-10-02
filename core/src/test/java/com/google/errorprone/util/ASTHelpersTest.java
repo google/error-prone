@@ -957,6 +957,28 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         .doTest();
   }
 
+  @Test
+  public void targetType_methodHandle() {
+    if (!isJdk8OrEarlier()) {
+      // JDK >= 9 complains about splitting java.lang.invoke
+      return;
+    }
+    CompilationTestHelper.newInstance(TargetTypeChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "package java.lang.invoke;",
+            "class Test {",
+            "  void f(MethodHandle mh) throws Throwable {",
+            "    // BUG: Diagnostic contains:",
+            "    mh.invokeBasic(detectString(), detectString(), detectString());",
+            "  }",
+            "  static String detectString() {",
+            "    return \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   /** A {@link BugChecker} that prints the target type of a parameterized type. */
   @BugPattern(
       name = "TargetTypeCheckerParentTypeNotMatched",
@@ -1186,5 +1208,16 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         };
     tests.add(scanner);
     assertCompiles(scanner);
+  }
+
+  private static boolean isJdk8OrEarlier() {
+    try {
+      Method versionMethod = Runtime.class.getMethod("version");
+      Object version = versionMethod.invoke(null);
+      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
+      return majorVersion <= 8;
+    } catch (ReflectiveOperationException e) {
+      return true;
+    }
   }
 }

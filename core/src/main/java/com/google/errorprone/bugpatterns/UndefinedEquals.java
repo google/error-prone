@@ -46,7 +46,6 @@ import com.sun.tools.javac.code.Type;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /**
  * Flags types which do not have well-defined equals behavior.
@@ -64,7 +63,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
       allOf(
           instanceMethod()
               .onDescendantOf("com.google.common.truth.Subject")
-              .withNameMatching(Pattern.compile("is(Not)?EqualTo")),
+              .namedAnyOf("isEqualTo", "isNotEqualTo"),
           receiverOfInvocation(
               anyOf(
                   staticMethod().onClass("com.google.common.truth.Truth").named("assertThat"),

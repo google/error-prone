@@ -47,7 +47,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 
@@ -78,7 +77,13 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
               EQUALS_TESTER.named("testEquals")),
           MethodPairing.of(
               "BugCheckerRefactoringTestHelper",
-              REFACTORING_HELPER.withNameMatching(Pattern.compile("add(Input|Output)(File)?")),
+              REFACTORING_HELPER.namedAnyOf(
+                  "addInput",
+                  "addInputLines",
+                  "addInputFile",
+                  "addOutput",
+                  "addOutputLines",
+                  "addOutputFile"),
               REFACTORING_HELPER.named("doTest")),
           MethodPairing.of(
               "CompilationTestHelper",

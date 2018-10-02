@@ -31,6 +31,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
@@ -59,6 +60,10 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
     if (!FORMAT_METHOD.matches(tree, state)) {
       return Description.NO_MATCH;
     }
+    MethodSymbol sym = ASTHelpers.getSymbol(tree);
+    if (sym == null) {
+      return Description.NO_MATCH;
+    }
     Deque<ExpressionTree> args = new ArrayDeque<>(tree.getArguments());
     // skip the first argument of printf(Locale,String,Object...)
     if (ASTHelpers.isSameType(
@@ -67,7 +72,8 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
         state)) {
       args.removeFirst();
     }
-    FormatStringValidation.ValidationResult result = FormatStringValidation.validate(args, state);
+    FormatStringValidation.ValidationResult result =
+        FormatStringValidation.validate(sym, args, state);
     if (result == null) {
       return Description.NO_MATCH;
     }
