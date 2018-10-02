@@ -39,12 +39,15 @@ public class ErrorProneJavacPlugin implements Plugin {
     BaseErrorProneJavaCompiler.checkCompilePolicy(Options.instance(context).get("compilePolicy"));
     BaseErrorProneJavaCompiler.setupMessageBundle(context);
     RefactoringCollection[] refactoringCollection = {null};
+    final ErrorProneOptions errorProneOptions = ErrorProneOptions.processArgs(args);
+    FileReporter fileReporter = new FileReporter(errorProneOptions);
     javacTask.addTaskListener(
         BaseErrorProneJavaCompiler.createAnalyzer(
             BuiltInCheckerSuppliers.defaultChecks(),
-            ErrorProneOptions.processArgs(args),
+            errorProneOptions,
             context,
-            refactoringCollection));
+            refactoringCollection,
+            fileReporter));
     if (refactoringCollection[0] != null) {
       javacTask.addTaskListener(new RefactoringTask(context, refactoringCollection[0]));
     }

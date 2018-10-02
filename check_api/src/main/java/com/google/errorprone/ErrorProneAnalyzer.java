@@ -56,14 +56,16 @@ public class ErrorProneAnalyzer implements TaskListener {
   private final ErrorProneOptions errorProneOptions;
   private final Context context;
   private final DescriptionListener.Factory descriptionListenerFactory;
+  private final FileReporter fileReporter;
 
   public static ErrorProneAnalyzer createByScanningForPlugins(
-      ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context) {
+      ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context, FileReporter fileReporter) {
     return new ErrorProneAnalyzer(
         scansPlugins(scannerSupplier, errorProneOptions, context),
         errorProneOptions,
         context,
-        JavacErrorDescriptionListener.provider(context));
+        JavacErrorDescriptionListener.provider(context),
+        fileReporter);
   }
 
   private static Supplier<CodeTransformer> scansPlugins(
@@ -87,23 +89,27 @@ public class ErrorProneAnalyzer implements TaskListener {
       CodeTransformer codeTransformer,
       ErrorProneOptions errorProneOptions,
       Context context,
-      DescriptionListener.Factory descriptionListenerFactory) {
+      DescriptionListener.Factory descriptionListenerFactory,
+      FileReporter fileReporter) {
     return new ErrorProneAnalyzer(
         Suppliers.ofInstance(codeTransformer),
         errorProneOptions,
         context,
-        descriptionListenerFactory);
+        descriptionListenerFactory,
+        fileReporter);
   }
 
   private ErrorProneAnalyzer(
       Supplier<CodeTransformer> transformer,
       ErrorProneOptions errorProneOptions,
       Context context,
-      DescriptionListener.Factory descriptionListenerFactory) {
+      DescriptionListener.Factory descriptionListenerFactory,
+      FileReporter fileReporter) {
     this.transformer = checkNotNull(transformer);
     this.errorProneOptions = checkNotNull(errorProneOptions);
     this.context = checkNotNull(context);
     this.descriptionListenerFactory = checkNotNull(descriptionListenerFactory);
+    this.fileReporter = fileReporter;
   }
 
   private int errorProneErrors = 0;
@@ -127,7 +133,7 @@ public class ErrorProneAnalyzer implements TaskListener {
     Log log = Log.instance(context);
     JCCompilationUnit compilation = (JCCompilationUnit) path.getCompilationUnit();
     DescriptionListener descriptionListener =
-        descriptionListenerFactory.getDescriptionListener(log, compilation);
+        descriptionListenerFactory.getDescriptionListener(log, fileReporter, compilation);
     DescriptionListener countingDescriptionListener =
         d -> {
           if (d.severity == SeverityLevel.ERROR) {

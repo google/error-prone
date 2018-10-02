@@ -36,6 +36,6 @@ public interface DescriptionListener {
 
   /** Factory for creating DescriptionListeners while compiling each file. */
   interface Factory {
-    DescriptionListener getDescriptionListener(Log log, JCCompilationUnit compilation);
+    DescriptionListener getDescriptionListener(Log log, FileReporter fileReporter, JCCompilationUnit compilation);
   }
 }

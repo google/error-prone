@@ -84,10 +84,13 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
             javacTool.getTask(
                 out, fileManager, diagnosticListener, javacOpts, classes, compilationUnits);
     setupMessageBundle(task.getContext());
+    FileReporter fileReporter = new FileReporter(errorProneOptions);
+    task.addTaskListener(fileReporter);
     RefactoringCollection[] refactoringCollection = {null};
     task.addTaskListener(
         createAnalyzer(
-            scannerSupplier, errorProneOptions, task.getContext(), refactoringCollection));
+            scannerSupplier, errorProneOptions, task.getContext(), refactoringCollection,
+            fileReporter));
     if (refactoringCollection[0] != null) {
       task.addTaskListener(new RefactoringTask(task.getContext(), refactoringCollection[0]));
     }
@@ -206,9 +209,11 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
       ScannerSupplier scannerSupplier,
       ErrorProneOptions epOptions,
       Context context,
-      RefactoringCollection[] refactoringCollection) {
+      RefactoringCollection[] refactoringCollection,
+      FileReporter fileReporter) {
     if (!epOptions.patchingOptions().doRefactor()) {
-      return ErrorProneAnalyzer.createByScanningForPlugins(scannerSupplier, epOptions, context);
+      return ErrorProneAnalyzer.createByScanningForPlugins(scannerSupplier, epOptions, context,
+          fileReporter);
     }
     refactoringCollection[0] = RefactoringCollection.refactor(epOptions.patchingOptions(), context);
 
@@ -231,7 +236,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
             .get();
 
     return ErrorProneAnalyzer.createWithCustomDescriptionListener(
-        codeTransformer, epOptions, context, refactoringCollection[0]);
+        codeTransformer, epOptions, context, refactoringCollection[0], fileReporter);
   }
 
   static class RefactoringTask implements TaskListener {

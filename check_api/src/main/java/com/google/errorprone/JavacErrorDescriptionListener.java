@@ -43,6 +43,7 @@ import javax.tools.JavaFileObject;
  */
 public class JavacErrorDescriptionListener implements DescriptionListener {
   private final Log log;
+  private final FileReporter fileReporter;
   private final JavaFileObject sourceFile;
   private final Function<Fix, AppliedFix> fixToAppliedFix;
   private final Context context;
@@ -57,11 +58,14 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
 
   private JavacErrorDescriptionListener(
       Log log,
+      FileReporter fileReporter,
       EndPosTable endPositions,
       JavaFileObject sourceFile,
       Context context,
-      boolean dontUseErrors) {
+      boolean dontUseErrors
+      ) {
     this.log = log;
+    this.fileReporter = fileReporter;
     this.sourceFile = sourceFile;
     this.context = context;
     this.dontUseErrors = dontUseErrors;
@@ -106,6 +110,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
           break;
       }
       log.report(factory.create(type, log.currentSource(), pos, MESSAGE_BUNDLE_KEY, message));
+      fileReporter.report(type, log.currentSource(), pos, message);
     } finally {
       if (originalSource != null) {
         log.useSource(originalSource);
@@ -147,14 +152,14 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   }
 
   static Factory provider(Context context) {
-    return (log, compilation) ->
+    return (log, reporter, compilation) ->
         new JavacErrorDescriptionListener(
-            log, compilation.endPositions, compilation.getSourceFile(), context, false);
+            log, reporter, compilation.endPositions, compilation.getSourceFile(), context, false);
   }
 
   static Factory providerForRefactoring(Context context) {
-    return (log, compilation) ->
+    return (log, reporter, compilation) ->
         new JavacErrorDescriptionListener(
-            log, compilation.endPositions, compilation.getSourceFile(), context, true);
+            log, reporter, compilation.endPositions, compilation.getSourceFile(), context, true);
   }
 }

@@ -146,12 +146,12 @@ class RefactoringCollection implements DescriptionListener.Factory {
   }
 
   @Override
-  public DescriptionListener getDescriptionListener(Log log, JCCompilationUnit compilation) {
+  public DescriptionListener getDescriptionListener(Log log, FileReporter fileReporter, JCCompilationUnit compilation) {
     URI sourceFile = compilation.getSourceFile().toUri();
 
     DelegatingDescriptionListener delegate =
         new DelegatingDescriptionListener(
-            descriptionsFactory.getDescriptionListener(log, compilation),
+            descriptionsFactory.getDescriptionListener(log, fileReporter, compilation),
             DescriptionBasedDiff.createIgnoringOverlaps(compilation, importOrganizer));
     foundSources.put(sourceFile, delegate);
     return delegate;

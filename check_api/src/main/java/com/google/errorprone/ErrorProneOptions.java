@@ -59,6 +59,7 @@ public class ErrorProneOptions {
       "-XepDisableWarningsInGeneratedCode";
   private static final String COMPILING_TEST_ONLY_CODE = "-XepCompilingTestOnlyCode";
   private static final String EXCLUDED_PATHS_PREFIX = "-XepExcludedPaths:";
+  private static final String REPORT_FILE_PREFIX = "-XepReportFile:";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
   public static int isSupportedOption(String option) {
@@ -68,6 +69,7 @@ public class ErrorProneOptions {
             || option.startsWith(PATCH_OUTPUT_LOCATION)
             || option.startsWith(PATCH_CHECKS_PREFIX)
             || option.startsWith(EXCLUDED_PATHS_PREFIX)
+            || option.startsWith(REPORT_FILE_PREFIX)
             || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG)
             || option.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG)
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
@@ -161,6 +163,7 @@ public class ErrorProneOptions {
   private final ErrorProneFlags flags;
   private final PatchingOptions patchingOptions;
   private final Pattern excludedPattern;
+  private String reportFile;
 
   private ErrorProneOptions(
       ImmutableMap<String, Severity> severityMap,
@@ -173,7 +176,8 @@ public class ErrorProneOptions {
       boolean isTestOnlyTarget,
       ErrorProneFlags flags,
       PatchingOptions patchingOptions,
-      Pattern excludedPattern) {
+      Pattern excludedPattern,
+      String reportFile) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
     this.ignoreUnknownChecks = ignoreUnknownChecks;
@@ -185,6 +189,7 @@ public class ErrorProneOptions {
     this.flags = flags;
     this.patchingOptions = patchingOptions;
     this.excludedPattern = excludedPattern;
+    this.reportFile = reportFile;
   }
 
   public String[] getRemainingArgs() {
@@ -223,6 +228,10 @@ public class ErrorProneOptions {
     return excludedPattern;
   }
 
+  public String getReportFile() {
+    return reportFile;
+  }
+
   private static class Builder {
     private boolean ignoreUnknownChecks = false;
     private boolean disableWarningsInGeneratedCode = false;
@@ -234,6 +243,7 @@ public class ErrorProneOptions {
     private final ErrorProneFlags.Builder flagsBuilder = ErrorProneFlags.builder();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
     private Pattern excludedPattern;
+    private String reportFile;
 
     private void parseSeverity(String arg) {
       // Strip prefix
@@ -310,11 +320,16 @@ public class ErrorProneOptions {
           isTestOnlyTarget,
           flagsBuilder.build(),
           patchingOptionsBuilder.build(),
-          excludedPattern);
+          excludedPattern,
+          reportFile);
     }
 
     public void setExcludedPattern(Pattern excludedPattern) {
       this.excludedPattern = excludedPattern;
+    }
+
+    public void setReportFile(final String reportFile) {
+      this.reportFile = reportFile;
     }
   }
 
@@ -407,6 +422,9 @@ public class ErrorProneOptions {
           } else if (arg.startsWith(EXCLUDED_PATHS_PREFIX)) {
             String pathRegex = arg.substring(EXCLUDED_PATHS_PREFIX.length());
             builder.setExcludedPattern(Pattern.compile(pathRegex));
+          } else if (arg.startsWith(REPORT_FILE_PREFIX)) {
+            String reportFile = arg.substring(REPORT_FILE_PREFIX.length());
+            builder.setReportFile(reportFile);
           } else {
             remainingArgs.add(arg);
           }
