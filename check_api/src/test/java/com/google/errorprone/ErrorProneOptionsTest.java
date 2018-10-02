@@ -257,4 +257,12 @@ public class ErrorProneOptionsTest {
     assertThat(options.patchingOptions().importOrganizer())
         .isSameAs(ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER);
   }
+
+  @Test
+  public void recognizesReportFile() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(
+            new String[] {"-XepReportFile:some/path/here.xml"});
+    assertThat(options.getReportFile()).isEqualTo("some/path/here.xml");
+  }
 }

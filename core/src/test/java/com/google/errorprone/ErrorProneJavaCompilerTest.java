@@ -51,6 +51,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -420,6 +422,23 @@ public class ErrorProneJavaCompilerTest {
     assertThat(result.succeeded).isFalse();
   }
 
+  @Test
+  public void testReportFile() throws IOException {
+    final Path reportFile = tempDir.getRoot().toPath().resolve("test_report_file.xml");
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-XepReportFile:" + reportFile.toAbsolutePath()),
+            Collections.emptyList());
+    assertThat(reportFile.toFile().exists()).isTrue();
+    final long descriptionsInReport = Files.readAllLines(reportFile).stream()
+        .filter(s -> s.contains("</description>"))
+        .count();
+    assertThat(descriptionsInReport).isEqualTo(5);
+    assertThat(result.succeeded).isFalse();
+    assertThat(result.diagnosticHelper.getDiagnostics()).hasSize(5);
+  }
+  
   private static class CompilationResult {
     public final boolean succeeded;
     public final DiagnosticTestHelper diagnosticHelper;
