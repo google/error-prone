@@ -21,6 +21,7 @@ import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableList;
@@ -64,7 +65,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -458,7 +458,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(Tree t, VisitorState state) {
-        return state.getTypes().isArray(((JCTree) t).type);
+        Type type = getType(t);
+        return type != null && state.getTypes().isArray(type);
       }
     };
   }
@@ -468,8 +469,10 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(Tree t, VisitorState state) {
-        Type type = ((JCTree) t).type;
-        return state.getTypes().isArray(type) && state.getTypes().elemtype(type).isPrimitive();
+        Type type = getType(t);
+        return type != null
+            && state.getTypes().isArray(type)
+            && state.getTypes().elemtype(type).isPrimitive();
       }
     };
   }
@@ -479,7 +482,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(Tree t, VisitorState state) {
-        return ((JCTree) t).type.isPrimitive();
+        Type type = getType(t);
+        return type != null && type.isPrimitive();
       }
     };
   }
@@ -489,7 +493,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(T t, VisitorState state) {
-        return ((JCTree) t).type.isPrimitiveOrVoid();
+        Type type = getType(t);
+        return type != null && type.isPrimitiveOrVoid();
       }
     };
   }
@@ -499,7 +504,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(T t, VisitorState state) {
-        return state.getTypes().isSameType(((JCTree) t).type, state.getSymtab().voidType);
+        Type type = getType(t);
+        return type != null && state.getTypes().isSameType(type, state.getSymtab().voidType);
       }
     };
   }
@@ -511,7 +517,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(Tree t, VisitorState state) {
-        return state.getTypes().unboxedTypeOrType(((JCTree) t).type).isPrimitive();
+        Type type = getType(t);
+        return type != null && state.getTypes().unboxedTypeOrType(type).isPrimitive();
       }
     };
   }
