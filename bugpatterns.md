@@ -164,6 +164,9 @@ This method always recurses, and will cause a StackOverflowError
 __[InjectMoreThanOneScopeAnnotationOnClass](bugpattern/InjectMoreThanOneScopeAnnotationOnClass)__<br>
 A class can be annotated with at most one scope annotation.
 
+__[InjectOnMemberAndConstructor](bugpattern/InjectOnMemberAndConstructor)__<br>
+Members shouldn&#39;t be annotated with @Inject if constructor is already annotated @Inject
+
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
 
@@ -516,9 +519,6 @@ This for loop increments the same variable in the header and in the body
 
 __[InjectOnConstructorOfAbstractClass](bugpattern/InjectOnConstructorOfAbstractClass)__<br>
 Constructors on abstract classes are never directly @Injected, only the constructors of their subclasses can be @Inject&#39;ed.
-
-__[InjectOnMemberAndConstructor](bugpattern/InjectOnMemberAndConstructor)__<br>
-Members shouldn&#39;t be annotated with @Inject if constructor is already annotated @Inject
 
 __[InputStreamSlowMultibyteRead](bugpattern/InputStreamSlowMultibyteRead)__<br>
 Please also override int read(byte[], int, int), otherwise multi-byte reads from this input stream are likely to be slow.

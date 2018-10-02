@@ -3,7 +3,7 @@ title: InjectOnMemberAndConstructor
 summary: Members shouldn't be annotated with @Inject if constructor is already annotated @Inject
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
