@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
+import com.google.common.base.Ascii;
 import com.google.common.base.CaseFormat;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -65,7 +66,7 @@ public class DateFormatConstant extends BugChecker implements VariableTreeMatche
     if (!(sym.isStatic() && sym.getModifiers().contains(Modifier.FINAL))) {
       return NO_MATCH;
     }
-    if (!name.equals(name.toUpperCase())) {
+    if (!name.equals(Ascii.toUpperCase(name))) {
       return NO_MATCH;
     }
     if (!isSubtype(getType(tree), state.getTypeFromString("java.text.DateFormat"), state)) {

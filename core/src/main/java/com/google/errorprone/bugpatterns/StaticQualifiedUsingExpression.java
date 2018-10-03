@@ -110,7 +110,7 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
         .setMessage(
             String.format(
                 "Static %s %s should not be accessed from an object instance; instead use %s",
-                isMethod ? "method" : "variable", sym.getSimpleName().toString(), replacement))
+                isMethod ? "method" : "variable", sym.getSimpleName(), replacement))
         .addFix(fix.build())
         .build();
   }

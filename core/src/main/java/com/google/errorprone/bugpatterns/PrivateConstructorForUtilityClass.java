@@ -109,7 +109,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
     TreePath treePath = state.getPath();
     do {
       Tree currentLeaf = treePath.getLeaf();
-      if (ClassTree.class.isInstance(currentLeaf)) {
+      if (currentLeaf instanceof ClassTree) {
         ClassTree currentClassTree = (ClassTree) currentLeaf;
         if (currentClassTree.getModifiers().getFlags().contains(PRIVATE)) {
           return true;

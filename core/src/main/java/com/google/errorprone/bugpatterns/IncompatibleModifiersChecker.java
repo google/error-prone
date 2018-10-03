@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -61,14 +60,6 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
   private static final String GUAVA_ANNOTATION =
       "com.google.common.annotations.IncompatibleModifiers";
 
-  private static final Function<Attribute.Enum, Modifier> TO_MODIFIER =
-      new Function<Attribute.Enum, Modifier>() {
-        @Override
-        public Modifier apply(Attribute.Enum input) {
-          return Modifier.valueOf(input.getValue().name.toString());
-        }
-      };
-
   private static Set<Modifier> getIncompatibleModifiers(AnnotationTree tree, VisitorState state) {
     for (Attribute.Compound c : ASTHelpers.getSymbol(tree).getAnnotationMirrors()) {
       if (((TypeElement) c.getAnnotationType().asElement())
@@ -77,7 +68,10 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
         @SuppressWarnings("unchecked")
         List<Attribute.Enum> modifiers =
             (List<Attribute.Enum>) c.member(state.getName("value")).getValue();
-        return ImmutableSet.copyOf(Iterables.transform(modifiers, TO_MODIFIER));
+        return ImmutableSet.copyOf(
+            Iterables.transform(
+                modifiers,
+                (Attribute.Enum input) -> Modifier.valueOf(input.getValue().name.toString())));
       }
     }
 
@@ -114,7 +108,7 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
         annotationName != null
             ? String.format("The annotation '@%s'", annotationName)
             : "This annotation";
-    String customMessage = String.format(MESSAGE_TEMPLATE, nameString, incompatible.toString());
+    String customMessage = String.format(MESSAGE_TEMPLATE, nameString, incompatible);
     return buildDescription(tree).setMessage(customMessage).build();
   }
 }

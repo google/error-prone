@@ -82,7 +82,7 @@ public class MixedArrayDimensions extends BugChecker
         int nonWhitespace = CharMatcher.isNot(' ').indexIn(dim);
         int idx = dim.indexOf("[]", nonWhitespace);
         if (idx > nonWhitespace) {
-          String replacement = dim.substring(idx, dim.length()) + dim.substring(0, idx);
+          String replacement = dim.substring(idx) + dim.substring(0, idx);
           return describeMatch(tree, SuggestedFix.replace(start, end, replacement));
         }
       }

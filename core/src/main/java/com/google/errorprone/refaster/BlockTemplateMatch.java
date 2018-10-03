@@ -19,6 +19,7 @@ package com.google.errorprone.refaster;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -48,7 +49,7 @@ class BlockTemplateMatch extends TemplateMatch {
     try {
       CharSequence sequence = unit.getSourceFile().getCharContent(true);
       JCTree firstStatement = statements.get(0);
-      JCTree lastStatement = statements.get(statements.size() - 1);
+      JCTree lastStatement = Iterables.getLast(statements);
       return sequence
           .subSequence(
               firstStatement.getStartPosition(), lastStatement.getEndPosition(unit.endPositions))

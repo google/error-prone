@@ -63,7 +63,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
       Map<String, ? extends UType> expressionArgumentTypes,
       UStatement... templateStatements) {
     return create(
-        ImmutableClassToInstanceMap.<Annotation>builder().build(),
+        ImmutableClassToInstanceMap.of(),
         typeVariables,
         expressionArgumentTypes,
         ImmutableList.copyOf(templateStatements));

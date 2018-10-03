@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
@@ -103,7 +104,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
             .collect(toImmutableSet());
     String constValue = valueArgumentFromCompatibleWithAnnotation(annoTree);
 
-    if (constValue == null || constValue.isEmpty()) {
+    if (isNullOrEmpty(constValue)) {
       return describeWithMessage(
           annoTree,
           String.format(

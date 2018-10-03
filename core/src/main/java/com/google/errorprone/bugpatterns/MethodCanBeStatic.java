@@ -274,7 +274,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
         case "readObjectNoData":
         case "readResolve":
         case "writeReplace":
-          if (sym.getParameters().size() == 0) {
+          if (sym.getParameters().isEmpty()) {
             return true;
           }
           break;

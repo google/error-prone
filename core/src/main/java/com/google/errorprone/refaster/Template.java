@@ -406,7 +406,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
 
     @Override
     public String getMessage() {
-      return "Inference failed with the following error(s): " + diagnostics.toString();
+      return "Inference failed with the following error(s): " + diagnostics;
     }
   }
 

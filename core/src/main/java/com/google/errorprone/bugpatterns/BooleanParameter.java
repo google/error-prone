@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.BLOCK;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
@@ -156,7 +157,8 @@ public class BooleanParameter extends BugChecker
     // Consider single-argument booleans for classes whose names contain "Boolean" to be self-
     // documenting. This is aimed at classes like AtomicBoolean which simply wrap a value.
     if (tree instanceof NewClassTree) {
-      return ((NewClassTree) tree).getIdentifier().toString().toLowerCase().contains("boolean");
+      return Ascii.toLowerCase(((NewClassTree) tree).getIdentifier().toString())
+          .contains("boolean");
     }
     return true;
   }

@@ -128,7 +128,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
       return;
     }
     // check if the indices of the overloads in the member list are sequential
-    MemberWithIndex first = overloads.iterator().next();
+    MemberWithIndex first = overloads.get(0);
     int prev = -1;
     int group = 0;
     Map<MemberWithIndex, Integer> groups = new LinkedHashMap<>();

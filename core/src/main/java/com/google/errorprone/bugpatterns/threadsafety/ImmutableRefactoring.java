@@ -87,9 +87,7 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
       private VisitorState createVisitorState() {
         return new VisitorState(
             state.context,
-            (Description description) -> {
-              ok[0] = false;
-            },
+            (Description description) -> ok[0] = false,
             ImmutableMap.of(),
             state.errorProneOptions());
       }
