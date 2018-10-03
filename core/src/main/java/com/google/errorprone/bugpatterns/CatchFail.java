@@ -151,7 +151,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
     if (tree.getFinallyBlock() != null || catchBlocks.size() < tree.getCatches().size()) {
       // If the try statement has a finally region, or other catch blocks, delete only the
       // unnecessary blocks.
-      catchBlocks.stream().forEachOrdered(fix::delete);
+      catchBlocks.forEach(fix::delete);
     } else {
       // The try statement has no finally region and all catch blocks are unnecessary. Replace it
       // with the try statements, deleting all catches.

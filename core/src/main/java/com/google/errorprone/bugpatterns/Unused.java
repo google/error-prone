@@ -37,6 +37,7 @@ import static com.sun.source.tree.Tree.Kind.POSTFIX_INCREMENT;
 import static com.sun.source.tree.Tree.Kind.PREFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.PREFIX_INCREMENT;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -844,6 +845,6 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
   }
 
   private static boolean exemptedByName(Name name) {
-    return name.toString().toLowerCase().startsWith(EXEMPT_PREFIX);
+    return Ascii.toLowerCase(name.toString()).startsWith(EXEMPT_PREFIX);
   }
 }

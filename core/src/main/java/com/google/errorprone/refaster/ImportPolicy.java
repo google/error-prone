@@ -66,9 +66,9 @@ public enum ImportPolicy {
        */
       checkArgument(
           topLevelClazz.length() > 0 && fullyQualifiedClazz.length() > 0,
-          String.format(
-              "either topLevelClass (%s) or fullyQualifiedClazz (%s) is null or empty",
-              topLevelClazz, fullyQualifiedClazz));
+          "either topLevelClass (%s) or fullyQualifiedClazz (%s) is null or empty",
+          topLevelClazz,
+          fullyQualifiedClazz);
       List<String> topLevelPath = Splitter.on('.').splitToList(topLevelClazz);
       String topClazz = Iterables.getLast(topLevelPath);
       List<String> qualifiedPath = Splitter.on('.').splitToList(fullyQualifiedClazz);
@@ -150,7 +150,7 @@ public enum ImportPolicy {
       PackageSymbol currentPackage = inliner.getContext().get(PackageSymbol.class);
       if (currentPackage == null
           || !currentPackage.getQualifiedName().contentEquals(packge)
-          || !topLevelClazz.equals(fullyQualifiedClazz)) {
+          || !topLevelClazz.toString().contentEquals(fullyQualifiedClazz)) {
         // don't import classes from the same package as the class we're refactoring
         inliner.addImport(fullyQualifiedClazz.toString());
       }

@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.formatstring;
 import static com.google.common.collect.Iterables.getOnlyElement;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -118,15 +117,12 @@ public class FormatStringValidation {
     Iterable<Object> instances =
         Iterables.transform(
             args,
-            new Function<ExpressionTree, Object>() {
-              @Override
-              public Object apply(ExpressionTree input) {
-                try {
-                  return getInstance(input, state);
-                } catch (Throwable t) {
-                  // ignore symbol completion failures
-                  return null;
-                }
+            (ExpressionTree input) -> {
+              try {
+                return getInstance(input, state);
+              } catch (Throwable t) {
+                // ignore symbol completion failures
+                return null;
               }
             });
 

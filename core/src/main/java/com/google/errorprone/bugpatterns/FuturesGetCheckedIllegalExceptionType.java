@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.sun.tools.javac.code.TypeTag.BOT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Futures;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -106,7 +107,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
           }
 
           List<Type> typeArguments = ((ClassType) argType).getTypeArguments();
-          Type exceptionType = typeArguments.isEmpty() ? null : typeArguments.get(0);
+          Type exceptionType = Iterables.getFirst(typeArguments, null);
           return types.isSubtype(exceptionType, runtimeExceptionType);
         }
       };

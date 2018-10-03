@@ -78,7 +78,7 @@ public class RequiredModifiersChecker extends BugChecker implements AnnotationTr
         annotationName != null
             ? String.format("The annotation '@%s'", annotationName)
             : "This annotation";
-    String customMessage = String.format(MESSAGE_TEMPLATE, nameString, missing.toString());
+    String customMessage = String.format(MESSAGE_TEMPLATE, nameString, missing);
     return buildDescription(tree).setMessage(customMessage).build();
   }
 }

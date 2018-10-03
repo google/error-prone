@@ -280,7 +280,7 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
     // UPPERCASE => UppercaseT
     if (tokens.size() == 1) {
       String token = tokens.get(0);
-      if (token.toUpperCase().equals(identifier)) {
+      if (Ascii.toUpperCase(token).equals(identifier)) {
         return upperCamelToken(token) + "T";
       }
     }

@@ -33,6 +33,7 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 
+import com.google.common.base.Ascii;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -108,7 +109,7 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
       if (matcher.lookingAt()) {
         fixedName = matcher.replaceFirst("test");
       } else if (wouldRunInJUnit4.matches(methodTree, state)) {
-        fixedName = "test" + fixedName.substring(0, 1).toUpperCase() + fixedName.substring(1);
+        fixedName = "test" + Ascii.toUpperCase(fixedName.substring(0, 1)) + fixedName.substring(1);
       } else {
         return NO_MATCH;
       }

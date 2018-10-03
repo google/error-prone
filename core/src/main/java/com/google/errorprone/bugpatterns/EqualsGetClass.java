@@ -184,8 +184,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
         matchedGetClass = true;
         String instanceOf =
             String.format(
-                "%s instanceof %s",
-                parameter.getSimpleName().toString(), classSymbol.getSimpleName().toString());
+                "%s instanceof %s", parameter.getSimpleName(), classSymbol.getSimpleName());
         if (binaryTree.getKind() == Kind.EQUAL_TO) {
           fix.replace(binaryTree, instanceOf);
         }
@@ -211,8 +210,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
         fix.replace(
             node,
             String.format(
-                "%s instanceof %s",
-                parameter.getSimpleName().toString(), classSymbol.getSimpleName().toString()));
+                "%s instanceof %s", parameter.getSimpleName(), classSymbol.getSimpleName()));
       }
       return super.visitMethodInvocation(node, null);
     }

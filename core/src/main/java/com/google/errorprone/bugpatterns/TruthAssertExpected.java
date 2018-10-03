@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
+import com.google.common.base.Ascii;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -90,7 +91,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
           return false;
         }
         Type throwable = Suppliers.typeFromClass(Throwable.class).get(state);
-        return identifier.getName().toString().toLowerCase().contains("expected")
+        return Ascii.toLowerCase(identifier.getName().toString()).contains("expected")
             && !ASTHelpers.isSubtype(ASTHelpers.getType(identifier), throwable, state);
       };
 
@@ -144,7 +145,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
       return Description.NO_MATCH;
     }
     ExpressionTree assertion = findReceiverMatching(tree, state, ASSERT_ON_EXPECTED);
-    if (!(assertion instanceof MethodInvocationTree) || !(tree instanceof MethodInvocationTree)) {
+    if (!(assertion instanceof MethodInvocationTree)) {
       return Description.NO_MATCH;
     }
     ExpressionTree assertedArgument =

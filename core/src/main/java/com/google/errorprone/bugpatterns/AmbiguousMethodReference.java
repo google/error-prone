@@ -24,8 +24,8 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.StreamSupport.stream;
 
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -59,7 +59,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
 
     // collect declared and inherited methods, grouped by reference descriptor
     Map<String, List<MethodSymbol>> methods =
-        stream(members.spliterator(), false)
+        Streams.stream(members)
             .filter(MethodSymbol.class::isInstance)
             .map(MethodSymbol.class::cast)
             .filter(m -> m.isConstructor() || m.owner.equals(origin))
