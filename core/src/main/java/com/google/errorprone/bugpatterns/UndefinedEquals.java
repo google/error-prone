@@ -54,7 +54,9 @@ import java.util.Optional;
  */
 @BugPattern(
     name = "UndefinedEquals",
-    summary = "Collection, Iterable, Multimap, and Queue do not have well-defined equals behavior",
+    summary =
+        "Collection, Iterable, Multimap, Queue, and CharSequence "
+            + "do not have well-defined equals behavior",
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class UndefinedEquals extends BugChecker implements MethodInvocationTreeMatcher {

@@ -1,7 +1,7 @@
 This code uses `Object.equals` (or similar method) with a type that does not
 have well-defined `equals` behavior: [`Collection`], [`Iterable`], [`Multimap`],
-or [`Queue`]. Such a call to `equals` may return `false` in cases where equality
-was expected.
+[`Queue`], or [`CharSequence`]. Such a call to `equals` may return `false` in
+cases where equality was expected.
 
 ## For [`Collection`] or [`Iterable`]
 
