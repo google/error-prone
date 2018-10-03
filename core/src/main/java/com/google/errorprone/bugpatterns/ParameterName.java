@@ -83,6 +83,11 @@ public class ParameterName extends BugChecker
     }
     int start = ((JCTree) tree).getStartPosition();
     int end = state.getEndPosition(getLast(arguments));
+    // check for obviously invalid locations, which can arise, e.g., when a Javac plugin does AST
+    // mutation but doesn't set source locations
+    if (start < 0 || end < 0 || end <= start) {
+      return;
+    }
     String source = state.getSourceCode().subSequence(start, end).toString();
     if (!source.contains("/*")) {
       // fast path if the arguments don't contain anything that looks like a comment
