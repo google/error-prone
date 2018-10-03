@@ -50,7 +50,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -261,12 +260,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
           type.isUnion()
               ? ((Type.UnionClassType) type).getAlternativeTypes()
               : Collections.singleton(type)) {
-        Iterator<Type> it = toHandle.iterator();
-        while (it.hasNext()) {
-          if (ASTHelpers.isSubtype(it.next(), precise, state)) {
-            it.remove();
-          }
-        }
+        toHandle.removeIf((Type elem) -> ASTHelpers.isSubtype(elem, precise, state));
       }
     }
     return new UnhandledResult<>(ImmutableSet.copyOf(toHandle), newHandles.build());

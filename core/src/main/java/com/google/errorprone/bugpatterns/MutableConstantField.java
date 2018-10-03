@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAS
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 
+import com.google.common.base.Ascii;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -114,7 +115,7 @@ public final class MutableConstantField extends BugChecker implements VariableTr
   }
 
   private static boolean isConstantFieldName(String fieldName) {
-    return fieldName.toUpperCase().equals(fieldName);
+    return Ascii.toUpperCase(fieldName).equals(fieldName);
   }
 
   private static Tree getTypeTree(Tree tree) {

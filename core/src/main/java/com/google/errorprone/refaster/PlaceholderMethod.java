@@ -75,7 +75,7 @@ abstract class PlaceholderMethod implements Serializable {
               && (matchesClass == null || matchesClass.newInstance().matches(t, state))
               && (notMatchesClass == null || !notMatchesClass.newInstance().matches(t, state))
               && allowedKinds.apply(t.getKind());
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (ReflectiveOperationException e) {
           throw new RuntimeException(e);
         }
       }

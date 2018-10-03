@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -132,7 +133,7 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
     ImmutableSet<Symbol> fieldsInEquals = equalsScanner.accessedFields();
     Set<Symbol> difference = new HashSet<>(Sets.difference(fieldsInHashCode, fieldsInEquals));
     // Special-case the situation where #hashCode uses a field containing `hash` for memoization.
-    difference.removeIf(f -> f.toString().toLowerCase().contains("hash"));
+    difference.removeIf(f -> Ascii.toLowerCase(f.toString()).contains("hash"));
     String message = String.format(MESSAGE, difference);
     // Skip cases where equals and hashCode compare the same fields, or equals compares none (and
     // so is probably checking reference equality).

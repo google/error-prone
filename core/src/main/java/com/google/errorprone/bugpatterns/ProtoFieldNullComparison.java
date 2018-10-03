@@ -338,10 +338,10 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         String countMethod = methodName + "Count";
         return String.format(
             "%s.%s() %s %s",
-            getReceiver(methodInvocation).toString(),
+            getReceiver(methodInvocation),
             countMethod,
             negated ? "<=" : ">",
-            getOnlyElement(methodInvocation.getArguments()).toString());
+            getOnlyElement(methodInvocation.getArguments()));
       }
     },
     /** {@code proto.getRepeatedFieldList()} */

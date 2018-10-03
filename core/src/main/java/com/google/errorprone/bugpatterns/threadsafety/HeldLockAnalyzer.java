@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -375,14 +374,7 @@ public class HeldLockAnalyzer {
         Matchers.<ExpressionTree>anyOf(unlockMatchers());
 
     private static Iterable<Matcher<ExpressionTree>> unlockMatchers() {
-      return Iterables.transform(
-          LOCK_RESOURCES,
-          new Function<LockResource, Matcher<ExpressionTree>>() {
-            @Override
-            public Matcher<ExpressionTree> apply(LockResource res) {
-              return res.createUnlockMatcher();
-            }
-          });
+      return Iterables.transform(LOCK_RESOURCES, LockResource::createUnlockMatcher);
     }
 
     static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
@@ -401,14 +393,7 @@ public class HeldLockAnalyzer {
         Matchers.<ExpressionTree>anyOf(unlockMatchers());
 
     private static Iterable<Matcher<ExpressionTree>> unlockMatchers() {
-      return Iterables.transform(
-          LOCK_RESOURCES,
-          new Function<LockResource, Matcher<ExpressionTree>>() {
-            @Override
-            public Matcher<ExpressionTree> apply(LockResource res) {
-              return res.createLockMatcher();
-            }
-          });
+      return Iterables.transform(LOCK_RESOURCES, LockResource::createLockMatcher);
     }
 
     static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {

@@ -21,7 +21,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.VisitorState;
@@ -29,6 +28,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -94,7 +94,7 @@ public abstract class AbstractLockMethodChecker extends BugChecker
     ImmutableList<String> sortedUnhandled =
         FluentIterable.from(locks)
             .transform(Functions.toStringFunction())
-            .toSortedList(Ordering.natural());
+            .toSortedList(Comparator.naturalOrder());
     return Joiner.on(", ").join(sortedUnhandled);
   }
 

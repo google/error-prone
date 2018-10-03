@@ -143,11 +143,8 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     }
 
     private VariableAssignments getDeclaration(VarSymbol sym) {
-      VariableAssignments info = assignments.get(sym);
-      if (info == null) {
-        info = new VariableAssignments(sym);
-        assignments.put(sym, info);
-      }
+      VariableAssignments info =
+          assignments.computeIfAbsent(sym, (VarSymbol k) -> new VariableAssignments(k));
       return info;
     }
 
