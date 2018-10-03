@@ -548,7 +548,6 @@ public class ASTHelpers {
       if (sym != null
           && !sym.isStatic()
           && ((sym.flags() & Flags.SYNTHETIC) == 0)
-          && sym.name.contentEquals(methodSymbol.name)
           && methodSymbol.overrides(
               sym, (TypeSymbol) methodSymbol.owner, types, /* checkResult= */ true)) {
         return (MethodSymbol) sym;
