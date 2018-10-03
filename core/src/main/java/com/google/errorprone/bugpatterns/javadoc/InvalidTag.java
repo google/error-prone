@@ -68,6 +68,10 @@ import java.util.regex.Pattern;
 public final class InvalidTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 
+  private static final String INVALID_TAG_IS_PARAMETER_NAME =
+      "@%1$s is not a valid tag, but is a parameter name. "
+          + "Use {@code %1%s} to refer to parameter names inline.";
+
   /** Non-standard commonly-used tags which we should allow. */
   private static final ImmutableSet<String> KNOWN_OTHER_TAGS =
       ImmutableSet.of(
@@ -177,7 +181,7 @@ public final class InvalidTag extends BugChecker
     private final ImmutableSet<String> parameters;
 
     private final Set<DocTree> fixedTags = new HashSet<>();
-    private boolean withinCodeTag = false;
+    private int codeTagNestedDepth = 0;
 
     private InvalidTagChecker(
         VisitorState state,
@@ -191,7 +195,7 @@ public final class InvalidTag extends BugChecker
     @Override
     public Void visitStartElement(StartElementTree startElementTree, Void unused) {
       if (CODE_TAGS.contains(startElementTree.getName().toString())) {
-        withinCodeTag = true;
+        codeTagNestedDepth++;
       }
       return super.visitStartElement(startElementTree, null);
     }
@@ -199,7 +203,7 @@ public final class InvalidTag extends BugChecker
     @Override
     public Void visitEndElement(EndElementTree endElementTree, Void unused) {
       if (CODE_TAGS.contains(endElementTree.getName().toString())) {
-        withinCodeTag = false;
+        codeTagNestedDepth--;
       }
       return super.visitEndElement(endElementTree, null);
     }
@@ -232,11 +236,15 @@ public final class InvalidTag extends BugChecker
       if (KNOWN_OTHER_TAGS.contains(tagName)) {
         return super.visitUnknownBlockTag(unknownBlockTagTree, null);
       }
-      if (withinCodeTag) {
+      if (codeTagNestedDepth > 0) {
         // If we're in a <code> tag, this is probably meant to be an annotation.
         int startPos = Utils.getStartPosition(unknownBlockTagTree, state);
         String message =
-            String.format("@%s is not a valid block tag. Did you mean to escape it?", tagName);
+            String.format(
+                "@%s is not a valid block tag. Did you mean to escape it? Annotations must be "
+                    + "escaped even within <pre> and {@code } tags, otherwise they will be "
+                    + "interpreted as block tags.",
+                tagName);
         state.reportMatch(
             buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)
@@ -247,11 +255,7 @@ public final class InvalidTag extends BugChecker
       }
       if (parameters.contains(tagName)) {
         int startPos = Utils.getStartPosition(unknownBlockTagTree, state);
-        String message =
-            String.format(
-                "@%1$s is not a valid tag, but is a parameter name. "
-                    + "Use {@code %1%s} to refer to parameter names inline.",
-                tagName);
+        String message = String.format(INVALID_TAG_IS_PARAMETER_NAME, tagName);
         state.reportMatch(
             buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)
@@ -268,11 +272,7 @@ public final class InvalidTag extends BugChecker
     public Void visitUnknownInlineTag(UnknownInlineTagTree unknownInlineTagTree, Void unused) {
       String name = unknownInlineTagTree.getTagName();
       if (parameters.contains(name)) {
-        String message =
-            String.format(
-                "`%1$s` is a parameter name, but not a valid tag. "
-                    + "Use {@code %1$s} to refer to parameters.",
-                name);
+        String message = String.format(INVALID_TAG_IS_PARAMETER_NAME, name);
         state.reportMatch(
             buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)
