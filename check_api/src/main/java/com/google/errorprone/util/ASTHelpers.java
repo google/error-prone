@@ -912,9 +912,15 @@ public class ASTHelpers {
         || state.getTypes().isSameType(Suppliers.JAVA_LANG_VOID_TYPE.get(state), type);
   }
 
+  private static final Set<TypeTag> SUBTYPE_UNDEFINED =
+      EnumSet.of(TypeTag.METHOD, TypeTag.PACKAGE, TypeTag.UNKNOWN, TypeTag.ERROR);
+
   /** Returns true if {@code erasure(s) <: erasure(t)}. */
   public static boolean isSubtype(Type s, Type t, VisitorState state) {
     if (s == null || t == null) {
+      return false;
+    }
+    if (SUBTYPE_UNDEFINED.contains(s.getTag()) || SUBTYPE_UNDEFINED.contains(t.getTag())) {
       return false;
     }
     Types types = state.getTypes();
