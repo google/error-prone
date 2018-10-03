@@ -668,8 +668,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
    * generics better.
    */
   @SuppressWarnings("unchecked")
-  private static <T> Class<? extends T> asSubclass(Class<?> klass, TypeToken<T> token)
-      throws ClassCastException {
+  private static <T> Class<? extends T> asSubclass(Class<?> klass, TypeToken<T> token) {
     if (!token.isSupertypeOf(klass)) {
       throw new ClassCastException(klass + " is not assignable to " + token);
     }

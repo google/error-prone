@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -65,7 +66,8 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
     ImmutableMap<String, Symbol> fieldNamesMap =
         fields.stream()
             .collect(
-                toImmutableMap(symbol -> symbol.toString().toLowerCase(), x -> x, (x, y) -> x));
+                toImmutableMap(
+                    symbol -> Ascii.toLowerCase(symbol.toString()), x -> x, (x, y) -> x));
     ImmutableMap<TreePath, Symbol> matchedParameters =
         MatchingParametersScanner.findMatchingParameters(fieldNamesMap, state.getPath());
 
@@ -139,7 +141,8 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
 
   /** Returns true if the given symbol has static modifier and is all upper case. */
   private static boolean isUpperCaseAndStatic(Symbol symbol) {
-    return symbol.isStatic() && symbol.name.contentEquals(symbol.name.toString().toUpperCase());
+    return symbol.isStatic()
+        && symbol.name.contentEquals(Ascii.toUpperCase(symbol.name.toString()));
   }
 
   /**
@@ -216,7 +219,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
         return super.visitVariable(tree, unused);
       }
       String variableName = symbol.toString();
-      Symbol matchedField = fields.get(variableName.toLowerCase());
+      Symbol matchedField = fields.get(Ascii.toLowerCase(variableName));
       if (matchedField != null) {
         String fieldName = matchedField.toString();
         if (!variableName.equals(fieldName)) {

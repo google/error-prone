@@ -48,7 +48,7 @@ import java.util.function.Function;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AutoValueConstructorOrderChecker extends BugChecker implements NewClassTreeMatcher {
 
-  private ArgumentChangeFinder argumentChangeFinder =
+  private final ArgumentChangeFinder argumentChangeFinder =
       ArgumentChangeFinder.builder()
           .setDistanceFunction(buildDistanceFunction())
           .addHeuristic(allArgumentsMustMatch())

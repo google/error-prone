@@ -93,7 +93,7 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker
             initPos,
             String.format(
                 ";\ntry (%s stream = %s) {\n%s =",
-                streamType, state.getSourceForNode(tree), var.getName().toString()));
+                streamType, state.getSourceForNode(tree), var.getName()));
       } else {
         // the non-variable case, e.g. `return Files.lines(p).count()`
         // -> try (Stream<Stream> stream = Files.lines(p)) { return stream.count(); }`

@@ -111,7 +111,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     String unqualifiedClassName = getUnqualifiedClassName(correctAnnotation);
     for (AnnotationTree annotationNode : methodTree.getModifiers().getAnnotations()) {
       Symbol annoSymbol = ASTHelpers.getSymbol(annotationNode);
-      if (annoSymbol.getSimpleName().toString().equals(unqualifiedClassName)) {
+      if (annoSymbol.getSimpleName().contentEquals(unqualifiedClassName)) {
         SuggestedFix.Builder suggestedFix =
             SuggestedFix.builder()
                 .removeImport(annoSymbol.getQualifiedName().toString())

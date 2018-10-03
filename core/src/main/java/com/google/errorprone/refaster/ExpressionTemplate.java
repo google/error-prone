@@ -78,7 +78,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
       UExpression expression,
       UType returnType) {
     return create(
-        ImmutableClassToInstanceMap.<Annotation>builder().build(),
+        ImmutableClassToInstanceMap.of(),
         ImmutableList.<UTypeVar>of(),
         expressionArgumentTypes,
         expression,

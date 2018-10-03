@@ -61,7 +61,7 @@ public class GuardedByUtils {
                     .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
                     .map(Map.Entry::getValue)
                     .findFirst()
-                    .map(v -> asStrings(v))
+                    .map(GuardedByUtils::asStrings)
                     .orElse(Stream.empty()))
         .collect(toImmutableSet());
   }

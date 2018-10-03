@@ -62,7 +62,7 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
   private static class TreeScannerEquals extends TreeScanner<Void, VarSymbol> {
 
     private boolean hasIllegalEquals = false;
-    private MethodTree methodTree;
+    private final MethodTree methodTree;
 
     public TreeScannerEquals(MethodTree currMethodTree) {
       methodTree = currMethodTree;

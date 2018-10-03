@@ -123,8 +123,7 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
         Set<String> undocumentedParameters = Sets.difference(paramNames, documentedParamNames);
         Optional<String> bestMatch =
             getBestMatch(paramTree.getName().toString(), undocumentedParameters);
-        String message =
-            String.format("Parameter name `%s` is unknown.", paramTree.getName().toString());
+        String message = String.format("Parameter name `%s` is unknown.", paramTree.getName());
         state.reportMatch(
             bestMatch
                 .map(

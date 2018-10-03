@@ -151,8 +151,7 @@ public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher
     if (!crashesWithNull[0]) {
       return NO_MATCH;
     }
-    String stringAddition =
-        String.format("if (%s == null) { return false; }\n", varSymbol.name.toString());
+    String stringAddition = String.format("if (%s == null) { return false; }\n", varSymbol.name);
     Fix fix = SuggestedFix.prefixWith(tree.getBody().getStatements().get(0), stringAddition);
     return describeMatch(tree, fix);
   }
