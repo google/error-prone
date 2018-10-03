@@ -698,7 +698,7 @@ __[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
 Avoid hash-based containers of java.net.URL--the containers rely on equals() and hashCode(), which cause java.net.URL to make blocking internet connections.
 
 __[UndefinedEquals](bugpattern/UndefinedEquals)__<br>
-Collection, Iterable, Multimap, and Queue do not have well-defined equals behavior
+Collection, Iterable, Multimap, Queue, and CharSequence do not have well-defined equals behavior
 
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
 Unnecessary use of grouping parentheses
