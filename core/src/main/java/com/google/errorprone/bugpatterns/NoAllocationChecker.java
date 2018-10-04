@@ -93,6 +93,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.util.Collections;
@@ -324,11 +325,13 @@ public class NoAllocationChecker extends BugChecker
               return true;
             }
 
-            // Check last parameter. If unassignable, this implies varargs boxing.
-            if (i == numArgs - 1) {
-              if (!state.getTypes().isAssignable(a.type, p.type)) {
-                return true;
-              }
+            // Check last parameter. If it's a varargs parameter, ensure no boxing by making sure
+            // it's assignable.
+            if (i == numArgs - 1
+                && methodSymbol.isVarArgs()
+                && p.type instanceof ArrayType
+                && !state.getTypes().isAssignable(a.type, p.type)) {
+              return true;
             }
             i++;
           }
