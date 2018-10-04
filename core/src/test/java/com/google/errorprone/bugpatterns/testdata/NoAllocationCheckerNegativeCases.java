@@ -193,6 +193,17 @@ public class NoAllocationCheckerNegativeCases {
     throw new IntegerException(i++);
   }
 
+  @NoAllocation
+  public void callGenericMethod() {
+    String foo = "foo";
+    String bar = genericMethod(foo);
+  }
+
+  @NoAllocation
+  private static <T> T genericMethod(T value) {
+    return value;
+  }
+
   // All of the positive cases with @NoAllocation removed are below.
   public int[] newArray(int size) {
     return new int[size];
