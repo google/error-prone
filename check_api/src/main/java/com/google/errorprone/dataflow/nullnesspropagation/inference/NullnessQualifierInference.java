@@ -97,7 +97,12 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     }
   }
 
+  /**
+   * &lt;= constraints between inference variables: an edge from A to B means A &lt;= B. In other
+   * words, edges point "upwards" in the lattice towards Top == Nullable.
+   */
   private final MutableGraph<InferenceVariable> qualifierConstraints;
+
   private final Tree currentMethodOrInitializerOrLambda;
 
   private NullnessQualifierInference(Tree currentMethodOrInitializerOrLambda) {
@@ -115,17 +120,17 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
   @Override
   public Void visitIdentifier(IdentifierTree node, Void unused) {
     Type declaredType = ((JCIdent) node).sym.type;
-    generateConstraintsFromIdentifierUse(declaredType, node, new ArrayDeque<>());
+    generateConstraintsFromAnnotations(declaredType, node, new ArrayDeque<>());
     return super.visitIdentifier(node, unused);
   }
 
-  private void generateConstraintsFromIdentifierUse(
+  private void generateConstraintsFromAnnotations(
       Type type, Tree sourceTree, ArrayDeque<Integer> argSelector) {
     List<Type> typeArguments = type.getTypeArguments();
     int numberOfTypeArgs = typeArguments.size();
     for (int i = 0; i < numberOfTypeArgs; i++) {
       argSelector.push(i);
-      generateConstraintsFromIdentifierUse(typeArguments.get(i), sourceTree, argSelector);
+      generateConstraintsFromAnnotations(typeArguments.get(i), sourceTree, argSelector);
       argSelector.pop();
     }
     ProperInferenceVar.fromTypeIfAnnotated(type)
@@ -207,9 +212,10 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         sourceNode.getArguments().stream(),
         (formal, actual) -> {
           // formal parameter type
-          generateConstraintsForWrite(formal, actual, node);
+          generateConstraintsFromAnnotations(formal, actual, new ArrayDeque<>());
           // actual parameter type (i.e. after type variable substitution)
-          generateConstraintsForWrite(actual.type, actual, node);
+          // TODO(b/116977632): fix to generate constraints for the instantiation of type parameters
+          generateConstraintsFromAnnotations(actual.type, actual, new ArrayDeque<>());
         });
 
     // if return type is parameterized by a generic type on receiver, collate references to that
@@ -240,6 +246,11 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
     // Get all references to each typeVar in the return type and formal parameters and relate them
     // in the constraint graph; covariant in the return type, contravariant in the argument types.
+    // TODO(b/116977632): generate constraints for the instantiation of type parameters, e.g.,
+    //    if type parameter T was instantiated List<String>, we not only need to capture constraints
+    //    for T == List<String> itself, but also for <String>.  This may be as simple as introducing
+    //    selectors into TypeVariableInferenceVar and then relating
+    //    T[0] < node[0] and arg[0] < T[0], for all generic parameters of T's instantiation
     for (TypeVariableSymbol typeVar : callee.getTypeParameters()) {
       InferenceVariable typeVarIV = TypeVariableInferenceVar.create(typeVar, node);
       for (InferenceVariable iv : getReferencesToTypeVar(typeVar, callee.getReturnType(), node)) {
