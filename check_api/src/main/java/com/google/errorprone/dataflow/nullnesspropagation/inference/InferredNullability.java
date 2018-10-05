@@ -15,9 +15,10 @@
  */
 package com.google.errorprone.dataflow.nullnesspropagation.inference;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.common.graph.Graph;
 import com.google.common.graph.ImmutableGraph;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
@@ -26,6 +27,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeInfo;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,8 +39,7 @@ import java.util.Optional;
 public class InferredNullability {
   private final ImmutableGraph<InferenceVariable> constraintGraph;
 
-  private final Map<InferenceVariable, Optional<Nullness>> lowerBoundMemoTable = Maps.newHashMap();
-  private final Map<InferenceVariable, Optional<Nullness>> upperBoundMemoTable = Maps.newHashMap();
+  private final Map<InferenceVariable, Optional<Nullness>> inferredMemoTable = new HashMap<>();
 
   InferredNullability(Graph<InferenceVariable> constraints) {
     this.constraintGraph = ImmutableGraph.copyOf(constraints);
@@ -55,7 +56,7 @@ public class InferredNullability {
     for (TypeVariableSymbol tvs :
         TreeInfo.symbol((JCTree) callsite.getMethodSelect()).getTypeParameters()) {
       InferenceVariable iv = TypeVariableInferenceVar.create(tvs, callsite);
-      getUpperBound(iv).ifPresent(nullness -> result.put(tvs, nullness));
+      getNullness(iv).ifPresent(nullness -> result.put(tvs, nullness));
     }
     return result.build();
   }
@@ -63,61 +64,42 @@ public class InferredNullability {
   /** Get inferred nullness qualifier for an expression, if possible. */
   public Optional<Nullness> getExprNullness(ExpressionTree exprTree) {
     InferenceVariable iv = TypeArgInferenceVar.create(ImmutableList.of(), exprTree);
-    return constraintGraph.nodes().contains(iv) ? getUpperBound(iv) : Optional.empty();
+    return constraintGraph.nodes().contains(iv) ? getNullness(iv) : Optional.empty();
   }
 
-  private Optional<Nullness> getLowerBound(InferenceVariable iv) {
+  private Optional<Nullness> getNullness(InferenceVariable iv) {
     Optional<Nullness> result;
     // short-circuit and return if...
     // ...this inference variable is a `proper` bound, i.e. a concrete nullness lattice element
     if (iv instanceof ProperInferenceVar) {
       return Optional.of(((ProperInferenceVar) iv).nullness());
       // ...we've already computed and memoized a nullness value for it.
-    } else if ((result = lowerBoundMemoTable.get(iv)) != null) {
+    } else if ((result = inferredMemoTable.get(iv)) != null) {
       return result;
     } else {
       // In case of cycles in constraint graph, ensures base case to recursion
-      lowerBoundMemoTable.put(iv, Optional.empty());
+      inferredMemoTable.put(iv, Optional.empty());
 
+      // Resolution per JLS 18.4:
+      // 1. resolve predecessors to see if there are lower bounds we can use
       result =
           constraintGraph.predecessors(iv).stream()
-              .map(this::getLowerBound)
+              .map(this::getNullness)
               .filter(Optional::isPresent)
               .map(Optional::get)
-              .reduce(Nullness::leastUpperBound);
-      lowerBoundMemoTable.put(iv, result);
+              .reduce(Nullness::leastUpperBound); // use least upper bound (lub) to combine
+      // 2. If not, resolve successors and use them as upper bounds
+      if (!result.isPresent()) {
+        result =
+            constraintGraph.successors(iv).stream()
+                .map(this::getNullness)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .reduce(Nullness::greatestLowerBound); // use greatest lower bound (glb) to combine
+      }
+
+      checkState(!inferredMemoTable.put(iv, result).isPresent());
       return result;
     }
-  }
-
-  private Optional<Nullness> getUpperBound(InferenceVariable iv) {
-    // short-circuit and return if...
-    // ...this inference variable is a `proper` bound, i.e. a concrete nullness lattice element
-    if (iv instanceof ProperInferenceVar) {
-      return Optional.of(((ProperInferenceVar) iv).nullness());
-      // ...we've already computed and memoized a nullness value for it.
-    }
-    Optional<Nullness> result = upperBoundMemoTable.get(iv);
-    if (result != null) {
-      return result;
-    }
-
-    // In case of cycles in constraint graph, ensures base case to recursion
-    upperBoundMemoTable.put(iv, Optional.empty());
-
-    result =
-        constraintGraph.successors(iv).stream()
-            .map(this::getUpperBound)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .reduce(Nullness::greatestLowerBound);
-
-    // A lower bound of NULLABLE implies an upper bound of NULLABLE, since NULLABLE is top
-    if (!result.isPresent() && getLowerBound(iv).equals(Optional.of(Nullness.NULLABLE))) {
-      result = Optional.of(Nullness.NULLABLE);
-    }
-
-    upperBoundMemoTable.put(iv, result);
-    return result;
   }
 }
