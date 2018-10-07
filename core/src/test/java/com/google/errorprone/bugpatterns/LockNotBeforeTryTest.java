@@ -187,4 +187,85 @@ public final class LockNotBeforeTryTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void twoRegions() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "class Test {",
+            "  private void test(ReentrantLock lock) {",
+            "    lock.lock();",
+            "    System.out.println(\"hi\");",
+            "    lock.unlock();",
+            "    lock.lock();",
+            "    try {",
+            "      System.out.println(\"hi\");",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "class Test {",
+            "  private void test(ReentrantLock lock) {",
+            "    lock.lock();",
+            "    try {",
+            "      System.out.println(\"hi\");",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "    lock.lock();",
+            "    try {",
+            "      System.out.println(\"hi\");",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unclosed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "class Test {",
+            "  private void test(ReentrantLock lock) {",
+            "    // BUG: Diagnostic contains:",
+            "    lock.lock();",
+            "    System.out.println(\"hi\");",
+            "    lock.lock();",
+            "    try {",
+            "      System.out.println(\"hi\");",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void receiverless() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test implements java.util.concurrent.locks.Lock {",
+            "  private void test() {",
+            "    lock();",
+            "    try {",
+            "    } finally {",
+            "      unlock();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
