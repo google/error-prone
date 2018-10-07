@@ -42,4 +42,23 @@ public class EqualsBrokenForNullTest {
   public void testNegativeCase() {
     compilationHelper.addSourceFile("EqualsBrokenForNullNegativeCases.java").doTest();
   }
+
+  @Test
+  public void negativeGenerics() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test<A, B> {",
+            "  A a;",
+            "  B b;",
+            "  public boolean equals(Object other) {",
+            "    if (!(other instanceof Test<?, ?>)) {",
+            "      return false;",
+            "    }",
+            "    Test<?, ?> that = (Test<?, ?>) other;",
+            "    return a.equals(that.a) && b.equals(that.b);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
