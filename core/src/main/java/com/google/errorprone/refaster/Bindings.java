@@ -60,7 +60,9 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
     }
 
     @Override
+    @SuppressWarnings("EqualsGetClass")
     public boolean equals(@Nullable Object obj) {
+      // explicitly call getClass so that objects of different subclasses return false.
       if (obj != null && this.getClass() == obj.getClass()) {
         Key<?> key = (Key<?>) obj;
         return identifier.equals(key.identifier);
