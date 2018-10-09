@@ -47,6 +47,8 @@ import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.DCTree.DCBlockTag;
+import com.sun.tools.javac.tree.DCTree.DCDocComment;
+import com.sun.tools.javac.tree.DCTree.DCErroneous;
 import com.sun.tools.javac.tree.DCTree.DCInlineTag;
 import java.util.HashSet;
 import java.util.Optional;
@@ -184,9 +186,7 @@ public final class InvalidTag extends BugChecker
     private int codeTagNestedDepth = 0;
 
     private InvalidTagChecker(
-        VisitorState state,
-        ImmutableSet<String> validTags,
-        ImmutableSet<String> parameters) {
+        VisitorState state, ImmutableSet<String> validTags, ImmutableSet<String> parameters) {
       this.state = state;
       this.validTags = validTags;
       this.parameters = parameters;
@@ -238,11 +238,25 @@ public final class InvalidTag extends BugChecker
       }
       if (codeTagNestedDepth > 0) {
         // If we're in a <code> tag, this is probably meant to be an annotation.
+        if (parentIsErroneousCodeTag()) {
+          String message =
+              String.format(
+                  "@%s is interpreted as a block tag here, not as a literal. Escaping "
+                      + "annotations within {@code } tags is problematic; you may have to avoid "
+                      + "using {@code } and escape any HTML entities manually instead.",
+                  tagName);
+          state.reportMatch(
+              buildDescription(diagnosticPosition(getCurrentPath(), state))
+                  .setMessage(message)
+                  .build());
+          fixedTags.add(unknownBlockTagTree);
+          return super.visitUnknownBlockTag(unknownBlockTagTree, null);
+        }
         int startPos = Utils.getStartPosition(unknownBlockTagTree, state);
         String message =
             String.format(
                 "@%s is not a valid block tag. Did you mean to escape it? Annotations must be "
-                    + "escaped even within <pre> and {@code } tags, otherwise they will be "
+                    + "escaped even within <pre> and <code>, otherwise they will be "
                     + "interpreted as block tags.",
                 tagName);
         state.reportMatch(
@@ -266,6 +280,24 @@ public final class InvalidTag extends BugChecker
       }
       reportUnknownTag(unknownBlockTagTree, tagName);
       return super.visitUnknownBlockTag(unknownBlockTagTree, null);
+    }
+
+    /**
+     * When we have an erroneous block tag inside a {@literal @}code tag, the enclosing
+     * {@literal @}code tag will fail to parse. So, we're looking for an enclosing erroneous tag.
+     */
+    private boolean parentIsErroneousCodeTag() {
+      if (getCurrentPath().getParentPath() == null) {
+        return false;
+      }
+      DocTree parentDoc = getCurrentPath().getParentPath().getLeaf();
+      if (!(parentDoc instanceof DCDocComment)) {
+        return false;
+      }
+      DCDocComment dcDocComment = (DCDocComment) parentDoc;
+      return dcDocComment.getFullBody().stream()
+          .anyMatch(
+              dc -> dc instanceof DCErroneous && ((DCErroneous) dc).body.startsWith("{@code"));
     }
 
     @Override
