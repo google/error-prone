@@ -332,6 +332,7 @@ import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfMod
 import com.google.errorprone.bugpatterns.javadoc.InvalidParam;
 import com.google.errorprone.bugpatterns.javadoc.InvalidTag;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
+import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
@@ -687,6 +688,7 @@ public class BuiltInCheckerSuppliers {
           LongLiteralLowerCaseSuffix.class,
           MethodCanBeStatic.class,
           MissingDefault.class,
+          MissingSummary.class,
           MixedArrayDimensions.class,
           MoreThanOneQualifier.class,
           MultiVariableDeclaration.class,
