@@ -91,10 +91,10 @@ public class DateFormatConstantTest {
             "import java.text.DateFormat;",
             "import java.util.Date;",
             "class Test {",
-            "  private static final ThreadLocal<DateFormat> DATE_FORMAT = ",
+            "  private static final ThreadLocal<DateFormat> dateFormat = ",
             "    ThreadLocal.withInitial(() -> new SimpleDateFormat(\"yyyy-MM-dd HH:mm\"));",
             "  static String f(Date d) {",
-            "    return DATE_FORMAT.get().format(d);",
+            "    return dateFormat.get().format(d);",
             "  }",
             "}")
         .doTest();
