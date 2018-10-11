@@ -72,19 +72,22 @@ public class DateFormatConstant extends BugChecker implements VariableTreeMatche
     if (!isSubtype(getType(tree), state.getTypeFromString("java.text.DateFormat"), state)) {
       return NO_MATCH;
     }
+    SuggestedFix rename =
+        renameVariable(
+            tree,
+            CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, tree.getName().toString()),
+            state);
     return buildDescription(tree)
-        .addFix(threadLocalFix(tree, state, sym))
-        .addFix(
-            renameVariable(
-                tree,
-                CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, tree.getName().toString()),
-                state))
+        .addFix(threadLocalFix(tree, state, sym, rename))
+        .addFix(rename)
         .build();
   }
 
-  private static Fix threadLocalFix(VariableTree tree, VisitorState state, final VarSymbol sym) {
+  private static Fix threadLocalFix(
+      VariableTree tree, VisitorState state, final VarSymbol sym, SuggestedFix rename) {
     SuggestedFix.Builder fix =
         SuggestedFix.builder()
+            .merge(rename)
             .replace(
                 tree.getType(),
                 String.format("ThreadLocal<%s>", state.getSourceForNode(tree.getType())))
