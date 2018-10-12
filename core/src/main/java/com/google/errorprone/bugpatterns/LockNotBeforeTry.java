@@ -22,7 +22,6 @@ import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
-import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -184,7 +183,6 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
 
   private static boolean releases(ExpressionTree node, ExpressionTree lockee, VisitorState state) {
     ExpressionTree receiver = getReceiver(node);
-    requireNonNull(receiver);
     return receiver != null
         && UNLOCK.matches(node, state)
         && state.getSourceForNode(receiver).equals(state.getSourceForNode(lockee));
