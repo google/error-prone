@@ -124,6 +124,20 @@ public class NullableDereferenceTest {
         .doTest();
   }
 
+  // Regression test for https://github.com/google/error-prone/issues/1138
+  @Test
+  public void testNoCrashOnStaticImport() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "Constraint.java",
+            "package javax.validation;",
+            "import static java.lang.annotation.ElementType.ANNOTATION_TYPE;",
+            "import java.lang.annotation.Target;",
+            "@Target({ ANNOTATION_TYPE })",
+            "public @interface Constraint {}")
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(NullableDereference.class, getClass());
   }
