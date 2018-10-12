@@ -96,7 +96,7 @@ public final class ProtoFieldNullComparisonTest {
             "    if (fields != null) {}",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:TrackAssignments"))
+        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:TrackServerProtoAssignments"))
         .doTest();
   }
 
@@ -320,7 +320,7 @@ public final class ProtoFieldNullComparisonTest {
             "    TestFieldProtoMessage fieldCopy = requireNonNull(field);",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:TrackAssignments"))
+        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:TrackServerProtoAssignments"))
         .doTest();
   }
 

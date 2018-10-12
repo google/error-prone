@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -130,8 +131,12 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     return tree.getKind() == Kind.NULL_LITERAL;
   }
 
+  /** Match proto receivers matching this. */
   private final Matcher<ExpressionTree> protoReceiver;
-  private final boolean trackAssignments;
+
+  /** Only track assignments of variables matching this. */
+  private final Matcher<ExpressionTree> trackAssignments;
+
   private final boolean matchListGetters;
   private final boolean matchTestAssertions;
 
@@ -141,10 +146,20 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         matchLite
             ? instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, PROTO_LITE_SUPER_CLASS)
             : instanceMethod().onDescendantOf(PROTO_SUPER_CLASS);
-    trackAssignments = flags.getBoolean("ProtoFieldNullComparison:TrackAssignments").orElse(false);
+    boolean trackServerProtoAssignments =
+        flags.getBoolean("ProtoFieldNullComparison:TrackServerProtoAssignments").orElse(false);
     matchListGetters = flags.getBoolean("ProtoFieldNullComparison:MatchListGetters").orElse(false);
     matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
+
+    ImmutableList.Builder<String> toTrack = ImmutableList.builder();
+    if (matchLite) {
+      toTrack.add(PROTO_LITE_SUPER_CLASS);
+    }
+    if (trackServerProtoAssignments) {
+      toTrack.add(PROTO_SUPER_CLASS);
+    }
+    trackAssignments = instanceMethod().onDescendantOfAny(toTrack.build());
   }
 
   @Override
@@ -174,11 +189,11 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
     @Override
     public Void visitVariable(VariableTree variable, Void unused) {
-      if (trackAssignments) {
-        Symbol symbol = ASTHelpers.getSymbol(variable);
-        if (isEffectivelyFinal(symbol) && variable.getInitializer() != null) {
-          effectivelyFinalValues.put(symbol, variable.getInitializer());
-        }
+      Symbol symbol = ASTHelpers.getSymbol(variable);
+      if (variable.getInitializer() != null
+          && isEffectivelyFinal(symbol)
+          && trackAssignments.matches(variable.getInitializer(), state)) {
+        effectivelyFinalValues.put(symbol, variable.getInitializer());
       }
       return isSuppressed(variable) ? null : super.visitVariable(variable, null);
     }
