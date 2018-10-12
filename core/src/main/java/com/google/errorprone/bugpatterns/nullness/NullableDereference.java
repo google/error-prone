@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -29,9 +30,9 @@ import com.google.errorprone.dataflow.nullnesspropagation.TrustingNullnessAnalys
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -60,14 +61,18 @@ public class NullableDereference extends BugChecker implements MemberSelectTreeM
       return Description.NO_MATCH;
     }
 
-    if (((tree instanceof JCIdent) && ((JCIdent) tree).sym.isStatic())
-        || ((tree instanceof JCFieldAccess) && ((JCFieldAccess) tree).sym.isStatic())) {
+    // sym = null on static field imports. See https://github.com/google/error-prone/issues/1138.
+    Symbol sym = getSymbol(tree);
+    if ((tree instanceof JCFieldAccess) && (sym == null || sym.isStatic())) {
       return Description.NO_MATCH;
     }
 
     Nullness nullness =
         TrustingNullnessAnalysis.instance(state.context)
             .getNullness(new TreePath(state.getPath(), receiverTree), state.context);
+    if (nullness == null) {
+      return Description.NO_MATCH;
+    }
 
     Description.Builder descBuilder = buildDescription(tree);
     switch (nullness) {
