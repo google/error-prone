@@ -37,4 +37,14 @@ public class OverrideThrowableToStringNegativeCases {
       return "";
     }
   }
+
+  class OverridesBoth extends Throwable {
+    public String toString() {
+      return "";
+    }
+
+    public String getMessage() {
+      return "";
+    }
+  }
 }
