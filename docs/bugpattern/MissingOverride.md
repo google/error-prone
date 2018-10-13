@@ -4,7 +4,7 @@ overriding a superclass method, a class method implementing an interface method,
 and an interface method respecifying a superinterface method.
 
 Exception: `@Override` may be omitted when the parent method is `@Deprecated`.
-If the option `-XepOpt:MissingOverride:IgnoreInterfaceOverrides=true`
+If the flag `-XepOpt:MissingOverride:IgnoreInterfaceOverrides=true`
 is used, `@Override` can be ommitted for an interface method respecifying a
 superinterface method.
 
