@@ -15,6 +15,9 @@
  */
 package com.google.errorprone.apply;
 
+import static com.google.common.primitives.Booleans.falseFirst;
+import static com.google.common.truth.Truth.assertThat;
+import static java.util.Comparator.comparing;
 import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.ImmutableSortedSet;
@@ -32,12 +35,12 @@ import org.junit.runners.JUnit4;
 public class OrganizedImportsTest {
 
   private static final Comparator<Import> IMPORT_COMPARATOR =
-      Comparator.comparing(Import::isStatic).thenComparing(Import::getType);
+      comparing(Import::isStatic, falseFirst()).thenComparing(Import::getType);
 
   @Test
   public void emptyList() {
     ImportOrganizer.OrganizedImports organizedImports = new ImportOrganizer.OrganizedImports();
-    assertEquals("", organizedImports.asImportBlock());
+    assertThat(organizedImports.asImportBlock()).isEmpty();
   }
 
   private ImmutableSortedSet<Import> buildSortedImportSet(Import... element) {

@@ -67,7 +67,7 @@ public class CompilationTestHelperTest {
                         "  }",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Saw unexpected error on line 3");
+    assertThat(expected).hasMessageThat().contains("Saw unexpected error on line 3");
   }
 
   @Test
@@ -84,7 +84,7 @@ public class CompilationTestHelperTest {
                         "  public void doIt() {}",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
 
   @Test
@@ -102,7 +102,7 @@ public class CompilationTestHelperTest {
                         "}")
                     .expectErrorMessage("X", Predicates.containsPattern(""))
                     .doTest());
-    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
 
   @Test
@@ -150,7 +150,7 @@ public class CompilationTestHelperTest {
                         "  }",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
 
   @Test
@@ -170,7 +170,7 @@ public class CompilationTestHelperTest {
                         "}")
                     .expectErrorMessage("X", Predicates.containsPattern(""))
                     .doTest());
-    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
 
   @Test
@@ -247,7 +247,8 @@ public class CompilationTestHelperTest {
                         "    return}",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage())
+    assertThat(expected)
+        .hasMessageThat()
         .contains("Test program failed to compile with non Error Prone error");
   }
 
@@ -269,7 +270,7 @@ public class CompilationTestHelperTest {
                     .expectResult(Result.ERROR)
                     .addSourceLines("Test.java", "public class Test {}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Expected compilation result ERROR, but was OK");
+    assertThat(expected).hasMessageThat().contains("Expected compilation result ERROR, but was OK");
   }
 
   @Test
@@ -306,7 +307,7 @@ public class CompilationTestHelperTest {
                         "  }",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
+    assertThat(expected).hasMessageThat().contains("Expected no diagnostics produced, but found 1");
   }
 
   @Test
@@ -327,7 +328,7 @@ public class CompilationTestHelperTest {
                         "}")
                     .expectErrorMessage("X", Predicates.containsPattern(""))
                     .doTest());
-    assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
+    assertThat(expected).hasMessageThat().contains("Expected no diagnostics produced, but found 1");
   }
 
   @Test
@@ -374,7 +375,7 @@ public class CompilationTestHelperTest {
                     .addSourceLines(
                         "Test.java", " // BUG: Diagnostic matches: X", "public class Test {}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("No expected error message with key [X]");
+    assertThat(expected).hasMessageThat().contains("No expected error message with key [X]");
   }
 
   @BugPattern(
@@ -399,7 +400,7 @@ public class CompilationTestHelperTest {
                 CompilationTestHelper.newInstance(PackageTreeChecker.class, getClass())
                     .addSourceLines("test/Test.java", "package test;", "public class Test {}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Package declaration found");
+    assertThat(expected).hasMessageThat().contains("Package declaration found");
   }
 
   @BugPattern(
@@ -448,6 +449,6 @@ public class CompilationTestHelperTest {
                         "// BUG: Diagnostic contains:",
                         "public class Test {}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Could not instantiate BugChecker");
+    assertThat(expected).hasMessageThat().contains("Could not instantiate BugChecker");
   }
 }

@@ -487,7 +487,7 @@ public class ScannerSupplierTest {
 
     InvalidCommandLineOptionException exception =
         assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
-    assertThat(exception.getMessage()).contains("may not be disabled");
+    assertThat(exception).hasMessageThat().contains("may not be disabled");
   }
 
   @Test
@@ -500,7 +500,7 @@ public class ScannerSupplierTest {
 
     InvalidCommandLineOptionException exception =
         assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
-    assertThat(exception.getMessage()).contains("may not be demoted to a warning");
+    assertThat(exception).hasMessageThat().contains("may not be demoted to a warning");
   }
 
   @Test
@@ -630,7 +630,7 @@ public class ScannerSupplierTest {
 
     InvalidCommandLineOptionException exception =
         assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
-    assertThat(exception.getMessage()).contains("may not be disabled");
+    assertThat(exception).hasMessageThat().contains("may not be disabled");
   }
 
   private static class ScannerSupplierSubject

@@ -37,7 +37,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class MethodHasParametersTest extends CompilerBasedAbstractTest {
 
-  final List<ScannerTest> tests = new ArrayList<ScannerTest>();
+  final List<ScannerTest> tests = new ArrayList<>();
 
   @Before
   public void setUp() {

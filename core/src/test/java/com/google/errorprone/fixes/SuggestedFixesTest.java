@@ -61,7 +61,7 @@ import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.net.URI;
-import java.util.stream.Stream;
+import java.util.Arrays;
 import javax.lang.model.element.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -121,7 +121,7 @@ public class SuggestedFixesTest {
               ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class), EditModifiers.class);
       SuggestedFix.Builder fix = SuggestedFix.builder();
       Modifier[] mods =
-          Stream.of(editModifiers.value())
+          Arrays.stream(editModifiers.value())
               .map(v -> Verify.verifyNotNull(MODIFIERS_BY_NAME.get(v), v))
               .toArray(Modifier[]::new);
       switch (editModifiers.kind()) {

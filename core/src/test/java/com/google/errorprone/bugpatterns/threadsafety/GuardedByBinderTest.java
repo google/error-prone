@@ -527,7 +527,7 @@ public class GuardedByBinderTest {
 
   private static class FindClass extends TreeScanner {
 
-    private final List<JCTree.JCClassDecl> decls = new ArrayList<JCTree.JCClassDecl>();
+    private final List<JCTree.JCClassDecl> decls = new ArrayList<>();
 
     @Override
     public void visitClassDef(JCTree.JCClassDecl classDecl) {

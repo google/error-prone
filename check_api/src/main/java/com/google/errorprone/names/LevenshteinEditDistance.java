@@ -16,6 +16,9 @@
 
 package com.google.errorprone.names;
 
+import com.google.common.base.Ascii;
+import com.google.common.primitives.Ints;
+
 /**
  * A utility class for finding the Levenshtein edit distance between strings. The edit distance
  * between two strings is the number of deletions, insertions, and substitutions required to
@@ -69,8 +72,8 @@ public class LevenshteinEditDistance {
     }
 
     if (!caseSensitive) {
-      source = source.toLowerCase();
-      target = target.toLowerCase();
+      source = Ascii.toLowerCase(source);
+      target = Ascii.toLowerCase(target);
     }
 
     int[][] levMatrix = new int[sourceLength + 1][targetLength + 1];
@@ -95,9 +98,8 @@ public class LevenshteinEditDistance {
         }
 
         levMatrix[i][j] =
-            Math.min(
-                cost + levMatrix[i - 1][j - 1],
-                Math.min(levMatrix[i - 1][j] + 1, levMatrix[i][j - 1] + 1));
+            Ints.min(
+                cost + levMatrix[i - 1][j - 1], levMatrix[i - 1][j] + 1, levMatrix[i][j - 1] + 1);
       }
     }
 
