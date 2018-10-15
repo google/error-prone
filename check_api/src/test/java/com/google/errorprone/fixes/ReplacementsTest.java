@@ -40,7 +40,7 @@ public class ReplacementsTest {
       replacements.add(Replacement.create(42, 43, "goodbye"));
       fail();
     } catch (IllegalArgumentException expected) {
-      assertThat(expected.getMessage()).contains("conflicts with existing replacement");
+      assertThat(expected).hasMessageThat().contains("conflicts with existing replacement");
     }
   }
 
@@ -54,7 +54,8 @@ public class ReplacementsTest {
       replacements.add(goodbye);
       fail();
     } catch (IllegalArgumentException expected) {
-      assertThat(expected.getMessage())
+      assertThat(expected)
+          .hasMessageThat()
           .isEqualTo(String.format("%s overlaps with existing replacements: %s", goodbye, hello));
     }
   }

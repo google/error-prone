@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -147,14 +147,7 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
       assertEquals(
           "variables used in " + node,
           expected,
-          Lists.transform(
-              uses,
-              new Function<IdentifierTree, String>() {
-                @Override
-                public String apply(IdentifierTree ident) {
-                  return ident.toString();
-                }
-              }));
+          Lists.transform(uses, Functions.toStringFunction()));
     }
 
     public void assertFoundAll() {

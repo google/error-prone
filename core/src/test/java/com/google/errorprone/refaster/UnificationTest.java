@@ -27,7 +27,6 @@ import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeScanner;
-import java.lang.annotation.Annotation;
 import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -251,7 +250,7 @@ public class UnificationTest extends CompilerBasedTest {
     UTypeVar eVar = UTypeVar.create("E");
     ExpressionTemplate template =
         ExpressionTemplate.create(
-            ImmutableClassToInstanceMap.<Annotation>builder().build(),
+            ImmutableClassToInstanceMap.of(),
             ImmutableList.of(eVar),
             ImmutableMap.of("list", UClassType.create("java.util.List", eVar)),
             UMethodInvocation.create(
@@ -304,7 +303,7 @@ public class UnificationTest extends CompilerBasedTest {
     eTypeVar.setUpperBound(UClassType.create("java.lang.Enum", eTypeVar));
     ExpressionTemplate template =
         ExpressionTemplate.create(
-            ImmutableClassToInstanceMap.<Annotation>builder().build(),
+            ImmutableClassToInstanceMap.of(),
             ImmutableList.of(eTypeVar),
             ImmutableMap.of("value", eTypeVar),
             UMethodInvocation.create(

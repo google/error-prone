@@ -172,7 +172,7 @@ public class BugCheckerRefactoringTestHelperTest {
           .expectUnchanged()
           .doTest();
     } catch (AssertionError e) {
-      assertThat(e.getMessage()).contains("compilation failed unexpectedly");
+      assertThat(e).hasMessageThat().contains("compilation failed unexpectedly");
       return;
     }
     fail("compilation succeeded unexpectedly");
@@ -229,7 +229,7 @@ public class BugCheckerRefactoringTestHelperTest {
           .expectUnchanged()
           .doTest();
     } catch (AssertionError e) {
-      assertThat(e.getMessage()).contains("error: cannot find symbol");
+      assertThat(e).hasMessageThat().contains("error: cannot find symbol");
       return;
     }
     fail("compilation succeeded unexpectedly");

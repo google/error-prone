@@ -139,8 +139,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    *     may not be disabled
    */
   @CheckReturnValue
-  public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions)
-      throws InvalidCommandLineOptionException {
+  public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions) {
     Map<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
     if (severityOverrides.isEmpty()
         && errorProneOptions.getFlags().isEmpty()

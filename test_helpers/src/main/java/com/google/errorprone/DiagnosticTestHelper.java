@@ -95,7 +95,7 @@ public class DiagnosticTestHelper {
           .append(":")
           .append(diagnostic.getColumnNumber())
           .append("]\t");
-      stringBuilder.append(diagnostic.getMessage(Locale.getDefault()).replaceAll("\n", "\\\\n"));
+      stringBuilder.append(diagnostic.getMessage(Locale.getDefault()).replace("\n", "\\n"));
       stringBuilder.append("\n");
     }
     return stringBuilder.toString();

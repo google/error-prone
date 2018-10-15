@@ -32,6 +32,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -231,7 +232,7 @@ public class ErrorProneJavaCompilerTest {
           Collections.<Class<? extends BugChecker>>emptyList());
       fail();
     } catch (RuntimeException expected) {
-      assertThat(expected.getMessage()).contains("invalid flag");
+      assertThat(expected).hasMessageThat().contains("invalid flag");
     }
   }
 
@@ -253,7 +254,7 @@ public class ErrorProneJavaCompilerTest {
           ImmutableList.<Class<? extends BugChecker>>of(UnsuppressibleArrayEquals.class));
       fail();
     } catch (RuntimeException expected) {
-      assertThat(expected.getMessage()).contains("ArrayEquals may not be disabled");
+      assertThat(expected).hasMessageThat().contains("ArrayEquals may not be disabled");
     }
   }
 
@@ -370,7 +371,8 @@ public class ErrorProneJavaCompilerTest {
       explanation = "",
       category = JDK,
       severity = ERROR,
-      disableable = false)
+      disableable = false,
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
   public static class DeleteMethod extends BugChecker implements ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {

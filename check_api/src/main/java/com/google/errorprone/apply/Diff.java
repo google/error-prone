@@ -30,5 +30,5 @@ public interface Diff {
    *
    * @throws DiffNotApplicableException if the diff could not be applied to the source file
    */
-  public void applyDifferences(SourceFile sourceFile) throws DiffNotApplicableException;
+  public void applyDifferences(SourceFile sourceFile);
 }

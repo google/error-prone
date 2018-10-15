@@ -186,6 +186,6 @@ public class BugPatternValidatorTest {
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
     ValidationException e =
         assertThrows(ValidationException.class, () -> BugPatternValidator.validate(annotation));
-    assertThat(e.getMessage()).contains("Name must not contain whitespace");
+    assertThat(e).hasMessageThat().contains("Name must not contain whitespace");
   }
 }

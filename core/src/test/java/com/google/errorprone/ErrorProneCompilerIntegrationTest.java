@@ -32,6 +32,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
+import com.google.common.base.Ascii;
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
@@ -444,7 +445,7 @@ public class ErrorProneCompilerIntegrationTest {
               Arrays.asList(
                   compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
       outputStream.flush();
-      assertThat(diagnosticHelper.getDiagnostics()).hasSize(0);
+      assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
       assertThat(outputStream.toString(), exitCode, is(Result.OK));
     }
   }
@@ -485,7 +486,7 @@ public class ErrorProneCompilerIntegrationTest {
               Arrays.asList(
                   compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
       outputStream.flush();
-      assertThat(diagnosticHelper.getDiagnostics()).hasSize(0);
+      assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
       assertThat(outputStream.toString(), exitCode, is(Result.OK));
     }
   }
@@ -640,7 +641,8 @@ public class ErrorProneCompilerIntegrationTest {
 
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
-      if (this.forbiddenString.equalsIgnoreCase(constValue(tree.getExpression()).toString())) {
+      if (Ascii.equalsIgnoreCase(
+          this.forbiddenString, constValue(tree.getExpression()).toString())) {
         return describeMatch(tree);
       } else {
         return NO_MATCH;

@@ -93,7 +93,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -167,12 +166,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   private Matcher<LiteralTree> literalHasStartPosition(final int startPosition) {
-    return new Matcher<LiteralTree>() {
-      @Override
-      public boolean matches(LiteralTree tree, VisitorState state) {
-        JCLiteral literal = (JCLiteral) tree;
-        return literal.getStartPosition() == startPosition;
-      }
+    return (LiteralTree tree, VisitorState state) -> {
+      JCLiteral literal = (JCLiteral) tree;
+      return literal.getStartPosition() == startPosition;
     };
   }
 
@@ -247,21 +243,15 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   private Matcher<ExpressionTree> expressionHasReceiverAndType(
       final String expectedReceiver, final String expectedType) {
     return Matchers.allOf(
-        new Matcher<ExpressionTree>() {
-          @Override
-          public boolean matches(ExpressionTree t, VisitorState state) {
-            ExpressionTree receiver = ASTHelpers.getReceiver(t);
-            return expectedReceiver != null
-                ? receiver.toString().equals(expectedReceiver)
-                : receiver == null;
-          }
+        (ExpressionTree t, VisitorState state) -> {
+          ExpressionTree receiver = ASTHelpers.getReceiver(t);
+          return expectedReceiver != null
+              ? receiver.toString().equals(expectedReceiver)
+              : receiver == null;
         },
-        new Matcher<ExpressionTree>() {
-          @Override
-          public boolean matches(ExpressionTree t, VisitorState state) {
-            Type type = ASTHelpers.getReceiverType(t);
-            return state.getTypeFromString(expectedType).equals(type);
-          }
+        (ExpressionTree t, VisitorState state) -> {
+          Type type = ASTHelpers.getReceiverType(t);
+          return state.getTypeFromString(expectedType).equals(type);
         });
   }
 
@@ -550,7 +540,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             if (!"super()".equals(tree.toString())) { // ignore synthetic super call
               setAssertionsComplete();
               Type type = ASTHelpers.getType(tree);
-              assertThat(type instanceof TypeVar).isTrue();
+              assertThat(type).isInstanceOf(TypeVar.class);
               assertThat(((TypeVar) type).isCaptured()).isTrue();
               assertThat(ASTHelpers.getUpperBound(type, state.getTypes()).toString())
                   .isEqualTo("java.lang.Number");
@@ -1004,7 +994,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     // Make sure that the method isn't implemented in the visitor; that would make this test
     // meaningless.
     List<String> methodNames =
-        Stream.of(TargetTypeVisitor.class.getDeclaredMethods())
+        Arrays.stream(TargetTypeVisitor.class.getDeclaredMethods())
             .map(Method::getName)
             .collect(Collectors.toList());
     assertThat(methodNames).doesNotContain("visitParameterizedType");
