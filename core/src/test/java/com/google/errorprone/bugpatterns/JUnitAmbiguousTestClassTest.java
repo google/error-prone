@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class JUnitAmbiguousTestClassTest {
 
-  private CompilationTestHelper compilationHelper =
+  private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(JUnitAmbiguousTestClass.class, getClass());
 
   @Test

@@ -42,7 +42,7 @@ public class JUnit4SetUpNotRunTest {
   @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   private CompilationTestHelper compilationHelper;
-  private BugCheckerRefactoringTestHelper refactoringTestHelper =
+  private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(new JUnit4SetUpNotRun(), getClass());
 
   @Before

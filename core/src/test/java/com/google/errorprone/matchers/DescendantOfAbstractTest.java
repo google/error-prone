@@ -29,7 +29,7 @@ import org.junit.Before;
 
 public class DescendantOfAbstractTest extends CompilerBasedAbstractTest {
 
-  final List<ScannerTest> tests = new ArrayList<ScannerTest>();
+  final List<ScannerTest> tests = new ArrayList<>();
 
   @Before
   public void setUp() throws Exception {

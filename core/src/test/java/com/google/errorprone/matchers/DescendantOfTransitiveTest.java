@@ -25,9 +25,9 @@ import com.google.errorprone.BaseErrorProneJavaCompiler;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import javax.tools.StandardJavaFileManager;
@@ -46,16 +46,16 @@ import org.junit.runners.JUnit4;
 public class DescendantOfTransitiveTest extends DescendantOfAbstractTest {
 
   @Rule public final TemporaryFolder tempDir = new TemporaryFolder();
-  final List<String> filesToCompile = new ArrayList<String>();
+  final List<String> filesToCompile = new ArrayList<>();
 
   private void writeFileToLocalDisk(String fileName, String... lines) throws IOException {
     File source = new File(tempDir.getRoot(), fileName);
     new File(source.getParent()).mkdirs();
-    PrintWriter writer = new PrintWriter(new FileWriter(source));
-    for (String line : lines) {
-      writer.println(line);
+    try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(source.toPath(), UTF_8))) {
+      for (String line : lines) {
+        writer.println(line);
+      }
     }
-    writer.close();
     filesToCompile.add(source.getAbsolutePath());
   }
 

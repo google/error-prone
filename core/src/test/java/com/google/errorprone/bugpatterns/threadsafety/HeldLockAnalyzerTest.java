@@ -261,7 +261,7 @@ public class HeldLockAnalyzerTest {
     @Override
     protected Description checkGuardedAccess(
         Tree tree, GuardedByExpression guard, HeldLockSet live, VisitorState state) {
-      List<String> toSort = new ArrayList<String>();
+      List<String> toSort = new ArrayList<>();
       for (GuardedByExpression node : live.allLocks()) {
         toSort.add(node.debugPrint());
       }

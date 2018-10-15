@@ -79,7 +79,7 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   private static final Matcher<Tree> USED_UNDER_LOOP_STATEMENT_ACCORDING_TO_BLOCK_OR_CASE =
       new Enclosing.BlockOrCase<>(IS_LOOP_STATEMENT, Matchers.<CaseTree>nothing());
 
-  final List<ScannerTest> tests = new ArrayList<ScannerTest>();
+  final List<ScannerTest> tests = new ArrayList<>();
 
   @After
   public void tearDown() {

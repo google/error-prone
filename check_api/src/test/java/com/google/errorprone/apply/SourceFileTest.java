@@ -16,6 +16,7 @@
 
 package com.google.errorprone.apply;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
@@ -64,7 +65,7 @@ public class SourceFileTest {
   @Test
   public void getLines() {
     List<String> lines = sourceFile.getLines();
-    assertEquals(8, lines.size());
+    assertThat(lines).hasSize(8);
     assertEquals(
         "// Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do", lines.get(0));
     assertEquals("// est laborum.", lines.get(7));
@@ -73,7 +74,7 @@ public class SourceFileTest {
   @Test
   public void replaceChars() {
     sourceFile.replaceChars(3, 8, "Sasquatch");
-    assertEquals(SOURCE_TEXT.replaceAll("Lorem", "Sasquatch"), sourceFile.getSourceText());
+    assertEquals(SOURCE_TEXT.replace("Lorem", "Sasquatch"), sourceFile.getSourceText());
     assertEquals(
         "// Sasquatch ipsum dolor sit amet, consectetur adipisicing elit, sed do",
         sourceFile.getLines().get(0));

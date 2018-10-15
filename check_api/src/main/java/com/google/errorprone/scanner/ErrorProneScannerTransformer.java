@@ -45,7 +45,7 @@ public abstract class ErrorProneScannerTransformer implements CodeTransformer {
 
   @Override
   public ImmutableClassToInstanceMap<Annotation> annotations() {
-    return ImmutableClassToInstanceMap.<Annotation>builder().build();
+    return ImmutableClassToInstanceMap.of();
   }
 
   /** Create a VisitorState object from a compilation unit. */

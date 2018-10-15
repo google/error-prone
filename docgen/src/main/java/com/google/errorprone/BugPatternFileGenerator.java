@@ -62,7 +62,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
   private final Path outputDir;
   private final Path exampleDirBase;
   private final Path explanationDir;
-  private List<BugPatternInstance> result;
+  private final List<BugPatternInstance> result;
 
   /**
    * Enables pygments-style code highlighting blocks instead of github flavoured markdown style code
@@ -97,7 +97,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
   }
 
   private static class ExampleFilter implements DirectoryStream.Filter<Path> {
-    private Pattern matchPattern;
+    private final Pattern matchPattern;
 
     public ExampleFilter(String checkerName) {
       this.matchPattern = Pattern.compile(checkerName + "(Positive|Negative)Case.*");

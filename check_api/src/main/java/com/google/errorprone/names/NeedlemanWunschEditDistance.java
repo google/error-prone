@@ -16,6 +16,9 @@
 
 package com.google.errorprone.names;
 
+import com.google.common.base.Ascii;
+import com.google.common.primitives.Ints;
+
 /**
  * The Needleman-Wunsch algorithm for finding least-cost string edit distances between pairs of
  * strings. Like Levenshtein, but this version allows for a sequence of adjacent
@@ -59,8 +62,8 @@ public final class NeedlemanWunschEditDistance {
       int continueGapCost) {
 
     if (!caseSensitive) {
-      source = source.toLowerCase();
-      target = target.toLowerCase();
+      source = Ascii.toLowerCase(source);
+      target = Ascii.toLowerCase(target);
     }
 
     int sourceLength = source.length();
@@ -128,9 +131,7 @@ public final class NeedlemanWunschEditDistance {
         // Cost of changing i chars of source into j chars of target,
         // using an edit script ending in matched characters.
         mMatrix[i][j] =
-            cost
-                + Math.min(
-                    mMatrix[i - 1][j - 1], Math.min(iMatrix[i - 1][j - 1], dMatrix[i - 1][j - 1]));
+            cost + Ints.min(mMatrix[i - 1][j - 1], iMatrix[i - 1][j - 1], dMatrix[i - 1][j - 1]);
 
         // Cost of an edit script ending in a deletion.
         dMatrix[i][j] =
@@ -150,9 +151,10 @@ public final class NeedlemanWunschEditDistance {
     int costOfEditScriptEndingWithMatch = mMatrix[sourceLength][targetLength];
     int costOfEditScriptEndingWithDelete = dMatrix[sourceLength][targetLength];
     int costOfEditScriptEndingWithInsert = iMatrix[sourceLength][targetLength];
-    return Math.min(
+    return Ints.min(
         costOfEditScriptEndingWithMatch,
-        Math.min(costOfEditScriptEndingWithDelete, costOfEditScriptEndingWithInsert));
+        costOfEditScriptEndingWithDelete,
+        costOfEditScriptEndingWithInsert);
   }
 
   /** Return the worst case edit distance between strings of this length */

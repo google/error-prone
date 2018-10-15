@@ -185,7 +185,7 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of(
                     "-Xplugin:ErrorProne"
                         + " -XepPatchChecks:MissingOverride -XepPatchLocation:"
-                        + patchDir.toString(),
+                        + patchDir,
                     "-XDcompilePolicy=byfile"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(fileA, fileB));
