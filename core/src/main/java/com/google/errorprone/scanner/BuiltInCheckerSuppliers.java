@@ -156,6 +156,7 @@ import com.google.errorprone.bugpatterns.MissingTestCall;
 import com.google.errorprone.bugpatterns.MisusedWeekYear;
 import com.google.errorprone.bugpatterns.MixedArrayDimensions;
 import com.google.errorprone.bugpatterns.MockitoCast;
+import com.google.errorprone.bugpatterns.MockitoInternalUsage;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifiedButNotUsed;
 import com.google.errorprone.bugpatterns.ModifyCollectionInEnhancedForLoop;
@@ -584,6 +585,7 @@ public class BuiltInCheckerSuppliers {
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
           MissingOverride.class,
+          MockitoInternalUsage.class,
           ModifiedButNotUsed.class,
           ModifyCollectionInEnhancedForLoop.class,
           MultipleParallelOrSequentialCalls.class,
