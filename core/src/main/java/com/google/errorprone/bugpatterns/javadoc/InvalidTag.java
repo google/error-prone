@@ -78,8 +78,10 @@ public final class InvalidTag extends BugChecker
   private static final ImmutableSet<String> KNOWN_OTHER_TAGS =
       ImmutableSet.of(
           "attr", // commonly used by Android
+          "contact",
+          "hide",
           "required",
-          "hide");
+          "team");
 
   /**
    * HTML tags which imply we're showing code, and should therefore probably escape unknown block
