@@ -1,0 +1,23 @@
+syntax = "proto2";
+
+package errorprone;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_package = "com.google.errorprone.bugpatterns.time";
+option java_outer_classname = "Test";
+
+message DurationTimestamp {
+  optional google.protobuf.Duration test_duration = 1;
+  optional google.protobuf.Timestamp test_timestamp = 2;
+  optional google.protobuf.Duration another_test_duration = 3;
+  optional google.protobuf.Timestamp another_test_timestamp = 4;
+
+  optional NestedMessage nested_message = 5;
+
+  message NestedMessage {
+    optional google.protobuf.Duration nested_test_duration = 1;
+    optional google.protobuf.Timestamp nested_test_timestamp = 2;
+  }
+}
