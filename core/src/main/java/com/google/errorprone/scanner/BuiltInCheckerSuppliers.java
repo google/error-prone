@@ -353,6 +353,26 @@ import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadPriorityCheck;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
+import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
+import com.google.errorprone.bugpatterns.time.DurationToLongTimeUnit;
+import com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano;
+import com.google.errorprone.bugpatterns.time.JavaDurationWithNanos;
+import com.google.errorprone.bugpatterns.time.JavaDurationWithSeconds;
+import com.google.errorprone.bugpatterns.time.JavaInstantGetSecondsGetNano;
+import com.google.errorprone.bugpatterns.time.JavaTimeDefaultTimeZone;
+import com.google.errorprone.bugpatterns.time.JodaDurationConstructor;
+import com.google.errorprone.bugpatterns.time.JodaDurationWithMillis;
+import com.google.errorprone.bugpatterns.time.JodaInstantWithMillis;
+import com.google.errorprone.bugpatterns.time.JodaNewPeriod;
+import com.google.errorprone.bugpatterns.time.JodaPlusMinusLong;
+import com.google.errorprone.bugpatterns.time.JodaTimeConverterManager;
+import com.google.errorprone.bugpatterns.time.JodaToSelf;
+import com.google.errorprone.bugpatterns.time.JodaWithDurationAddedLong;
+import com.google.errorprone.bugpatterns.time.PeriodGetTemporalUnit;
+import com.google.errorprone.bugpatterns.time.ProtoDurationGetSecondsGetNano;
+import com.google.errorprone.bugpatterns.time.ProtoTimestampGetSecondsGetNano;
+import com.google.errorprone.bugpatterns.time.TemporalAccessorGetChronoField;
+import com.google.errorprone.bugpatterns.time.TimeUnitConversionChecker;
 import java.util.Arrays;
 
 /**
@@ -426,6 +446,8 @@ public class BuiltInCheckerSuppliers {
           DeadException.class,
           DeadThread.class,
           DoNotCallChecker.class,
+          DurationGetTemporalUnit.class,
+          DurationToLongTimeUnit.class,
           EqualsNaN.class,
           EqualsReference.class,
           EqualsWrongThing.class,
@@ -452,6 +474,7 @@ public class BuiltInCheckerSuppliers {
           IsInstanceOfClass.class,
           IsLoggableTagLength.class,
           JavaxInjectOnAbstractMethod.class,
+          JodaToSelf.class,
           JUnit3TestNotRun.class,
           JUnit4ClassAnnotationNonStatic.class,
           JUnit4SetUpNotRun.class,
@@ -481,6 +504,7 @@ public class BuiltInCheckerSuppliers {
           OverridesJavaxInjectableMethod.class,
           PackageInfo.class,
           ParcelableCreator.class,
+          PeriodGetTemporalUnit.class,
           PreconditionsCheckNotNull.class,
           PreconditionsCheckNotNullPrimitive.class,
           PredicateIncompatibleType.class,
@@ -504,6 +528,7 @@ public class BuiltInCheckerSuppliers {
           StringBuilderInitWithChar.class,
           SubstringOfZero.class,
           SuppressWarningsDeprecated.class,
+          TemporalAccessorGetChronoField.class,
           ThrowIfUncheckedKnownChecked.class,
           ThrowNull.class,
           TruthSelfEquals.class,
@@ -574,8 +599,20 @@ public class BuiltInCheckerSuppliers {
           InstanceOfAndCastMatchWrongType.class,
           IntLongMath.class,
           IterableAndIterator.class,
+          JavaDurationGetSecondsGetNano.class,
+          JavaDurationWithNanos.class,
+          JavaDurationWithSeconds.class,
+          JavaInstantGetSecondsGetNano.class,
+          JavaTimeDefaultTimeZone.class,
           JavaLangClash.class,
           JdkObsolete.class,
+          JodaDurationConstructor.class,
+          JodaDurationWithMillis.class,
+          JodaInstantWithMillis.class,
+          JodaNewPeriod.class,
+          JodaPlusMinusLong.class,
+          JodaTimeConverterManager.class,
+          JodaWithDurationAddedLong.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnit4ClassUsedInJUnit3.class,
           JUnitAmbiguousTestClass.class,
@@ -608,6 +645,8 @@ public class BuiltInCheckerSuppliers {
           ParameterName.class,
           PreconditionsInvalidPlaceholder.class,
           ProtoRedundantSet.class,
+          ProtoDurationGetSecondsGetNano.class,
+          ProtoTimestampGetSecondsGetNano.class,
           QualifierOrScopeOnInjectMethod.class,
           ReachabilityFenceUsage.class,
           ReferenceEquality.class,
@@ -622,6 +661,7 @@ public class BuiltInCheckerSuppliers {
           ThreadLocalUsage.class,
           ThreadPriorityCheck.class,
           ThreeLetterTimeZoneID.class,
+          TimeUnitConversionChecker.class,
           ToStringReturnsNull.class,
           TruthAssertExpected.class,
           TruthConstantAsserts.class,
