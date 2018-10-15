@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Context.Key;
@@ -31,8 +32,8 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class SubContextTest {
-  private static final Key<String> KEY1 = new Key<String>();
-  private static final Key<String> KEY2 = new Key<String>();
+  private static final Key<String> KEY1 = new Key<>();
+  private static final Key<String> KEY2 = new Key<>();
 
   enum Enum1 {
     VALUE1,
@@ -57,8 +58,8 @@ public class SubContextTest {
     assertEquals("key2", overlay.get(KEY2));
     assertEquals(Enum2.VALUE, overlay.get(Enum2.class));
 
-    assertEquals(null, base.get(KEY2));
-    assertEquals(null, base.get(Enum2.class));
+    assertNull(base.get(KEY2));
+    assertNull(base.get(Enum2.class));
   }
 
   @Test

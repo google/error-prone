@@ -113,7 +113,6 @@ public enum Nullness implements AbstractValue<Nullness> {
   public Nullness deducedValueWhenNotEqual() {
     switch (this) {
       case NULLABLE:
-        return NULLABLE;
       case NONNULL:
         return NULLABLE;
       case NULL:

@@ -116,7 +116,7 @@ public class CompilationTestHelper {
   // TODO(cushon): test compilations should be isolated so they can't pick things up from the
   // ambient classpath.
   static List<String> disableImplicitProcessing(List<String> args) {
-    if (args.indexOf("-processor") != -1 || args.indexOf("-processorpath") != -1) {
+    if (args.contains("-processor") || args.contains("-processorpath")) {
       return args;
     }
     return ImmutableList.<String>builder().addAll(args).add("-proc:none").build();
@@ -237,7 +237,7 @@ public class CompilationTestHelper {
   public void doTest() {
     Preconditions.checkState(!sources.isEmpty(), "No source files to compile");
     List<String> allArgs = buildArguments(args);
-    Result result = compile(sources, allArgs.toArray(new String[allArgs.size()]));
+    Result result = compile(sources, allArgs.toArray(new String[0]));
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticHelper.getDiagnostics()) {
       if (diagnostic.getCode().contains("error.prone.crash")) {
         fail(diagnostic.getMessage(Locale.ENGLISH));
@@ -258,7 +258,7 @@ public class CompilationTestHelper {
                       + ", but was %s. No diagnostics were emitted."
                       + " OutputStream from Compiler follows.\n\n%s",
                   result,
-                  outputStream.toString()))
+                  outputStream))
           .that(result)
           .isEqualTo(expectedResult.or(Result.OK));
     } else {
@@ -282,7 +282,7 @@ public class CompilationTestHelper {
                   expectedResult.get(),
                   result,
                   Joiner.on('\n').join(diagnosticHelper.getDiagnostics()),
-                  outputStream.toString()))
+                  outputStream))
           .that(result)
           .isEqualTo(expectedResult.get());
     }
@@ -353,8 +353,7 @@ public class CompilationTestHelper {
     boolean result = task.call();
     assertWithMessage(
             String.format(
-                "Test program failed to compile with non Error Prone error: %s",
-                outputStream.toString()))
+                "Test program failed to compile with non Error Prone error: %s", outputStream))
         .that(result)
         .isTrue();
   }

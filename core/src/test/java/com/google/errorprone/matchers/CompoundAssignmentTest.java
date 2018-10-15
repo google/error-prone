@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.VisitorState;
@@ -23,7 +24,7 @@ import com.google.errorprone.scanner.Scanner;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,32 +34,38 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void cannotConstructWithInvalidKind() {
-    Set<Kind> operators = new HashSet<Kind>();
+    Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS_ASSIGNMENT);
     operators.add(Kind.IF);
-    assertCompiles(
-        compoundAssignmentMatches(
-            /* shouldMatch= */ true,
-            new CompoundAssignment(
-                operators,
-                Matchers.<ExpressionTree>anything(),
-                Matchers.<ExpressionTree>anything())));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            assertCompiles(
+                compoundAssignmentMatches(
+                    /* shouldMatch= */ true,
+                    new CompoundAssignment(
+                        operators,
+                        Matchers.<ExpressionTree>anything(),
+                        Matchers.<ExpressionTree>anything()))));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void cannotConstructWithBinaryOperator() {
-    Set<Kind> operators = new HashSet<Kind>();
+    Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS);
     operators.add(Kind.PLUS_ASSIGNMENT);
-    assertCompiles(
-        compoundAssignmentMatches(
-            /* shouldMatch= */ true,
-            new CompoundAssignment(
-                operators,
-                Matchers.<ExpressionTree>anything(),
-                Matchers.<ExpressionTree>anything())));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            assertCompiles(
+                compoundAssignmentMatches(
+                    /* shouldMatch= */ true,
+                    new CompoundAssignment(
+                        operators,
+                        Matchers.<ExpressionTree>anything(),
+                        Matchers.<ExpressionTree>anything()))));
   }
 
   @Test
@@ -71,7 +78,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
         "    c += b;",
         "  }",
         "}");
-    Set<Kind> operators = new HashSet<Kind>();
+    Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS_ASSIGNMENT);
     operators.add(Kind.LEFT_SHIFT_ASSIGNMENT);
     assertCompiles(
@@ -93,7 +100,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
         "    c -= b;",
         "  }",
         "}");
-    Set<Kind> operators = new HashSet<Kind>();
+    Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(
         compoundAssignmentMatches(
@@ -114,7 +121,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
         "    c += b;",
         "  }",
         "}");
-    Set<Kind> operators = new HashSet<Kind>();
+    Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(
         compoundAssignmentMatches(
@@ -135,7 +142,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
         "    c += b;",
         "  }",
         "}");
-    Set<Kind> operators = new HashSet<Kind>();
+    Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(
         compoundAssignmentMatches(

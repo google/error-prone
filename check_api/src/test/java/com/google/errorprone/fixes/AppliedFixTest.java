@@ -53,20 +53,14 @@ public class AppliedFixTest {
 
         @Override
         public int replaceTree(JCTree oldtree, JCTree newtree) {
-          Integer endpos = map.get(oldtree);
-          if (endpos == null) {
-            endpos = Position.NOPOS;
-          }
+          Integer endpos = map.getOrDefault(oldtree, Position.NOPOS);
           map.put(newtree, endpos);
           return endpos;
         }
 
         @Override
         public int getEndPos(JCTree tree) {
-          Integer result = map.get(tree);
-          if (result == null) {
-            result = Position.NOPOS;
-          }
+          Integer result = map.getOrDefault(tree, Position.NOPOS);
           return result;
         }
       };

@@ -16,7 +16,9 @@
 
 package com.google.errorprone.apply;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -315,7 +317,7 @@ public class ImportStatementsTest {
     ImportStatements imports = createImportStatements(basePackage, baseImportList);
     boolean added = imports.add("import com.google.common.collect.ImmutableMap");
 
-    assertTrue(!added);
+    assertFalse(added);
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
             + "import static com.google.common.base.Preconditions.checkNotNull;\n"
@@ -440,7 +442,7 @@ public class ImportStatementsTest {
     ImportStatements imports = createImportStatements(basePackage, baseImportList);
     boolean removed = imports.remove("import org.joda.time.format.ISODateTimeFormat;\n");
 
-    assertTrue(!removed);
+    assertFalse(removed);
     assertEquals(
         "import static com.google.ads.pebl.AdGroupCriterionPredicate.PAUSED;\n"
             + "import static com.google.common.base.Preconditions.checkNotNull;\n"
@@ -519,7 +521,8 @@ public class ImportStatementsTest {
 
     imports.add("import java.util.List");
     IllegalStateException exception = assertThrows(IllegalStateException.class, imports::toString);
-    assertEquals(
-        "Expected 1 import(s) in the organized imports but it contained 0", exception.getMessage());
+    assertThat(exception)
+        .hasMessageThat()
+        .isEqualTo("Expected 1 import(s) in the organized imports but it contained 0");
   }
 }

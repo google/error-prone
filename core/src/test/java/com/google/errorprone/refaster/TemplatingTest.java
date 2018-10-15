@@ -25,7 +25,6 @@ import com.google.common.collect.Iterables;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Flags;
-import java.lang.annotation.Annotation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -281,7 +280,7 @@ public class TemplatingTest extends CompilerBasedTest {
         "}");
     assertEquals(
         ExpressionTemplate.create(
-            ImmutableClassToInstanceMap.<Annotation>builder().build(),
+            ImmutableClassToInstanceMap.of(),
             ImmutableList.of(UTypeVar.create("E")),
             ImmutableMap.of("list", UClassType.create("java.util.List", UTypeVar.create("E"))),
             UMethodInvocation.create(
@@ -308,7 +307,7 @@ public class TemplatingTest extends CompilerBasedTest {
     UTypeVar eVar = UTypeVar.create("E");
     assertEquals(
         ExpressionTemplate.create(
-            ImmutableClassToInstanceMap.<Annotation>builder().build(),
+            ImmutableClassToInstanceMap.of(),
             ImmutableList.of(eVar),
             ImmutableMap.of("list", UClassType.create("java.util.List", eVar)),
             UMethodInvocation.create(
@@ -621,7 +620,7 @@ public class TemplatingTest extends CompilerBasedTest {
     UTypeVar eVar = Iterables.getOnlyElement(template.templateTypeVariables());
     assertEquals(
         ExpressionTemplate.create(
-            ImmutableClassToInstanceMap.<Annotation>builder().build(),
+            ImmutableClassToInstanceMap.of(),
             ImmutableList.of(UTypeVar.create("E", UClassType.create("java.lang.Enum", eVar))),
             ImmutableMap.of("e", eVar),
             UFreeIdent.create("e"),

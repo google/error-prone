@@ -33,7 +33,7 @@ import org.junit.runners.JUnit4;
 /** @author cpovirk@google.com (Chris Povirk) */
 @RunWith(JUnit4.class)
 public class MethodReturnsTest extends CompilerBasedAbstractTest {
-  final List<ScannerTest> tests = new ArrayList<ScannerTest>();
+  final List<ScannerTest> tests = new ArrayList<>();
 
   @After
   public void tearDown() {
