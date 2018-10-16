@@ -77,9 +77,12 @@ public final class InvalidTag extends BugChecker
   /** Non-standard commonly-used tags which we should allow. */
   private static final ImmutableSet<String> KNOWN_OTHER_TAGS =
       ImmutableSet.of(
+          "apiNote",
           "attr", // commonly used by Android
           "contact",
           "hide",
+          "implNote",
+          "implSpec",
           "required",
           "team");
 
@@ -90,58 +93,38 @@ public final class InvalidTag extends BugChecker
   private static final ImmutableSet<String> CODE_TAGS = ImmutableSet.of("code", "pre");
 
   // TODO(b/72685460): Split these into unknown block vs inline tags.
-  private static final ImmutableSet<String> VALID_METHOD_TAGS =
+  private static final ImmutableSet<String> COMMON_TAGS =
       ImmutableSet.of(
-          "author",
-          "code",
-          "deprecated",
-          "docRoot",
-          "exception",
-          "inheritDoc",
-          "link",
-          "linkplain",
-          "literal",
-          "param",
-          "return",
-          "see",
-          "serial",
-          "since",
-          "throws",
-          "serialData",
-          "serialField",
-          "value",
-          "version");
+          "code", "deprecated", "docRoot", "link", "linkplain", "literal", "see", "since");
+
+  private static final ImmutableSet<String> VALID_METHOD_TAGS =
+      ImmutableSet.<String>builder()
+          .addAll(COMMON_TAGS)
+          .add(
+              "author",
+              "exception",
+              "inheritDoc",
+              "param",
+              "return",
+              "serial",
+              "throws",
+              "serialData",
+              "serialField",
+              "value",
+              "version")
+          .build();
 
   private static final ImmutableSet<String> VALID_VARIABLE_TAGS =
-      ImmutableSet.of(
-          "code",
-          "deprecated",
-          "docRoot",
-          "link",
-          "linkplain",
-          "literal",
-          "see",
-          "serial",
-          "serialData",
-          "serialField",
-          "since",
-          "value");
+      ImmutableSet.<String>builder()
+          .addAll(COMMON_TAGS)
+          .add("serial", "serialData", "serialField", "value")
+          .build();
 
   private static final ImmutableSet<String> VALID_CLASS_TAGS =
-      ImmutableSet.of(
-          "author",
-          "code",
-          "deprecated",
-          "docRoot",
-          "inheritDoc",
-          "link",
-          "linkplain",
-          "literal",
-          "param",
-          "see",
-          "since",
-          "value",
-          "version");
+      ImmutableSet.<String>builder()
+          .addAll(COMMON_TAGS)
+          .add("author", "inheritDoc", "param", "value", "version")
+          .build();
 
   private static final Pattern PARAM_MATCHER = Pattern.compile("\\{@param (.*)}");
 
