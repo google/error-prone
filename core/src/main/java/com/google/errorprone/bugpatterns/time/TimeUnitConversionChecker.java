@@ -32,6 +32,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 import java.util.concurrent.TimeUnit;
 
 /** Check for problematic or suspicious TimeUnit conversion calls. */
@@ -66,8 +67,16 @@ public final class TimeUnitConversionChecker extends BugChecker
       return Description.NO_MATCH;
     }
 
-    String timeUnitName =
-        ASTHelpers.getSymbol(ASTHelpers.getReceiver(tree)).getSimpleName().toString();
+    Tree receiverOfConversion = ASTHelpers.getReceiver(tree);
+    if (receiverOfConversion == null) {
+      // Usage inside TimeUnit itself, no changes we can make here.
+      return Description.NO_MATCH;
+    }
+    // This trips up on code like:
+    // TimeUnit SECONDS = TimeUnit.MINUTES;
+    // long about2500 = SECONDS.toSeconds(42);
+    // but... I think that's bad enough to ignore here :)
+    String timeUnitName = ASTHelpers.getSymbol(receiverOfConversion).getSimpleName().toString();
     Optional<TimeUnit> receiver = Enums.getIfPresent(TimeUnit.class, timeUnitName);
     if (!receiver.isPresent()) {
       return Description.NO_MATCH;
