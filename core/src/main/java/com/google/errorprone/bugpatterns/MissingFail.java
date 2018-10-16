@@ -45,6 +45,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.ChildMultiMatcher;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -74,6 +75,7 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.tools.javac.code.Symbol;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Name;
@@ -225,26 +227,33 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       List<? extends StatementTree> tryStatements = tree.getBlock().getStatements();
       StatementTree lastTryStatement = tryStatements.get(tryStatements.size() - 1);
 
-      String failCall = String.format("\nfail(\"Expected %s\");", exceptionToString(tree));
-      SuggestedFix.Builder fixBuilder =
-          SuggestedFix.builder().postfixWith(lastTryStatement, failCall);
-
-      // Make sure that when the fail import is added it doesn't conflict with existing ones.
-      fixBuilder.removeStaticImport("junit.framework.Assert.fail");
-      fixBuilder.removeStaticImport("junit.framework.TestCase.fail");
-      fixBuilder.addStaticImport("org.junit.Assert.fail");
-
-      return describeMatch(lastTryStatement, fixBuilder.build());
+      Optional<Fix> assertThrowsFix =
+          AssertThrowsUtils.tryFailToAssertThrows(tree, tryStatements, state);
+      Fix failFix = addFailCall(tree, lastTryStatement);
+      return buildDescription(lastTryStatement).addFix(assertThrowsFix).addFix(failFix).build();
     } else {
       return Description.NO_MATCH;
     }
+  }
+
+  public static Fix addFailCall(TryTree tree, StatementTree lastTryStatement) {
+    String failCall = String.format("\nfail(\"Expected %s\");", exceptionToString(tree));
+    SuggestedFix.Builder fixBuilder =
+        SuggestedFix.builder().postfixWith(lastTryStatement, failCall);
+
+    // Make sure that when the fail import is added it doesn't conflict with existing ones.
+    fixBuilder.removeStaticImport("junit.framework.Assert.fail");
+    fixBuilder.removeStaticImport("junit.framework.TestCase.fail");
+    fixBuilder.addStaticImport("org.junit.Assert.fail");
+
+    return fixBuilder.build();
   }
 
   /**
    * Returns a string describing the exception type caught by the given try tree's catch
    * statement(s), defaulting to {@code "Exception"} if more than one exception type is caught.
    */
-  private String exceptionToString(TryTree tree) {
+  private static String exceptionToString(TryTree tree) {
     if (tree.getCatches().size() != 1) {
       return "Exception";
     }
