@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Verify.verify;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
@@ -32,7 +33,9 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ReturnTree;
@@ -102,9 +105,10 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
 
     Type newReturnType = state.getTypeFromString(immutableReturnType.get());
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+    Tree typeTree = getTypeTree(methodTree.getReturnType());
+    verify(typeTree != null, "Could not find return type of %s", methodTree);
     fixBuilder.replace(
-        getTypeTree(methodTree.getReturnType()),
-        SuggestedFixes.qualifyType(state, fixBuilder, newReturnType.asElement()));
+        typeTree, SuggestedFixes.qualifyType(state, fixBuilder, newReturnType.asElement()));
     SuggestedFix fix = fixBuilder.build();
 
     return describeMatch(methodTree.getReturnType(), fix);
@@ -159,6 +163,18 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
               returnTypes.add((ClassType) type);
             }
 
+            return null;
+          }
+
+          @Override
+          public Void visitClass(ClassTree tree, Void unused) {
+            // Don't continue into nested classes.
+            return null;
+          }
+
+          @Override
+          public Void visitLambdaExpression(LambdaExpressionTree tree, Void unused) {
+            // Don't continue into nested lambdas.
             return null;
           }
         },
