@@ -288,6 +288,7 @@ public class ASTHelpers {
       case ARRAY_ACCESS:
       case PARENTHESIZED:
       case NEW_CLASS:
+      case MEMBER_REFERENCE:
       case LAMBDA_EXPRESSION:
         return false;
       default: // continue below
