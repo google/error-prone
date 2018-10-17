@@ -43,6 +43,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -83,6 +84,10 @@ public class ParameterName extends BugChecker
     }
     int start = ((JCTree) tree).getStartPosition();
     int end = state.getEndPosition(getLast(arguments));
+    if (start == Position.NOPOS || end == Position.NOPOS) {
+      // best effort work-around for https://github.com/google/error-prone/issues/780
+      return;
+    }
     String source = state.getSourceCode().subSequence(start, end).toString();
     if (!source.contains("/*")) {
       // fast path if the arguments don't contain anything that looks like a comment
