@@ -377,11 +377,13 @@ public class VisitorState {
   private static void validateTypeStr(String typeStr) {
     if (typeStr.contains("[") || typeStr.contains("]")) {
       throw new IllegalArgumentException(
-          "Cannot convert array types, please build them using " + "getType()");
+          String.format(
+              "Cannot convert array types (%s), please build them using getType()", typeStr));
     }
     if (typeStr.contains("<") || typeStr.contains(">")) {
       throw new IllegalArgumentException(
-          "Cannot convert generic types, please build them using getType()");
+          String.format(
+              "Cannot convert generic types (%s), please build them using getType()", typeStr));
     }
   }
 
