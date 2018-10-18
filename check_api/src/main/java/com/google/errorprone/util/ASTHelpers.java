@@ -987,7 +987,7 @@ public class ASTHelpers {
   public static boolean isJUnitTestCode(VisitorState state) {
     for (Tree ancestor : state.getPath()) {
       if (ancestor instanceof MethodTree
-          && JUnitMatchers.hasJUnitAnnotation.matches((MethodTree) ancestor, state)) {
+          && JUnitMatchers.hasJUnitAnnotation((MethodTree) ancestor, state)) {
         return true;
       }
       if (ancestor instanceof ClassTree

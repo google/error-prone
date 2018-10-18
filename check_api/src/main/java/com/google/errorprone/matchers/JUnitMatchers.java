@@ -37,10 +37,11 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.nestingKind;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -49,6 +50,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree;
@@ -72,17 +74,27 @@ public class JUnitMatchers {
   private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
   private static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
 
-  public static final Matcher<MethodTree> hasJUnitAnnotation =
-      anyOf(
-          /* @Test, @Before, and @After are inherited by methods that override a base method with the
-           * annotation.  @BeforeClass and @AfterClass can only be applied to static methods, so they
-           * cannot be inherited. */
-          hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
-          hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION),
-          hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
-          hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
-          hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
-          hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
+  /**
+   * Checks if a method, or any overridden method, is annotated with any annotation from the
+   * org.junit package.
+   */
+  public static boolean hasJUnitAnnotation(MethodTree tree, VisitorState state) {
+    MethodSymbol methodSym = getSymbol(tree);
+    if (methodSym == null) {
+      return false;
+    }
+    if (hasJUnitAttr(methodSym)) {
+      return true;
+    }
+    return findSuperMethods(methodSym, state.getTypes()).stream()
+        .anyMatch(JUnitMatchers::hasJUnitAttr);
+  }
+
+  /** Checks if a method symbol has any attribute from the org.junit package. */
+  private static boolean hasJUnitAttr(MethodSymbol methodSym) {
+    return methodSym.getRawAttributes().stream()
+        .anyMatch(attr -> attr.type.tsym.getQualifiedName().toString().startsWith("org.junit."));
+  }
 
   public static final Matcher<MethodTree> hasJUnit4BeforeAnnotations =
       anyOf(
@@ -276,7 +288,7 @@ public class JUnitMatchers {
             new TreeScanner<Boolean, Void>() {
               @Override
               public Boolean visitMethodInvocation(MethodInvocationTree node, Void unused) {
-                String name = ASTHelpers.getSymbol(node).getSimpleName().toString();
+                String name = getSymbol(node).getSimpleName().toString();
                 return name.contains("assert")
                     || name.contains("verify")
                     || name.contains("check")
