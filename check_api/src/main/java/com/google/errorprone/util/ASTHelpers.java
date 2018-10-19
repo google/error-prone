@@ -37,6 +37,7 @@ import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.DoWhileLoopTree;
@@ -1050,6 +1051,16 @@ public class ASTHelpers {
       return null;
     }
     return TypeAnnotations.instance(state.context).annotationTargetType(compound, target);
+  }
+
+  /**
+   * Extract the filename from a {@link CompilationUnitTree}, with special handling for jar files.
+   * The return value is normalized to always use '/' to separate elements of the path and to always
+   * have a leading '/'.
+   */
+  @Nullable
+  public static String getFileName(CompilationUnitTree tree) {
+    return getFileNameFromUri(tree.getSourceFile().toUri());
   }
 
   private static final CharMatcher BACKSLASH_MATCHER = CharMatcher.is('\\');
