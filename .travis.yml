@@ -5,8 +5,8 @@ dist: trusty
 jdk:
   - oraclejdk8
   - oraclejdk9
-  - oraclejdk10
-  - oraclejdk11
+  - openjdk10
+  - openjdk11
 
 # see https://github.com/travis-ci/travis-ci/issues/8408
 before_install:
