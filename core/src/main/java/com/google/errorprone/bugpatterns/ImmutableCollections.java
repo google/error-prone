@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 
@@ -25,8 +25,8 @@ public final class ImmutableCollections {
 
   private ImmutableCollections() {}
 
-  private static final ImmutableBiMap<String, String> MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP =
-      ImmutableBiMap.<String, String>builder()
+  public static final ImmutableMap<String, String> MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP =
+      ImmutableMap.<String, String>builder()
           .put(
               com.google.common.collect.BiMap.class.getName(),
               com.google.common.collect.ImmutableBiMap.class.getName())
@@ -70,6 +70,18 @@ public final class ImmutableCollections {
               com.google.common.collect.ImmutableSortedSet.class.getName())
           .put(
               java.util.Set.class.getName(), com.google.common.collect.ImmutableSet.class.getName())
+          .put(
+              java.util.EnumSet.class.getName(),
+              com.google.common.collect.ImmutableSet.class.getName())
+          .put(
+              java.util.ArrayList.class.getName(),
+              com.google.common.collect.ImmutableList.class.getName())
+          .put(
+              java.util.HashMap.class.getName(),
+              com.google.common.collect.ImmutableMap.class.getName())
+          .put(
+              java.util.HashSet.class.getName(),
+              com.google.common.collect.ImmutableSet.class.getName())
           .build();
 
   public static boolean isImmutableType(Type type) {
