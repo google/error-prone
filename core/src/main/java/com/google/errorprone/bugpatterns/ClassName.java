@@ -51,8 +51,7 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
     if (tree.getTypeDecls().isEmpty() || tree.getPackageName() == null) {
       return Description.NO_MATCH;
     }
-    String filename =
-        Files.getNameWithoutExtension(ASTHelpers.getFileNameFromUri(tree.getSourceFile().toUri()));
+    String filename = Files.getNameWithoutExtension(ASTHelpers.getFileName(tree));
     List<String> names = new ArrayList<>();
     for (Tree member : tree.getTypeDecls()) {
       if (member instanceof ClassTree) {
