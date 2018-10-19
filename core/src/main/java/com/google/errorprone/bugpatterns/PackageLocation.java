@@ -55,7 +55,7 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
     }
 
     String packageName = tree.getPackageName().toString();
-    String actualFileName = ASTHelpers.getFileNameFromUri(tree.getSourceFile().toUri());
+    String actualFileName = ASTHelpers.getFileName(tree);
     if (actualFileName == null) {
       return Description.NO_MATCH;
     }
