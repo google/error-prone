@@ -74,16 +74,27 @@ final class Utils {
     return (int) positions.getStartPosition(compilationUnitTree, getDocCommentTree(state), docTree);
   }
 
+  static int getEndPosition(DocTree docTree, VisitorState state) {
+    DocSourcePositions positions = JavacTrees.instance(state.context).getSourcePositions();
+    CompilationUnitTree compilationUnitTree = state.getPath().getCompilationUnit();
+    return (int) positions.getEndPosition(compilationUnitTree, getDocCommentTree(state), docTree);
+  }
+
   /**
    * Gets a {@link DiagnosticPosition} for the {@link DocTree} pointed to by {@code path}, attached
    * to the {@link Tree} which it documents.
    */
   static DiagnosticPosition diagnosticPosition(DocTreePath path, VisitorState state) {
     int startPosition = getStartPosition(path.getLeaf(), state);
+    Tree tree = path.getTreePath().getLeaf();
+    return getDiagnosticPosition(startPosition, tree);
+  }
+
+  static DiagnosticPosition getDiagnosticPosition(int startPosition, Tree tree) {
     return new DiagnosticPosition() {
       @Override
       public JCTree getTree() {
-        return (JCTree) path.getTreePath().getLeaf();
+        return (JCTree) tree;
       }
 
       @Override

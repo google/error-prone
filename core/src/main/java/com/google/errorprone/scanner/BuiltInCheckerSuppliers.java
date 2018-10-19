@@ -335,6 +335,7 @@ import com.google.errorprone.bugpatterns.javadoc.InvalidTag;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
 import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
+import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.NullableDereference;
@@ -768,6 +769,7 @@ public class BuiltInCheckerSuppliers {
           ThrowsUncheckedException.class,
           TryFailRefactoring.class,
           TypeParameterNaming.class,
+          UnescapedEntity.class,
           UngroupedOverloads.class,
           UnlockMethodChecker.class,
           UnnecessaryDefaultInEnumSwitch.class,
