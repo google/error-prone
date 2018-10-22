@@ -24,20 +24,20 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class JavaTimeDefaultTimeZoneTest {
   private final CompilationTestHelper helper =
-      CompilationTestHelper.newInstance(JavaTimeDefaultTimeZone.class, getClass());
+      CompilationTestHelper.newInstance(JavaTimeDefaultTimeZone.class, getClass())
+          .expectErrorMessage("REPLACEME", s -> s.contains("systemDefault()"));
 
   @Test
   public void clock() {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.Clock;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: Clock.systemDefaultZone() is not allowed",
-            "  // Clock clock = Clock.system(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  Clock clock = Clock.systemDefaultZone();",
-            "  Clock clockWithZone = Clock.system(googleZoneId());",
+            "  Clock clockWithZone = Clock.system(systemDefault());",
             "}")
         .doTest();
   }
@@ -47,13 +47,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.LocalDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: LocalDate.now() is not allowed",
-            "  // LocalDate now = LocalDate.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  LocalDate now = LocalDate.now();",
-            "  LocalDate nowWithZone = LocalDate.now(googleZoneId());",
+            "  LocalDate nowWithZone = LocalDate.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -63,13 +62,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.LocalTime;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: LocalTime.now() is not allowed",
-            "  // LocalTime now = LocalTime.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  LocalTime now = LocalTime.now();",
-            "  LocalTime nowWithZone = LocalTime.now(googleZoneId());",
+            "  LocalTime nowWithZone = LocalTime.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -79,13 +77,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.LocalDateTime;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: LocalDateTime.now() is not allowed",
-            "  // LocalDateTime now = LocalDateTime.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  LocalDateTime now = LocalDateTime.now();",
-            "  LocalDateTime nowWithZone = LocalDateTime.now(googleZoneId());",
+            "  LocalDateTime nowWithZone = LocalDateTime.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -95,13 +92,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.MonthDay;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: MonthDay.now() is not allowed",
-            "  // MonthDay now = MonthDay.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  MonthDay now = MonthDay.now();",
-            "  MonthDay nowWithZone = MonthDay.now(googleZoneId());",
+            "  MonthDay nowWithZone = MonthDay.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -111,13 +107,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.OffsetDateTime;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: OffsetDateTime.now() is not allowed",
-            "  // OffsetDateTime now = OffsetDateTime.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  OffsetDateTime now = OffsetDateTime.now();",
-            "  OffsetDateTime nowWithZone = OffsetDateTime.now(googleZoneId());",
+            "  OffsetDateTime nowWithZone = OffsetDateTime.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -127,13 +122,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.OffsetTime;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: OffsetTime.now() is not allowed",
-            "  // OffsetTime now = OffsetTime.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  OffsetTime now = OffsetTime.now();",
-            "  OffsetTime nowWithZone = OffsetTime.now(googleZoneId());",
+            "  OffsetTime nowWithZone = OffsetTime.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -143,13 +137,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.Year;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: Year.now() is not allowed",
-            "  // Year now = Year.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  Year now = Year.now();",
-            "  Year nowWithZone = Year.now(googleZoneId());",
+            "  Year nowWithZone = Year.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -159,13 +152,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.YearMonth;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: YearMonth.now() is not allowed",
-            "  // YearMonth now = YearMonth.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  YearMonth now = YearMonth.now();",
-            "  YearMonth nowWithZone = YearMonth.now(googleZoneId());",
+            "  YearMonth nowWithZone = YearMonth.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -175,13 +167,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.ZonedDateTime;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: ZonedDateTime.now() is not allowed",
-            "  // ZonedDateTime now = ZonedDateTime.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  ZonedDateTime now = ZonedDateTime.now();",
-            "  ZonedDateTime nowWithZone = ZonedDateTime.now(googleZoneId());",
+            "  ZonedDateTime nowWithZone = ZonedDateTime.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -191,13 +182,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.chrono.JapaneseDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: JapaneseDate.now() is not allowed",
-            "  // JapaneseDate now = JapaneseDate.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  JapaneseDate now = JapaneseDate.now();",
-            "  JapaneseDate nowWithZone = JapaneseDate.now(googleZoneId());",
+            "  JapaneseDate nowWithZone = JapaneseDate.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -207,13 +197,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.chrono.MinguoDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: MinguoDate.now() is not allowed",
-            "  // MinguoDate now = MinguoDate.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  MinguoDate now = MinguoDate.now();",
-            "  MinguoDate nowWithZone = MinguoDate.now(googleZoneId());",
+            "  MinguoDate nowWithZone = MinguoDate.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -223,13 +212,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.chrono.HijrahDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: HijrahDate.now() is not allowed",
-            "  // HijrahDate now = HijrahDate.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  HijrahDate now = HijrahDate.now();",
-            "  HijrahDate nowWithZone = HijrahDate.now(googleZoneId());",
+            "  HijrahDate nowWithZone = HijrahDate.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -239,13 +227,12 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.chrono.ThaiBuddhistDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: ThaiBuddhistDate.now() is not allowed",
-            "  // ThaiBuddhistDate now = ThaiBuddhistDate.now(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  ThaiBuddhistDate now = ThaiBuddhistDate.now();",
-            "  ThaiBuddhistDate nowWithZone = ThaiBuddhistDate.now(googleZoneId());",
+            "  ThaiBuddhistDate nowWithZone = ThaiBuddhistDate.now(systemDefault());",
             "}")
         .doTest();
   }
@@ -255,14 +242,13 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.chrono.Chronology;",
             "import java.time.chrono.ChronoLocalDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: Chronology.dateNow() is not allowed",
-            "  // ChronoLocalDate now = Chronology.of(\"ISO\").dateNow(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  ChronoLocalDate now = Chronology.of(\"ISO\").dateNow();",
-            "  ChronoLocalDate nowWithZone = Chronology.of(\"ISO\").dateNow(googleZoneId());",
+            "  ChronoLocalDate nowWithZone = Chronology.of(\"ISO\").dateNow(systemDefault());",
             "}")
         .doTest();
   }
@@ -272,14 +258,13 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.chrono.HijrahChronology;",
             "import java.time.chrono.HijrahDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: HijrahChronology.dateNow() is not allowed",
-            "  // HijrahDate now = HijrahChronology.INSTANCE.dateNow(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  HijrahDate now = HijrahChronology.INSTANCE.dateNow();",
-            "  HijrahDate nowWithZone = HijrahChronology.INSTANCE.dateNow(googleZoneId());",
+            "  HijrahDate nowWithZone = HijrahChronology.INSTANCE.dateNow(systemDefault());",
             "}")
         .doTest();
   }
@@ -289,14 +274,13 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.LocalDate;",
             "import java.time.chrono.IsoChronology;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: IsoChronology.dateNow() is not allowed",
-            "  // LocalDate now = IsoChronology.INSTANCE.dateNow(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  LocalDate now = IsoChronology.INSTANCE.dateNow();",
-            "  LocalDate nowWithZone = IsoChronology.INSTANCE.dateNow(googleZoneId());",
+            "  LocalDate nowWithZone = IsoChronology.INSTANCE.dateNow(systemDefault());",
             "}")
         .doTest();
   }
@@ -306,14 +290,13 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.chrono.JapaneseChronology;",
             "import java.time.chrono.JapaneseDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: JapaneseChronology.dateNow() is not allowed",
-            "  // JapaneseDate now = JapaneseChronology.INSTANCE.dateNow(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  JapaneseDate now = JapaneseChronology.INSTANCE.dateNow();",
-            "  JapaneseDate nowWithZone = JapaneseChronology.INSTANCE.dateNow(googleZoneId());",
+            "  JapaneseDate nowWithZone = JapaneseChronology.INSTANCE.dateNow(systemDefault());",
             "}")
         .doTest();
   }
@@ -323,14 +306,13 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.chrono.MinguoChronology;",
             "import java.time.chrono.MinguoDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: MinguoChronology.dateNow() is not allowed",
-            "  // MinguoDate now = MinguoChronology.INSTANCE.dateNow(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  MinguoDate now = MinguoChronology.INSTANCE.dateNow();",
-            "  MinguoDate nowWithZone = MinguoChronology.INSTANCE.dateNow(googleZoneId());",
+            "  MinguoDate nowWithZone = MinguoChronology.INSTANCE.dateNow(systemDefault());",
             "}")
         .doTest();
   }
@@ -340,16 +322,14 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static com.google.common.time.ZoneIds.googleZoneId;",
+            "import static java.time.ZoneId.systemDefault;",
             "import java.time.chrono.ThaiBuddhistChronology;",
             "import java.time.chrono.ThaiBuddhistDate;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: ThaiBuddhistChronology.dateNow() is not allowed",
-            "  // ThaiBuddhistDate now = "
-                + "ThaiBuddhistChronology.INSTANCE.dateNow(unsafeDefaultZoneId());",
+            "  // BUG: Diagnostic matches: REPLACEME",
             "  ThaiBuddhistDate now = ThaiBuddhistChronology.INSTANCE.dateNow();",
             "  ThaiBuddhistDate nowWithZone = "
-                + "ThaiBuddhistChronology.INSTANCE.dateNow(googleZoneId());",
+                + "ThaiBuddhistChronology.INSTANCE.dateNow(systemDefault());",
             "}")
         .doTest();
   }

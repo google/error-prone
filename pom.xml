@@ -38,6 +38,7 @@
     <autovalue.version>1.5.3</autovalue.version>
     <junit.version>4.13-SNAPSHOT</junit.version>
     <dataflow.version>2.5.3</dataflow.version>
+    <mockito.version>1.9.5</mockito.version>
   </properties>
 
   <modules>
