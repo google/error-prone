@@ -789,20 +789,26 @@ public class SuggestedFixes {
     Context context = new Context();
     Options.instance(context).putAll(Options.instance(javacTask.getContext()));
     context.put(Arguments.class, arguments);
+    // When using the -Xplugin Error Prone integration, disable Error Prone for speculative
+    // recompiles to avoid infinite recurison.
+    ImmutableList<String> options =
+        arguments.getPluginOpts().stream().anyMatch(x -> x.iterator().next().equals("ErrorProne"))
+            ? ImmutableList.of("-Xplugin:ErrorProne -XepDisableAllChecks")
+            : ImmutableList.of();
     JavacTask newTask =
         JavacTool.create()
             .getTask(
                 CharStreams.nullWriter(),
                 state.context.get(JavaFileManager.class),
                 diagnosticListener,
-                ImmutableList.of(),
+                options,
                 arguments.getClassNames(),
                 fileObjects,
                 context);
     try {
       newTask.analyze();
-    } catch (Throwable e) {
-      return false; // ¯\_(ツ)_/¯
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     }
     return countErrors(diagnosticListener) == 0;
   }
