@@ -34,6 +34,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.errorprone.fixes.SuggestedFixes;
+
 /** Check for calls to {@code java.time} APIs that silently use the default system time-zone. */
 @BugPattern(
     name = "JavaTimeDefaultTimeZone",
@@ -111,21 +113,24 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
       replacementMethod = "system";
     }
 
+    String idealReplacementCode = "ZoneId.of(\"America/Los_Angeles\")";
+
+    SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+    String zoneIdName = SuggestedFixes.qualifyType(state, fixBuilder, "java.time.ZoneId");
+    String replacementCode = zoneIdName + ".systemDefault()";
+
+    fixBuilder.replace(
+        state.getEndPosition(ASTHelpers.getReceiver(tree)),
+        state.getEndPosition(tree),
+        "." + replacementMethod + "(" + replacementCode + ")");
+
     return buildDescription(tree)
         .setMessage(
             String.format(
                 "%s.%s is not allowed because it silently uses the system default time-zone. You "
-                    + "must pass an explicit time-zone (e.g., ZoneIds.googleZoneId()) to this "
-                    + "method.",
-                method.owner.getSimpleName(), method))
-        .addFix(
-            SuggestedFix.builder()
-                .addStaticImport("com.google.common.time.ZoneIds.unsafeDefaultZoneId")
-                .replace(
-                    state.getEndPosition(ASTHelpers.getReceiver(tree)),
-                    state.getEndPosition(tree),
-                    "." + replacementMethod + "(unsafeDefaultZoneId())")
-                .build())
+                    + "must pass an explicit time-zone (e.g., %s) to this method.",
+                method.owner.getSimpleName(), method, idealReplacementCode))
+        .addFix(fixBuilder.build())
         .build();
   }
 }
