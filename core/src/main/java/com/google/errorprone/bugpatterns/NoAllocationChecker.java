@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.anything;
@@ -38,10 +39,10 @@ import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.typeCast;
 import static com.google.errorprone.matchers.Matchers.variableInitializer;
 import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.sun.source.tree.Tree.Kind.AND_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.DIVIDE_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.LEFT_SHIFT_ASSIGNMENT;
-import static com.sun.source.tree.Tree.Kind.METHOD;
 import static com.sun.source.tree.Tree.Kind.MINUS_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.MULTIPLY_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.OR_ASSIGNMENT;
@@ -53,7 +54,6 @@ import static com.sun.source.tree.Tree.Kind.PREFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.PREFIX_INCREMENT;
 import static com.sun.source.tree.Tree.Kind.REMAINDER_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.RIGHT_SHIFT_ASSIGNMENT;
-import static com.sun.source.tree.Tree.Kind.THROW;
 import static com.sun.source.tree.Tree.Kind.UNSIGNED_RIGHT_SHIFT_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.XOR_ASSIGNMENT;
 
@@ -65,12 +65,14 @@ import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.EnhancedForLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewArrayTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.UnaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -130,6 +132,7 @@ public class NoAllocationChecker extends BugChecker
         BinaryTreeMatcher,
         CompoundAssignmentTreeMatcher,
         EnhancedForLoopTreeMatcher,
+        MethodTreeMatcher,
         MethodInvocationTreeMatcher,
         NewArrayTreeMatcher,
         NewClassTreeMatcher,
@@ -361,7 +364,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchNewArray(NewArrayTree tree, VisitorState state) {
     if (!newArrayMatcher.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage("Allocating a new array with \"new\" or \"{ ... }\" " + COMMON_MESSAGE_SUFFIX)
@@ -371,7 +374,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     if (!newClassMatcher.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage("Constructing a new object " + COMMON_MESSAGE_SUFFIX)
@@ -381,7 +384,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!methodMatcher.matches(tree, state) && !boxingInvocation.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage(
@@ -393,9 +396,40 @@ public class NoAllocationChecker extends BugChecker
   }
 
   @Override
+  public Description matchMethod(MethodTree tree, VisitorState state) {
+    if (hasAnnotation(NoAllocation.class).matches(tree, state)) {
+      return NO_MATCH;
+    }
+    MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+    if (symbol == null) {
+      return NO_MATCH;
+    }
+    return findSuperMethods(symbol, state.getTypes()).stream()
+        .filter(s -> ASTHelpers.hasAnnotation(s, NoAllocation.class.getName(), state))
+        .findAny()
+        .map(
+            s -> {
+              String message =
+                  String.format(
+                      "Method overrides %s in %s which is annotated @NoAllocation,"
+                          + " it should also be annotated.",
+                      s.getSimpleName(), s.owner.getSimpleName());
+              return buildDescription(tree)
+                  .setMessage(message)
+                  .addFix(
+                      SuggestedFix.builder()
+                          .addImport(NoAllocation.class.getName())
+                          .prefixWith(tree, "@NoAllocation ")
+                          .build())
+                  .build();
+            })
+        .orElse(NO_MATCH);
+  }
+
+  @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     if (!stringConcatenationMatcher.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage("String concatenation allocates a new String, which " + COMMON_MESSAGE_SUFFIX)
@@ -405,7 +439,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchCompoundAssignment(CompoundAssignmentTree tree, VisitorState state) {
     if (!compoundAssignmentMatcher.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage(
@@ -418,7 +452,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchEnhancedForLoop(EnhancedForLoopTree tree, VisitorState state) {
     if (!foreachMatcher.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage(
@@ -431,7 +465,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
     if (!boxingAssignment.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage(
@@ -444,7 +478,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     if (!boxingInitialization.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage(
@@ -457,7 +491,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchTypeCast(TypeCastTree tree, VisitorState state) {
     if (!boxingCast.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage(
@@ -470,7 +504,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchReturn(ReturnTree tree, VisitorState state) {
     if (!boxingReturn.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage(
@@ -483,7 +517,7 @@ public class NoAllocationChecker extends BugChecker
   @Override
   public Description matchUnary(UnaryTree tree, VisitorState state) {
     if (!boxingUnary.matches(tree, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     return buildDescription(tree)
         .setMessage(
