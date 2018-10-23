@@ -83,7 +83,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     // The unbound MethodSymbol for bar(), with type parameters <A> and <B>
     MethodSymbol declaredMethod = ASTHelpers.getSymbol(methodInvocationTree);
     if (arguments.isEmpty() || declaredMethod == null) {
-      return null;
+      return Description.NO_MATCH;
     }
 
     List<RequiredType> requiredTypesAtCallSite =
