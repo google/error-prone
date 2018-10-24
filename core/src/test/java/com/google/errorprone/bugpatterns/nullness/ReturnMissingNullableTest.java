@@ -271,6 +271,33 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testGenericTypeParameter() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/anno/my/Nullable.java",
+            "package com.google.anno.my;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Target;",
+            "@Target({ElementType.TYPE_USE})",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/GenericTypeParameterTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import com.google.anno.my.Nullable;",
+            "public class GenericTypeParameterTest {",
+            "  public String first(java.util.List<@Nullable String> names) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return names.get(0);",
+            "  }",
+            "  public String first(java.util.Set<@Nullable String> names) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return names.iterator().next();", // go through method returning generic type
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCases_alreadyAnnotated() {
     createCompilationTestHelper()
         .addSourceLines(
