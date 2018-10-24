@@ -87,7 +87,7 @@ public class IntLongMath extends BugChecker
   }
 
   Description check(Type targetType, ExpressionTree init) {
-    if (init == null) {
+    if (init == null || targetType == null) {
       return NO_MATCH;
     }
     if (ASTHelpers.constValue(init) != null) {
