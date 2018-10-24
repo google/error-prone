@@ -275,8 +275,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     // Baseline nullness information about this method, in case inference is unsuccessful.
     Nullness baselineNullness = methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
     if (!callee.isGenericResult) {
-      // We only care about inference results for generic methods that return one of their type
-      // parameters.
+      // We only care about inference results for methods that return a type variable.
       return baselineNullness;
     }
 
@@ -1075,17 +1074,10 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     /**
-     * Returns {@code true} for {@link MethodSymbol}s of generic methods where one of the method's
-     * type parameters <b>is</b> the result type, {@code false} otherwise.
+     * Returns {@code true} for {@link MethodSymbol}s whose result type is a generic type variable.
      */
     private static boolean hasGenericResult(MethodSymbol methodSymbol) {
-      Type resultType = methodSymbol.getReturnType();
-      for (TypeVariableSymbol var : methodSymbol.getTypeParameters()) {
-        if (resultType.tsym.equals(var)) {
-          return true;
-        }
-      }
-      return false;
+      return methodSymbol.getReturnType().tsym instanceof TypeVariableSymbol;
     }
 
     private static boolean knownNonNullMethod(
