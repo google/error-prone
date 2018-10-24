@@ -17,7 +17,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -41,7 +41,7 @@ import java.util.List;
         "The type of the array parameter of Collection.toArray "
             + "needs to be compatible with the array type",
     category = JDK,
-    severity = WARNING)
+    severity = ERROR)
 public class CollectionToArraySafeParameter extends BugChecker
     implements MethodInvocationTreeMatcher {
 
