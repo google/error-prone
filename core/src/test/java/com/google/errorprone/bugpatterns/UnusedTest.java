@@ -543,7 +543,7 @@ public class UnusedTest {
   }
 
   @Test
-  public void unusedWithComment() {
+  public void removal_javadocsAndNonJavadocs() {
     refactoringHelper
         .addInputLines(
             "UnusedWithComment.java",
@@ -568,6 +568,45 @@ public class UnusedTest {
             "UnusedWithComment.java", //
             "package unusedvars;",
             "public class UnusedWithComment {",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void removal_trailingComment() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public class Test {",
+            "  public static final int A = 1; // foo",
+            "",
+            "  private static final int B = 2;",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "public class Test {",
+            "  public static final int A = 1; // foo",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void removal_javadocAndSingleLines() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public class Test {",
+            "  public static final int A = 1; // foo",
+            "",
+            "  /** Javadoc. */",
+            "  // TODO: fix",
+            "  // BUG: bug",
+            "  private static final int B = 2;",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "public class Test {",
+            "  public static final int A = 1; // foo",
             "}")
         .doTest(TestMode.TEXT_MATCH);
   }

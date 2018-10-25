@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
@@ -53,6 +54,8 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneToken;
+import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
@@ -83,12 +86,14 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -783,39 +788,61 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
    * Replaces the tree at {@code path} along with any Javadocs/associated single-line comments.
    *
    * <p>This is the same as just deleting the tree for non-class members. For class members, we
-   * delete from the end of the previous member (or the start of the class, if it's the first).
+   * tokenize and scan backwards to try to work out which prior comments are associated with this
+   * node.
    */
   private static SuggestedFix replaceWithComments(
       TreePath path, String replacement, VisitorState state) {
     Tree tree = path.getLeaf();
     Tree parent = path.getParentPath().getLeaf();
-    if (parent instanceof ClassTree) {
-      Tree previousMember = null;
-      ClassTree classTree = (ClassTree) parent;
-      for (Tree member : classTree.getMembers()) {
-        if (member instanceof MethodTree
-            && ASTHelpers.isGeneratedConstructor((MethodTree) member)) {
-          continue;
-        }
-        if (member.equals(tree)) {
-          break;
-        }
-        previousMember = member;
+    if (!(parent instanceof ClassTree)) {
+      return SuggestedFix.replace(tree, replacement);
+    }
+    Tree previousMember = null;
+    ClassTree classTree = (ClassTree) parent;
+    int startTokenization;
+    for (Tree member : classTree.getMembers()) {
+      if (member instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) member)) {
+        continue;
       }
-      if (previousMember != null) {
-        return SuggestedFix.replace(
-            state.getEndPosition(previousMember), state.getEndPosition(tree), replacement);
+      if (member.equals(tree)) {
+        break;
       }
+      previousMember = member;
+    }
+    if (previousMember != null) {
+      startTokenization = state.getEndPosition(previousMember);
+    } else {
       int startOfClass = ((JCTree) classTree).getStartPosition();
       String source =
           state
               .getSourceCode()
               .subSequence(startOfClass, ((JCTree) tree).getStartPosition())
               .toString();
-      return SuggestedFix.replace(
-          startOfClass + source.indexOf("{") + 1, state.getEndPosition(tree), replacement);
+      startTokenization = startOfClass + source.indexOf("{") + 1;
     }
-    return SuggestedFix.replace(tree, replacement);
+    String source =
+        state.getSourceCode().subSequence(startTokenization, state.getEndPosition(tree)).toString();
+    List<ErrorProneToken> tokens = ErrorProneTokens.getTokens(source, state.context);
+    if (tokens.isEmpty() || tokens.get(0).comments().isEmpty()) {
+      return SuggestedFix.replace(startTokenization, state.getEndPosition(tree), replacement);
+    }
+    List<Comment> comments =
+        tokens.get(0).comments().stream()
+            .sorted(Comparator.<Comment>comparingInt(c -> c.getSourcePos(0)).reversed())
+            .collect(toImmutableList());
+    int startPos = ((JCTree) tree).getStartPosition() - startTokenization;
+    // Delete backwards for comments which are not separated from our target by a blank line.
+    for (Comment comment : comments) {
+      String stringBetweenComments =
+          source.substring(comment.getSourcePos(comment.getText().length() - 1), startPos);
+      if (stringBetweenComments.chars().filter(c -> c == '\n').count() > 1) {
+        break;
+      }
+      startPos = comment.getSourcePos(0);
+    }
+    return SuggestedFix.replace(
+        startTokenization + startPos, state.getEndPosition(tree), replacement);
   }
 
   private static boolean isEnhancedForLoopVar(TreePath variablePath) {
