@@ -745,32 +745,28 @@ public class ASTHelpers {
   }
 
   /**
-   * Retrieve an annotation, considering annotation inheritance.
+   * Retrieves an annotation, considering annotation inheritance.
    *
-   * <p>Note: if {@code annotationClass} contains a member that is a {@code Class} or an array of
-   * them, attempting to access that member from the Error Prone checker code will result in a
-   * runtime exception. If the annotation has class members, you may need to operate on {@code
-   * ASTHelpers.getSymbol(sym).getAnnotationMirrors()} to meta-syntactically inspect the annotation.
-   *
-   * @return the annotation of given type on the tree's symbol, or null.
+   * @deprecated If {@code annotationClass} contains a member that is a {@code Class} or an array of
+   *     them, attempting to access that member from the Error Prone checker code will result in a
+   *     runtime exception. Instead, operate on {@code sym.getAnnotationMirrors()} to
+   *     meta-syntactically inspect the annotation.
    */
+  @Deprecated
   public static <T extends Annotation> T getAnnotation(Tree tree, Class<T> annotationClass) {
     Symbol sym = getSymbol(tree);
     return sym == null ? null : getAnnotation(sym, annotationClass);
   }
 
   /**
-   * Retrieve an annotation, considering annotation inheritance.
+   * Retrieves an annotation, considering annotation inheritance.
    *
-   * <p>Note: if {@code annotationClass} contains a member that is a {@code Class} or an array of
-   * them, attempting to access that member from the Error Prone checker code will result in a
-   * runtime exception. If the annotation has class members, you may need to operate on {@code
-   * sym.getAnnotationMirrors()} to meta-syntactically inspect the annotation.
-   *
-   * @return the annotation of given type on the symbol, or null.
+   * @deprecated If {@code annotationClass} contains a member that is a {@code Class} or an array of
+   *     them, attempting to access that member from the Error Prone checker code will result in a
+   *     runtime exception. Instead, operate on {@code sym.getAnnotationMirrors()} to
+   *     meta-syntactically inspect the annotation.
    */
-  // Symbol#getAnnotation is not intended for internal javac use, but because error-prone is run
-  // after attribution it's safe to use here.
+  @Deprecated
   @SuppressWarnings("deprecation")
   public static <T extends Annotation> T getAnnotation(Symbol sym, Class<T> annotationClass) {
     return sym == null ? null : sym.getAnnotation(annotationClass);
