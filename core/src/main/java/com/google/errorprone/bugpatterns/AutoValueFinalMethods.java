@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.not;
 
+import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -35,6 +36,8 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javax.lang.model.element.Modifier;
 
@@ -72,20 +75,32 @@ public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatche
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
+    List<String> matchedMethods = new ArrayList<>();
+    MethodTree firstMatchedMethod = null;
     for (Tree memberTree : tree.getMembers()) {
       if (!(memberTree instanceof MethodTree)) {
         continue;
       }
-      if (METHOD_MATCHER.matches((MethodTree) memberTree, state)) {
+      MethodTree method = (MethodTree) memberTree;
+      if (METHOD_MATCHER.matches(method, state)) {
         Optional<SuggestedFix> optionalSuggestedFix =
-            SuggestedFixes.addModifiers(memberTree, state, Modifier.FINAL);
+            SuggestedFixes.addModifiers(method, state, Modifier.FINAL);
         if (optionalSuggestedFix.isPresent()) {
+          matchedMethods.add(method.getName().toString());
           fix.merge(optionalSuggestedFix.get());
+          if (firstMatchedMethod == null) {
+            firstMatchedMethod = method;
+          }
         }
       }
     }
     if (!fix.isEmpty()) {
-      return describeMatch(tree, fix.build());
+      String message =
+          String.format(
+              "Make %s final in AutoValue classes, "
+                  + "so it is clear to readers that AutoValue is not overriding them",
+              Joiner.on(", ").join(matchedMethods));
+      return buildDescription(firstMatchedMethod).setMessage(message).addFix(fix.build()).build();
     }
     return NO_MATCH;
   }
