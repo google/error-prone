@@ -92,6 +92,7 @@ import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.util.Position;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -763,7 +764,12 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
 
       private void removeByIndex(List<? extends Tree> trees) {
         if (trees.size() == 1) {
-          fix.delete(getOnlyElement(trees));
+          Tree tree = getOnlyElement(trees);
+          if (((JCTree) tree).getStartPosition() == -1 || state.getEndPosition(tree) == -1) {
+            // TODO(b/118437729): handle bogus source positions in enum declarations
+            return;
+          }
+          fix.delete(tree);
           return;
         }
         int startPos;
@@ -777,6 +783,10 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
         }
         if (index == methodSymbol.params().size() - 1 && methodSymbol.isVarArgs()) {
           endPos = state.getEndPosition(getLast(trees));
+        }
+        if (startPos == Position.NOPOS || endPos == Position.NOPOS) {
+          // TODO(b/118437729): handle bogus source positions in enum declarations
+          return;
         }
         fix.replace(startPos, endPos, "");
       }
