@@ -32,6 +32,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -39,9 +40,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.Optional;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 // TODO(cushon): this should subsume ImmutableModification and LocalizableWrongToString
@@ -133,23 +132,10 @@ public class DoNotCallChecker extends BugChecker
       if (!a.type.tsym.getQualifiedName().contentEquals(DO_NOT_CALL)) {
         continue;
       }
-      return a.getElementValues().entrySet().stream()
-          .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
-          .map(e -> e.getValue())
-          .findFirst()
-          .flatMap(DoNotCallChecker::asStringValue)
+      return MoreAnnotations.getValue(a, "value")
+          .flatMap(MoreAnnotations::asStringValue)
           .orElse("");
     }
     throw new IllegalStateException();
-  }
-
-  private static Optional<String> asStringValue(Attribute a) {
-    class Visitor extends SimpleAnnotationValueVisitor8<String, Void> {
-      @Override
-      public String visitString(String s, Void aVoid) {
-        return s;
-      }
-    };
-    return Optional.ofNullable(a.accept(new Visitor(), null));
   }
 }
