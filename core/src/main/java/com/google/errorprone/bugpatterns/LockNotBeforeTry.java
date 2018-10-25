@@ -182,6 +182,9 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
   }
 
   private static boolean releases(ExpressionTree node, ExpressionTree lockee, VisitorState state) {
+    if (!UNLOCK.matches(node, state)) {
+      return false;
+    }
     ExpressionTree receiver = getReceiver(node);
     return receiver != null
         && UNLOCK.matches(node, state)
@@ -189,6 +192,9 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
   }
 
   private static boolean acquires(ExpressionTree node, ExpressionTree lockee, VisitorState state) {
+    if (!LOCK.matches(node, state)) {
+      return false;
+    }
     ExpressionTree receiver = getReceiver(node);
     return receiver != null
         && LOCK.matches(node, state)
