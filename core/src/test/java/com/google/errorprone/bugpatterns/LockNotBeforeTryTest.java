@@ -268,4 +268,22 @@ public final class LockNotBeforeTryTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nonInvocationExpression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "abstract class Test {",
+            "  private void test(ReentrantLock lock) {",
+            "    String s;",
+            "    // BUG: Diagnostic contains:",
+            "    lock.lock();",
+            "    s = lock.toString();",
+            "    lock.unlock();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
