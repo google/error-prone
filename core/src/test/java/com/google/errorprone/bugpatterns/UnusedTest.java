@@ -20,6 +20,7 @@ import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.ErrorProneFlags;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -873,6 +874,58 @@ public class UnusedTest {
             "class Test {",
             "  int a = foo(1);",
             "  private int foo(int a) { return a; }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("b/118437729")
+  @Test
+  public void enumField() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "enum Test {",
+            "  ONE(\"1\", 1) {};",
+            "  private String a;",
+            "  private Test(String a, int x) {",
+            "    this.a = a;",
+            "  }",
+            "  String a() {",
+            "    return a;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "enum Test {",
+            "  ONE(\"1\") {};",
+            "  private String a;",
+            "  private Test(String a) {",
+            "    this.a = a;",
+            "  }",
+            "  String a() {",
+            "    return a;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("b/118437729")
+  @Test
+  public void onlyEnumField() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "enum Test {",
+            "  ONE(1) {};",
+            "  private Test(int x) {",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "enum Test {",
+            "  ONE() {};",
+            "  private Test() {",
+            "  }",
             "}")
         .doTest();
   }
