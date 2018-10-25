@@ -61,7 +61,10 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
     if (symbol.getKind() != ElementKind.CLASS) {
       return NO_MATCH;
     }
-
+    // don't flag java.lang.Object
+    if (symbol == state.getSymtab().objectType.tsym) {
+      return NO_MATCH;
+    }
     MethodTree equals = null;
     for (Tree member : classTree.getMembers()) {
       if (!(member instanceof MethodTree)) {

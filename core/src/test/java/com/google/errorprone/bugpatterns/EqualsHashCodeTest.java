@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+import java.lang.reflect.Method;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -137,5 +140,34 @@ public class EqualsHashCodeTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void dontFlagJavaLangObject() {
+    assumeTrue(isJDK8OrEarlier());
+    compilationHelper
+        .addSourceLines(
+            "Object.java",
+            "package java.lang;",
+            "public class Object {",
+            "  public boolean equals(Object that) {",
+            "    return this == that;",
+            "  }",
+            "  public int hashCode() {",
+            "    return 1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  private static boolean isJDK8OrEarlier() {
+    try {
+      Method versionMethod = Runtime.class.getMethod("version");
+      Object version = versionMethod.invoke(null);
+      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
+      return majorVersion <= 8;
+    } catch (ReflectiveOperationException e) {
+      return true;
+    }
   }
 }
