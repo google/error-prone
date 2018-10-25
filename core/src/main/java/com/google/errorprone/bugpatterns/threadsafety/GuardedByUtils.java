@@ -57,6 +57,8 @@ public class GuardedByUtils {
         .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals(guardedBy))
         .flatMap(
             a ->
+                // TODO(cushon): after the next release:
+                // MoreAnnotations.getValue(a, "value").map(MoreAnnotations::asStrings)
                 a.getElementValues().entrySet().stream()
                     .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
                     .map(Map.Entry::getValue)
