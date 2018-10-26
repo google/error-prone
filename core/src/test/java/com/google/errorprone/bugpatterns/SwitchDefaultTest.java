@@ -192,4 +192,36 @@ public class SwitchDefaultTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void refactoring_outOfOrder() {
+    testHelper
+        .addInputLines(
+            "in/Test.java", //
+            "class Test {",
+            "  boolean f(int i) {",
+            "    switch (i) {",
+            "      case 0:",
+            "        return true;",
+            "      default: // fall through",
+            "      case 1: // fall through",
+            "    }",
+            "    return false;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "class Test {",
+            "  boolean f(int i) {",
+            "    switch (i) {",
+            "      case 0:",
+            "        return true;",
+            "      case 1: // fall through",
+            "      default: // fall through",
+            "    }",
+            "    return false;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

@@ -105,10 +105,13 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
       }
     } else if (idx != defaultStatementGroup.size() - 1) {
       // If the default case isn't the last case in its statement group, move it to the end.
-      fix.delete(defaultTree)
-          .prefixWith(
-              getLast(defaultStatementGroup).getStatements().get(0),
-              state.getSourceForNode(defaultTree));
+      fix.delete(defaultTree);
+      CaseTree lastCase = getLast(defaultStatementGroup);
+      if (!lastCase.getStatements().isEmpty()) {
+        fix.prefixWith(lastCase.getStatements().get(0), state.getSourceForNode(defaultTree));
+      } else {
+        fix.postfixWith(lastCase, state.getSourceForNode(defaultTree));
+      }
     } else {
       return NO_MATCH;
     }
