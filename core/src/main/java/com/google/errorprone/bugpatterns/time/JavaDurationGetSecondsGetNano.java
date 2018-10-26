@@ -131,8 +131,11 @@ public final class JavaDurationGetSecondsGetNano extends BugChecker
                   return false;
                 }
                 // now check if the root variables of the invocations are the same...
-                if (ASTHelpers.sameVariable(
-                    ASTHelpers.getRootAssignable(tree), ASTHelpers.getRootAssignable(nanoTree))) {
+                ExpressionTree treeRootAssignable = ASTHelpers.getRootAssignable(tree);
+                ExpressionTree nanoTreeRootAssignable = ASTHelpers.getRootAssignable(nanoTree);
+                if (treeRootAssignable != null
+                    && nanoTreeRootAssignable != null
+                    && ASTHelpers.sameVariable(treeRootAssignable, nanoTreeRootAssignable)) {
 
                   // build up a list of method invocations for both invocations
 
