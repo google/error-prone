@@ -265,6 +265,49 @@ public class MissingFailTest {
         .doTest();
   }
 
+  @Test
+  public void emptyTry() {
+    refactoringHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import java.io.IOException;",
+            "import org.junit.Test;",
+            "abstract class ExceptionTest {",
+            "  abstract AutoCloseable c();",
+            "  @Test",
+            "  public void test() {",
+            "    try (AutoCloseable c = c()) {",
+            "    } catch (Exception expected) {",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void noEnclosingMethod() {
+    refactoringHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import java.io.IOException;",
+            "import org.junit.Test;",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "abstract class ExceptionTest {",
+            "  abstract void c();",
+            "  {",
+            "    try {",
+            "      c();",
+            "    } catch (Exception expected) {",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
   private static class TestScanner extends Scanner {
 
     final List<Description> suggestedChanges = new ArrayList<>();
