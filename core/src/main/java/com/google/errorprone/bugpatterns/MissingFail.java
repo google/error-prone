@@ -297,6 +297,10 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       return false;
     }
 
+    if (tree.getBlock().getStatements().isEmpty()) {
+      return false;
+    }
+
     return true;
   }
 
@@ -456,7 +460,10 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     public boolean matches(TryTree tryTree, VisitorState state) {
       MethodTree enclosingMethodTree =
           ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
-
+      if (enclosingMethodTree == null) {
+        // e.g. a class initializer
+        return true;
+      }
       Name name = enclosingMethodTree.getName();
       return JUnitMatchers.looksLikeJUnit3SetUp.matches(enclosingMethodTree, state)
           || JUnitMatchers.looksLikeJUnit3TearDown.matches(enclosingMethodTree, state)
