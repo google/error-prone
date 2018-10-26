@@ -87,7 +87,7 @@ public abstract class AbstractTestExceptionChecker extends BugChecker implements
           ((ExpressionStatementTree) getOnlyElement(statements)).getExpression();
       fix.prefixWith(expression, prefix.toString());
       fix.postfixWith(expression, ")");
-    } else {
+    } else if (!statements.isEmpty()) {
       prefix.append(" {");
       fix.prefixWith(statements.iterator().next(), prefix.toString());
       fix.postfixWith(getLast(statements), "});");
