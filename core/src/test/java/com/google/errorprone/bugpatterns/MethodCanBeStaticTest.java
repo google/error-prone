@@ -118,6 +118,22 @@ public class MethodCanBeStaticTest {
   }
 
   @Test
+  public void positiveChain_oneFix() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private static final int FOO = 1;",
+            "  // BUG: Diagnostic contains: MethodCanBeStatic",
+            "  private int a() { return FOO; }",
+            "  private int b() { return a(); }",
+            "  private int c() { return b(); }",
+            "  private int d() { return c(); }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveRecursive() {
     refactoringHelper
         .addInputLines(
