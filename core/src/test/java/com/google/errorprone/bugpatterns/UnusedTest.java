@@ -613,6 +613,21 @@ public class UnusedTest {
   }
 
   @Test
+  public void unusedWithComment_interspersedComments() {
+    helper
+        .addSourceLines(
+            "UnusedWithComment.java",
+            "package unusedvars;",
+            "public class UnusedWithComment {",
+            "  private static final String foo = null, // foo",
+            "  // BUG: Diagnostic contains: Unused",
+            "      bar = null;",
+            "  public static String foo() { return foo; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void usedInLambda() {
     helper
         .addSourceLines(
