@@ -69,7 +69,7 @@ public class TestExceptionChecker extends AbstractTestExceptionChecker {
             .collect(toImmutableList());
     if (!fixes.isEmpty()) {
       description.addAllFixes(fixes);
-    } else {
+    } else if (!statements.isEmpty()) {
       description.addFix(
           buildFix(
               state,
