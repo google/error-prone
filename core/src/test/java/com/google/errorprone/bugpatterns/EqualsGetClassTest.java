@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,9 +32,12 @@ public final class EqualsGetClassTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(EqualsGetClass.class, getClass());
 
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass());
+
   @Test
   public void fixes_inline() {
-    BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass())
+    refactoringHelper
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -52,12 +54,12 @@ public final class EqualsGetClassTest {
             "    return o instanceof Test && a == ((Test) o).a;",
             "  }",
             "}")
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test
   public void fixes_extraParens() {
-    BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass())
+    refactoringHelper
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -74,12 +76,12 @@ public final class EqualsGetClassTest {
             "    return (o instanceof Test) && a == ((Test) o).a;",
             "  }",
             "}")
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test
-  public void fixes_separateNullCheck() {
-    BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass())
+  public void separateNullCheck() {
+    refactoringHelper
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -99,9 +101,12 @@ public final class EqualsGetClassTest {
             "    return ((Test) o).a == a;",
             "  }",
             "}")
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
+  }
 
-    BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass())
+  @Test
+  public void separateNullCheck_withElse() {
+    refactoringHelper
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -124,9 +129,12 @@ public final class EqualsGetClassTest {
             "    return ((Test) o).a == a;",
             "  }",
             "}")
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
+  }
 
-    BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass())
+  @Test
+  public void separateNullCheck_noParens() {
+    refactoringHelper
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -146,7 +154,33 @@ public final class EqualsGetClassTest {
             "    return o instanceof Test && ((Test) o).a == a;",
             "  }",
             "}")
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
+  }
+
+  @Test
+  public void unnecessaryCast() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private int a;",
+            "  @Override public boolean equals(Object o) {",
+            "    if (o == null || !o.getClass().equals(((Object) this).getClass())) {",
+            "      return false;",
+            "    }",
+            "    return ((Test) o).a == a;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private int a;",
+            "  @Override public boolean equals(Object o) {",
+            "    if (!(o instanceof Test)) { return false; }",
+            "    return ((Test) o).a == a;",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test

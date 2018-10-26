@@ -37,12 +37,15 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TypeCastTree;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -126,7 +129,20 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
 
     private static boolean matchesThis(ExpressionTree tree) {
       ExpressionTree receiver = getReceiver(tree);
-      return receiver == null || getSymbol(receiver).getSimpleName().contentEquals("this");
+      if (receiver == null) {
+        return true;
+      }
+      while (!(receiver instanceof IdentifierTree)) {
+        if (receiver instanceof ParenthesizedTree) {
+          receiver = ((ParenthesizedTree) receiver).getExpression();
+        } else if (receiver instanceof TypeCastTree) {
+          receiver = ((TypeCastTree) receiver).getExpression();
+        } else {
+          return false;
+        }
+      }
+      Symbol symbol = getSymbol(receiver);
+      return symbol != null && symbol.getSimpleName().contentEquals("this");
     }
 
     private static boolean matchesClass(ExpressionTree tree) {
@@ -207,10 +223,13 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
       }
       if (matchesEitherWay(argument, receiver, THIS_CLASS, otherClass)) {
         matchedGetClass = true;
-        fix.replace(
-            node,
+        String replacement =
             String.format(
-                "%s instanceof %s", parameter.getSimpleName(), classSymbol.getSimpleName()));
+                "%s instanceof %s", parameter.getSimpleName(), classSymbol.getSimpleName());
+        if (getCurrentPath().getParentPath().getLeaf() instanceof UnaryTree) {
+          replacement = String.format("(%s)", replacement);
+        }
+        fix.replace(node, replacement);
       }
       return super.visitMethodInvocation(node, null);
     }
