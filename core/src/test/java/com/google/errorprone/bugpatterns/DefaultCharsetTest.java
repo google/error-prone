@@ -445,6 +445,30 @@ public class DefaultCharsetTest {
   }
 
   @Test
+  public void byteStringDefaultCharset_staticImport() {
+    refactoringTest()
+        .addInputLines(
+            "in/Test.java",
+            "import static com.google.protobuf.ByteString.copyFrom;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    copyFrom(\"hello\".getBytes());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import static com.google.protobuf.ByteString.copyFrom;",
+            "import java.nio.charset.Charset;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    copyFrom(\"hello\", Charset.defaultCharset());",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
   public void scannerDefaultCharset() {
     refactoringTest()
         .addInputLines(
