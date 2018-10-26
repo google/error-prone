@@ -41,7 +41,11 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.List;
 import javax.annotation.Nullable;
 
 /**
@@ -123,14 +127,29 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
    * Matches expressions that look like they should be considered constant, i.e. {@code
    * ImmutableList.of(1, 2)}, {@code Long.valueOf(10L)}.
    */
-  private static final Matcher<ExpressionTree> CONSTANT_CREATOR =
-      allOf(
-          anyOf(staticMethod(), Matchers.constructor()),
-          (tree, state) -> {
-            MethodInvocationTree methodTree = (MethodInvocationTree) tree;
-            return methodTree.getArguments().stream()
-                .allMatch(argument -> ASTHelpers.constValue(argument) != null);
-          });
+  static boolean isConstantCreator(ExpressionTree tree, VisitorState state) {
+    List<? extends ExpressionTree> arguments =
+        tree.accept(
+            new SimpleTreeVisitor<List<? extends ExpressionTree>, Void>() {
+              @Override
+              public List<? extends ExpressionTree> visitNewClass(NewClassTree node, Void unused) {
+                return node.getArguments();
+              }
+
+              @Override
+              public List<? extends ExpressionTree> visitMethodInvocation(
+                  MethodInvocationTree node, Void unused) {
+                MethodSymbol symbol = ASTHelpers.getSymbol(node);
+                if (symbol == null || !symbol.isStatic()) {
+                  return null;
+                }
+                return node.getArguments();
+              }
+            },
+            null);
+    return arguments != null
+        && arguments.stream().allMatch(argument -> ASTHelpers.constValue(argument) != null);
+  }
 
   /** Matcher for a reversible assertion that appears to be the wrong way around. */
   private static final Matcher<ExpressionTree> MATCH =
@@ -155,7 +174,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
     // compile-time constant.
     if (ASTHelpers.constValue(terminatingArgument) != null
         || Matchers.staticFieldAccess().matches(terminatingArgument, state)
-        || CONSTANT_CREATOR.matches(terminatingArgument, state)) {
+        || isConstantCreator(terminatingArgument, state)) {
       return Description.NO_MATCH;
     }
     SuggestedFix fix = SuggestedFix.swap(assertedArgument, terminatingArgument);
