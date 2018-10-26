@@ -319,7 +319,8 @@ public class Matchers {
     return new Matcher<MethodInvocationTree>() {
       @Override
       public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-        return expressionTreeMatcher.matches(ASTHelpers.getReceiver(methodInvocationTree), state);
+        ExpressionTree receiver = ASTHelpers.getReceiver(methodInvocationTree);
+        return receiver != null && expressionTreeMatcher.matches(receiver, state);
       }
     };
   }
