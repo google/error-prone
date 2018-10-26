@@ -36,6 +36,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
@@ -220,11 +221,11 @@ public class DefaultCharset extends BugChecker
       MethodInvocationTree tree,
       ExpressionTree parent,
       VisitorState state) {
-    description.addFix(byteStringFix(tree, parent, state, ".copyFromUtf8(", "").build());
+    description.addFix(byteStringFix(tree, parent, state, "copyFromUtf8(", "").build());
 
     SuggestedFix.Builder builder =
         byteStringFix(
-            tree, parent, state, ".copyFrom(", ", " + CharsetFix.DEFAULT_CHARSET_FIX.replacement());
+            tree, parent, state, "copyFrom(", ", " + CharsetFix.DEFAULT_CHARSET_FIX.replacement());
     CharsetFix.DEFAULT_CHARSET_FIX.addImport(builder, state);
     description.addFix(builder.build());
   }
@@ -235,13 +236,22 @@ public class DefaultCharset extends BugChecker
       VisitorState state,
       String prefix,
       String suffix) {
-    return SuggestedFix.builder()
-        .replace(
-            /*startPos=*/ state.getEndPosition(ASTHelpers.getReceiver(parent)),
-            /*endPos=*/ ((JCTree) tree).getStartPosition(),
-            /*replaceWith=*/ prefix)
-        .replace(
-            state.getEndPosition(ASTHelpers.getReceiver(tree)), state.getEndPosition(tree), suffix);
+    Tree parentReceiver = ASTHelpers.getReceiver(parent);
+    Builder fix = SuggestedFix.builder();
+    if (parentReceiver != null) {
+      fix.replace(
+          /*startPos=*/ state.getEndPosition(parentReceiver),
+          /*endPos=*/ ((JCTree) tree).getStartPosition(),
+          /*replaceWith=*/ "." + prefix);
+    } else {
+      fix.replace(
+          /*startPos=*/ ((JCTree) parent).getStartPosition(),
+          /*endPos=*/ ((JCTree) tree).getStartPosition(),
+          /*replaceWith=*/ prefix);
+    }
+    fix.replace(
+        state.getEndPosition(ASTHelpers.getReceiver(tree)), state.getEndPosition(tree), suffix);
+    return fix;
   }
 
   @Override
