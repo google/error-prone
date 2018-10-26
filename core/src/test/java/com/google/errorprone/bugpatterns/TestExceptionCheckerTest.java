@@ -116,4 +116,20 @@ public class TestExceptionCheckerTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void empty() {
+    testHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import java.io.IOException;",
+            "import org.junit.Test;",
+            "class ExceptionTest {",
+            "  @Test(expected = IOException.class)",
+            "  public void test() throws Exception {",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
