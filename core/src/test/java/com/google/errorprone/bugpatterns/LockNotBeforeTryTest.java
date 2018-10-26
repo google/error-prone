@@ -270,6 +270,26 @@ public final class LockNotBeforeTryTest {
   }
 
   @Test
+  public void receiverless2() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.locks.Lock;",
+            "abstract class Test implements Lock {",
+            "  private void test(Lock l) {",
+            "    lock();",
+            "    l.lock();",
+            "    try {",
+            "    } finally {",
+            "      unlock();",
+            "      l.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void nonInvocationExpression() {
     compilationHelper
         .addSourceLines(
