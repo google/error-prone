@@ -82,6 +82,10 @@ public final class MoreAnnotations {
           default:
             return false;
         }
+      case CLASS:
+        // There are no type annotations on the top-level type of the class being declared, only
+        // on other types in the signature (e.g. `class Foo extends Bar<@A Baz> {}`).
+        return false;
       default:
         throw new AssertionError(sym.getKind());
     }
