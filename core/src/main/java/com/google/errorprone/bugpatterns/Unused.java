@@ -763,6 +763,10 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       }
 
       private void removeByIndex(List<? extends Tree> trees) {
+        if (index >= trees.size()) {
+          // possible when removing a varargs parameter with no corresponding formal parameters
+          return;
+        }
         if (trees.size() == 1) {
           Tree tree = getOnlyElement(trees);
           if (((JCTree) tree).getStartPosition() == -1 || state.getEndPosition(tree) == -1) {

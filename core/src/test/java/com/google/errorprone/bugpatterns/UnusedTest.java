@@ -878,6 +878,24 @@ public class UnusedTest {
         .doTest();
   }
 
+  @Test
+  public void fixPrivateMethod_varArgs_noArgs() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  int a = foo(1);",
+            "  private int foo(int a, int... b) { return a; }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  int a = foo(1);",
+            "  private int foo(int a) { return a; }",
+            "}")
+        .doTest();
+  }
+
   @Ignore("b/118437729")
   @Test
   public void enumField() {
