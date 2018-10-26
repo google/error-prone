@@ -89,6 +89,9 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
       MethodInvocationTree lockInvocation, TreePath statementPath, VisitorState state) {
     Tree lockStatement = statementPath.getLeaf();
     ExpressionTree lockee = getReceiver(lockInvocation);
+    if (lockee == null) {
+      return NO_MATCH;
+    }
     TryTree enclosingTry = state.findEnclosing(TryTree.class);
     if (enclosingTry != null && releases(enclosingTry, lockee, state)) {
       SuggestedFix fix =
