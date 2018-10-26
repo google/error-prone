@@ -846,10 +846,14 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
             .sorted(Comparator.<Comment>comparingInt(c -> c.getSourcePos(0)).reversed())
             .collect(toImmutableList());
     int startPos = ((JCTree) tree).getStartPosition() - startTokenization;
+    // This can happen for desugared expressions like `int a, b;`.
+    if (startPos < 0) {
+      return SuggestedFix.builder().build();
+    }
     // Delete backwards for comments which are not separated from our target by a blank line.
     for (Comment comment : comments) {
-      String stringBetweenComments =
-          source.substring(comment.getSourcePos(comment.getText().length() - 1), startPos);
+      int endOfCommentPos = comment.getSourcePos(comment.getText().length() - 1);
+      String stringBetweenComments = source.substring(endOfCommentPos, startPos);
       if (stringBetweenComments.chars().filter(c -> c == '\n').count() > 1) {
         break;
       }
