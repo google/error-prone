@@ -874,13 +874,19 @@ public final class ThreadSafety {
     if (methodType == null) {
       return Violation.absent();
     }
-    Collection<TypeVariableSymbol> typeParameters = symbol.getTypeParameters();
+    List<TypeVariableSymbol> typeParameters = symbol.getTypeParameters();
     if (typeParameters.stream().noneMatch(this::hasThreadSafeTypeParameterAnnotation)) {
       // fast path
       return Violation.absent();
     }
     ImmutableMap<TypeVariableSymbol, Type> instantiation =
         getInstantiation(state.getTypes(), methodType);
+
+    // javac does not instantiate all types, so filter out ones that were not instantiated.  Ideally
+    // we wouldn't have to do this.
+    typeParameters =
+        typeParameters.stream().filter(instantiation::containsKey).collect(toImmutableList());
+
     return checkInstantiation(
         typeParameters, typeParameters.stream().map(instantiation::get).collect(toImmutableList()));
   }
