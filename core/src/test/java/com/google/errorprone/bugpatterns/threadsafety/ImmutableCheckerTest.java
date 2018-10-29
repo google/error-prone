@@ -1581,6 +1581,53 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void immutableTypeParameter_notAllTypeVarsInstantiated() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  public final <A> void f1(A transform) {}",
+            "  public <B, @ImmutableTypeParameter C> C f2(Function<B, C> fn) {",
+            "    return null;",
+            "  }",
+            "  public final <D, E> void f3(Function<D, E> fn) {",
+            "    // BUG: Diagnostic contains: instantiation of 'C' is mutable",
+            "    // 'E' is a mutable type variable",
+            "    f1(f2(fn));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // javac does not instantiate type variables when they are not used, so we cannot check whether
+  // their instantiations are immutable.
+  @Ignore
+  @Test
+  public void immutableTypeParameter_notAllTypeVarsInstantiated_shouldFail() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  public final <A> void f1(A transform) {}",
+            "  public <@ImmutableTypeParameter B, C> C f2(Function<B, C> fn) {",
+            "    return null;",
+            "  }",
+            "  public final <D, E> void f3(Function<D, E> fn) {",
+            "    // BUG: Diagnostic contains: instantiation of 'B' is mutable",
+            "    // 'D' is a mutable type variable",
+            "    f1(f2(fn));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void containerOf_extendsThreadSafe() {
     compilationHelper
         .addSourceLines(
