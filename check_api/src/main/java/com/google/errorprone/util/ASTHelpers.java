@@ -105,6 +105,7 @@ import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
@@ -1110,13 +1111,10 @@ public class ASTHelpers {
    * {@code meth} could be different MethodSymbol's depending on whether {@code symbol} represented
    * {@code B} or {@code A}. (B's hashCode method or Object#hashCode).
    *
-   * <p>Do NOT call this method unless the method you're looking for is guaranteed to exist. A fatal
-   * error will result otherwise. Note: a method can fail to exist if it was added in a newer
-   * version of a library (you may be depending on version N of a library which added a method to a
-   * class, but someone else could depend on version N-1 which didn't have that method).
-   *
-   * @return a MethodSymbol representing the method symbol resolved from the context of this type
+   * @return a MethodSymbol representing the method symbol resolved from the context of this type,
+   *     or {@code null} if the method could not be resolved.
    */
+  @Nullable
   public static MethodSymbol resolveExistingMethod(
       VisitorState state,
       TypeSymbol base,
@@ -1135,6 +1133,9 @@ public class ASTHelpers {
           name,
           com.sun.tools.javac.util.List.from(argTypes),
           com.sun.tools.javac.util.List.from(tyargTypes));
+    } catch (FatalError e) {
+      // the method could not be resolved
+      return null;
     } finally {
       log.popDiagnosticHandler(handler);
     }
