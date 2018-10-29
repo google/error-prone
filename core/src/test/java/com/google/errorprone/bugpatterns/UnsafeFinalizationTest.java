@@ -184,6 +184,21 @@ public class UnsafeFinalizationTest {
         .doTest();
   }
 
+  @Test
+  public void negativeInterface() {
+    compilationTestHelper
+        .addSourceLines(
+            "I.java",
+            "interface I {",
+            "  int duration = 1;",
+            "  default void f() throws Exception {",
+            "    // a native static method",
+            "    Thread.sleep(duration);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   static boolean isJdk8OrEarlier() {
     try {
       Method versionMethod = Runtime.class.getMethod("version");
