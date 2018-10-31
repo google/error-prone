@@ -498,12 +498,15 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       @Override
       public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
         super.visitMemberReference(tree, null);
-        Symbol symbol = getSymbol(tree);
+        MethodSymbol symbol = getSymbol(tree);
         if (isUsed(symbol)) {
           unusedElements.remove(symbol);
         }
         if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
           usageSites.put(symbol, currentExpressionStatement);
+        }
+        if (symbol != null) {
+          symbol.getParameters().forEach(unusedElements::remove);
         }
         return null;
       }

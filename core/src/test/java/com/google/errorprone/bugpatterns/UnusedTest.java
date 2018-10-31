@@ -962,4 +962,19 @@ public class UnusedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void onlyForMethodReference() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  private static boolean foo(int a) {",
+            "    return true;",
+            "  }",
+            "  Predicate<Integer> pred = Test::foo;",
+            "}")
+        .doTest();
+  }
 }
