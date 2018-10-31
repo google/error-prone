@@ -631,10 +631,12 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           if (ignoreUnusedMethods.get()) {
             break;
           }
+          String message =
+              String.format("Private method '%s' is never used.", ((MethodTree) unused).getName());
           state.reportMatch(
               buildDescription(unused)
                   .addFix(replaceWithComments(unusedPath, "", state))
-                  .setMessage("Unused private method.")
+                  .setMessage(message)
                   .build());
           break;
         default:
