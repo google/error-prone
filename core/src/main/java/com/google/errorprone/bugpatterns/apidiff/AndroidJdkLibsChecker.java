@@ -151,7 +151,6 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
             .addAll(BASE_ALLOWED_CLASSES)
             .add("java/util/Collection")
             .add("java/util/Comparator")
-            .add("java/util/Comparators")
             .add("java/util/DoubleSummaryStatistics")
             .add("java/util/IntSummaryStatistics")
             .add("java/util/Iterator")
