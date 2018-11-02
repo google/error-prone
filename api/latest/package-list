@@ -15,6 +15,7 @@ com.google.errorprone.bugpatterns.javadoc
 com.google.errorprone.bugpatterns.nullness
 com.google.errorprone.bugpatterns.overloading
 com.google.errorprone.bugpatterns.threadsafety
+com.google.errorprone.bugpatterns.time
 com.google.errorprone.dataflow
 com.google.errorprone.dataflow.nullnesspropagation
 com.google.errorprone.dataflow.nullnesspropagation.inference

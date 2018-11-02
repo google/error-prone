@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -131,6 +131,31 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static &lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?is-external=true" title="class or interface in java.lang">Enum</a>&lt;T&gt;&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;T&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/MoreAnnotations.html#asEnumValue-java.lang.Class-com.sun.tools.javac.code.Attribute-">asEnumValue</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;clazz,
+           com.sun.tools.javac.code.Attribute&nbsp;a)</code>
+<div class="block">Converts the given attribute to an enum value.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/MoreAnnotations.html#asIntegerValue-com.sun.tools.javac.code.Attribute-">asIntegerValue</a></span>(com.sun.tools.javac.code.Attribute&nbsp;a)</code>
+<div class="block">Converts the given attribute to an integer value.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/MoreAnnotations.html#asStrings-com.sun.tools.javac.code.Attribute-">asStrings</a></span>(com.sun.tools.javac.code.Attribute&nbsp;v)</code>
+<div class="block">Converts the given attribute to one or more strings.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/MoreAnnotations.html#asStringValue-com.sun.tools.javac.code.Attribute-">asStringValue</a></span>(com.sun.tools.javac.code.Attribute&nbsp;a)</code>
+<div class="block">Converts the given attribute to an string value.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream">Stream</a>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/MoreAnnotations.html#getDeclarationAndTypeAttributes-com.sun.tools.javac.code.Symbol-">getDeclarationAndTypeAttributes</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code>
 <div class="block">Returns declaration annotations of the given symbol, as well as 'top-level' type annotations,
@@ -138,6 +163,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 
  
    Type annotations of the return type of a method.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;com.sun.tools.javac.code.Attribute&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/MoreAnnotations.html#getValue-com.sun.tools.javac.code.Attribute.Compound-java.lang.String-">getValue</a></span>(com.sun.tools.javac.code.Attribute.Compound&nbsp;attribute,
+        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</code>
+<div class="block">Returns the value of the annotation element-value pair with the given name if it is not
+ explicitly set.</div>
 </td>
 </tr>
 </table>
@@ -165,7 +198,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <a name="getDeclarationAndTypeAttributes-com.sun.tools.javac.code.Symbol-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getDeclarationAndTypeAttributes</h4>
 <pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream">Stream</a>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;&nbsp;getDeclarationAndTypeAttributes(com.sun.tools.javac.code.Symbol&nbsp;sym)</pre>
@@ -180,6 +213,59 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <p>One might expect this to be equivalent to information returned by <code>Type.getAnnotationMirrors()</code>, but javac doesn't associate type
  annotation information with types for symbols completed from class files, so that approach
  doesn't work across compilation boundaries.</div>
+</li>
+</ul>
+<a name="getValue-com.sun.tools.javac.code.Attribute.Compound-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getValue</h4>
+<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;com.sun.tools.javac.code.Attribute&gt;&nbsp;getValue(com.sun.tools.javac.code.Attribute.Compound&nbsp;attribute,
+                                                                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</pre>
+<div class="block">Returns the value of the annotation element-value pair with the given name if it is not
+ explicitly set.</div>
+</li>
+</ul>
+<a name="asIntegerValue-com.sun.tools.javac.code.Attribute-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>asIntegerValue</h4>
+<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;asIntegerValue(com.sun.tools.javac.code.Attribute&nbsp;a)</pre>
+<div class="block">Converts the given attribute to an integer value.</div>
+</li>
+</ul>
+<a name="asStringValue-com.sun.tools.javac.code.Attribute-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>asStringValue</h4>
+<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;asStringValue(com.sun.tools.javac.code.Attribute&nbsp;a)</pre>
+<div class="block">Converts the given attribute to an string value.</div>
+</li>
+</ul>
+<a name="asEnumValue-java.lang.Class-com.sun.tools.javac.code.Attribute-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>asEnumValue</h4>
+<pre>public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?is-external=true" title="class or interface in java.lang">Enum</a>&lt;T&gt;&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;T&gt;&nbsp;asEnumValue(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;clazz,
+                                                          com.sun.tools.javac.code.Attribute&nbsp;a)</pre>
+<div class="block">Converts the given attribute to an enum value.</div>
+</li>
+</ul>
+<a name="asStrings-com.sun.tools.javac.code.Attribute-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>asStrings</h4>
+<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;asStrings(com.sun.tools.javac.code.Attribute&nbsp;v)</pre>
+<div class="block">Converts the given attribute to one or more strings.</div>
 </li>
 </ul>
 </li>

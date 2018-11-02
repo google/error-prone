@@ -97,7 +97,24 @@
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#SOURCE" title="class or interface in java.lang.annotation">SOURCE</a>)
 public @interface <span class="memberNameLabel">Matches</span></pre>
 <div class="block">Specify an error-prone <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to further restrict what expressions are matched by the
- annotated parameter.</div>
+ annotated parameter.
+
+ <p><b>Note:</b> The <code>@Matches</code> annotation should <b>only</b> go on the
+ <code>@BeforeTemplate</code>. For example:
+
+ <pre><code>
+ class SingletonList {
+   {@literal @}BeforeTemplate
+   public &lt;E&gt; List&lt;E&gt; before({@literal @}Matches(IsNonNullMatcher.class) E e) {
+     return Collections.singletonList(e);
+   }
+
+   {@literal @}AfterTemplate
+   public &lt;E&gt; List&lt;E&gt; after(E e) {
+     return ImmutableList.of(e);
+   }
+ }
+ </code></pre></div>
 </li>
 </ul>
 </div>

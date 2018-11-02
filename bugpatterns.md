@@ -59,6 +59,9 @@ Ignored return value of method that is annotated with @CheckReturnValue
 __[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
 Incompatible type as argument to Object-accepting Java collections method
 
+__[CollectionToArraySafeParameter](bugpattern/CollectionToArraySafeParameter)__<br>
+The type of the array parameter of Collection.toArray needs to be compatible with the array type
+
 __[ComparableType](bugpattern/ComparableType)__<br>
  Implementing &#39;Comparable&lt;T&gt;&#39; where T is not compatible with the implementing class.
 
@@ -94,6 +97,12 @@ Thread created but not started
 
 __[DoNotCall](bugpattern/DoNotCall)__<br>
 This method should not be called.
+
+__[DurationGetTemporalUnit](bugpattern/DurationGetTemporalUnit)__<br>
+Duration.get() only works with SECONDS or NANOS.
+
+__[DurationToLongTimeUnit](bugpattern/DurationToLongTimeUnit)__<br>
+Unit mismatch when decomposing a Duration or Instant to call a &lt;long, TimeUnit&gt; API
 
 __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 == NaN always returns false; use the isNaN methods instead
@@ -200,6 +209,9 @@ An object is tested for reference equality to itself using JUnit library.
 __[JavaxInjectOnAbstractMethod](bugpattern/JavaxInjectOnAbstractMethod)__<br>
 Abstract and default methods are not injectable with javax.inject.Inject
 
+__[JodaToSelf](bugpattern/JodaToSelf)__<br>
+Use of Joda-Time&#39;s DateTime.toDateTime(), Duration.toDuration(), Instant.toInstant(), Interval.toInterval(), and Period.toPeriod() are not allowed.
+
 __[LiteByteStringUtf8](bugpattern/LiteByteStringUtf8)__<br>
 This pattern will silently corrupt certain byte sequences from the serialized protocol message. Use ByteString or byte[] directly
 
@@ -266,6 +278,9 @@ Declaring types inside package-info.java files is very bad form
 __[ParcelableCreator](bugpattern/ParcelableCreator)__<br>
 Detects classes which implement Parcelable but don&#39;t have CREATOR
 
+__[PeriodGetTemporalUnit](bugpattern/PeriodGetTemporalUnit)__<br>
+Period.get() only works with YEARS, MONTHS, or DAYS.
+
 __[PreconditionsCheckNotNull](bugpattern/PreconditionsCheckNotNull)__<br>
 Literal passed as first argument to Preconditions.checkNotNull() can never be null
 
@@ -331,6 +346,9 @@ String.substring(0) returns the original String
 
 __[SuppressWarningsDeprecated](bugpattern/SuppressWarningsDeprecated)__<br>
 Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot;
+
+__[TemporalAccessorGetChronoField](bugpattern/TemporalAccessorGetChronoField)__<br>
+TemporalAccessor.get() only works for certain values of ChronoField.
 
 __[ThrowIfUncheckedKnownChecked](bugpattern/ThrowIfUncheckedKnownChecked)__<br>
 throwIfUnchecked(knownCheckedException) is a no-op.
@@ -426,9 +444,6 @@ Class.newInstance() bypasses exception checking; prefer getDeclaredConstructor()
 
 __[CloseableProvides](bugpattern/CloseableProvides)__<br>
 Providing Closeable resources makes their lifecycle unclear
-
-__[CollectionToArraySafeParameter](bugpattern/CollectionToArraySafeParameter)__<br>
-The type of the array parameter of Collection.toArray needs to be compatible with the array type
 
 __[CollectorShouldNotUseState](bugpattern/CollectorShouldNotUseState)__<br>
 Collector.of() should not use state
@@ -541,11 +556,47 @@ Some JUnit4 construct cannot be used in a JUnit3 context. Convert your class to 
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test annotations.
 
+__[JavaDurationGetSecondsGetNano](bugpattern/JavaDurationGetSecondsGetNano)__<br>
+duration.getNano() only accesses the underlying nanosecond adjustment from the whole second.
+
+__[JavaDurationWithNanos](bugpattern/JavaDurationWithNanos)__<br>
+Use of java.time.Duration.withNanos(int) is not allowed.
+
+__[JavaDurationWithSeconds](bugpattern/JavaDurationWithSeconds)__<br>
+Use of java.time.Duration.withSeconds(long) is not allowed.
+
+__[JavaInstantGetSecondsGetNano](bugpattern/JavaInstantGetSecondsGetNano)__<br>
+instant.getNano() only accesses the underlying nanosecond adjustment from the whole second.
+
 __[JavaLangClash](bugpattern/JavaLangClash)__<br>
 Never reuse class names from java.lang
 
+__[JavaTimeDefaultTimeZone](bugpattern/JavaTimeDefaultTimeZone)__<br>
+java.time APIs that silently use the default system time-zone are not allowed.
+
 __[JdkObsolete](bugpattern/JdkObsolete)__<br>
 Suggests alternatives to obsolete JDK classes.
+
+__[JodaDurationConstructor](bugpattern/JodaDurationConstructor)__<br>
+Use of new Duration(long) is not allowed. Please use Duration.millis(long) instead.
+
+__[JodaDurationWithMillis](bugpattern/JodaDurationWithMillis)__<br>
+Use of duration.withMillis(long) is not allowed. Please use Duration.millis(long) instead.
+
+__[JodaInstantWithMillis](bugpattern/JodaInstantWithMillis)__<br>
+Use of instant.withMillis(long) is not allowed. Please use new Instant(long) instead.
+
+__[JodaNewPeriod](bugpattern/JodaNewPeriod)__<br>
+This may have surprising semantics, e.g. new Period(LocalDate.parse(&quot;1970-01-01&quot;), LocalDate.parse(&quot;1970-02-02&quot;)).getDays() == 1, not 32.
+
+__[JodaPlusMinusLong](bugpattern/JodaPlusMinusLong)__<br>
+Use of JodaTime&#39;s type.plus(long) or type.minus(long) is not allowed (where &lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}). Please use  type.plus(Duration.millis(long)) or type.minus(Duration.millis(long)) instead.
+
+__[JodaTimeConverterManager](bugpattern/JodaTimeConverterManager)__<br>
+Joda-Time&#39;s ConverterManager makes the semantics of DateTime/Instant/etc construction subject to global static state. If you need to define your own converters, use a helper.
+
+__[JodaWithDurationAddedLong](bugpattern/JodaWithDurationAddedLong)__<br>
+Use of JodaTime&#39;s type.withDurationAdded(long, int) (where &lt;type&gt; = {Duration,Instant,DateTime}). Please use type.withDurationAdded(Duration.millis(long), int) instead.
 
 __[LockNotBeforeTry](bugpattern/LockNotBeforeTry)__<br>
 Calls to Lock#lock should be immediately followed by a try block which releases the lock.
@@ -564,6 +615,9 @@ Not calling fail() when expecting an exception masks bugs
 
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
+
+__[MockitoInternalUsage](bugpattern/MockitoInternalUsage)__<br>
+org.mockito.internal.* is a private API and should not be used by clients
 
 __[ModifiedButNotUsed](bugpattern/ModifiedButNotUsed)__<br>
 A collection or proto builder was created, but its values were never accessed.
@@ -614,7 +668,7 @@ __[OrphanedFormatString](bugpattern/OrphanedFormatString)__<br>
 String literal contains format specifiers, but is not passed to a format method
 
 __[OverrideThrowableToString](bugpattern/OverrideThrowableToString)__<br>
-To return a custom message with a Throwable class, one should override getMessage() instead of toString() for Throwable.
+To return a custom message with a Throwable class, one should override getMessage() instead of toString().
 
 __[Overrides](bugpattern/Overrides)__<br>
 Varargs doesn&#39;t agree for overridden method
@@ -628,8 +682,14 @@ Detects `/* name= */`-style comments on actual parameters where the name doesn&#
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
 
+__[ProtoDurationGetSecondsGetNano](bugpattern/ProtoDurationGetSecondsGetNano)__<br>
+getNanos() only accesses the underlying nanosecond-adjustment of the duration.
+
 __[ProtoRedundantSet](bugpattern/ProtoRedundantSet)__<br>
 A field on a protocol buffer was set twice in the same chained expression.
+
+__[ProtoTimestampGetSecondsGetNano](bugpattern/ProtoTimestampGetSecondsGetNano)__<br>
+getNanos() only accesses the underlying nanosecond-adjustment of the instant.
 
 __[QualifierOrScopeOnInjectMethod](bugpattern/QualifierOrScopeOnInjectMethod)__<br>
 Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move the qualifier annotation to the binding location.
@@ -672,6 +732,9 @@ Relying on the thread scheduler is discouraged; see Effective Java Item 72 (2nd 
 
 __[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
 Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.
+
+__[TimeUnitConversionChecker](bugpattern/TimeUnitConversionChecker)__<br>
+This TimeUnit conversion looks buggy: converting from a smaller unit to a larger unit (and passing a constant), converting to/from the same TimeUnit, or converting TimeUnits where the result is statically known to be 0 or 1 are all buggy patterns.
 
 __[ToStringReturnsNull](bugpattern/ToStringReturnsNull)__<br>
 An implementation of Object.toString() should never return null.
@@ -863,6 +926,9 @@ The documented method doesn&#39;t actually throw this checked exception.
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
 
+__[MissingSummary](bugpattern/MissingSummary)__<br>
+A summary line is required on public/protected Javadocs.
+
 __[MutableMethodReturnType](bugpattern/MutableMethodReturnType)__<br>
 Method return type should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
 
@@ -904,6 +970,9 @@ Code that contains System.exit() is untestable.
 
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
+
+__[UnescapedEntity](bugpattern/UnescapedEntity)__<br>
+Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped.
 
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values: an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.

@@ -3,7 +3,7 @@ title: CollectionToArraySafeParameter
 summary: The type of the array parameter of Collection.toArray needs to be compatible with the array type
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 providesFix: NO_FIX
 ---
 

@@ -77,6 +77,7 @@
 <li><a href="com/google/errorprone/bugpatterns/AssertionFailureIgnored.html" title="class in com.google.errorprone.bugpatterns">AssertionFailureIgnored</a></li>
 <li><a href="com/google/errorprone/matchers/Asserts.html" title="class in com.google.errorprone.matchers">Asserts</a></li>
 <li><a href="com/google/errorprone/bugpatterns/AssertThrowsMultipleStatements.html" title="class in com.google.errorprone.bugpatterns">AssertThrowsMultipleStatements</a></li>
+<li><a href="com/google/errorprone/bugpatterns/AssertThrowsUtils.html" title="class in com.google.errorprone.bugpatterns">AssertThrowsUtils</a></li>
 <li><a href="com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnConstructors.html" title="class in com.google.errorprone.bugpatterns.inject">AssistedInjectAndInjectOnConstructors</a></li>
 <li><a href="com/google/errorprone/bugpatterns/inject/AssistedInjectAndInjectOnSameConstructor.html" title="class in com.google.errorprone.bugpatterns.inject">AssistedInjectAndInjectOnSameConstructor</a></li>
 <li><a href="com/google/errorprone/bugpatterns/inject/guice/AssistedInjectScoping.html" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedInjectScoping</a></li>
@@ -259,6 +260,8 @@
 <li><a href="com/google/errorprone/bugpatterns/DoNotCallChecker.html" title="class in com.google.errorprone.bugpatterns">DoNotCallChecker</a></li>
 <li><a href="com/google/errorprone/bugpatterns/DoubleBraceInitialization.html" title="class in com.google.errorprone.bugpatterns">DoubleBraceInitialization</a></li>
 <li><a href="com/google/errorprone/bugpatterns/threadsafety/DoubleCheckedLocking.html" title="class in com.google.errorprone.bugpatterns.threadsafety">DoubleCheckedLocking</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/DurationGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationGetTemporalUnit</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/DurationToLongTimeUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationToLongTimeUnit</a></li>
 <li><a href="com/google/errorprone/bugpatterns/inject/ElementPredicates.html" title="class in com.google.errorprone.bugpatterns.inject">ElementPredicates</a></li>
 <li><a href="com/google/errorprone/bugpatterns/EmptyIfStatement.html" title="class in com.google.errorprone.bugpatterns">EmptyIfStatement</a></li>
 <li><a href="com/google/errorprone/bugpatterns/inject/dagger/EmptySetMultibindingContributions.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">EmptySetMultibindingContributions</a></li>
@@ -414,11 +417,24 @@
 <li><a href="com/google/errorprone/bugpatterns/IterablePathParameter.html" title="class in com.google.errorprone.bugpatterns">IterablePathParameter</a></li>
 <li><a href="com/google/errorprone/bugpatterns/apidiff/Java7ApiChecker.html" title="class in com.google.errorprone.bugpatterns.apidiff">Java7ApiChecker</a></li>
 <li><a href="com/google/errorprone/JavacErrorDescriptionListener.html" title="class in com.google.errorprone">JavacErrorDescriptionListener</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JavaDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationGetSecondsGetNano</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JavaDurationWithNanos.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationWithNanos</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JavaDurationWithSeconds.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationWithSeconds</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JavaInstantGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaInstantGetSecondsGetNano</a></li>
 <li><a href="com/google/errorprone/bugpatterns/JavaLangClash.html" title="class in com.google.errorprone.bugpatterns">JavaLangClash</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JavaTimeDefaultTimeZone.html" title="class in com.google.errorprone.bugpatterns.time">JavaTimeDefaultTimeZone</a></li>
 <li><a href="com/google/errorprone/bugpatterns/inject/JavaxInjectOnAbstractMethod.html" title="class in com.google.errorprone.bugpatterns.inject">JavaxInjectOnAbstractMethod</a></li>
 <li><a href="com/google/errorprone/bugpatterns/inject/JavaxInjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns.inject">JavaxInjectOnFinalField</a></li>
 <li><a href="com/google/errorprone/bugpatterns/JdkObsolete.html" title="class in com.google.errorprone.bugpatterns">JdkObsolete</a></li>
 <li><a href="com/google/errorprone/bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html" title="class in com.google.errorprone.bugpatterns">JMockTestWithoutRunWithOrRuleAnnotation</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JodaDurationConstructor.html" title="class in com.google.errorprone.bugpatterns.time">JodaDurationConstructor</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JodaDurationWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaDurationWithMillis</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JodaInstantWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaInstantWithMillis</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JodaNewPeriod.html" title="class in com.google.errorprone.bugpatterns.time">JodaNewPeriod</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JodaPlusMinusLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaPlusMinusLong</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JodaTimeConverterManager.html" title="class in com.google.errorprone.bugpatterns.time">JodaTimeConverterManager</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JodaToSelf.html" title="class in com.google.errorprone.bugpatterns.time">JodaToSelf</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/JodaWithDurationAddedLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaWithDurationAddedLong</a></li>
 <li><a href="com/google/errorprone/bugpatterns/JUnit3FloatingPointComparisonWithoutDelta.html" title="class in com.google.errorprone.bugpatterns">JUnit3FloatingPointComparisonWithoutDelta</a></li>
 <li><a href="com/google/errorprone/bugpatterns/JUnit3TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit3TestNotRun</a></li>
 <li><a href="com/google/errorprone/bugpatterns/JUnit4ClassAnnotationNonStatic.html" title="class in com.google.errorprone.bugpatterns">JUnit4ClassAnnotationNonStatic</a></li>
@@ -475,11 +491,13 @@
 <li><a href="com/google/errorprone/bugpatterns/MissingDefault.html" title="class in com.google.errorprone.bugpatterns">MissingDefault</a></li>
 <li><a href="com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">MissingFail</a></li>
 <li><a href="com/google/errorprone/bugpatterns/MissingOverride.html" title="class in com.google.errorprone.bugpatterns">MissingOverride</a></li>
+<li><a href="com/google/errorprone/bugpatterns/javadoc/MissingSummary.html" title="class in com.google.errorprone.bugpatterns.javadoc">MissingSummary</a></li>
 <li><a href="com/google/errorprone/bugpatterns/MissingSuperCall.html" title="class in com.google.errorprone.bugpatterns">MissingSuperCall</a></li>
 <li><a href="com/google/errorprone/bugpatterns/MissingTestCall.html" title="class in com.google.errorprone.bugpatterns">MissingTestCall</a></li>
 <li><a href="com/google/errorprone/bugpatterns/MisusedWeekYear.html" title="class in com.google.errorprone.bugpatterns">MisusedWeekYear</a></li>
 <li><a href="com/google/errorprone/bugpatterns/MixedArrayDimensions.html" title="class in com.google.errorprone.bugpatterns">MixedArrayDimensions</a></li>
 <li><a href="com/google/errorprone/bugpatterns/MockitoCast.html" title="class in com.google.errorprone.bugpatterns">MockitoCast</a></li>
+<li><a href="com/google/errorprone/bugpatterns/MockitoInternalUsage.html" title="class in com.google.errorprone.bugpatterns">MockitoInternalUsage</a></li>
 <li><a href="com/google/errorprone/bugpatterns/MockitoUsage.html" title="class in com.google.errorprone.bugpatterns">MockitoUsage</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ModifiedButNotUsed.html" title="class in com.google.errorprone.bugpatterns">ModifiedButNotUsed</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ModifyCollectionInEnhancedForLoop.html" title="class in com.google.errorprone.bugpatterns">ModifyCollectionInEnhancedForLoop</a></li>
@@ -549,6 +567,7 @@
 <li><a href="com/google/errorprone/bugpatterns/android/ParcelableCreator.html" title="class in com.google.errorprone.bugpatterns.android">ParcelableCreator</a></li>
 <li><a href="com/google/errorprone/matchers/ParentNode.html" title="class in com.google.errorprone.matchers">ParentNode</a></li>
 <li><a href="com/google/errorprone/apply/PatchFileDestination.html" title="class in com.google.errorprone.apply">PatchFileDestination</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></li>
 <li><a href="com/google/errorprone/refaster/annotation/Placeholder.html" title="annotation in com.google.errorprone.refaster.annotation">Placeholder</a></li>
 <li><a href="com/google/errorprone/bugpatterns/PreconditionsCheckNotNull.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNull</a></li>
 <li><a href="com/google/errorprone/bugpatterns/PreconditionsCheckNotNullPrimitive.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNullPrimitive</a></li>
@@ -559,10 +578,12 @@
 <li><a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></li>
 <li><a href="com/google/errorprone/bugpatterns/PrivateSecurityContractProtoAccess.html" title="class in com.google.errorprone.bugpatterns">PrivateSecurityContractProtoAccess</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ProtocolBufferOrdinal.html" title="class in com.google.errorprone.bugpatterns">ProtocolBufferOrdinal</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/ProtoDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoDurationGetSecondsGetNano</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldNullComparison</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ProtoRedundantSet.html" title="class in com.google.errorprone.bugpatterns">ProtoRedundantSet</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ProtosAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">ProtosAsKeyOfSetOrMap</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ProtoStringFieldReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">ProtoStringFieldReferenceEquality</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/ProtoTimestampGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoTimestampGetSecondsGetNano</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ProvidesFixChecker.html" title="class in com.google.errorprone.bugpatterns">ProvidesFixChecker</a></li>
 <li><a href="com/google/errorprone/bugpatterns/inject/guice/ProvidesMethodOutsideOfModule.html" title="class in com.google.errorprone.bugpatterns.inject.guice">ProvidesMethodOutsideOfModule</a></li>
 <li><a href="com/google/errorprone/bugpatterns/inject/dagger/ProvidesNull.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">ProvidesNull</a></li>
@@ -645,6 +666,7 @@
 <li><a href="com/google/errorprone/bugpatterns/SystemExitOutsideMain.html" title="class in com.google.errorprone.bugpatterns">SystemExitOutsideMain</a></li>
 <li><a href="com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster">Template</a></li>
 <li><a href="com/google/errorprone/refaster/TemplateMatch.html" title="class in com.google.errorprone.refaster">TemplateMatch</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/TemporalAccessorGetChronoField.html" title="class in com.google.errorprone.bugpatterns.time">TemporalAccessorGetChronoField</a></li>
 <li><a href="com/google/errorprone/names/TermEditDistance.html" title="class in com.google.errorprone.names">TermEditDistance</a></li>
 <li><a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">TestExceptionChecker</a></li>
 <li><a href="com/google/errorprone/bugpatterns/TestExceptionRefactoring.html" title="class in com.google.errorprone.bugpatterns">TestExceptionRefactoring</a></li>
@@ -661,6 +683,7 @@
 <li><a href="com/google/errorprone/bugpatterns/ThrowNull.html" title="class in com.google.errorprone.bugpatterns">ThrowNull</a></li>
 <li><a href="com/google/errorprone/matchers/Throws.html" title="class in com.google.errorprone.matchers">Throws</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html" title="class in com.google.errorprone.bugpatterns">ThrowsUncheckedException</a></li>
+<li><a href="com/google/errorprone/bugpatterns/time/TimeUnitConversionChecker.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitConversionChecker</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ToStringReturnsNull.html" title="class in com.google.errorprone.bugpatterns">ToStringReturnsNull</a></li>
 <li><a href="com/google/errorprone/dataflow/nullnesspropagation/TrustingNullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">TrustingNullnessAnalysis</a></li>
 <li><a href="com/google/errorprone/bugpatterns/TruthAssertExpected.html" title="class in com.google.errorprone.bugpatterns">TruthAssertExpected</a></li>
@@ -688,6 +711,7 @@
 <li><a href="com/google/errorprone/refaster/UMethodInvocation.html" title="class in com.google.errorprone.refaster">UMethodInvocation</a></li>
 <li><a href="com/google/errorprone/refaster/UMethodType.html" title="class in com.google.errorprone.refaster">UMethodType</a></li>
 <li><a href="com/google/errorprone/bugpatterns/UndefinedEquals.html" title="class in com.google.errorprone.bugpatterns">UndefinedEquals</a></li>
+<li><a href="com/google/errorprone/bugpatterns/javadoc/UnescapedEntity.html" title="class in com.google.errorprone.bugpatterns.javadoc">UnescapedEntity</a></li>
 <li><a href="com/google/errorprone/bugpatterns/UngroupedOverloads.html" title="class in com.google.errorprone.bugpatterns">UngroupedOverloads</a></li>
 <li><a href="com/google/errorprone/refaster/Unifiable.html" title="interface in com.google.errorprone.refaster"><span class="interfaceName">Unifiable</span></a></li>
 <li><a href="com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a></li>

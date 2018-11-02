@@ -116,6 +116,22 @@
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colOne"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation-com.sun.tools.javac.code.Symbol-java.lang.Class-">com.google.errorprone.util.ASTHelpers.getAnnotation(Symbol, Class&lt;T&gt;)</a>
+<div class="block"><span class="deprecationComment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
+     them, attempting to access that member from the Error Prone checker code will result in a
+     runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
+     meta-syntactically inspect the annotation.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation-com.sun.source.tree.Tree-java.lang.Class-">com.google.errorprone.util.ASTHelpers.getAnnotation(Tree, Class&lt;T&gt;)</a>
+<div class="block"><span class="deprecationComment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
+     them, attempting to access that member from the Error Prone checker code will result in a
+     runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
+     meta-syntactically inspect the annotation.</span></div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><a href="com/google/errorprone/matchers/Matchers.html#instanceMethod-com.google.errorprone.matchers.Matcher-java.lang.String-">com.google.errorprone.matchers.Matchers.instanceMethod(Matcher&lt;? super ExpressionTree&gt;, String)</a>
 <div class="block"><span class="deprecationComment">prefer <a href="com/google/errorprone/matchers/method/MethodMatchers.html#instanceMethod--"><code>MethodMatchers.instanceMethod()</code></a></span></div>
 </td>

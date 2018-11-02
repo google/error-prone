@@ -1037,6 +1037,11 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/MockitoCast.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.MockitoCast</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.MockitoInternalUsage">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/MockitoInternalUsage.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.MockitoInternalUsage</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.MockitoUsage">
 <!--   -->
 </a>
@@ -1283,10 +1288,12 @@
 <li class="blockList">
 <h4>protoReceiver</h4>
 <pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; protoReceiver</pre>
+<div class="block">Match proto receivers matching this.</div>
 </li>
 <li class="blockList">
 <h4>trackAssignments</h4>
-<pre>boolean trackAssignments</pre>
+<pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt; trackAssignments</pre>
+<div class="block">Only track assignments of variables matching this.</div>
 </li>
 <li class="blockList">
 <h4>matchListGetters</h4>
@@ -2237,10 +2244,31 @@
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/javadoc/InvalidThrows.html" title="class in com.google.errorprone.bugpatterns.javadoc">com.google.errorprone.bugpatterns.javadoc.InvalidThrows</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.javadoc.MissingSummary">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/javadoc/MissingSummary.html" title="class in com.google.errorprone.bugpatterns.javadoc">com.google.errorprone.bugpatterns.javadoc.MissingSummary</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid">
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/javadoc/ReturnFromVoid.html" title="class in com.google.errorprone.bugpatterns.javadoc">com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.javadoc.UnescapedEntity">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/javadoc/UnescapedEntity.html" title="class in com.google.errorprone.bugpatterns.javadoc">com.google.errorprone.bugpatterns.javadoc.UnescapedEntity</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>reportAll</h4>
+<pre>boolean reportAll</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 </ul>
 </li>
@@ -2393,6 +2421,111 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker</a> extends <a href="com/google/errorprone/bugpatterns/threadsafety/AbstractLockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AbstractLockMethodChecker</a> implements Serializable</h3>
+</li>
+</ul>
+</li>
+<li class="blockList">
+<h2 title="Package">Package&nbsp;com.google.errorprone.bugpatterns.time</h2>
+<ul class="blockList">
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/DurationGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.DurationToLongTimeUnit">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/DurationToLongTimeUnit.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.DurationToLongTimeUnit</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JavaDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JavaDurationWithNanos">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JavaDurationWithNanos.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JavaDurationWithNanos</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JavaDurationWithSeconds">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JavaDurationWithSeconds.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JavaDurationWithSeconds</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JavaInstantGetSecondsGetNano">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JavaInstantGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JavaInstantGetSecondsGetNano</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JavaTimeDefaultTimeZone">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JavaTimeDefaultTimeZone.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JavaTimeDefaultTimeZone</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JodaDurationConstructor">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JodaDurationConstructor.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JodaDurationConstructor</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JodaDurationWithMillis">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JodaDurationWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JodaDurationWithMillis</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JodaInstantWithMillis">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JodaInstantWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JodaInstantWithMillis</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JodaNewPeriod">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JodaNewPeriod.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JodaNewPeriod</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JodaPlusMinusLong">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JodaPlusMinusLong.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JodaPlusMinusLong</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JodaTimeConverterManager">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JodaTimeConverterManager.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JodaTimeConverterManager</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JodaToSelf">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JodaToSelf.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JodaToSelf</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.JodaWithDurationAddedLong">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/JodaWithDurationAddedLong.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.JodaWithDurationAddedLong</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.PeriodGetTemporalUnit">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.PeriodGetTemporalUnit</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.ProtoDurationGetSecondsGetNano">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/ProtoDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.ProtoDurationGetSecondsGetNano</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.ProtoTimestampGetSecondsGetNano">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/ProtoTimestampGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.ProtoTimestampGetSecondsGetNano</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.TemporalAccessorGetChronoField">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/TemporalAccessorGetChronoField.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.TemporalAccessorGetChronoField</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.time.TimeUnitConversionChecker">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/time/TimeUnitConversionChecker.html" title="class in com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time.TimeUnitConversionChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
 </li>
 </ul>
 </li>
