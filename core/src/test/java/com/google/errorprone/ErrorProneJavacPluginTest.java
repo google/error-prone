@@ -23,7 +23,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ENGLISH;
 import static org.junit.Assert.assertThrows;
 
-import com.google.auto.service.AutoService;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.StandardSystemProperty;
@@ -44,6 +43,7 @@ import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -51,6 +51,9 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.stream.Stream;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
@@ -313,7 +316,6 @@ public class ErrorProneJavacPluginTest {
   }
 
   /** A bugpattern for testing. */
-  @AutoService(BugChecker.class)
   @BugPattern(
       name = "TestCompilesWithFix",
       summary = "",
@@ -331,8 +333,17 @@ public class ErrorProneJavacPluginTest {
     }
   }
 
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
+
   @Test
   public void compilesWithFix() throws IOException {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      jos.putNextEntry(new JarEntry("META-INF/services/" + BugChecker.class.getName()));
+      jos.write(TestCompilesWithFix.class.getName().getBytes(UTF_8));
+    }
+
     FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
     Path source = fileSystem.getPath("Test.java");
     Files.write(
@@ -349,10 +360,11 @@ public class ErrorProneJavacPluginTest {
     JavacFileManager fileManager = new JavacFileManager(new Context(), false, UTF_8);
     fileManager.setLocation(
         StandardLocation.ANNOTATION_PROCESSOR_PATH,
-        Streams.stream(
+        Streams.concat(Stream.of(libJar),
+            Streams.stream(
                 Splitter.on(File.pathSeparatorChar)
                     .split(StandardSystemProperty.JAVA_CLASS_PATH.value()))
-            .map(File::new)
+                .map(File::new))
             .collect(toImmutableList()));
     DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
     JavacTask task =

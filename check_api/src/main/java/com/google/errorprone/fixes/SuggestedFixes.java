@@ -787,21 +787,24 @@ public class SuggestedFixes {
     }
     DiagnosticCollector<JavaFileObject> diagnosticListener = new DiagnosticCollector<>();
     Context context = new Context();
-    Options.instance(context).putAll(Options.instance(javacTask.getContext()));
-    context.put(Arguments.class, arguments);
-    // When using the -Xplugin Error Prone integration, disable Error Prone for speculative
-    // recompiles to avoid infinite recurison.
-    ImmutableList<String> options =
-        arguments.getPluginOpts().stream().anyMatch(x -> x.iterator().next().equals("ErrorProne"))
-            ? ImmutableList.of("-Xplugin:ErrorProne -XepDisableAllChecks")
-            : ImmutableList.of();
+    Options options = Options.instance(context);
+    Options originalOptions = Options.instance(javacTask.getContext());
+    for (String key : originalOptions.keySet()) {
+      String value = originalOptions.get(key);
+      if (key.equals("-Xplugin:") && value.startsWith("ErrorProne")) {
+        // When using the -Xplugin Error Prone integration, disable Error Prone for speculative
+        // recompiles to avoid infinite recurison.
+        continue;
+      }
+      options.put(key, value);
+    }
     JavacTask newTask =
         JavacTool.create()
             .getTask(
                 CharStreams.nullWriter(),
                 state.context.get(JavaFileManager.class),
                 diagnosticListener,
-                options,
+                ImmutableList.of(),
                 arguments.getClassNames(),
                 fileObjects,
                 context);
