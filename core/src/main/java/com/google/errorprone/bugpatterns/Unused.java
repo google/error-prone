@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
@@ -62,10 +63,14 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
+import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ErroneousTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.IfTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -78,6 +83,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
@@ -660,6 +667,49 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
     return hasAnyNativeMethods.get();
   }
 
+  // https://docs.oracle.com/javase/specs/jls/se11/html/jls-14.html#jls-ExpressionStatement
+  private static final ImmutableSet<Tree.Kind> TOP_LEVEL_EXPRESSIONS =
+      ImmutableSet.of(
+          Tree.Kind.ASSIGNMENT,
+          Tree.Kind.PREFIX_INCREMENT,
+          Tree.Kind.PREFIX_DECREMENT,
+          Tree.Kind.POSTFIX_INCREMENT,
+          Tree.Kind.POSTFIX_DECREMENT,
+          Tree.Kind.METHOD_INVOCATION,
+          Tree.Kind.NEW_CLASS);
+
+  private static boolean needsBlock(TreePath path) {
+    Tree leaf = path.getLeaf();
+    class Visitor extends SimpleTreeVisitor<Boolean, Void> {
+
+      @Override
+      public Boolean visitIf(IfTree tree, Void unused) {
+        return tree.getThenStatement() == leaf || tree.getElseStatement() == leaf;
+      }
+
+      @Override
+      public Boolean visitDoWhileLoop(DoWhileLoopTree tree, Void unused) {
+        return tree.getStatement() == leaf;
+      }
+
+      @Override
+      public Boolean visitWhileLoop(WhileLoopTree tree, Void unused) {
+        return tree.getStatement() == leaf;
+      }
+
+      @Override
+      public Boolean visitForLoop(ForLoopTree tree, Void unused) {
+        return tree.getStatement() == leaf;
+      }
+
+      @Override
+      public Boolean visitEnhancedForLoop(EnhancedForLoopTree tree, Void unused) {
+        return tree.getStatement() == leaf;
+      }
+    }
+    return firstNonNull(path.getParentPath().getLeaf().accept(new Visitor(), null), false);
+  }
+
   private static ImmutableList<SuggestedFix> buildUnusedVarFixes(
       Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
     // Don't suggest a fix for fields annotated @Inject: we can warn on them, but they *could* be
@@ -676,20 +726,18 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       StatementTree statement = (StatementTree) usagePath.getLeaf();
       if (statement.getKind() == Kind.VARIABLE) {
         VariableTree variableTree = (VariableTree) statement;
-        if (hasSideEffect(((VariableTree) statement).getInitializer())) {
+        ExpressionTree initializer = variableTree.getInitializer();
+        if (hasSideEffect(initializer) && TOP_LEVEL_EXPRESSIONS.contains(initializer.getKind())) {
           encounteredSideEffects = true;
           if (varKind == ElementKind.FIELD) {
             String newContent =
                 String.format(
                     "%s{ %s; }",
-                    varSymbol.isStatic() ? "static " : "",
-                    state.getSourceForNode(variableTree.getInitializer()));
+                    varSymbol.isStatic() ? "static " : "", state.getSourceForNode(initializer));
             fix.merge(replaceWithComments(usagePath, newContent, state));
             removeSideEffectsFix.replace(statement, "");
           } else {
-            fix.replace(
-                statement,
-                String.format("%s;", state.getSourceForNode(variableTree.getInitializer())));
+            fix.replace(statement, String.format("%s;", state.getSourceForNode(initializer)));
             removeSideEffectsFix.replace(statement, "");
           }
         } else if (isEnhancedForLoopVar(usagePath)) {
@@ -703,8 +751,9 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           fix.replace(variableTree, newContent);
           removeSideEffectsFix.replace(variableTree, newContent);
         } else {
-          fix.merge(replaceWithComments(usagePath, "", state));
-          removeSideEffectsFix.merge(replaceWithComments(usagePath, "", state));
+          String replacement = needsBlock(usagePath) ? "{}" : "";
+          fix.merge(replaceWithComments(usagePath, replacement, state));
+          removeSideEffectsFix.merge(replaceWithComments(usagePath, replacement, state));
         }
         continue;
       } else if (statement.getKind() == Kind.EXPRESSION_STATEMENT) {
@@ -734,8 +783,9 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           }
         }
       }
-      fix.replace(statement, "");
-      removeSideEffectsFix.replace(statement, "");
+      String replacement = needsBlock(usagePath) ? "{}" : "";
+      fix.replace(statement, replacement);
+      removeSideEffectsFix.replace(statement, replacement);
     }
     return encounteredSideEffects
         ? ImmutableList.of(fix.build(), removeSideEffectsFix.build())

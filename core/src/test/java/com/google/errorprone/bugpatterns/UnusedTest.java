@@ -977,4 +977,41 @@ public class UnusedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void sideEffectFix() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private static final int[] xs = new int[0];",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void blockFixTest() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  void foo() {",
+            "    int a = 1;",
+            "    if (hashCode() > 0)",
+            "      a = 2;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  void foo() {",
+            "    if (hashCode() > 0) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
