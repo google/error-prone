@@ -17,10 +17,13 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Streams;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
 import java.io.Serializable;
@@ -82,6 +85,40 @@ public final class ErrorProneFlags implements Serializable {
     return this.get(key).map(ErrorProneFlags::parseBoolean);
   }
 
+  /**
+   * Gets the flag value for an enum of the given type, wrapped in an {@link Optional}, which is
+   * empty if the flag is unset.
+   */
+  public <T extends Enum<T>> Optional<T> getEnum(String key, Class<T> clazz) {
+    return this.get(key).map(value -> asEnumValue(key, value, clazz));
+  }
+
+  /**
+   * Gets the flag value for a comma-separated set of enums of the given type, wrapped in an {@link
+   * Optional}, which is empty if the flag is unset. If the flag is explicitly set to empty, an
+   * empty set will be returned.
+   */
+  public <T extends Enum<T>> Optional<ImmutableSet<T>> getEnumSet(String key, Class<T> clazz) {
+    return this.get(key)
+        .map(
+            value ->
+                Streams.stream(Splitter.on(',').omitEmptyStrings().split(value))
+                    .map(v -> asEnumValue(key, v, clazz))
+                    .collect(toImmutableSet()));
+  }
+
+  private static <T extends Enum<T>> T asEnumValue(String key, String value, Class<T> clazz) {
+    try {
+      return Enum.valueOf(clazz, value);
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException(
+          String.format(
+              "Error Prone flag %s=%s could not be parsed as an enum constant of %s",
+              key, value, clazz),
+          e);
+    }
+  }
+
   private static boolean parseBoolean(String value) {
     if ("true".equalsIgnoreCase(value)) {
       return true;
@@ -131,6 +168,7 @@ public final class ErrorProneFlags implements Serializable {
     combinedMaps.putAll(other.getFlagsMap());
     return ErrorProneFlags.fromMap(combinedMaps);
   }
+
 
   /** Builder for Error Prone command-line flags object. Parses flags from strings. */
   public static class Builder {
