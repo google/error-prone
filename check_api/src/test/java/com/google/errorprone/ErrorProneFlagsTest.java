@@ -22,6 +22,7 @@ import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -126,5 +127,38 @@ public final class ErrorProneFlagsTest {
     ErrorProneFlags nonEmptyFlags = ErrorProneFlags.fromMap(ImmutableMap.of("a", "b"));
     assertThat(nonEmptyFlags.isEmpty()).isFalse();
     assertThat(nonEmptyFlags.getFlagsMap().isEmpty()).isFalse();
+  }
+
+  /** An enum for testing. */
+  public enum Colour {
+    RED,
+    YELLOW,
+    GREEN
+  }
+
+  @Test
+  public void enumFlags() {
+    ErrorProneFlags flags =
+        ErrorProneFlags.builder()
+            .parseFlag("-XepOpt:Colour=RED")
+            .parseFlag("-XepOpt:Colours=YELLOW,GREEN")
+            .parseFlag("-XepOpt:EmptyColours=")
+            .build();
+    assertThat(flags.getEnum("Colour", Colour.class)).hasValue(Colour.RED);
+    assertThat(flags.getEnumSet("Colours", Colour.class))
+        .hasValue(ImmutableSet.of(Colour.YELLOW, Colour.GREEN));
+    assertThat(flags.getEnumSet("EmptyColours", Colour.class)).hasValue(ImmutableSet.of());
+    assertThat(flags.getEnumSet("NoSuchColours", Colour.class)).isEmpty();
+  }
+
+  @Test
+  public void invalidEnumFlags() {
+    ErrorProneFlags flags =
+        ErrorProneFlags.builder()
+            .parseFlag("-XepOpt:Colour=NOSUCH")
+            .parseFlag("-XepOpt:Colours=YELLOW,NOSUCH")
+            .build();
+    assertThrows(IllegalArgumentException.class, () -> flags.getEnum("Colour", Colour.class));
+    assertThrows(IllegalArgumentException.class, () -> flags.getEnumSet("Colours", Colour.class));
   }
 }
