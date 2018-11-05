@@ -18,19 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
-import com.google.common.io.ByteStreams;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -170,28 +161,13 @@ public class JdkObsoleteTest {
         .doTest();
   }
 
-  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
-
   /** A test input. */
   public interface Lib {
     Enumeration<Integer> foos();
   }
 
-  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
-    String entryPath = clazz.getName().replace('.', '/') + ".class";
-    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
-      jos.putNextEntry(new JarEntry(entryPath));
-      ByteStreams.copy(is, jos);
-    }
-  }
-
   @Test
-  public void obsoleteOverride() throws IOException {
-    File libJar = tempFolder.newFile("lib.jar");
-    try (FileOutputStream fis = new FileOutputStream(libJar);
-        JarOutputStream jos = new JarOutputStream(fis)) {
-      addClassToJar(jos, Lib.class);
-    }
+  public void obsoleteOverride() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -263,12 +239,7 @@ public class JdkObsoleteTest {
   }
 
   @Test
-  public void obsoleteMocking() throws IOException {
-    File libJar = tempFolder.newFile("lib.jar");
-    try (FileOutputStream fis = new FileOutputStream(libJar);
-        JarOutputStream jos = new JarOutputStream(fis)) {
-      addClassToJar(jos, Lib.class);
-    }
+  public void obsoleteMocking() {
     testHelper
         .addSourceLines(
             "Test.java",

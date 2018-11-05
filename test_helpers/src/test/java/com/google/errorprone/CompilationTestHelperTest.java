@@ -451,4 +451,38 @@ public class CompilationTestHelperTest {
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Could not instantiate BugChecker");
   }
+
+  /** Test classes used for withClassPath tests */
+  public static class WithClassPath extends WithClassPathSuper {}
+
+  public static class WithClassPathSuper {}
+
+  @Test
+  public void withClassPath_success() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + WithClassPath.class.getCanonicalName() + ";",
+            "class Test extends WithClassPath {}")
+        .withClasspath(
+            CompilationTestHelperTest.class, WithClassPath.class, WithClassPathSuper.class)
+        .doTest();
+  }
+
+  @Test
+  public void withClassPath_failure() {
+    // disable checkWellFormed
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + WithClassPath.class.getCanonicalName() + ";",
+            "// BUG: Diagnostic contains: cannot access "
+                + WithClassPathSuper.class.getCanonicalName(),
+            "class Test extends WithClassPath {}")
+        .withClasspath(CompilationTestHelperTest.class, WithClassPath.class)
+        .ignoreJavacErrors()
+        .matchAllDiagnostics()
+        .expectResult(Result.ERROR)
+        .doTest();
+  }
 }
