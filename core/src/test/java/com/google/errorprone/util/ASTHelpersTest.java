@@ -31,7 +31,6 @@ import static org.junit.Assert.assertTrue;
 import com.google.common.base.Joiner;
 import com.google.common.base.Verify;
 import com.google.common.collect.Iterables;
-import com.google.common.io.ByteStreams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -77,10 +76,6 @@ import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -89,14 +84,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.junit.After;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -681,27 +672,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     }
   }
 
-  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
-
-  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
-    String entryPath = clazz.getName().replace('.', '/') + ".class";
-    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
-      jos.putNextEntry(new JarEntry(entryPath));
-      ByteStreams.copy(is, jos);
-    }
-  }
-
   @Test
-  public void testHasDirectAnnotationWithSimpleNameWithoutAnnotationOnClasspath()
-      throws IOException {
-    File libJar = tempFolder.newFile("lib.jar");
-    try (FileOutputStream fis = new FileOutputStream(libJar);
-        JarOutputStream jos = new JarOutputStream(fis)) {
-      addClassToJar(jos, CustomCRVTest.class);
-      addClassToJar(jos, ASTHelpersTest.class);
-      addClassToJar(jos, CompilerBasedAbstractTest.class);
-    }
-
+  public void testHasDirectAnnotationWithSimpleNameWithoutAnnotationOnClasspath() {
     CompilationTestHelper.newInstance(HasDirectAnnotationWithSimpleNameChecker.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -711,7 +683,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "    com.google.errorprone.util.ASTHelpersTest.CustomCRVTest.hello();",
             "  }",
             "}")
-        .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .withClasspath(CustomCRVTest.class, ASTHelpersTest.class, CompilerBasedAbstractTest.class)
         .doTest();
   }
 

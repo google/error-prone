@@ -22,10 +22,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -34,6 +34,7 @@ import com.sun.tools.javac.main.Main.Result;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -45,6 +46,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import javax.annotation.Nullable;
 import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -67,9 +72,10 @@ public class CompilationTestHelper {
   private final ByteArrayOutputStream outputStream;
   private final ErrorProneInMemoryFileManager fileManager;
   private final List<JavaFileObject> sources = new ArrayList<>();
-  private List<String> args = ImmutableList.of();
+  private ImmutableList<String> extraArgs = ImmutableList.of();
+  @Nullable private ImmutableList<Class<?>> overrideClasspath;
   private boolean expectNoDiagnostics = false;
-  private Optional<Result> expectedResult = Optional.absent();
+  private Optional<Result> expectedResult = Optional.empty();
   private boolean checkWellFormed = true;
   private LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic =
       LookForCheckNameInDiagnostic.YES;
@@ -123,14 +129,37 @@ public class CompilationTestHelper {
   }
 
   /**
-   * Creates a list of arguments to pass to the compiler, including the list of source files to
-   * compile. Uses DEFAULT_ARGS as the base and appends the extraArgs passed in.
+   * Creates a list of arguments to pass to the compiler. Uses DEFAULT_ARGS as the base and appends
+   * the overridden classpath, if provided, and any extraArgs that were provided.
    */
-  private static List<String> buildArguments(List<String> extraArgs) {
-    return ImmutableList.<String>builder()
-        .addAll(DEFAULT_ARGS)
-        .addAll(disableImplicitProcessing(extraArgs))
-        .build();
+  private static List<String> buildArguments(
+      @Nullable List<Class<?>> overrideClasspath, List<String> extraArgs) {
+    ImmutableList.Builder<String> result = ImmutableList.<String>builder().addAll(DEFAULT_ARGS);
+    getOverrideClasspath(overrideClasspath)
+        .ifPresent((Path jar) -> result.add("-cp").add(jar.toString()));
+    return result.addAll(disableImplicitProcessing(extraArgs)).build();
+  }
+
+  private static Optional<Path> getOverrideClasspath(@Nullable List<Class<?>> overrideClasspath) {
+    if (overrideClasspath == null) {
+      return Optional.empty();
+    }
+    try {
+      Path tempJarFile = Files.createTempFile(/* prefix = */ null, /* suffix = */ ".jar");
+      try (OutputStream os = Files.newOutputStream(tempJarFile);
+          JarOutputStream jos = new JarOutputStream(os)) {
+        for (Class<?> clazz : overrideClasspath) {
+          String entryPath = clazz.getName().replace('.', '/') + ".class";
+          jos.putNextEntry(new JarEntry(entryPath));
+          try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+            ByteStreams.copy(is, jos);
+          }
+        }
+      }
+      return Optional.of(tempJarFile);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   /**
@@ -166,11 +195,23 @@ public class CompilationTestHelper {
   }
 
   /**
+   * Sets the classpath for the test compilation, overriding the default of using the runtime
+   * classpath of the test execution. This is useful to verify correct behavior when the classpath
+   * is incomplete.
+   *
+   * @param classes the class(es) to use as the classpath
+   */
+  public CompilationTestHelper withClasspath(Class<?>... classes) {
+    this.overrideClasspath = ImmutableList.copyOf(classes);
+    return this;
+  }
+
+  /**
    * Sets custom command-line arguments for the compilation. These will be appended to the default
    * compilation arguments.
    */
   public CompilationTestHelper setArgs(List<String> args) {
-    this.args = args;
+    this.extraArgs = ImmutableList.copyOf(args);
     return this;
   }
 
@@ -236,8 +277,7 @@ public class CompilationTestHelper {
   // TODO(eaftan): any way to ensure that this is actually called?
   public void doTest() {
     Preconditions.checkState(!sources.isEmpty(), "No source files to compile");
-    List<String> allArgs = buildArguments(args);
-    Result result = compile(sources, allArgs.toArray(new String[0]));
+    Result result = compile();
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticHelper.getDiagnostics()) {
       if (diagnostic.getCode().contains("error.prone.crash")) {
         fail(diagnostic.getMessage(Locale.ENGLISH));
@@ -254,13 +294,13 @@ public class CompilationTestHelper {
       assertWithMessage(
               String.format(
                   "Expected compilation result to be "
-                      + expectedResult.or(Result.OK)
+                      + expectedResult.orElse(Result.OK)
                       + ", but was %s. No diagnostics were emitted."
                       + " OutputStream from Compiler follows.\n\n%s",
                   result,
                   outputStream))
           .that(result)
-          .isEqualTo(expectedResult.or(Result.OK));
+          .isEqualTo(expectedResult.orElse(Result.OK));
     } else {
       for (JavaFileObject source : sources) {
         try {
@@ -288,9 +328,10 @@ public class CompilationTestHelper {
     }
   }
 
-  private Result compile(Iterable<JavaFileObject> sources, String[] args) {
+  private Result compile() {
+    List<String> processedArgs = buildArguments(overrideClasspath, extraArgs);
     if (checkWellFormed) {
-      checkWellFormed(sources, args);
+      checkWellFormed(sources, processedArgs);
     }
     createAndInstallTempFolderForOutput(fileManager);
     return compiler
@@ -300,7 +341,7 @@ public class CompilationTestHelper {
                     /*autoFlush=*/ true),
                 fileManager,
                 diagnosticHelper.collector,
-                /* options= */ ImmutableList.copyOf(args),
+                /* options= */ ImmutableList.copyOf(processedArgs),
                 /* classes= */ ImmutableList.of(),
                 sources)
             .call()
@@ -330,13 +371,13 @@ public class CompilationTestHelper {
             });
   }
 
-  private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {
+  private void checkWellFormed(Iterable<JavaFileObject> sources, List<String> args) {
     createAndInstallTempFolderForOutput(fileManager);
     JavaCompiler compiler = JavacTool.create();
     OutputStream outputStream = new ByteArrayOutputStream();
-    String[] remainingArgs = null;
+    List<String> remainingArgs = null;
     try {
-      remainingArgs = ErrorProneOptions.processArgs(args).getRemainingArgs();
+      remainingArgs = Arrays.asList(ErrorProneOptions.processArgs(args).getRemainingArgs());
     } catch (InvalidCommandLineOptionException e) {
       fail("Exception during argument processing: " + e);
     }
@@ -347,7 +388,7 @@ public class CompilationTestHelper {
                 /*autoFlush=*/ true),
             fileManager,
             null,
-            buildArguments(Arrays.asList(remainingArgs)),
+            remainingArgs,
             null,
             sources);
     boolean result = task.call();

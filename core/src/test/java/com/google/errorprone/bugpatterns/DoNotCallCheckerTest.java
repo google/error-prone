@@ -16,19 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.DoNotCall;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -169,30 +159,14 @@ public class DoNotCallCheckerTest {
         .doTest();
   }
 
-  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
-
   /** Test class containing a method annotated with @DNC. */
   public static class DNCTest {
     @DoNotCall
     public static final void f() {}
   }
 
-  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
-    String entryPath = clazz.getName().replace('.', '/') + ".class";
-    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
-      jos.putNextEntry(new JarEntry(entryPath));
-      ByteStreams.copy(is, jos);
-    }
-  }
-
   @Test
-  public void noDNConClasspath() throws Exception {
-    File libJar = tempFolder.newFile("lib.jar");
-    try (FileOutputStream fis = new FileOutputStream(libJar);
-        JarOutputStream jos = new JarOutputStream(fis)) {
-      addClassToJar(jos, DNCTest.class);
-      addClassToJar(jos, DoNotCallCheckerTest.class);
-    }
+  public void noDNConClasspath() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -202,7 +176,7 @@ public class DoNotCallCheckerTest {
             "    com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f();",
             "  }",
             "}")
-        .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .withClasspath(DNCTest.class, DoNotCallCheckerTest.class)
         .doTest();
   }
 }
