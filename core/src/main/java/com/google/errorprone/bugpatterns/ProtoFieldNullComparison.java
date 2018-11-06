@@ -131,8 +131,9 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     return tree.getKind() == Kind.NULL_LITERAL;
   }
 
-  /** Match proto receivers matching this. */
-  private final Matcher<ExpressionTree> protoReceiver;
+  /** Matcher for generated protobufs. */
+  private static final Matcher<ExpressionTree> PROTO_RECEIVER =
+      instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, PROTO_LITE_SUPER_CLASS);
 
   /** Only track assignments of variables matching this. */
   private final Matcher<ExpressionTree> trackAssignments;
@@ -141,21 +142,14 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   private final boolean matchTestAssertions;
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
-    boolean matchLite = flags.getBoolean("ProtoFieldNullComparison:MatchLite").orElse(false);
-    protoReceiver =
-        matchLite
-            ? instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, PROTO_LITE_SUPER_CLASS)
-            : instanceMethod().onDescendantOf(PROTO_SUPER_CLASS);
     boolean trackServerProtoAssignments =
         flags.getBoolean("ProtoFieldNullComparison:TrackServerProtoAssignments").orElse(false);
     matchListGetters = flags.getBoolean("ProtoFieldNullComparison:MatchListGetters").orElse(false);
     matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
 
-    ImmutableList.Builder<String> toTrack = ImmutableList.builder();
-    if (matchLite) {
-      toTrack.add(PROTO_LITE_SUPER_CLASS);
-    }
+    ImmutableList.Builder<String> toTrack =
+        ImmutableList.<String>builder().add(PROTO_LITE_SUPER_CLASS);
     if (trackServerProtoAssignments) {
       toTrack.add(PROTO_SUPER_CLASS);
     }
@@ -247,7 +241,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
     private Optional<Fixer> getFixer(ExpressionTree tree, VisitorState state) {
       ExpressionTree resolvedTree = getEffectiveTree(tree);
-      if (resolvedTree == null || !protoReceiver.matches(resolvedTree, state)) {
+      if (resolvedTree == null || !PROTO_RECEIVER.matches(resolvedTree, state)) {
         return Optional.empty();
       }
       return Arrays.stream(GetterTypes.values())
