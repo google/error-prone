@@ -26,7 +26,7 @@ make sure that there's a (potentially empty) Set binding for your type:
 However, there's a slightly easier way to express this:
 
 ```java
-@Multibinds abstract Set<?> provideEmptySetOfMyType();
+@Multibinds abstract Set<MyType> provideEmptySetOfMyType();
 ```
 
 [dmb]: https://google.github.io/dagger/multibindings.html

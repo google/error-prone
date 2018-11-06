@@ -3649,6 +3649,15 @@
 <dd>
 <div class="block">Returns the end position of the node, or -1 if it is not available.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneFlags.html#getEnum-java.lang.String-java.lang.Class-">getEnum(String, Class&lt;T&gt;)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
+<dd>
+<div class="block">Gets the flag value for an enum of the given type, wrapped in an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util"><code>Optional</code></a>, which is
+ empty if the flag is unset.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/ErrorProneFlags.html#getEnumSet-java.lang.String-java.lang.Class-">getEnumSet(String, Class&lt;T&gt;)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
+<dd>
+<div class="block">Gets the flag value for a comma-separated set of enums of the given type, wrapped in an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util"><code>Optional</code></a>, which is empty if the flag is unset.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html#getEverythingDiff--">getEverythingDiff()</a></span> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.Builder</a></dt>
 <dd>
 <div class="block"><code>.devtools.staticanalysis.errorprone.apidiff.EverythingDiff everything_diff = 1;</code></div>
@@ -10486,6 +10495,11 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withAnyName--">withAnyName()</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
 <dd>
 <div class="block">Match methods with any name.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/CompilationTestHelper.html#withClasspath-java.lang.Class...-">withClasspath(Class&lt;?&gt;...)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></dt>
+<dd>
+<div class="block">Sets the classpath for the test compilation, overriding the default of using the runtime
+ classpath of the test execution.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugCheckerInfo.html#withCustomDefaultSeverity-com.google.errorprone.BugPattern.SeverityLevel-">withCustomDefaultSeverity(BugPattern.SeverityLevel)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
