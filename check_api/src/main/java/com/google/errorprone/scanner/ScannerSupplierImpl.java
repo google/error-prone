@@ -74,7 +74,7 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
       try {
         return flagsConstructor.get().newInstance(getFlags());
       } catch (ReflectiveOperationException e) {
-        // Invoking flags constructor failed, do nothing and try default constructor.
+        throw new LinkageError("Could not instantiate BugChecker.", e);
       }
     }
     // If no flags constructor, invoke default constructor.
