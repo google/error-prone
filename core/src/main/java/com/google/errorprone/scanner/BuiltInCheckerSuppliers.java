@@ -354,6 +354,7 @@ import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadPriorityCheck;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
+import com.google.errorprone.bugpatterns.time.DurationFrom;
 import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
 import com.google.errorprone.bugpatterns.time.DurationToLongTimeUnit;
 import com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano;
@@ -369,6 +370,7 @@ import com.google.errorprone.bugpatterns.time.JodaPlusMinusLong;
 import com.google.errorprone.bugpatterns.time.JodaTimeConverterManager;
 import com.google.errorprone.bugpatterns.time.JodaToSelf;
 import com.google.errorprone.bugpatterns.time.JodaWithDurationAddedLong;
+import com.google.errorprone.bugpatterns.time.PeriodFrom;
 import com.google.errorprone.bugpatterns.time.PeriodGetTemporalUnit;
 import com.google.errorprone.bugpatterns.time.ProtoDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.ProtoTimestampGetSecondsGetNano;
@@ -448,6 +450,7 @@ public class BuiltInCheckerSuppliers {
           DeadException.class,
           DeadThread.class,
           DoNotCallChecker.class,
+          DurationFrom.class,
           DurationGetTemporalUnit.class,
           DurationToLongTimeUnit.class,
           EqualsNaN.class,
@@ -506,6 +509,7 @@ public class BuiltInCheckerSuppliers {
           OverridesJavaxInjectableMethod.class,
           PackageInfo.class,
           ParcelableCreator.class,
+          PeriodFrom.class,
           PeriodGetTemporalUnit.class,
           PreconditionsCheckNotNull.class,
           PreconditionsCheckNotNullPrimitive.class,
