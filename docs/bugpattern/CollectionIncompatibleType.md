@@ -9,6 +9,7 @@ element type are "incompatible." A typical example:
 
 ```java
 Set<Long> values = ...
+Integer i = ...
 if (values.contains(1)) { ... }
 ```
 
