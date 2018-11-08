@@ -100,8 +100,9 @@ class Demo {
 
 ```
 javac \
+  -J-Xbootclasspath/p:javac-9+181-r4173-1.jar \
   -XDcompilePolicy=byfile \
-  -processorpath error_prone_ant-2.3.1.jar \
+  -processorpath error_prone_core-2.3.2-with-dependencies.jar \
   "-Xplugin:ErrorProne -XepPatchChecks:refaster:${PWD}/myrule.refaster -XepPatchLocation:${PWD}" \
   Demo.java
 ```

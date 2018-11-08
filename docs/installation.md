@@ -208,10 +208,10 @@ API, and can be used with JDK 9, 10 and 11 by adding Error Prone to the
 Example:
 
 ```bash
-ERROR_PRONE_JAR=... @ path to error_prone_ant-2.3.2.jar
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.3.2/error_prone_core-2.3.2-with-dependencies.jar
 javac \
   -XDcompilePolicy=simple \
-  -processorpath $ERROR_PRONE_JAR \
+  -processorpath error_prone_core-2.3.2-with-dependencies.jar \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
   ShortSet.java
 ```
@@ -229,15 +229,14 @@ ShortSet.java:8: error: [CollectionIncompatibleType] Argument 'i - 1' should not
 To use Error Prone from the command line as a javac replacement:
 
 ```
-wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_ant/2.3.2/error_prone_ant-2.3.2.jar
-java -Xbootclasspath/p:error_prone_ant-2.3.2.jar com.google.errorprone.ErrorProneCompiler Test.java
-```
-
-```
-Test.java:1: error: [InfiniteRecursion] This method always recurses, and will cause a StackOverflowError
-class Test { void f() { f(); } }
-                        ^
-    (see http://errorprone.info/bugpattern/InfiniteRecursion)
+wget https://repo1.maven.org/maven2/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.3.2/error_prone_core-2.3.2-with-dependencies.jar
+javac \
+  -J-Xbootclasspath/p:javac-9+181-r4173-1.jar \
+  -XDcompilePolicy=simple \
+  -processorpath error_prone_core-2.3.2-with-dependencies.jar \
+  '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
+  ShortSet.java
 ```
 
 ## My build system isn't listed here
