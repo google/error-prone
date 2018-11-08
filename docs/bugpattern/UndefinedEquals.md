@@ -1,7 +1,8 @@
 This code uses `Object.equals` (or similar method) with a type that does not
 have well-defined `equals` behavior: [`Collection`], [`Iterable`], [`Multimap`],
 [`Queue`], or [`CharSequence`]. Such a call to `equals` may return `false` in
-cases where equality was expected.
+cases where equality was expected. [`SparseArray`] and [`LongSparseArray`] do
+not implement `equals`, so will fall back to reference equality.
 
 ## For [`Collection`] or [`Iterable`]
 
@@ -44,13 +45,19 @@ When comparing a `String` to a `CharSequence`, prefer `String#contentEquals`.
 When comparing the content of two `CharSequence`s, you may want to compare the
 string representation: `lhs.toString().contentEquals(rhs)`.
 
+## For [`SparseArray`] and [`LongSparseArray`]
+
+These must be iterated over and compared manually, element by element.
+
 [`Collection`]: https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html
 [`Iterable`]: https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
 [`Iterables.elementsEqual`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/Iterables.html#elementsEqual-java.lang.Iterable-java.lang.Iterable-
 [`LinkedList`]: http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html
 [`ListMultimap`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/ListMultimap.html
+[`LongSparseArray`]: https://developer.android.com/reference/android/util/LongSparseArray
 [`Multimap`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/Multimap.html
 [`Multiset`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/Multiset.html
 [`SetMultimap`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/SetMultimap.html
+[`SparseArray`]: https://developer.android.com/reference/android/util/SparseArray
 [`Queue`]: http://docs.oracle.com/javase/8/docs/api/java/util/Queue.html
 [`CharSequence`]: http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html

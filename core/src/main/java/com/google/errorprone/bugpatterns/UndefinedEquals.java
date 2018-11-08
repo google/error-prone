@@ -32,6 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -54,9 +55,7 @@ import java.util.Optional;
  */
 @BugPattern(
     name = "UndefinedEquals",
-    summary =
-        "Collection, Iterable, Multimap, Queue, and CharSequence "
-            + "do not have well-defined equals behavior",
+    summary = "This type is not guaranteed to implement a useful #equals method.",
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class UndefinedEquals extends BugChecker implements MethodInvocationTreeMatcher {
@@ -96,73 +95,95 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
 
     return Arrays.stream(BadClass.values())
         .filter(
-            b ->
-                isSameType(getType(receiver), b.type(state), state)
-                    || isSameType(getType(argument), b.type(state), state))
+            b -> b.matchesType(getType(receiver), state) || b.matchesType(getType(argument), state))
         .findFirst()
         .map(
             b ->
                 buildDescription(tree)
-                    .setMessage(b.typeName() + " does not have well-defined equals behavior")
+                    .setMessage(b.shortName() + " does not have well-defined equals behavior.")
                     .addFix(b.generateFix(receiver, argument, state))
                     .build())
         .orElse(Description.NO_MATCH);
   }
 
   private enum BadClass {
-    MULTIMAP("com.google.common.collect.Multimap") {
+    LONG_SPARSE_ARRAY(
+        "LongSparseArray",
+        "android.util.LongSparseArray",
+        "android.support.v4.util.LongSparseArrayCompat",
+        "androidx.collection.LongSparseArrayCompat") {
       @Override
       Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
         return Optional.empty();
       }
     },
-    CHARSEQUENCE("java.lang.CharSequence") {
+    SPARSE_ARRAY(
+        "SparseArray",
+        "android.util.SparseArray",
+        "android.support.v4.util.SparseArrayCompat",
+        "androidx.collection.SparseArrayCompat") {
       @Override
       Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
-        if (isSameType(getType(receiver), CHARSEQUENCE.type(state), state)
+        return Optional.empty();
+      }
+    },
+    MULTIMAP("Multimap", "com.google.common.collect.Multimap") {
+      @Override
+      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
+        return Optional.empty();
+      }
+    },
+    CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence") {
+      @Override
+      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
+        Type charSequence = state.getTypeFromString(getOnlyElement(CHAR_SEQUENCE.typeNames));
+        if (isSameType(getType(receiver), charSequence, state)
             && isSameType(getType(argument), state.getSymtab().stringType, state)) {
           return Optional.of(SuggestedFix.postfixWith(receiver, ".toString()"));
         }
-        if (isSameType(getType(argument), CHARSEQUENCE.type(state), state)
+        if (isSameType(getType(argument), charSequence, state)
             && isSameType(getType(receiver), state.getSymtab().stringType, state)) {
           return Optional.of(SuggestedFix.postfixWith(argument, ".toString()"));
         }
         return Optional.empty();
       }
     },
-    ITERABLE("java.lang.Iterable") {
+    ITERABLE("Iterable", "java.lang.Iterable") {
       @Override
       Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
         return Optional.empty();
       }
     },
-    COLLECTION("java.util.Collection") {
+    COLLECTION("Collection", "java.util.Collection") {
       @Override
       Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
         return Optional.empty();
       }
     },
-    QUEUE("java.util.Queue") {
+    QUEUE("Queue", "java.util.Queue") {
       @Override
       Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
         return Optional.empty();
       }
     };
 
-    private final String typeName;
+    private final String shortName;
+    private final ImmutableSet<String> typeNames;
 
-    BadClass(String typeName) {
-      this.typeName = typeName;
+    BadClass(String shortName, String... typeNames) {
+      this.shortName = shortName;
+      this.typeNames = ImmutableSet.copyOf(typeNames);
     }
 
     abstract Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state);
 
-    private Type type(VisitorState state) {
-      return state.getTypeFromString(typeName);
+    private boolean matchesType(Type type, VisitorState state) {
+      return typeNames.stream()
+          .anyMatch(typeName -> isSameType(type, state.getTypeFromString(typeName), state));
     }
 
-    private String typeName() {
-      return typeName;
+    private String shortName() {
+      return shortName;
     }
   }
 }
