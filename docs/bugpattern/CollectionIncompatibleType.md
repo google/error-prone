@@ -9,7 +9,7 @@ element type are "incompatible." A typical example:
 
 ```java
 Set<Long> values = ...
-if (values.contains(1)) { ... }
+if (values.contains(42)) { ... }
 ```
 
 This code looks reasonable, but there's a problem: The `Set` contains `Long`
@@ -24,7 +24,7 @@ be strictly *assignable to* the collection's element type. For example:
 
 ```java
 void addIntegerOne(Set<? extends Number> numbers) {
-  numbers.add(1); // won't compile
+  numbers.add(42); // won't compile
 }
 ```
 
@@ -36,11 +36,11 @@ that only query or remove elements cannot corrupt the collection:
 
 ```java
 void removeIntegerOne(Set<? extends Number> numbers) {
-  numbers.remove(1); // should compile (and does)
+  numbers.remove(42); // should compile (and does)
 }
 ```
 
-In this case, the `Integer` `1` might be contained in `numbers`, and should be
+In this case, the `Integer` `42` might be contained in `numbers`, and should be
 removed if it is, but if `numbers` is a `Set<Long>`, no harm is done.
 
 We'd like to define `contains` in a way that rejects the bad call but permits
