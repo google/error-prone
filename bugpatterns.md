@@ -98,6 +98,9 @@ Thread created but not started
 __[DoNotCall](bugpattern/DoNotCall)__<br>
 This method should not be called.
 
+__[DurationFrom](bugpattern/DurationFrom)__<br>
+Duration.from(Duration) returns itself; from(Period) throws a runtime exception.
+
 __[DurationGetTemporalUnit](bugpattern/DurationGetTemporalUnit)__<br>
 Duration.get() only works with SECONDS or NANOS.
 
@@ -277,6 +280,9 @@ Declaring types inside package-info.java files is very bad form
 
 __[ParcelableCreator](bugpattern/ParcelableCreator)__<br>
 Detects classes which implement Parcelable but don&#39;t have CREATOR
+
+__[PeriodFrom](bugpattern/PeriodFrom)__<br>
+Period.from(Period) returns itself; from(Duration) throws a runtime exception.
 
 __[PeriodGetTemporalUnit](bugpattern/PeriodGetTemporalUnit)__<br>
 Period.get() only works with YEARS, MONTHS, or DAYS.
@@ -761,7 +767,7 @@ __[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
 Avoid hash-based containers of java.net.URL--the containers rely on equals() and hashCode(), which cause java.net.URL to make blocking internet connections.
 
 __[UndefinedEquals](bugpattern/UndefinedEquals)__<br>
-Collection, Iterable, Multimap, Queue, and CharSequence do not have well-defined equals behavior
+This type is not guaranteed to implement a useful #equals method.
 
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
 Unnecessary use of grouping parentheses

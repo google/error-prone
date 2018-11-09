@@ -2259,96 +2259,108 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/DurationFrom.html" title="class in com.google.errorprone.bugpatterns.time">DurationFrom</a></span></code>
+<div class="block">Bans calls to <code>Duration.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Period.html?is-external=true" title="class or interface in java.time"><code>Period</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/DurationGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationGetTemporalUnit</a></span></code>
 <div class="block">Bans calls to <code>Duration.get(temporalUnit)</code> where <code>temporalUnit</code> is not <code>SECONDS</code> or <code>NANOS</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/DurationToLongTimeUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationToLongTimeUnit</a></span></code>
 <div class="block">Reports an error when a Duration or Instant is incorrectly decomposed in order to call an API
  which accepts a <code>&lt;long, TimeUnit&gt;</code> pair.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JavaDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationGetSecondsGetNano</a></span></code>
 <div class="block">This checker warns about calls to <code>duration.getNano()</code> without a corresponding "nearby"
  call to <code>duration.getSeconds()</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JavaDurationWithNanos.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationWithNanos</a></span></code>
 <div class="block">Check for calls to <code>duration.withNanos(int)</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JavaDurationWithSeconds.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationWithSeconds</a></span></code>
 <div class="block">Check for calls to <code>duration.withSeconds(long)</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JavaInstantGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaInstantGetSecondsGetNano</a></span></code>
 <div class="block">This checker warns about calls to <code>instant.getNano()</code> without a corresponding "nearby" call
  to <code>instant.getEpochSecond()</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JavaTimeDefaultTimeZone.html" title="class in com.google.errorprone.bugpatterns.time">JavaTimeDefaultTimeZone</a></span></code>
 <div class="block">Check for calls to <code>java.time</code> APIs that silently use the default system time-zone.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JodaDurationConstructor.html" title="class in com.google.errorprone.bugpatterns.time">JodaDurationConstructor</a></span></code>
 <div class="block">Check for calls to new Duration(long).</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JodaDurationWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaDurationWithMillis</a></span></code>
 <div class="block">Check for calls to <code>duration.withMillis(long)</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JodaInstantWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaInstantWithMillis</a></span></code>
 <div class="block">Check for calls to <code>instant.withMillis(long)</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JodaNewPeriod.html" title="class in com.google.errorprone.bugpatterns.time">JodaNewPeriod</a></span></code>
 <div class="block">Match possibly incorrect use of Period to obtain a number of (e.g.) days between two dates.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JodaPlusMinusLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaPlusMinusLong</a></span></code>
 <div class="block">Check for calls to JodaTime's <code>type.plus(long)</code> and <code>type.minus(long)</code> where <code>&lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JodaTimeConverterManager.html" title="class in com.google.errorprone.bugpatterns.time">JodaTimeConverterManager</a></span></code>
 <div class="block">Ban usage of Joda's <code>ConverterManager</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JodaToSelf.html" title="class in com.google.errorprone.bugpatterns.time">JodaToSelf</a></span></code>
 <div class="block">Check for calls to Joda-Time's <code>foo.toFoo()</code> and <code>new Foo(foo)</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/JodaWithDurationAddedLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaWithDurationAddedLong</a></span></code>
 <div class="block">Check for calls to JodaTime's <code>type.withDurationAdded(long, int)</code> where <code>&lt;type&gt; =
  {Duration,Instant,DateTime}</code>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/time/PeriodFrom.html" title="class in com.google.errorprone.bugpatterns.time">PeriodFrom</a></span></code>
+<div class="block">Bans calls to <code>Period.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time"><code>Duration</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
