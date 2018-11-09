@@ -372,6 +372,7 @@ import com.google.errorprone.bugpatterns.time.JodaToSelf;
 import com.google.errorprone.bugpatterns.time.JodaWithDurationAddedLong;
 import com.google.errorprone.bugpatterns.time.PeriodFrom;
 import com.google.errorprone.bugpatterns.time.PeriodGetTemporalUnit;
+import com.google.errorprone.bugpatterns.time.PeriodTimeMath;
 import com.google.errorprone.bugpatterns.time.ProtoDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.ProtoTimestampGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.TemporalAccessorGetChronoField;
@@ -510,6 +511,7 @@ public class BuiltInCheckerSuppliers {
           PackageInfo.class,
           ParcelableCreator.class,
           PeriodFrom.class,
+          PeriodTimeMath.class,
           PeriodGetTemporalUnit.class,
           PreconditionsCheckNotNull.class,
           PreconditionsCheckNotNullPrimitive.class,
