@@ -94,6 +94,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.parser.Tokens.Comment;
+import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
@@ -881,20 +882,23 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
     }
     if (previousMember != null) {
       startTokenization = state.getEndPosition(previousMember);
+    } else if (state.getEndPosition(classTree.getModifiers()) == Position.NOPOS) {
+      startTokenization = ((JCTree) classTree).getStartPosition();
     } else {
-      int startOfClass = ((JCTree) classTree).getStartPosition();
-      String source =
-          state
-              .getSourceCode()
-              .subSequence(startOfClass, ((JCTree) tree).getStartPosition())
-              .toString();
-      startTokenization = startOfClass + source.indexOf("{") + 1;
+      startTokenization = state.getEndPosition(classTree.getModifiers());
     }
     String source =
         state.getSourceCode().subSequence(startTokenization, state.getEndPosition(tree)).toString();
-    List<ErrorProneToken> tokens = ErrorProneTokens.getTokens(source, state.context);
-    if (tokens.isEmpty() || tokens.get(0).comments().isEmpty()) {
-      return SuggestedFix.replace(startTokenization, state.getEndPosition(tree), replacement);
+    ImmutableList<ErrorProneToken> tokens = ErrorProneTokens.getTokens(source, state.context);
+    if (previousMember == null) {
+      tokens = getTokensAfterOpeningBrace(tokens);
+    }
+    if (tokens.isEmpty()) {
+      return SuggestedFix.replace(tree, replacement);
+    }
+    if (tokens.get(0).comments().isEmpty()) {
+      return SuggestedFix.replace(
+          startTokenization + tokens.get(0).pos(), state.getEndPosition(tree), replacement);
     }
     List<Comment> comments =
         tokens.get(0).comments().stream()
@@ -916,6 +920,16 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
     }
     return SuggestedFix.replace(
         startTokenization + startPos, state.getEndPosition(tree), replacement);
+  }
+
+  private static ImmutableList<ErrorProneToken> getTokensAfterOpeningBrace(
+      ImmutableList<ErrorProneToken> tokens) {
+    for (int i = 0; i < tokens.size() - 1; ++i) {
+      if (tokens.get(i).kind() == TokenKind.LBRACE) {
+        return tokens.subList(i + 1, tokens.size());
+      }
+    }
+    return ImmutableList.of();
   }
 
   private static boolean isEnhancedForLoopVar(TreePath variablePath) {

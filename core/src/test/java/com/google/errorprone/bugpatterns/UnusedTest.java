@@ -613,6 +613,23 @@ public class UnusedTest {
   }
 
   @Test
+  public void removal_rogueBraces() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "@SuppressWarnings(\"foo\" /* { */)",
+            "public class Test {",
+            "  private static final int A = 1;",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "@SuppressWarnings(\"foo\" /* { */)",
+            "public class Test {",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void unusedWithComment_interspersedComments() {
     helper
         .addSourceLines(
