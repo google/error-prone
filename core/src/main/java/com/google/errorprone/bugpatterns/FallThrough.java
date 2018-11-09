@@ -32,6 +32,8 @@ import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.Position;
+
 import java.util.regex.Pattern;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -63,10 +65,16 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
       // reported an error if that statement wasn't reachable, and the answer is
       // independent of any preceding statements.
       boolean completes = Reachability.canCompleteNormally(getLast(caseTree.stats));
+      int caseEndPositionIndex = caseEndPosition(state, caseTree);
+      int nextStartPositionIndex = next.getStartPosition();
+      // best effort work-around for https://github.com/google/error-prone/issues/613
+      if (caseEndPositionIndex == Position.NOPOS || nextStartPositionIndex == Position.NOPOS) {
+        continue;
+      }
       String comments =
           state
               .getSourceCode()
-              .subSequence(caseEndPosition(state, caseTree), next.getStartPosition())
+              .subSequence(caseEndPositionIndex, nextStartPositionIndex)
               .toString()
               .trim();
       if (completes && !FALL_THROUGH_PATTERN.matcher(comments).find()) {
