@@ -73,6 +73,7 @@ import com.google.errorprone.bugpatterns.ConstructorLeaksThis;
 import com.google.errorprone.bugpatterns.DateFormatConstant;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DeadThread;
+import com.google.errorprone.bugpatterns.DeduplicateConstants;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DivZero;
@@ -706,6 +707,7 @@ public class BuiltInCheckerSuppliers {
           ConstantField.class,
           ConstructorInvokesOverridable.class,
           ConstructorLeaksThis.class,
+          DeduplicateConstants.class,
           DepAnn.class,
           DivZero.class,
           EmptyIfStatement.class,
