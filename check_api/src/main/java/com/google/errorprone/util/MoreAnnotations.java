@@ -16,13 +16,18 @@
 
 package com.google.errorprone.util;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Streams;
 import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.TargetType;
 import com.sun.tools.javac.code.TypeAnnotationPosition;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,7 +53,7 @@ public final class MoreAnnotations {
    * annotation information with types for symbols completed from class files, so that approach
    * doesn't work across compilation boundaries.
    */
-  public static Stream<Attribute.Compound> getDeclarationAndTypeAttributes(Symbol sym) {
+  public static Stream<Compound> getDeclarationAndTypeAttributes(Symbol sym) {
     Symbol typeAnnotationOwner;
     switch (sym.getKind()) {
       case PARAMETER:
@@ -58,9 +63,13 @@ public final class MoreAnnotations {
         typeAnnotationOwner = sym;
     }
     return Streams.concat(
-        sym.getRawAttributes().stream(),
-        typeAnnotationOwner.getRawTypeAttributes().stream()
-            .filter(anno -> isAnnotationOnType(sym, anno.position)));
+            sym.getRawAttributes().stream(),
+            typeAnnotationOwner.getRawTypeAttributes().stream()
+                .filter(anno -> isAnnotationOnType(sym, anno.position)))
+        .collect(
+            groupingBy(c -> c.type.asElement().getQualifiedName(), LinkedHashMap::new, toList()))
+        .values().stream()
+        .map(c -> c.get(0));
   }
 
   private static boolean isAnnotationOnType(Symbol sym, TypeAnnotationPosition position) {
@@ -72,6 +81,7 @@ public final class MoreAnnotations {
         return position.type == TargetType.LOCAL_VARIABLE;
       case FIELD:
         return position.type == TargetType.FIELD;
+      case CONSTRUCTOR:
       case METHOD:
         return position.type == TargetType.METHOD_RETURN;
       case PARAMETER:
@@ -87,7 +97,8 @@ public final class MoreAnnotations {
         // on other types in the signature (e.g. `class Foo extends Bar<@A Baz> {}`).
         return false;
       default:
-        throw new AssertionError(sym.getKind());
+        throw new AssertionError(
+            "unsupported element kind in MoreAnnotation#isAnnotationOnType: " + sym.getKind());
     }
   }
 
