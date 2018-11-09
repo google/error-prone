@@ -106,7 +106,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
 
   // Represent a single day/hour/minute as hours/minutes/seconds is sometimes used to allow a block
   // of durations to have consistent units.
-  private static final ImmutableMap<TemporalUnit, Long> BLACKLIST =
+  private static final ImmutableMap<TemporalUnit, Long> BANLIST =
       ImmutableMap.of(
           ChronoUnit.HOURS, 24L,
           ChronoUnit.MINUTES, 60L,
@@ -166,7 +166,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
       return NO_MATCH;
     }
     TemporalUnit unit = METHOD_NAME_TO_UNIT.get(sym.getSimpleName().toString());
-    if (Objects.equals(BLACKLIST.get(unit), value.longValue())) {
+    if (Objects.equals(BANLIST.get(unit), value.longValue())) {
       return NO_MATCH;
     }
     Duration duration = Duration.of(value.longValue(), unit);
