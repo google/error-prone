@@ -131,11 +131,12 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
       // don't inline constants
       return NO_MATCH;
     }
-    Number value = constValue(arg, Number.class);
-    if (value == null) {
+    Number constValue = constValue(arg, Number.class);
+    if (constValue == null) {
       return NO_MATCH;
     }
-    if (value.intValue() == 0) {
+    long value = constValue.longValue();
+    if (value == 0) {
       switch (api) {
         case JODA:
           ExpressionTree receiver = getReceiver(tree);
@@ -166,10 +167,10 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
       return NO_MATCH;
     }
     TemporalUnit unit = METHOD_NAME_TO_UNIT.get(sym.getSimpleName().toString());
-    if (Objects.equals(BANLIST.get(unit), value.longValue())) {
+    if (Objects.equals(BANLIST.get(unit), value)) {
       return NO_MATCH;
     }
-    Duration duration = Duration.of(value.longValue(), unit);
+    Duration duration = Duration.of(value, unit);
     // Iterate over all possible units from largest to smallest (days to nanos) until we find the
     // largest unit that can be used to exactly express the duration.
     for (Map.Entry<ChronoUnit, Converter<Duration, Long>> entry : CONVERTERS.entrySet()) {
