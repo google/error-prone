@@ -26,6 +26,7 @@ import com.google.common.collect.Sets.SetView;
 import com.google.common.primitives.Primitives;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.ImmutableCollections;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.tools.javac.code.Type;
@@ -296,22 +297,30 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   private final ImmutableSet<String> knownUnsafeClasses;
 
   private static ImmutableSet<String> buildUnsafeClasses(List<String> knownUnsafes) {
-    ImmutableSet.Builder<String> result = ImmutableSet.<String>builder();
-    result.addAll(knownUnsafes);
-    for (Class<?> clazz :
-        ImmutableSet.<Class<?>>of(
-            java.lang.Iterable.class,
-            java.lang.Object.class,
-            java.util.ArrayList.class,
-            java.util.Collection.class,
-            java.util.List.class,
-            java.util.Map.class,
-            java.util.Set.class,
-            java.util.EnumSet.class,
-            java.util.EnumMap.class)) {
-      result.add(clazz.getName());
-    }
-    return result.build();
+    return ImmutableSet.<String>builder()
+        .addAll(knownUnsafes)
+        .addAll(ImmutableCollections.MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.keySet())
+        .add("com.google.protobuf.util.FieldMaskUtil.MergeOptions")
+        .add(java.util.BitSet.class.getName())
+        .add(java.util.Calendar.class.getName())
+        .add(java.lang.Iterable.class.getName())
+        .add(java.lang.Object.class.getName())
+        .add("java.text.DateFormat")
+        .add(java.util.ArrayList.class.getName())
+        .add(java.util.Collection.class.getName())
+        .add(java.util.EnumMap.class.getName())
+        .add(java.util.EnumSet.class.getName())
+        .add(java.util.List.class.getName())
+        .add(java.util.Map.class.getName())
+        .add(java.util.HashMap.class.getName())
+        .add(java.util.HashSet.class.getName())
+        .add(java.util.NavigableMap.class.getName())
+        .add(java.util.NavigableSet.class.getName())
+        .add(java.util.TreeMap.class.getName())
+        .add(java.util.TreeSet.class.getName())
+        .add(java.util.Vector.class.getName())
+        .add(java.util.Set.class.getName())
+        .build();
   }
 
   // ProtocolSupport matches Message (not MessageLite) for legacy reasons
