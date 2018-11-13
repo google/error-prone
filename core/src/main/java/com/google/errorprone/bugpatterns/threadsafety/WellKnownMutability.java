@@ -26,7 +26,6 @@ import com.google.common.collect.Sets.SetView;
 import com.google.common.primitives.Primitives;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.ImmutableCollections;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
@@ -38,14 +37,7 @@ import java.util.Map;
 import java.util.Set;
 
 /** A collection of types with known mutability. */
-@Immutable
 public final class WellKnownMutability implements ThreadSafety.KnownTypes {
-
-  /** Types that are known to be immutable. */
-  private final ImmutableMap<String, AnnotationInfo> knownImmutableClasses;
-
-  /** Types that are known to be mutable. */
-  private final ImmutableSet<String> knownUnsafeClasses;
 
 
   private WellKnownMutability(List<String> knownImmutable, List<String> knownUnsafe) {
@@ -59,7 +51,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
     return new WellKnownMutability(immutable, unsafe);
   }
 
-  public ImmutableMap<String, AnnotationInfo> getKnownImmutableClasses() {
+  public Map<String, AnnotationInfo> getKnownImmutableClasses() {
     return knownImmutableClasses;
   }
 
@@ -72,6 +64,9 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   public Set<String> getKnownUnsafeClasses() {
     return knownUnsafeClasses;
   }
+
+  /** Types that are known to be immutable. */
+  private final ImmutableMap<String, AnnotationInfo> knownImmutableClasses;
 
   static class Builder {
     final ImmutableMap.Builder<String, AnnotationInfo> mapBuilder = ImmutableMap.builder();
@@ -297,6 +292,9 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("org.openqa.selenium.ImmutableCapabilities")
         .build();
   }
+
+  /** Types that are known to be mutable. */
+  private final ImmutableSet<String> knownUnsafeClasses;
 
   private static ImmutableSet<String> buildUnsafeClasses(List<String> knownUnsafes) {
     return ImmutableSet.<String>builder()
