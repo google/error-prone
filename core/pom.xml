@@ -148,6 +148,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwt.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <!-- BSD New (3 clause) -->
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>

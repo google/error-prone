@@ -191,6 +191,7 @@ import com.google.errorprone.bugpatterns.OperatorPrecedence;
 import com.google.errorprone.bugpatterns.OptionalEquality;
 import com.google.errorprone.bugpatterns.OptionalNotPresent;
 import com.google.errorprone.bugpatterns.OrphanedFormatString;
+import com.google.errorprone.bugpatterns.OutlineNone;
 import com.google.errorprone.bugpatterns.OverrideThrowableToString;
 import com.google.errorprone.bugpatterns.Overrides;
 import com.google.errorprone.bugpatterns.PackageInfo;
@@ -647,6 +648,7 @@ public class BuiltInCheckerSuppliers {
           OperatorPrecedence.class,
           OptionalNotPresent.class,
           OrphanedFormatString.class,
+          OutlineNone.class,
           Overrides.class,
           OverridesGuiceInjectableMethod.class,
           OverrideThrowableToString.class,
