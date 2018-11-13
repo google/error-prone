@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.annotations.Immutable;
 import java.util.Set;
 
 /**
@@ -29,7 +28,6 @@ import java.util.Set;
  * the JDK.
  */
 @AutoValue
-@Immutable
 public abstract class AnnotationInfo {
   public abstract String typeName();
 
