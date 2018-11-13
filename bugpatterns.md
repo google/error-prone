@@ -287,6 +287,9 @@ Period.from(Period) returns itself; from(Duration) throws a runtime exception.
 __[PeriodGetTemporalUnit](bugpattern/PeriodGetTemporalUnit)__<br>
 Period.get() only works with YEARS, MONTHS, or DAYS.
 
+__[PeriodTimeMath](bugpattern/PeriodTimeMath)__<br>
+When adding or subtracting from a Period, Duration is incompatible.
+
 __[PreconditionsCheckNotNull](bugpattern/PreconditionsCheckNotNull)__<br>
 Literal passed as first argument to Preconditions.checkNotNull() can never be null
 
@@ -809,6 +812,9 @@ The source file name should match the name of the top-level class it contains
 
 __[ComparisonContractViolated](bugpattern/ComparisonContractViolated)__<br>
 This comparison method violates the contract
+
+__[DeduplicateConstants](bugpattern/DeduplicateConstants)__<br>
+This expression was previously declared as a constant; consider replacing this occurrence.
 
 __[DepAnn](bugpattern/DepAnn)__<br>
 Deprecated item is not annotated with @Deprecated

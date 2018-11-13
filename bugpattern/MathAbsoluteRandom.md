@@ -35,5 +35,12 @@ Random r = new Random();
 int positiveNumber = r.nextInt(Integer.MAX_VALUE);
 ```
 
+or map negative numbers onto the non-negative range:
+
+```java
+long lng = r.nextLong();
+lng = (lng == Long.MIN_VALUE) ? 0 : Math.abs(lng);
+```
+
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MathAbsoluteRandom")` to the enclosing element.
