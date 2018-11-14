@@ -676,6 +676,9 @@ One should not call optional.get() inside an if statement that checks !optional.
 __[OrphanedFormatString](bugpattern/OrphanedFormatString)__<br>
 String literal contains format specifiers, but is not passed to a format method
 
+__[OutlineNone](bugpattern/OutlineNone)__<br>
+Setting CSS outline style to none or 0 (while not otherwise providing visual focus indicators) is inaccessible for users navigating a web page without a mouse.
+
 __[OverrideThrowableToString](bugpattern/OverrideThrowableToString)__<br>
 To return a custom message with a Throwable class, one should override getMessage() instead of toString().
 
