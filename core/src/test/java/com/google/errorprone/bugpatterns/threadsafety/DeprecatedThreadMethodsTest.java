@@ -107,7 +107,7 @@ public final class DeprecatedThreadMethodsTest {
 
   @Test
   public void destroyThread() {
-    assumeFalse(RuntimeVersion.isAtLeast12()); // destroy was removed in 11
+    assumeFalse(RuntimeVersion.isAtLeast11()); // destroy was removed in 11
     compilationHelper
         .addSourceLines(
             "Test.java",
