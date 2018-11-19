@@ -230,6 +230,7 @@ public class FormatStringTest {
             "  void f() {",
             "    System.err.printf(\"%tY\",",
             "        LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));",
+            "    System.err.printf(\"%tQ\", Instant.now());",
             "  }",
             "}")
         .doTest();
