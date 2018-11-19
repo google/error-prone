@@ -27,6 +27,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Verify;
@@ -921,10 +922,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void targetType_methodHandle() {
-    if (!isJdk8OrEarlier()) {
-      // JDK >= 9 complains about splitting java.lang.invoke
-      return;
-    }
+    assumeFalse(RuntimeVersion.isAtLeast9()); // JDK >= 9 complains about splitting java.lang.invoke
     CompilationTestHelper.newInstance(TargetTypeChecker.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -1170,16 +1168,5 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         };
     tests.add(scanner);
     assertCompiles(scanner);
-  }
-
-  private static boolean isJdk8OrEarlier() {
-    try {
-      Method versionMethod = Runtime.class.getMethod("version");
-      Object version = versionMethod.invoke(null);
-      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
-      return majorVersion <= 8;
-    } catch (ReflectiveOperationException e) {
-      return true;
-    }
   }
 }

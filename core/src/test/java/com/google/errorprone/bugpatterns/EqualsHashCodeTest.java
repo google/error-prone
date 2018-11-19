@@ -16,10 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assume.assumeFalse;
 
 import com.google.errorprone.CompilationTestHelper;
-import java.lang.reflect.Method;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -144,7 +144,7 @@ public class EqualsHashCodeTest {
 
   @Test
   public void dontFlagJavaLangObject() {
-    assumeTrue(isJDK8OrEarlier());
+    assumeFalse(RuntimeVersion.isAtLeast9());
     compilationHelper
         .addSourceLines(
             "Object.java",
@@ -158,16 +158,5 @@ public class EqualsHashCodeTest {
             "  }",
             "}")
         .doTest();
-  }
-
-  private static boolean isJDK8OrEarlier() {
-    try {
-      Method versionMethod = Runtime.class.getMethod("version");
-      Object version = versionMethod.invoke(null);
-      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
-      return majorVersion <= 8;
-    } catch (ReflectiveOperationException e) {
-      return true;
-    }
   }
 }

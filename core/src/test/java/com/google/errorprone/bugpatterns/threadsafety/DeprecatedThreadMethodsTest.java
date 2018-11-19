@@ -16,8 +16,10 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static org.junit.Assume.assumeFalse;
+
 import com.google.errorprone.CompilationTestHelper;
-import java.lang.reflect.Method;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,10 +64,7 @@ public final class DeprecatedThreadMethodsTest {
 
   @Test
   public void stopThrowableThread() {
-    if (isJdk11OrLater()) {
-      // stop(Throwable) was removed in 11
-      return;
-    }
+    assumeFalse(RuntimeVersion.isAtLeast12()); // stop(Throwable) was removed in 11
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -108,10 +107,7 @@ public final class DeprecatedThreadMethodsTest {
 
   @Test
   public void destroyThread() {
-    if (isJdk11OrLater()) {
-      // destroy was removed in 11
-      return;
-    }
+    assumeFalse(RuntimeVersion.isAtLeast12()); // destroy was removed in 11
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -190,16 +186,5 @@ public final class DeprecatedThreadMethodsTest {
             "  }",
             "}")
         .doTest();
-  }
-
-  static boolean isJdk11OrLater() {
-    try {
-      Method versionMethod = Runtime.class.getMethod("version");
-      Object version = versionMethod.invoke(null);
-      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
-      return majorVersion >= 11;
-    } catch (ReflectiveOperationException e) {
-      return true;
-    }
   }
 }

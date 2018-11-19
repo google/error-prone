@@ -21,7 +21,7 @@ import static org.junit.Assume.assumeTrue;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import java.lang.reflect.Method;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ public class StringSplitterTest {
   // Regression test for issue #1124
   @Test
   public void positive_localVarTypeInference() {
-    assumeTrue(isJdk10OrGreater());
+    assumeTrue(RuntimeVersion.isAtLeast10());
     testHelper
         .addInputLines(
             "Test.java",
@@ -437,16 +437,5 @@ public class StringSplitterTest {
             "}")
         .setArgs("-cp", ":")
         .doTest(TestMode.TEXT_MATCH);
-  }
-
-  private static boolean isJdk10OrGreater() {
-    try {
-      Method versionMethod = Runtime.class.getMethod("version");
-      Object version = versionMethod.invoke(null);
-      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
-      return majorVersion >= 10;
-    } catch (ReflectiveOperationException e) {
-      return false;
-    }
   }
 }
