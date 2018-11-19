@@ -201,6 +201,9 @@ public class FormatStringValidation {
     if (isSubtype(types, type, state.getTypeFromString(Calendar.class.getName()))) {
       return new GregorianCalendar();
     }
+    if (isSubtype(types, type, state.getTypeFromString(Instant.class.getName()))) {
+      return Instant.now();
+    }
     if (isSubtype(types, type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
       return LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
     }
