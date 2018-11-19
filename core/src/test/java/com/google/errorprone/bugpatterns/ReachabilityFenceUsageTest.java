@@ -16,8 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
-import java.lang.reflect.Method;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,9 +33,7 @@ public final class ReachabilityFenceUsageTest {
 
   @Test
   public void positive() {
-    if (isJdk8OrEarlier()) {
-      return;
-    }
+    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "Test.java",
@@ -49,9 +49,7 @@ public final class ReachabilityFenceUsageTest {
 
   @Test
   public void negative() {
-    if (isJdk8OrEarlier()) {
-      return;
-    }
+    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "Test.java",
@@ -65,16 +63,5 @@ public final class ReachabilityFenceUsageTest {
             "  }",
             "}")
         .doTest();
-  }
-
-  static boolean isJdk8OrEarlier() {
-    try {
-      Method versionMethod = Runtime.class.getMethod("version");
-      Object version = versionMethod.invoke(null);
-      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
-      return majorVersion <= 8;
-    } catch (ReflectiveOperationException e) {
-      return true;
-    }
   }
 }

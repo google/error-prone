@@ -18,8 +18,9 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assert_;
+import static com.google.errorprone.util.RuntimeVersion.isAtLeast9;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assume.assumeFalse;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
@@ -31,7 +32,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import javax.tools.JavaFileObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -198,7 +198,7 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   @Test
   public void freeIdentWildcardCapture() throws IOException {
     // TODO(b/67786978): investigate JDK 9 test failures
-    assumeTrue(isJDK8OrEarlier());
+    assumeFalse(isAtLeast9());
     runTest("WildcardUnificationTemplate");
   }
 
@@ -260,7 +260,7 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   @Test
   public void returnPlaceholder() throws IOException {
     // TODO(b/67786978): investigate JDK 9 test failures
-    assumeTrue(isJDK8OrEarlier());
+    assumeFalse(isAtLeast9());
     runTest("ReturnPlaceholderTemplate");
   }
 
@@ -282,14 +282,14 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   @Test
   public void samePackageImports() throws IOException {
     // TODO(b/67786978): investigate JDK 9 test failures
-    assumeTrue(isJDK8OrEarlier());
+    assumeFalse(isAtLeast9());
     runTest("SamePackageImportsTemplate");
   }
 
   @Test
   public void ifFallthrough() throws IOException {
     // TODO(b/67786978): investigate JDK 9 test failures
-    assumeTrue(isJDK8OrEarlier());
+    assumeFalse(isAtLeast9());
     runTest("IfFallthroughTemplate");
   }
 
@@ -336,16 +336,5 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   @Test
   public void unnecessaryLambdaParens() throws IOException {
     runTest("UnnecessaryLambdaParens");
-  }
-
-  static boolean isJDK8OrEarlier() {
-    try {
-      Method versionMethod = Runtime.class.getMethod("version");
-      Object version = versionMethod.invoke(null);
-      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
-      return majorVersion <= 8;
-    } catch (ReflectiveOperationException e) {
-      return true;
-    }
   }
 }

@@ -15,9 +15,10 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assume.assumeFalse;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -57,7 +58,7 @@ public class JavaDurationWithSecondsTest {
 
   @Test
   public void durationWithSecondsInsideJavaTime() {
-    assumeTrue(TestFunctions.isJDK8OrEarlier());
+    assumeFalse(RuntimeVersion.isAtLeast9());
     helper
         .addSourceLines(
             "TestClass.java",
