@@ -745,6 +745,9 @@ public class Matchers {
       @Override
       public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
         List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
+        if (args.size() < index1 || args.size() < index2) {
+          return false;
+        }
         return ASTHelpers.sameVariable(args.get(index1), args.get(index2));
       }
     };
