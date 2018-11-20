@@ -64,7 +64,7 @@ public final class DeprecatedThreadMethodsTest {
 
   @Test
   public void stopThrowableThread() {
-    assumeFalse(RuntimeVersion.isAtLeast12()); // stop(Throwable) was removed in 11
+    assumeFalse(RuntimeVersion.isAtLeast11()); // stop(Throwable) was removed in 11
     compilationHelper
         .addSourceLines(
             "Test.java",
