@@ -192,4 +192,30 @@ public class ParameterCommentTest {
             "}")
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void negative_nestedLambda() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Consumer;",
+            "public class Test {",
+            "  private void testcase(String s, Consumer<Boolean> c) {",
+            "    outer(",
+            "        p -> {",
+            "          System.out.println(s);",
+            "          inner(",
+            "              /* myFunc= */ c,",
+            "              /* i1= */ 200,",
+            "              /* i2= */ 300);",
+            "        },",
+            "        /* b1= */ true,",
+            "        /* b2= */ false);",
+            "  }",
+            "  private void outer(Consumer<Boolean> myFunc, boolean b1, boolean b2) {}",
+            "  private void inner(Consumer<Boolean> myFunc, int i1, int i2) {}",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
 }
