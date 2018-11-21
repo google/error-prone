@@ -92,6 +92,14 @@ public class ErrorProneTokens {
       this.style = style;
     }
 
+    public int getPos() {
+      return pos;
+    }
+
+    public int getEndPos() {
+      return endPos;
+    }
+
     /**
      * Returns the source position of the character at index {@code index} in the comment text.
      *

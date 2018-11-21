@@ -24,6 +24,7 @@ import com.google.common.collect.Range;
 import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.Commented.Position;
+import com.google.errorprone.util.ErrorProneTokens.CommentWithTextAndPosition;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -102,7 +103,10 @@ public class Comments {
   }
 
   private static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
-      Tree tree, List<? extends ExpressionTree> arguments, int startPosition, VisitorState state) {
+      Tree tree,
+      List<? extends ExpressionTree> arguments,
+      int invocationStart,
+      VisitorState state) {
 
     if (arguments.isEmpty()) {
       return ImmutableList.of();
@@ -114,25 +118,30 @@ public class Comments {
       return noComments(arguments);
     }
 
-    CharSequence source = sourceCode.subSequence(startPosition, endPosition.get());
+    CharSequence source = sourceCode.subSequence(invocationStart, endPosition.get());
 
     if (CharMatcher.is('/').matchesNoneOf(source)) {
       return noComments(arguments);
     }
 
     // The token position of the end of the method invocation
-    int invocationEnd = state.getEndPosition(tree) - startPosition;
+    int invocationEnd = state.getEndPosition(tree) - invocationStart;
 
     // Ignore comments nested inside arguments.
     TreeRangeSet<Integer> exclude = TreeRangeSet.create();
     arguments.forEach(
-        a -> exclude.add(Range.closed(((JCTree) a).getStartPosition(), state.getEndPosition(a))));
+        arg ->
+            exclude.add(
+                Range.closed(
+                    ((JCTree) arg).getStartPosition() - invocationStart,
+                    state.getEndPosition(arg) - invocationStart)));
 
     ErrorProneTokens errorProneTokens = new ErrorProneTokens(source.toString(), state.context);
     ImmutableList<ErrorProneToken> tokens = errorProneTokens.getTokens();
     LineMap lineMap = errorProneTokens.getLineMap();
 
-    ArgumentTracker argumentTracker = new ArgumentTracker(arguments, startPosition, state, lineMap);
+    ArgumentTracker argumentTracker =
+        new ArgumentTracker(arguments, invocationStart, state, lineMap);
     TokenTracker tokenTracker = new TokenTracker(lineMap);
 
     argumentTracker.advance();
@@ -142,7 +151,13 @@ public class Comments {
         // if the token is at the start of a line it could still have a comment attached which was
         // on the previous line
         for (Comment c : token.comments()) {
-          if (exclude.intersects(Range.closedOpen(token.pos(), token.endPos()))) {
+          if (!(c instanceof CommentWithTextAndPosition)) {
+            continue;
+          }
+          CommentWithTextAndPosition comment = (CommentWithTextAndPosition) c;
+          int commentStart = comment.getPos();
+          int commentEnd = comment.getEndPos();
+          if (exclude.intersects(Range.closedOpen(commentStart, commentEnd))) {
             continue;
           }
           if (tokenTracker.isCommentOnPreviousLine(c)
@@ -154,8 +169,8 @@ public class Comments {
           } else {
             // if the comment comes after the end of the invocation and its not on the same line
             // as the final argument then we need to ignore it
-            if (c.getSourcePos(0) <= invocationEnd
-                || lineMap.getLineNumber(c.getSourcePos(0))
+            if (commentStart <= invocationEnd
+                || lineMap.getLineNumber(commentStart)
                     <= lineMap.getLineNumber(argumentTracker.currentArgumentEndPosition)) {
               argumentTracker.addCommentToCurrentArgument(c, Position.ANY);
             }
