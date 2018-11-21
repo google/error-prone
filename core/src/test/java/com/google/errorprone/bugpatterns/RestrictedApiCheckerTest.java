@@ -30,9 +30,10 @@ public class RestrictedApiCheckerTest {
 
   @Before
   public void setUp() {
-    helper = CompilationTestHelper.newInstance(RestrictedApiChecker.class, getClass());
-    helper.addSourceFile("RestrictedApiMethods.java");
-    helper.matchAllDiagnostics();
+    helper =
+        CompilationTestHelper.newInstance(RestrictedApiChecker.class, getClass())
+            .addSourceFile("RestrictedApiMethods.java")
+            .matchAllDiagnostics();
   }
 
   @Test

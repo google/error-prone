@@ -52,7 +52,7 @@ public class CompilerBasedAbstractTest {
     CompilationTestHelper compilationHelper =
         CompilationTestHelper.newInstance(scannerSupplier, getClass()).expectResult(Result.OK);
     for (FileToCompile fileToCompile : filesToCompile) {
-      compilationHelper.addSourceLines(fileToCompile.name, fileToCompile.lines);
+      compilationHelper = compilationHelper.addSourceLines(fileToCompile.name, fileToCompile.lines);
     }
     compilationHelper.doTest();
   }
