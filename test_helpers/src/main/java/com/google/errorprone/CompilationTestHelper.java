@@ -27,6 +27,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.api.JavacTool;
@@ -98,6 +99,7 @@ public class CompilationTestHelper {
    * @param scannerSupplier the {@link ScannerSupplier} to test
    * @param clazz the class to use to locate file resources
    */
+  @CheckReturnValue
   public static CompilationTestHelper newInstance(ScannerSupplier scannerSupplier, Class<?> clazz) {
     return new CompilationTestHelper(scannerSupplier, null, clazz);
   }
@@ -108,6 +110,7 @@ public class CompilationTestHelper {
    * @param checker the {@link BugChecker} to test
    * @param clazz the class to use to locate file resources
    */
+  @CheckReturnValue
   public static CompilationTestHelper newInstance(
       Class<? extends BugChecker> checker, Class<?> clazz) {
     ScannerSupplier scannerSupplier = ScannerSupplier.fromBugCheckerClasses(checker);
@@ -177,6 +180,7 @@ public class CompilationTestHelper {
    */
   // TODO(eaftan): We could eliminate this path parameter and just infer the path from the
   // package and class name
+  @CheckReturnValue
   public CompilationTestHelper addSourceLines(String path, String... lines) {
     this.sources.add(fileManager.forSourceLines(path, lines));
     return this;
@@ -189,6 +193,7 @@ public class CompilationTestHelper {
    *
    * @param path the path to the source file
    */
+  @CheckReturnValue
   public CompilationTestHelper addSourceFile(String path) {
     this.sources.add(fileManager.forResource(path));
     return this;
@@ -201,6 +206,7 @@ public class CompilationTestHelper {
    *
    * @param classes the class(es) to use as the classpath
    */
+  @CheckReturnValue
   public CompilationTestHelper withClasspath(Class<?>... classes) {
     this.overrideClasspath = ImmutableList.copyOf(classes);
     return this;
@@ -210,6 +216,7 @@ public class CompilationTestHelper {
    * Sets custom command-line arguments for the compilation. These will be appended to the default
    * compilation arguments.
    */
+  @CheckReturnValue
   public CompilationTestHelper setArgs(List<String> args) {
     this.extraArgs = ImmutableList.copyOf(args);
     return this;
@@ -220,6 +227,7 @@ public class CompilationTestHelper {
    * source file contains bug markers. Useful for testing that a check is actually disabled when the
    * proper command-line argument is passed.
    */
+  @CheckReturnValue
   public CompilationTestHelper expectNoDiagnostics() {
     this.expectNoDiagnostics = true;
     return this;
@@ -230,6 +238,7 @@ public class CompilationTestHelper {
    * javac errors. This behaviour can be disabled to test the interaction between Error Prone checks
    * and javac diagnostics.
    */
+  @CheckReturnValue
   public CompilationTestHelper ignoreJavacErrors() {
     this.checkWellFormed = false;
     return this;
@@ -240,6 +249,7 @@ public class CompilationTestHelper {
    * tested. This behaviour can be disabled to test the interaction between Error Prone checks and
    * javac diagnostics.
    */
+  @CheckReturnValue
   public CompilationTestHelper matchAllDiagnostics() {
     this.lookForCheckNameInDiagnostic = LookForCheckNameInDiagnostic.NO;
     return this;
@@ -249,6 +259,7 @@ public class CompilationTestHelper {
    * Tells the compilation helper to expect a specific result from the compilation, e.g. success or
    * failure.
    */
+  @CheckReturnValue
   public CompilationTestHelper expectResult(Result result) {
     expectedResult = Optional.of(result);
     return this;
@@ -268,6 +279,7 @@ public class CompilationTestHelper {
    *
    * <p>Error message keys that don't match any diagnostics will cause test to fail.
    */
+  @CheckReturnValue
   public CompilationTestHelper expectErrorMessage(String key, Predicate<? super String> matcher) {
     diagnosticHelper.expectErrorMessage(key, matcher);
     return this;
