@@ -437,6 +437,52 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
+  /* Tests for ASTHelpers#isCheckedExceptionType */
+
+  private TestScanner isCheckedExceptionTypeScanner(boolean expectChecked) {
+    return new TestScanner() {
+      @Override
+      public Void visitMethod(MethodTree tree, VisitorState state) {
+        setAssertionsComplete();
+        List<? extends ExpressionTree> throwz = tree.getThrows();
+
+        for (ExpressionTree expr : throwz) {
+          Type exType = ASTHelpers.getType(expr);
+          assertThat(ASTHelpers.isCheckedExceptionType(exType, state)).isEqualTo(expectChecked);
+        }
+        return super.visitMethod(tree, state);
+      }
+    };
+  }
+
+  @Test
+  public void testIsCheckedExceptionType_yes() {
+    writeFile(
+        "A.java",
+        "import java.text.ParseException;",
+        "public class A {",
+        "  static class MyException extends Exception {}",
+        "  void foo() throws Exception, ParseException {}",
+        "}");
+    TestScanner scanner = isCheckedExceptionTypeScanner(true);
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testIsCheckedExceptionType_no() {
+    writeFile(
+        "A.java",
+        "public class A {",
+        "  static class MyException extends RuntimeException {}",
+        "  void foo() throws RuntimeException, IllegalArgumentException, MyException,",
+        "      Error, VerifyError {}",
+        "}");
+    TestScanner scanner = isCheckedExceptionTypeScanner(false);
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
   /* Tests for ASTHelpers#getUpperBound */
 
   private TestScanner getUpperBoundScanner(final String expectedBound) {
