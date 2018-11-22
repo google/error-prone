@@ -80,6 +80,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
@@ -923,6 +924,13 @@ public class ASTHelpers {
     }
     Types types = state.getTypes();
     return types.isSubtype(types.erasure(s), types.erasure(t));
+  }
+
+  /** Returns true if {@code t} is a subtype of Exception but not a subtype of RuntimeException. */
+  public static boolean isCheckedExceptionType(Type t, VisitorState state) {
+    Symtab symtab = state.getSymtab();
+    return isSubtype(t, symtab.exceptionType, state)
+        && !isSubtype(t, symtab.runtimeExceptionType, state);
   }
 
   /** Returns true if {@code erasure(s)} is castable to {@code erasure(t)}. */
