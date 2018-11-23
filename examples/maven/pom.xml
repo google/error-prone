@@ -47,6 +47,9 @@
               <artifactId>error_prone_core</artifactId>
               <version>2.3.3-SNAPSHOT</version>
             </path>
+            <!-- If you are using any other annotation processors, such as Lombok,
+                 you will need to add them here, even if they are on the project
+                 dependency classpath. -->
           </annotationProcessorPaths>
         </configuration>
       </plugin>
