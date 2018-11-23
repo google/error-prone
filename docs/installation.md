@@ -275,3 +275,12 @@ visible to the classloader which currently locates the javac Main class. Then
 replace the call of `javac.main.Main.main()` with the Error Prone compiler:
 
 `return new ErrorProneCompiler.Builder().build().compile(args) == 0`
+
+## Using ErrorProne in concert with other Annotation Processors
+
+All of the above instructions use the `javac` option `-processorpath` which has
+side-effect of causing `javac` to no longer scan the compile classpath for
+annotation processors. If you are using other annotation processors in addition
+to ErrorProne, such as Lombok, then you will need to add their JARs to your
+`-processorpath` argument. The mechanics of this will vary according to the build
+tool you are using.
