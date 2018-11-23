@@ -60,6 +60,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
               <artifactId>error_prone_core</artifactId>
               <version>2.3.3-SNAPSHOT</version>
             </path>
+            <!-- Add other annotation processors and Error Prone custom checks here if needed -->
           </annotationProcessorPaths>
         </configuration>
       </plugin>
@@ -142,7 +143,7 @@ and add the following javac task to your project's `build.xml` file:
     <path id="processorpath.ref">
       <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.3.3-SNAPSHOT/error_prone_core-2.3.3-SNAPSHOT-with-dependencies.jar"/>
       <pathelement location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
-      <!-- Add annotation processors and Error Prone custom checks here if needed -->
+      <!-- Add other annotation processors and Error Prone custom checks here if needed -->
     </path>
 
     <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
@@ -204,6 +205,8 @@ Error Prone supports the
 [`com.sun.source.util.Plugin`](https://docs.oracle.com/javase/8/docs/jdk/api/javac/tree/com/sun/source/util/Plugin.html)
 API, and can be used with JDK 9, 10 and 11 by adding Error Prone to the
 `-processorpath` and setting the `-Xplugin` flag.
+
+Add any other annotation processors and Error Prone custom checks to the `-processorpath` as needed.
 
 Example:
 
