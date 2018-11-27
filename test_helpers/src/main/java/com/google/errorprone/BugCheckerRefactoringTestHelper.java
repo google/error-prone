@@ -222,14 +222,20 @@ public class BugCheckerRefactoringTestHelper {
       throws IOException {
     JavacTool tool = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
-    context.put(ErrorProneOptions.class, ErrorProneOptions.empty());
+    ErrorProneOptions errorProneOptions;
+    try {
+      errorProneOptions = ErrorProneOptions.processArgs(options);
+    } catch (InvalidCommandLineOptionException e) {
+      throw new IllegalArgumentException("Exception during argument processing: " + e);
+    }
+    context.put(ErrorProneOptions.class, errorProneOptions);
     JavacTaskImpl task =
         (JavacTaskImpl)
             tool.getTask(
                 CharStreams.nullWriter(),
                 fileManager,
                 diagnosticsCollector,
-                options,
+                ImmutableList.copyOf(errorProneOptions.getRemainingArgs()),
                 /*classes=*/ null,
                 files,
                 context);
