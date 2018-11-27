@@ -22,7 +22,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher;
@@ -30,6 +32,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Flags;
@@ -69,12 +72,19 @@ import java.util.Iterator;
     suppressionAnnotations = {}
     )
 public class CompileTimeConstantChecker extends BugChecker
-    implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
+    implements MethodInvocationTreeMatcher, NewClassTreeMatcher, MemberReferenceTreeMatcher {
 
   private static final String DID_YOU_MEAN_FINAL_FMT_MESSAGE = " Did you mean to make '%s' final?";
 
   private final Matcher<ExpressionTree> compileTimeConstExpressionMatcher =
       new CompileTimeConstantExpressionMatcher();
+
+  private final boolean forbidMethodReferences;
+
+  public CompileTimeConstantChecker(ErrorProneFlags flags) {
+    forbidMethodReferences =
+        flags.getBoolean("CompileTimeConstantChecker:ForbidMethodReferences").orElse(false);
+  }
 
   /**
    * Matches formal parameters with {@link com.google.errorprone.annotations.CompileTimeConstant}
@@ -165,5 +175,26 @@ public class CompileTimeConstantChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return matchArguments(state, sym, tree.getArguments().iterator());
+  }
+
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    if (!forbidMethodReferences) {
+      return Description.NO_MATCH;
+    }
+    Symbol.MethodSymbol sym = ASTHelpers.getSymbol(tree);
+    if (sym == null) {
+      return Description.NO_MATCH;
+    }
+    for (Symbol.VarSymbol formalParam : sym.getParameters()) {
+      if (hasCompileTimeConstantAnnotation(state, formalParam)) {
+        // We couldn't check how the reference will be used. Simply disallow all references.
+        return buildDescription(tree)
+            .setMessage(
+                "References to methods with @CompileTimeConstant parameters are not supported.")
+            .build();
+      }
+    }
+    return Description.NO_MATCH;
   }
 }
