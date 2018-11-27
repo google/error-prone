@@ -200,6 +200,7 @@ import com.google.errorprone.bugpatterns.ParameterComment;
 import com.google.errorprone.bugpatterns.ParameterName;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
+import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullRepeated;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
 import com.google.errorprone.bugpatterns.PredicateIncompatibleType;
 import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
@@ -653,6 +654,7 @@ public class BuiltInCheckerSuppliers {
           OverridesGuiceInjectableMethod.class,
           OverrideThrowableToString.class,
           ParameterName.class,
+          PreconditionsCheckNotNullRepeated.class,
           PreconditionsInvalidPlaceholder.class,
           ProtoRedundantSet.class,
           ProtoDurationGetSecondsGetNano.class,
