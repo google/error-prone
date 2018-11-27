@@ -238,8 +238,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>newInstance</h4>
-<pre>public static&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;newInstance(<a href="../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;scannerSupplier,
-                                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public static&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;newInstance(<a href="../../../com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;scannerSupplier,
+                                                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 <div class="block">Returns a new <a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone"><code>CompilationTestHelper</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -254,8 +255,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>newInstance</h4>
-<pre>public static&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;newInstance(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;checker,
-                                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public static&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;newInstance(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;checker,
+                                                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 <div class="block">Returns a new <a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone"><code>CompilationTestHelper</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -270,8 +272,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>addSourceLines</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;addSourceLines(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
-                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;lines)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;addSourceLines(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
+                                                              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;lines)</pre>
 <div class="block">Adds a source file to the test compilation, from the string content of the file.
 
  <p>The diagnostics expected from compiling the file are inferred from the file contents. For
@@ -292,7 +295,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>addSourceFile</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;addSourceFile(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;addSourceFile(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Adds a source file to the test compilation, from an existing resource file.
 
  <p>See <a href="../../../com/google/errorprone/CompilationTestHelper.html#addSourceLines-java.lang.String-java.lang.String...-"><code>addSourceLines(java.lang.String, java.lang.String...)</code></a> for how expected diagnostics should be specified.</div>
@@ -308,7 +312,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>withClasspath</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;withClasspath(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;...&nbsp;classes)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;withClasspath(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;...&nbsp;classes)</pre>
 <div class="block">Sets the classpath for the test compilation, overriding the default of using the runtime
  classpath of the test execution. This is useful to verify correct behavior when the classpath
  is incomplete.</div>
@@ -324,7 +329,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>setArgs</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;setArgs(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;args)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;setArgs(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;args)</pre>
 <div class="block">Sets custom command-line arguments for the compilation. These will be appended to the default
  compilation arguments.</div>
 </li>
@@ -335,7 +341,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>expectNoDiagnostics</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;expectNoDiagnostics()</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;expectNoDiagnostics()</pre>
 <div class="block">Tells the compilation helper to expect that no diagnostics will be generated, even if the
  source file contains bug markers. Useful for testing that a check is actually disabled when the
  proper command-line argument is passed.</div>
@@ -347,7 +354,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>ignoreJavacErrors</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;ignoreJavacErrors()</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;ignoreJavacErrors()</pre>
 <div class="block">By default, the compilation helper will not run Error Prone on compilations that fail with
  javac errors. This behaviour can be disabled to test the interaction between Error Prone checks
  and javac diagnostics.</div>
@@ -359,7 +367,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>matchAllDiagnostics</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;matchAllDiagnostics()</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;matchAllDiagnostics()</pre>
 <div class="block">By default, the compilation helper will only inspect diagnostics generated by the check being
  tested. This behaviour can be disabled to test the interaction between Error Prone checks and
  javac diagnostics.</div>
@@ -371,7 +380,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>expectResult</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;expectResult(com.sun.tools.javac.main.Main.Result&nbsp;result)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;expectResult(com.sun.tools.javac.main.Main.Result&nbsp;result)</pre>
 <div class="block">Tells the compilation helper to expect a specific result from the compilation, e.g. success or
  failure.</div>
 </li>
@@ -382,8 +392,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>expectErrorMessage</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;expectErrorMessage(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
-                                                com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;matcher)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a>&nbsp;expectErrorMessage(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
+                                                                  com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;matcher)</pre>
 <div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.
  For example, given the source
 

@@ -244,8 +244,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>newInstance</h4>
-<pre>public static&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;newInstance(<a href="../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
-                                                          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public static&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;newInstance(<a href="../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
+                                                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 </li>
 </ul>
 <a name="addInput-java.lang.String-">
@@ -254,7 +255,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>addInput</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper.ExpectOutput</a>&nbsp;addInput(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;inputFilename)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper.ExpectOutput</a>&nbsp;addInput(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;inputFilename)</pre>
 </li>
 </ul>
 <a name="addInputLines-java.lang.String-java.lang.String...-">
@@ -263,8 +265,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>addInputLines</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper.ExpectOutput</a>&nbsp;addInputLines(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
-                                                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;input)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper.ExpectOutput</a>&nbsp;addInputLines(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
+                                                                                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;input)</pre>
 </li>
 </ul>
 <a name="setFixChooser-com.google.errorprone.BugCheckerRefactoringTestHelper.FixChooser-">
@@ -273,7 +276,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>setFixChooser</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;setFixChooser(<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.FixChooser.html" title="interface in com.google.errorprone">BugCheckerRefactoringTestHelper.FixChooser</a>&nbsp;chooser)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;setFixChooser(<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.FixChooser.html" title="interface in com.google.errorprone">BugCheckerRefactoringTestHelper.FixChooser</a>&nbsp;chooser)</pre>
 </li>
 </ul>
 <a name="setArgs-java.lang.String...-">
@@ -282,7 +286,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>setArgs</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;setArgs(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;args)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;setArgs(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;args)</pre>
 </li>
 </ul>
 <a name="allowBreakingChanges--">
@@ -291,7 +296,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>allowBreakingChanges</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;allowBreakingChanges()</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;allowBreakingChanges()</pre>
 <div class="block">If set, fixes that produce output that doesn't compile are allowed. Off by default.</div>
 </li>
 </ul>
@@ -301,7 +307,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>setImportOrder</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;setImportOrder(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importOrder)</pre>
+<pre><a href="../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public&nbsp;<a href="../../../com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a>&nbsp;setImportOrder(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importOrder)</pre>
 </li>
 </ul>
 <a name="doTest--">
