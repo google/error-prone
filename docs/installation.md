@@ -58,7 +58,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
             <path>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
-              <version>2.3.3-SNAPSHOT</version>
+              <version>2.3.2</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -142,7 +142,7 @@ and add the following javac task to your project's `build.xml` file:
     </condition>
 
     <path id="processorpath.ref">
-      <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.3.3-SNAPSHOT/error_prone_core-2.3.3-SNAPSHOT-with-dependencies.jar"/>
+      <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.3.2/error_prone_core-2.3.2-with-dependencies.jar"/>
       <pathelement location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
       <pathelement location="${user.home}/.m2/repository/org/checkerframework/dataflow/2.5.7/dataflow-2.5.7.jar"/>
       <pathelement location="${user.home}/.m2/repository/org/checkerframework/javacutil/2.5.7/javacutil-2.5.7.jar"/>
@@ -151,7 +151,7 @@ and add the following javac task to your project's `build.xml` file:
 
     <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
       <compilerarg value="-J-Xbootclasspath/p:${javac.jar}" unless:set="jdk9orlater"/>
-      <compilerarg line="-XDcompilePolicy=simple"/>
+      <compilerarg value="-XDcompilePolicy=simple"/>
       <compilerarg value="-processorpath"/>
       <compilerarg pathref="processorpath.ref"/>
       <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
