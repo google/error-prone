@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class CompileTimeConstantCheckerTest {
             "public class CompileTimeConstantTestCase {",
             "  public static void m(@CompileTimeConstant String s) { }",
             "  @SuppressWarnings(\"CompileTimeConstant\")",
-            " // BUG: Diagnostic contains: Non-compile-time constant expression passed",
+            "  // BUG: Diagnostic contains: Non-compile-time constant expression passed",
             "  public static void r(String x) { m(x); }",
             "}")
         .doTest();
@@ -338,6 +339,25 @@ public class CompileTimeConstantCheckerTest {
             "    m(x); ",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_methodReference() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.function.Consumer;",
+            "public class CompileTimeConstantTestCase {",
+            "  public static void m(@CompileTimeConstant String s) { }",
+            "  public static Consumer<String> r(String x) {",
+            "    // BUG: Diagnostic contains: References to methods with @CompileTimeConstant",
+            "    return CompileTimeConstantTestCase::m;",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:ForbidMethodReferences=true"))
         .doTest();
   }
 }
