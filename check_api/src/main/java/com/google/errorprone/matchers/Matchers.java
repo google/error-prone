@@ -736,8 +736,12 @@ public class Matchers {
   }
 
   /**
-   * Matches a MethodInvocation AST node when the arguments at the two given indices are both the
-   * same identifier.
+   * Matches a {@link MethodInvocation} when the arguments at the two given indices are both the
+   * same variable, as determined by {@link ASTHelpers#sameVariable}.
+   *
+   * @param index1 the index of the first actual parameter to test
+   * @param index2 the index of the second actual parameter to test
+   * @throws IndexOutOfBoundsException if the given indices are invalid
    */
   public static Matcher<? super MethodInvocationTree> sameArgument(
       final int index1, final int index2) {
@@ -745,9 +749,6 @@ public class Matchers {
       @Override
       public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
         List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
-        if (args.size() < index1 || args.size() < index2) {
-          return false;
-        }
         return ASTHelpers.sameVariable(args.get(index1), args.get(index2));
       }
     };
