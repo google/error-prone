@@ -145,10 +145,10 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     if (overloads.stream().anyMatch(m -> isSuppressed(m.tree()))) {
       return;
     }
-    // build a fix that deletes all but the first overload, and adds them back immediately after
-    // the first overload
+    // build a fix that replaces the first overload with all the overloads grouped together
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     StringBuilder sb = new StringBuilder("\n");
+    sb.append(state.getSourceForNode(first.tree()));
     overloads.stream()
         .filter(o -> o != first)
         .forEach(
@@ -158,7 +158,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
               sb.append(state.getSourceCode(), start, end).append('\n');
               fixBuilder.replace(start, end, "");
             });
-    fixBuilder.postfixWith(first.tree(), sb.toString());
+    fixBuilder.replace(first.tree(), sb.toString());
     SuggestedFix fix = fixBuilder.build();
     LineMap lineMap = state.getPath().getCompilationUnit().getLineMap();
     // emit findings for each overload
