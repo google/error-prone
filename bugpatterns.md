@@ -691,6 +691,9 @@ This method is not annotated with @Inject, but it overrides a method that is ann
 __[ParameterName](bugpattern/ParameterName)__<br>
 Detects `/* name= */`-style comments on actual parameters where the name doesn&#39;t match the formal parameter
 
+__[PreconditionsCheckNotNullRepeated](bugpattern/PreconditionsCheckNotNullRepeated)__<br>
+Including this argument in the failure message isn&#39;t helpful, since its value will always be `null`.
+
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
 
