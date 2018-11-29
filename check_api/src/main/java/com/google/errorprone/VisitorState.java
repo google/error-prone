@@ -52,6 +52,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import javax.annotation.Nullable;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 public class VisitorState {
@@ -65,11 +66,7 @@ public class VisitorState {
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
-  private static final DescriptionListener NULL_LISTENER =
-      new DescriptionListener() {
-        @Override
-        public void onDescribed(Description description) {}
-      };
+  private static final DescriptionListener NULL_LISTENER = description -> {};
 
   public VisitorState(Context context) {
     this(context, NULL_LISTENER);
@@ -103,20 +100,18 @@ public class VisitorState {
     this.descriptionListener = descriptionListener;
     this.severityMap = severityMap;
     this.errorProneOptions = errorProneOptions;
-    if (typeCache != null) {
-      this.typeCache = typeCache;
-    } else {
-      this.typeCache =
-          CacheBuilder.newBuilder()
-              .concurrencyLevel(1) // resolving symbols in javac is not is not thread-safe
-              .build(
-                  new CacheLoader<String, Optional<Type>>() {
-                    @Override
-                    public Optional<Type> load(String key) throws Exception {
-                      return Optional.fromNullable(getTypeFromStringInternal(key));
-                    }
-                  });
-    }
+    this.typeCache =
+        typeCache != null
+            ? typeCache
+            : CacheBuilder.newBuilder()
+                .concurrencyLevel(1) // resolving symbols in javac is not is not thread-safe
+                .build(
+                    new CacheLoader<String, Optional<Type>>() {
+                      @Override
+                      public Optional<Type> load(String key) {
+                        return Optional.fromNullable(getTypeFromStringInternal(key));
+                      }
+                    });
   }
 
   public VisitorState withPath(TreePath path) {
@@ -186,11 +181,9 @@ public class VisitorState {
 
   private Type getTypeFromStringInternal(String typeStr) {
     validateTypeStr(typeStr);
-    if (isPrimitiveType(typeStr)) {
-      return getPrimitiveType(typeStr);
-    }
-    if (isVoidType(typeStr)) {
-      return getVoidType();
+    Type primitiveOrVoidType = getPrimitiveOrVoidType(typeStr);
+    if (primitiveOrVoidType != null) {
+      return primitiveOrVoidType;
     }
     // Fast path if the type's symbol is available.
     ClassSymbol classSymbol = (ClassSymbol) getSymbolFromString(typeStr);
@@ -388,47 +381,33 @@ public class VisitorState {
   }
 
   /**
-   * Given a string that represents a primitive type (e.g., "int"), return the corresponding Type.
+   * Given a string that represents a type, if it's a primitive type (e.g., "int") or "void", return
+   * the corresponding Type, or null otherwise.
    */
-  private Type getPrimitiveType(String typeStr) {
-    if (typeStr.equals("byte")) {
-      return getSymtab().byteType;
-    } else if (typeStr.equals("short")) {
-      return getSymtab().shortType;
-    } else if (typeStr.equals("int")) {
-      return getSymtab().intType;
-    } else if (typeStr.equals("long")) {
-      return getSymtab().longType;
-    } else if (typeStr.equals("float")) {
-      return getSymtab().floatType;
-    } else if (typeStr.equals("double")) {
-      return getSymtab().doubleType;
-    } else if (typeStr.equals("boolean")) {
-      return getSymtab().booleanType;
-    } else if (typeStr.equals("char")) {
-      return getSymtab().charType;
-    } else {
-      throw new IllegalStateException("Type string " + typeStr + " expected to be primitive");
+  @Nullable
+  private Type getPrimitiveOrVoidType(String typeStr) {
+    switch (typeStr) {
+      case "byte":
+        return getSymtab().byteType;
+      case "short":
+        return getSymtab().shortType;
+      case "int":
+        return getSymtab().intType;
+      case "long":
+        return getSymtab().longType;
+      case "float":
+        return getSymtab().floatType;
+      case "double":
+        return getSymtab().doubleType;
+      case "boolean":
+        return getSymtab().booleanType;
+      case "char":
+        return getSymtab().charType;
+      case "void":
+        return getSymtab().voidType;
+      default:
+        return null;
     }
-  }
-
-  private Type getVoidType() {
-    return getSymtab().voidType;
-  }
-
-  private static boolean isPrimitiveType(String typeStr) {
-    return typeStr.equals("byte")
-        || typeStr.equals("short")
-        || typeStr.equals("int")
-        || typeStr.equals("long")
-        || typeStr.equals("float")
-        || typeStr.equals("double")
-        || typeStr.equals("boolean")
-        || typeStr.equals("char");
-  }
-
-  private static boolean isVoidType(String typeStr) {
-    return typeStr.equals("void");
   }
 
   /** Returns true if the compilation is targeting Android. */
