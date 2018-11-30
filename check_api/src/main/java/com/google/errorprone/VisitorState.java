@@ -104,7 +104,7 @@ public class VisitorState {
         typeCache != null
             ? typeCache
             : CacheBuilder.newBuilder()
-                .concurrencyLevel(1) // resolving symbols in javac is not is not thread-safe
+                .concurrencyLevel(1) // resolving symbols in javac is not thread-safe
                 .build(
                     new CacheLoader<String, Optional<Type>>() {
                       @Override
