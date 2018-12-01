@@ -308,4 +308,16 @@ public class TypeNameShadowingTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void fieldClashOk() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  final Object T = new Object();",
+            "  <T> void doIt(T t) {}",
+            "}")
+        .doTest();
+  }
 }
