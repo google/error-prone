@@ -66,6 +66,10 @@ import javax.lang.model.element.Modifier;
 public final class MissingSummary extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 
+  private static final String CONSIDER_USING_MESSAGE =
+      "A summary fragment is required; consider using the value of the @%s block as a "
+          + "summary fragment instead.";
+
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
     return handle(getDocTreePath(state), state);
@@ -131,9 +135,7 @@ public final class MissingSummary extends BugChecker
                     lowerFirstLetter(description), description.endsWith(".") ? "" : "."))
             .build();
     return buildDescription(diagnosticPosition(docTreePath, state))
-        .setMessage(
-            "A summary fragment is required; the value of @return might make a"
-                + " good summary of this method.")
+        .setMessage(String.format(CONSIDER_USING_MESSAGE, "link"))
         .addFix(fix)
         .build();
   }
@@ -151,7 +153,7 @@ public final class MissingSummary extends BugChecker
                     seeTree.getReference().stream().map(Object::toString).collect(joining(" "))))
             .build();
     return buildDescription(diagnosticPosition(docTreePath, state))
-        .setMessage("A summary fragment is required; the value of @see might make a good summary.")
+        .setMessage(String.format(CONSIDER_USING_MESSAGE, "see"))
         .addFix(fix)
         .build();
   }
