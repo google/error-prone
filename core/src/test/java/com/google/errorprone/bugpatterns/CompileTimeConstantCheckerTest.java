@@ -360,4 +360,42 @@ public class CompileTimeConstantCheckerTest {
         .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:ForbidMethodReferences=true"))
         .doTest();
   }
+
+  @Test
+  public void testMatches_lambdaExpression() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.function.Consumer;",
+            "public class CompileTimeConstantTestCase {",
+            "  // BUG: Diagnostic contains: Lambda expressions with @CompileTimeConstant",
+            "  Consumer<String> c = (@CompileTimeConstant String s) -> {};",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:ForbidMethodReferences=true"))
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_lambdaExpressionWithoutExplicitFormalParameters() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  @FunctionalInterface",
+            "  interface I {",
+            "    void f(@CompileTimeConstant String x);",
+            "  }",
+            "  void f(String s) {",
+            "    I i = x -> {};",
+            "    // BUG: Diagnostic contains: Non-compile-time constant expression passed",
+            "    i.f(s);",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:ForbidMethodReferences=true"))
+        .doTest();
+  }
 }

@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatche
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -32,9 +33,11 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -72,7 +75,10 @@ import java.util.Iterator;
     suppressionAnnotations = {}
     )
 public class CompileTimeConstantChecker extends BugChecker
-    implements MethodInvocationTreeMatcher, NewClassTreeMatcher, MemberReferenceTreeMatcher {
+    implements LambdaExpressionTreeMatcher,
+        MemberReferenceTreeMatcher,
+        MethodInvocationTreeMatcher,
+        NewClassTreeMatcher {
 
   private static final String DID_YOU_MEAN_FINAL_FMT_MESSAGE = " Did you mean to make '%s' final?";
 
@@ -192,6 +198,24 @@ public class CompileTimeConstantChecker extends BugChecker
         return buildDescription(tree)
             .setMessage(
                 "References to methods with @CompileTimeConstant parameters are not supported.")
+            .build();
+      }
+    }
+    return Description.NO_MATCH;
+  }
+
+  @Override
+  public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
+    if (!forbidMethodReferences) {
+      return Description.NO_MATCH;
+    }
+    for (VariableTree formalParam : tree.getParameters()) {
+      if (hasCompileTimeConstantAnnotation(state, ASTHelpers.getSymbol(formalParam))) {
+        // We couldn't check how the lambda expression will be used. Simply disallow all lambda
+        // expressions.
+        return buildDescription(tree)
+            .setMessage(
+                "Lambda expressions with @CompileTimeConstant parameters are not supported.")
             .build();
       }
     }
