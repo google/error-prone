@@ -76,6 +76,7 @@ import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DeduplicateConstants;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
+import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
 import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
@@ -452,6 +453,7 @@ public class BuiltInCheckerSuppliers {
           ComplexBooleanConstant.class,
           ConditionalExpressionNumericPromotion.class,
           ConstantOverflow.class,
+          DiscardedPostfixExpression.class,
           DeadException.class,
           DeadThread.class,
           DoNotCallChecker.class,
