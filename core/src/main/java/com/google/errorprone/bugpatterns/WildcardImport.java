@@ -205,7 +205,8 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     }
     for (Map.Entry<Symbol, List<TypeToImport>> entry : toFix.entrySet()) {
       final Symbol owner = entry.getKey();
-      if (entry.getValue().size() > MAX_MEMBER_IMPORTS) {
+      if (entry.getKey().getKind() != ElementKind.PACKAGE
+          && entry.getValue().size() > MAX_MEMBER_IMPORTS) {
         qualifiedNameFix(fix, owner, state);
       } else {
         for (TypeToImport toImport : entry.getValue()) {
