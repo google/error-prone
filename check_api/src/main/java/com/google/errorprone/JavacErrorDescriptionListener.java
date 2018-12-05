@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.Replacement;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.EndPosTable;
@@ -68,7 +69,15 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     checkNotNull(endPositions);
     try {
       CharSequence sourceFileContent = sourceFile.getCharContent(true);
-      fixToAppliedFix = fix -> AppliedFix.fromSource(sourceFileContent, endPositions).apply(fix);
+      fixToAppliedFix = fix -> {
+        try {
+          return AppliedFix.fromSource(sourceFileContent, endPositions).apply(fix);
+        } catch (Replacement.InvalidReplacementPositionException e) {
+          // Not possible to auto-suggest a fix, for example inside
+          // Lombok auto-generated code
+          return null;
+        }
+      };
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

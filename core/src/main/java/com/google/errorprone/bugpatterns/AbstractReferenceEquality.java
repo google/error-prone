@@ -25,6 +25,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.Replacement;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -79,7 +80,12 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
     }
 
     Description.Builder builder = buildDescription(tree);
-    addFixes(builder, tree, state);
+    try {
+      addFixes(builder, tree, state);
+    } catch (Replacement.InvalidReplacementPositionException e) {
+      // Not possible to auto-suggest a fix, for example inside
+      // Lombok auto-generated setters which use "=="
+    }
     return builder.build();
   }
 
