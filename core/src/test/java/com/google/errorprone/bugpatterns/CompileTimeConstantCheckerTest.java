@@ -27,10 +27,6 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class CompileTimeConstantCheckerTest {
 
-  public static final String ERROR_MESSAGE =
-      "[CompileTimeConstant] Non-compile-time constant expression passed "
-          + "to parameter with @CompileTimeConstant type annotation";
-
   private CompilationTestHelper compilationHelper;
 
   @Before
@@ -339,6 +335,25 @@ public class CompileTimeConstantCheckerTest {
             "    m(x); ",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_override() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "abstract class CompileTimeConstantTestCase {",
+            "  abstract void m(String y);",
+            "  static class C extends CompileTimeConstantTestCase {",
+            "    // BUG: Diagnostic contains: Method with @CompileTimeConstant parameter",
+            "    @Override void m(@CompileTimeConstant String s) {}",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:CompileTimeConstantChecker:ForbidConstantOverrides=true"))
         .doTest();
   }
 
