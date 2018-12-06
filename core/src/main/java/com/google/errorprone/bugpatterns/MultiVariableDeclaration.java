@@ -20,8 +20,8 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static java.util.stream.Collectors.joining;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
@@ -38,6 +38,12 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCAnnotation;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.Pretty;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,8 +78,8 @@ public class MultiVariableDeclaration extends BugChecker
         continue;
       }
       VariableTree variableTree = (VariableTree) it.next();
-      ArrayList<VariableTree> fragments = new ArrayList<>();
-      fragments.add(variableTree);
+      ArrayList<JCVariableDecl> fragments = new ArrayList<>();
+      fragments.add((JCVariableDecl) variableTree);
       // Javac handles multi-variable declarations by lowering them in the parser into a series of
       // individual declarations, all of which have the same start position. We search for the first
       // declaration in the group, which is either the first variable declared in this scope or has
@@ -82,18 +88,42 @@ public class MultiVariableDeclaration extends BugChecker
           && it.peek().getKind() == Tree.Kind.VARIABLE
           && ((JCTree) variableTree).getStartPosition()
               == ((JCTree) it.peek()).getStartPosition()) {
-        fragments.add((VariableTree) it.next());
+        fragments.add((JCVariableDecl) it.next());
       }
       if (fragments.size() == 1) {
         continue;
       }
       Fix fix =
           SuggestedFix.replace(
-              ((JCTree) fragments.get(0)).getStartPosition(),
+              fragments.get(0).getStartPosition(),
               state.getEndPosition(Iterables.getLast(fragments)),
-              Joiner.on("; ").join(fragments) + ";");
+              fragments.stream().map(this::pretty).collect(joining("")));
       state.reportMatch(describeMatch(fragments.get(0), fix));
     }
     return NO_MATCH;
+  }
+
+  private String pretty(JCVariableDecl variableDecl) {
+    StringWriter sw = new StringWriter();
+    try {
+      new Pretty(sw, true) {
+        @Override
+        public void visitAnnotation(JCAnnotation anno) {
+          if (anno.getArguments().isEmpty()) {
+            try {
+              print("@");
+              printExpr(anno.annotationType);
+            } catch (IOException e) {
+              throw new UncheckedIOException(e);
+            }
+          } else {
+            super.visitAnnotation(anno);
+          }
+        }
+      }.printStat(variableDecl);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+    return sw.toString();
   }
 }
