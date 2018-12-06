@@ -173,12 +173,8 @@ public class MultiVariableDeclarationTest {
             "out/A.java",
             "package a;",
             "public class A {",
-            // javac's pretty printer uses the system line separator
-            "  @Deprecated()"
-                + System.lineSeparator()
-                + "int x = 1; @Deprecated()"
-                + System.lineSeparator()
-                + "int y = 2;",
+            "  @Deprecated int x = 1;",
+            "  @Deprecated int y = 2;",
             "}")
         .doTest(TEXT_MATCH);
   }
