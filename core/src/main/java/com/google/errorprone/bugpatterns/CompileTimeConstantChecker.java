@@ -27,6 +27,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher;
 import com.google.errorprone.matchers.Description;
@@ -36,12 +37,15 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Detects invocations of methods with a parameter annotated {@code @CompileTimeConstant} such that
@@ -78,6 +82,7 @@ public class CompileTimeConstantChecker extends BugChecker
     implements LambdaExpressionTreeMatcher,
         MemberReferenceTreeMatcher,
         MethodInvocationTreeMatcher,
+        MethodTreeMatcher,
         NewClassTreeMatcher {
 
   private static final String DID_YOU_MEAN_FINAL_FMT_MESSAGE = " Did you mean to make '%s' final?";
@@ -86,10 +91,13 @@ public class CompileTimeConstantChecker extends BugChecker
       new CompileTimeConstantExpressionMatcher();
 
   private final boolean forbidMethodReferences;
+  private final boolean forbidConstantOverrides;
 
   public CompileTimeConstantChecker(ErrorProneFlags flags) {
     forbidMethodReferences =
         flags.getBoolean("CompileTimeConstantChecker:ForbidMethodReferences").orElse(false);
+    forbidConstantOverrides =
+        flags.getBoolean("CompileTimeConstantChecker:ForbidConstantOverrides").orElse(false);
   }
 
   /**
@@ -181,6 +189,37 @@ public class CompileTimeConstantChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return matchArguments(state, sym, tree.getArguments().iterator());
+  }
+
+  @Override
+  public Description matchMethod(MethodTree node, VisitorState state) {
+    if (!forbidConstantOverrides) {
+      return Description.NO_MATCH;
+    }
+    Symbol.MethodSymbol method = ASTHelpers.getSymbol(node);
+    if (method == null) {
+      return Description.NO_MATCH;
+    }
+    List<Integer> compileTimeConstantAnnotationIndexes = new ArrayList<>();
+    for (int i = 0; i < method.getParameters().size(); i++) {
+      if (hasCompileTimeConstantAnnotation(state, method.getParameters().get(i))) {
+        compileTimeConstantAnnotationIndexes.add(i);
+      }
+    }
+    if (compileTimeConstantAnnotationIndexes.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+    for (Symbol.MethodSymbol superMethod : ASTHelpers.findSuperMethods(method, state.getTypes())) {
+      for (Integer index : compileTimeConstantAnnotationIndexes) {
+        if (!hasCompileTimeConstantAnnotation(state, superMethod.getParameters().get(index))) {
+          return buildDescription(node)
+              .setMessage(
+                  "Method with @CompileTimeConstant parameter can't override method without it.")
+              .build();
+        }
+      }
+    }
+    return Description.NO_MATCH;
   }
 
   @Override
