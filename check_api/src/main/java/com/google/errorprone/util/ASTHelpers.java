@@ -543,6 +543,7 @@ public class ASTHelpers {
   @Nullable
   public static MethodSymbol findSuperMethodInType(
       MethodSymbol methodSymbol, Type superType, Types types) {
+    // TODO(ghm): Using a comparison of tsym here appears to be a behaviour change.
     if (methodSymbol.isStatic() || superType.equals(methodSymbol.owner.type)) {
       return null;
     }

@@ -334,7 +334,7 @@ public class ImmutableChecker extends BugChecker
    */
   private Type immutableSupertype(Symbol sym, VisitorState state) {
     for (Type superType : state.getTypes().closure(sym.type)) {
-      if (superType.equals(sym.type)) {
+      if (superType.tsym.equals(sym.type.tsym)) {
         continue;
       }
       // Don't use getImmutableAnnotation here: subtypes of trusted types are

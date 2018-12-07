@@ -82,9 +82,10 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
    * when they're not the same, in which case we prefer the type of the expression. This ensures
    * that a byte/short subtracted from another byte/short isn't regarded as an int.
    */
-  private static Type getTypeOfSubtract(BinaryTree expression) {
+  private static Type getTypeOfSubtract(BinaryTree expression, VisitorState state) {
     Type expressionType = ASTHelpers.getType(expression.getLeftOperand());
-    if (!expressionType.equals(ASTHelpers.getType(expression.getRightOperand()))) {
+    if (!ASTHelpers.isSameType(
+        expressionType, ASTHelpers.getType(expression.getRightOperand()), state)) {
       return ASTHelpers.getType(expression);
     }
     return expressionType;
@@ -110,7 +111,7 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
 
     // Ensure the expression type is wider and signed (ie a long) than the cast type ignoring
     // boxing.
-    Type expressionType = getTypeOfSubtract((BinaryTree) expression);
+    Type expressionType = getTypeOfSubtract((BinaryTree) expression, state);
     TypeTag expressionTypeTag = state.getTypes().unboxedTypeOrType(expressionType).getTag();
     return (expressionTypeTag == TypeTag.LONG);
   }

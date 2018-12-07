@@ -243,7 +243,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         },
         (ExpressionTree t, VisitorState state) -> {
           Type type = ASTHelpers.getReceiverType(t);
-          return state.getTypeFromString(expectedType).equals(type);
+          return ASTHelpers.isSameType(state.getTypeFromString(expectedType), type, state);
         });
   }
 

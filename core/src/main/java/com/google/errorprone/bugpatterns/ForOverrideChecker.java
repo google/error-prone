@@ -94,7 +94,7 @@ public class ForOverrideChecker extends BugChecker
 
     for (Symbol overriddenMethod : overriddenMethods) {
       Type declaringClass = overriddenMethod.outermostClass().asType();
-      if (!declaringClass.equals(currentClass)) {
+      if (!ASTHelpers.isSameType(declaringClass, currentClass, state)) {
         String customMessage =
             MESSAGE_BASE
                 + "must not be invoked directly "
@@ -194,8 +194,9 @@ public class ForOverrideChecker extends BugChecker
     // package-private visibility, but interface methods have implicit public visibility.
     Type currType = state.getTypes().supertype(method.owner.type);
     while (currType != null
-        && !currType.equals(state.getSymtab().objectType)
-        && !currType.equals(Type.noType)) {
+        && currType.tsym != null
+        && !currType.tsym.equals(state.getSymtab().objectType.tsym)
+        && !ASTHelpers.isSameType(currType, Type.noType, state)) {
       Symbol sym = currType.tsym.members().findFirst(method.name);
       if (sym instanceof MethodSymbol) {
         list.add((MethodSymbol) sym);
