@@ -3,6 +3,7 @@ package test;
 
 option java_package = "com.google.errorprone.testdata.proto";
 option java_mutable_api = true;
+option java_enable_dual_generate_mutable_api = true;
 
 message User {
   optional string name = 1;

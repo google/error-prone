@@ -341,6 +341,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
       // the type couldn't be loaded
       return false;
     }
+    to = state.getTypes().erasure(to);
     return state.getTypes().isAssignable(type, to);
   }
 
