@@ -21,6 +21,7 @@ import com.google.common.base.Splitter;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
@@ -48,7 +49,6 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -58,48 +58,97 @@ import javax.annotation.Nullable;
 public class VisitorState {
 
   private final DescriptionListener descriptionListener;
-  public final Context context;
   private final TreePath path;
   private final Map<String, SeverityLevel> severityMap;
   private final ErrorProneOptions errorProneOptions;
+
+  public final Context context;
   private final LoadingCache<String, Optional<Type>> typeCache;
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
   private static final DescriptionListener NULL_LISTENER = description -> {};
 
+  /**
+   * Return a VisitorState that has no Error Prone configuration, and can't report results.
+   *
+   * <p>If using this method, consider moving to using utility methods not needing VisitorSate
+   */
+  public static VisitorState createForUtilityPurposes(Context context) {
+    return new VisitorState(
+        context, NULL_LISTENER, ImmutableMap.of(), ErrorProneOptions.empty(), null, null);
+  }
+
+  /**
+   * Return a VisitorState that has no Error Prone configuration, but can report findings to {@code
+   * listener}.
+   */
+  public static VisitorState createForCustomFindingCollection(
+      Context context, DescriptionListener listener) {
+    return new VisitorState(
+        context, listener, ImmutableMap.of(), ErrorProneOptions.empty(), null, null);
+  }
+
+  /**
+   * Return a VisitorState configured for a new compilation, including Error Prone configuration.
+   */
+  public static VisitorState createConfiguredForCompilation(
+      Context context,
+      DescriptionListener listener,
+      Map<String, SeverityLevel> severityMap,
+      ErrorProneOptions errorProneOptions) {
+    return new VisitorState(context, listener, severityMap, errorProneOptions, null, null);
+  }
+
+  /**
+   * Return a VisitorState that has no Error Prone configuration, and can't report results.
+   *
+   * @deprecated If VisitorState is needed, use {@link #createForUtilityPurposes}, otherwise just
+   *     use utility methods in ASTHelpers that don't need VisitorSate.
+   */
+  @Deprecated
   public VisitorState(Context context) {
-    this(context, NULL_LISTENER);
+    this(context, NULL_LISTENER, ImmutableMap.of(), ErrorProneOptions.empty(), null, null);
   }
 
+  /**
+   * Return a VisitorState that has no Error Prone configuration, but can report findings to {@code
+   * listener}.
+   *
+   * @deprecated Use the equivalent factory method {@link #createForCustomFindingCollection}.
+   */
+  @Deprecated
   public VisitorState(Context context, DescriptionListener listener) {
-    this(
-        context,
-        listener,
-        Collections.<String, SeverityLevel>emptyMap(),
-        ErrorProneOptions.empty());
+    this(context, listener, ImmutableMap.of(), ErrorProneOptions.empty(), null, null);
   }
 
+  /**
+   * Return a VisitorState configured for a new compilation, including Error Prone configuration.
+   *
+   * @deprecated Use the equivalent factory method {@link #createConfiguredForCompilation}.
+   */
+  @Deprecated
   public VisitorState(
       Context context,
       DescriptionListener listener,
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions) {
-    this(context, null, listener, severityMap, errorProneOptions, null);
+    this(context, listener, severityMap, errorProneOptions, null, null);
   }
 
   private VisitorState(
       Context context,
-      TreePath path,
       DescriptionListener descriptionListener,
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions,
+      TreePath path,
       LoadingCache<String, Optional<Type>> typeCache) {
     this.context = context;
-    this.path = path;
     this.descriptionListener = descriptionListener;
     this.severityMap = severityMap;
     this.errorProneOptions = errorProneOptions;
+
+    this.path = path;
     this.typeCache =
         typeCache != null
             ? typeCache
@@ -116,7 +165,7 @@ public class VisitorState {
 
   public VisitorState withPath(TreePath path) {
     return new VisitorState(
-        context, path, descriptionListener, severityMap, errorProneOptions, typeCache);
+        context, descriptionListener, severityMap, errorProneOptions, path, typeCache);
   }
 
   public TreePath getPath() {
