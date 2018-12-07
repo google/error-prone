@@ -28,20 +28,22 @@ public class HidingFieldPositiveCases1 {
     String varThree;
   }
 
-
-  /** ClassB has a variable name as parent */
+  /** ClassB has a field with the same name as one in its parent. */
   public static class ClassB extends ClassA {
     // BUG: Diagnostic contains: superclass: ClassA
     private String varOne = "Test";
   }
 
-  /** ClassC has same variable name as grandparent */
+  /** ClassC has a field with the same name as one in its grandparent. */
   public static class ClassC extends ClassB {
     // BUG: Diagnostic contains: superclass: ClassA
     public int varTwo;
   }
 
-  /** ClassD has same variable name as grandparent and other unrelated members */
+  /**
+   * ClassD has multiple fields with the same name as those in its grandparent, as well as other
+   * unrelated members.
+   */
   public static class ClassD extends ClassB {
     // BUG: Diagnostic contains: superclass: ClassA
     protected int varThree;
