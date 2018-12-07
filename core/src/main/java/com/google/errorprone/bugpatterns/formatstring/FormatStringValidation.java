@@ -33,8 +33,8 @@ import edu.umd.cs.findbugs.formatStringChecker.Formatter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayDeque;
 import java.util.Calendar;
@@ -205,7 +205,7 @@ public class FormatStringValidation {
       return Instant.now();
     }
     if (isSubtype(types, type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
-      return LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
+      return ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
     }
     return new Object();
   }

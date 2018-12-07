@@ -223,14 +223,14 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Instant;",
-            "import java.time.LocalDateTime;",
-            "import java.time.ZoneId;",
+            "import java.time.*;",
             "class Test {",
             "  void f() {",
             "    System.err.printf(\"%tY\",",
             "        LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));",
             "    System.err.printf(\"%tQ\", Instant.now());",
+            "    System.err.printf(\"%tZ\", ZonedDateTime.of(LocalDate.of(2018, 12, 27),"
+                + " LocalTime.of(17, 0), ZoneId.of(\"Europe/London\")));",
             "  }",
             "}")
         .doTest();
