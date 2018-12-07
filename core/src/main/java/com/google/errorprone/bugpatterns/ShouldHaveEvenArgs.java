@@ -16,11 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.Category.TRUTH;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
-import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -29,9 +30,8 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.util.List;
 
 /**
@@ -64,16 +64,16 @@ public class ShouldHaveEvenArgs extends BugChecker implements MethodInvocationTr
     if (methodInvocationTree.getArguments().size() % 2 == 0) {
       return Description.NO_MATCH;
     }
-    JCMethodInvocation methodInvocation = (JCMethodInvocation) methodInvocationTree;
-    List<JCExpression> arguments = methodInvocation.getArguments();
+    List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
 
-    Type typeVargs = methodInvocation.varargsElement;
-    if (typeVargs == null) {
+    MethodSymbol methodSymbol = getSymbol(methodInvocationTree);
+    if (methodSymbol == null || !methodSymbol.isVarArgs()) {
       return Description.NO_MATCH;
     }
-    Type typeVarargsArr = state.arrayTypeForType(typeVargs);
-    Type lastArgType = ASTHelpers.getType(Iterables.getLast(arguments));
-    if (typeVarargsArr.equals(lastArgType)) {
+    Type varArgsArrayType = getLast(methodSymbol.params()).type;
+    Type lastArgType = ASTHelpers.getType(getLast(arguments));
+    if (arguments.size() == methodSymbol.params().size()
+        && ASTHelpers.isSameType(varArgsArrayType, lastArgType, state)) {
       return Description.NO_MATCH;
     }
     return describeMatch(methodInvocationTree);

@@ -27,8 +27,6 @@ import static com.google.errorprone.matchers.Matchers.toType;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -48,9 +46,10 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.annotation.Nullable;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
@@ -131,11 +130,10 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
 
   public static TypeCompatibilityReport compatibilityOfTypes(
       Type receiverType, Type argumentType, VisitorState state) {
-    return compatibilityOfTypes(
-        receiverType, argumentType, new HashSet<>(), new HashSet<>(), state);
+    return compatibilityOfTypes(receiverType, argumentType, typeSet(state), typeSet(state), state);
   }
 
-  public static TypeCompatibilityReport compatibilityOfTypes(
+  private static TypeCompatibilityReport compatibilityOfTypes(
       Type receiverType,
       Type argumentType,
       Set<Type> previousReceiverTypes,
@@ -263,17 +261,20 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
         .filter(
             tp ->
                 !(previousReceiverTypes.contains(tp.receiver)
-                    || tp.receiver.equals(receiverType)
+                    || ASTHelpers.isSameType(tp.receiver, receiverType, state)
                     || previousArgumentTypes.contains(tp.argument)
-                    || tp.argument.equals(argumentType)))
+                    || ASTHelpers.isSameType(tp.argument, argumentType, state)))
         .map(
-            types ->
-                compatibilityOfTypes(
-                    types.receiver,
-                    types.argument,
-                    Sets.union(previousReceiverTypes, ImmutableSet.of(receiverType)),
-                    Sets.union(previousArgumentTypes, ImmutableSet.of(argumentType)),
-                    state))
+            types -> {
+              Set<Type> nextReceiverTypes = typeSet(state);
+              nextReceiverTypes.addAll(previousReceiverTypes);
+              nextReceiverTypes.add(receiverType);
+              Set<Type> nextArgumentTypes = typeSet(state);
+              nextArgumentTypes.addAll(previousArgumentTypes);
+              nextArgumentTypes.add(argumentType);
+              return compatibilityOfTypes(
+                  types.receiver, types.argument, nextReceiverTypes, nextArgumentTypes, state);
+            })
         .filter(tcr -> !tcr.compatible())
         .findFirst()
         .orElse(TypeCompatibilityReport.createCompatibleReport());
@@ -346,11 +347,11 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
     }
   }
 
-  public static class TypeStringPair {
+  private static class TypeStringPair {
     private String receiverTypeString;
     private String argumentTypeString;
 
-    public TypeStringPair(Type receiverType, Type argumentType) {
+    private TypeStringPair(Type receiverType, Type argumentType) {
       receiverTypeString = Signatures.prettyType(receiverType);
       argumentTypeString = Signatures.prettyType(argumentType);
       if (argumentTypeString.equals(receiverTypeString)) {
@@ -359,12 +360,33 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
       }
     }
 
-    public String getReceiverTypeString() {
+    private String getReceiverTypeString() {
       return receiverTypeString;
     }
 
-    public String getArgumentTypeString() {
+    private String getArgumentTypeString() {
       return argumentTypeString;
     }
+  }
+
+  private static TreeSet<Type> typeSet(VisitorState state) {
+    return new TreeSet<>(
+        new Comparator<Type>() {
+          @Override
+          public int compare(Type t1, Type t2) {
+            return state.getTypes().isSameType(t1, t2) ? 0 : t1.toString().compareTo(t2.toString());
+          }
+
+          @Override
+          public int hashCode() {
+            return super.hashCode();
+          }
+
+          /** Indicates whether some other object is "equal to" this comparator. */
+          @Override
+          public boolean equals(Object obj) {
+            return obj == this;
+          }
+        });
   }
 }
