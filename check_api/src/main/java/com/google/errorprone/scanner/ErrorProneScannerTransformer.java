@@ -51,6 +51,7 @@ public abstract class ErrorProneScannerTransformer implements CodeTransformer {
   /** Create a VisitorState object from a compilation unit. */
   private VisitorState createVisitorState(Context context, DescriptionListener listener) {
     ErrorProneOptions options = requireNonNull(context.get(ErrorProneOptions.class));
-    return new VisitorState(context, listener, scanner().severityMap(), options);
+    return VisitorState.createConfiguredForCompilation(
+        context, listener, scanner().severityMap(), options);
   }
 }
