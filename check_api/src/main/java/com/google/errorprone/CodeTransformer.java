@@ -30,5 +30,21 @@ public interface CodeTransformer {
   /** Apply recursively from the leaf node in the given {@link TreePath}. */
   void apply(TreePath path, Context context, DescriptionListener listener);
 
+  /**
+   * Returns a map of annotation data logically applied to this code transformer.
+   *
+   * <p>As an example, if a {@code CodeTransformer} expressed as a Refaster rule had an annotation
+   * applied to it:
+   *
+   * <pre>{@code
+   * {@literal @}MyCustomAnnotation("value")
+   * public class AnnotatedRefasterRule {
+   *    {@literal @}BeforeTemplate void before(String x) {...}
+   *    {@literal @}AfterTemplate void after(String x) {...}
+   * }
+   * }</pre>
+   *
+   * You could retrieve the value of {@code @MyCustomAnnotation} from this map.
+   */
   ImmutableClassToInstanceMap<Annotation> annotations();
 }

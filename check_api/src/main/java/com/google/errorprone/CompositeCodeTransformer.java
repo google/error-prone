@@ -48,6 +48,6 @@ public abstract class CompositeCodeTransformer implements CodeTransformer, Seria
 
   @Override
   public ImmutableClassToInstanceMap<Annotation> annotations() {
-    return ImmutableClassToInstanceMap.<Annotation>builder().build();
+    return ImmutableClassToInstanceMap.of();
   }
 }
