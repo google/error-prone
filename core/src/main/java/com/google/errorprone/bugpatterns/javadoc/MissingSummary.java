@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocTreePath;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static java.util.stream.Collectors.joining;
@@ -40,10 +41,12 @@ import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SeeTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import java.util.List;
 import java.util.Set;
@@ -88,6 +91,9 @@ public final class MissingSummary extends BugChecker
   private Description handle(@Nullable DocTreePath docTreePath, VisitorState state) {
     if (docTreePath == null) {
       return NO_MATCH;
+    }
+    if (!requiresJavadoc(docTreePath.getTreePath().getLeaf(), state)) {
+      return Description.NO_MATCH;
     }
     List<? extends DocTree> firstSentence = docTreePath.getDocComment().getFirstSentence();
     if (!firstSentence.isEmpty()) {
@@ -173,5 +179,19 @@ public final class MissingSummary extends BugChecker
 
   private static String lowerFirstLetter(String description) {
     return Character.toLowerCase(description.charAt(0)) + description.substring(1);
+  }
+
+  private static boolean requiresJavadoc(Tree tree, VisitorState state) {
+    if (state.errorProneOptions().isTestOnlyTarget()) {
+      return false;
+    }
+    Symbol symbol = getSymbol(tree);
+    if (symbol instanceof MethodSymbol
+        && !findSuperMethods((MethodSymbol) symbol, state.getTypes()).isEmpty()) {
+      return false;
+    }
+    return symbol != null
+        && (symbol.getModifiers().contains(Modifier.PUBLIC)
+            || symbol.getModifiers().contains(Modifier.PROTECTED));
   }
 }
