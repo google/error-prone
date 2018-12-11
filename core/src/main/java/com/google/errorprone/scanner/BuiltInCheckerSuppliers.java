@@ -253,6 +253,7 @@ import com.google.errorprone.bugpatterns.TruthConstantAsserts;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
 import com.google.errorprone.bugpatterns.TryFailRefactoring;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
+import com.google.errorprone.bugpatterns.TypeEqualsChecker;
 import com.google.errorprone.bugpatterns.TypeNameShadowing;
 import com.google.errorprone.bugpatterns.TypeParameterNaming;
 import com.google.errorprone.bugpatterns.TypeParameterQualifier;
@@ -681,6 +682,7 @@ public class BuiltInCheckerSuppliers {
           TruthAssertExpected.class,
           TruthConstantAsserts.class,
           TruthIncompatibleType.class,
+          TypeEqualsChecker.class,
           TypeNameShadowing.class,
           TypeParameterShadowing.class,
           TypeParameterUnusedInFormals.class,
