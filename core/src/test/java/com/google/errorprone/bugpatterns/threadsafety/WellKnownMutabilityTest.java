@@ -59,17 +59,4 @@ public final class WellKnownMutabilityTest {
       return Description.NO_MATCH;
     }
   }
-
-  @Test
-  public void basicFields() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import com.google.errorprone.testdata.proto.proto1api.User;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: This is not proto2",
-            "  final User user = null;",
-            "}")
-        .doTest();
-  }
 }
