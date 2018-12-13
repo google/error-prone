@@ -22,7 +22,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultiset;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
@@ -58,12 +60,13 @@ import javax.annotation.Nullable;
 public class VisitorState {
 
   private final DescriptionListener descriptionListener;
-  private final TreePath path;
+  private final StatisticsCollector statisticsCollector;
   private final Map<String, SeverityLevel> severityMap;
   private final ErrorProneOptions errorProneOptions;
-
-  public final Context context;
   private final LoadingCache<String, Optional<Type>> typeCache;
+  public final Context context;
+
+  private final TreePath path;
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
@@ -76,7 +79,14 @@ public class VisitorState {
    */
   public static VisitorState createForUtilityPurposes(Context context) {
     return new VisitorState(
-        context, NULL_LISTENER, ImmutableMap.of(), ErrorProneOptions.empty(), null, null);
+        context,
+        NULL_LISTENER,
+        ImmutableMap.of(),
+        ErrorProneOptions.empty(),
+        // Can't use this VisitorState to report results, so no-op collector.
+        StatisticsCollector.createNoOpCollector(),
+        null,
+        null);
   }
 
   /**
@@ -86,7 +96,13 @@ public class VisitorState {
   public static VisitorState createForCustomFindingCollection(
       Context context, DescriptionListener listener) {
     return new VisitorState(
-        context, listener, ImmutableMap.of(), ErrorProneOptions.empty(), null, null);
+        context,
+        listener,
+        ImmutableMap.of(),
+        ErrorProneOptions.empty(),
+        StatisticsCollector.createCollector(),
+        null,
+        null);
   }
 
   /**
@@ -97,7 +113,14 @@ public class VisitorState {
       DescriptionListener listener,
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions) {
-    return new VisitorState(context, listener, severityMap, errorProneOptions, null, null);
+    return new VisitorState(
+        context,
+        listener,
+        severityMap,
+        errorProneOptions,
+        StatisticsCollector.createCollector(),
+        null,
+        null);
   }
 
   /**
@@ -108,7 +131,15 @@ public class VisitorState {
    */
   @Deprecated
   public VisitorState(Context context) {
-    this(context, NULL_LISTENER, ImmutableMap.of(), ErrorProneOptions.empty(), null, null);
+    this(
+        context,
+        NULL_LISTENER,
+        ImmutableMap.of(),
+        ErrorProneOptions.empty(),
+        // Can't use this VisitorState to report results, so no-op collector.
+        StatisticsCollector.createNoOpCollector(),
+        null,
+        null);
   }
 
   /**
@@ -119,7 +150,14 @@ public class VisitorState {
    */
   @Deprecated
   public VisitorState(Context context, DescriptionListener listener) {
-    this(context, listener, ImmutableMap.of(), ErrorProneOptions.empty(), null, null);
+    this(
+        context,
+        listener,
+        ImmutableMap.of(),
+        ErrorProneOptions.empty(),
+        StatisticsCollector.createCollector(),
+        null,
+        null);
   }
 
   /**
@@ -133,7 +171,14 @@ public class VisitorState {
       DescriptionListener listener,
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions) {
-    this(context, listener, severityMap, errorProneOptions, null, null);
+    this(
+        context,
+        listener,
+        severityMap,
+        errorProneOptions,
+        StatisticsCollector.createCollector(),
+        null,
+        null);
   }
 
   private VisitorState(
@@ -141,12 +186,14 @@ public class VisitorState {
       DescriptionListener descriptionListener,
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions,
+      StatisticsCollector statisticsCollector,
       TreePath path,
       LoadingCache<String, Optional<Type>> typeCache) {
     this.context = context;
     this.descriptionListener = descriptionListener;
     this.severityMap = severityMap;
     this.errorProneOptions = errorProneOptions;
+    this.statisticsCollector = statisticsCollector;
 
     this.path = path;
     this.typeCache =
@@ -165,7 +212,13 @@ public class VisitorState {
 
   public VisitorState withPath(TreePath path) {
     return new VisitorState(
-        context, descriptionListener, severityMap, errorProneOptions, path, typeCache);
+        context,
+        descriptionListener,
+        severityMap,
+        errorProneOptions,
+        statisticsCollector,
+        path,
+        typeCache);
   }
 
   public TreePath getPath() {
@@ -202,7 +255,54 @@ public class VisitorState {
     if (override != null) {
       description = description.applySeverityOverride(override);
     }
+    incrementCounter(description.checkName + "-findings");
     descriptionListener.onDescribed(description);
+  }
+
+  /**
+   * Increments the counter for {@code key} inside this VisitorState by 1.
+   *
+   * <p>One can retrieve the total count from this VisitorState with {@link #counters}.
+   */
+  public void incrementCounter(String key) {
+    statisticsCollector.incrementCounter(key);
+  }
+
+  /**
+   * Increments the counter for {@code key} inside this VisitorState by {@code count}.
+   *
+   * <p>One can retrieve the total count from this VisitorState with {@link #counters}.
+   */
+  public void incrementCounter(String key, int count) {
+    statisticsCollector.incrementCounter(key, count);
+  }
+
+  /**
+   * Increment the counter for a combination of {@code bugChecker}'s canonical name and {@code key}
+   * by 1.
+   *
+   * <p>e.g.: a key of {@code foo} becomes {@code FooChecker-foo}.
+   */
+  public void incrementCounter(BugChecker bugChecker, String key) {
+    incrementCounter(bugChecker, key, 1);
+  }
+
+  /**
+   * Increment the counter for a combination of {@code bugChecker}'s canonical name and {@code key}
+   * by {@code count}.
+   *
+   * <p>e.g.: a key of {@code foo} becomes {@code FooChecker-foo}.
+   */
+  public void incrementCounter(BugChecker bugChecker, String key, int count) {
+    incrementCounter(bugChecker.canonicalName() + "-" + key, count);
+  }
+
+  /**
+   * Returns a copy of all of the counters previously added to this VisitorState with {@link
+   * #incrementCounter}.
+   */
+  public ImmutableMultiset<String> counters() {
+    return statisticsCollector.counters();
   }
 
   public Name getName(String nameStr) {
@@ -402,7 +502,7 @@ public class VisitorState {
    * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
    * be used if a fix is already going to be emitted.
    */
-  public java.util.List<ErrorProneToken> getTokensForNode(Tree tree) {
+  public List<ErrorProneToken> getTokensForNode(Tree tree) {
     return ErrorProneTokens.getTokens(getSourceForNode(tree), context);
   }
 
