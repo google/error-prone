@@ -85,12 +85,19 @@ support:
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                  <groupId>com.google.errorprone</groupId>
+                  <artifactId>javac</artifactId>
+                  <version>9+181-r4173-1</version>
+              </dependency>
+            </dependencies>
             <configuration>
               <fork>true</fork>
               <compilerArgs combine.children="append">
-                <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</arg>
+                <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar</arg>
               </compilerArgs>
-            </configuration>
+            </configuration>            
           </plugin>
         </plugins>
       </build>
