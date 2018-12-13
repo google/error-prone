@@ -248,6 +248,7 @@ import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
 import com.google.errorprone.bugpatterns.ThrowNull;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.ToStringReturnsNull;
+import com.google.errorprone.bugpatterns.TreeToStringChecker;
 import com.google.errorprone.bugpatterns.TruthAssertExpected;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
@@ -679,6 +680,7 @@ public class BuiltInCheckerSuppliers {
           ThreeLetterTimeZoneID.class,
           TimeUnitConversionChecker.class,
           ToStringReturnsNull.class,
+          TreeToStringChecker.class,
           TruthAssertExpected.class,
           TruthConstantAsserts.class,
           TruthIncompatibleType.class,
