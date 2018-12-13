@@ -46,7 +46,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -371,22 +370,7 @@ public class EqualsIncompatibleType extends BugChecker implements MethodInvocati
 
   private static TreeSet<Type> typeSet(VisitorState state) {
     return new TreeSet<>(
-        new Comparator<Type>() {
-          @Override
-          public int compare(Type t1, Type t2) {
-            return state.getTypes().isSameType(t1, t2) ? 0 : t1.toString().compareTo(t2.toString());
-          }
-
-          @Override
-          public int hashCode() {
-            return super.hashCode();
-          }
-
-          /** Indicates whether some other object is "equal to" this comparator. */
-          @Override
-          public boolean equals(Object obj) {
-            return obj == this;
-          }
-        });
+        (t1, t2) ->
+            state.getTypes().isSameType(t1, t2) ? 0 : t1.toString().compareTo(t2.toString()));
   }
 }
