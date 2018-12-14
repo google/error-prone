@@ -128,13 +128,7 @@ public final class TemporalAccessorGetChronoField extends BugChecker
       matchers.put(
           Matchers.instanceMethod()
               .onExactClass(clazz.getName())
-              .named("getLong")
-              .withParameters("java.time.temporal.TemporalField"),
-          clazz);
-      matchers.put(
-          Matchers.instanceMethod()
-              .onExactClass(clazz.getName())
-              .named("get")
+              .namedAnyOf("get", "getLong")
               .withParameters("java.time.temporal.TemporalField"),
           clazz);
     }
