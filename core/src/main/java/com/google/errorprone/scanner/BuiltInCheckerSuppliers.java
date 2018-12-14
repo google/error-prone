@@ -292,7 +292,6 @@ import com.google.errorprone.bugpatterns.android.IsLoggableTagLength;
 import com.google.errorprone.bugpatterns.android.MislabeledAndroidString;
 import com.google.errorprone.bugpatterns.android.ParcelableCreator;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
-import com.google.errorprone.bugpatterns.android.RestrictToEnforcer;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.android.WakelockReleasedDangerously;
 import com.google.errorprone.bugpatterns.apidiff.AndroidJdkLibsChecker;
@@ -776,7 +775,6 @@ public class BuiltInCheckerSuppliers {
           QualifierWithTypeUse.class,
           RedundantThrows.class,
           RemoveUnusedImports.class,
-          RestrictToEnforcer.class,
           ReturnMissingNullable.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOnModule.class,
