@@ -156,16 +156,23 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
       // The try statement has no finally region and all catch blocks are unnecessary. Replace it
       // with the try statements, deleting all catches.
       List<? extends StatementTree> tryStatements = tree.getBlock().getStatements();
-      String source = state.getSourceCode().toString();
-      // Replace the full region to work around a GJF partial formatting bug that prevents it from
-      // re-indenting unchanged lines. This means that fixes may overlap, but that's (hopefully)
-      // unlikely.
-      // TODO(b/24140798): emit more precise replacements if GJF is fixed
-      fix.replace(
-          tree,
-          source.substring(
-              ((JCTree) tryStatements.get(0)).getStartPosition(),
-              state.getEndPosition(Iterables.getLast(tryStatements))));
+
+      // If the try block is empty, all of the catches are dead, so just delete the whole try and
+      // don't modify the signature of the method
+      if (tryStatements.isEmpty()) {
+        return Optional.of(fix.delete(tree).build());
+      } else {
+        String source = state.getSourceCode().toString();
+        // Replace the full region to work around a GJF partial formatting bug that prevents it from
+        // re-indenting unchanged lines. This means that fixes may overlap, but that's (hopefully)
+        // unlikely.
+        // TODO(b/24140798): emit more precise replacements if GJF is fixed
+        fix.replace(
+            tree,
+            source.substring(
+                ((JCTree) tryStatements.get(0)).getStartPosition(),
+                state.getEndPosition(Iterables.getLast(tryStatements))));
+      }
     }
     MethodTree enclosing = findEnclosing(state.getPath());
     if (enclosing == null) {
