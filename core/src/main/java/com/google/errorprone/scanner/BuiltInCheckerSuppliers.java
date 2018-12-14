@@ -123,6 +123,7 @@ import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType;
 import com.google.errorprone.bugpatterns.IntLongMath;
+import com.google.errorprone.bugpatterns.InterfaceWithOnlyStatics;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
@@ -736,6 +737,7 @@ public class BuiltInCheckerSuppliers {
           InconsistentOverloads.class,
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
+          InterfaceWithOnlyStatics.class,
           InvalidTargetingOnScopingAnnotation.class,
           IterablePathParameter.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
