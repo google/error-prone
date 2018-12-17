@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.util.*;
 
 /** @author adgar@google.com (Mike Edgar) */
-public class ArrayStringConcatenationPositiveCases {
+public class ArrayToStringConcatenationPositiveCases {
 
   private static final int[] a = {1, 2, 3};
 
