@@ -118,11 +118,11 @@ public class ArrayToStringTest {
 
   @Test
   public void testPositiveConcat() {
-    compilationHelper.addSourceFile("ArrayStringConcatenationPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("ArrayToStringConcatenationPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeConcat() {
-    compilationHelper.addSourceFile("ArrayStringConcatenationNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("ArrayToStringConcatenationNegativeCases.java").doTest();
   }
 }
