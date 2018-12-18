@@ -301,4 +301,22 @@ public final class PrivateConstructorForUtilityClassTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void ignoreTestClasses() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "final class Test {",
+            "  @RunWith(JUnit4.class)",
+            "  private static class Blah {",
+            "    static void blah() {}",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
