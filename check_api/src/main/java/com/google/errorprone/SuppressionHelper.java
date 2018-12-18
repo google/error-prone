@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Attribute;
@@ -59,21 +60,22 @@ public class SuppressionHelper {
     this.customSuppressionAnnotations = customSuppressionAnnotations;
   }
 
-  /**
-   * Container for information about suppressions. Either reference field may be null, which
-   * indicates that the suppression sets are unchanged.
-   */
+  /** Immutable container for information about currently-known-about suppressions. */
+  @Immutable
   public static class SuppressionInfo {
-    public Set<String> suppressWarningsStrings;
-    public Set<Class<? extends Annotation>> customSuppressions;
-    public boolean inGeneratedCode;
+    public static final SuppressionInfo EMPTY =
+        new SuppressionInfo(ImmutableSet.of(), ImmutableSet.of(), false);
 
-    public SuppressionInfo(
+    public final ImmutableSet<String> suppressWarningsStrings;
+    public final ImmutableSet<Class<? extends Annotation>> customSuppressions;
+    public final boolean inGeneratedCode;
+
+    private SuppressionInfo(
         Set<String> suppressWarningsStrings,
         Set<Class<? extends Annotation>> customSuppressions,
         boolean inGeneratedCode) {
-      this.suppressWarningsStrings = suppressWarningsStrings;
-      this.customSuppressions = customSuppressions;
+      this.suppressWarningsStrings = ImmutableSet.copyOf(suppressWarningsStrings);
+      this.customSuppressions = ImmutableSet.copyOf(customSuppressions);
       this.inGeneratedCode = inGeneratedCode;
     }
   }
@@ -91,56 +93,71 @@ public class SuppressionHelper {
    * @param sym The {@code Symbol} for the AST node currently being scanned
    * @param suppressWarningsType The {@code Type} for {@code @SuppressWarnings}, as given by javac's
    *     symbol table
-   * @param suppressionsOnCurrentPath The set of strings in all {@code @SuppressWarnings}
-   *     annotations on the current path through the AST
-   * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations
+   * @param toExtend The suppression info to extend from.
+   * @param state VisitorState for checking the current tree
    */
   public SuppressionInfo extendSuppressionSets(
-      Symbol sym,
-      Type suppressWarningsType,
-      Set<String> suppressionsOnCurrentPath,
-      Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath,
-      boolean inGeneratedCode,
-      VisitorState state) {
+      Symbol sym, Type suppressWarningsType, SuppressionInfo toExtend, VisitorState state) {
+    boolean newInGeneratedCode = toExtend.inGeneratedCode || isGenerated(sym, state);
+    boolean anyModification = newInGeneratedCode != toExtend.inGeneratedCode;
 
-    boolean newInGeneratedCode = inGeneratedCode || isGenerated(sym, state);
-
-    /** Handle custom suppression annotations. */
+    /* Handle custom suppression annotations. */
     Set<Class<? extends Annotation>> newCustomSuppressions = null;
     for (Class<? extends Annotation> annotationType : customSuppressionAnnotations) {
+      // Don't need to check already-suppressed annos
+      if (toExtend.customSuppressions.contains(annotationType)) {
+        continue;
+      }
       if (ASTHelpers.hasAnnotation(sym, annotationType, state)) {
+        anyModification = true;
         if (newCustomSuppressions == null) {
-          newCustomSuppressions = new HashSet<>(customSuppressionsOnCurrentPath);
+          newCustomSuppressions = new HashSet<>(toExtend.customSuppressions);
         }
         newCustomSuppressions.add(annotationType);
       }
     }
 
-    /** Handle {@code @SuppressWarnings} and {@code @SuppressLint}. */
+    /* Handle {@code @SuppressWarnings} and {@code @SuppressLint}. */
     Set<String> newSuppressions = null;
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
       if ((attr.type.tsym == suppressWarningsType.tsym)
           || attr.type.tsym.getQualifiedName().contentEquals("android.annotation.SuppressLint")) {
         for (Pair<MethodSymbol, Attribute> value : attr.values) {
-          if (value.fst.name.contentEquals("value"))
+          if (value.fst.name.contentEquals("value")) {
             if (value.snd
                 instanceof Attribute.Array) { // SuppressWarnings/SuppressLint take an array
               for (Attribute suppress : ((Attribute.Array) value.snd).values) {
-                if (newSuppressions == null) {
-                  newSuppressions = new HashSet<>(suppressionsOnCurrentPath);
+                String suppressedWarning = (String) suppress.getValue();
+                if (!toExtend.suppressWarningsStrings.contains(suppressedWarning)) {
+                  anyModification = true;
+                  if (newSuppressions == null) {
+                    newSuppressions = new HashSet<>(toExtend.suppressWarningsStrings);
+                  }
+                  newSuppressions.add(suppressedWarning);
                 }
-                // TODO(eaftan): check return value to see if this was a new warning?
-                newSuppressions.add((String) suppress.getValue());
               }
             } else {
               throw new RuntimeException(
                   "Expected SuppressWarnings/SuppressLint annotation to take array type");
             }
+          }
         }
       }
     }
 
+    // Since this is invoked every time we descend into a new node, let's save some garbage
+    // by returning the same instance if there were no changes.
+    if (!anyModification) {
+      return toExtend;
+    }
+
+    if (newCustomSuppressions == null) {
+      newCustomSuppressions = toExtend.customSuppressions;
+    }
+    if (newSuppressions == null) {
+      newSuppressions = toExtend.suppressWarningsStrings;
+    }
     return new SuppressionInfo(newSuppressions, newCustomSuppressions, newInGeneratedCode);
   }
 
@@ -148,30 +165,28 @@ public class SuppressionHelper {
    * Returns true if this checker should be suppressed on the current tree path.
    *
    * @param suppressible Holds information about the suppressibilty of a checker
-   * @param suppressionsOnCurrentPath The set of strings in all {@code @SuppressWarnings}
-   *     annotations on the current path through the AST
-   * @param customSuppressionsOnCurrentPath The set of all custom suppression annotations on the
-   *     current path through the AST
    * @param severityLevel of the check to be suppressed
-   * @param inGeneratedCode true if the current code is generated
+   * @param suppressionInfo The current set of suppressions.
    * @param disableWarningsInGeneratedCode true if warnings in generated code should be suppressed
    */
   public static boolean isSuppressed(
       Suppressible suppressible,
-      Set<String> suppressionsOnCurrentPath,
-      Set<Class<? extends Annotation>> customSuppressionsOnCurrentPath,
       SeverityLevel severityLevel,
-      boolean inGeneratedCode,
+      SuppressionInfo suppressionInfo,
       boolean disableWarningsInGeneratedCode) {
-    if (inGeneratedCode && disableWarningsInGeneratedCode && severityLevel != SeverityLevel.ERROR) {
+
+    if (suppressionInfo.inGeneratedCode
+        && disableWarningsInGeneratedCode
+        && severityLevel != SeverityLevel.ERROR) {
       return true;
     }
     if (suppressible.supportsSuppressWarnings()
-        && !Collections.disjoint(suppressible.allNames(), suppressionsOnCurrentPath)) {
+        && !Collections.disjoint(
+            suppressible.allNames(), suppressionInfo.suppressWarningsStrings)) {
       return true;
     }
     return !Collections.disjoint(
-        suppressible.customSuppressionAnnotations(), customSuppressionsOnCurrentPath);
+        suppressible.customSuppressionAnnotations(), suppressionInfo.customSuppressions);
   }
 
   private static boolean isGenerated(Symbol sym, VisitorState state) {
