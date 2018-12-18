@@ -540,10 +540,11 @@ public class ASTHelpers {
     return JavacTrees.instance(state.context).getTree(symbol);
   }
 
+  // TODO(ghm): Using a comparison of tsym here appears to be a behaviour change.
+  @SuppressWarnings("TypeEquals")
   @Nullable
   public static MethodSymbol findSuperMethodInType(
       MethodSymbol methodSymbol, Type superType, Types types) {
-    // TODO(ghm): Using a comparison of tsym here appears to be a behaviour change.
     if (methodSymbol.isStatic() || superType.equals(methodSymbol.owner.type)) {
       return null;
     }
@@ -1553,6 +1554,11 @@ public class ASTHelpers {
         return ASTHelpers.getType(node.getExpression());
       }
       return null;
+    }
+
+    @Override
+    public Type visitMemberReference(MemberReferenceTree node, Void aVoid) {
+      return state.getTypes().findDescriptorType(getType(node)).getReturnType();
     }
 
     private Type getConditionType(Tree condition) {
