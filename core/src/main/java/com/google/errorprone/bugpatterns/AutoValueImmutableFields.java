@@ -128,7 +128,7 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
     return methodReturns(typeFromString(type));
   }
 
-  private static final Matcher<MethodTree> METHOD_MATCHER =
+  private static final Matcher<MethodTree> PUBLIC_ABSTRACT_METHOD_MATCHER =
       allOf(
           Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
           Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT));
@@ -139,12 +139,13 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
       for (Tree memberTree : tree.getMembers()) {
         if (memberTree instanceof MethodTree) {
           MethodTree methodTree = (MethodTree) memberTree;
-          if (METHOD_MATCHER.matches(methodTree, state)) {
+          if (PUBLIC_ABSTRACT_METHOD_MATCHER.matches(methodTree, state)) {
             for (Map.Entry<String, Matcher<MethodTree>> entry : REPLACEMENT_TO_MATCHERS.entries()) {
               if (entry.getValue().matches(methodTree, state)) {
-                return buildDescription(methodTree)
-                    .setMessage(String.format(MESSAGE, entry.getKey()))
-                    .build();
+                state.reportMatch(
+                    buildDescription(methodTree)
+                        .setMessage(String.format(MESSAGE, entry.getKey()))
+                        .build());
               }
             }
           }
