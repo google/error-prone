@@ -19,6 +19,8 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addMembers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.METHOD;
@@ -57,7 +59,8 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
     if (!classTree.getKind().equals(CLASS)
         || classTree.getExtendsClause() != null
         || !classTree.getImplementsClause().isEmpty()
-        || isInPrivateScope(state)) {
+        || isInPrivateScope(state)
+        || hasAnnotation(getSymbol(classTree), "org.junit.runner.RunWith", state)) {
       return NO_MATCH;
     }
 
