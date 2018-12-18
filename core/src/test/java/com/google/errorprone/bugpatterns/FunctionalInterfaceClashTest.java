@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -40,7 +39,7 @@ public class FunctionalInterfaceClashTest {
             "import java.util.function.Function;",
             "import java.util.function.Consumer;",
             "public class Test {",
-            "  // BUG: Diagnostic contains: disambiguate with: foo(Function<String, String>)",
+            "  // BUG: Diagnostic contains: foo(Function<String, String>)",
             "  void foo(Consumer<String> x) {}",
             "  void foo(Function<String, String> c) {}",
             "}")
@@ -57,7 +56,7 @@ public class FunctionalInterfaceClashTest {
             "  interface MyCallable {",
             "    String call();",
             "  }",
-            "  // BUG: Diagnostic contains: disambiguate with: foo(MyCallable)",
+            "  // BUG: Diagnostic contains: foo(MyCallable)",
             "  void foo(Callable<String> x) {}",
             "  void foo(MyCallable c) {}",
             "}")
@@ -77,7 +76,7 @@ public class FunctionalInterfaceClashTest {
             "Test.java", //
             "import java.util.function.Consumer;",
             "public class Test extends Super {",
-            "  // BUG: Diagnostic contains: disambiguate with: Super.foo(Function<String, String>)",
+            "  // BUG: Diagnostic contains: Super.foo(Function<String, String>)",
             "  void foo(Consumer<String> c) {}",
             "}")
         .doTest();
@@ -91,7 +90,7 @@ public class FunctionalInterfaceClashTest {
             "import java.util.function.Function;",
             "import java.util.function.Consumer;",
             "public class Test {",
-            "  // BUG: Diagnostic contains: disambiguate with: foo(Function<String, Integer>)",
+            "  // BUG: Diagnostic contains: foo(Function<String, Integer>)",
             "  void foo(Consumer<String> c) {}",
             "  void foo(Function<String, Integer> f) {}",
             "}")
@@ -142,7 +141,7 @@ public class FunctionalInterfaceClashTest {
             "import java.util.function.Function;",
             "import java.util.function.Consumer;",
             "public class Test {",
-            "  // BUG: Diagnostic contains: disambiguate with: Test(Function<String, String>)",
+            "  // BUG: Diagnostic contains: Test(Function<String, String>)",
             "  Test(Consumer<String> r) {}",
             "  Test(Function<String, String> c) {}",
             "}")
@@ -157,16 +156,14 @@ public class FunctionalInterfaceClashTest {
             "import java.util.function.Function;",
             "import java.util.function.Consumer;",
             "public class Test {",
-            "  // BUG: Diagnostic contains: disambiguate with: foo(Function<String, String>)",
+            "  // BUG: Diagnostic contains: foo(Function<String, String>)",
             "  static void foo(Consumer<String> x) {}",
             "  void foo(Function<String, String> c) {}",
             "}")
         .doTest();
   }
 
-  // TODO(b/38460312): Fix and enable test
   @Test
-  @Ignore
   public void suppressWarningsOnMethod() {
     testHelper
         .addSourceLines(
@@ -234,8 +231,8 @@ public class FunctionalInterfaceClashTest {
             "import java.util.function.Consumer;",
             "public abstract class BaseClass {",
             "  // BUG: Diagnostic contains: When passing lambda arguments to this function",
-            " abstract void baz(Consumer<String> c);",
-            " abstract void baz(Function<String, Integer> f);",
+            "  abstract void baz(Consumer<String> c);",
+            "  abstract void baz(Function<String, Integer> f);",
             "}")
         .addSourceLines(
             "pkg2/DerivedClass.java",
@@ -258,7 +255,7 @@ public class FunctionalInterfaceClashTest {
             "import java.util.function.Function;",
             "import java.util.function.Consumer;",
             "public abstract class BaseClass {",
-            " abstract void bar(Consumer<String> c);",
+            "  abstract void bar(Consumer<String> c);",
             "}")
         .addSourceLines(
             "pkg2/DerivedClass.java",
@@ -280,7 +277,7 @@ public class FunctionalInterfaceClashTest {
             "import java.util.function.Function;",
             "import java.util.function.Consumer;",
             "public class BaseClass {",
-            " void conduct(Consumer<String> c) {}",
+            "  void conduct(Consumer<String> c) {}",
             "}")
         .addSourceLines(
             "pkg2/ConductClass.java",
@@ -304,7 +301,7 @@ public class FunctionalInterfaceClashTest {
             "import java.util.function.Function;",
             "import java.util.function.Consumer;",
             "public class BaseClass {",
-            " void conduct(Consumer<String> c) {}",
+            "  void conduct(Consumer<String> c) {}",
             "}")
         .addSourceLines(
             "pkg2/ConductClass.java",
@@ -332,7 +329,7 @@ public class FunctionalInterfaceClashTest {
             "package pkg2;",
             "import java.util.function.Consumer;",
             "public abstract class BaseClass extends Super {",
-            " void barr(Consumer<String> c) {}",
+            "  void barr(Consumer<String> c) {}",
             "}")
         .addSourceLines(
             "pkg2/MyDerivedClass.java",
@@ -341,6 +338,34 @@ public class FunctionalInterfaceClashTest {
             "public class MyDerivedClass extends BaseClass {",
             "  // BUG: Diagnostic contains: disambiguate with:",
             "  void barr(Function<String, Integer> f) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_overridesInClassAndNewClashingPairInSameClass() {
+    testHelper
+        .addSourceLines(
+            "pkg2/Super.java",
+            "package pkg2;",
+            "import java.util.function.Consumer;",
+            "import java.util.function.Function;",
+            "public abstract class Super {",
+            "  // BUG: Diagnostic contains: When passing lambda arguments to this function",
+            "  void barr(Function<String, Integer> f) {}",
+            "  void barr(Consumer<String> c) {}",
+            "}")
+        .addSourceLines(
+            "pkg2/BaseClass.java",
+            "package pkg2;",
+            "import java.util.function.Consumer;",
+            "import java.util.function.Function;",
+            "public abstract class BaseClass extends Super {",
+            "  void barr(Function<String, Integer> f) {}",
+            "  void barr(Consumer<String> c) {}",
+            "  // BUG: Diagnostic contains: When passing lambda arguments to this function",
+            "  void foo(Function<Integer, Integer> f) {}",
+            "  void foo(Consumer<Integer> c) {}",
             "}")
         .doTest();
   }
