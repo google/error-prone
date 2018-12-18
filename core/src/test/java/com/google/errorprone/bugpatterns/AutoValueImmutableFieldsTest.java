@@ -191,6 +191,27 @@ public class AutoValueImmutableFieldsTest {
   }
 
   @Test
+  public void matchesTwoProperties() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "import java.util.Map;",
+            "import java.util.Set;",
+            "@AutoValue",
+            "abstract class Test {",
+            "  // BUG: Diagnostic contains: ImmutableSet",
+            "  public abstract Set<String> countriesSet();",
+            // TODO(kak): We should show an error here too, but since we scan from the ClassTree
+            // downward, we only can report a single match for the entire class. We should consider
+            // re-writing to scan each method instead (and check "upward" to see if the enclosing
+            // class has the @AutoValue annotation).
+            "  public abstract Map<String, String> countriesMap();",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void noMatches() {
     compilationHelper
         .addSourceLines(
