@@ -141,7 +141,9 @@ implements <a href="../../../com/google/errorprone/CodeTransformer.html" title="
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/CompositeCodeTransformer.html#annotations--">annotations</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/CompositeCodeTransformer.html#annotations--">annotations</a></span>()</code>
+<div class="block">Returns a map of annotation data logically applied to this code transformer.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -236,6 +238,21 @@ implements <a href="../../../com/google/errorprone/CodeTransformer.html" title="
 <li class="blockList">
 <h4>annotations</h4>
 <pre>public&nbsp;com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;annotations()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../com/google/errorprone/CodeTransformer.html#annotations--">CodeTransformer</a></code></span></div>
+<div class="block">Returns a map of annotation data logically applied to this code transformer.
+
+ <p>As an example, if a <code>CodeTransformer</code> expressed as a Refaster rule had an annotation
+ applied to it:
+
+ <pre><code>
+ {@literal @}MyCustomAnnotation("value")
+ public class AnnotatedRefasterRule {
+    {@literal @}BeforeTemplate void before(String x) {...}
+    {@literal @}AfterTemplate void after(String x) {...}
+ }
+ </code></pre>
+
+ You could retrieve the value of <code>@MyCustomAnnotation</code> from this map.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../com/google/errorprone/CodeTransformer.html#annotations--">annotations</a></code>&nbsp;in interface&nbsp;<code><a href="../../../com/google/errorprone/CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></code></dd>

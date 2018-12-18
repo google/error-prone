@@ -64,7 +64,7 @@ class MockitoInternalUsagePositiveCases {
 
   public void staticMethodInvocation() {
     // BUG: Diagnostic contains:
-    org.mockito.internal.creation.ClassNameFinder.classNameForMock(null);
+    org.mockito.internal.configuration.GlobalConfiguration.validate();
   }
 
   public void variableTypeDeclaration() {

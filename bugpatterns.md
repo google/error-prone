@@ -77,9 +77,6 @@ __[CompatibleWithAnnotationMisuse](bugpattern/CompatibleWithAnnotationMisuse)__<
 __[CompileTimeConstant](bugpattern/CompileTimeConstant)__<br>
 Non-compile-time constant expression passed to parameter with @CompileTimeConstant type annotation.
 
-__[ComplexBooleanConstant](bugpattern/ComplexBooleanConstant)__<br>
-Non-trivial compile time constant boolean expressions shouldn&#39;t be used.
-
 __[ConditionalExpressionNumericPromotion](bugpattern/ConditionalExpressionNumericPromotion)__<br>
 A conditional expression with numeric operands of differing types will perform binary numeric promotion of the operands; when these operands are of reference types, the expression&#39;s result may not be of the expected type.
 
@@ -94,6 +91,9 @@ Exception created but not thrown
 
 __[DeadThread](bugpattern/DeadThread)__<br>
 Thread created but not started
+
+__[DiscardedPostfixExpression](bugpattern/DiscardedPostfixExpression)__<br>
+The result of this unary operation on a lambda parameter is discarded
 
 __[DoNotCall](bugpattern/DoNotCall)__<br>
 This method should not be called.
@@ -460,6 +460,9 @@ Collector.of() should not use state
 __[ComparableAndComparator](bugpattern/ComparableAndComparator)__<br>
 Class should not implement both `Comparable` and `Comparator`
 
+__[ComplexBooleanConstant](bugpattern/ComplexBooleanConstant)__<br>
+Non-trivial compile time constant boolean expressions shouldn&#39;t be used.
+
 __[DateFormatConstant](bugpattern/DateFormatConstant)__<br>
 DateFormat is not thread-safe, and should not be used as a constant field.
 
@@ -754,6 +757,9 @@ This TimeUnit conversion looks buggy: converting from a smaller unit to a larger
 __[ToStringReturnsNull](bugpattern/ToStringReturnsNull)__<br>
 An implementation of Object.toString() should never return null.
 
+__[TreeToString](bugpattern/TreeToString)__<br>
+Tree.toString shouldn&#39;t be used
+
 __[TruthAssertExpected](bugpattern/TruthAssertExpected)__<br>
 The actual and expected values appear to be swapped, which results in poor assertion failure messages. The actual value should come first.
 
@@ -762,6 +768,9 @@ Truth Library assert is called on a constant.
 
 __[TruthIncompatibleType](bugpattern/TruthIncompatibleType)__<br>
 Argument is not compatible with the subject&#39;s type.
+
+__[TypeEquals](bugpattern/TypeEquals)__<br>
+com.sun.tools.javac.code.Type doesn&#39;t override Object.equals and instances are not interned by javac, so testing types for equality should be done with Types#isSameType instead
 
 __[TypeNameShadowing](bugpattern/TypeNameShadowing)__<br>
 Type parameter declaration shadows another named type
@@ -879,9 +888,6 @@ Numeric comparison using reference equality instead of value equality
 __[ParameterPackage](bugpattern/ParameterPackage)__<br>
 Method parameter has wrong package
 
-__[RestrictTo](bugpattern/RestrictTo)__<br>
-Use of method or class annotated with @RestrictTo
-
 __[StaticOrDefaultInterfaceMethod](bugpattern/StaticOrDefaultInterfaceMethod)__<br>
 Static and default interface methods are not natively supported on older Android devices. 
 
@@ -931,6 +937,12 @@ Hardcoded reference to /sdcard
 
 __[InconsistentOverloads](bugpattern/InconsistentOverloads)__<br>
 The ordering of parameters in overloaded methods should be as consistent as possible (when viewed from left to right)
+
+__[InheritDoc](bugpattern/InheritDoc)__<br>
+Invalid use of @inheritDoc.
+
+__[InterfaceWithOnlyStatics](bugpattern/InterfaceWithOnlyStatics)__<br>
+This interface only contains static fields and methods; consider making it a final class instead to prevent subclassing.
 
 __[InvalidParam](bugpattern/InvalidParam)__<br>
 This @param tag doesn&#39;t refer to a parameter of the method.

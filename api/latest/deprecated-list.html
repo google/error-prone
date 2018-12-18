@@ -194,6 +194,22 @@
 <tr class="altColor">
 <td class="colOne"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#ThreadSafety-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes-java.util.Set-java.util.Set-java.lang.Class-java.lang.Class-java.lang.Class-">com.google.errorprone.bugpatterns.threadsafety.ThreadSafety(VisitorState, ThreadSafety.KnownTypes, Set&lt;String&gt;, Set&lt;String&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;)</a></td>
 </tr>
+<tr class="rowColor">
+<td class="colOne"><a href="com/google/errorprone/VisitorState.html#VisitorState-com.sun.tools.javac.util.Context-">com.google.errorprone.VisitorState(Context)</a>
+<div class="block"><span class="deprecationComment">If VisitorState is needed, use <a href="com/google/errorprone/VisitorState.html#createForUtilityPurposes-com.sun.tools.javac.util.Context-"><code>VisitorState.createForUtilityPurposes(com.sun.tools.javac.util.Context)</code></a>, otherwise just
+     use utility methods in ASTHelpers that don't need VisitorSate.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="com/google/errorprone/VisitorState.html#VisitorState-com.sun.tools.javac.util.Context-com.google.errorprone.DescriptionListener-">com.google.errorprone.VisitorState(Context, DescriptionListener)</a>
+<div class="block"><span class="deprecationComment">Use the equivalent factory method <a href="com/google/errorprone/VisitorState.html#createForCustomFindingCollection-com.sun.tools.javac.util.Context-com.google.errorprone.DescriptionListener-"><code>VisitorState.createForCustomFindingCollection(com.sun.tools.javac.util.Context, com.google.errorprone.DescriptionListener)</code></a>.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="com/google/errorprone/VisitorState.html#VisitorState-com.sun.tools.javac.util.Context-com.google.errorprone.DescriptionListener-java.util.Map-com.google.errorprone.ErrorProneOptions-">com.google.errorprone.VisitorState(Context, DescriptionListener, Map&lt;String, BugPattern.SeverityLevel&gt;, ErrorProneOptions)</a>
+<div class="block"><span class="deprecationComment">Use the equivalent factory method <a href="com/google/errorprone/VisitorState.html#createConfiguredForCompilation-com.sun.tools.javac.util.Context-com.google.errorprone.DescriptionListener-java.util.Map-com.google.errorprone.ErrorProneOptions-"><code>VisitorState.createConfiguredForCompilation(com.sun.tools.javac.util.Context, com.google.errorprone.DescriptionListener, java.util.Map&lt;java.lang.String, com.google.errorprone.BugPattern.SeverityLevel&gt;, com.google.errorprone.ErrorProneOptions)</code></a>.</span></div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>

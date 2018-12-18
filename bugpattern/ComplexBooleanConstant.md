@@ -3,7 +3,7 @@ title: ComplexBooleanConstant
 summary: Non-trivial compile time constant boolean expressions shouldn't be used.
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
