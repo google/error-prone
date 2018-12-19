@@ -124,13 +124,14 @@ public enum Nullness implements AbstractValue<Nullness> {
     }
   }
 
-  // TODO(bennostein): Support jsr305 @CheckForNull?
-  // See CF Manual 3.7.2 for discussion of its idiosyncracy/incompatibility
+  // TODO(kmb): Correctly handle JSR 305 @Nonnull(NEVER) etc.
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
-      Pattern.compile(".*\\.(Nullable(Decl)?|NotNull|Nonnull|NonNull)$").asPredicate();
+      Pattern.compile(
+              ".*\\.((Recently)?Nullable(Decl)?|(Recently)?NotNull|Nonnull|NonNull|CheckForNull)$")
+          .asPredicate();
 
   private static final Predicate<String> NULLABLE_ANNOTATION =
-      Pattern.compile(".*\\.Nullable(Decl)?$").asPredicate();
+      Pattern.compile(".*\\.((Recently)?Nullable(Decl)?|CheckForNull)$").asPredicate();
 
   private static Optional<Nullness> fromAnnotationStream(Stream<String> annotations) {
     return annotations

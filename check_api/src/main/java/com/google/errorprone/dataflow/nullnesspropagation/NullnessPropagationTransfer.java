@@ -207,12 +207,10 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
     @Override
     public boolean apply(MethodInfo methodInfo) {
-      // Any method explicitly annotated with @Nullable is assumed to be capable of returning
-      // null.
-      for (String annotation : methodInfo.annotations()) {
-        if (annotation.endsWith(".Nullable") || annotation.endsWith(".NullableDecl")) {
-          return false;
-        }
+      // Any method explicitly annotated is trusted to behave as advertised.
+      Optional<Nullness> fromAnnotations = Nullness.fromAnnotations(methodInfo.annotations());
+      if (fromAnnotations.isPresent()) {
+        return fromAnnotations.get() == NONNULL;
       }
 
       if (methodInfo.method().equals("valueOf")
