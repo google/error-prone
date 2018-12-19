@@ -127,6 +127,7 @@ import com.google.errorprone.bugpatterns.IntLongMath;
 import com.google.errorprone.bugpatterns.InterfaceWithOnlyStatics;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
+import com.google.errorprone.bugpatterns.InvalidZoneId;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
 import com.google.errorprone.bugpatterns.IterableAndIterator;
 import com.google.errorprone.bugpatterns.IterablePathParameter;
@@ -615,6 +616,7 @@ public class BuiltInCheckerSuppliers {
           InputStreamSlowMultibyteRead.class,
           InstanceOfAndCastMatchWrongType.class,
           IntLongMath.class,
+          InvalidZoneId.class,
           IterableAndIterator.class,
           JavaDurationGetSecondsGetNano.class,
           JavaDurationWithNanos.class,
