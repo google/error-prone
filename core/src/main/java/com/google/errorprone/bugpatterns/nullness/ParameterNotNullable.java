@@ -85,7 +85,10 @@ public class ParameterNotNullable extends BugChecker
     VariableTree paramDecl = findDeclaration(state, dereferenced);
     for (AnnotationTree anno : paramDecl.getModifiers().getAnnotations()) {
       String annoType = ASTHelpers.getSymbol(anno).type.toString();
-      if (annoType.endsWith(".Nullable") || annoType.endsWith(".NullableDecl")) {
+      if (annoType.endsWith(".Nullable")
+          || annoType.endsWith(".NullableDecl")
+          || annoType.endsWith(".CheckForNull")
+          || annoType.endsWith(".RecentlyNullable")) {
         return buildDescription(dereferencedExpression)
             .setMessage("Nullable parameter not checked for null")
             .addFix(SuggestedFix.delete(anno))
