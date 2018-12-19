@@ -213,6 +213,7 @@ import com.google.errorprone.bugpatterns.PrivateSecurityContractProtoAccess;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoRedundantSet;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
+import com.google.errorprone.bugpatterns.ProtoTruthMixedDescriptors;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
 import com.google.errorprone.bugpatterns.ProtosAsKeyOfSetOrMap;
 import com.google.errorprone.bugpatterns.ProvidesFixChecker;
@@ -530,6 +531,7 @@ public class BuiltInCheckerSuppliers {
           ProtocolBufferOrdinal.class,
           ProtoFieldNullComparison.class,
           ProtoStringFieldReferenceEquality.class,
+          ProtoTruthMixedDescriptors.class,
           ProvidesMethodOutsideOfModule.class,
           ProvidesNull.class,
           RandomModInteger.class,
