@@ -73,6 +73,10 @@ Using the `error-prone-javac` is required when running on JDK 8, but using the
 support:
 
 ```xml
+  <properties>
+    <javac.version>9+181-r4173-1</javac.version>
+  </properties>
+
   <!-- using github.com/google/error-prone-javac is required when running on JDK 8 -->
   <profiles>
     <profile>
