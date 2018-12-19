@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -352,8 +351,6 @@ public class CompileTimeConstantCheckerTest {
             "    @Override void m(@CompileTimeConstant String s) {}",
             "  }",
             "}")
-        .setArgs(
-            ImmutableList.of("-XepOpt:CompileTimeConstantChecker:ForbidConstantOverrides=true"))
         .doTest();
   }
 
@@ -372,7 +369,6 @@ public class CompileTimeConstantCheckerTest {
             "    return CompileTimeConstantTestCase::m;",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:ForbidMethodReferences=true"))
         .doTest();
   }
 
@@ -388,7 +384,6 @@ public class CompileTimeConstantCheckerTest {
             "  // BUG: Diagnostic contains: Lambda expressions with @CompileTimeConstant",
             "  Consumer<String> c = (@CompileTimeConstant String s) -> {};",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:ForbidMethodReferences=true"))
         .doTest();
   }
 
@@ -410,7 +405,6 @@ public class CompileTimeConstantCheckerTest {
             "    i.f(s);",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:ForbidMethodReferences=true"))
         .doTest();
   }
 }

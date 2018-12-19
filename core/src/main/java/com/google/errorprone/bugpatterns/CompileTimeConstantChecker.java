@@ -22,7 +22,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
@@ -89,16 +88,6 @@ public class CompileTimeConstantChecker extends BugChecker
 
   private final Matcher<ExpressionTree> compileTimeConstExpressionMatcher =
       new CompileTimeConstantExpressionMatcher();
-
-  private final boolean forbidMethodReferences;
-  private final boolean forbidConstantOverrides;
-
-  public CompileTimeConstantChecker(ErrorProneFlags flags) {
-    forbidMethodReferences =
-        flags.getBoolean("CompileTimeConstantChecker:ForbidMethodReferences").orElse(false);
-    forbidConstantOverrides =
-        flags.getBoolean("CompileTimeConstantChecker:ForbidConstantOverrides").orElse(false);
-  }
 
   /**
    * Matches formal parameters with {@link com.google.errorprone.annotations.CompileTimeConstant}
@@ -193,9 +182,6 @@ public class CompileTimeConstantChecker extends BugChecker
 
   @Override
   public Description matchMethod(MethodTree node, VisitorState state) {
-    if (!forbidConstantOverrides) {
-      return Description.NO_MATCH;
-    }
     Symbol.MethodSymbol method = ASTHelpers.getSymbol(node);
     if (method == null) {
       return Description.NO_MATCH;
@@ -224,9 +210,6 @@ public class CompileTimeConstantChecker extends BugChecker
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    if (!forbidMethodReferences) {
-      return Description.NO_MATCH;
-    }
     Symbol.MethodSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
       return Description.NO_MATCH;
@@ -245,9 +228,6 @@ public class CompileTimeConstantChecker extends BugChecker
 
   @Override
   public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
-    if (!forbidMethodReferences) {
-      return Description.NO_MATCH;
-    }
     for (VariableTree formalParam : tree.getParameters()) {
       if (hasCompileTimeConstantAnnotation(state, ASTHelpers.getSymbol(formalParam))) {
         // We couldn't check how the lambda expression will be used. Simply disallow all lambda
