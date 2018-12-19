@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -39,10 +39,10 @@ import java.time.ZoneId;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "InvalidZoneID",
+    name = "InvalidZoneId",
     summary = "Invalid zone identifier. ZoneId.of(String) will throw exception at runtime.",
     category = JDK,
-    severity = WARNING,
+    severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InvalidZoneId extends BugChecker implements MethodInvocationTreeMatcher {
 
