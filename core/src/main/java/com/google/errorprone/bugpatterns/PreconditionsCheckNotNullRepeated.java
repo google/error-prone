@@ -17,12 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.GUAVA;
+import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -41,13 +41,16 @@ import java.util.List;
 @BugPattern(
     name = "PreconditionsCheckNotNullRepeated",
     summary =
-        "Including this argument in the failure message isn't helpful,"
-            + " since its value will always be `null`.",
+        "Including the first argument of checkNotNull in the failure message is not useful, "
+            + "as it will always be `null`.",
     category = GUAVA,
     severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    providesFix = REQUIRES_HUMAN_ATTENTION)
 public class PreconditionsCheckNotNullRepeated extends BugChecker
     implements MethodInvocationTreeMatcher {
+  private static final String MESSAGE =
+      "Including `%s` in the failure message isn't helpful,"
+          + " since its value will always be `null`.";
 
   private static final Matcher<MethodInvocationTree> MATCHER =
       allOf(staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"));
@@ -67,16 +70,20 @@ public class PreconditionsCheckNotNullRepeated extends BugChecker
       if (!ASTHelpers.sameVariable(args.get(0), args.get(i))) {
         continue;
       }
+      String nullArgSource = state.getSourceForNode(args.get(0));
       // Special case in case there are only two args and they're same.
       // checkNotNull(T reference, Object errorMessage)
       if (numArgs == 2 && i == 1) {
-        return describeMatch(
-            args.get(1),
-            SuggestedFix.replace(
-                args.get(1),
-                String.format("\"%s must not be null\"", state.getSourceForNode(args.get(0)))));
+        return buildDescription(args.get(1))
+            .setMessage(String.format(MESSAGE, nullArgSource))
+            .addFix(
+                SuggestedFix.replace(
+                    args.get(1), String.format("\"%s must not be null\"", nullArgSource)))
+            .build();
       }
-      return describeMatch(methodInvocationTree);
+      return buildDescription(args.get(i))
+          .setMessage(String.format(MESSAGE, nullArgSource))
+          .build();
     }
     return Description.NO_MATCH;
   }
