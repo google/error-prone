@@ -23,3 +23,7 @@ Prefer wrapping the original exception instead,
     throw new IllegalStateException(e); // GOOD
   }
 ```
+
+Suppress false positives with `@SuppressWarnings("UnusedException")` on the
+enclosing element. Consider also adding a comment to explain why the exception
+should not be propagated.
