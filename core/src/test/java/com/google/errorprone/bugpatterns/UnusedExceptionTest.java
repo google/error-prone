@@ -172,6 +172,23 @@ public final class UnusedExceptionTest {
   }
 
   @Test
+  public void suppressible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @SuppressWarnings(\"UnusedException\")",
+            "  void test() {",
+            "    try {",
+            "    } catch (Exception e) {",
+            "      throw new RuntimeException(\"foo\");",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void anonymousClass() {
     BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass())
         .addInputLines(
