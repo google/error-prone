@@ -24,6 +24,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
@@ -67,6 +68,7 @@ public class VisitorState {
   public final Context context;
 
   private final TreePath path;
+  private final SuppressionInfo.SuppressedState suppressedState;
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
@@ -86,7 +88,8 @@ public class VisitorState {
         // Can't use this VisitorState to report results, so no-op collector.
         StatisticsCollector.createNoOpCollector(),
         null,
-        null);
+        null,
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -102,7 +105,8 @@ public class VisitorState {
         ErrorProneOptions.empty(),
         StatisticsCollector.createCollector(),
         null,
-        null);
+        null,
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -120,7 +124,8 @@ public class VisitorState {
         errorProneOptions,
         StatisticsCollector.createCollector(),
         null,
-        null);
+        null,
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -139,7 +144,8 @@ public class VisitorState {
         // Can't use this VisitorState to report results, so no-op collector.
         StatisticsCollector.createNoOpCollector(),
         null,
-        null);
+        null,
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -157,7 +163,8 @@ public class VisitorState {
         ErrorProneOptions.empty(),
         StatisticsCollector.createCollector(),
         null,
-        null);
+        null,
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -178,7 +185,8 @@ public class VisitorState {
         errorProneOptions,
         StatisticsCollector.createCollector(),
         null,
-        null);
+        null,
+        SuppressedState.UNSUPPRESSED);
   }
 
   private VisitorState(
@@ -187,14 +195,16 @@ public class VisitorState {
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions,
       StatisticsCollector statisticsCollector,
+      LoadingCache<String, Optional<Type>> typeCache,
       TreePath path,
-      LoadingCache<String, Optional<Type>> typeCache) {
+      SuppressedState suppressedState) {
     this.context = context;
     this.descriptionListener = descriptionListener;
     this.severityMap = severityMap;
     this.errorProneOptions = errorProneOptions;
     this.statisticsCollector = statisticsCollector;
 
+    this.suppressedState = suppressedState;
     this.path = path;
     this.typeCache =
         typeCache != null
@@ -202,12 +212,7 @@ public class VisitorState {
             : CacheBuilder.newBuilder()
                 .concurrencyLevel(1) // resolving symbols in javac is not thread-safe
                 .build(
-                    new CacheLoader<String, Optional<Type>>() {
-                      @Override
-                      public Optional<Type> load(String key) {
-                        return Optional.fromNullable(getTypeFromStringInternal(key));
-                      }
-                    });
+                    CacheLoader.from(key -> Optional.fromNullable(getTypeFromStringInternal(key))));
   }
 
   public VisitorState withPath(TreePath path) {
@@ -217,8 +222,21 @@ public class VisitorState {
         severityMap,
         errorProneOptions,
         statisticsCollector,
+        typeCache,
         path,
-        typeCache);
+        suppressedState);
+  }
+
+  public VisitorState withPathAndSuppression(TreePath path, SuppressedState suppressedState) {
+    return new VisitorState(
+        context,
+        descriptionListener,
+        severityMap,
+        errorProneOptions,
+        statisticsCollector,
+        typeCache,
+        path,
+        suppressedState);
   }
 
   public TreePath getPath() {
@@ -255,26 +273,17 @@ public class VisitorState {
     if (override != null) {
       description = description.applySeverityOverride(override);
     }
-    incrementCounter(description.checkName + "-findings");
+    statisticsCollector.incrementCounter(statsKey(description.checkName + "-findings"));
+
+    // TODO(glorioso): I believe it is correct to still emit regular findings since the
+    // Scanner configured the visitor state to explicitly scan suppressed nodes, but perhaps
+    // we can add a 'suppressed' field to Description to allow the description listener to bucket
+    // them out.
     descriptionListener.onDescribed(description);
   }
 
-  /**
-   * Increments the counter for {@code key} inside this VisitorState by 1.
-   *
-   * <p>One can retrieve the total count from this VisitorState with {@link #counters}.
-   */
-  public void incrementCounter(String key) {
-    statisticsCollector.incrementCounter(key);
-  }
-
-  /**
-   * Increments the counter for {@code key} inside this VisitorState by {@code count}.
-   *
-   * <p>One can retrieve the total count from this VisitorState with {@link #counters}.
-   */
-  public void incrementCounter(String key, int count) {
-    statisticsCollector.incrementCounter(key, count);
+  private String statsKey(String key) {
+    return suppressedState == SuppressedState.SUPPRESSED ? key + "-suppressed" : key;
   }
 
   /**
@@ -294,7 +303,7 @@ public class VisitorState {
    * <p>e.g.: a key of {@code foo} becomes {@code FooChecker-foo}.
    */
   public void incrementCounter(BugChecker bugChecker, String key, int count) {
-    incrementCounter(bugChecker.canonicalName() + "-" + key, count);
+    statisticsCollector.incrementCounter(statsKey(bugChecker.canonicalName() + "-" + key), count);
   }
 
   /**

@@ -162,6 +162,13 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesVisitSuppressedCode() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepIgnoreSuppressionAnnotations"});
+    assertThat(options.isIgnoreSuppressionAnnotations()).isTrue();
+  }
+
+  @Test
   public void recognizesExcludedPaths() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(

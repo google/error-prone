@@ -18,9 +18,10 @@ package com.google.errorprone.scanner;
 
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions;
-import com.google.errorprone.SuppressionHelper;
-import com.google.errorprone.SuppressionHelper.SuppressionInfo;
+import com.google.errorprone.SuppressionInfo;
+import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
@@ -40,19 +41,10 @@ import java.util.Set;
  * @author alexeagle@google.com (Alex Eagle)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@CheckReturnValue
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
   private SuppressionInfo currentSuppressions = SuppressionInfo.EMPTY;
-  // This must be lazily initialized, because the list of custom suppression annotations will
-  // not be available until after the subclass's constructor has run.
-  private SuppressionHelper suppressionHelper;
-
-  private SuppressionHelper suppressionHelper() {
-    if (suppressionHelper == null) {
-      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
-    }
-    return suppressionHelper;
-  }
 
   /** Scan a tree from a position identified by a TreePath. */
   @Override
@@ -91,24 +83,27 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     Symbol sym = ASTHelpers.getDeclaredSymbol(tree);
     if (sym != null) {
       currentSuppressions =
-          suppressionHelper()
-              .extendSuppressionSets(
-                  sym, state.getSymtab().suppressWarningsType, currentSuppressions, state);
+          currentSuppressions.withExtendedSuppressions(
+              sym, state, getCustomSuppressionAnnotations());
     }
     return prevSuppressionInfo;
   }
 
   /**
-   * Returns true if this checker should be suppressed on the current tree path.
+   * Returns if this checker should be suppressed on the current tree path.
    *
    * @param suppressible holds information about the suppressibility of a checker
+   * @param errorProneOptions Options object configuring whether or not to suppress non-errors in
+   *     generated code.
    */
-  protected boolean isSuppressed(Suppressible suppressible, ErrorProneOptions errorProneOptions) {
-    return SuppressionHelper.isSuppressed(
-        suppressible,
-        severityMap().get(suppressible.canonicalName()),
-        currentSuppressions,
-        errorProneOptions.disableWarningsInGeneratedCode());
+  protected SuppressedState isSuppressed(
+      Suppressible suppressible, ErrorProneOptions errorProneOptions) {
+
+    boolean suppressedInGeneratedCode =
+        errorProneOptions.disableWarningsInGeneratedCode()
+            && severityMap().get(suppressible.canonicalName()) != SeverityLevel.ERROR;
+
+    return currentSuppressions.suppressedState(suppressible, suppressedInGeneratedCode);
   }
 
   /**
