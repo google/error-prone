@@ -77,9 +77,11 @@ public class InterfaceWithOnlyStaticsTest {
   }
 
   @Test
-  public void negative_extends() throws Exception {
+  public void negative_extends() {
     testHelper
-        .addSourceLines("A.java", "interface A {}")
+        .addSourceLines(
+            "A.java", //
+            "interface A {}")
         .addSourceLines(
             "Test.java", //
             "interface Test extends A {",
@@ -90,7 +92,24 @@ public class InterfaceWithOnlyStaticsTest {
   }
 
   @Test
-  public void refactoring() throws Exception {
+  public void negative_module() {
+    testHelper
+        .addSourceLines(
+            "Module.java", //
+            "package dagger;",
+            "public @interface Module {}")
+        .addSourceLines(
+            "Test.java", //
+            "import dagger.Module;",
+            "@Module",
+            "interface Test {",
+            "  public static final int foo = 42;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoring() {
     refactoringHelper
         .addInputLines(
             "Test.java", //
@@ -109,7 +128,7 @@ public class InterfaceWithOnlyStaticsTest {
   }
 
   @Test
-  public void refactoring_innerClass() throws Exception {
+  public void refactoring_innerClass() {
     refactoringHelper
         .addInputLines(
             "Foo.java", //

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -57,6 +58,9 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (!tree.getImplementsClause().isEmpty()) {
+      return Description.NO_MATCH;
+    }
+    if (hasAnnotation(tree, "dagger.Module", state)) {
       return Description.NO_MATCH;
     }
     List<? extends Tree> members = tree.getMembers();
