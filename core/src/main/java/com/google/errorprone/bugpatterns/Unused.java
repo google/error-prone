@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
@@ -742,11 +743,15 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
             removeSideEffectsFix.replace(statement, "");
           }
         } else if (isEnhancedForLoopVar(usagePath)) {
+          String modifiers =
+              nullToEmpty(
+                  variableTree.getModifiers() == null
+                      ? null
+                      : state.getSourceForNode(variableTree.getModifiers()));
           String newContent =
               String.format(
                   "%s%s unused",
-                  variableTree.getModifiers() == null ? "" : variableTree.getModifiers().toString(),
-                  variableTree.getType());
+                  modifiers.isEmpty() ? "" : (modifiers + " "), variableTree.getType());
           // The new content for the second fix should be identical to the content for the first
           // fix in this case because we can't just remove the enhanced for loop variable.
           fix.replace(variableTree, newContent);
@@ -762,6 +767,8 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
 
         if (tree instanceof CompoundAssignmentTree) {
           if (hasSideEffect(((CompoundAssignmentTree) tree).getExpression())) {
+            // If it's a compound assignment, there's no reason we'd want to remove the expression,
+            // so don't set `encounteredSideEffects` based on this usage.
             SuggestedFix replacement =
                 SuggestedFix.replace(
                     tree.getStartPosition(),
@@ -773,13 +780,10 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
           }
         } else if (tree instanceof AssignmentTree) {
           if (hasSideEffect(((AssignmentTree) tree).getExpression())) {
-            SuggestedFix replacement =
-                SuggestedFix.replace(
-                    tree.getStartPosition(),
-                    ((JCAssign) tree).getExpression().getStartPosition(),
-                    "");
-            fix.merge(replacement);
-            removeSideEffectsFix.merge(replacement);
+            encounteredSideEffects = true;
+            fix.replace(
+                tree.getStartPosition(), ((JCAssign) tree).getExpression().getStartPosition(), "");
+            removeSideEffectsFix.replace(statement, "");
             continue;
           }
         }
