@@ -272,4 +272,19 @@ public final class UngroupedOverloadsTest {
         .setArgs("-XepOpt:UngroupedOverloads:FindingsOnFirstOverload")
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void describingConstructors() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: Constructor overloads",
+            "  Test() {}",
+            "  private void bar() {}",
+            "  // BUG: Diagnostic contains: Constructor overloads",
+            "  Test(int i) {}",
+            "}")
+        .doTest();
+  }
 }

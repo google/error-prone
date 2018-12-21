@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Multimaps.toMultimap;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
@@ -27,7 +26,6 @@ import static java.util.stream.Collectors.joining;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -44,7 +42,6 @@ import com.sun.tools.javac.tree.JCTree;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 import javax.lang.model.element.Name;
 
 /** @author hanuszczak@google.com (Łukasz Hanuszczak) */
@@ -74,9 +71,9 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
 
     abstract int index();
 
-    abstract Tree tree();
+    abstract MethodTree tree();
 
-    static MemberWithIndex create(int index, Tree tree) {
+    static MemberWithIndex create(int index, MethodTree tree) {
       return new AutoValue_UngroupedOverloads_MemberWithIndex(index, tree);
     }
   }
@@ -99,30 +96,25 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
     // collect all member methods and their indices in the list of members, grouped by name
-    LinkedHashMultimap<OverloadKey, MemberWithIndex> methods =
-        Streams.zip(
-                Stream.iterate(0, i -> i + 1),
-                classTree.getMembers().stream(),
-                MemberWithIndex::create)
-            .filter(m -> m.tree() instanceof MethodTree)
-            .collect(
-                toMultimap(
-                    m -> OverloadKey.create((MethodTree) m.tree()),
-                    x -> x,
-                    LinkedHashMultimap::create));
+    LinkedHashMultimap<OverloadKey, MemberWithIndex> methods = LinkedHashMultimap.create();
+    for (int i = 0; i < classTree.getMembers().size(); ++i) {
+      Tree member = classTree.getMembers().get(i);
+      if (member instanceof MethodTree) {
+        MethodTree methodTree = (MethodTree) member;
+        methods.put(OverloadKey.create(methodTree), MemberWithIndex.create(i, methodTree));
+      }
+    }
     methods
         .asMap()
         .forEach(
             (key, overloads) ->
-                checkOverloads(
-                    state, classTree.getMembers(), key.name(), ImmutableList.copyOf(overloads)));
+                checkOverloads(state, classTree.getMembers(), ImmutableList.copyOf(overloads)));
     return NO_MATCH;
   }
 
   private void checkOverloads(
       VisitorState state,
       List<? extends Tree> members,
-      Name name,
       ImmutableList<MemberWithIndex> overloads) {
     if (overloads.size() <= 1) {
       return;
@@ -169,12 +161,12 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
                 state.reportMatch(
                     buildDescription(o.tree())
                         .addFix(fix)
-                        .setMessage(createMessage(name, overloads, groups, lineMap, o))
+                        .setMessage(createMessage(o.tree(), overloads, groups, lineMap, o))
                         .build()));
   }
 
   private static String createMessage(
-      Name name,
+      MethodTree tree,
       ImmutableList<MemberWithIndex> overloads,
       Map<MemberWithIndex, Integer> groups,
       LineMap lineMap,
@@ -185,8 +177,13 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
             .map(t -> lineMap.getLineNumber(((JCTree) t.tree()).getStartPosition()))
             .map(String::valueOf)
             .collect(joining(", "));
+    MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+    String name =
+        symbol.isConstructor()
+            ? "Constructor overloads"
+            : String.format("Overloads of '%s'", symbol.getSimpleName());
     return String.format(
-        "Overloads of '%s' are not grouped together; found ungrouped overloads on line(s): %s",
+        "%s are not grouped together; found ungrouped overloads on line(s): %s",
         name, ungroupedLines);
   }
 }
