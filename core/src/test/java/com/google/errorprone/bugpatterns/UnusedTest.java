@@ -1011,6 +1011,29 @@ public class UnusedTest {
   }
 
   @Test
+  public void sideEffectFieldFix() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private int x = 1;",
+            "  public int a() {",
+            "    x = a();",
+            "    return 1;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  public int a() {",
+            "    return 1;",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
   public void blockFixTest() {
     refactoringHelper
         .addInputLines(
