@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -75,6 +76,22 @@ public class ScannerTest {
             "  @OkToUseFoo",
             "  Foo foo;",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressionAnnotationIgnoredWithOptions() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.scanner.ScannerTest.Foo;",
+            "import com.google.errorprone.scanner.ScannerTest.OkToUseFoo;",
+            "class Test {",
+            "  @OkToUseFoo",
+            "  // BUG: Diagnostic contains: ShouldNotUseFoo",
+            "  Foo foo;",
+            "}")
+        .setArgs(ImmutableList.of("-XepIgnoreSuppressionAnnotations"))
         .doTest();
   }
 

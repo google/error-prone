@@ -51,14 +51,16 @@ public class ErrorProneOptions {
   private static final String PATCH_CHECKS_PREFIX = "-XepPatchChecks:";
   private static final String PATCH_OUTPUT_LOCATION = "-XepPatchLocation:";
   private static final String PATCH_IMPORT_ORDER_PREFIX = "-XepPatchImportOrder:";
+  private static final String EXCLUDED_PATHS_PREFIX = "-XepExcludedPaths:";
+
   private static final String ERRORS_AS_WARNINGS_FLAG = "-XepAllErrorsAsWarnings";
   private static final String ENABLE_ALL_CHECKS = "-XepAllDisabledChecksAsWarnings";
+  private static final String IGNORE_SUPPRESSION_ANNOTATIONS = "-XepIgnoreSuppressionAnnotations";
   private static final String DISABLE_ALL_CHECKS = "-XepDisableAllChecks";
   private static final String IGNORE_UNKNOWN_CHECKS_FLAG = "-XepIgnoreUnknownCheckNames";
   private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
       "-XepDisableWarningsInGeneratedCode";
   private static final String COMPILING_TEST_ONLY_CODE = "-XepCompilingTestOnlyCode";
-  private static final String EXCLUDED_PATHS_PREFIX = "-XepExcludedPaths:";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
   public static int isSupportedOption(String option) {
@@ -73,6 +75,7 @@ public class ErrorProneOptions {
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
             || option.equals(ENABLE_ALL_CHECKS)
             || option.equals(DISABLE_ALL_CHECKS)
+            || option.equals(IGNORE_SUPPRESSION_ANNOTATIONS)
             || option.equals(COMPILING_TEST_ONLY_CODE);
     return isSupported ? 0 : -1;
   }
@@ -161,6 +164,7 @@ public class ErrorProneOptions {
   private final ErrorProneFlags flags;
   private final PatchingOptions patchingOptions;
   private final Pattern excludedPattern;
+  private final boolean ignoreSuppressionAnnotations;
 
   private ErrorProneOptions(
       ImmutableMap<String, Severity> severityMap,
@@ -173,7 +177,8 @@ public class ErrorProneOptions {
       boolean isTestOnlyTarget,
       ErrorProneFlags flags,
       PatchingOptions patchingOptions,
-      Pattern excludedPattern) {
+      Pattern excludedPattern,
+      boolean ignoreSuppressionAnnotations) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
     this.ignoreUnknownChecks = ignoreUnknownChecks;
@@ -185,6 +190,7 @@ public class ErrorProneOptions {
     this.flags = flags;
     this.patchingOptions = patchingOptions;
     this.excludedPattern = excludedPattern;
+    this.ignoreSuppressionAnnotations = ignoreSuppressionAnnotations;
   }
 
   public String[] getRemainingArgs() {
@@ -211,6 +217,10 @@ public class ErrorProneOptions {
     return isTestOnlyTarget;
   }
 
+  public boolean isIgnoreSuppressionAnnotations() {
+    return ignoreSuppressionAnnotations;
+  }
+
   public ErrorProneFlags getFlags() {
     return flags;
   }
@@ -230,6 +240,7 @@ public class ErrorProneOptions {
     private boolean enableAllChecksAsWarnings = false;
     private boolean disableAllChecks = false;
     private boolean isTestOnlyTarget = false;
+    private boolean ignoreSuppressionAnnotations = false;
     private Map<String, Severity> severityMap = new HashMap<>();
     private final ErrorProneFlags.Builder flagsBuilder = ErrorProneFlags.builder();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
@@ -259,6 +270,10 @@ public class ErrorProneOptions {
 
     public void parseFlag(String flag) {
       flagsBuilder.parseFlag(flag);
+    }
+
+    public void setIgnoreSuppressionAnnotations(boolean ignoreSuppressionAnnotations) {
+      this.ignoreSuppressionAnnotations = ignoreSuppressionAnnotations;
     }
 
     public void setIgnoreUnknownChecks(boolean ignoreUnknownChecks) {
@@ -310,7 +325,8 @@ public class ErrorProneOptions {
           isTestOnlyTarget,
           flagsBuilder.build(),
           patchingOptionsBuilder.build(),
-          excludedPattern);
+          excludedPattern,
+          ignoreSuppressionAnnotations);
     }
 
     public void setExcludedPattern(Pattern excludedPattern) {
@@ -346,6 +362,9 @@ public class ErrorProneOptions {
     Builder builder = new Builder();
     for (String arg : args) {
       switch (arg) {
+        case IGNORE_SUPPRESSION_ANNOTATIONS:
+          builder.setIgnoreSuppressionAnnotations(true);
+          break;
         case IGNORE_UNKNOWN_CHECKS_FLAG:
           builder.setIgnoreUnknownChecks(true);
           break;

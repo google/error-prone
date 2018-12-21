@@ -21,6 +21,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneError;
+import com.google.errorprone.ErrorProneOptions;
+import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotatedTypeTreeMatcher;
@@ -153,21 +155,12 @@ public class ErrorProneScanner extends Scanner {
   private final ImmutableSet<BugChecker> bugCheckers;
 
   /**
-   * Create an error-prone scanner for a non-hardcoded set of checkers.
+   * Create an error-prone scanner for the given checkers.
    *
    * @param checkers The checkers that this scanner should use.
    */
   public ErrorProneScanner(BugChecker... checkers) {
     this(Arrays.asList(checkers));
-  }
-
-  private static Map<String, BugPattern.SeverityLevel> defaultSeverities(
-      Iterable<BugChecker> checkers) {
-    ImmutableMap.Builder<String, BugPattern.SeverityLevel> builder = ImmutableMap.builder();
-    for (BugChecker check : checkers) {
-      builder.put(check.canonicalName(), check.defaultSeverity());
-    }
-    return builder.build();
   }
 
   /**
@@ -191,6 +184,15 @@ public class ErrorProneScanner extends Scanner {
     for (BugChecker checker : this.bugCheckers) {
       registerNodeTypes(checker);
     }
+  }
+
+  private static Map<String, BugPattern.SeverityLevel> defaultSeverities(
+      Iterable<BugChecker> checkers) {
+    ImmutableMap.Builder<String, BugPattern.SeverityLevel> builder = ImmutableMap.builder();
+    for (BugChecker check : checkers) {
+      builder.put(check.canonicalName(), check.defaultSeverity());
+    }
+    return builder.build();
   }
 
   @Override
@@ -417,17 +419,28 @@ public class ErrorProneScanner extends Scanner {
 
   private <M extends Suppressible, T extends Tree> VisitorState processMatchers(
       Iterable<M> matchers, T tree, TreeProcessor<M, T> processingFunction, VisitorState oldState) {
-    VisitorState state = oldState.withPath(getCurrentPath());
+    ErrorProneOptions errorProneOptions = oldState.errorProneOptions();
     for (M matcher : matchers) {
-      if (!isSuppressed(matcher, state.errorProneOptions())) {
+      SuppressedState suppressed = isSuppressed(matcher, errorProneOptions);
+      // If the ErrorProneOptions say to visit suppressed code, we still visit it
+      if (suppressed == SuppressedState.UNSUPPRESSED
+          || errorProneOptions.isIgnoreSuppressionAnnotations()) {
         try {
-          reportMatch(processingFunction.process(matcher, tree, state), state);
+          // We create a new VisitorState with the suppression info specific to this matcher.
+          VisitorState stateWithSuppressionInformation =
+              oldState.withPathAndSuppression(getCurrentPath(), suppressed);
+          reportMatch(
+              processingFunction.process(matcher, tree, stateWithSuppressionInformation),
+              stateWithSuppressionInformation);
         } catch (Throwable t) {
           handleError(matcher, t);
         }
       }
     }
-    return state;
+
+    // Return a VisitorState with our new path, but without mentioning the suppression of any
+    // matcher.
+    return oldState.withPath(getCurrentPath());
   }
 
   @Override
