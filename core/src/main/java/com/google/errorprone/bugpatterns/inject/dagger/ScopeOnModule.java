@@ -31,7 +31,6 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +44,7 @@ import java.util.List;
 public final class ScopeOnModule extends BugChecker implements ClassTreeMatcher {
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    ClassSymbol classSymbol = getSymbol(classTree);
-    if (!hasAnnotation(classSymbol, "dagger.Module", state)
-        && !hasAnnotation(classSymbol, "dagger.producers.ProducerModule", state)) {
+    if (!DaggerAnnotations.isAnyModule().matches(classTree, state)) {
       return Description.NO_MATCH;
     }
 
