@@ -17,6 +17,7 @@
 package com.google.errorprone.util;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.truth.Truth8.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
@@ -25,8 +26,6 @@ import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 
 import com.google.common.base.Joiner;
@@ -387,7 +386,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
           @Override
           public Void visitAnnotation(AnnotationTree tree, VisitorState state) {
             setAssertionsComplete();
-            assertEquals("B.MyAnnotation", ASTHelpers.getType(tree.getAnnotationType()).toString());
+            assertThat(ASTHelpers.getType(tree.getAnnotationType()).toString())
+                .isEqualTo("B.MyAnnotation");
             return super.visitAnnotation(tree, state);
           }
         };
@@ -404,7 +404,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
           @Override
           public Void visitVariable(VariableTree tree, VisitorState state) {
             setAssertionsComplete();
-            assertEquals("B.C", ASTHelpers.getType(tree.getType()).toString());
+            assertThat(ASTHelpers.getType(tree.getType()).toString()).isEqualTo("B.C");
             return super.visitVariable(tree, state);
           }
         };
@@ -806,11 +806,13 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
     <T extends Tree> void assertMatch(T node, VisitorState visitorState, Matcher<T> matcher) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      assertTrue(matcher.matches(node, state));
+      assertThat(matcher.matches(node, state)).isTrue();
     }
 
     public void verifyAssertionsComplete() {
-      assertTrue("Expected the visitor to call setAssertionsComplete().", assertionsComplete);
+      assertWithMessage("Expected the visitor to call setAssertionsComplete().")
+          .that(assertionsComplete)
+          .isTrue();
     }
   }
 

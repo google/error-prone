@@ -17,7 +17,6 @@
 package com.google.errorprone.apply;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,66 +53,64 @@ public class SourceFileTest {
 
   @Test
   public void getSourceText() {
-    assertEquals(SOURCE_TEXT, sourceFile.getSourceText());
+    assertThat(sourceFile.getSourceText()).isEqualTo(SOURCE_TEXT);
   }
 
   @Test
   public void getPath() {
-    assertEquals(DUMMY_PATH, sourceFile.getPath());
+    assertThat(sourceFile.getPath()).isEqualTo(DUMMY_PATH);
   }
 
   @Test
   public void getLines() {
     List<String> lines = sourceFile.getLines();
     assertThat(lines).hasSize(8);
-    assertEquals(
-        "// Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do", lines.get(0));
-    assertEquals("// est laborum.", lines.get(7));
+    assertThat(lines.get(0))
+        .isEqualTo("// Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do");
+    assertThat(lines.get(7)).isEqualTo("// est laborum.");
   }
 
   @Test
   public void replaceChars() {
     sourceFile.replaceChars(3, 8, "Sasquatch");
-    assertEquals(SOURCE_TEXT.replace("Lorem", "Sasquatch"), sourceFile.getSourceText());
-    assertEquals(
-        "// Sasquatch ipsum dolor sit amet, consectetur adipisicing elit, sed do",
-        sourceFile.getLines().get(0));
+    assertThat(sourceFile.getSourceText()).isEqualTo(SOURCE_TEXT.replace("Lorem", "Sasquatch"));
+    assertThat(sourceFile.getLines().get(0))
+        .isEqualTo("// Sasquatch ipsum dolor sit amet, consectetur adipisicing elit, sed do");
   }
 
   @Test
   public void replaceLines() {
     sourceFile.replaceLines(Arrays.asList("Line1", "Line2"));
-    assertEquals("Line1\nLine2\n", sourceFile.getSourceText());
+    assertThat(sourceFile.getSourceText()).isEqualTo("Line1\nLine2\n");
   }
 
   @Test
   public void replaceLines_numbered() {
     sourceFile.replaceLines(2, 5, Arrays.asList("cat", "dog"));
-    assertEquals(
-        "// Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do\n"
-            + "cat\n"
-            + "dog\n"
-            + "// eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat\n"
-            + "// non proident, sunt in culpa qui officia deserunt mollit anim id\n"
-            + "// est laborum.\n",
-        sourceFile.getSourceText());
+    assertThat(sourceFile.getSourceText())
+        .isEqualTo(
+            "// Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do\n"
+                + "cat\n"
+                + "dog\n"
+                + "// eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat\n"
+                + "// non proident, sunt in culpa qui officia deserunt mollit anim id\n"
+                + "// est laborum.\n");
   }
 
   @Test
   public void getFragmentByChars() {
-    assertEquals("Lorem", sourceFile.getFragmentByChars(3, 8));
+    assertThat(sourceFile.getFragmentByChars(3, 8)).isEqualTo("Lorem");
   }
 
   @Test
   public void getFragmentByLines() {
-    assertEquals(
-        "// eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut\n",
-        sourceFile.getFragmentByLines(2, 2));
-    assertEquals("// est laborum.\n", sourceFile.getFragmentByLines(8, 8));
-    assertEquals(
-        "// eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut\n"
-            + "// enim ad minim veniam, quis nostrud exercitation ullamco\n",
-        sourceFile.getFragmentByLines(2, 3));
-    assertEquals(SOURCE_TEXT, sourceFile.getFragmentByLines(1, 8));
+    assertThat(sourceFile.getFragmentByLines(2, 2))
+        .isEqualTo("// eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut\n");
+    assertThat(sourceFile.getFragmentByLines(8, 8)).isEqualTo("// est laborum.\n");
+    assertThat(sourceFile.getFragmentByLines(2, 3))
+        .isEqualTo(
+            "// eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut\n"
+                + "// enim ad minim veniam, quis nostrud exercitation ullamco\n");
+    assertThat(sourceFile.getFragmentByLines(1, 8)).isEqualTo(SOURCE_TEXT);
   }
 }

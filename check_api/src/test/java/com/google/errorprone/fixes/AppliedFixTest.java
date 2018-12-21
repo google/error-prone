@@ -18,7 +18,6 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Matchers.any;
@@ -125,7 +124,7 @@ public class AppliedFixTest {
     AppliedFix fix =
         AppliedFix.fromSource("public class Foo {}", endPositions)
             .apply(SuggestedFix.builder().build());
-    assertNull(fix);
+    assertThat(fix).isNull();
   }
 
   @Test
@@ -133,7 +132,7 @@ public class AppliedFixTest {
     AppliedFix fix =
         AppliedFix.fromSource("public class Foo {}", endPositions)
             .apply(SuggestedFix.builder().addImport("foo.bar.Baz").build());
-    assertNull(fix);
+    assertThat(fix).isNull();
   }
 
   @Test

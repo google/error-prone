@@ -16,8 +16,8 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.matchers.Matchers.hasIdentifier;
-import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
@@ -151,7 +151,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
 
           @Override
           public void assertDone() {
-            assertEquals(matched, shouldMatch);
+            assertThat(shouldMatch).isEqualTo(matched);
           }
         };
     tests.add(test);
@@ -175,7 +175,7 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
 
           @Override
           void assertDone() {
-            assertEquals(matched, shouldMatch);
+            assertThat(shouldMatch).isEqualTo(matched);
           }
         };
     tests.add(test);

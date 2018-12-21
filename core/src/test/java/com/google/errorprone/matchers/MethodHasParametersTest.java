@@ -16,11 +16,11 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.isPrimitiveType;
 import static com.google.errorprone.matchers.Matchers.variableType;
-import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
@@ -138,7 +138,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
 
           @Override
           public void assertDone() {
-            assertEquals(matched, shouldMatch);
+            assertThat(shouldMatch).isEqualTo(matched);
           }
         };
     tests.add(test);

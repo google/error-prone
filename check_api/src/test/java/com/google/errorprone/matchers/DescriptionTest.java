@@ -16,10 +16,10 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -85,11 +85,11 @@ public class DescriptionTest {
   @Test
   public void testDescriptionFromBugPattern() {
     Description description = new MyChecker().getDescription();
-    assertEquals("DeadException", description.checkName);
-    assertEquals(
-        "Exception created but not thrown\n" + URL, description.getMessageWithoutCheckName());
-    assertEquals(
-        "[DeadException] Exception created but not thrown\n" + URL, description.getMessage());
+    assertThat(description.checkName).isEqualTo("DeadException");
+    assertThat(description.getMessageWithoutCheckName())
+        .isEqualTo("Exception created but not thrown\n" + URL);
+    assertThat(description.getMessage())
+        .isEqualTo("[DeadException] Exception created but not thrown\n" + URL);
   }
 
   @Test
@@ -98,9 +98,9 @@ public class DescriptionTest {
         BugChecker.buildDescriptionFromChecker((DiagnosticPosition) new MockTree(), new MyChecker())
             .setMessage("custom message")
             .build();
-    assertEquals("DeadException", description.checkName);
-    assertEquals("custom message\n" + URL, description.getMessageWithoutCheckName());
-    assertEquals("[DeadException] custom message\n" + URL, description.getMessage());
+    assertThat(description.checkName).isEqualTo("DeadException");
+    assertThat(description.getMessageWithoutCheckName()).isEqualTo("custom message\n" + URL);
+    assertThat(description.getMessage()).isEqualTo("[DeadException] custom message\n" + URL);
   }
 
   @BugPattern(
@@ -124,8 +124,7 @@ public class DescriptionTest {
                 (DiagnosticPosition) new MockTree(), new CustomLinkChecker())
             .setMessage("custom message")
             .build();
-    assertEquals(
-        "[CustomLinkChecker] custom message\n  (see https://www.google.com/)",
-        description.getMessage());
+    assertThat(description.getMessage())
+        .isEqualTo("[CustomLinkChecker] custom message\n  (see https://www.google.com/)");
   }
 }

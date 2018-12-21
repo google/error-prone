@@ -16,8 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
@@ -51,7 +50,7 @@ public class StringLiteralTest {
             return "a string literal";
           }
         };
-    assertTrue(new StringLiteral("a string literal").matches(tree, null));
+    assertThat(new StringLiteral("a string literal").matches(tree, null)).isTrue();
   }
 
   @Test
@@ -75,7 +74,7 @@ public class StringLiteralTest {
             return "a string literal";
           }
         };
-    assertFalse(new StringLiteral("different string").matches(tree, null));
+    assertThat(new StringLiteral("different string").matches(tree, null)).isFalse();
 
     IdentifierTree idTree =
         new IdentifierTree() {
@@ -94,7 +93,7 @@ public class StringLiteralTest {
             throw new UnsupportedOperationException();
           }
         };
-    assertFalse(new StringLiteral("test").matches(idTree, null));
+    assertThat(new StringLiteral("test").matches(idTree, null)).isFalse();
 
     // TODO(b/67738557): consolidate helpers for creating fake trees
     LiteralTree intTree =
@@ -114,6 +113,6 @@ public class StringLiteralTest {
             throw new UnsupportedOperationException();
           }
         };
-    assertFalse(new StringLiteral("test").matches(intTree, null));
+    assertThat(new StringLiteral("test").matches(intTree, null)).isFalse();
   }
 }

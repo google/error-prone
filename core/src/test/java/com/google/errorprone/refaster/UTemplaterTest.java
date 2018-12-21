@@ -16,7 +16,7 @@
 
 package com.google.errorprone.refaster;
 
-import static org.junit.Assert.assertNotNull;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.sun.tools.javac.tree.JCTree;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class UTemplaterTest extends AbstractUTreeTest {
   private void testTemplateWithoutTypes(String expression) {
     JCTree ast = parseExpression(expression);
     UTree<?> template = (UTree<?>) new UTemplater(context).template(ast);
-    assertNotNull(template.unify(ast, unifier));
+    assertThat(template.unify(ast, unifier)).isNotNull();
   }
 
   @Test

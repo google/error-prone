@@ -16,7 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertWithMessage;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
@@ -124,7 +124,9 @@ public class InstanceMethodTest extends CompilerBasedAbstractTest {
       @Override
       public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
         if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
-          assertTrue(node.toString(), !shouldMatch ^ toMatch.matches(node, visitorState));
+          assertWithMessage(node.toString())
+              .that(!shouldMatch ^ toMatch.matches(node, visitorState))
+              .isTrue();
         }
         return super.visitMemberSelect(node, visitorState);
       }

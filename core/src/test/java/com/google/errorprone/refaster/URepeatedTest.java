@@ -16,10 +16,8 @@
 
 package com.google.errorprone.refaster;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static com.google.common.truth.Truth.assertThat;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -35,8 +33,8 @@ public class URepeatedTest extends AbstractUTreeTest {
   public void unifies() {
     JCExpression expr = parseExpression("\"abcdefg\".charAt(x + 1)");
     URepeated ident = URepeated.create("foo", UFreeIdent.create("foo"));
-    assertNotNull(ident.unify(expr, unifier));
-    assertEquals(ImmutableMap.of(new UFreeIdent.Key("foo"), expr), unifier.getBindings());
+    assertThat(ident.unify(expr, unifier)).isNotNull();
+    assertThat(unifier.getBindings()).containsExactly(new UFreeIdent.Key("foo"), expr);
   }
 
   @Test
