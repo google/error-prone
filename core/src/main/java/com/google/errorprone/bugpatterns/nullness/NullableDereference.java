@@ -25,14 +25,24 @@ import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.TrustingNullnessAnalysis;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import java.util.List;
+import java.util.function.Function;
+import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -49,7 +59,8 @@ import javax.lang.model.type.TypeKind;
     category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.NO_FIX)
-public class NullableDereference extends BugChecker implements MemberSelectTreeMatcher {
+public class NullableDereference extends BugChecker
+    implements MemberSelectTreeMatcher, MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
@@ -67,30 +78,97 @@ public class NullableDereference extends BugChecker implements MemberSelectTreeM
       return Description.NO_MATCH;
     }
 
-    Nullness nullness =
-        TrustingNullnessAnalysis.instance(state.context)
-            .getNullness(new TreePath(state.getPath(), receiverTree), state.context);
-    if (nullness == null) {
+    Description result =
+        checkExpression(
+            receiverTree,
+            state,
+            qual ->
+                String.format(
+                    "Dereferencing method/field \"%s\" of %s null receiver %s",
+                    tree.getIdentifier(), qual, receiverTree));
+    return result != null ? result : Description.NO_MATCH;
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    return checkCallArguments(tree.getArguments(), getSymbol(tree), state);
+  }
+
+  @Override
+  public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    // 1. Check any enclosing expression like a dereference
+    JCExpression receiverTree = (JCExpression) tree.getEnclosingExpression();
+    if (receiverTree != null) {
+      Description result =
+          checkExpression(
+              receiverTree,
+              state,
+              qual ->
+                  String.format(
+                      "Outer object %s for %s is %s null",
+                      receiverTree, tree.getIdentifier(), qual));
+      if (result != null) {
+        return result;
+      }
+    }
+
+    // 2. Check call arguments like a method call
+    return checkCallArguments(tree.getArguments(), getSymbol(tree), state);
+  }
+
+  private Description checkCallArguments(
+      List<? extends ExpressionTree> arguments, @Nullable MethodSymbol sym, VisitorState state) {
+    if (sym == null) {
       return Description.NO_MATCH;
     }
 
-    Description.Builder descBuilder = buildDescription(tree);
+    // TODO(b/121273225): Use iterators instead of indexing into these linked lists
+    for (int i = 0; i < sym.getParameters().size(); ++i) {
+      VarSymbol param = sym.getParameters().get(i);
+      if (param.equals(sym.getParameters().last()) && sym.isVarArgs()) {
+        break; // TODO(b/121273225): support varargs
+      }
+      // TODO(b/121273225): handle and check constrained type variables
+      // TODO(b/121203670): Recognize @ParametersAreNonnullByDefault etc.
+      // Ignore unannotated and @Nullable parameters
+      if (Nullness.fromAnnotationsOn(param).orElse(null) != Nullness.NONNULL) {
+        continue;
+      }
+      ExpressionTree arg = arguments.get(i);
+      Description result =
+          checkExpression(
+              arg,
+              state,
+              qual ->
+                  String.format(
+                      "argument %s is %s null but %s expects it to be non-null",
+                      arg, qual, sym.getSimpleName()));
+      if (result != null) {
+        return result;
+      }
+    }
+    return Description.NO_MATCH;
+  }
+
+  @Nullable
+  private Description checkExpression(
+      ExpressionTree tree, VisitorState state, Function<String, String> describer) {
+    Nullness nullness =
+        TrustingNullnessAnalysis.instance(state.context)
+            .getNullness(new TreePath(state.getPath(), tree), state.context);
+    if (nullness == null) {
+      return null;
+    }
+
     switch (nullness) {
       case NONNULL:
       case BOTTOM:
-        return Description.NO_MATCH;
+        return null;
       case NULL:
-        descBuilder.setMessage(
-            String.format(
-                "Dereferencing method/field \"%s\" of definitely null receiver %s",
-                tree.getIdentifier(), receiverTree));
-        break;
+        return buildDescription(tree).setMessage(describer.apply("definitely")).build();
       case NULLABLE:
-        descBuilder.setMessage(
-            String.format(
-                "Dereferencing method/field \"%s\" of possibly null receiver %s",
-                tree.getIdentifier(), receiverTree));
+        return buildDescription(tree).setMessage(describer.apply("possibly")).build();
     }
-    return descBuilder.build();
+    throw new AssertionError("Unhandled: " + nullness);
   }
 }
