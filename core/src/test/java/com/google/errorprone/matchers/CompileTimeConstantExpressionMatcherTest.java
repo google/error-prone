@@ -16,8 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertWithMessage;
 
 import com.google.common.truth.Truth;
 import com.google.errorprone.CompilationTestHelper;
@@ -218,9 +217,13 @@ public class CompileTimeConstantExpressionMatcherTest {
             if (expectedMatches.containsKey(lhs.toString())) {
               boolean matches = matcher.matches(t.getExpression(), state);
               if (expectedMatches.get(lhs.toString())) {
-                assertTrue("Matcher should match expression" + t.getExpression(), matches);
+                assertWithMessage("Matcher should match expression" + t.getExpression())
+                    .that(matches)
+                    .isTrue();
               } else {
-                assertFalse("Matcher should not match expression" + t.getExpression(), matches);
+                assertWithMessage("Matcher should not match expression" + t.getExpression())
+                    .that(matches)
+                    .isFalse();
               }
             }
             return super.visitAssignment(t, state);

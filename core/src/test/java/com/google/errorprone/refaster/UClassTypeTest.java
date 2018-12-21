@@ -16,7 +16,7 @@
 
 package com.google.errorprone.refaster;
 
-import static org.junit.Assert.assertNotNull;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
@@ -59,7 +59,9 @@ public class UClassTypeTest extends AbstractUTreeTest {
 
   @Test
   public void unifies() {
-    assertNotNull(
-        UClassType.create("java.lang.String").unify(Symtab.instance(context).stringType, unifier));
+    assertThat(
+            UClassType.create("java.lang.String")
+                .unify(Symtab.instance(context).stringType, unifier))
+        .isNotNull();
   }
 }

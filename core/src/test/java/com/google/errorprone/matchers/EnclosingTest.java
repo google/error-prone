@@ -16,10 +16,10 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.matchers.Matchers.enclosingBlock;
 import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.parentNode;
-import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
@@ -212,7 +212,7 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
 
           @Override
           void assertDone() {
-            assertEquals(shouldMatch, matched);
+            assertThat(matched).isEqualTo(shouldMatch);
           }
         };
     tests.add(test);

@@ -16,8 +16,8 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.truth.Truth.assertWithMessage;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
@@ -158,7 +158,9 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
     return new Scanner() {
       @Override
       public Void visitCompoundAssignment(CompoundAssignmentTree node, VisitorState visitorState) {
-        assertTrue(node.toString(), !shouldMatch ^ toMatch.matches(node, visitorState));
+        assertWithMessage(node.toString())
+            .that(!shouldMatch ^ toMatch.matches(node, visitorState))
+            .isTrue();
         return super.visitCompoundAssignment(node, visitorState);
       }
     };

@@ -16,7 +16,6 @@
 package com.google.errorprone.dataflow;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
@@ -30,7 +29,7 @@ public class AccessPathStoreTest {
 
   @Test
   public void leastUpperBoundEmpty() {
-    assertEquals(newStore(), newStore().leastUpperBound(newStore()));
+    assertThat(newStore().leastUpperBound(newStore())).isEqualTo(newStore());
   }
 
   @Test
@@ -40,8 +39,9 @@ public class AccessPathStoreTest {
     AccessPath path2 = mock(AccessPath.class);
     builder.setInformation(path1, Nullness.NULL);
     builder.setInformation(path2, Nullness.NONNULL);
-    assertEquals(Nullness.NULL, builder.build().valueOfAccessPath(path1, Nullness.BOTTOM));
-    assertEquals(Nullness.NONNULL, builder.build().valueOfAccessPath(path2, Nullness.BOTTOM));
+    assertThat(builder.build().valueOfAccessPath(path1, Nullness.BOTTOM)).isEqualTo(Nullness.NULL);
+    assertThat(builder.build().valueOfAccessPath(path2, Nullness.BOTTOM))
+        .isEqualTo(Nullness.NONNULL);
     assertThat(newStore().heap()).isEmpty();
   }
 

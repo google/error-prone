@@ -16,7 +16,7 @@
 
 package com.google.errorprone.dataflow;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import org.junit.runners.JUnit4;
 public class LocalStoreTest {
   @Test
   public void leastUpperBoundEmpty() {
-    assertEquals(newStore(), newStore().leastUpperBound(newStore()));
+    assertThat(newStore().leastUpperBound(newStore())).isEqualTo(newStore());
   }
 
   // TODO(cpovirk): more tests!

@@ -16,7 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
@@ -74,7 +74,7 @@ public class DescendantOfAbstractTest extends CompilerBasedAbstractTest {
 
           @Override
           public void assertDone() {
-            assertEquals(matched, shouldMatch);
+            assertThat(shouldMatch).isEqualTo(matched);
           }
         };
     tests.add(test);

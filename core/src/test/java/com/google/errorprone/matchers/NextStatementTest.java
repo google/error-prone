@@ -16,9 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static org.junit.Assert.assertNotNull;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
@@ -49,7 +49,7 @@ public final class NextStatementTest {
     public Description matchCompoundAssignment(CompoundAssignmentTree cat, VisitorState state) {
       StatementTree exprStat =
           ASTHelpers.findEnclosingNode(state.getPath(), ExpressionStatementTree.class);
-      assertNotNull(exprStat);
+      assertThat(exprStat).isNotNull();
       if (new NextStatement<StatementTree>(Matchers.<StatementTree>anything())
           .matches(exprStat, state)) {
         return describeMatch(cat);

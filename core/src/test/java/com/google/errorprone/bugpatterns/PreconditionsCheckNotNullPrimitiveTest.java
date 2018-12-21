@@ -16,8 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertWithMessage;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableList;
@@ -144,15 +143,14 @@ public class PreconditionsCheckNotNullPrimitiveTest extends CompilerBasedAbstrac
 
     private void assertMatch(ExpressionTree node, List<String> expected) {
       List<IdentifierTree> uses = PreconditionsCheckNotNullPrimitive.getVariableUses(node);
-      assertEquals(
-          "variables used in " + node,
-          expected,
-          Lists.transform(uses, Functions.toStringFunction()));
+      assertWithMessage("variables used in " + node)
+          .that(Lists.transform(uses, Functions.toStringFunction()))
+          .isEqualTo(expected);
     }
 
     public void assertFoundAll() {
       for (Map.Entry<String, Match> entry : matches.entrySet()) {
-        assertTrue("found " + entry.getKey(), entry.getValue().found);
+        assertWithMessage("found " + entry.getKey()).that(entry.getValue().found).isTrue();
       }
     }
   }

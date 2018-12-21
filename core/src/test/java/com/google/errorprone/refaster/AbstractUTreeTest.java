@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster;
 
 import static com.google.common.truth.Truth.assertWithMessage;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 
 import com.google.common.base.Joiner;
@@ -63,10 +62,11 @@ public abstract class AbstractUTreeTest {
 
   public void assertInlines(String expression, UTree<?> template) {
     try {
-      assertEquals(
-          String.format("Expected template %s to inline to expression %s", template, expression),
-          expression,
-          template.inline(inliner).toString());
+      assertWithMessage(
+              String.format(
+                  "Expected template %s to inline to expression %s", template, expression))
+          .that(template.inline(inliner).toString())
+          .isEqualTo(expression);
     } catch (CouldNotResolveImportException e) {
       throw new RuntimeException(e);
     }
@@ -75,10 +75,11 @@ public abstract class AbstractUTreeTest {
   public void assertInlines(String expression, UStatement template) {
     try {
       // javac's pretty-printer uses the platform line terminator
-      assertEquals(
-          String.format("Expected template %s to inline to expression %s", template, expression),
-          expression,
-          Joiner.on(System.lineSeparator()).join(template.inlineStatements(inliner)));
+      assertWithMessage(
+              String.format(
+                  "Expected template %s to inline to expression %s", template, expression))
+          .that(Joiner.on(System.lineSeparator()).join(template.inlineStatements(inliner)))
+          .isEqualTo(expression);
     } catch (CouldNotResolveImportException e) {
       throw new RuntimeException(e);
     }

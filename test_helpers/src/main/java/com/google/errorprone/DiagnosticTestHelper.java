@@ -16,11 +16,11 @@
 
 package com.google.errorprone;
 
+import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Locale.ENGLISH;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Predicate;
@@ -278,7 +278,6 @@ public class DiagnosticTestHelper {
    * the diagnostic.
    *
    * @param source File in which to find matching lines
-   *     <p>TODO(eaftan): Switch to use assertThat instead of assertTrue.
    */
   public void assertHasDiagnosticOnAllMatchingLines(
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
@@ -305,15 +304,12 @@ public class DiagnosticTestHelper {
         List<String> lookupKeys = extractPatterns(line, reader, BUG_MARKER_COMMENT_LOOKUP);
         predicates = new ArrayList<>(lookupKeys.size());
         for (String lookupKey : lookupKeys) {
-          assertTrue(
-              "No expected error message with key ["
-                  + lookupKey
-                  + "] as expected from line ["
-                  + markerLineNumber
-                  + "] with diagnostic ["
-                  + line.trim()
-                  + "]",
-              expectedErrorMsgs.containsKey(lookupKey));
+          assertWithMessage(
+                  "No expected error message with key [%s] as expected from line [%s] "
+                      + "with diagnostic [%s]",
+                  lookupKey, markerLineNumber, line.trim())
+              .that(expectedErrorMsgs.containsKey(lookupKey))
+              .isTrue();
           predicates.add(expectedErrorMsgs.get(lookupKey));
           usedLookupKeys.add(lookupKey);
         }
@@ -324,14 +320,11 @@ public class DiagnosticTestHelper {
         for (Predicate<? super String> predicate : predicates) {
           Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> patternMatcher =
               hasItem(diagnosticOnLine(source.toUri(), lineNumber, predicate));
-          assertTrue(
-              "Did not see an error on line "
-                  + lineNumber
-                  + " matching "
-                  + predicate
-                  + ". "
-                  + allErrors(diagnostics),
-              patternMatcher.matches(diagnostics));
+          assertWithMessage(
+                  "Did not see an error on line %s matching %s. %s",
+                  lineNumber, predicate, allErrors(diagnostics))
+              .that(patternMatcher.matches(diagnostics))
+              .isTrue();
         }
 
         if (checkName != null && lookForCheckNameInDiagnostic == LookForCheckNameInDiagnostic.YES) {
@@ -340,14 +333,11 @@ public class DiagnosticTestHelper {
               hasItem(
                   diagnosticOnLine(
                       source.toUri(), lineNumber, new SimpleStringContains("[" + checkName + "]")));
-          assertTrue(
-              "Did not see an error on line "
-                  + lineNumber
-                  + " containing ["
-                  + checkName
-                  + "]. "
-                  + allErrors(diagnostics),
-              checkNameMatcher.matches(diagnostics));
+          assertWithMessage(
+                  "Did not see an error on line %s containing [%s]. %s",
+                  lineNumber, checkName, allErrors(diagnostics))
+              .that(checkNameMatcher.matches(diagnostics))
+              .isTrue();
         }
 
       } else {

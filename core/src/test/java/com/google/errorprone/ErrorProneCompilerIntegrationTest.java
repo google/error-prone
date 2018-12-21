@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
@@ -29,7 +30,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.common.base.Ascii;
@@ -108,9 +108,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[BadShiftAmount]")));
-    assertTrue(
-        "Error should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
   }
 
   @Test
@@ -128,9 +128,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[NonAtomicVolatileUpdate]")));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
   }
 
   @Test
@@ -173,9 +173,9 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(4);
   }
 
@@ -206,9 +206,9 @@ public class ErrorProneCompilerIntegrationTest {
                 CoreMatchers.<String>allOf(
                     containsString("IllegalStateException: test123"),
                     containsString("unhandled exception was thrown by the Error Prone"))));
-    assertTrue(
-        "Error should be reported. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Error should be reported. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
   }
 
   /** Regression test for Issue 188, error-prone doesn't work with annotation processors. */
@@ -265,9 +265,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         not(hasItem(diagnosticMessage(containsString("[ConstructorMatcher]"))));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
@@ -310,9 +310,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         not(hasItem(diagnosticMessage(containsString("[SuperCallMatcher]"))));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
@@ -354,9 +354,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[EmptyIf]")));
-    assertTrue(
-        "Error should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
   }
@@ -373,9 +373,9 @@ public class ErrorProneCompilerIntegrationTest {
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     // Should reset to default severity (ERROR)
     exitCode =
@@ -397,9 +397,9 @@ public class ErrorProneCompilerIntegrationTest {
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[EmptyIf]")));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
-    assertTrue(
-        "Error should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     diagnosticHelper.clearDiagnostics();
     exitCode =

@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Joiner;
@@ -173,7 +172,7 @@ public class CompilationTestHelper {
    * foo", we expect to see a diagnostic on that line containing "foo". For each line of the test
    * file that does <i>not</i> contain the bug marker pattern, we expect no diagnostic to be
    * generated. You can also use "// BUG: Diagnostic matches: X" in tandem with {@code
-   * expectErrorMessage("X", "foo")} to allow you to programatically construct the error message.
+   * expectErrorMessage("X", "foo")} to allow you to programmatically construct the error message.
    *
    * @param path a path for the source file
    * @param lines the content of the source file
@@ -322,9 +321,9 @@ public class CompilationTestHelper {
           throw new UncheckedIOException(e);
         }
       }
-      assertTrue(
-          "Unused error keys: " + diagnosticHelper.getUnusedLookupKeys(),
-          diagnosticHelper.getUnusedLookupKeys().isEmpty());
+      assertWithMessage("Unused error keys: " + diagnosticHelper.getUnusedLookupKeys())
+          .that(diagnosticHelper.getUnusedLookupKeys().isEmpty())
+          .isTrue();
     }
 
     if (expectedResult.isPresent()) {
