@@ -47,6 +47,36 @@ public class NullableDereferenceTest {
   }
 
   @Test
+  public void testAnnotatedField() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/AnnotatedFieldTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "import org.checkerframework.checker.nullness.qual.NonNull;",
+            "public class AnnotatedFieldTest<T extends @Nullable Object> {",
+            "  Object f1;",
+            "  @Nullable Object f2;",
+            "  @NonNull Object f3;",
+            "  T f4;",
+            "  @Nullable T f5;",
+            "  @NonNull T f6;",
+            "  public void test() {",
+            "    f1.toString();",
+            "    // BUG: Diagnostic contains: possibly null",
+            "    f2.toString();",
+            "    f3.toString();",
+            "    // BUG: Diagnostic contains: possibly null",
+            "    f4.toString();",
+            "    // BUG: Diagnostic contains: possibly null",
+            "    f5.toString();",
+            "    f6.toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testDataflow() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -55,11 +85,25 @@ public class NullableDereferenceTest {
             "import org.checkerframework.checker.nullness.qual.Nullable;",
             "import org.checkerframework.checker.nullness.qual.NonNull;",
             "public class DataflowTest {",
-            "  public void test(@Nullable Object o) {",
+            "  @Nullable Object f;",
+            "  public void testFormal(@Nullable Object o) {",
             "    // BUG: Diagnostic contains: possibly null",
             "    o.toString();",
             // no error here: successful deref on previous line implies `o` is not null
             "    o.toString();",
+            "  }",
+            "  public void testFieldDeref() {",
+            "    // BUG: Diagnostic contains: possibly null",
+            "    f.toString();",
+            // no error here: successful deref on previous line implies `o` is not null
+            "    f.toString();",
+            "  }",
+            "  public void testFieldAssignment() {",
+            "    f = \"hello\";",
+            "    f.toString();",
+            "    f = null;",
+            "    // BUG: Diagnostic contains: definitely null",
+            "    f.toString();",
             "  }",
             "}")
         .doTest();

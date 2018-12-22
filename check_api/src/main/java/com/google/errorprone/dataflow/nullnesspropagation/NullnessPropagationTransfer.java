@@ -686,6 +686,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return false;
   }
 
+  @Nullable
   private static ClassAndField tryGetFieldSymbol(Tree tree) {
     Symbol symbol = tryGetSymbol(tree);
     if (symbol instanceof VarSymbol) {
@@ -694,6 +695,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return null;
   }
 
+  @Nullable
   static ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree, Types types) {
     Symbol symbol = tryGetSymbol(tree.getMethodSelect());
     if (symbol instanceof MethodSymbol) {
@@ -706,7 +708,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * We can't use ASTHelpers here. It's in core, which depends on jdk8, so we can't make jdk8 depend
    * back on core.
    */
-
+  @Nullable
   private static Symbol tryGetSymbol(Tree tree) {
     if (tree instanceof JCIdent) {
       return ((JCIdent) tree).sym;
@@ -721,7 +723,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   Nullness fieldNullness(
-      ClassAndField accessed, @Nullable AccessPath path, AccessPathValues<Nullness> store) {
+      @Nullable ClassAndField accessed,
+      @Nullable AccessPath path,
+      AccessPathValues<Nullness> store) {
     if (accessed == null) {
       return defaultAssumption;
     }
@@ -749,23 +753,24 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         return initializer;
       }
     }
+    return standardFieldNullness(accessed, path, store);
+  }
 
+  /** Determines field nullness based on store and annotations. */
+  // TODO(kmb): Reverse subtyping between this class and TrustingNullnessPropagation to avoid this
+  Nullness standardFieldNullness(
+      ClassAndField accessed, @Nullable AccessPath path, AccessPathValues<Nullness> store) {
     // First, check the store for a dataflow-computed nullness value and return it if it exists
     // Otherwise, check for nullness annotations on the field declaration
     // If there are none, check for nullness annotations on generic type declarations
     // If there are none, fall back to the defaultAssumption
 
     Nullness dataflowResult = (path == null) ? BOTTOM : store.valueOfAccessPath(path, BOTTOM);
-
     if (dataflowResult != BOTTOM) {
       return dataflowResult;
     }
 
-    Optional<Nullness> declaredNullness =
-        Nullness.fromAnnotations(
-            MoreAnnotations.getDeclarationAndTypeAttributes(accessed.symbol)
-                .map(Object::toString)
-                .collect(ImmutableList.toImmutableList()));
+    Optional<Nullness> declaredNullness = Nullness.fromAnnotationsOn(accessed.symbol);
     return declaredNullness.orElseGet(
         () ->
             Nullness.fromAnnotations(inheritedAnnotations(accessed.symbol.type))
@@ -1053,7 +1058,6 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
     static ClassAndMethod make(MethodSymbol methodSymbol, @Nullable Types types) {
       // TODO(b/71812955): consider just wrapping methodSymbol instead of copying everything out.
-      // TODO(b/71812955): for type variables, check for type annotations on the referenced variable
       ImmutableList<String> annotations =
           MoreAnnotations.getDeclarationAndTypeAttributes(methodSymbol)
               .map(c -> c.getAnnotationType().asElement().toString())
