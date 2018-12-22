@@ -61,7 +61,7 @@ public final class UngroupedOverloadsTest {
   public void ungroupedOverloadsPositiveCasesCoveringOnlyFirstOverload() {
     compilationHelper
         .addSourceFile("UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst.java")
-        .setArgs(ImmutableList.of("-XepOpt:UngroupedOverloads:FindingsOnFirstOverload"))
+        .setArgs(ImmutableList.of("-XepOpt:UngroupedOverloads:BatchFindings"))
         .doTest();
   }
 
@@ -269,7 +269,7 @@ public final class UngroupedOverloadsTest {
             "    System.err.println();",
             "  }",
             "}")
-        .setArgs("-XepOpt:UngroupedOverloads:FindingsOnFirstOverload")
+        .setArgs("-XepOpt:UngroupedOverloads:BatchFindings")
         .doTest(TestMode.TEXT_MATCH);
   }
 
