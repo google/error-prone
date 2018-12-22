@@ -269,14 +269,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return result.build();
   }
 
-  private Nullness getInferredNullness(MethodInvocationNode node, ClassAndMethod callee) {
-    // Baseline nullness information about this method, in case inference is unsuccessful.
-    Nullness baselineNullness = methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
-    if (!callee.isGenericResult) {
-      // We only care about inference results for methods that return a type variable.
-      return baselineNullness;
-    }
-
+  private Optional<Nullness> getInferredNullness(MethodInvocationNode node) {
     // Method has a generic result, so ask inference to infer a qualifier for that type parameter
     if (inferenceResults == null) {
       // inferenceResults are per-procedure; if it is null that means this is the first query within
@@ -302,7 +295,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
                   "Call `%s` is not contained in an lambda, initializer or method.",
                   node));
     }
-    return inferenceResults.getExprNullness(node.getTree()).orElse(baselineNullness);
+    return inferenceResults.getExprNullness(node.getTree());
   }
 
   /**
@@ -789,19 +782,21 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (AccessPath.isAutoValueAccessor(node.getTree())) {
       return NONNULL;
     }
-    // If there is no nullness annotation on the callee method declaration, look for applicable
-    // annotations inherited from elsewhere.
-    ImmutableList<String> annotations =
-        ImmutableList.<String>builder()
-            .addAll(inheritedAnnotations(node.getTarget().getMethod().getReturnType()))
-            .addAll(
-                node.getType().getAnnotationMirrors().stream()
-                    .map(Object::toString)
-                    .collect(ImmutableList.toImmutableList()))
-            .build();
 
-    return getInferredNullness(node, callee)
-        .greatestLowerBound(Nullness.fromAnnotations(annotations).orElse(NULLABLE));
+    Nullness assumedNullness = methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
+    if (!callee.isGenericResult) {
+      // We only care about inference results for methods that return a type variable.
+      return assumedNullness;
+    }
+
+    // Look for applicable annotations inherited from elsewhere.
+    // TODO(b/121398981): Treat type parameter bounds correctly
+    Nullness lowerBound =
+        Nullness.fromAnnotations(inheritedAnnotations(node.getTarget().getMethod().getReturnType()))
+            .orElse(NULLABLE);
+
+    // Method has a generic result, so ask inference to infer a qualifier for that type parameter
+    return getInferredNullness(node).orElse(assumedNullness).greatestLowerBound(lowerBound);
   }
 
   /**
@@ -1060,7 +1055,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       // TODO(b/71812955): consider just wrapping methodSymbol instead of copying everything out.
       ImmutableList<String> annotations =
           MoreAnnotations.getDeclarationAndTypeAttributes(methodSymbol)
-              .map(c -> c.getAnnotationType().asElement().toString())
+              .map(Object::toString)
               .collect(toImmutableList());
 
       ClassSymbol clazzSymbol = (ClassSymbol) methodSymbol.owner;
