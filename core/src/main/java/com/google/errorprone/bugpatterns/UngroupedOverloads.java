@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
@@ -42,6 +44,7 @@ import com.sun.tools.javac.tree.JCTree;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import javax.lang.model.element.Name;
 
 /** @author hanuszczak@google.com (Łukasz Hanuszczak) */
@@ -59,11 +62,10 @@ import javax.lang.model.element.Name;
     )
 public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
 
-  private final Boolean showFindingOnFirstOverloadOnly;
+  private final Boolean batchFindings;
 
   public UngroupedOverloads(ErrorProneFlags flags) {
-    showFindingOnFirstOverloadOnly =
-        flags.getBoolean("UngroupedOverloads:FindingsOnFirstOverload").orElse(false);
+    batchFindings = flags.getBoolean("UngroupedOverloads:BatchFindings").orElse(false);
   }
 
   @AutoValue
@@ -104,20 +106,26 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
         methods.put(OverloadKey.create(methodTree), MemberWithIndex.create(i, methodTree));
       }
     }
-    methods
-        .asMap()
-        .forEach(
-            (key, overloads) ->
-                checkOverloads(state, classTree.getMembers(), ImmutableList.copyOf(overloads)));
+    ImmutableList<Description> descriptions =
+        methods.asMap().entrySet().stream()
+            .flatMap(
+                e ->
+                    checkOverloads(
+                        state, classTree.getMembers(), ImmutableList.copyOf(e.getValue())))
+            .collect(toImmutableList());
+    if (batchFindings && !descriptions.isEmpty()) {
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      descriptions.forEach(d -> fix.merge((SuggestedFix) getOnlyElement(d.fixes)));
+      return buildDescription(descriptions.get(0).position).addFix(fix.build()).build();
+    }
+    descriptions.forEach(state::reportMatch);
     return NO_MATCH;
   }
 
-  private void checkOverloads(
-      VisitorState state,
-      List<? extends Tree> members,
-      ImmutableList<MemberWithIndex> overloads) {
+  private Stream<Description> checkOverloads(
+      VisitorState state, List<? extends Tree> members, ImmutableList<MemberWithIndex> overloads) {
     if (overloads.size() <= 1) {
-      return;
+      return Stream.empty();
     }
     // check if the indices of the overloads in the member list are sequential
     MemberWithIndex first = overloads.get(0);
@@ -132,10 +140,10 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
       prev = overload.index();
     }
     if (group == 0) {
-      return;
+      return Stream.empty();
     }
     if (overloads.stream().anyMatch(m -> isSuppressed(m.tree()))) {
-      return;
+      return Stream.empty();
     }
     // build a fix that replaces the first overload with all the overloads grouped together
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
@@ -154,15 +162,13 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     SuggestedFix fix = fixBuilder.build();
     LineMap lineMap = state.getPath().getCompilationUnit().getLineMap();
     // emit findings for each overload
-    overloads.stream()
-        .limit(showFindingOnFirstOverloadOnly ? 1 : Long.MAX_VALUE)
-        .forEach(
+    return overloads.stream()
+        .map(
             o ->
-                state.reportMatch(
-                    buildDescription(o.tree())
-                        .addFix(fix)
-                        .setMessage(createMessage(o.tree(), overloads, groups, lineMap, o))
-                        .build()));
+                buildDescription(o.tree())
+                    .addFix(fix)
+                    .setMessage(createMessage(o.tree(), overloads, groups, lineMap, o))
+                    .build());
   }
 
   private static String createMessage(
