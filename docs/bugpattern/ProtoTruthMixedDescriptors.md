@@ -25,7 +25,7 @@ ignore:
 ```java {.good}
 void assertOnFoo(Foo foo) {
   assertThat(foo)
-      .ignoringFields(
+      .ignoringFieldDescriptors(
           Bar.getDescriptor().findFieldByNumber(Bar.NAME_FIELD_NUMBER))
       .isEqualTo(...);
 }
