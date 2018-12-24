@@ -185,6 +185,9 @@ Invalid syntax used for a regular expression
 __[InvalidTimeZoneID](bugpattern/InvalidTimeZoneID)__<br>
 Invalid time zone identifier. TimeZone.getTimeZone(String) will silently return GMT instead of the time zone you intended.
 
+__[InvalidZoneId](bugpattern/InvalidZoneId)__<br>
+Invalid zone identifier. ZoneId.of(String) will throw exception at runtime.
+
 __[IsInstanceOfClass](bugpattern/IsInstanceOfClass)__<br>
 The argument to Class#isInstance(Object) should not be a Class
 
@@ -308,6 +311,9 @@ Protobuf fields cannot be null.
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
 
+__[ProtoTruthMixedDescriptors](bugpattern/ProtoTruthMixedDescriptors)__<br>
+The arguments passed to `ignoringFields` are inconsistent with the proto which is the subject of the assertion.
+
 __[ProtocolBufferOrdinal](bugpattern/ProtocolBufferOrdinal)__<br>
 To get the tag number of a protocol buffer enum, use getNumber() instead.
 
@@ -408,6 +414,9 @@ This assertion throws an AssertionError if it fails, which will be caught by an 
 
 __[AutoValueFinalMethods](bugpattern/AutoValueFinalMethods)__<br>
 Make toString(), hashCode() and equals() final in AutoValue classes, so it is clear to readers that AutoValue is not overriding them
+
+__[AutoValueImmutableFields](bugpattern/AutoValueImmutableFields)__<br>
+AutoValue recommends using immutable collections
 
 __[BadAnnotationImplementation](bugpattern/BadAnnotationImplementation)__<br>
 Classes that implement Annotation must override equals and hashCode. Consider using AutoAnnotation instead of implementing Annotation by hand.
@@ -695,7 +704,7 @@ __[ParameterName](bugpattern/ParameterName)__<br>
 Detects `/* name= */`-style comments on actual parameters where the name doesn&#39;t match the formal parameter
 
 __[PreconditionsCheckNotNullRepeated](bugpattern/PreconditionsCheckNotNullRepeated)__<br>
-Including this argument in the failure message isn&#39;t helpful, since its value will always be `null`.
+Including the first argument of checkNotNull in the failure message is not useful, as it will always be `null`.
 
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
@@ -930,7 +939,7 @@ __[ExpectedExceptionChecker](bugpattern/ExpectedExceptionChecker)__<br>
 Calls to ExpectedException#expect should always be followed by exactly one statement.
 
 __[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
-Overloads will be ambiguous when passing lambda arguments
+Overloads will be ambiguous when passing lambda arguments.
 
 __[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
 Hardcoded reference to /sdcard

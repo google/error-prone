@@ -127,7 +127,8 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>public class <span class="typeNameLabel">Scanner</span>
+<pre><a href="../../../../com/google/errorprone/annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
+public class <span class="typeNameLabel">Scanner</span>
 extends com.sun.source.util.TreePathScanner&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a>,<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;</pre>
 <div class="block">TODO(eaftan): I'm worried about this performance of this code, specifically the part that handles
  SuppressWarnings. We should profile it and see where the hotspots are.</div>
@@ -185,10 +186,10 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="https://docs.oracle.com/
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>protected boolean</code></td>
+<td class="colFirst"><code>protected <a href="../../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/Scanner.html#isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.ErrorProneOptions-">isSuppressed</a></span>(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
             <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>
-<div class="block">Returns true if this checker should be suppressed on the current tree path.</div>
+<div class="block">Returns if this checker should be suppressed on the current tree path.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -305,12 +306,14 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="https://docs.oracle.com/
 <ul class="blockList">
 <li class="blockList">
 <h4>isSuppressed</h4>
-<pre>protected&nbsp;boolean&nbsp;isSuppressed(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
-                               <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
-<div class="block">Returns true if this checker should be suppressed on the current tree path.</div>
+<pre>protected&nbsp;<a href="../../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;isSuppressed(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
+                                                       <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
+<div class="block">Returns if this checker should be suppressed on the current tree path.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>suppressible</code> - holds information about the suppressibility of a checker</dd>
+<dd><code>errorProneOptions</code> - Options object configuring whether or not to suppress non-errors in
+     generated code.</dd>
 </dl>
 </li>
 </ul>

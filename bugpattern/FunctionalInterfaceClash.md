@@ -1,6 +1,6 @@
 ---
 title: FunctionalInterfaceClash
-summary: Overloads will be ambiguous when passing lambda arguments
+summary: Overloads will be ambiguous when passing lambda arguments.
 layout: bugpattern
 tags: ''
 severity: WARNING

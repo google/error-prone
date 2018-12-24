@@ -39,5 +39,9 @@ Prefer wrapping the original exception instead,
   }
 ```
 
+Suppress false positives with `@SuppressWarnings("UnusedException")` on the
+enclosing element. Consider also adding a comment to explain why the exception
+should not be propagated.
+
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnusedException")` to the enclosing element.
