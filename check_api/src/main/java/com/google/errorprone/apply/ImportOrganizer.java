@@ -89,6 +89,20 @@ public interface ImportOrganizer {
   ImportOrganizer ANDROID_STATIC_LAST_ORGANIZER =
       new AndroidImportOrganizer(StaticOrder.STATIC_LAST);
 
+  /**
+   * An {@link ImportOrganizer} that organizes imports based on the default format provided by IntelliJ IDEA.
+   *
+   * <p>This groups the imports into three groups, each delimited by a newline:
+   *
+   * <ol>
+   *   <li>Non-static, non-{@code java.*}, non-{@code javax.*} imports.
+   *   <li>{@code javax.*} and {@code java.*} imports, with {@code javax.*} imports ordered first.
+   *   <li>Static imports.
+   * </ol>
+   */
+  ImportOrganizer IDEA_ORGANIZER =
+      new IdeaImportOrganizer();
+
   /** Represents an import. */
   @AutoValue
   abstract class Import {
