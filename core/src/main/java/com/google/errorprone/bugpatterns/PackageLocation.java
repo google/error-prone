@@ -28,6 +28,8 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -54,7 +56,11 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
       return Description.NO_MATCH;
     }
 
-    String packageName = tree.getPackageName().toString();
+    PackageSymbol packageSymbol = ((JCCompilationUnit) state.getPath().getCompilationUnit()).packge;
+    if (packageSymbol == null) {
+      return Description.NO_MATCH;
+    }
+    String packageName = packageSymbol.fullname.toString();
     String actualFileName = ASTHelpers.getFileName(tree);
     if (actualFileName == null) {
       return Description.NO_MATCH;

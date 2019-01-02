@@ -125,7 +125,7 @@ public final class FormatStringAnnotationChecker extends BugChecker
               .setMessage(
                   "A parameter can only be annotated @FormatString in a method annotated "
                       + "@FormatMethod: "
-                      + param)
+                      + state.getSourceForNode(param))
               .build();
         }
         if (!isStringParam) {

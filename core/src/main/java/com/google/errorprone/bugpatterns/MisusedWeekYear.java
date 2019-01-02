@@ -36,7 +36,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree;
 
 /**
  * Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date. Otherwise
@@ -107,7 +106,7 @@ public class MisusedWeekYear extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return constructDescription(tree, tree.getArguments().get(0));
+    return constructDescription(tree, tree.getArguments().get(0), state);
   }
 
   /**
@@ -122,7 +121,7 @@ public class MisusedWeekYear extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return constructDescription(tree, tree.getArguments().get(0));
+    return constructDescription(tree, tree.getArguments().get(0), state);
   }
 
   /**
@@ -131,11 +130,12 @@ public class MisusedWeekYear extends BugChecker
    * May be {@link Description#NO_MATCH} if the pattern does not have a constant value, does not use
    * the week year format specifier, or is in proper week date format.
    */
-  private Description constructDescription(Tree tree, ExpressionTree patternArg) {
-    String pattern = (String) ASTHelpers.constValue((JCTree) patternArg);
+  private Description constructDescription(
+      Tree tree, ExpressionTree patternArg, VisitorState state) {
+    String pattern = (String) ASTHelpers.constValue(patternArg);
     if (pattern != null && pattern.contains("Y") && !pattern.contains("w")) {
       if (patternArg.getKind() == Kind.STRING_LITERAL) {
-        String replacement = patternArg.toString().replace('Y', 'y');
+        String replacement = state.getSourceForNode(patternArg).replace('Y', 'y');
         return describeMatch(tree, SuggestedFix.replace(patternArg, replacement));
       } else {
         return describeMatch(tree);

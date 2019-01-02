@@ -66,7 +66,7 @@ public final class JodaDurationConstructor extends BugChecker implements NewClas
         SuggestedFix.replace(
             ((JCTree) tree).getStartPosition(),
             ((JCTree) millisArg).getStartPosition(),
-            tree.getIdentifier() + ".millis(");
+            state.getSourceForNode(tree.getIdentifier()) + ".millis(");
     return describeMatch(tree, fix);
   }
 }

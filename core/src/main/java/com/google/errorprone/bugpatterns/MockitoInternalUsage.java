@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.matchers.Matchers.packageStartsWith;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -23,9 +25,10 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 
 /**
@@ -40,25 +43,17 @@ import com.sun.tools.javac.code.Symbol;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MockitoInternalUsage extends BugChecker implements MemberSelectTreeMatcher {
 
+  private static final Matcher<Tree> INSIDE_MOCKITO = packageStartsWith("org.mockito");
+
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
+    if (INSIDE_MOCKITO.matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
     Symbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol != null
-        && symbol.getQualifiedName().toString().startsWith("org.mockito.internal")
-        && !insideMockitoPackage(state)) {
+    if (symbol != null && symbol.getQualifiedName().toString().startsWith("org.mockito.internal")) {
       return describeMatch(tree);
     }
     return Description.NO_MATCH;
-  }
-
-  private static boolean insideMockitoPackage(VisitorState state) {
-    ExpressionTree packageName = state.getPath().getCompilationUnit().getPackageName();
-
-    // Classes in the default packages do not have a packageName
-    if (packageName == null) {
-      return false;
-    }
-
-    return packageName.toString().startsWith("org.mockito");
   }
 }

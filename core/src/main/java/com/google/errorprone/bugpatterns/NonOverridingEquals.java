@@ -162,7 +162,7 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
             "if (!("
                 + parameterName
                 + " instanceof "
-                + parameterType
+                + state.getSourceForNode(parameterType)
                 + ")) {\n"
                 + "  return false;\n"
                 + "}\n";
@@ -171,7 +171,8 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
         // Cast all uses of the parameter name using a recursive TreeScanner.
         new CastScanner()
             .scan(
-                methodTree.getBody(), new CastState(parameterName, parameterType.toString(), fix));
+                methodTree.getBody(),
+                new CastState(parameterName, state.getSourceForNode(parameterType), fix));
       }
 
       return describeMatch(methodTree, fix.build());

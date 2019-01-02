@@ -73,6 +73,7 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -229,15 +230,15 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
 
       Optional<Fix> assertThrowsFix =
           AssertThrowsUtils.tryFailToAssertThrows(tree, tryStatements, state);
-      Fix failFix = addFailCall(tree, lastTryStatement);
+      Fix failFix = addFailCall(tree, lastTryStatement, state);
       return buildDescription(lastTryStatement).addFix(assertThrowsFix).addFix(failFix).build();
     } else {
       return Description.NO_MATCH;
     }
   }
 
-  public static Fix addFailCall(TryTree tree, StatementTree lastTryStatement) {
-    String failCall = String.format("\nfail(\"Expected %s\");", exceptionToString(tree));
+  public static Fix addFailCall(TryTree tree, StatementTree lastTryStatement, VisitorState state) {
+    String failCall = String.format("\nfail(\"Expected %s\");", exceptionToString(tree, state));
     SuggestedFix.Builder fixBuilder =
         SuggestedFix.builder().postfixWith(lastTryStatement, failCall);
 
@@ -253,15 +254,16 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
    * Returns a string describing the exception type caught by the given try tree's catch
    * statement(s), defaulting to {@code "Exception"} if more than one exception type is caught.
    */
-  private static String exceptionToString(TryTree tree) {
+  private static String exceptionToString(TryTree tree, VisitorState state) {
     if (tree.getCatches().size() != 1) {
       return "Exception";
     }
-    String exceptionType = tree.getCatches().iterator().next().getParameter().getType().toString();
-    if (exceptionType.contains("|")) {
+    Tree exceptionType = tree.getCatches().iterator().next().getParameter().getType();
+    Type type = ASTHelpers.getType(exceptionType);
+    if (type != null && type.isUnion()) {
       return "Exception";
     }
-    return exceptionType;
+    return state.getSourceForNode(exceptionType);
   }
 
   private boolean tryTreeMatches(TryTree tree, VisitorState state) {

@@ -53,7 +53,7 @@ public class GetClassOnClass extends BugChecker implements MethodInvocationTreeM
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (getClassMethodMatcher.matches(tree, state)) {
-      String methodInvoker = ASTHelpers.getReceiver(tree).toString();
+      String methodInvoker = state.getSourceForNode(ASTHelpers.getReceiver(tree));
       Fix removeGetClass = SuggestedFix.replace(tree, methodInvoker);
       Fix changeToClassDotClass = SuggestedFix.replace(tree, "Class.class");
       return buildDescription(tree).addFix(removeGetClass).addFix(changeToClassDotClass).build();

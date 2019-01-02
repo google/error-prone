@@ -1002,7 +1002,10 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
       TargetType targetType = ASTHelpers.targetType(state);
       return buildDescription(tree)
           .setMessage(
-              "Target type of " + tree + " is " + (targetType != null ? targetType.type() : null))
+              "Target type of "
+                  + state.getSourceForNode(tree)
+                  + " is "
+                  + (targetType != null ? targetType.type() : null))
           .build();
     }
   }

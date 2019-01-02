@@ -95,6 +95,7 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
               .postfixWith(tree, ")")
               .build());
     }
-    throw new AssertionError("Unknown argument type to round call: " + tree);
+    throw new AssertionError(
+        "Unknown argument type to round call: " + state.getSourceForNode(tree));
   }
 }

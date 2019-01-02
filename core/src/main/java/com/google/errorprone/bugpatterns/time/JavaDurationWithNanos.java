@@ -70,7 +70,7 @@ public final class JavaDurationWithNanos extends BugChecker implements MethodInv
     String replacement =
         SuggestedFixes.qualifyType(state, builder, "java.time.Duration")
             + ".ofSeconds("
-            + receiver
+            + state.getSourceForNode(receiver)
             + ".getSeconds(), ";
 
     builder.replace(

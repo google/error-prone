@@ -83,7 +83,10 @@ public final class DurationGetTemporalUnit extends BugChecker
       if (invalidUnit.isPresent()) {
         if (SUGGESTIONS.containsKey(invalidUnit.get())) {
           SuggestedFix.Builder builder = SuggestedFix.builder();
-          builder.replace(tree, ASTHelpers.getReceiver(tree) + SUGGESTIONS.get(invalidUnit.get()));
+          builder.replace(
+              tree,
+              state.getSourceForNode(ASTHelpers.getReceiver(tree))
+                  + SUGGESTIONS.get(invalidUnit.get()));
           return describeMatch(tree, builder.build());
         }
         return describeMatch(tree);

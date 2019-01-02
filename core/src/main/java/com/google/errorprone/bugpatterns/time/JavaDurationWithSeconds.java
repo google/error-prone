@@ -66,9 +66,9 @@ public final class JavaDurationWithSeconds extends BugChecker
     String replacement =
         SuggestedFixes.qualifyType(state, builder, "java.time.Duration")
             + ".ofSeconds("
-            + secondsArg
+            + state.getSourceForNode(secondsArg)
             + ", "
-            + receiver
+            + state.getSourceForNode(receiver)
             + ".getNano())";
 
     builder.replace(tree, replacement);
