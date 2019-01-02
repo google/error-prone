@@ -87,7 +87,7 @@ public final class TimeUnitConversionChecker extends BugChecker
     ExpressionTree arg0 = tree.getArguments().get(0);
 
     // if we have a constant and can Long-parse it...
-    Long constant = Longs.tryParse(String.valueOf(arg0));
+    Long constant = Longs.tryParse(String.valueOf(state.getSourceForNode(arg0)));
     if (constant != null) {
       long converted = invokeConversion(receiver.get(), methodName, constant);
 
@@ -108,7 +108,7 @@ public final class TimeUnitConversionChecker extends BugChecker
 
     // if we're trying to convert the unit to itself, just return the arg
     if (receiver.get().equals(convertTo)) {
-      SuggestedFix fix = replaceTreeWith(tree, convertTo, arg0.toString());
+      SuggestedFix fix = replaceTreeWith(tree, convertTo, state.getSourceForNode(arg0));
       return describeMatch(tree, fix);
     }
     return Description.NO_MATCH;

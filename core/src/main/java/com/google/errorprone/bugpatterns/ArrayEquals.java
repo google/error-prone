@@ -62,11 +62,11 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
     String arg1;
     String arg2;
     if (instanceEqualsMatcher.matches(t, state)) {
-      arg1 = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
-      arg2 = t.getArguments().get(0).toString();
+      arg1 = state.getSourceForNode(((JCFieldAccess) t.getMethodSelect()).getExpression());
+      arg2 = state.getSourceForNode(t.getArguments().get(0));
     } else if (staticEqualsMatcher.matches(t, state)) {
-      arg1 = t.getArguments().get(0).toString();
-      arg2 = t.getArguments().get(1).toString();
+      arg1 = state.getSourceForNode(t.getArguments().get(0));
+      arg2 = state.getSourceForNode(t.getArguments().get(1));
     } else {
       return NO_MATCH;
     }

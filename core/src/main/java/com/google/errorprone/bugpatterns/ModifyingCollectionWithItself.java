@@ -162,7 +162,7 @@ public class ModifyingCollectionWithItself extends BugChecker
     if (parent instanceof ExpressionStatementTree) {
       Fix fix;
       if (instanceMethod().anyClass().named("removeAll").matches(methodInvocationTree, state)) {
-        fix = SuggestedFix.replace(methodInvocationTree, lhs + ".clear()");
+        fix = SuggestedFix.replace(methodInvocationTree, state.getSourceForNode(lhs) + ".clear()");
       } else {
         fix = SuggestedFix.delete(parent);
       }

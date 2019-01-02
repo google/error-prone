@@ -50,6 +50,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -189,10 +190,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
     ExpressionTree identifierExpr = ASTHelpers.getRootAssignable(methodInvocationTree);
-    String identifierStr = null;
     Type identifierType = null;
     if (identifierExpr != null) {
-      identifierStr = identifierExpr.toString();
       if (identifierExpr instanceof JCIdent) {
         identifierType = ((JCIdent) identifierExpr).sym.type;
       } else if (identifierExpr instanceof JCFieldAccess) {
@@ -206,12 +205,16 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         ASTHelpers.getReturnType(((JCMethodInvocation) methodInvocationTree).getMethodSelect());
 
     Fix fix;
-    if (identifierStr != null
-        && !"this".equals(identifierStr)
+    Symbol symbol = ASTHelpers.getSymbol(identifierExpr);
+    if (identifierExpr != null
+        && symbol != null
+        && !symbol.name.contentEquals("this")
         && returnType != null
         && state.getTypes().isAssignable(returnType, identifierType)) {
       // Fix by assigning the assigning the result of the call to the root receiver reference.
-      fix = SuggestedFix.prefixWith(methodInvocationTree, identifierStr + " = ");
+      fix =
+          SuggestedFix.prefixWith(
+              methodInvocationTree, state.getSourceForNode(identifierExpr) + " = ");
     } else {
       // Unclear what the programmer intended.  Delete since we don't know what else to do.
       Tree parent = state.getPath().getParentPath().getLeaf();

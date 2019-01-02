@@ -74,13 +74,14 @@ public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {
     return Description.NO_MATCH;
   }
 
-  private CharSequence toString(JCTree tree, VisitorState state) {
+  @SuppressWarnings("TreeToString")
+  private static CharSequence toString(JCTree tree, VisitorState state) {
     CharSequence source = state.getSourceForNode(tree);
     return (source == null) ? tree.toString() : source;
   }
 
   @Nullable
-  private String matchNaN(ExpressionTree tree) {
+  private static String matchNaN(ExpressionTree tree) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym != null
         && sym.owner != null

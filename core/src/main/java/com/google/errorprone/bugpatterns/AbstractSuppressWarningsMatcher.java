@@ -20,6 +20,7 @@ import com.google.common.base.Joiner;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
@@ -44,7 +45,9 @@ abstract class AbstractSuppressWarningsMatcher extends BugChecker implements Ann
     List<String> values = new ArrayList<>();
     for (ExpressionTree argumentTree : annotationTree.getArguments()) {
       AssignmentTree assignmentTree = (AssignmentTree) argumentTree;
-      if (assignmentTree.getVariable().toString().equals("value")) {
+      if (ASTHelpers.getSymbol(assignmentTree.getVariable())
+          .getSimpleName()
+          .contentEquals("value")) {
         ExpressionTree expressionTree = assignmentTree.getExpression();
         switch (expressionTree.getKind()) {
           case STRING_LITERAL:

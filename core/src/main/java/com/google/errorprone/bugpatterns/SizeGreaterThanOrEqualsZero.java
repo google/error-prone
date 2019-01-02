@@ -246,7 +246,9 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     String expSrc = state.getSourceForNode(protoGetSize);
     java.util.regex.Matcher protoGetCountMatcher = PROTO_COUNT_METHOD_PATTERN.matcher(expSrc);
     if (!protoGetCountMatcher.find()) {
-      throw new AssertionError(protoGetSize + " does not contain a get<RepeatedField>Count method");
+      throw new AssertionError(
+          state.getSourceForNode(protoGetSize)
+              + " does not contain a get<RepeatedField>Count method");
     }
     return describeMatch(
         tree,

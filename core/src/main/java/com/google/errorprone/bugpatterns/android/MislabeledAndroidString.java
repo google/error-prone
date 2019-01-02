@@ -92,7 +92,9 @@ public class MislabeledAndroidString extends BugChecker implements MemberSelectT
                 R_STRING_CLASSNAME,
                 preferred))
         // Keep the way tree refers to android.R.string as it is but replace the identifier
-        .addFix(SuggestedFix.replace(tree, tree.getExpression() + "." + preferred))
+        .addFix(
+            SuggestedFix.replace(
+                tree, state.getSourceForNode(tree.getExpression()) + "." + preferred))
         .build();
   }
 }

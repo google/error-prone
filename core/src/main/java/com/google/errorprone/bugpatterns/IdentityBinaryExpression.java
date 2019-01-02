@@ -53,6 +53,7 @@ public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMa
           staticMethod().anyClass().namedAnyOf("assertTrue", "assertFalse", "assertThat"));
 
   @Override
+  @SuppressWarnings("TreeToString")
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     if (constValue(tree.getLeftOperand()) != null) {
       switch (tree.getKind()) {
@@ -105,6 +106,7 @@ public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMa
       default:
         return NO_MATCH;
     }
+    // toString rather than getSourceForNode is intentional.
     if (!tree.getLeftOperand().toString().equals(tree.getRightOperand().toString())) {
       return NO_MATCH;
     }

@@ -95,7 +95,7 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
       // to use Arrays.hashCode/deepHashCode instead.
       fix =
           SuggestedFix.builder()
-              .replace(tree, rewriteArrayArgument(tree.getArguments().get(0), types));
+              .replace(tree, rewriteArrayArgument(tree.getArguments().get(0), state));
     } else if (instanceHashCodeMethodMatcher.matches(tree, state)) {
       // Rewrite call to instance hashCode method to use Arrays.hashCode/deepHashCode instead.
       fix =
@@ -103,7 +103,7 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
               .replace(
                   tree,
                   rewriteArrayArgument(
-                      ((JCFieldAccess) tree.getMethodSelect()).getExpression(), types));
+                      ((JCFieldAccess) tree.getMethodSelect()).getExpression(), state));
     } else if (varargsHashCodeMethodMatcher.matches(tree, state)) {
       // Varargs hash code methods, java.util.Objects#hash and
       // com.google.common.base.Objects#hashCode
@@ -114,14 +114,14 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
         ExpressionTree arg = tree.getArguments().get(0);
         Type elemType = types.elemtype(ASTHelpers.getType(arg));
         if (elemType.isPrimitive() || types.isArray(elemType)) {
-          fix = SuggestedFix.builder().replace(tree, rewriteArrayArgument(arg, types));
+          fix = SuggestedFix.builder().replace(tree, rewriteArrayArgument(arg, state));
         }
       } else {
         // If more than one argument, wrap each argument in a call to Arrays#hashCode/deepHashCode.
         fix = SuggestedFix.builder();
         for (ExpressionTree arg : tree.getArguments()) {
           if (types.isArray(ASTHelpers.getType(arg))) {
-            fix.replace(arg, rewriteArrayArgument(arg, types));
+            fix.replace(arg, rewriteArrayArgument(arg, state));
           }
         }
       }
@@ -140,13 +140,14 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
    * it in a call to either {@link java.util.Arrays#hashCode} if it is single dimensional, or {@link
    * java.util.Arrays#deepHashCode} if it is multidimensional.
    */
-  private static String rewriteArrayArgument(ExpressionTree arg, Types types) {
+  private static String rewriteArrayArgument(ExpressionTree arg, VisitorState state) {
+    Types types = state.getTypes();
     Type argType = ASTHelpers.getType(arg);
     Preconditions.checkState(types.isArray(argType), "arg must be of array type");
     if (types.isArray(types.elemtype(argType))) {
-      return "Arrays.deepHashCode(" + arg + ")";
+      return "Arrays.deepHashCode(" + state.getSourceForNode(arg) + ")";
     } else {
-      return "Arrays.hashCode(" + arg + ")";
+      return "Arrays.hashCode(" + state.getSourceForNode(arg) + ")";
     }
   }
 }

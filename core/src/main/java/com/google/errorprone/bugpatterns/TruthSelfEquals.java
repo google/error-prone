@@ -110,7 +110,7 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
           .setMessage(
               generateSummary(
                   ASTHelpers.getSymbol(methodInvocationTree).getSimpleName().toString(), "passes"))
-          .addFix(suggestEqualsTesterFix(methodInvocationTree, toReplace));
+          .addFix(suggestEqualsTesterFix(methodInvocationTree, toReplace, state));
     } else if (NOT_EQUALS_MATCHER.matches(methodInvocationTree, state)) {
       description.setMessage(
           generateSummary(
@@ -156,9 +156,11 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
   }
 
   private static Fix suggestEqualsTesterFix(
-      MethodInvocationTree methodInvocationTree, ExpressionTree toReplace) {
+      MethodInvocationTree methodInvocationTree, ExpressionTree toReplace, VisitorState state) {
     String equalsTesterSuggest =
-        "new EqualsTester().addEqualityGroup(" + toReplace + ").testEquals()";
+        "new EqualsTester().addEqualityGroup("
+            + state.getSourceForNode(toReplace)
+            + ").testEquals()";
     return SuggestedFix.builder()
         .replace(methodInvocationTree, equalsTesterSuggest)
         .addImport("com.google.common.testing.EqualsTester")

@@ -144,9 +144,19 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
     ExpressionTree rhs = subtract.getRightOperand();
     Fix fix;
     if (ASTHelpers.getType(lhs).isPrimitive()) {
-      fix = SuggestedFix.replace(tree, "Long.compare(" + lhs + ", " + rhs + ")");
+      fix =
+          SuggestedFix.replace(
+              tree,
+              "Long.compare("
+                  + state.getSourceForNode(lhs)
+                  + ", "
+                  + state.getSourceForNode(rhs)
+                  + ")");
     } else {
-      fix = SuggestedFix.replace(tree, lhs + ".compareTo(" + rhs + ")");
+      fix =
+          SuggestedFix.replace(
+              tree,
+              state.getSourceForNode(lhs) + ".compareTo(" + state.getSourceForNode(rhs) + ")");
     }
     return describeMatch(tree, fix);
   }

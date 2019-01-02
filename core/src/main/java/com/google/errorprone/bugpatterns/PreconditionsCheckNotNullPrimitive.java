@@ -106,7 +106,8 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
 
     // Assignment, return, etc.
     if (parent.getKind() != Kind.EXPRESSION_STATEMENT) {
-      return describeMatch(arg1, SuggestedFix.replace(methodInvocationTree, arg1.toString()));
+      return describeMatch(
+          arg1, SuggestedFix.replace(methodInvocationTree, state.getSourceForNode(arg1)));
     }
 
     // Comparison to null
@@ -114,11 +115,11 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
       BinaryTree binaryExpr = (BinaryTree) arg1;
       if (binaryExpr.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
         return describeMatch(
-            arg1, SuggestedFix.replace(arg1, binaryExpr.getRightOperand().toString()));
+            arg1, SuggestedFix.replace(arg1, state.getSourceForNode(binaryExpr.getRightOperand())));
       }
       if (binaryExpr.getRightOperand().getKind() == Kind.NULL_LITERAL) {
         return describeMatch(
-            arg1, SuggestedFix.replace(arg1, binaryExpr.getLeftOperand().toString()));
+            arg1, SuggestedFix.replace(arg1, state.getSourceForNode(binaryExpr.getLeftOperand())));
       }
     }
 
