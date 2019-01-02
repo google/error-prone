@@ -21,11 +21,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link TreeToStringChecker}. */
+/** Unit tests for {@link TreeToString}. */
 @RunWith(JUnit4.class)
-public class TreeToStringCheckerTest {
+public class TreeToStringTest {
   private final CompilationTestHelper testHelper =
-      CompilationTestHelper.newInstance(TreeToStringChecker.class, getClass());
+      CompilationTestHelper.newInstance(TreeToString.class, getClass());
 
   @Test
   public void noMatch() {
@@ -70,7 +70,7 @@ public class TreeToStringCheckerTest {
             "@BugPattern(name = \"Example\", summary = \"\", severity = SeverityLevel.ERROR)",
             "public class ExampleChecker extends BugChecker implements ClassTreeMatcher {",
             "  @Override public Description matchClass(ClassTree tree, VisitorState state) {",
-            "    // BUG: Diagnostic contains: TreeToString",
+            "    // BUG: Diagnostic contains: state.getSourceForNode(tree).contains",
             "    if (tree.toString().contains(\"match\")) {",
             "      return describeMatch(tree);",
             "    }",
