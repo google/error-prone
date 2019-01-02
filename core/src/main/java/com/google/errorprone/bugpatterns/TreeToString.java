@@ -18,32 +18,39 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 
 /**
- * Flags com.sun.source.tree.Tree#toString usage in {@link BugChecker}s.
+ * Flags {@code com.sun.source.tree.Tree#toString} usage in {@link BugChecker}s.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
     name = "TreeToString",
-    summary = "Tree.toString shouldn't be used",
+    summary =
+        "Tree#toString shouldn't be used for Trees deriving from the code being "
+            + "compiled, as it discards whitespace and comments.",
     severity = WARNING,
     providesFix = NO_FIX)
-public class TreeToStringChecker extends AbstractToString {
+public class TreeToString extends AbstractToString {
 
   private static final Matcher<ClassTree> IS_BUGCHECKER =
       Matchers.isSubtypeOf("com.google.errorprone.bugpatterns.BugChecker");
@@ -61,7 +68,7 @@ public class TreeToStringChecker extends AbstractToString {
 
   @Override
   protected TypePredicate typePredicate() {
-    return TreeToStringChecker::treeToStringInBugChecker;
+    return TreeToString::treeToStringInBugChecker;
   }
 
   @Override
@@ -71,11 +78,36 @@ public class TreeToStringChecker extends AbstractToString {
 
   @Override
   protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
-    return Optional.absent();
+    return fix(tree, tree, state);
   }
 
   @Override
   protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
-    return Optional.absent();
+    if (!(parent instanceof MethodInvocationTree)) {
+      return Optional.absent();
+    }
+    ExpressionTree receiver = getReceiver((ExpressionTree) parent);
+    if (receiver == null) {
+      return Optional.absent();
+    }
+    return fix(receiver, parent, state);
+  }
+
+  private static Optional<Fix> fix(Tree target, Tree replace, VisitorState state) {
+    return Optional.fromJavaUtil(
+        FindIdentifiers.findAllIdents(state).stream()
+            .filter(
+                s ->
+                    isSubtype(
+                        s.type,
+                        state.getTypeFromString("com.google.errorprone.VisitorState"),
+                        state))
+            .findFirst()
+            .map(
+                s ->
+                    SuggestedFix.replace(
+                        replace,
+                        String.format(
+                            "%s.getSourceForNode(%s)", s, state.getSourceForNode(target)))));
   }
 }
