@@ -637,6 +637,9 @@ Not calling fail() when expecting an exception masks bugs
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
 
+__[MixedDescriptors](bugpattern/MixedDescriptors)__<br>
+The field number passed into #getFieldByNumber belongs to a different proto to the Descriptor.
+
 __[MockitoInternalUsage](bugpattern/MockitoInternalUsage)__<br>
 org.mockito.internal.* is a private API and should not be used by clients
 
@@ -767,7 +770,7 @@ __[ToStringReturnsNull](bugpattern/ToStringReturnsNull)__<br>
 An implementation of Object.toString() should never return null.
 
 __[TreeToString](bugpattern/TreeToString)__<br>
-Tree.toString shouldn&#39;t be used
+Tree#toString shouldn&#39;t be used for Trees deriving from the code being compiled, as it discards whitespace and comments.
 
 __[TruthAssertExpected](bugpattern/TruthAssertExpected)__<br>
 The actual and expected values appear to be swapped, which results in poor assertion failure messages. The actual value should come first.

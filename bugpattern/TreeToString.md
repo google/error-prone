@@ -1,6 +1,6 @@
 ---
 title: TreeToString
-summary: Tree.toString shouldn't be used
+summary: Tree#toString shouldn't be used for Trees deriving from the code being compiled, as it discards whitespace and comments.
 layout: bugpattern
 tags: ''
 severity: WARNING
