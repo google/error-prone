@@ -119,6 +119,10 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
               returning("com.google.common.collect.RangeMap"),
               returning("com.google.common.collect.ImmutableRangeMap.Builder"))
           .putAll(
+              "ImmutableRangeSet",
+              returning("com.google.common.collect.RangeSet"),
+              returning("com.google.common.collect.ImmutableRangeSet.Builder"))
+          .putAll(
               "ImmutablePrefixTrie",
               returning("com.google.common.collect.PrefixTrie"),
               returning("com.google.common.collect.ImmutablePrefixTrie.Builder"))
