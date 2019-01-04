@@ -341,6 +341,7 @@ import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
+import com.google.errorprone.bugpatterns.javadoc.EscapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.InheritDoc;
 import com.google.errorprone.bugpatterns.javadoc.InvalidParam;
 import com.google.errorprone.bugpatterns.javadoc.InvalidTag;
@@ -735,6 +736,7 @@ public class BuiltInCheckerSuppliers {
           EmptySetMultibindingContributions.class,
           EmptyTopLevelDeclaration.class,
           EqualsBrokenForNull.class,
+          EscapedEntity.class,
           ExpectedExceptionChecker.class,
           ExpectedExceptionRefactoring.class,
           FieldCanBeFinal.class,
