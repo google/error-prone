@@ -30,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
 
 /**
  * Applier of diffs to Java source code
@@ -132,7 +131,6 @@ public class DiffApplier extends AbstractService {
     }
   }
 
-  @Nullable
   public Future<?> put(Diff diff) {
     if (refactoredPaths.add(diff.getRelevantFileName())) {
       runState.incrementAndGet();

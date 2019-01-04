@@ -121,9 +121,9 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
     return flags;
   }
 
-  /** Returns the name of the first check, or {@code ""}. */
+  /** Returns the name of the first check, or {@code null}. */
   @Override
   public String toString() {
-    return getFirst(getAllChecks().keySet(), "");
+    return getFirst(getAllChecks().keySet(), null);
   }
 }

@@ -329,7 +329,6 @@ public class VisitorState {
    * @param typeStr the JLS 13.1 binary name of the class, e.g. {@code "java.util.Map$Entry"}
    * @return the {@link Type}, or null if it cannot be found
    */
-  @Nullable
   public Type getTypeFromString(String typeStr) {
     try {
       return typeCache.get(typeStr).orNull();
@@ -338,7 +337,6 @@ public class VisitorState {
     }
   }
 
-  @Nullable
   private Type getTypeFromStringInternal(String typeStr) {
     validateTypeStr(typeStr);
     Type primitiveOrVoidType = getPrimitiveOrVoidType(typeStr);
@@ -358,7 +356,6 @@ public class VisitorState {
    * @return the Symbol object, or null if it cannot be found
    */
   // TODO(cushon): deal with binary compat issues and return ClassSymbol
-  @Nullable
   public Symbol getSymbolFromString(String symStr) {
     symStr = inferBinaryName(symStr);
     Name name = getName(symStr);
@@ -379,7 +376,6 @@ public class VisitorState {
     return null;
   }
 
-  @Nullable
   public ClassSymbol getSymbolFromString(ModuleSymbol msym, Name name) {
     ClassSymbol result = getSymtab().getClass(msym, name);
     if (result == null || result.kind == Kind.ERR || !result.exists()) {
@@ -451,7 +447,6 @@ public class VisitorState {
    *
    * @return the path, or {@code null} if there is no match
    */
-  @Nullable
   @SafeVarargs
   public final TreePath findPathToEnclosing(Class<? extends Tree>... classes) {
     TreePath enclosingPath = getPath();
@@ -471,7 +466,6 @@ public class VisitorState {
    *
    * @return the node, or {@code null} if there is no match
    */
-  @Nullable
   @SuppressWarnings("unchecked") // findPathToEnclosing guarantees that the type is from |classes|
   @SafeVarargs
   public final <T extends Tree> T findEnclosing(Class<? extends T>... classes) {
@@ -484,7 +478,6 @@ public class VisitorState {
    *
    * @return the source file as a sequence of characters, or null if it is not available
    */
-  @Nullable
   public CharSequence getSourceCode() {
     try {
       return getPath().getCompilationUnit().getSourceFile().getCharContent(false);
@@ -502,7 +495,6 @@ public class VisitorState {
    *
    * @return the source code that represents the node.
    */
-  @Nullable
   public String getSourceForNode(Tree tree) {
     JCTree node = (JCTree) tree;
     int start = node.getStartPosition();

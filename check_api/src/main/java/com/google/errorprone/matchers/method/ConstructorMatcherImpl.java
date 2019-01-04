@@ -28,7 +28,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import javax.annotation.Nullable;
 
 /** Matches constructors, allows refinement on class type. */
 public class ConstructorMatcherImpl extends AbstractSimpleMatcher<MatchState>
@@ -43,7 +42,6 @@ public class ConstructorMatcherImpl extends AbstractSimpleMatcher<MatchState>
     return Optional.of(MatchState.create(sym.owner.type, sym));
   }
 
-  @Nullable
   private static MethodSymbol getConstructor(ExpressionTree tree) {
     switch (tree.getKind()) {
       case NEW_CLASS:

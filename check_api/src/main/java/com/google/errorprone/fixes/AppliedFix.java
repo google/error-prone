@@ -24,7 +24,6 @@ import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.Nullable;
 
 /**
  * Represents the corrected source which we think was intended, by applying a Fix. This is used to
@@ -62,7 +61,6 @@ public class AppliedFix {
      * Applies the suggestedFix to the source. Returns null if applying the fix results in no change
      * to the source, or a change only to imports.
      */
-    @Nullable
     public AppliedFix apply(Fix suggestedFix) {
       StringBuilder replaced = new StringBuilder(source);
 
