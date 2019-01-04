@@ -25,7 +25,6 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
-import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 import static org.checkerframework.javacutil.TreeUtils.enclosingOfClass;
 
@@ -88,14 +87,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
 import org.checkerframework.dataflow.analysis.Analysis;
 import org.checkerframework.dataflow.cfg.CFGBuilder;
 import org.checkerframework.dataflow.cfg.ControlFlowGraph;
@@ -766,7 +758,10 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     Optional<Nullness> declaredNullness = Nullness.fromAnnotationsOn(accessed.symbol);
     return declaredNullness.orElseGet(
         () ->
-            Nullness.fromAnnotations(inheritedAnnotations(accessed.symbol.type))
+            Nullness.fromAnnotations(
+                    MoreAnnotations.inheritedAnnotations(accessed.symbol.type).stream()
+                        .map(Object::toString)
+                        .collect(ImmutableList.toImmutableList()))
                 .orElse(defaultAssumption));
   }
 
@@ -788,54 +783,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       // We only care about inference results for methods that return a type variable.
       return assumedNullness;
     }
-
-    // Look for applicable annotations inherited from elsewhere.
-    // TODO(b/121398981): Treat type parameter bounds correctly
-    Nullness lowerBound =
-        Nullness.fromAnnotations(inheritedAnnotations(node.getTarget().getMethod().getReturnType()))
-            .orElse(NULLABLE);
-
     // Method has a generic result, so ask inference to infer a qualifier for that type parameter
-    return getInferredNullness(node).orElse(assumedNullness).greatestLowerBound(lowerBound);
-  }
-
-  /**
-   * Gathers all type annotations that are applicable to this TypeMirror and its bounds but are not
-   * applied syntactically to its declaration. This includes:
-   *
-   * <ul>
-   *   <li>annotations on type parameters at type use, e.g. {@code List<@Nullable String> xs = ...}
-   *   <li>annotations on generic type declarations, e.g. {@code class MyClass<@Nullable T> {...} }
-   *   <li>bounds on the above, e.g. {@code class MyClass<T extends @Nullable MyOtherClass> {...} }
-   * </ul>
-   */
-  private static ImmutableList<String> inheritedAnnotations(TypeMirror type) {
-    ImmutableSet.Builder<AnnotationMirror> inheritedAnnotations = ImmutableSet.builder();
-
-    // Annotations on type parameters at use-site
-    inheritedAnnotations.addAll(type.getAnnotationMirrors());
-
-    if (type.getKind() == TypeKind.TYPEVAR) {
-      TypeVariable typeVar = (TypeVariable) type;
-      // Annotations on bounds at type variable declaration
-      inheritedAnnotations.addAll(typeVar.getUpperBound().getAnnotationMirrors());
-      if (typeVar.asElement().getKind() == TYPE_PARAMETER) {
-        Element genericElt = ((TypeParameterElement) typeVar.asElement()).getGenericElement();
-        if (genericElt.getKind().isClass() || genericElt.getKind().isInterface()) {
-          ((TypeElement) genericElt)
-              .getTypeParameters().stream()
-                  .filter(
-                      typeParam ->
-                          typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
-                  .findFirst()
-                  // Annotations at class/interface type variable declaration
-                  .ifPresent(decl -> inheritedAnnotations.addAll(decl.getAnnotationMirrors()));
-        }
-      }
-    }
-    return inheritedAnnotations.build().stream()
-        .map(Object::toString)
-        .collect(ImmutableList.toImmutableList());
+    return getInferredNullness(node).orElse(assumedNullness);
   }
 
   @Nullable
