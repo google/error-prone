@@ -27,6 +27,7 @@ import com.google.common.collect.Streams;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
@@ -58,6 +59,7 @@ import com.sun.tools.javac.tree.TreeInfo;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Eagerly traverse one {@code MethodTree} at a time and accumulate constraints between nullness
@@ -143,6 +145,33 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
             });
   }
 
+  private void generateConstraintsFromAnnotations(
+      MethodSymbol symbol, JCMethodInvocation sourceTree, ArrayDeque<Integer> argSelector) {
+    List<Type> typeArguments = sourceTree.type.getTypeArguments();
+    int numberOfTypeArgs = typeArguments.size();
+    for (int i = 0; i < numberOfTypeArgs; i++) {
+      argSelector.push(i);
+      generateConstraintsFromAnnotations(typeArguments.get(i), sourceTree, argSelector);
+      argSelector.pop();
+    }
+
+    // First check if the given symbol is directly annotated; if not, look for implicit annotations
+    // on the inferred type of the expression.  The latter for instance propagates a type parameter
+    // T instantiated as <@Nullable X> to the result of a method returning T.
+    Optional<InferenceVariable> fromAnnotations =
+        Nullness.fromAnnotationsOn(symbol).map(ProperInferenceVar::create);
+    if (!fromAnnotations.isPresent()) {
+      fromAnnotations = ProperInferenceVar.fromTypeIfAnnotated(sourceTree.type);
+    }
+    fromAnnotations.ifPresent(
+        annot -> {
+          qualifierConstraints.putEdge(
+              TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree), annot);
+          qualifierConstraints.putEdge(
+              annot, TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree));
+        });
+  }
+
   @Override
   public Void visitAssignment(AssignmentTree node, Void unused) {
     Type lhsType =
@@ -206,19 +235,21 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
                 .map(var -> var.type)
                 .collect(ImmutableList.toImmutableList());
 
-    // generate constraints for each argument write.
+    // Generate constraints for each argument write.
     Streams.forEachPair(
         formalParameters.stream(),
         sourceNode.getArguments().stream(),
         (formal, actual) -> {
           // formal parameter type
+          // TODO(b/116977632): constraints for actual parameter type (i.e. after type variable
+          // substitution) without ignoring annotations directly on the parameter or vararg
           generateConstraintsFromAnnotations(formal, actual, new ArrayDeque<>());
-          // actual parameter type (i.e. after type variable substitution)
-          // TODO(b/116977632): fix to generate constraints for the instantiation of type parameters
-          generateConstraintsFromAnnotations(actual.type, actual, new ArrayDeque<>());
         });
 
-    // if return type is parameterized by a generic type on receiver, collate references to that
+    // Generate constraints for method return
+    generateConstraintsFromAnnotations(callee, sourceNode, new ArrayDeque<>());
+
+    // If return type is parameterized by a generic type on receiver, collate references to that
     // generic between the receiver and the result/argument types.
     if (node.getMethodSelect() instanceof JCFieldAccess) {
       JCFieldAccess fieldAccess = ((JCFieldAccess) node.getMethodSelect());
