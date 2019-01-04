@@ -82,6 +82,7 @@ public final class FindIdentifiers {
   }
 
   /** Finds a declaration with the given name and type that is in scope at the current location. */
+  @Nullable
   public static Symbol findIdent(String name, VisitorState state, KindSelector kind) {
     ClassType enclosingClass = ASTHelpers.getType(state.findEnclosing(ClassTree.class));
     if (enclosingClass == null || enclosingClass.tsym == null) {
