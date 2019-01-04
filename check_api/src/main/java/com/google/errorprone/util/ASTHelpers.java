@@ -182,7 +182,6 @@ public class ASTHelpers {
    * Gets the symbol declared by a tree. Returns null if {@code tree} does not declare a symbol or
    * is null.
    */
-  @Nullable
   public static Symbol getDeclaredSymbol(Tree tree) {
     if (tree instanceof AnnotationTree) {
       return getSymbol(((AnnotationTree) tree).getAnnotationType());
@@ -257,7 +256,6 @@ public class ASTHelpers {
   }
 
   /** Gets the method symbol for a new class. */
-  @Nullable
   public static MethodSymbol getSymbol(NewClassTree tree) {
     Symbol sym = ((JCNewClass) tree).constructor;
     return sym instanceof MethodSymbol ? (MethodSymbol) sym : null;
@@ -269,7 +267,6 @@ public class ASTHelpers {
   }
 
   /** Gets the symbol for a method invocation. */
-  @Nullable
   public static MethodSymbol getSymbol(MethodInvocationTree tree) {
     Symbol sym = ASTHelpers.getSymbol(tree.getMethodSelect());
     if (!(sym instanceof MethodSymbol)) {
@@ -280,7 +277,6 @@ public class ASTHelpers {
   }
 
   /** Gets the symbol for a member reference. */
-  @Nullable
   public static MethodSymbol getSymbol(MemberReferenceTree tree) {
     Symbol sym = ((JCMemberReference) tree).sym;
     return sym instanceof MethodSymbol ? (MethodSymbol) sym : null;
@@ -369,7 +365,6 @@ public class ASTHelpers {
    * java.lang.String.format() ==> null
    * }</pre>
    */
-  @Nullable
   public static ExpressionTree getRootAssignable(MethodInvocationTree methodInvocationTree) {
     if (!(methodInvocationTree instanceof JCMethodInvocation)) {
       throw new IllegalArgumentException(
@@ -429,7 +424,6 @@ public class ASTHelpers {
    * @param expressionTree the tree to evaluate
    * @return the result type of this tree or null if unable to resolve it
    */
-  @Nullable
   public static Type getResultType(ExpressionTree expressionTree) {
     Type type = ASTHelpers.getType(expressionTree);
     return type == null ? null : Optional.ofNullable(type.getReturnType()).orElse(type);
@@ -514,7 +508,6 @@ public class ASTHelpers {
    * @param state the VisitorState
    * @return a list of matched operands, or null if at least one did not match
    */
-  @Nullable
   public static List<ExpressionTree> matchBinaryTree(
       BinaryTree tree, List<Matcher<ExpressionTree>> matchers, VisitorState state) {
     ExpressionTree leftOperand = tree.getLeftOperand();
@@ -763,7 +756,6 @@ public class ASTHelpers {
    *     runtime exception. Instead, operate on {@code sym.getAnnotationMirrors()} to
    *     meta-syntactically inspect the annotation.
    */
-  @Nullable
   @Deprecated
   public static <T extends Annotation> T getAnnotation(Tree tree, Class<T> annotationClass) {
     Symbol sym = getSymbol(tree);
@@ -778,7 +770,6 @@ public class ASTHelpers {
    *     runtime exception. Instead, operate on {@code sym.getAnnotationMirrors()} to
    *     meta-syntactically inspect the annotation.
    */
-  @Nullable
   @Deprecated
   @SuppressWarnings("deprecation")
   public static <T extends Annotation> T getAnnotation(Symbol sym, Class<T> annotationClass) {
@@ -849,7 +840,6 @@ public class ASTHelpers {
     return type instanceof ClassType ? (ClassType) type : null;
   }
 
-  @Nullable
   public static String getAnnotationName(AnnotationTree tree) {
     Symbol sym = getSymbol(tree);
     return sym == null ? null : sym.name.toString();
@@ -1018,7 +1008,6 @@ public class ASTHelpers {
   }
 
   /** Returns an {@link AnnotationTree} with the given simple name, or {@code null}. */
-  @Nullable
   public static AnnotationTree getAnnotationWithSimpleName(
       List<? extends AnnotationTree> annotations, String name) {
     for (AnnotationTree annotation : annotations) {
@@ -1313,7 +1302,6 @@ public class ASTHelpers {
       this.parent = parent;
     }
 
-    @Nullable
     @Override
     public Type visitArrayAccess(ArrayAccessTree node, Void aVoid) {
       if (current.equals(node.getIndex())) {
@@ -1323,13 +1311,11 @@ public class ASTHelpers {
       }
     }
 
-    @Nullable
     @Override
     public Type visitAssignment(AssignmentTree tree, Void unused) {
       return getType(tree.getVariable());
     }
 
-    @Nullable
     @Override
     public Type visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
       Type variableType = getType(tree.getVariable());
@@ -1374,7 +1360,6 @@ public class ASTHelpers {
       return visit(node.getExpression(), unused);
     }
 
-    @Nullable
     @Override
     public Type visitReturn(ReturnTree tree, Void unused) {
       for (TreePath path = parent; path != null; path = path.getParentPath()) {
@@ -1390,19 +1375,16 @@ public class ASTHelpers {
       throw new AssertionError("return not enclosed by method or lambda");
     }
 
-    @Nullable
     @Override
     public Type visitVariable(VariableTree tree, Void unused) {
       return getType(tree.getType());
     }
 
-    @Nullable
     @Override
     public Type visitUnary(UnaryTree tree, Void unused) {
       return getType(tree);
     }
 
-    @Nullable
     @Override
     public Type visitBinary(BinaryTree tree, Void unused) {
       Type leftType = checkNotNull(getType(tree.getLeftOperand()));
@@ -1448,7 +1430,6 @@ public class ASTHelpers {
       }
     }
 
-    @Nullable
     private Type handleEqualityOperator(BinaryTree tree, Type leftType, Type rightType) {
       Type unboxedLeft = checkNotNull(state.getTypes().unboxedTypeOrType(leftType));
       Type unboxedRight = checkNotNull(state.getTypes().unboxedTypeOrType(rightType));
@@ -1484,7 +1465,6 @@ public class ASTHelpers {
       return type.getTag() == TypeTag.BOOLEAN;
     }
 
-    @Nullable
     @Override
     public Type visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
       return tree.getCondition().equals(current) ? state.getSymtab().booleanType : getType(tree);
@@ -1502,7 +1482,6 @@ public class ASTHelpers {
           tree.getArguments(), ASTHelpers.getSymbol(tree), ((JCMethodInvocation) tree).meth.type);
     }
 
-    @Nullable
     private Type visitMethodInvocationOrNewClass(
         List<? extends ExpressionTree> arguments, MethodSymbol sym, Type type) {
       int idx = arguments.indexOf(current);
@@ -1549,7 +1528,6 @@ public class ASTHelpers {
       return getConditionType(tree.getCondition());
     }
 
-    @Nullable
     @Override
     public Type visitSwitch(SwitchTree node, Void unused) {
       if (current == node.getExpression()) {
@@ -1559,7 +1537,6 @@ public class ASTHelpers {
       }
     }
 
-    @Nullable
     @Override
     public Type visitNewArray(NewArrayTree node, Void aVoid) {
       if (node.getDimensions().contains(current)) {
@@ -1571,7 +1548,6 @@ public class ASTHelpers {
       return null;
     }
 
-    @Nullable
     @Override
     public Type visitMemberSelect(MemberSelectTree node, Void aVoid) {
       if (current.equals(node.getExpression())) {
@@ -1585,7 +1561,6 @@ public class ASTHelpers {
       return state.getTypes().findDescriptorType(getType(node)).getReturnType();
     }
 
-    @Nullable
     private Type getConditionType(Tree condition) {
       if (condition != null && condition.equals(current)) {
         return state.getSymtab().booleanType;
