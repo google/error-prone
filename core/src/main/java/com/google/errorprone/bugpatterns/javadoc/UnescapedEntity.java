@@ -53,6 +53,7 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
+import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
@@ -217,7 +218,10 @@ public final class UnescapedEntity extends BugChecker
     }
 
     private void excludeFromCodeFixes(DocTree tree) {
-      dontEmitCodeFix.add(Range.closed(getStartPosition(tree, state), getEndPosition(tree, state)));
+      int endPos = getEndPosition(tree, state);
+      if (endPos != Position.NOPOS) {
+        dontEmitCodeFix.add(Range.closed(getStartPosition(tree, state), endPos));
+      }
     }
   }
 
