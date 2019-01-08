@@ -281,6 +281,7 @@ import com.google.errorprone.bugpatterns.Unused;
 import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
 import com.google.errorprone.bugpatterns.UnusedCollectionModifiedInPlace;
 import com.google.errorprone.bugpatterns.UnusedException;
+import com.google.errorprone.bugpatterns.UnusedNestedClass;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.VarTypeName;
@@ -704,6 +705,8 @@ public class BuiltInCheckerSuppliers {
           UnsafeFinalization.class,
           UnsafeReflectiveConstructionCast.class,
           UnsynchronizedOverridesSynchronized.class,
+          Unused.class,
+          UnusedNestedClass.class,
           URLEqualsHashCode.class,
           UseCorrectAssertInTests.class,
           VariableNameSameAsType.class,
@@ -807,7 +810,6 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryDefaultInEnumSwitch.class,
           UnnecessarySetDefault.class,
           UnnecessaryStaticImport.class,
-          Unused.class,
           UnusedException.class,
           UseBinds.class,
           VarChecker.class,
