@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.javadoc;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
+import static com.google.errorprone.bugpatterns.javadoc.Utils.replace;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -29,6 +31,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.bugpatterns.javadoc.InvalidTag.JavadocTag.TagType;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.FindIdentifiers;
@@ -50,6 +53,7 @@ import com.sun.tools.javac.tree.DCTree.DCBlockTag;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCErroneous;
 import com.sun.tools.javac.tree.DCTree.DCInlineTag;
+import com.sun.tools.javac.util.JCDiagnostic;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -75,16 +79,16 @@ public final class InvalidTag extends BugChecker
           + "Use {@code %1%s} to refer to parameter names inline.";
 
   /** Non-standard commonly-used tags which we should allow. */
-  private static final ImmutableSet<String> KNOWN_OTHER_TAGS =
+  private static final ImmutableSet<JavadocTag> KNOWN_OTHER_TAGS =
       ImmutableSet.of(
-          "apiNote",
-          "attr", // commonly used by Android
-          "contact",
-          "hide",
-          "implNote",
-          "implSpec",
-          "required",
-          "team");
+          blockTag("apiNote"),
+          blockTag("attr"), // commonly used by Android
+          blockTag("contact"),
+          blockTag("hide"),
+          blockTag("implNote"),
+          blockTag("implSpec"),
+          blockTag("required"),
+          blockTag("team"));
 
   /**
    * HTML tags which imply we're showing code, and should therefore probably escape unknown block
@@ -92,38 +96,53 @@ public final class InvalidTag extends BugChecker
    */
   private static final ImmutableSet<String> CODE_TAGS = ImmutableSet.of("code", "pre");
 
-  // TODO(b/72685460): Split these into unknown block vs inline tags.
-  private static final ImmutableSet<String> COMMON_TAGS =
+  private static final ImmutableSet<JavadocTag> COMMON_TAGS =
       ImmutableSet.of(
-          "code", "deprecated", "docRoot", "link", "linkplain", "literal", "see", "since");
+          inlineTag("code"),
+          blockTag("deprecated"),
+          inlineTag("docRoot"),
+          inlineTag("link"),
+          inlineTag("linkplain"),
+          inlineTag("literal"),
+          blockTag("see"),
+          blockTag("since"));
 
-  private static final ImmutableSet<String> VALID_METHOD_TAGS =
-      ImmutableSet.<String>builder()
+  private static final ImmutableSet<JavadocTag> VALID_METHOD_TAGS =
+      ImmutableSet.<JavadocTag>builder()
           .addAll(COMMON_TAGS)
           .add(
-              "author",
-              "exception",
-              "inheritDoc",
-              "param",
-              "return",
-              "serial",
-              "throws",
-              "serialData",
-              "serialField",
-              "value",
-              "version")
+              blockTag("author"),
+              blockTag("exception"),
+              inlineTag("inheritDoc"),
+              blockTag("param"),
+              blockTag("return"),
+              blockTag("serial"),
+              blockTag("throws"),
+              blockTag("serialData"),
+              blockTag("serialField"),
+              inlineTag("value"),
+              blockTag("version"))
           .build();
 
-  private static final ImmutableSet<String> VALID_VARIABLE_TAGS =
-      ImmutableSet.<String>builder()
+  private static final ImmutableSet<JavadocTag> VALID_VARIABLE_TAGS =
+      ImmutableSet.<JavadocTag>builder()
           .addAll(COMMON_TAGS)
-          .add("serial", "serialData", "serialField", "value")
+          .add(
+              blockTag("serial"),
+              blockTag("serialData"),
+              blockTag("serialField"),
+              inlineTag("value"))
           .build();
 
-  private static final ImmutableSet<String> VALID_CLASS_TAGS =
-      ImmutableSet.<String>builder()
+  private static final ImmutableSet<JavadocTag> VALID_CLASS_TAGS =
+      ImmutableSet.<JavadocTag>builder()
           .addAll(COMMON_TAGS)
-          .add("author", "inheritDoc", "param", "value", "version")
+          .add(
+              blockTag("author"),
+              inlineTag("inheritDoc"),
+              blockTag("param"),
+              inlineTag("value"),
+              blockTag("version"))
           .build();
 
   private static final Pattern PARAM_MATCHER = Pattern.compile("\\{@param (.*)}");
@@ -164,14 +183,14 @@ public final class InvalidTag extends BugChecker
   private final class InvalidTagChecker extends DocTreePathScanner<Void, Void> {
     private final VisitorState state;
 
-    private final ImmutableSet<String> validTags;
+    private final ImmutableSet<JavadocTag> validTags;
     private final ImmutableSet<String> parameters;
 
     private final Set<DocTree> fixedTags = new HashSet<>();
     private int codeTagNestedDepth = 0;
 
     private InvalidTagChecker(
-        VisitorState state, ImmutableSet<String> validTags, ImmutableSet<String> parameters) {
+        VisitorState state, ImmutableSet<JavadocTag> validTags, ImmutableSet<String> parameters) {
       this.state = state;
       this.validTags = validTags;
       this.parameters = parameters;
@@ -195,6 +214,23 @@ public final class InvalidTag extends BugChecker
 
     @Override
     public Void visitErroneous(ErroneousTree erroneousTree, Void unused) {
+      JCDiagnostic diagnostic = ((DCErroneous) erroneousTree).diag;
+      if (diagnostic.getCode().equals("compiler.err.dc.bad.inline.tag")) {
+        JavadocTag tag = inlineTag(erroneousTree.toString().replace("@", ""));
+        SuggestedFix fix =
+            validTags.contains(tag)
+                ? replace(erroneousTree, String.format("{%s}", erroneousTree), state)
+                : SuggestedFix.builder().build();
+        String message =
+            String.format(
+                "%s is not a valid block tag. Should it be an inline tag instead?", erroneousTree);
+        state.reportMatch(
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
+                .setMessage(message)
+                .addFix(fix)
+                .build());
+        return null;
+      }
       Matcher matcher = PARAM_MATCHER.matcher(erroneousTree.getBody());
       if (matcher.find()) {
         String parameterName = matcher.group(1);
@@ -218,7 +254,8 @@ public final class InvalidTag extends BugChecker
     @Override
     public Void visitUnknownBlockTag(UnknownBlockTagTree unknownBlockTagTree, Void unused) {
       String tagName = unknownBlockTagTree.getTagName();
-      if (KNOWN_OTHER_TAGS.contains(tagName)) {
+      JavadocTag tag = blockTag(tagName);
+      if (KNOWN_OTHER_TAGS.contains(tag)) {
         return super.visitUnknownBlockTag(unknownBlockTagTree, null);
       }
       if (codeTagNestedDepth > 0) {
@@ -263,7 +300,7 @@ public final class InvalidTag extends BugChecker
         fixedTags.add(unknownBlockTagTree);
         return super.visitUnknownBlockTag(unknownBlockTagTree, null);
       }
-      reportUnknownTag(unknownBlockTagTree, tagName);
+      reportUnknownTag(unknownBlockTagTree, tag);
       return super.visitUnknownBlockTag(unknownBlockTagTree, null);
     }
 
@@ -314,7 +351,7 @@ public final class InvalidTag extends BugChecker
         fixedTags.add(unknownInlineTagTree);
         return super.visitUnknownInlineTag(unknownInlineTagTree, null);
       }
-      reportUnknownTag(unknownInlineTagTree, unknownInlineTagTree.getTagName());
+      reportUnknownTag(unknownInlineTagTree, inlineTag(name));
       return super.visitUnknownInlineTag(unknownInlineTagTree, null);
     }
 
@@ -325,17 +362,23 @@ public final class InvalidTag extends BugChecker
           || name.contains("#");
     }
 
-    private void reportUnknownTag(DocTree docTree, String tagName) {
-      Optional<String> bestMatch = Utils.getBestMatch(tagName, validTags);
-      int pos = Utils.getStartPosition(docTree, state) + docTree.toString().indexOf(tagName);
-      String message = String.format("Tag name `%s` is unknown.", tagName);
+    private void reportUnknownTag(DocTree docTree, JavadocTag tag) {
+      Optional<String> bestMatch =
+          Utils.getBestMatch(
+              tag.name(),
+              validTags.stream()
+                  .filter(t -> t.type().equals(tag.type()))
+                  .map(JavadocTag::name)
+                  .collect(toImmutableSet()));
+      int pos = Utils.getStartPosition(docTree, state) + docTree.toString().indexOf(tag.name());
+      String message = String.format("Tag name `%s` is unknown.", tag.name());
       state.reportMatch(
           bestMatch
               .map(
                   bm ->
                       buildDescription(diagnosticPosition(getCurrentPath(), state))
                           .setMessage(message + String.format(" Did you mean tag `%s`?", bm))
-                          .addFix(SuggestedFix.replace(pos, pos + tagName.length(), bm))
+                          .addFix(SuggestedFix.replace(pos, pos + tag.name().length(), bm))
                           .build())
               .orElse(
                   buildDescription(diagnosticPosition(getCurrentPath(), state))
@@ -354,16 +397,16 @@ public final class InvalidTag extends BugChecker
       if (fixedTags.contains(docTree)) {
         return null;
       }
-      String tagName = null;
+      JavadocTag tag = null;
       if (docTree instanceof DCBlockTag) {
-        tagName = ((DCBlockTag) docTree).getTagName();
+        tag = blockTag(((DCBlockTag) docTree).getTagName());
       }
       if (docTree instanceof DCInlineTag) {
-        tagName = ((DCInlineTag) docTree).getTagName();
+        tag = inlineTag(((DCInlineTag) docTree).getTagName());
       }
-      if (tagName != null && !validTags.contains(tagName) && !KNOWN_OTHER_TAGS.contains(tagName)) {
+      if (tag != null && !validTags.contains(tag) && !KNOWN_OTHER_TAGS.contains(tag)) {
         String message =
-            String.format("The block tag @%s is not allowed on this type of element.", tagName);
+            String.format("The tag @%s is not allowed on this type of element.", tag.name());
         state.reportMatch(
             buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)
@@ -372,5 +415,29 @@ public final class InvalidTag extends BugChecker
       }
       return null;
     }
+  }
+
+  @AutoValue
+  abstract static class JavadocTag {
+    abstract String name();
+
+    abstract TagType type();
+
+    enum TagType {
+      BLOCK,
+      INLINE
+    }
+
+    private static JavadocTag of(String name, TagType type) {
+      return new AutoValue_InvalidTag_JavadocTag(name, type);
+    }
+  }
+
+  private static JavadocTag blockTag(String name) {
+    return JavadocTag.of(name, JavadocTag.TagType.BLOCK);
+  }
+
+  private static JavadocTag inlineTag(String name) {
+    return JavadocTag.of(name, TagType.INLINE);
   }
 }
