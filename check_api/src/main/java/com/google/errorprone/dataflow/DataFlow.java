@@ -122,6 +122,7 @@ public final class DataFlow {
               });
 
   // TODO(user), remove once we merge jdk8 specific's with core
+  @Nullable
   private static <T> TreePath findEnclosingMethodOrLambdaOrInitializer(TreePath path) {
     while (path != null) {
       if (path.getLeaf() instanceof MethodTree) {
