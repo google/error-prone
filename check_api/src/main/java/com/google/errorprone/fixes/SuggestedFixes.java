@@ -74,6 +74,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.main.Arguments;
 import com.sun.tools.javac.parser.Tokens;
+import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
@@ -92,6 +93,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
@@ -980,5 +982,83 @@ public class SuggestedFixes {
       }
     }
     return types.build();
+  }
+
+  /**
+   * Replaces the tree at {@code path} along with any Javadocs/associated single-line comments.
+   *
+   * <p>This is the same as just deleting the tree for non-class members. For class members, we
+   * tokenize and scan backwards to try to work out which prior comments are associated with this
+   * node.
+   */
+  public static SuggestedFix replaceIncludingComments(
+      TreePath path, String replacement, VisitorState state) {
+    Tree tree = path.getLeaf();
+    Tree parent = path.getParentPath().getLeaf();
+    if (!(parent instanceof ClassTree)) {
+      return SuggestedFix.replace(tree, replacement);
+    }
+    Tree previousMember = null;
+    ClassTree classTree = (ClassTree) parent;
+    int startTokenization;
+    for (Tree member : classTree.getMembers()) {
+      if (member instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) member)) {
+        continue;
+      }
+      if (member.equals(tree)) {
+        break;
+      }
+      previousMember = member;
+    }
+    if (previousMember != null) {
+      startTokenization = state.getEndPosition(previousMember);
+    } else if (state.getEndPosition(classTree.getModifiers()) == Position.NOPOS) {
+      startTokenization = ((JCTree) classTree).getStartPosition();
+    } else {
+      startTokenization = state.getEndPosition(classTree.getModifiers());
+    }
+    String source =
+        state.getSourceCode().subSequence(startTokenization, state.getEndPosition(tree)).toString();
+    ImmutableList<ErrorProneToken> tokens = ErrorProneTokens.getTokens(source, state.context);
+    if (previousMember == null) {
+      tokens = getTokensAfterOpeningBrace(tokens);
+    }
+    if (tokens.isEmpty()) {
+      return SuggestedFix.replace(tree, replacement);
+    }
+    if (tokens.get(0).comments().isEmpty()) {
+      return SuggestedFix.replace(
+          startTokenization + tokens.get(0).pos(), state.getEndPosition(tree), replacement);
+    }
+    ImmutableList<Comment> comments =
+        ImmutableList.sortedCopyOf(
+            Comparator.<Comment>comparingInt(c -> c.getSourcePos(0)).reversed(),
+            tokens.get(0).comments());
+    int startPos = ((JCTree) tree).getStartPosition() - startTokenization;
+    // This can happen for desugared expressions like `int a, b;`.
+    if (startPos < 0) {
+      return SuggestedFix.builder().build();
+    }
+    // Delete backwards for comments which are not separated from our target by a blank line.
+    for (Comment comment : comments) {
+      int endOfCommentPos = comment.getSourcePos(comment.getText().length() - 1);
+      String stringBetweenComments = source.substring(endOfCommentPos, startPos);
+      if (stringBetweenComments.chars().filter(c -> c == '\n').count() > 1) {
+        break;
+      }
+      startPos = comment.getSourcePos(0);
+    }
+    return SuggestedFix.replace(
+        startTokenization + startPos, state.getEndPosition(tree), replacement);
+  }
+
+  private static ImmutableList<ErrorProneToken> getTokensAfterOpeningBrace(
+      ImmutableList<ErrorProneToken> tokens) {
+    for (int i = 0; i < tokens.size() - 1; ++i) {
+      if (tokens.get(i).kind() == TokenKind.LBRACE) {
+        return tokens.subList(i + 1, tokens.size());
+      }
+    }
+    return ImmutableList.of();
   }
 }
