@@ -107,10 +107,6 @@ public class MustBeClosedCheckerNegativeCases {
     ParentWithNoArgument() {}
   }
 
-  abstract class ChildOfParentWithNoArgument extends ParentWithNoArgument {
-    // Use a default constructor.
-  }
-
   abstract class ParentWithArgument implements AutoCloseable {
     @MustBeClosed
     ParentWithArgument(int i) {}
