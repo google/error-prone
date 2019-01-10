@@ -33,6 +33,9 @@ public final class UnusedExceptionTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(UnusedException.class, getClass());
 
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass());
+
   @Test
   public void positiveCase() {
     compilationHelper
@@ -52,7 +55,7 @@ public final class UnusedExceptionTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass())
+    refactoringHelper
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -189,8 +192,24 @@ public final class UnusedExceptionTest {
   }
 
   @Test
+  public void suppressibleViaCatchBlock() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test() {",
+            "    try {",
+            "    } catch (@SuppressWarnings(\"UnusedException\") Exception e) {",
+            "      throw new RuntimeException(\"foo\");",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void anonymousClass() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass())
+    refactoringHelper
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -216,7 +235,7 @@ public final class UnusedExceptionTest {
 
   @Test
   public void replacementNotVisible() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass())
+    refactoringHelper
         .addInputLines(
             "in/MyException.java",
             "class MyException extends RuntimeException {",
