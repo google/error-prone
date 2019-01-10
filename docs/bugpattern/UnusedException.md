@@ -25,5 +25,13 @@ Prefer wrapping the original exception instead,
 ```
 
 Suppress false positives with `@SuppressWarnings("UnusedException")` on the
-enclosing element. Consider also adding a comment to explain why the exception
+ignored exception. Consider also adding a comment to explain why the exception
 should not be propagated.
+
+```java
+  try {
+    ...
+  } catch (@SuppressWarnings("UnusedException") IOException e) {
+    throw new IllegalStateException();
+  }
+```
