@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Represents an immutable map of Error Prone flags to their set values.
@@ -151,6 +152,16 @@ public final class ErrorProneFlags implements Serializable {
    */
   public Optional<List<String>> getList(String key) {
     return this.get(key).map(v -> ImmutableList.copyOf(Splitter.on(',').split(v)));
+  }
+
+  /**
+   * Gets the flag value for the given key as a comma-separated {@link Set} of Strings, wrapped in
+   * an {@link Optional}, which is empty if the flag is unset.
+   *
+   * <p>(note: empty strings included, e.g. {@code "-XepOpt:Set=,1,,1,2," => ["","1","2"]})
+   */
+  public Optional<Set<String>> getSet(String key) {
+    return this.get(key).map(v -> ImmutableSet.copyOf(Splitter.on(',').split(v)));
   }
 
   /** Whether this Flags object is empty, i.e. no flags have been set. */
