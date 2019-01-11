@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
@@ -50,7 +50,7 @@ import javax.lang.model.element.ElementKind;
     name = "EqualsHashCode",
     summary = "Classes that override equals should also override hashCode.",
     category = JDK,
-    severity = WARNING,
+    severity = ERROR,
     tags = StandardTags.FRAGILE_CODE)
 public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
 
