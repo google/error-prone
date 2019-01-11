@@ -120,7 +120,8 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
   @Override
   public void apply(TreePath path, Context context, DescriptionListener listener) {
     RefasterScanner.create(this, listener)
-        .scan(path, prepareContext(context, (JCCompilationUnit) path.getCompilationUnit()));
+        .scan(
+            path.getLeaf(), prepareContext(context, (JCCompilationUnit) path.getCompilationUnit()));
   }
 
   boolean rejectMatchesWithComments() {
