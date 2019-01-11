@@ -213,7 +213,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
     // We will skip reporting on the whole compilation if there are any native methods found.
     // Use a TreeScanner to find all local variables and fields.
     // The only reason type is atomic here is that we need to set its value from inside the closure.
-    if (hasNativeMethods(state.getPath())) {
+    if (hasNativeMethods(tree)) {
       // Skipping the analysis of this file because it has native methods.
       return Description.NO_MATCH;
     }
@@ -650,7 +650,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
     return Description.NO_MATCH;
   }
 
-  private static boolean hasNativeMethods(TreePath path) {
+  private static boolean hasNativeMethods(CompilationUnitTree tree) {
     AtomicBoolean hasAnyNativeMethods = new AtomicBoolean(false);
     new TreeScanner<Void, Void>() {
       @Override
@@ -660,7 +660,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
         }
         return null;
       }
-    }.scan(path, null);
+    }.scan(tree, null);
     return hasAnyNativeMethods.get();
   }
 
