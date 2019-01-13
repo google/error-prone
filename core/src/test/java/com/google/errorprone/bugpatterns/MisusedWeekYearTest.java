@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,5 +47,25 @@ public class MisusedWeekYearTest {
   @Test
   public void testNegativeCases() {
     compilationHelper.addSourceFile("MisusedWeekYearNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void testRefactoring() {
+    BugCheckerRefactoringTestHelper.newInstance(new MisusedWeekYear(), getClass())
+        .addInputLines(
+            "Test.java",
+            "import java.time.format.DateTimeFormatter;",
+            "class Test {", //
+            "  private static final String PATTERN = \"YYYY\";",
+            "  static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(PATTERN);",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.time.format.DateTimeFormatter;",
+            "class Test {", //
+            "  private static final String PATTERN = \"yyyy\";",
+            "  static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(PATTERN);",
+            "}")
+        .doTest();
   }
 }
