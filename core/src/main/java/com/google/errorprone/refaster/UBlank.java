@@ -87,9 +87,11 @@ abstract class UBlank implements UStatement {
     int goodIndex = 0;
     while (goodIndex < state.unconsumedStatements().size()) {
       StatementTree stmt = state.unconsumedStatements().get(goodIndex);
+      // If the statement refers to bound variables or doesn't always exit, stop consuming
+      // statements.
       if (firstNonNull(FORBIDDEN_REFERENCE_SCANNER.scan(stmt, state.unifier()), false)
-          && ControlFlowVisitor.INSTANCE.visitStatement(stmt)
-              == ControlFlowVisitor.Result.NEVER_EXITS) {
+          || ControlFlowVisitor.INSTANCE.visitStatement(stmt)
+              != ControlFlowVisitor.Result.NEVER_EXITS) {
         break;
       } else {
         goodIndex++;
