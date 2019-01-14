@@ -60,6 +60,7 @@ import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nullable;
 
 /**
  * Eagerly traverse one {@code MethodTree} at a time and accumulate constraints between nullness
@@ -135,6 +136,8 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       generateConstraintsFromAnnotations(typeArguments.get(i), sourceTree, argSelector);
       argSelector.pop();
     }
+    // Use equality constraints even for top-level type, since we want to "trust" the annotation
+    // TODO(b/121398981): skip for T extends @<Annot> since they constrain one side only
     ProperInferenceVar.fromTypeIfAnnotated(type)
         .ifPresent(
             annot -> {
@@ -157,16 +160,20 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
     // First check if the given symbol is directly annotated; if not, look for implicit annotations
     // on the inferred type of the expression.  The latter for instance propagates a type parameter
-    // T instantiated as <@Nullable X> to the result of a method returning T.
+    // T instantiated as <@Nullable String> to the result of a method returning T.
     Optional<InferenceVariable> fromAnnotations =
         Nullness.fromAnnotationsOn(symbol).map(ProperInferenceVar::create);
     if (!fromAnnotations.isPresent()) {
       fromAnnotations = ProperInferenceVar.fromTypeIfAnnotated(sourceTree.type);
     }
+    // Use equality constraints here, since we want to "trust" the annotation.  For instance,
+    // a method return annotated @Nullable requires us assume the method might really return null,
+    // and a method return annotated @Nonnull should allow us to assume it really returns non-null.
     fromAnnotations.ifPresent(
         annot -> {
           qualifierConstraints.putEdge(
               TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree), annot);
+          // TODO(b/121398981): skip for T extends @<Annot> since they constrain one side only
           qualifierConstraints.putEdge(
               annot, TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree));
         });
@@ -240,10 +247,10 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         formalParameters.stream(),
         sourceNode.getArguments().stream(),
         (formal, actual) -> {
-          // formal parameter type
+          // formal parameter type (no l-val b/c that would wrongly constrain the method return)
           // TODO(b/116977632): constraints for actual parameter type (i.e. after type variable
           // substitution) without ignoring annotations directly on the parameter or vararg
-          generateConstraintsFromAnnotations(formal, actual, new ArrayDeque<>());
+          generateConstraintsForWrite(formal, actual, /*lVal=*/ null);
         });
 
     // Generate constraints for method return
@@ -328,30 +335,37 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
   /**
    * Generate inference variable constraints derived from this write, including proper bounds from
-   * type annotations on the declared type {@code lType} of the l-val as well as relationships
-   * between type parameters of the l-val and r-val
+   * type annotations on the declared type {@code lType} of the r-val as well as relationships
+   * between type parameters of the l-val and r-val (if given). l-val is optional so this method is
+   * usable for method arguments, and note that the l-val is a statement in other cases (return and
+   * variable declarations); the l-val only appears useful when it's an assignment
    */
-  private void generateConstraintsForWrite(Type lType, ExpressionTree rVal, Tree sourceTree) {
+  private void generateConstraintsForWrite(Type lType, ExpressionTree rVal, @Nullable Tree lVal) {
+    // TODO(kmb): Consider just visiting these expression types
     if (rVal.getKind() == Kind.NULL_LITERAL) {
       qualifierConstraints.putEdge(
-          ProperInferenceVar.NULL, TypeArgInferenceVar.create(ImmutableList.of(), sourceTree));
+          ProperInferenceVar.NULL, TypeArgInferenceVar.create(ImmutableList.of(), rVal));
+      qualifierConstraints.putEdge(
+          TypeArgInferenceVar.create(ImmutableList.of(), rVal), ProperInferenceVar.NULL);
     } else if ((rVal instanceof LiteralTree)
         || (rVal instanceof NewClassTree)
         || (rVal instanceof NewArrayTree)
         || ((rVal instanceof IdentifierTree)
             && ((IdentifierTree) rVal).getName().contentEquals("this"))) {
       qualifierConstraints.putEdge(
-          ProperInferenceVar.NONNULL, TypeArgInferenceVar.create(ImmutableList.of(), sourceTree));
+          ProperInferenceVar.NONNULL, TypeArgInferenceVar.create(ImmutableList.of(), rVal));
+      qualifierConstraints.putEdge(
+          TypeArgInferenceVar.create(ImmutableList.of(), rVal), ProperInferenceVar.NONNULL);
     }
-    generateConstraintsForWrite(lType, rVal, sourceTree, new ArrayDeque<>());
+    generateConstraintsForWrite(lType, rVal, lVal, new ArrayDeque<>());
   }
 
   private void generateConstraintsForWrite(
-      Type lType, ExpressionTree rVal, Tree sourceTree, ArrayDeque<Integer> argSelector) {
+      Type lType, ExpressionTree rVal, @Nullable Tree lVal, ArrayDeque<Integer> argSelector) {
     List<Type> typeArguments = lType.getTypeArguments();
     for (int i = 0; i < typeArguments.size(); i++) {
       argSelector.push(i);
-      generateConstraintsForWrite(typeArguments.get(i), rVal, sourceTree, argSelector);
+      generateConstraintsForWrite(typeArguments.get(i), rVal, lVal, argSelector);
       argSelector.pop();
     }
 
@@ -363,14 +377,24 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         .ifPresent(
             annot -> {
               qualifierConstraints.putEdge(
-                  TypeArgInferenceVar.create(argSelectorList, sourceTree), annot);
-              qualifierConstraints.putEdge(
-                  annot, TypeArgInferenceVar.create(argSelectorList, sourceTree));
+                  TypeArgInferenceVar.create(argSelectorList, rVal), annot);
+              if (!argSelector.isEmpty()) {
+                // Top-level target types implicitly only constrain from above: for instance, a
+                // local variable annotated @Nullable can be initialized with a non-null value just
+                // fine.  This isn't true for invariant generic type parameters such as
+                // List<@Nullable String> which rVal needs to satisfy exactly, so we generate
+                // equality constraints for those.
+                // TODO(b/121398981): skip for ? extends @<Annot> since they constrain one side only
+                qualifierConstraints.putEdge(
+                    annot, TypeArgInferenceVar.create(argSelectorList, rVal));
+              }
             });
 
-    // Constrain this type or type argument on the rVal to be <= its lVal counterpart
-    qualifierConstraints.putEdge(
-        TypeArgInferenceVar.create(argSelectorList, rVal),
-        TypeArgInferenceVar.create(argSelectorList, sourceTree));
+    if (lVal != null) {
+      // Constrain this type or type argument on the rVal to be <= its lVal counterpart
+      qualifierConstraints.putEdge(
+          TypeArgInferenceVar.create(argSelectorList, rVal),
+          TypeArgInferenceVar.create(argSelectorList, lVal));
+    }
   }
 }
