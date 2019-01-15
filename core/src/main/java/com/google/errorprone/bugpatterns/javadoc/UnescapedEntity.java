@@ -285,11 +285,6 @@ public final class UnescapedEntity extends BugChecker
           .addFix(replace(getCurrentPath().getLeaf(), replacement, state))
           .build();
     }
-
-    @Override
-    public Void scan(DocTree docTree, Void aVoid) {
-      return super.scan(docTree, aVoid);
-    }
   }
 
   private static SuggestedFix wrapInCodeTag(Range<Integer> containingPre) {

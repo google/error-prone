@@ -30,7 +30,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.InheritDocTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -125,11 +124,6 @@ public final class InheritDoc extends BugChecker
         }
       }.visit(getCurrentPath().getTreePath().getLeaf(), null);
       return super.visitInheritDoc(inheritDocTree, null);
-    }
-
-    @Override
-    public Void scan(DocTree docTree, Void aVoid) {
-      return super.scan(docTree, aVoid);
     }
   }
 }
