@@ -252,4 +252,18 @@ public class AutoValueImmutableFieldsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void matchesNonPublic() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Test {",
+            "  // BUG: Diagnostic contains: ImmutableList",
+            "  abstract String[] countries();",
+            "}")
+        .doTest();
+  }
 }

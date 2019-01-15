@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isArrayType;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
@@ -30,7 +30,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -135,10 +134,7 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
     return methodReturns(typeFromString(type));
   }
 
-  private static final Matcher<MethodTree> PUBLIC_ABSTRACT_METHOD_MATCHER =
-      allOf(
-          Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
-          Matchers.<MethodTree>hasModifier(Modifier.ABSTRACT));
+  private static final Matcher<MethodTree> ABSTRACT_MATCHER = hasModifier(Modifier.ABSTRACT);
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -146,7 +142,7 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
       for (Tree memberTree : tree.getMembers()) {
         if (memberTree instanceof MethodTree && !isSuppressed(memberTree)) {
           MethodTree methodTree = (MethodTree) memberTree;
-          if (PUBLIC_ABSTRACT_METHOD_MATCHER.matches(methodTree, state)) {
+          if (ABSTRACT_MATCHER.matches(methodTree, state)) {
             for (Map.Entry<String, Matcher<MethodTree>> entry : REPLACEMENT_TO_MATCHERS.entries()) {
               if (entry.getValue().matches(methodTree, state)) {
                 state.reportMatch(
