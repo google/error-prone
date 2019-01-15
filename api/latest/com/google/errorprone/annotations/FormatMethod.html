@@ -104,10 +104,10 @@ public @interface <span class="memberNameLabel">FormatMethod</span></pre>
  a printf-style format string and its format arguments. In any method annotated as <code>FormatMethod</code> without a <a href="../../../../com/google/errorprone/annotations/FormatString.html" title="annotation in com.google.errorprone.annotations"><code>FormatString</code></a> parameter, the first <code>String</code> parameter is
  assumed to be the format string. For example, the following two methods are equivalent:
 
- <pre><code>
- &amp;#064;FormatMethod void log(Locale l, &amp;#064;FormatString String logMessage, Object... args) {}
- &amp;#064;FormatMethod void log(Locale l, String logMessage, Object... args) {}
- </code></pre>
+ <pre>
+ &#064;FormatMethod void log(Locale l, &#064;FormatString String logMessage, Object... args) {}
+ &#064;FormatMethod void log(Locale l, String logMessage, Object... args) {}
+ </pre>
 
  <p>Using <a href="../../../../com/google/errorprone/annotations/FormatMethod.html" title="annotation in com.google.errorprone.annotations"><code>FormatMethod</code></a> on a method header will ensure the following for the parameters
  passed to the method:
@@ -117,41 +117,38 @@ public @interface <span class="memberNameLabel">FormatMethod</span></pre>
        <ul>
          <li>A compile time constant value (see <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> for more info).
              <p>The following example is valid:
-             <pre><code>
+             <pre>
  public class Foo {
    static final String staticFinalLogMessage = "foo";
-   &amp;#064;FormatMethod void log(&amp;#064;FormatString String format, Object... args) {}
+   &#064;FormatMethod void log(&#064;FormatString String format, Object... args) {}
    void validLogs() {
      log("String literal");
      log(staticFinalLogMessage);
    }
- }
- </code></pre>
+ }</pre>
              <p>However the following would be invalid:
-             <pre><code>
+             <pre>
  public class Foo{
-   &amp;#064;FormatMethod void log(&amp;#064;FormatString String format, Object... args) {}
+   &#064;FormatMethod void log(&#064;FormatString String format, Object... args) {}
    void invalidLog(String notCompileTimeConstant) {
      log(notCompileTimeConstant);
    }
- }
- </code></pre>
+ }</pre>
          <li>An effectively final variable that was assigned to a compile time constant value.
              This is to permit the following common case:
-             <pre><code>
+             <pre>
  String format = "Some long format string: %s";
  log(format, arg);
- </code></pre>
+ </pre>
          <li>Another <a href="../../../../com/google/errorprone/annotations/FormatString.html" title="annotation in com.google.errorprone.annotations"><code>FormatString</code></a> annotated parameter. Ex:
-             <pre><code>
+             <pre>
  public class Foo {
    static final String staticFinalLogMessage = "foo";
-   &amp;#064;FormatMethod void log(&amp;#064;FormatString String format, Object... args) {}
-   &amp;#064;FormatMethod void validLog(&amp;#064;FormatString String format, Object... args) {
+   &#064;FormatMethod void log(&#064;FormatString String format, Object... args) {}
+   &#064;FormatMethod void validLog(&#064;FormatString String format, Object... args) {
      log(format, args);
    }
- }
- </code></pre>
+ }</pre>
        </ul>
    <li>The format string will be valid for the input format arguments. In the case that the actual
        format string parameter has a compile time constant value, this will compare the actual

@@ -27,7 +27,7 @@ public interface Constants {
 ```
 
 ```java {.good}
-public final class {
+public final class Constants {
   public static final float PI = 3.14159f;
 
   private Constants() {}

@@ -73,6 +73,14 @@ class ThreadJoinLoopPositiveCases {
     }
   }
 
+  public void emptyCatchStatements(Thread thread) {
+    try {
+      // BUG: Diagnostic contains: Uninterruptibles.joinUninterruptibly(thread)
+      thread.join();
+    } catch (Exception e) {;;
+    }
+  }
+
   public void whileLoop(Thread thread) {
     while (true) {
       try {
@@ -234,6 +242,10 @@ class ThreadJoinLoopPositiveCases {
   }
 
   public void emptyException(Thread thread) {
+    Uninterruptibles.joinUninterruptibly(thread);
+  }
+
+  public void emptyCatchStatements(Thread thread) {
     Uninterruptibles.joinUninterruptibly(thread);
   }
 

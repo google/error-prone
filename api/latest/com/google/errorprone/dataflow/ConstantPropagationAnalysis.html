@@ -200,8 +200,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockListLast">
 <li class="blockList">
 <h4>numberValue</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html?is-external=true" title="class or interface in java.lang">Number</a>&nbsp;numberValue(com.sun.source.util.TreePath&nbsp;exprPath,
-                                 com.sun.tools.javac.util.Context&nbsp;context)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html?is-external=true" title="class or interface in java.lang">Number</a>&nbsp;numberValue(com.sun.source.util.TreePath&nbsp;exprPath,
+                                           com.sun.tools.javac.util.Context&nbsp;context)</pre>
 <div class="block">Returns the value of the leaf of <code>exprPath</code>, if it is determined to be a constant (always
  evaluates to the same numeric value), and null otherwise. Note that returning null does not
  necessarily mean the expression is *not* a constant.</div>

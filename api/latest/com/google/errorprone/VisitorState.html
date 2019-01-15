@@ -609,7 +609,8 @@ public&nbsp;VisitorState(com.sun.tools.javac.util.Context&nbsp;context,
 <ul class="blockList">
 <li class="blockList">
 <h4>getTypeFromString</h4>
-<pre>public&nbsp;com.sun.tools.javac.code.Type&nbsp;getTypeFromString(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;typeStr)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public&nbsp;com.sun.tools.javac.code.Type&nbsp;getTypeFromString(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;typeStr)</pre>
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.
 
  <p>If this method returns null, the compiler doesn't have access to this type, which means that
@@ -630,7 +631,8 @@ public&nbsp;VisitorState(com.sun.tools.javac.util.Context&nbsp;context,
 <ul class="blockList">
 <li class="blockList">
 <h4>getSymbolFromString</h4>
-<pre>public&nbsp;com.sun.tools.javac.code.Symbol&nbsp;getSymbolFromString(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;symStr)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public&nbsp;com.sun.tools.javac.code.Symbol&nbsp;getSymbolFromString(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;symStr)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>symStr</code> - the string representation of a symbol</dd>
@@ -645,8 +647,9 @@ public&nbsp;VisitorState(com.sun.tools.javac.util.Context&nbsp;context,
 <ul class="blockList">
 <li class="blockList">
 <h4>getSymbolFromString</h4>
-<pre>public&nbsp;com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
-                                                                       com.sun.tools.javac.util.Name&nbsp;name)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public&nbsp;com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
+                                                                                 com.sun.tools.javac.util.Name&nbsp;name)</pre>
 </li>
 </ul>
 <a name="getType-com.sun.tools.javac.code.Type-boolean-java.util.List-">
@@ -677,7 +680,8 @@ public&nbsp;VisitorState(com.sun.tools.javac.util.Context&nbsp;context,
 <ul class="blockList">
 <li class="blockList">
 <h4>findPathToEnclosing</h4>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html?is-external=true" title="class or interface in java.lang">@SafeVarargs</a>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html?is-external=true" title="class or interface in java.lang">@SafeVarargs</a>
 public final&nbsp;com.sun.source.util.TreePath&nbsp;findPathToEnclosing(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends com.sun.source.tree.Tree&gt;...&nbsp;classes)</pre>
 <div class="block">Returns the <code>TreePath</code> to the nearest tree node of one of the given types. To instead
  retrieve the element directly, use <a href="../../../com/google/errorprone/VisitorState.html#findEnclosing-java.lang.Class...-"><code>findEnclosing(Class...)</code></a>.</div>
@@ -693,7 +697,8 @@ public final&nbsp;com.sun.source.util.TreePath&nbsp;findPathToEnclosing(<a href=
 <ul class="blockList">
 <li class="blockList">
 <h4>findEnclosing</h4>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html?is-external=true" title="class or interface in java.lang">@SafeVarargs</a>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html?is-external=true" title="class or interface in java.lang">@SafeVarargs</a>
 public final&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;T&nbsp;findEnclosing(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends T&gt;...&nbsp;classes)</pre>
 <div class="block">Find the first enclosing tree node of one of the given types.</div>
 <dl>
@@ -708,7 +713,8 @@ public final&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;T&nbsp;findEnc
 <ul class="blockList">
 <li class="blockList">
 <h4>getSourceCode</h4>
-<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;getSourceCode()</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&nbsp;getSourceCode()</pre>
 <div class="block">Gets the current source file.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -722,7 +728,8 @@ public final&nbsp;&lt;T extends com.sun.source.tree.Tree&gt;&nbsp;T&nbsp;findEnc
 <ul class="blockList">
 <li class="blockList">
 <h4>getSourceForNode</h4>
-<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getSourceForNode(com.sun.source.tree.Tree&nbsp;tree)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getSourceForNode(com.sun.source.tree.Tree&nbsp;tree)</pre>
 <div class="block">Gets the original source code that represents the given node.
 
  <p>Note that this may be different from what is returned by calling .toString() on the node.

@@ -98,6 +98,9 @@ The result of this unary operation on a lambda parameter is discarded
 __[DoNotCall](bugpattern/DoNotCall)__<br>
 This method should not be called.
 
+__[DuplicateMapKeys](bugpattern/DuplicateMapKeys)__<br>
+Map#ofEntries will throw an IllegalArgumentException if there are any duplicate keys
+
 __[DurationFrom](bugpattern/DurationFrom)__<br>
 Duration.from(Duration) returns itself; from(Period) throws a runtime exception.
 
@@ -811,6 +814,12 @@ Prefer `asSubclass` instead of casting the result of `newInstance`, to detect cl
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
 
+__[Unused](bugpattern/Unused)__<br>
+Unused.
+
+__[UnusedNestedClass](bugpattern/UnusedNestedClass)__<br>
+This nested class is unused, and can be removed.
+
 __[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
 Java assert is used in test. For testing purposes Assert.* matchers should be used.
 
@@ -938,6 +947,9 @@ Empty top-level type declaration
 __[EqualsBrokenForNull](bugpattern/EqualsBrokenForNull)__<br>
 equals() implementation may throw NullPointerException when given null
 
+__[EscapedEntity](bugpattern/EscapedEntity)__<br>
+HTML entities in @code/@literal tags will appear literally in the rendered javadoc.
+
 __[ExpectedExceptionChecker](bugpattern/ExpectedExceptionChecker)__<br>
 Calls to ExpectedException#expect should always be followed by exactly one statement.
 
@@ -1018,9 +1030,6 @@ Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must 
 
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values: an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
-
-__[Unused](bugpattern/Unused)__<br>
-Unused.
 
 __[UnusedException](bugpattern/UnusedException)__<br>
 This catch block catches an exception and re-throws another, but swallows the caught exception rather than setting it as a cause. This can make debugging harder.

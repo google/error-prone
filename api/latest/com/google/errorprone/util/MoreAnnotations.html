@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -173,6 +173,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  explicitly set.</div>
 </td>
 </tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>static com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/AnnotationMirror.html?is-external=true" title="class or interface in javax.lang.model.element">AnnotationMirror</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/MoreAnnotations.html#inheritedAnnotations-javax.lang.model.type.TypeMirror-">inheritedAnnotations</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/type/TypeMirror.html?is-external=true" title="class or interface in javax.lang.model.type">TypeMirror</a>&nbsp;type)</code>
+<div class="block">Gathers all type annotations that are applicable to this TypeMirror and its bounds but are not
+ applied syntactically to its declaration.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -261,11 +268,28 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <a name="asStrings-com.sun.tools.javac.code.Attribute-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>asStrings</h4>
 <pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;asStrings(com.sun.tools.javac.code.Attribute&nbsp;v)</pre>
 <div class="block">Converts the given attribute to one or more strings.</div>
+</li>
+</ul>
+<a name="inheritedAnnotations-javax.lang.model.type.TypeMirror-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>inheritedAnnotations</h4>
+<pre>public static&nbsp;com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/AnnotationMirror.html?is-external=true" title="class or interface in javax.lang.model.element">AnnotationMirror</a>&gt;&nbsp;inheritedAnnotations(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/type/TypeMirror.html?is-external=true" title="class or interface in javax.lang.model.type">TypeMirror</a>&nbsp;type)</pre>
+<div class="block">Gathers all type annotations that are applicable to this TypeMirror and its bounds but are not
+ applied syntactically to its declaration. This includes:
+
+ <ul>
+   <li>annotations on type parameters at type use, e.g. <code>List&lt;@Nullable String&gt; xs = ...</code>
+   <li>annotations on generic type declarations, e.g. <code>class MyClass&lt;@Nullable T&gt; {...} </code>
+   <li>bounds on the above, e.g. <code>class MyClass&lt;T extends @Nullable MyOtherClass&gt; {...} </code>
+ </ul></div>
 </li>
 </ul>
 </li>

@@ -684,7 +684,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getDeclaredSymbol</h4>
-<pre>public static&nbsp;com.sun.tools.javac.code.Symbol&nbsp;getDeclaredSymbol(com.sun.source.tree.Tree&nbsp;tree)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.tools.javac.code.Symbol&nbsp;getDeclaredSymbol(com.sun.source.tree.Tree&nbsp;tree)</pre>
 <div class="block">Gets the symbol declared by a tree. Returns null if <code>tree</code> does not declare a symbol or
  is null.</div>
 </li>
@@ -737,7 +738,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getSymbol</h4>
-<pre>public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;getSymbol(com.sun.source.tree.NewClassTree&nbsp;tree)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;getSymbol(com.sun.source.tree.NewClassTree&nbsp;tree)</pre>
 <div class="block">Gets the method symbol for a new class.</div>
 </li>
 </ul>
@@ -757,7 +759,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getSymbol</h4>
-<pre>public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;getSymbol(com.sun.source.tree.MethodInvocationTree&nbsp;tree)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;getSymbol(com.sun.source.tree.MethodInvocationTree&nbsp;tree)</pre>
 <div class="block">Gets the symbol for a method invocation.</div>
 </li>
 </ul>
@@ -767,7 +770,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getSymbol</h4>
-<pre>public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;getSymbol(com.sun.source.tree.MemberReferenceTree&nbsp;tree)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;getSymbol(com.sun.source.tree.MemberReferenceTree&nbsp;tree)</pre>
 <div class="block">Gets the symbol for a member reference.</div>
 </li>
 </ul>
@@ -832,7 +836,8 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;findEnclosingNode(com.sun.source.util.T
 <ul class="blockList">
 <li class="blockList">
 <h4>getRootAssignable</h4>
-<pre>public static&nbsp;com.sun.source.tree.ExpressionTree&nbsp;getRootAssignable(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.source.tree.ExpressionTree&nbsp;getRootAssignable(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree)</pre>
 <div class="block">Find the root assignable expression of a chain of field accesses. If there is no root (i.e, a
  bare method call or a static method call), return null.
 
@@ -867,7 +872,8 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;findEnclosingNode(com.sun.source.util.T
 <ul class="blockList">
 <li class="blockList">
 <h4>getResultType</h4>
-<pre>public static&nbsp;com.sun.tools.javac.code.Type&nbsp;getResultType(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.tools.javac.code.Type&nbsp;getResultType(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</pre>
 <div class="block">Returns the type that this expression tree will evaluate to. If its a literal, an identifier,
  or a member select this is the actual type, if its a method invocation then its the return type
  of the method (after instantiating generic types), if its a constructor then its the type of
@@ -936,9 +942,10 @@ public static&nbsp;com.sun.source.tree.ExpressionTree&nbsp;getReceiver(com.sun.s
 <ul class="blockList">
 <li class="blockList">
 <h4>matchBinaryTree</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;matchBinaryTree(com.sun.source.tree.BinaryTree&nbsp;tree,
-                                                                       <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;&nbsp;matchers,
-                                                                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;matchBinaryTree(com.sun.source.tree.BinaryTree&nbsp;tree,
+                                                                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;&nbsp;matchers,
+                                                                                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Given a BinaryTree to match against and a list of two matchers, applies the matchers to the
  operands in both orders. If both matchers match, returns a list with the operand that matched
  each matcher in the corresponding position.</div>
@@ -1157,9 +1164,10 @@ public static&nbsp;com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;findSuperMe
 <ul class="blockList">
 <li class="blockList">
 <h4>getAnnotation</h4>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
 public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;T&nbsp;getAnnotation(com.sun.source.tree.Tree&nbsp;tree,
-                                                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;annotationClass)</pre>
+                                                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;annotationClass)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
      them, attempting to access that member from the Error Prone checker code will result in a
      runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
@@ -1173,9 +1181,10 @@ public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/
 <ul class="blockList">
 <li class="blockList">
 <h4>getAnnotation</h4>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
 public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&nbsp;T&nbsp;getAnnotation(com.sun.tools.javac.code.Symbol&nbsp;sym,
-                                                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;annotationClass)</pre>
+                                                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;annotationClass)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
      them, attempting to access that member from the Error Prone checker code will result in a
      runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
@@ -1223,7 +1232,8 @@ public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/
 <li class="blockList">
 <h4>getType</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
-public static&nbsp;com.sun.tools.javac.code.Type&nbsp;getType(com.sun.source.tree.Tree&nbsp;tree)</pre>
+public static&nbsp;com.sun.tools.javac.code.Type&nbsp;getType(<a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                                              com.sun.source.tree.Tree&nbsp;tree)</pre>
 <div class="block">Returns the <code>Type</code> of the given tree, or <code>null</code> if the type could not be
  determined.</div>
 </li>
@@ -1235,7 +1245,8 @@ public static&nbsp;com.sun.tools.javac.code.Type&nbsp;getType(com.sun.source.tre
 <li class="blockList">
 <h4>getType</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
-public static&nbsp;com.sun.tools.javac.code.Type.ClassType&nbsp;getType(com.sun.source.tree.ClassTree&nbsp;tree)</pre>
+public static&nbsp;com.sun.tools.javac.code.Type.ClassType&nbsp;getType(<a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+                                                                        com.sun.source.tree.ClassTree&nbsp;tree)</pre>
 <div class="block">Returns the <code>ClassType</code> for the given type <code>ClassTree</code> or <code>null</code> if the type
  could not be determined.</div>
 </li>
@@ -1246,7 +1257,8 @@ public static&nbsp;com.sun.tools.javac.code.Type.ClassType&nbsp;getType(com.sun.
 <ul class="blockList">
 <li class="blockList">
 <h4>getAnnotationName</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getAnnotationName(com.sun.source.tree.AnnotationTree&nbsp;tree)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getAnnotationName(com.sun.source.tree.AnnotationTree&nbsp;tree)</pre>
 </li>
 </ul>
 <a name="enclosingClass-com.sun.tools.javac.code.Symbol-">
@@ -1413,8 +1425,9 @@ public static&nbsp;com.sun.source.tree.ModifiersTree&nbsp;getModifiers(com.sun.s
 <ul class="blockList">
 <li class="blockList">
 <h4>getAnnotationWithSimpleName</h4>
-<pre>public static&nbsp;com.sun.source.tree.AnnotationTree&nbsp;getAnnotationWithSimpleName(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;? extends com.sun.source.tree.AnnotationTree&gt;&nbsp;annotations,
-                                                                             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public static&nbsp;com.sun.source.tree.AnnotationTree&nbsp;getAnnotationWithSimpleName(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;? extends com.sun.source.tree.AnnotationTree&gt;&nbsp;annotations,
+                                                                                       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</pre>
 <div class="block">Returns an <code>AnnotationTree</code> with the given simple name, or <code>null</code>.</div>
 </li>
 </ul>
