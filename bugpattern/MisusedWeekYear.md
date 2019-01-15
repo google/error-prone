@@ -137,6 +137,11 @@ public class MisusedWeekYearPositiveCases {
     // BUG: Diagnostic contains:
     sdf.applyLocalizedPattern(WEEK_YEAR_PATTERN);
   }
+
+  void testDateTimeFormatter() {
+    // BUG: Diagnostic contains:
+    java.time.format.DateTimeFormatter.ofPattern(WEEK_YEAR_PATTERN);
+  }
 }
 {% endhighlight %}
 

@@ -110,6 +110,9 @@ Duration.get() only works with SECONDS or NANOS.
 __[DurationToLongTimeUnit](bugpattern/DurationToLongTimeUnit)__<br>
 Unit mismatch when decomposing a Duration or Instant to call a &lt;long, TimeUnit&gt; API
 
+__[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
+Classes that override equals should also override hashCode.
+
 __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 == NaN always returns false; use the isNaN methods instead
 
@@ -492,9 +495,6 @@ Double-checked locking on non-volatile fields is unsafe
 
 __[EqualsGetClass](bugpattern/EqualsGetClass)__<br>
 Overriding Object#equals in a non-final class by using getClass rather than instanceof breaks substitutability of subclasses.
-
-__[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
-Classes that override equals should also override hashCode.
 
 __[EqualsIncompatibleType](bugpattern/EqualsIncompatibleType)__<br>
 An equality test between objects with incompatible types always returns false
@@ -968,11 +968,14 @@ Invalid use of @inheritDoc.
 __[InterfaceWithOnlyStatics](bugpattern/InterfaceWithOnlyStatics)__<br>
 This interface only contains static fields and methods; consider making it a final class instead to prevent subclassing.
 
+__[InvalidBlockTag](bugpattern/InvalidBlockTag)__<br>
+This tag is invalid.
+
+__[InvalidInlineTag](bugpattern/InvalidInlineTag)__<br>
+This tag is invalid.
+
 __[InvalidParam](bugpattern/InvalidParam)__<br>
 This @param tag doesn&#39;t refer to a parameter of the method.
-
-__[InvalidTag](bugpattern/InvalidTag)__<br>
-This tag is invalid.
 
 __[InvalidThrows](bugpattern/InvalidThrows)__<br>
 The documented method doesn&#39;t actually throw this checked exception.

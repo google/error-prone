@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -247,12 +247,19 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializab
 </td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneFlags.html#getSet-java.lang.String-">getSet</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
+<div class="block">Gets the flag value for the given key as a comma-separated <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util"><code>Set</code></a> of Strings, wrapped in
+ an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util"><code>Optional</code></a>, which is empty if the flag is unset.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneFlags.html#isEmpty--">isEmpty</a></span>()</code>
 <div class="block">Whether this Flags object is empty, i.e.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneFlags.html#plus-com.google.errorprone.ErrorProneFlags-">plus</a></span>(<a href="../../../com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;other)</code>
 <div class="block">Returns a new ErrorProneFlags object with the values of two ErrorProneFlags objects added
@@ -406,6 +413,19 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializab
  an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util"><code>Optional</code></a>, which is empty if the flag is unset.
 
  <p>(note: empty strings included, e.g. <code>"-XepOpt:List=,1,,2," =&gt; ["","1","","2",""]</code>)</div>
+</li>
+</ul>
+<a name="getSet-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSet</h4>
+<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;&nbsp;getSet(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
+<div class="block">Gets the flag value for the given key as a comma-separated <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util"><code>Set</code></a> of Strings, wrapped in
+ an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util"><code>Optional</code></a>, which is empty if the flag is unset.
+
+ <p>(note: empty strings included, e.g. <code>"-XepOpt:Set=,1,,1,2," =&gt; ["","1","2"]</code>)</div>
 </li>
 </ul>
 <a name="isEmpty--">
