@@ -47,12 +47,15 @@ import javax.lang.model.element.Modifier;
     name = "AutoValueImmutableFields",
     summary = "AutoValue recommends using immutable collections",
     severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
+    documentSuppression = false)
 public class AutoValueImmutableFields extends BugChecker implements ClassTreeMatcher {
 
   private static final String MESSAGE =
       "AutoValue instances should be deeply immutable. Therefore, we recommend returning a %s "
-          + "instead. Read more at http://goo.gl/qWo9sC";
+          + "instead. Read more at "
+          + "http://goo.gl/qWo9sC"
+      ;
 
   private static final ImmutableListMultimap<String, Matcher<MethodTree>> REPLACEMENT_TO_MATCHERS =
       ImmutableListMultimap.<String, Matcher<MethodTree>>builder()
@@ -141,7 +144,7 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (ASTHelpers.hasAnnotation(tree, "com.google.auto.value.AutoValue", state)) {
       for (Tree memberTree : tree.getMembers()) {
-        if (memberTree instanceof MethodTree) {
+        if (memberTree instanceof MethodTree && !isSuppressed(memberTree)) {
           MethodTree methodTree = (MethodTree) memberTree;
           if (PUBLIC_ABSTRACT_METHOD_MATCHER.matches(methodTree, state)) {
             for (Map.Entry<String, Matcher<MethodTree>> entry : REPLACEMENT_TO_MATCHERS.entries()) {
