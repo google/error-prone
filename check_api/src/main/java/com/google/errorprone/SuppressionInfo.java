@@ -21,14 +21,19 @@ import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Pair;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Immutable container of "suppression signals" - annotations or other information gathered from
@@ -101,6 +106,24 @@ public class SuppressionInfo {
    */
   public boolean isNameSuppressed(String name) {
     return suppressWarningsStrings.contains(name);
+  }
+
+  /**
+   * Generates the {@link SuppressionInfo} for a {@link CompilationUnitTree}. This differs in that
+   * {@code isGenerated} is determined by inspecting the annotations of the outermost class so that
+   * matchers on {@link CompilationUnitTree} will also be suppressed.
+   */
+  public SuppressionInfo forCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    AtomicBoolean generated = new AtomicBoolean(false);
+    new SimpleTreeVisitor<Void, Void>() {
+      @Override
+      public Void visitClass(ClassTree node, Void unused) {
+        ClassSymbol symbol = ASTHelpers.getSymbol(node);
+        generated.compareAndSet(false, symbol != null && isGenerated(symbol, state));
+        return null;
+      }
+    }.visit(tree.getTypeDecls(), null);
+    return new SuppressionInfo(suppressWarningsStrings, customSuppressions, generated.get());
   }
 
   /**

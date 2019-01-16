@@ -413,16 +413,15 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void suppressGeneratedWarning() {
     String[] generatedFile = {
+      "import java.util.List;",
       "@javax.annotation.Generated(\"Foo\")",
       "class Generated {",
-      "  public Generated() {",
-      "    if (true);",
-      "  }",
+      "  public Generated() {}",
       "}"
     };
 
     {
-      String[] args = {"-Xep:EmptyIf:WARN"};
+      String[] args = {"-Xep:RemoveUnusedImports:WARN"};
       Result exitCode =
           compiler.compile(
               args,
@@ -431,14 +430,14 @@ public class ErrorProneCompilerIntegrationTest {
       outputStream.flush();
       assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
       assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(ENGLISH))
-          .contains("[EmptyIf]");
+          .contains("[RemoveUnusedImports]");
       assertThat(outputStream.toString(), exitCode, is(Result.OK));
     }
 
     diagnosticHelper.clearDiagnostics();
 
     {
-      String[] args = {"-Xep:EmptyIf:WARN", "-XepDisableWarningsInGeneratedCode"};
+      String[] args = {"-Xep:RemoveUnusedImports:WARN", "-XepDisableWarningsInGeneratedCode"};
       Result exitCode =
           compiler.compile(
               args,

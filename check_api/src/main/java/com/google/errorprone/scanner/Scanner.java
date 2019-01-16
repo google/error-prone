@@ -25,6 +25,7 @@ import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -80,11 +81,16 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    */
   private SuppressionInfo updateSuppressions(Tree tree, VisitorState state) {
     SuppressionInfo prevSuppressionInfo = currentSuppressions;
-    Symbol sym = ASTHelpers.getDeclaredSymbol(tree);
-    if (sym != null) {
+    if (tree instanceof CompilationUnitTree) {
       currentSuppressions =
-          currentSuppressions.withExtendedSuppressions(
-              sym, state, getCustomSuppressionAnnotations());
+          currentSuppressions.forCompilationUnit((CompilationUnitTree) tree, state);
+    } else {
+      Symbol sym = ASTHelpers.getDeclaredSymbol(tree);
+      if (sym != null) {
+        currentSuppressions =
+            currentSuppressions.withExtendedSuppressions(
+                sym, state, getCustomSuppressionAnnotations());
+      }
     }
     return prevSuppressionInfo;
   }
