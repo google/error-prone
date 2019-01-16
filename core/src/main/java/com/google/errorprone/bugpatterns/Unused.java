@@ -245,7 +245,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
               if (var.getKind() == Kind.IDENTIFIER) {
                 // Anything that is not @Parameters(value = ...), e.g.
                 // @Parameters(source = ...) or @Parameters(method = ...)
-                if (((IdentifierTree) var).getName().contentEquals(JUNIT_PARAMS_VALUE)) {
+                if (!((IdentifierTree) var).getName().contentEquals(JUNIT_PARAMS_VALUE)) {
                   return true;
                 }
               }
