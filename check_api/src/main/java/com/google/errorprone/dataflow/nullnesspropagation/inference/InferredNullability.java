@@ -56,7 +56,9 @@ public class InferredNullability {
     for (TypeVariableSymbol tvs :
         TreeInfo.symbol((JCTree) callsite.getMethodSelect()).getTypeParameters()) {
       InferenceVariable iv = TypeVariableInferenceVar.create(tvs, callsite);
-      getNullness(iv).ifPresent(nullness -> result.put(tvs, nullness));
+      if (constraintGraph.nodes().contains(iv)) {
+        getNullness(iv).ifPresent(nullness -> result.put(tvs, nullness));
+      }
     }
     return result.build();
   }

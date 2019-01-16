@@ -263,9 +263,9 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       for (TypeVariableSymbol tvs : fieldAccess.selected.type.tsym.getTypeParameters()) {
         Type rcvrtype = fieldAccess.selected.type.tsym.type;
         ImmutableSet<InferenceVariable> rcvrReferences =
-            getReferencesToTypeVar(tvs, rcvrtype, fieldAccess.selected);
+            findUnannotatedTypeVarRefs(tvs, rcvrtype, fieldAccess.selected);
         Type restype = fieldAccess.sym.type.asMethodType().restype;
-        getReferencesToTypeVar(tvs, restype, node)
+        findUnannotatedTypeVarRefs(tvs, restype, node)
             .forEach(
                 resRef ->
                     rcvrReferences.forEach(
@@ -274,7 +274,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
             formalParameters.stream(),
             node.getArguments().stream(),
             (formal, actual) ->
-                getReferencesToTypeVar(tvs, formal, actual)
+                findUnannotatedTypeVarRefs(tvs, formal, actual)
                     .forEach(
                         argRef ->
                             rcvrReferences.forEach(
@@ -284,6 +284,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
     // Get all references to each typeVar in the return type and formal parameters and relate them
     // in the constraint graph; covariant in the return type, contravariant in the argument types.
+    // Annotated type var references override the type var's inferred qualifier, so ignore them.
     // TODO(b/116977632): generate constraints for the instantiation of type parameters, e.g.,
     //    if type parameter T was instantiated List<String>, we not only need to capture constraints
     //    for T == List<String> itself, but also for <String>.  This may be as simple as introducing
@@ -291,14 +292,15 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     //    T[0] < node[0] and arg[0] < T[0], for all generic parameters of T's instantiation
     for (TypeVariableSymbol typeVar : callee.getTypeParameters()) {
       InferenceVariable typeVarIV = TypeVariableInferenceVar.create(typeVar, node);
-      for (InferenceVariable iv : getReferencesToTypeVar(typeVar, callee.getReturnType(), node)) {
+      for (InferenceVariable iv :
+          findUnannotatedTypeVarRefs(typeVar, callee.getReturnType(), node)) {
         qualifierConstraints.putEdge(typeVarIV, iv);
       }
       Streams.forEachPair(
           formalParameters.stream(),
           node.getArguments().stream(),
           (formal, actual) -> {
-            for (InferenceVariable iv : getReferencesToTypeVar(typeVar, formal, actual)) {
+            for (InferenceVariable iv : findUnannotatedTypeVarRefs(typeVar, formal, actual)) {
               qualifierConstraints.putEdge(iv, typeVarIV);
             }
           });
@@ -306,14 +308,15 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     return super.visitMethodInvocation(node, unused);
   }
 
-  private static ImmutableSet<InferenceVariable> getReferencesToTypeVar(
+  // TODO(b/121273225): Exclude declaration annotations as well
+  private static ImmutableSet<InferenceVariable> findUnannotatedTypeVarRefs(
       TypeVariableSymbol typeVar, Type type, Tree sourceNode) {
     ImmutableSet.Builder<InferenceVariable> result = ImmutableSet.builder();
-    getTypeVarReferences(typeVar, sourceNode, type, new ArrayDeque<>(), result);
+    findUnannotatedTypeVarRefs(typeVar, sourceNode, type, new ArrayDeque<>(), result);
     return result.build();
   }
 
-  private static void getTypeVarReferences(
+  private static void findUnannotatedTypeVarRefs(
       TypeVariableSymbol typeVar,
       Tree sourceNode,
       Type type,
@@ -323,14 +326,19 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     List<Type> typeArguments = type.getTypeArguments();
     for (int i = 0; i < typeArguments.size(); i++) {
       partialSelector.push(i);
-      getTypeVarReferences(
+      findUnannotatedTypeVarRefs(
           typeVar, sourceNode, typeArguments.get(i), partialSelector, resultBuilder);
       partialSelector.pop();
     }
-    if (type.tsym.equals(typeVar)) {
+    if (type.tsym.equals(typeVar) && !toNullness(type.getAnnotationMirrors()).isPresent()) {
       resultBuilder.add(
           TypeArgInferenceVar.create(ImmutableList.copyOf(partialSelector), sourceNode));
     }
+  }
+
+  private static Optional<Nullness> toNullness(List<?> annotations) {
+    return Nullness.fromAnnotations(
+        annotations.stream().map(Object::toString).collect(ImmutableList.toImmutableList()));
   }
 
   /**
