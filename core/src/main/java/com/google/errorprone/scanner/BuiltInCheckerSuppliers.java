@@ -222,6 +222,7 @@ import com.google.errorprone.bugpatterns.ProvidesFixChecker;
 import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReachabilityFenceUsage;
+import com.google.errorprone.bugpatterns.RedundantOverride;
 import com.google.errorprone.bugpatterns.RedundantThrows;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
 import com.google.errorprone.bugpatterns.RemoveUnusedImports;
@@ -761,6 +762,7 @@ public class BuiltInCheckerSuppliers {
           InvalidBlockTag.class,
           InvalidInlineTag.class,
           InvalidParam.class,
+          RedundantOverride.class,
           ReturnFromVoid.class,
           InvalidThrows.class,
           JavaxInjectOnFinalField.class,
