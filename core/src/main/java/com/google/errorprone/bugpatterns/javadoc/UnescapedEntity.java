@@ -31,7 +31,6 @@ import com.google.common.collect.Range;
 import com.google.common.collect.RangeSet;
 import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -77,15 +76,20 @@ public final class UnescapedEntity extends BugChecker
 
   private static final ImmutableSet<String> PRE_TAGS = ImmutableSet.of("pre", "code");
 
-  private static final Pattern GENERIC = Pattern.compile("([A-Z][a-zA-Z0-9_]*<[A-Z][A-Za-z, ]+>)");
+  private static final String TYPE = "[A-Z][a-zA-Z0-9_]*";
 
-  private static final Pattern CONTAINS_HTML = Pattern.compile("&(lt|gt|amp);|&#|\\*\\s*@");
+  private static final String TYPE_PARAMETERS = "[A-Z][A-Za-z0-9,.& ]+";
 
-  private final boolean reportAll;
+  private static final Pattern GENERIC_PATTERN =
+      Pattern.compile(
+          String.format("(%s<%s>|%s<%s<%s>>)", TYPE, TYPE_PARAMETERS, TYPE, TYPE, TYPE_PARAMETERS));
 
-  public UnescapedEntity(ErrorProneFlags flags) {
-    reportAll = flags.getBoolean("UnescapedEntity:ReportAllUnescapedEntities").orElse(false);
-  }
+  /**
+   * Pattern for code/literal tags which should not be wrapped in a code tag, as they contain HTML
+   * entities, annotations, or other tags.
+   */
+  private static final Pattern SHOULD_NOT_WRAP =
+      Pattern.compile("&[a-zA-Z0-9]+;|&#[0-9]+;|&#x[0-9a-fA-F]+;|\n *\\*\\s*@|\\{@(literal|code)");
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
@@ -108,39 +112,42 @@ public final class UnescapedEntity extends BugChecker
     }
     RangesFinder rangesFinder = new RangesFinder(state);
     rangesFinder.scan(path, null);
+    Comment comment = ((DCDocComment) path.getDocComment()).comment;
+    Matcher matcher = GENERIC_PATTERN.matcher(comment.getText());
+    RangeSet<Integer> generics = TreeRangeSet.create();
+    while (matcher.find()) {
+      generics.add(
+          Range.closedOpen(
+              comment.getSourcePos(matcher.start()), comment.getSourcePos(matcher.end())));
+    }
     RangeSet<Integer> emittedFixes =
-        fixGenerics(path, rangesFinder.preTags, rangesFinder.dontEmitCodeFix, state);
-    new EntityChecker(state, rangesFinder.preTags, emittedFixes).scan(path, null);
+        fixGenerics(generics, rangesFinder.preTags, rangesFinder.dontEmitCodeFix, state);
+    new EntityChecker(state, generics, rangesFinder.preTags, emittedFixes).scan(path, null);
     return NO_MATCH;
   }
 
   private RangeSet<Integer> fixGenerics(
-      DocTreePath path,
+      RangeSet<Integer> generics,
       RangeSet<Integer> preTags,
       RangeSet<Integer> dontEmitCodeFix,
       VisitorState state) {
     RangeSet<Integer> emittedFixes = TreeRangeSet.create();
-    Comment comment = ((DCDocComment) path.getDocComment()).comment;
-    Matcher matcher = GENERIC.matcher(comment.getText());
-    while (matcher.find()) {
-      Range<Integer> range =
-          Range.closed(comment.getSourcePos(matcher.start()), comment.getSourcePos(matcher.end()));
+    for (Range<Integer> range : generics.asRanges()) {
       if (emittedFixes.intersects(range) || dontEmitCodeFix.intersects(range)) {
         continue;
       }
-      Range<Integer> containingPre = preTags.rangeContaining(range.lowerEndpoint());
-      if (containingPre == null) {
-        containingPre = range;
+      Range<Integer> regionToWrap = preTags.rangeContaining(range.lowerEndpoint());
+      if (regionToWrap == null) {
+        regionToWrap = range;
       }
-      emittedFixes.add(containingPre);
+      emittedFixes.add(regionToWrap);
       state.reportMatch(
-          buildDescription(
-                  getDiagnosticPosition(containingPre.lowerEndpoint(), state.getPath().getLeaf()))
+          buildDescription(getDiagnosticPosition(range.lowerEndpoint(), state.getPath().getLeaf()))
               .setMessage(
                   "This looks like a type with type parameters. The < and > characters here will "
                       + "be interpreted as HTML, which can be avoided by wrapping it in a "
                       + "{@code } tag.")
-              .addFix(wrapInCodeTag(containingPre))
+              .addFix(wrapInCodeTag(regionToWrap))
               .build());
     }
     return emittedFixes;
@@ -186,7 +193,7 @@ public final class UnescapedEntity extends BugChecker
           if (startPos != null) {
             int endPos = getStartPosition(endTree, state);
             String source = state.getSourceCode().subSequence(startPos, endPos).toString();
-            if (CONTAINS_HTML.matcher(source).find()) {
+            if (SHOULD_NOT_WRAP.matcher(source).find()) {
               dontEmitCodeFix.add(Range.closed(startPos, endPos));
             } else {
               preTags.add(Range.closed(startPos, endPos));
@@ -227,12 +234,17 @@ public final class UnescapedEntity extends BugChecker
 
   private final class EntityChecker extends DocTreePathScanner<Void, Void> {
     private final VisitorState state;
+    private final RangeSet<Integer> generics;
     private final RangeSet<Integer> preTags;
     private final RangeSet<Integer> emittedFixes;
 
     private EntityChecker(
-        VisitorState state, RangeSet<Integer> preTags, RangeSet<Integer> emittedFixes) {
+        VisitorState state,
+        RangeSet<Integer> generics,
+        RangeSet<Integer> preTags,
+        RangeSet<Integer> emittedFixes) {
       this.state = state;
+      this.generics = generics;
       this.preTags = preTags;
       this.emittedFixes = emittedFixes;
     }
@@ -262,7 +274,9 @@ public final class UnescapedEntity extends BugChecker
       }
       Range<Integer> containingPre = preTags.rangeContaining(startPosition);
       if (containingPre == null) {
-        return reportAll ? Optional.of(replacementFix(replacement)) : Optional.empty();
+        return generics.contains(startPosition)
+            ? Optional.of(replacementFix(replacement))
+            : Optional.empty();
       }
       if (emittedFixes.intersects(containingPre)) {
         return Optional.empty();
