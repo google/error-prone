@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -177,6 +177,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="../../../com/google/errorprone/SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/SuppressionInfo.html#forCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">forCompilationUnit</a></span>(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
+                  <a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<div class="block">Generates the <a href="../../../com/google/errorprone/SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <code>CompilationUnitTree</code>.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/SuppressionInfo.html#isNameSuppressed-java.lang.String-">isNameSuppressed</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</code>
 <div class="block">Returns true if <code>name</code> is a suppressed name according to the suppression signals in this
@@ -184,7 +191,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  annotation.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/SuppressionInfo.html#suppressedState-com.google.errorprone.matchers.Suppressible-boolean-">suppressedState</a></span>(<a href="../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
                boolean&nbsp;suppressedInGeneratedCode)</code>
@@ -192,7 +199,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  object.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/SuppressionInfo.html#withExtendedSuppressions-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-java.util.Set-">withExtendedSuppressions</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
                         <a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -268,6 +275,19 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Returns true if <code>name</code> is a suppressed name according to the suppression signals in this
  object (namely, is a member of previously-seen <code>SuppressWarnings</code> or <code>SuppressLint</code>
  annotation.</div>
+</li>
+</ul>
+<a name="forCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>forCompilationUnit</h4>
+<pre>public&nbsp;<a href="../../../com/google/errorprone/SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a>&nbsp;forCompilationUnit(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
+                                          <a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block">Generates the <a href="../../../com/google/errorprone/SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <code>CompilationUnitTree</code>. This differs in that
+ <code>isGenerated</code> is determined by inspecting the annotations of the outermost class so that
+ matchers on <code>CompilationUnitTree</code> will also be suppressed.</div>
 </li>
 </ul>
 <a name="withExtendedSuppressions-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-java.util.Set-">

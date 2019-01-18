@@ -1010,6 +1010,9 @@ BugChecker has incorrect ProvidesFix tag, please update
 __[QualifierWithTypeUse](bugpattern/QualifierWithTypeUse)__<br>
 Injection frameworks currently don&#39;t understand Qualifiers in TYPE_PARAMETER or TYPE_USE contexts.
 
+__[RedundantOverride](bugpattern/RedundantOverride)__<br>
+This override is redundant, and can be removed.
+
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
 
