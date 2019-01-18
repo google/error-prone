@@ -34,13 +34,10 @@ import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -105,7 +102,7 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
 
     Type newReturnType = state.getTypeFromString(immutableReturnType.get());
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    Tree typeTree = getTypeTree(methodTree.getReturnType());
+    Tree typeTree = ASTHelpers.getErasedTypeTree(methodTree.getReturnType());
     verify(typeTree != null, "Could not find return type of %s", methodTree);
     fixBuilder.replace(
         typeTree, SuggestedFixes.qualifyType(state, fixBuilder, newReturnType.asElement()));
@@ -181,21 +178,4 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
         null /* unused */);
     return returnTypes.build();
   }
-
-  private static Tree getTypeTree(Tree tree) {
-    return tree.accept(GET_TYPE_TREE_VISITOR, null /* unused */);
-  }
-
-  private static final SimpleTreeVisitor<Tree, Void> GET_TYPE_TREE_VISITOR =
-      new SimpleTreeVisitor<Tree, Void>() {
-        @Override
-        public Tree visitIdentifier(IdentifierTree tree, Void unused) {
-          return tree;
-        }
-
-        @Override
-        public Tree visitParameterizedType(ParameterizedTypeTree tree, Void unused) {
-          return tree.getType();
-        }
-      };
 }

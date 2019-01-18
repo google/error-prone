@@ -34,11 +34,8 @@ import com.google.errorprone.matchers.MultiMatcher;
 import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.ElementKind;
@@ -93,7 +90,7 @@ public final class MutableConstantField extends BugChecker implements VariableTr
     Type newLhsType = state.getTypeFromString(newLhsTypeQualifiedName);
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     fixBuilder.replace(
-        getTypeTree(lhsTree),
+        ASTHelpers.getErasedTypeTree(lhsTree),
         SuggestedFixes.qualifyType(state, fixBuilder, newLhsType.asElement()));
     SuggestedFix fix = fixBuilder.build();
 
@@ -117,21 +114,4 @@ public final class MutableConstantField extends BugChecker implements VariableTr
   private static boolean isConstantFieldName(String fieldName) {
     return Ascii.toUpperCase(fieldName).equals(fieldName);
   }
-
-  private static Tree getTypeTree(Tree tree) {
-    return tree.accept(GET_TYPE_TREE_VISITOR, null /* unused */);
-  }
-
-  private static final SimpleTreeVisitor<Tree, Void> GET_TYPE_TREE_VISITOR =
-      new SimpleTreeVisitor<Tree, Void>() {
-        @Override
-        public Tree visitIdentifier(IdentifierTree tree, Void unused) {
-          return tree;
-        }
-
-        @Override
-        public Tree visitParameterizedType(ParameterizedTypeTree tree, Void unused) {
-          return tree.getType();
-        }
-      };
 }
