@@ -51,7 +51,7 @@ import javax.lang.model.element.Modifier;
 public class AutoValueImmutableFields extends BugChecker implements ClassTreeMatcher {
 
   private static final String MESSAGE =
-      "AutoValue instances should be deeply immutable. Therefore, we recommend returning a %s "
+      "AutoValue instances should be deeply immutable. Therefore, we recommend returning %s "
           + "instead. Read more at "
           + "http://goo.gl/qWo9sC"
       ;
