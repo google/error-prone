@@ -18,6 +18,7 @@ package com.google.errorprone.dataflow.nullnesspropagation.inference;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -44,6 +45,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
@@ -185,15 +187,15 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         node.getVariable() instanceof ArrayAccessTree
             ? ((JCArrayAccess) node.getVariable()).getExpression().type
             : TreeInfo.symbol((JCTree) node.getVariable()).type;
-    generateConstraintsForWrite(lhsType, node.getExpression(), node);
+    generateConstraintsForWrite(lhsType, null, node.getExpression(), node);
     return super.visitAssignment(node, unused);
   }
 
   @Override
   public Void visitVariable(VariableTree node, Void unused) {
     if (node.getInitializer() != null) {
-      generateConstraintsForWrite(
-          TreeInfo.symbolFor((JCTree) node).type, node.getInitializer(), node);
+      Symbol symbol = TreeInfo.symbolFor((JCTree) node);
+      generateConstraintsForWrite(symbol.type, symbol, node.getInitializer(), node);
     }
     return super.visitVariable(node, unused);
   }
@@ -201,28 +203,28 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
   @Override
   public Void visitReturn(ReturnTree node, Void unused) {
     if (node.getExpression() != null && currentMethodOrInitializerOrLambda instanceof MethodTree) {
-      Type returnType =
-          ((MethodSymbol) TreeInfo.symbolFor((JCTree) currentMethodOrInitializerOrLambda))
-              .getReturnType();
-      generateConstraintsForWrite(returnType, node.getExpression(), node);
+      MethodSymbol sym =
+          ((MethodSymbol) TreeInfo.symbolFor((JCTree) currentMethodOrInitializerOrLambda));
+      generateConstraintsForWrite(sym.getReturnType(), sym, node.getExpression(), node);
     }
     return super.visitReturn(node, unused);
   }
 
-  private static ImmutableList<Type> expandVarargsToArity(List<VarSymbol> formalArgs, int arity) {
-    ImmutableList.Builder<Type> result = ImmutableList.builderWithExpectedSize(arity);
+  private static ImmutableList<TypeAndSymbol> expandVarargsToArity(
+      List<VarSymbol> formalArgs, int arity) {
+    ImmutableList.Builder<TypeAndSymbol> result = ImmutableList.builderWithExpectedSize(arity);
     int numberOfVarArgs = arity - formalArgs.size() + 1;
 
     for (Iterator<VarSymbol> argsIterator = formalArgs.iterator(); argsIterator.hasNext(); ) {
       VarSymbol arg = argsIterator.next();
       if (argsIterator.hasNext()) {
         // Not the variadic argument: just add to result
-        result.add(arg.type);
+        result.add(TypeAndSymbol.create(arg.type, arg));
       } else {
         // Variadic argument: extract the type and add it to result the proper number of times
         Type varArgType = ((ArrayType) arg.type).elemtype;
         for (int idx = 0; idx < numberOfVarArgs; idx++) {
-          result.add(varArgType);
+          result.add(TypeAndSymbol.create(varArgType));
         }
       }
     }
@@ -235,11 +237,11 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     JCMethodInvocation sourceNode = (JCMethodInvocation) node;
     MethodSymbol callee = (MethodSymbol) TreeInfo.symbol(sourceNode.getMethodSelect());
 
-    ImmutableList<Type> formalParameters =
+    ImmutableList<TypeAndSymbol> formalParameters =
         callee.isVarArgs()
             ? expandVarargsToArity(callee.getParameters(), sourceNode.args.size())
             : callee.getParameters().stream()
-                .map(var -> var.type)
+                .map(var -> TypeAndSymbol.create(var.type, var))
                 .collect(ImmutableList.toImmutableList());
 
     // Generate constraints for each argument write.
@@ -250,7 +252,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
           // formal parameter type (no l-val b/c that would wrongly constrain the method return)
           // TODO(b/116977632): constraints for actual parameter type (i.e. after type variable
           // substitution) without ignoring annotations directly on the parameter or vararg
-          generateConstraintsForWrite(formal, actual, /*lVal=*/ null);
+          generateConstraintsForWrite(formal.type(), formal.symbol(), actual, /*lVal=*/ null);
         });
 
     // Generate constraints for method return
@@ -263,9 +265,9 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       for (TypeVariableSymbol tvs : fieldAccess.selected.type.tsym.getTypeParameters()) {
         Type rcvrtype = fieldAccess.selected.type.tsym.type;
         ImmutableSet<InferenceVariable> rcvrReferences =
-            findUnannotatedTypeVarRefs(tvs, rcvrtype, fieldAccess.selected);
+            findUnannotatedTypeVarRefs(tvs, rcvrtype, /*decl=*/ null, fieldAccess.selected);
         Type restype = fieldAccess.sym.type.asMethodType().restype;
-        findUnannotatedTypeVarRefs(tvs, restype, node)
+        findUnannotatedTypeVarRefs(tvs, restype, fieldAccess.sym, node)
             .forEach(
                 resRef ->
                     rcvrReferences.forEach(
@@ -274,7 +276,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
             formalParameters.stream(),
             node.getArguments().stream(),
             (formal, actual) ->
-                findUnannotatedTypeVarRefs(tvs, formal, actual)
+                findUnannotatedTypeVarRefs(tvs, formal.type(), formal.symbol(), actual)
                     .forEach(
                         argRef ->
                             rcvrReferences.forEach(
@@ -293,14 +295,15 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     for (TypeVariableSymbol typeVar : callee.getTypeParameters()) {
       InferenceVariable typeVarIV = TypeVariableInferenceVar.create(typeVar, node);
       for (InferenceVariable iv :
-          findUnannotatedTypeVarRefs(typeVar, callee.getReturnType(), node)) {
+          findUnannotatedTypeVarRefs(typeVar, callee.getReturnType(), callee, node)) {
         qualifierConstraints.putEdge(typeVarIV, iv);
       }
       Streams.forEachPair(
           formalParameters.stream(),
           node.getArguments().stream(),
           (formal, actual) -> {
-            for (InferenceVariable iv : findUnannotatedTypeVarRefs(typeVar, formal, actual)) {
+            for (InferenceVariable iv :
+                findUnannotatedTypeVarRefs(typeVar, formal.type(), formal.symbol(), actual)) {
               qualifierConstraints.putEdge(iv, typeVarIV);
             }
           });
@@ -308,11 +311,10 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     return super.visitMethodInvocation(node, unused);
   }
 
-  // TODO(b/121273225): Exclude declaration annotations as well
   private static ImmutableSet<InferenceVariable> findUnannotatedTypeVarRefs(
-      TypeVariableSymbol typeVar, Type type, Tree sourceNode) {
+      TypeVariableSymbol typeVar, Type type, @Nullable Symbol decl, Tree sourceNode) {
     ImmutableSet.Builder<InferenceVariable> result = ImmutableSet.builder();
-    findUnannotatedTypeVarRefs(typeVar, sourceNode, type, new ArrayDeque<>(), result);
+    findUnannotatedTypeVarRefs(typeVar, sourceNode, type, decl, new ArrayDeque<>(), result);
     return result.build();
   }
 
@@ -320,20 +322,36 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       TypeVariableSymbol typeVar,
       Tree sourceNode,
       Type type,
+      @Nullable Symbol decl,
       ArrayDeque<Integer> partialSelector,
       ImmutableSet.Builder<InferenceVariable> resultBuilder) {
-
+    checkArgument(decl == null || partialSelector.isEmpty());
     List<Type> typeArguments = type.getTypeArguments();
     for (int i = 0; i < typeArguments.size(); i++) {
       partialSelector.push(i);
       findUnannotatedTypeVarRefs(
-          typeVar, sourceNode, typeArguments.get(i), partialSelector, resultBuilder);
+          typeVar,
+          sourceNode,
+          typeArguments.get(i),
+          /*decl=*/ null,
+          partialSelector,
+          resultBuilder);
       partialSelector.pop();
     }
-    if (type.tsym.equals(typeVar) && !toNullness(type.getAnnotationMirrors()).isPresent()) {
+    if (type.tsym.equals(typeVar) && !extractExplicitNullness(type, decl).isPresent()) {
       resultBuilder.add(
           TypeArgInferenceVar.create(ImmutableList.copyOf(partialSelector), sourceNode));
     }
+  }
+
+  private static Optional<Nullness> extractExplicitNullness(Type type, @Nullable Symbol symbol) {
+    if (symbol != null) {
+      Optional<Nullness> result = Nullness.fromAnnotationsOn(symbol);
+      if (result.isPresent()) {
+        return result;
+      }
+    }
+    return toNullness(type.getAnnotationMirrors());
   }
 
   private static Optional<Nullness> toNullness(List<?> annotations) {
@@ -348,7 +366,8 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
    * usable for method arguments, and note that the l-val is a statement in other cases (return and
    * variable declarations); the l-val only appears useful when it's an assignment
    */
-  private void generateConstraintsForWrite(Type lType, ExpressionTree rVal, @Nullable Tree lVal) {
+  private void generateConstraintsForWrite(
+      Type lType, @Nullable Symbol decl, ExpressionTree rVal, @Nullable Tree lVal) {
     // TODO(kmb): Consider just visiting these expression types
     if (rVal.getKind() == Kind.NULL_LITERAL) {
       qualifierConstraints.putEdge(
@@ -365,15 +384,20 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       qualifierConstraints.putEdge(
           TypeArgInferenceVar.create(ImmutableList.of(), rVal), ProperInferenceVar.NONNULL);
     }
-    generateConstraintsForWrite(lType, rVal, lVal, new ArrayDeque<>());
+    generateConstraintsForWrite(lType, decl, rVal, lVal, new ArrayDeque<>());
   }
 
   private void generateConstraintsForWrite(
-      Type lType, ExpressionTree rVal, @Nullable Tree lVal, ArrayDeque<Integer> argSelector) {
+      Type lType,
+      @Nullable Symbol decl,
+      ExpressionTree rVal,
+      @Nullable Tree lVal,
+      ArrayDeque<Integer> argSelector) {
+    checkArgument(decl == null || argSelector.isEmpty());
     List<Type> typeArguments = lType.getTypeArguments();
     for (int i = 0; i < typeArguments.size(); i++) {
       argSelector.push(i);
-      generateConstraintsForWrite(typeArguments.get(i), rVal, lVal, argSelector);
+      generateConstraintsForWrite(typeArguments.get(i), /*decl=*/ null, rVal, lVal, argSelector);
       argSelector.pop();
     }
 
@@ -381,22 +405,24 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
     // If there is an explicit annotation, trust it and constrain the corresponding type arg
     // inference variable to be equal to that proper inference variable.
-    ProperInferenceVar.fromTypeIfAnnotated(lType)
-        .ifPresent(
-            annot -> {
-              qualifierConstraints.putEdge(
-                  TypeArgInferenceVar.create(argSelectorList, rVal), annot);
-              if (!argSelector.isEmpty()) {
-                // Top-level target types implicitly only constrain from above: for instance, a
-                // local variable annotated @Nullable can be initialized with a non-null value just
-                // fine.  This isn't true for invariant generic type parameters such as
-                // List<@Nullable String> which rVal needs to satisfy exactly, so we generate
-                // equality constraints for those.
-                // TODO(b/121398981): skip for ? extends @<Annot> since they constrain one side only
-                qualifierConstraints.putEdge(
-                    annot, TypeArgInferenceVar.create(argSelectorList, rVal));
-              }
-            });
+    Optional<InferenceVariable> fromAnnotations =
+        extractExplicitNullness(lType, decl).map(ProperInferenceVar::create);
+    if (!fromAnnotations.isPresent()) {
+      fromAnnotations = ProperInferenceVar.fromTypeIfAnnotated(lType);
+    }
+    fromAnnotations.ifPresent(
+        annot -> {
+          qualifierConstraints.putEdge(TypeArgInferenceVar.create(argSelectorList, rVal), annot);
+          if (!argSelector.isEmpty()) {
+            // Top-level target types implicitly only constrain from above: for instance, a
+            // local variable annotated @Nullable can be initialized with a non-null value just
+            // fine.  This isn't true for invariant generic type parameters such as
+            // List<@Nullable String> which rVal needs to satisfy exactly, so we generate
+            // equality constraints for those.
+            // TODO(b/121398981): skip for ? extends @<Annot> since they constrain one side only
+            qualifierConstraints.putEdge(annot, TypeArgInferenceVar.create(argSelectorList, rVal));
+          }
+        });
 
     if (lVal != null) {
       // Constrain this type or type argument on the rVal to be <= its lVal counterpart
@@ -404,5 +430,22 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
           TypeArgInferenceVar.create(argSelectorList, rVal),
           TypeArgInferenceVar.create(argSelectorList, lVal));
     }
+  }
+
+  /** Pair of a {@link Type} and an optional {@link Symbol}. */
+  @AutoValue
+  abstract static class TypeAndSymbol {
+    static TypeAndSymbol create(Type type) {
+      return create(type, /*symbol=*/ null);
+    }
+
+    static TypeAndSymbol create(Type type, @Nullable VarSymbol symbol) {
+      return new AutoValue_NullnessQualifierInference_TypeAndSymbol(type, symbol);
+    }
+
+    abstract Type type();
+
+    @Nullable
+    abstract VarSymbol symbol();
   }
 }
