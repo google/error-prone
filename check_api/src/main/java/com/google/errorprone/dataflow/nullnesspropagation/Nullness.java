@@ -127,7 +127,8 @@ public enum Nullness implements AbstractValue<Nullness> {
   // TODO(kmb): Correctly handle JSR 305 @Nonnull(NEVER) etc.
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
       Pattern.compile(
-              ".*\\.((Recently)?Nullable(Decl)?|(Recently)?NotNull|Nonnull|NonNull|CheckForNull)$")
+              ".*\\.((Recently)?Nullable(Decl)?|(Recently)?NotNull(Decl)?|NonNull(Decl)?|Nonnull|"
+                  + "CheckForNull)$")
           .asPredicate();
 
   private static final Predicate<String> NULLABLE_ANNOTATION =
