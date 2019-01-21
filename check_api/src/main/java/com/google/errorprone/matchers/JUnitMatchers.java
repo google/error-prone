@@ -219,42 +219,44 @@ public class JUnitMatchers {
           "org.mockito.runners.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
 
   /**
-   * Matches an argument of type Class<T>, where T is a subtype of one of the test runners listed in
-   * the TEST_RUNNERS field.
+   * Matches an argument of type {@code Class<T>}, where T is a subtype of one of the test runners
+   * listed in the TEST_RUNNERS field.
    *
    * <p>TODO(eaftan): Support checking for an annotation that tells us whether this test runner
    * expects tests to be annotated with @Test.
    */
-  private static final Matcher<ExpressionTree> isJUnit4TestRunner =
-      new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree t, VisitorState state) {
-          Type type = ((JCTree) t).type;
-          // Expect a class type.
-          if (!(type instanceof ClassType)) {
-            return false;
-          }
-          // Expect one type argument, the type of the JUnit class runner to use.
-          com.sun.tools.javac.util.List<Type> typeArgs = ((ClassType) type).getTypeArguments();
-          if (typeArgs.size() != 1) {
-            return false;
-          }
-          Type runnerType = typeArgs.get(0);
-          for (String testRunner : TEST_RUNNERS) {
-            Symbol parent = state.getSymbolFromString(testRunner);
-            if (parent == null) {
-              continue;
-            }
-            if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
-              return true;
-            }
-          }
+  public static Matcher<ExpressionTree> isJUnit4TestRunnerOfType(Iterable<String> runnerTypes) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree t, VisitorState state) {
+        Type type = ((JCTree) t).type;
+        // Expect a class type.
+        if (!(type instanceof ClassType)) {
           return false;
         }
-      };
+        // Expect one type argument, the type of the JUnit class runner to use.
+        com.sun.tools.javac.util.List<Type> typeArgs = type.getTypeArguments();
+        if (typeArgs.size() != 1) {
+          return false;
+        }
+        Type runnerType = typeArgs.get(0);
+        for (String testRunner : runnerTypes) {
+          Symbol parent = state.getSymbolFromString(testRunner);
+          if (parent == null) {
+            continue;
+          }
+          if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
+            return true;
+          }
+        }
+        return false;
+      }
+    };
+  }
 
   public static final MultiMatcher<ClassTree, AnnotationTree> hasJUnit4TestRunner =
-      annotations(AT_LEAST_ONE, hasArgumentWithValue("value", isJUnit4TestRunner));
+      annotations(
+          AT_LEAST_ONE, hasArgumentWithValue("value", isJUnit4TestRunnerOfType(TEST_RUNNERS)));
 
   /**
    * Matches classes which have attributes of only JUnit4 test classes.
