@@ -336,6 +336,7 @@ import com.google.errorprone.bugpatterns.inject.dagger.AndroidInjectionBeforeSup
 import com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions;
 import com.google.errorprone.bugpatterns.inject.dagger.PrivateConstructorForNoninstantiableModule;
 import com.google.errorprone.bugpatterns.inject.dagger.ProvidesNull;
+import com.google.errorprone.bugpatterns.inject.dagger.RefersToDaggerCodegen;
 import com.google.errorprone.bugpatterns.inject.dagger.ScopeOnModule;
 import com.google.errorprone.bugpatterns.inject.dagger.UseBinds;
 import com.google.errorprone.bugpatterns.inject.guice.AssistedInjectScoping;
@@ -547,6 +548,7 @@ public class BuiltInCheckerSuppliers {
           RandomModInteger.class,
           RandomCast.class,
           RectIntersectReturnValueIgnored.class,
+          RefersToDaggerCodegen.class,
           RestrictedApiChecker.class,
           ReturnValueIgnored.class,
           SelfAssignment.class,
