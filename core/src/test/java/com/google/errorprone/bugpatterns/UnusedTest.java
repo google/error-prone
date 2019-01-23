@@ -789,7 +789,7 @@ public class UnusedTest {
             "     ImmutableList.of();",
             "  }",
             "}")
-        .setFixChooser(FixChoosers.FIRST)
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
@@ -812,7 +812,6 @@ public class UnusedTest {
             "  void test() {",
             "  }",
             "}")
-        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
@@ -1026,6 +1025,7 @@ public class UnusedTest {
             "Test.java", //
             "class Test {",
             "  public int a() {",
+            "    a();",
             "    return 1;",
             "  }",
             "}")
