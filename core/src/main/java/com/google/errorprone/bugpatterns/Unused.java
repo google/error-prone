@@ -789,7 +789,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       removeSideEffectsFix.replace(statement, replacement);
     }
     return encounteredSideEffects
-        ? ImmutableList.of(fix.build(), removeSideEffectsFix.build())
+        ? ImmutableList.of(removeSideEffectsFix.build(), fix.build())
         : ImmutableList.of(fix.build());
   }
 

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +59,7 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  public void sideEffectFreeRefactoring() throws Exception {
+  public void sideEffectFreeRefactoring() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -72,7 +73,36 @@ public final class ModifiedButNotUsedTest {
             "    bar.add(sideEffects());",
             "    List<Integer> baz;",
             "    baz = new ArrayList<>();",
+            "    baz.add(sideEffects());",
+            "  }",
+            "  int sideEffects() { return 1; }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "  }",
+            "  int sideEffects() { return 1; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void sideEffectPreservingRefactoring() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "    List<Integer> bar = new ArrayList<>();",
             "    bar.add(sideEffects());",
+            "    List<Integer> baz;",
+            "    baz = new ArrayList<>();",
+            "    baz.add(sideEffects());",
             "  }",
             "  int sideEffects() { return 1; }",
             "}")
@@ -87,6 +117,7 @@ public final class ModifiedButNotUsedTest {
             "  }",
             "  int sideEffects() { return 1; }",
             "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
@@ -197,7 +228,7 @@ public final class ModifiedButNotUsedTest {
 
   @Test
   @Ignore("b/74365407 test proto sources are broken")
-  public void protoSideEffects() throws Exception {
+  public void protoSideEffects() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -222,6 +253,7 @@ public final class ModifiedButNotUsedTest {
             "  }",
             "  TestFieldProtoMessage sideEffects() { throw new UnsupportedOperationException(); }",
             "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
