@@ -351,7 +351,7 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
         withoutSideEffects.replace(enclosingStatement, "");
       }
       return encounteredSideEffects
-          ? ImmutableList.of(withSideEffects.build(), withoutSideEffects.build())
+          ? ImmutableList.of(withoutSideEffects.build(), withSideEffects.build())
           : ImmutableList.of(withoutSideEffects.build());
     }
   }
