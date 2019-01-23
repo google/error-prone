@@ -229,6 +229,21 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
+  public void testPreservePrecedence3() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    float f = 0;",
+            "    // BUG: Diagnostic contains: f = (float) (f - (3.0 > 0 ? 1.0 : 2.0))",
+            "    f -= 3.0 > 0 ? 1.0 : 2.0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testPreservePrecedenceExhaustive() throws Exception {
     testPrecedence("*", "*", /* parens= */ true);
     testPrecedence("*", "+", /* parens= */ true);
