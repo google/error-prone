@@ -292,4 +292,74 @@ public final class ModifiedButNotUsedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  @Ignore("b/74365407 test proto sources are broken")
+  public void protoUnusedExpression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void foo(TestProtoMessage proto) {",
+            "    // BUG: Diagnostic contains:",
+            "    proto.toBuilder().setMessage(TestFieldProtoMessage.newBuilder()).build();",
+            "    // BUG: Diagnostic contains:",
+            "    proto.toBuilder().setMessage(TestFieldProtoMessage.newBuilder());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  @Ignore("b/74365407 test proto sources are broken")
+  public void protoUnusedButNotModified() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void foo(TestProtoMessage proto) throws Exception {",
+            // Consider mergeFrom as a use, given it throws a checked exception.
+            "    TestProtoMessage.newBuilder().mergeFrom(new byte[0]).build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  @Ignore("b/74365407 test proto sources are broken")
+  public void protoUnusedExpressionViaBuilderGetter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void foo(TestProtoMessage proto) {",
+            "    // BUG: Diagnostic contains:",
+            "    proto.toBuilder().getMessageBuilder().clearField().build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void collectionUnusedExpression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  void foo() {",
+            "    // BUG: Diagnostic contains:",
+            "    ImmutableList.<Integer>builder().add(1).build();",
+            "    // BUG: Diagnostic contains:",
+            "    ImmutableList.<Integer>builder().add(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
