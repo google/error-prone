@@ -141,7 +141,7 @@ public final class MissingSummary extends BugChecker
                     lowerFirstLetter(description), description.endsWith(".") ? "" : "."))
             .build();
     return buildDescription(diagnosticPosition(docTreePath, state))
-        .setMessage(String.format(CONSIDER_USING_MESSAGE, "link"))
+        .setMessage(String.format(CONSIDER_USING_MESSAGE, "return"))
         .addFix(fix)
         .build();
   }
