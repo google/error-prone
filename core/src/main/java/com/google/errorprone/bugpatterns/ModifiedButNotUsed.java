@@ -21,7 +21,9 @@ import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -35,11 +37,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.IsSubtypeOf;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.predicates.type.DescendantOf;
 import com.google.errorprone.predicates.type.DescendantOfAny;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
@@ -54,6 +58,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -77,7 +82,8 @@ import java.util.stream.Stream;
     category = JDK,
     providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING)
-public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatcher {
+public class ModifiedButNotUsed extends BugChecker
+    implements ExpressionStatementTreeMatcher, VariableTreeMatcher {
 
   private static final ImmutableSet<String> GUAVA_IMMUTABLES =
       ImmutableSet.of(
@@ -109,38 +115,42 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
               "set",
               "sort");
 
-  private static final ImmutableSet<String> PROTO_CLASSES =
-      ImmutableSet.of(
-          "com.google.protobuf.GeneratedMessage", "com.google.protobuf.GeneratedMessageLite");
+  private static final String MESSAGE = "com.google.protobuf.MessageLite";
+
+  private static final String MESSAGE_BUILDER = MESSAGE + ".Builder";
 
   private static final Matcher<ExpressionTree> FLUENT_SETTER =
       anyOf(
           instanceMethod()
-              .onDescendantOfAny(
-                  PROTO_CLASSES.stream().map(p -> p + ".Builder").collect(toImmutableList()))
-              .withNameMatching(Pattern.compile("(add|set|clear|remove|merge).+")),
+              .onDescendantOf(MESSAGE_BUILDER)
+              .withNameMatching(Pattern.compile("(add|clear|remove|set).+")),
           instanceMethod()
               .onDescendantOfAny(
                   GUAVA_IMMUTABLES.stream().map(c -> c + ".Builder").collect(toImmutableSet()))
               .namedAnyOf("add", "addAll", "put", "putAll"));
 
+  private static final Matcher<ExpressionTree> FLUENT_CHAIN =
+      anyOf(
+          FLUENT_SETTER,
+          instanceMethod()
+              .onDescendantOf(MESSAGE_BUILDER)
+              .withNameMatching(Pattern.compile("get.+")));
+
   private static final Matcher<Tree> COLLECTION_TYPE =
       anyOf(COLLECTIONS.stream().map(IsSubtypeOf::new).collect(toImmutableList()));
 
-  private static final Matcher<Tree> PROTO_TYPE =
-      anyOf(
-          PROTO_CLASSES.stream()
-              .map(p -> new IsSubtypeOf<>(p + ".Builder"))
-              .collect(toImmutableList()));
+  private static final Matcher<Tree> PROTO_TYPE = new IsSubtypeOf<>(MESSAGE_BUILDER);
 
   private static final Matcher<ExpressionTree> FLUENT_CONSTRUCTOR =
       anyOf(
-          constructor()
-              .forClass(
-                  new DescendantOfAny(
-                      GUAVA_IMMUTABLES.stream()
-                          .map(i -> Suppliers.typeFromString(i + ".Builder"))
-                          .collect(toImmutableList()))),
+          allOf(
+              kindIs(Kind.NEW_CLASS),
+              constructor()
+                  .forClass(
+                      new DescendantOfAny(
+                          GUAVA_IMMUTABLES.stream()
+                              .map(i -> Suppliers.typeFromString(i + ".Builder"))
+                              .collect(toImmutableList())))),
           staticMethod()
               .onClass(
                   new DescendantOfAny(
@@ -148,25 +158,14 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
                           .map(Suppliers::typeFromString)
                           .collect(toImmutableList())))
               .namedAnyOf("builder", "builderWithExpectedSize"),
-          constructor()
-              .forClass(
-                  new DescendantOfAny(
-                      PROTO_CLASSES.stream()
-                          .map(c -> Suppliers.typeFromString(c + ".Builder"))
-                          .collect(toImmutableList()))),
+          allOf(
+              kindIs(Kind.NEW_CLASS),
+              constructor().forClass(new DescendantOf(Suppliers.typeFromString(MESSAGE_BUILDER)))),
           staticMethod()
-              .onClass(
-                  new DescendantOfAny(
-                      PROTO_CLASSES.stream()
-                          .map(Suppliers::typeFromString)
-                          .collect(toImmutableList())))
+              .onClass(new DescendantOf(Suppliers.typeFromString(MESSAGE)))
               .named("newBuilder"),
           instanceMethod()
-              .onClass(
-                  new DescendantOfAny(
-                      PROTO_CLASSES.stream()
-                          .map(Suppliers::typeFromString)
-                          .collect(toImmutableList())))
+              .onClass(new DescendantOf(Suppliers.typeFromString(MESSAGE)))
               .namedAnyOf("toBuilder", "newBuilderForType"));
 
   private static final Matcher<ExpressionTree> NEW_COLLECTION =
@@ -184,38 +183,18 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
                   "com.google.common.collect.Sets")
               .withNameMatching(Pattern.compile("new.+")));
 
-  private static boolean newFluentChain(ExpressionTree tree, VisitorState state) {
-    while (tree instanceof MethodInvocationTree && FLUENT_SETTER.matches(tree, state)) {
-      tree = getReceiver(tree);
-    }
-    return FLUENT_CONSTRUCTOR.matches(tree, state);
-  }
-
-  private static boolean collectionUsed(VisitorState state) {
-    TreePath path = state.getPath();
-    return !(path.getParentPath().getLeaf() instanceof MemberSelectTree)
-        || !(path.getParentPath().getParentPath().getLeaf() instanceof MethodInvocationTree)
-        || !COLLECTION_SETTER.matches(
-            (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf(), state)
-        || ASTHelpers.targetType(state.withPath(path.getParentPath().getParentPath())) != null;
-  }
-
-  private static boolean fluentUsed(VisitorState state) {
-    for (TreePath path = state.getPath();
-        path != null;
-        path = path.getParentPath().getParentPath()) {
-      if (path.getParentPath().getLeaf() instanceof ExpressionStatementTree) {
-        return false;
-      }
-      if (!(path.getParentPath().getLeaf() instanceof MemberSelectTree
-          && path.getParentPath().getParentPath().getLeaf() instanceof MethodInvocationTree
-          && FLUENT_SETTER.matches(
-              (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf(), state))) {
-        break;
-      }
-    }
-    return true;
-  }
+  private static final Matcher<ExpressionTree> BUILD_CALL =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("com.google.protobuf.MessageLite.Builder")
+              .namedAnyOf("build", "buildPartial"),
+          instanceMethod()
+              .onClass(
+                  new DescendantOfAny(
+                      GUAVA_IMMUTABLES.stream()
+                          .map(c -> Suppliers.typeFromString(c + ".Builder"))
+                          .collect(toImmutableList())))
+              .named("build"));
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -266,7 +245,64 @@ public class ModifiedButNotUsed extends BugChecker implements VariableTreeMatche
   private static Matcher<IdentifierTree> getMatcher(Tree tree, VisitorState state) {
     return COLLECTION_TYPE.matches(tree, state)
         ? (t, s) -> collectionUsed(s)
-        : (t, s) -> fluentUsed(s);
+        : (t, s) -> fluentBuilderUsed(s);
+  }
+
+  private static boolean collectionUsed(VisitorState state) {
+    TreePath path = state.getPath();
+    return !(path.getParentPath().getLeaf() instanceof MemberSelectTree)
+        || !(path.getParentPath().getParentPath().getLeaf() instanceof MethodInvocationTree)
+        || !COLLECTION_SETTER.matches(
+            (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf(), state)
+        || ASTHelpers.targetType(state.withPath(path.getParentPath().getParentPath())) != null;
+  }
+
+  private static boolean fluentBuilderUsed(VisitorState state) {
+    for (TreePath path = state.getPath();
+        path != null;
+        path = path.getParentPath().getParentPath()) {
+      if (path.getParentPath().getLeaf() instanceof ExpressionStatementTree) {
+        return false;
+      }
+      if (!(path.getParentPath().getLeaf() instanceof MemberSelectTree
+          && path.getParentPath().getParentPath().getLeaf() instanceof MethodInvocationTree
+          && FLUENT_CHAIN.matches(
+              (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf(), state))) {
+        return true;
+      }
+    }
+    return true;
+  }
+
+  @Override
+  public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
+    ExpressionTree expression = tree.getExpression();
+    if (BUILD_CALL.matches(expression, state)) {
+      expression = getReceiver(expression);
+    }
+    if (expression == null) {
+      return NO_MATCH;
+    }
+    // Make sure we actually set something.
+    if (!FLUENT_SETTER.matches(expression, state)) {
+      return NO_MATCH;
+    }
+    if (!newFluentChain(expression, state)) {
+      return NO_MATCH;
+    }
+    return buildDescription(tree)
+        .setMessage("Modifying a Builder without assigning it to anything does nothing.")
+        .build();
+  }
+
+  /**
+   * Whether this is a chain of method invocations terminating in a new proto or collection builder.
+   */
+  private static boolean newFluentChain(ExpressionTree tree, VisitorState state) {
+    while (tree instanceof MethodInvocationTree && FLUENT_CHAIN.matches(tree, state)) {
+      tree = getReceiver(tree);
+    }
+    return tree != null && FLUENT_CONSTRUCTOR.matches(tree, state);
   }
 
   private static class UnusedScanner extends TreePathScanner<Void, Void> {
