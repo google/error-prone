@@ -20,18 +20,19 @@ something is done with the return value:
   }
 ```
 
-As protos are immutable, the return value must be used:
+As protos are immutable, either the return value must be used:
 
 ```java {.good}
-  MyProto setFoo(MyProto proto, String foo) {
+  @CheckReturnValue
+  MyProto withFoo(MyProto proto, String foo) {
     return proto.toBuilder().setFoo(foo).build();
   }
 ```
 
 or the Builder modified in place:
 
-```java {.bad}
+```java {.good}
   void setFoo(MyProto.Builder protoBuilder, String foo) {
-    protoBuilder.toBuilder().setFoo(foo);
+    protoBuilder.setFoo(foo);
   }
 ```
