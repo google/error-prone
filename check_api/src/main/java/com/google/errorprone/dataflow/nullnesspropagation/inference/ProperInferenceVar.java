@@ -17,10 +17,6 @@
 package com.google.errorprone.dataflow.nullnesspropagation.inference;
 
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
-import com.google.errorprone.util.MoreAnnotations;
-import com.sun.tools.javac.code.Type;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Proper inference variables are thin wrappers around Nullness lattice elements, lifted so that
@@ -53,14 +49,6 @@ enum ProperInferenceVar implements InferenceVariable {
   };
 
   abstract Nullness nullness();
-
-  static Optional<InferenceVariable> fromTypeIfAnnotated(Type type) {
-    return Nullness.fromAnnotations(
-            MoreAnnotations.inheritedAnnotations(type).stream()
-                .map(Object::toString)
-                .collect(Collectors.toList()))
-        .map(ProperInferenceVar::create);
-  }
 
   static InferenceVariable create(Nullness nullness) {
     switch (nullness) {

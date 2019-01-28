@@ -28,6 +28,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.dataflow.nullnesspropagation.TrustingNullnessAnalysis;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ExpressionTree;
@@ -131,7 +132,7 @@ public class NullableDereference extends BugChecker
       // TODO(b/121273225): handle and check constrained type variables
       // TODO(b/121203670): Recognize @ParametersAreNonnullByDefault etc.
       // Ignore unannotated and @Nullable parameters
-      if (Nullness.fromAnnotationsOn(param).orElse(null) != Nullness.NONNULL) {
+      if (NullnessAnnotations.fromAnnotationsOn(param).orElse(null) != Nullness.NONNULL) {
         continue;
       }
       ExpressionTree arg = arguments.get(i);

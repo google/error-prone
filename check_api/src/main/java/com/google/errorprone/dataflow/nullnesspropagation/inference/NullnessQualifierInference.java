@@ -29,6 +29,7 @@ import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
@@ -124,61 +125,60 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
   @Override
   public Void visitIdentifier(IdentifierTree node, Void unused) {
-    Type declaredType = ((JCIdent) node).sym.type;
-    generateConstraintsFromAnnotations(declaredType, node, new ArrayDeque<>());
+    Symbol sym = ((JCIdent) node).sym;
+    if (sym instanceof VarSymbol) {
+      Type declaredType = sym.type;
+      generateConstraintsFromAnnotations(
+          ((JCIdent) node).type, sym, declaredType, node, new ArrayDeque<>());
+    }
     return super.visitIdentifier(node, unused);
   }
 
   private void generateConstraintsFromAnnotations(
-      Type type, Tree sourceTree, ArrayDeque<Integer> argSelector) {
-    List<Type> typeArguments = type.getTypeArguments();
-    int numberOfTypeArgs = typeArguments.size();
+      Type inferredType,
+      @Nullable Symbol decl,
+      @Nullable Type declaredType,
+      Tree sourceTree,
+      ArrayDeque<Integer> argSelector) {
+    checkArgument(decl == null || argSelector.isEmpty());
+    List<Type> inferredTypeArguments = inferredType.getTypeArguments();
+    List<Type> declaredTypeArguments =
+        declaredType != null ? declaredType.getTypeArguments() : ImmutableList.of();
+    int numberOfTypeArgs = inferredTypeArguments.size();
     for (int i = 0; i < numberOfTypeArgs; i++) {
       argSelector.push(i);
-      generateConstraintsFromAnnotations(typeArguments.get(i), sourceTree, argSelector);
+      generateConstraintsFromAnnotations(
+          inferredTypeArguments.get(i),
+          /*decl=*/ null,
+          i < declaredTypeArguments.size() ? declaredTypeArguments.get(i) : null,
+          sourceTree,
+          argSelector);
       argSelector.pop();
+    }
+
+    Optional<Nullness> fromAnnotations = extractExplicitNullness(declaredType, decl);
+    if (!fromAnnotations.isPresent()) {
+      // Check declared type before inferred type so that type annotations on the declaration take
+      // precedence (just like declaration annotations) over annotations on the inferred type.
+      // For instance, we want a @Nullable T m() to take precedence over annotations on T's inferred
+      // type (e.g., @NotNull String), whether @Nullable is a declaration or type annotation.
+      fromAnnotations = NullnessAnnotations.fromAnnotationsOn(inferredType);
+    }
+    if (!fromAnnotations.isPresent()) {
+      // Check bounds last so explicit annotations take precedence. Even for bounds we still use
+      // equality constraint below since we have to assume the bound as the "worst" case.
+      fromAnnotations = NullnessAnnotations.getUpperBound(declaredType);
     }
     // Use equality constraints even for top-level type, since we want to "trust" the annotation
-    // TODO(b/121398981): skip for T extends @<Annot> since they constrain one side only
-    ProperInferenceVar.fromTypeIfAnnotated(type)
+    fromAnnotations
+        .map(ProperInferenceVar::create)
         .ifPresent(
             annot -> {
-              qualifierConstraints.putEdge(
-                  TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree), annot);
-              qualifierConstraints.putEdge(
-                  annot, TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree));
+              InferenceVariable var =
+                  TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree);
+              qualifierConstraints.putEdge(var, annot);
+              qualifierConstraints.putEdge(annot, var);
             });
-  }
-
-  private void generateConstraintsFromAnnotations(
-      MethodSymbol symbol, JCMethodInvocation sourceTree, ArrayDeque<Integer> argSelector) {
-    List<Type> typeArguments = sourceTree.type.getTypeArguments();
-    int numberOfTypeArgs = typeArguments.size();
-    for (int i = 0; i < numberOfTypeArgs; i++) {
-      argSelector.push(i);
-      generateConstraintsFromAnnotations(typeArguments.get(i), sourceTree, argSelector);
-      argSelector.pop();
-    }
-
-    // First check if the given symbol is directly annotated; if not, look for implicit annotations
-    // on the inferred type of the expression.  The latter for instance propagates a type parameter
-    // T instantiated as <@Nullable String> to the result of a method returning T.
-    Optional<InferenceVariable> fromAnnotations =
-        Nullness.fromAnnotationsOn(symbol).map(ProperInferenceVar::create);
-    if (!fromAnnotations.isPresent()) {
-      fromAnnotations = ProperInferenceVar.fromTypeIfAnnotated(sourceTree.type);
-    }
-    // Use equality constraints here, since we want to "trust" the annotation.  For instance,
-    // a method return annotated @Nullable requires us assume the method might really return null,
-    // and a method return annotated @Nonnull should allow us to assume it really returns non-null.
-    fromAnnotations.ifPresent(
-        annot -> {
-          qualifierConstraints.putEdge(
-              TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree), annot);
-          // TODO(b/121398981): skip for T extends @<Annot> since they constrain one side only
-          qualifierConstraints.putEdge(
-              annot, TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree));
-        });
   }
 
   @Override
@@ -256,7 +256,8 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         });
 
     // Generate constraints for method return
-    generateConstraintsFromAnnotations(callee, sourceNode, new ArrayDeque<>());
+    generateConstraintsFromAnnotations(
+        sourceNode.type, callee, callee.getReturnType(), sourceNode, new ArrayDeque<>());
 
     // If return type is parameterized by a generic type on receiver, collate references to that
     // generic between the receiver and the result/argument types.
@@ -344,19 +345,15 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     }
   }
 
-  private static Optional<Nullness> extractExplicitNullness(Type type, @Nullable Symbol symbol) {
+  private static Optional<Nullness> extractExplicitNullness(
+      @Nullable Type type, @Nullable Symbol symbol) {
     if (symbol != null) {
-      Optional<Nullness> result = Nullness.fromAnnotationsOn(symbol);
+      Optional<Nullness> result = NullnessAnnotations.fromAnnotationsOn(symbol);
       if (result.isPresent()) {
         return result;
       }
     }
-    return toNullness(type.getAnnotationMirrors());
-  }
-
-  private static Optional<Nullness> toNullness(List<?> annotations) {
-    return Nullness.fromAnnotations(
-        annotations.stream().map(Object::toString).collect(ImmutableList.toImmutableList()));
+    return NullnessAnnotations.fromAnnotationsOn(type);
   }
 
   /**
@@ -405,24 +402,28 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
     // If there is an explicit annotation, trust it and constrain the corresponding type arg
     // inference variable to be equal to that proper inference variable.
-    Optional<InferenceVariable> fromAnnotations =
-        extractExplicitNullness(lType, decl).map(ProperInferenceVar::create);
+    boolean isBound = false;
+    Optional<Nullness> fromAnnotations = extractExplicitNullness(lType, decl);
     if (!fromAnnotations.isPresent()) {
-      fromAnnotations = ProperInferenceVar.fromTypeIfAnnotated(lType);
+      fromAnnotations = NullnessAnnotations.getUpperBound(lType);
+      isBound = true;
     }
-    fromAnnotations.ifPresent(
-        annot -> {
-          qualifierConstraints.putEdge(TypeArgInferenceVar.create(argSelectorList, rVal), annot);
-          if (!argSelector.isEmpty()) {
-            // Top-level target types implicitly only constrain from above: for instance, a
-            // local variable annotated @Nullable can be initialized with a non-null value just
-            // fine.  This isn't true for invariant generic type parameters such as
-            // List<@Nullable String> which rVal needs to satisfy exactly, so we generate
-            // equality constraints for those.
-            // TODO(b/121398981): skip for ? extends @<Annot> since they constrain one side only
-            qualifierConstraints.putEdge(annot, TypeArgInferenceVar.create(argSelectorList, rVal));
-          }
-        });
+    // Top-level target types implicitly only constrain from above: for instance, a method
+    // parameter annotated @Nullable can be called with a non-null argument just fine. Same
+    // goes for bounded type parameters and ? extends @Nullable type parameters, but not for
+    // invariant generic type parameters such as List<@Nullable String> which rVal needs to
+    // satisfy exactly, so we generate equality constraints for those.
+    boolean oneSided = isBound || argSelector.isEmpty();
+    fromAnnotations
+        .map(ProperInferenceVar::create)
+        .ifPresent(
+            annot -> {
+              InferenceVariable var = TypeArgInferenceVar.create(argSelectorList, rVal);
+              qualifierConstraints.putEdge(var, annot);
+              if (!oneSided) {
+                qualifierConstraints.putEdge(annot, var);
+              }
+            });
 
     if (lVal != null) {
       // Constrain this type or type argument on the rVal to be <= its lVal counterpart

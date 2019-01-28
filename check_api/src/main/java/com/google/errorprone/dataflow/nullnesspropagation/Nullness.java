@@ -16,13 +16,6 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import com.google.errorprone.util.MoreAnnotations;
-import com.sun.tools.javac.code.Symbol;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import org.checkerframework.dataflow.analysis.AbstractValue;
 
 /**
@@ -122,32 +115,6 @@ public enum Nullness implements AbstractValue<Nullness> {
       default:
         throw new AssertionError("Inverse of " + this + " not defined");
     }
-  }
-
-  // TODO(kmb): Correctly handle JSR 305 @Nonnull(NEVER) etc.
-  private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
-      Pattern.compile(
-              ".*\\.((Recently)?Nullable(Decl)?|(Recently)?NotNull(Decl)?|NonNull(Decl)?|Nonnull|"
-                  + "CheckForNull)$")
-          .asPredicate();
-
-  private static final Predicate<String> NULLABLE_ANNOTATION =
-      Pattern.compile(".*\\.((Recently)?Nullable(Decl)?|CheckForNull)$").asPredicate();
-
-  private static Optional<Nullness> fromAnnotationStream(Stream<String> annotations) {
-    return annotations
-        .filter(ANNOTATION_RELEVANT_TO_NULLNESS)
-        .map(annot -> NULLABLE_ANNOTATION.test(annot) ? NULLABLE : NONNULL)
-        .reduce(Nullness::greatestLowerBound);
-  }
-
-  public static Optional<Nullness> fromAnnotations(Collection<String> annotations) {
-    return fromAnnotationStream(annotations.stream());
-  }
-
-  public static Optional<Nullness> fromAnnotationsOn(Symbol sym) {
-    return fromAnnotationStream(
-        MoreAnnotations.getDeclarationAndTypeAttributes(sym).map(Object::toString));
   }
 
   @Override
