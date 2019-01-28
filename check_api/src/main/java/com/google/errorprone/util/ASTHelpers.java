@@ -1644,4 +1644,21 @@ public class ASTHelpers {
     return ErrorProneTokens.getTokens(state.getSourceForNode(tree), state.context).stream()
         .anyMatch(t -> !t.comments().isEmpty());
   }
+
+  /**
+   * Returns the outermost enclosing owning class, or {@code null}. Doesn't crash on symbols that
+   * aren't containing in a package, unlike {@link Symbol#outermostClass} (see b/123431414).
+   */
+  // TODO(b/123431414): fix javac and use Symbol.outermostClass insteads
+  public static ClassSymbol outermostClass(Symbol symbol) {
+    ClassSymbol curr = symbol.enclClass();
+    while (curr.owner != null) {
+      ClassSymbol encl = curr.owner.enclClass();
+      if (encl == null) {
+        break;
+      }
+      curr = encl;
+    }
+    return curr;
+  }
 }

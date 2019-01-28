@@ -93,7 +93,7 @@ public class ForOverrideChecker extends BugChecker
     List<MethodSymbol> overriddenMethods = getOverriddenMethods(state, method);
 
     for (Symbol overriddenMethod : overriddenMethods) {
-      Type declaringClass = overriddenMethod.outermostClass().asType();
+      Type declaringClass = ASTHelpers.outermostClass(overriddenMethod).asType();
       if (!ASTHelpers.isSameType(declaringClass, currentClass, state)) {
         String customMessage =
             MESSAGE_BASE
