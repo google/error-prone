@@ -18,10 +18,8 @@ package com.google.errorprone.util;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
@@ -34,15 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** Annotation-related utilities. */
@@ -172,45 +163,6 @@ public final class MoreAnnotations {
             },
             null),
         Stream.empty());
-  }
-
-  /**
-   * Gathers all type annotations that are applicable to this TypeMirror and its bounds but are not
-   * applied syntactically to its declaration. This includes:
-   *
-   * <ul>
-   *   <li>annotations on type parameters at type use, e.g. {@code List<@Nullable String> xs = ...}
-   *   <li>annotations on generic type declarations, e.g. {@code class MyClass<@Nullable T> {...} }
-   *   <li>bounds on the above, e.g. {@code class MyClass<T extends @Nullable MyOtherClass> {...} }
-   * </ul>
-   */
-  // TODO(b/121398981): distinguish upper and lower bounds of type variables
-  public static ImmutableSet<AnnotationMirror> inheritedAnnotations(TypeMirror type) {
-    ImmutableSet.Builder<AnnotationMirror> inheritedAnnotations = ImmutableSet.builder();
-
-    // Annotations on type parameters at use-site
-    inheritedAnnotations.addAll(type.getAnnotationMirrors());
-
-    if (type.getKind() == TypeKind.TYPEVAR) {
-      TypeVariable typeVar = (TypeVariable) type;
-      // Annotations on bounds at type variable declaration
-      // TODO(b/121398981): handle intersection bounds
-      inheritedAnnotations.addAll(typeVar.getUpperBound().getAnnotationMirrors());
-      if (typeVar.asElement().getKind() == TYPE_PARAMETER) {
-        Element genericElt = ((TypeParameterElement) typeVar.asElement()).getGenericElement();
-        if (genericElt.getKind().isClass() || genericElt.getKind().isInterface()) {
-          ((TypeElement) genericElt)
-              .getTypeParameters().stream()
-                  .filter(
-                      typeParam ->
-                          typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
-                  .findFirst()
-                  // Annotations at class/interface type variable declaration
-                  .ifPresent(decl -> inheritedAnnotations.addAll(decl.getAnnotationMirrors()));
-        }
-      }
-    }
-    return inheritedAnnotations.build();
   }
 
   private MoreAnnotations() {}

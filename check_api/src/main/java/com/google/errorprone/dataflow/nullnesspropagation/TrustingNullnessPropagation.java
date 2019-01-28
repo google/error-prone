@@ -73,7 +73,7 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
 
     @Override
     public boolean apply(MethodInfo input) {
-      return Nullness.fromAnnotations(input.annotations()).orElse(Nullness.NONNULL)
+      return NullnessAnnotations.fromAnnotations(input.annotations()).orElse(Nullness.NONNULL)
           == Nullness.NONNULL;
     }
   }

@@ -200,7 +200,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     @Override
     public boolean apply(MethodInfo methodInfo) {
       // Any method explicitly annotated is trusted to behave as advertised.
-      Optional<Nullness> fromAnnotations = Nullness.fromAnnotations(methodInfo.annotations());
+      Optional<Nullness> fromAnnotations =
+          NullnessAnnotations.fromAnnotations(methodInfo.annotations());
       if (fromAnnotations.isPresent()) {
         return fromAnnotations.get() == NONNULL;
       }
@@ -255,7 +256,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     AccessPathStore.Builder<Nullness> result = AccessPathStore.<Nullness>empty().toBuilder();
     for (LocalVariableNode param : parameters) {
       Nullness declared =
-          Nullness.fromAnnotationsOn((Symbol) param.getElement()).orElse(defaultAssumption);
+          NullnessAnnotations.fromAnnotationsOn((Symbol) param.getElement())
+              .orElse(defaultAssumption);
       result.setInformation(AccessPath.fromLocalVariable(param), declared);
     }
     return result.build();
@@ -404,7 +406,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         node.getType().getAnnotationMirrors().stream()
             .map(Object::toString)
             .collect(ImmutableList.toImmutableList());
-    return Nullness.fromAnnotations(annotations)
+    return NullnessAnnotations.fromAnnotations(annotations)
         .orElseGet(
             () -> hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand()));
   }
@@ -746,8 +748,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   Nullness standardFieldNullness(
       ClassAndField accessed, @Nullable AccessPath path, AccessPathValues<Nullness> store) {
     // First, check the store for a dataflow-computed nullness value and return it if it exists
-    // Otherwise, check for nullness annotations on the field declaration
-    // If there are none, check for nullness annotations on generic type declarations
+    // Otherwise, check for nullness annotations on the field's symbol (including type annotations)
+    // If there are none, check for nullness annotations on generic type bounds, if any
     // If there are none, fall back to the defaultAssumption
 
     Nullness dataflowResult = (path == null) ? BOTTOM : store.valueOfAccessPath(path, BOTTOM);
@@ -755,21 +757,16 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       return dataflowResult;
     }
 
-    Optional<Nullness> declaredNullness = Nullness.fromAnnotationsOn(accessed.symbol);
+    Optional<Nullness> declaredNullness = NullnessAnnotations.fromAnnotationsOn(accessed.symbol);
     return declaredNullness.orElseGet(
-        () ->
-            Nullness.fromAnnotations(
-                    MoreAnnotations.inheritedAnnotations(accessed.symbol.type).stream()
-                        .map(Object::toString)
-                        .collect(ImmutableList.toImmutableList()))
-                .orElse(defaultAssumption));
+        () -> NullnessAnnotations.getUpperBound(accessed.symbol.type).orElse(defaultAssumption));
   }
 
   private Nullness returnValueNullness(MethodInvocationNode node, @Nullable ClassAndMethod callee) {
     if (callee == null) {
       return defaultAssumption;
     }
-    Optional<Nullness> declaredNullness = Nullness.fromAnnotations(callee.annotations);
+    Optional<Nullness> declaredNullness = NullnessAnnotations.fromAnnotations(callee.annotations);
     if (declaredNullness.isPresent()) {
       return declaredNullness.get();
     }
