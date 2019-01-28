@@ -59,7 +59,7 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol method = getSymbol(tree);
-    ClassSymbol rootClassOfMethod = method.outermostClass();
+    ClassSymbol rootClassOfMethod = ASTHelpers.outermostClass(method);
 
     if (!isGeneratedFactoryType(rootClassOfMethod, state)
         && !isMembersInjectionInvocation(method, state)
@@ -78,7 +78,7 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
     if (method.getSimpleName().contentEquals("injectMembers")) {
       return false;
     }
-    return isGeneratedBaseType(method.outermostClass(), state, "dagger.MembersInjector");
+    return isGeneratedBaseType(ASTHelpers.outermostClass(method), state, "dagger.MembersInjector");
   }
 
   // TODO(ronshapiro): if we ever start emitting an annotation that has class retention, use that
@@ -101,7 +101,8 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
   }
 
   private static boolean isAllowedToReferenceDaggerInternals(VisitorState state) {
-    ClassSymbol rootCallingClass = getSymbol(state.findEnclosing(ClassTree.class)).outermostClass();
+    ClassSymbol rootCallingClass =
+        ASTHelpers.outermostClass(getSymbol(state.findEnclosing(ClassTree.class)));
     if (rootCallingClass.getQualifiedName().toString().startsWith("dagger.")) {
       return true;
     }
