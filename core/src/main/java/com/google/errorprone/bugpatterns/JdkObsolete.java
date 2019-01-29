@@ -208,9 +208,8 @@ public class JdkObsolete extends BugChecker
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    return describeIfObsolete(
-        tree.getQualifierExpression(), ImmutableList.of(symbol.owner.asType()), state);
+    Symbol sym = ASTHelpers.getSymbol(tree.getQualifierExpression());
+    return describeIfObsolete(tree.getQualifierExpression(), ImmutableList.of(sym.asType()), state);
   }
 
   private Description describeIfObsolete(
