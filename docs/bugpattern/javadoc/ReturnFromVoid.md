@@ -10,3 +10,8 @@ void frobnicator(int a) {
   ...
 }
 ```
+
+## Suppression
+
+Suppress by applying `@SuppressWarnings("ReturnFromVoid")` to the element being
+documented.

@@ -70,7 +70,8 @@ import javax.annotation.Nullable;
     summary = "Javadoc is interpreted as HTML, so HTML entities such as &, <, > must be escaped.",
     severity = WARNING,
     tags = STYLE,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    providesFix = REQUIRES_HUMAN_ATTENTION,
+    documentSuppression = false)
 public final class UnescapedEntity extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 

@@ -50,7 +50,8 @@ import javax.annotation.Nullable;
     summary = "HTML entities in @code/@literal tags will appear literally in the rendered javadoc.",
     severity = WARNING,
     tags = STYLE,
-    providesFix = NO_FIX)
+    providesFix = NO_FIX,
+    documentSuppression = false)
 public final class EscapedEntity extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 

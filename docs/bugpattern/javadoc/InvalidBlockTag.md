@@ -17,3 +17,8 @@ int twoTimes(int n) {
   return 2 * n;
 }
 ```
+
+## Suppression
+
+Suppress by applying `@SuppressWarnings("InvalidBlockTag")` to the element being
+documented.

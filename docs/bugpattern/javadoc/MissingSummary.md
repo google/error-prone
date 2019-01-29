@@ -15,3 +15,8 @@ public Proto parse(byte[] bytes) {
   ...
 }
 ```
+
+## Suppression
+
+Suppress by applying `@SuppressWarnings("MissingSummary")` to the element being
+documented.

@@ -27,3 +27,8 @@ Iterable<Integer> generatePrimes();
 ```
 
 Prefer writing generic types as `{@code Iterable<Integer>}` (or `{@link }`).
+
+## Suppression
+
+Suppress by applying `@SuppressWarnings("UnescapedEntity")` to the element being
+documented.

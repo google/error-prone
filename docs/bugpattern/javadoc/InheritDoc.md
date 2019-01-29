@@ -9,3 +9,8 @@ class Frobnicator {
   }
 }
 ```
+
+## Suppression
+
+Suppress by applying `@SuppressWarnings("InheritDoc")` to the element being
+documented.
