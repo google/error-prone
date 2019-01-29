@@ -262,4 +262,22 @@ public class JdkObsoleteTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void navigableSetRepro() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.NavigableSet;",
+            "import java.util.Optional;",
+            "class Test {",
+            "  Optional<Object> fail1(Optional<NavigableSet<Object>> myOptionalSet) {",
+            "    return myOptionalSet.map(NavigableSet::first);",
+            "  }",
+            "  Optional<Object> fail2(Optional<NavigableSet<Object>> myOptionalSet) {",
+            "    return myOptionalSet.map(NavigableSet::last);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
