@@ -65,7 +65,8 @@ import javax.lang.model.element.Modifier;
     tags = STYLE,
     linkType = CUSTOM,
     link = "http://google.github.io/styleguide/javaguide.html#s7.2-summary-fragment",
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
+    documentSuppression = false)
 public final class MissingSummary extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 

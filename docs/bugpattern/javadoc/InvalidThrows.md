@@ -11,3 +11,8 @@ void validate(int n) {
   ...
 }
 ```
+
+## Suppression
+
+Suppress by applying `@SuppressWarnings("InvalidThrows")` to the element being
+documented.

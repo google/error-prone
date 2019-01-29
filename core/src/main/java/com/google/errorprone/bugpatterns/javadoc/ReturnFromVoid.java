@@ -43,7 +43,8 @@ import com.sun.source.util.DocTreePathScanner;
     summary = "Void methods should not have a @return tag.",
     severity = WARNING,
     tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
+    documentSuppression = false)
 public final class ReturnFromVoid extends BugChecker implements MethodTreeMatcher {
 
   @Override

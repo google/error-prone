@@ -49,7 +49,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
     summary = "Invalid use of @inheritDoc.",
     severity = WARNING,
     tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
+    documentSuppression = false)
 public final class InheritDoc extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 

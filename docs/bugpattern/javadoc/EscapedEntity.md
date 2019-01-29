@@ -27,3 +27,8 @@ any generic type parameters which may otherwise be interpreted as HTML. That is,
  * </pre>
  */
 ```
+
+## Suppression
+
+Suppress by applying `@SuppressWarnings("EscapedEntity")` to the element being
+documented.

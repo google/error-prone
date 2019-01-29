@@ -12,3 +12,8 @@ MyProto parse(byte[] input) {
   ...
 }
 ```
+
+## Suppression
+
+Suppress by applying `@SuppressWarnings("InvalidParam")` to the element being
+documented.

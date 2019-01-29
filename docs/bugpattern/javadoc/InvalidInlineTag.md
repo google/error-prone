@@ -20,3 +20,8 @@ int twoTimes(int n) {
   return 2 * n;
 }
 ```
+
+## Suppression
+
+Suppress by applying `@SuppressWarnings("InvalidInlineTag")` to the element
+being documented.
