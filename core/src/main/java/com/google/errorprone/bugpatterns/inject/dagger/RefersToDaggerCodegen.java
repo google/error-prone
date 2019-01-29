@@ -56,6 +56,13 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
   private static final ImmutableSet<String> GENERATED_BASE_TYPES =
       ImmutableSet.of("dagger.internal.Factory", "dagger.producers.internal.AbstractProducer");
 
+  /**
+   * Dagger 1 does not add an @Generated annotation, but it's code should still be able to refer to
+   * {@code dagger.internal} APIs.
+   */
+  private static final ImmutableSet<String> DAGGER_1_GENERATED_BASE_TYPES =
+      ImmutableSet.of("dagger.internal.Binding", "dagger.internal.ModuleAdapter");
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol method = getSymbol(tree);
@@ -120,6 +127,11 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
                 .getValue()
                 .equals("dagger.internal.codegen.ComponentProcessor");
       }
+    }
+
+    if (DAGGER_1_GENERATED_BASE_TYPES.stream()
+        .anyMatch(dagger1Type -> isGeneratedBaseType(rootCallingClass, state, dagger1Type))) {
+      return true;
     }
     return false;
   }
