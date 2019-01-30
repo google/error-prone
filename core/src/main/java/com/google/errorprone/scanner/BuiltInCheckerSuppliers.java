@@ -197,6 +197,7 @@ import com.google.errorprone.bugpatterns.ObjectToString;
 import com.google.errorprone.bugpatterns.ObjectsHashCodePrimitive;
 import com.google.errorprone.bugpatterns.OperatorPrecedence;
 import com.google.errorprone.bugpatterns.OptionalEquality;
+import com.google.errorprone.bugpatterns.OptionalMapToOptional;
 import com.google.errorprone.bugpatterns.OptionalNotPresent;
 import com.google.errorprone.bugpatterns.OrphanedFormatString;
 import com.google.errorprone.bugpatterns.OutlineNone;
@@ -672,6 +673,7 @@ public class BuiltInCheckerSuppliers {
           ObjectsHashCodePrimitive.class,
           ObjectToString.class,
           OperatorPrecedence.class,
+          OptionalMapToOptional.class,
           OptionalNotPresent.class,
           OrphanedFormatString.class,
           OutlineNone.class,
