@@ -397,6 +397,7 @@ import com.google.errorprone.bugpatterns.time.ProtoDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.ProtoTimestampGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.TemporalAccessorGetChronoField;
 import com.google.errorprone.bugpatterns.time.TimeUnitConversionChecker;
+import com.google.errorprone.bugpatterns.time.TimeUnitMismatch;
 import java.util.Arrays;
 
 /**
@@ -814,6 +815,7 @@ public class BuiltInCheckerSuppliers {
           TestExceptionChecker.class,
           TestExceptionRefactoring.class,
           ThrowsUncheckedException.class,
+          TimeUnitMismatch.class,
           TryFailRefactoring.class,
           TypeParameterNaming.class,
           UnescapedEntity.class,
