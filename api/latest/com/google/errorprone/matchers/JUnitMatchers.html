@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9};
+var methods = {"i0":9,"i1":9,"i2":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -300,6 +300,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Checks if a method, or any overridden method, is annotated with any annotation from the
  org.junit package.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/JUnitMatchers.html#isJUnit4TestRunnerOfType-java.lang.Iterable-">isJUnit4TestRunnerOfType</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;runnerTypes)</code>
+<div class="block">Matches an argument of type <code>Class&lt;T&gt;</code>, where T is a subtype of one of the test runners
+ listed in the TEST_RUNNERS field.</div>
 </td>
 </tr>
 </table>
@@ -642,6 +649,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                                          <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Checks if a method, or any overridden method, is annotated with any annotation from the
  org.junit package.</div>
+</li>
+</ul>
+<a name="isJUnit4TestRunnerOfType-java.lang.Iterable-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isJUnit4TestRunnerOfType</h4>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;isJUnit4TestRunnerOfType(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;runnerTypes)</pre>
+<div class="block">Matches an argument of type <code>Class&lt;T&gt;</code>, where T is a subtype of one of the test runners
+ listed in the TEST_RUNNERS field.
+
+ <p>TODO(eaftan): Support checking for an annotation that tells us whether this test runner
+ expects tests to be annotated with @Test.</div>
 </li>
 </ul>
 <a name="containsTestMethod-com.sun.source.tree.Tree-">

@@ -21,7 +21,7 @@ The GuardedBy analysis checks that fields or methods annotated with
 Example:
 
 ```java
-import javax.annotation.concurrent.GuardedBy;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 
 class Account {
   @GuardedBy("this")
@@ -123,7 +123,7 @@ should be deterministic.
 
 #### @GuardedBy
 
-javax.annotation.concurrent.GuardedBy
+com.google.errorprone.annotations.concurrent.GuardedBy
 
 The @GuardedBy annotation is used to document that a member (a field or a
 method) can only be accessed when the specified lock is held.
@@ -146,6 +146,12 @@ void m() {
   }
 }
 ```
+
+Note: there are a couple more annotations called `@GuardedBy`, including 
+`javax.annotation.concurrent.GuardedBy` and
+`org.checkerframework.checker.lock.qual.GuardedBy`. The check recognizes those
+versions of the annotation, but we recommend using
+`com.google.errorprone.annotations.concurrent.GuardedBy`.
 
 #### @LockMethod
 

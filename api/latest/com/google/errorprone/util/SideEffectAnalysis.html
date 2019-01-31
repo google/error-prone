@@ -136,10 +136,7 @@ extends com.sun.source.util.TreeScanner&lt;<a href="https://docs.oracle.com/java
  <p>Everything besides the above examples is considered side-effect free.
 
  <p>The analysis in this class initially assumes that the expression is side-effect free and then
- tries to prove it wrong.
-
- <p>TODO(ghm): augment the logic in this class to ignore side-effect free method calls such as
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true#toString--" title="class or interface in java.lang"><code>String.toString()</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true#length--" title="class or interface in java.lang"><code>String.length()</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true#size--" title="class or interface in java.util"><code>List.size()</code></a>, etc.</div>
+ tries to prove it wrong.</div>
 </li>
 </ul>
 </div>
@@ -160,7 +157,9 @@ extends com.sun.source.util.TreeScanner&lt;<a href="https://docs.oracle.com/java
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/SideEffectAnalysis.html#hasSideEffect-com.sun.source.tree.ExpressionTree-">hasSideEffect</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expression)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/util/SideEffectAnalysis.html#hasSideEffect-com.sun.source.tree.ExpressionTree-">hasSideEffect</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expression)</code>
+<div class="block">Tries to establish whether <code>expression</code> is side-effect free.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang">Void</a></code></td>
@@ -223,6 +222,8 @@ extends com.sun.source.util.TreeScanner&lt;<a href="https://docs.oracle.com/java
 <li class="blockList">
 <h4>hasSideEffect</h4>
 <pre>public static&nbsp;boolean&nbsp;hasSideEffect(com.sun.source.tree.ExpressionTree&nbsp;expression)</pre>
+<div class="block">Tries to establish whether <code>expression</code> is side-effect free. The heuristics here are very
+ conservative.</div>
 </li>
 </ul>
 <a name="visitCompoundAssignment-com.sun.source.tree.CompoundAssignmentTree-java.lang.Void-">

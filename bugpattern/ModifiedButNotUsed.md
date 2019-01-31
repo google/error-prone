@@ -26,5 +26,31 @@ be a sign of a bug, for example:
   return builder.build();
 ```
 
+Likewise, converting a proto to a builder and modifying it is a no-op unless
+something is done with the return value:
+
+```java {.bad}
+  void setFoo(MyProto proto, String foo) {
+    proto.toBuilder().setFoo(foo).build();
+  }
+```
+
+As protos are immutable, either the return value must be used:
+
+```java {.good}
+  @CheckReturnValue
+  MyProto withFoo(MyProto proto, String foo) {
+    return proto.toBuilder().setFoo(foo).build();
+  }
+```
+
+or the Builder modified in place:
+
+```java {.good}
+  void setFoo(MyProto.Builder protoBuilder, String foo) {
+    protoBuilder.setFoo(foo);
+  }
+```
+
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifiedButNotUsed")` to the enclosing element.

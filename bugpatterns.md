@@ -335,6 +335,9 @@ Use Random.nextInt(int).  Random.nextInt() % n can have negative results
 __[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
 Return value of android.graphics.Rect.intersect() must be checked
 
+__[RefersToDaggerCodegen](bugpattern/RefersToDaggerCodegen)__<br>
+Don&#39;t refer to Dagger&#39;s internal or generated code
+
 __[RestrictedApiChecker](bugpattern/RestrictedApiChecker)__<br>
  Check for non-whitelisted callers to RestrictedApiChecker.
 
@@ -417,6 +420,9 @@ The lambda passed to assertThrows should contain exactly one statement
 
 __[AssertionFailureIgnored](bugpattern/AssertionFailureIgnored)__<br>
 This assertion throws an AssertionError if it fails, which will be caught by an enclosing try block.
+
+__[AssignmentToMock](bugpattern/AssignmentToMock)__<br>
+Fields annotated with @Mock should not be manually assigned to.
 
 __[AutoValueFinalMethods](bugpattern/AutoValueFinalMethods)__<br>
 Make toString(), hashCode() and equals() final in AutoValue classes, so it is clear to readers that AutoValue is not overriding them
@@ -643,6 +649,9 @@ method overrides method in supertype; expected @Override
 __[MixedDescriptors](bugpattern/MixedDescriptors)__<br>
 The field number passed into #getFieldByNumber belongs to a different proto to the Descriptor.
 
+__[MixedMutabilityReturnType](bugpattern/MixedMutabilityReturnType)__<br>
+This method returns both mutable and immutable collections or maps from different paths. This may be confusing for users of the method.
+
 __[MockitoInternalUsage](bugpattern/MockitoInternalUsage)__<br>
 org.mockito.internal.* is a private API and should not be used by clients
 
@@ -687,6 +696,9 @@ Objects.hashCode(Object o) should not be passed a primitive value
 
 __[OperatorPrecedence](bugpattern/OperatorPrecedence)__<br>
 Use grouping parenthesis to make the operator precedence explicit
+
+__[OptionalMapToOptional](bugpattern/OptionalMapToOptional)__<br>
+Mapping to another Optional will yield a nested Optional. Did you mean flatMap?
 
 __[OptionalNotPresent](bugpattern/OptionalNotPresent)__<br>
 One should not call optional.get() inside an if statement that checks !optional.isPresent
@@ -1030,6 +1042,9 @@ Code that contains System.exit() is untestable.
 
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
+
+__[TimeUnitMismatch](bugpattern/TimeUnitMismatch)__<br>
+An value that appears to be represented in one unit is used where another appears to be required (e.g., seconds where nanos are needed)
 
 __[UnescapedEntity](bugpattern/UnescapedEntity)__<br>
 Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped.

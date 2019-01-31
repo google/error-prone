@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -114,13 +114,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+<dd><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ExpressionStatementTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a>, <a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">ModifiedButNotUsed</span>
 extends <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></pre>
+implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ExpressionStatementTreeMatcher</a>, <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></pre>
 <div class="block">Matches creation of new collections/proto builders which are modified but never used.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
@@ -179,6 +179,11 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Var
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ModifiedButNotUsed.html#matchExpressionStatement-com.sun.source.tree.ExpressionStatementTree-com.google.errorprone.VisitorState-">matchExpressionStatement</a></span>(com.sun.source.tree.ExpressionStatementTree&nbsp;tree,
+                        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/ModifiedButNotUsed.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable</a></span>(com.sun.source.tree.VariableTree&nbsp;tree,
              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
@@ -239,7 +244,7 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Var
 <a name="matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>matchVariable</h4>
 <pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchVariable(com.sun.source.tree.VariableTree&nbsp;tree,
@@ -247,6 +252,20 @@ implements <a href="../../../../com/google/errorprone/bugpatterns/BugChecker.Var
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="matchExpressionStatement-com.sun.source.tree.ExpressionStatementTree-com.google.errorprone.VisitorState-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>matchExpressionStatement</h4>
+<pre>public&nbsp;<a href="../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchExpressionStatement(com.sun.source.tree.ExpressionStatementTree&nbsp;tree,
+                                            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html#matchExpressionStatement-com.sun.source.tree.ExpressionStatementTree-com.google.errorprone.VisitorState-">matchExpressionStatement</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ExpressionStatementTreeMatcher</a></code></dd>
 </dl>
 </li>
 </ul>
