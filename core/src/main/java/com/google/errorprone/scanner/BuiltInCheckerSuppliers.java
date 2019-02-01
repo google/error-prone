@@ -62,6 +62,7 @@ import com.google.errorprone.bugpatterns.CollectionToArraySafeParameter;
 import com.google.errorprone.bugpatterns.CollectorShouldNotUseState;
 import com.google.errorprone.bugpatterns.ComparableAndComparator;
 import com.google.errorprone.bugpatterns.ComparableType;
+import com.google.errorprone.bugpatterns.CompareToZero;
 import com.google.errorprone.bugpatterns.ComparingThisWithNull;
 import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
@@ -602,6 +603,7 @@ public class BuiltInCheckerSuppliers {
           CloseableProvides.class,
           CollectorShouldNotUseState.class,
           ComparableAndComparator.class,
+          CompareToZero.class,
           ComplexBooleanConstant.class,
           DateFormatConstant.class,
           DefaultCharset.class,
