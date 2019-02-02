@@ -55,6 +55,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCArrayAccess;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
@@ -63,6 +64,7 @@ import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 /**
@@ -261,13 +263,14 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
     // If return type is parameterized by a generic type on receiver, collate references to that
     // generic between the receiver and the result/argument types.
-    if (node.getMethodSelect() instanceof JCFieldAccess) {
+    if (!callee.isStatic() && node.getMethodSelect() instanceof JCFieldAccess) {
       JCFieldAccess fieldAccess = ((JCFieldAccess) node.getMethodSelect());
       for (TypeVariableSymbol tvs : fieldAccess.selected.type.tsym.getTypeParameters()) {
         Type rcvrtype = fieldAccess.selected.type.tsym.type;
         ImmutableSet<InferenceVariable> rcvrReferences =
             findUnannotatedTypeVarRefs(tvs, rcvrtype, /*decl=*/ null, fieldAccess.selected);
         Type restype = fieldAccess.sym.type.asMethodType().restype;
+        // TODO(b/116977632): Propagate constraints for instantiated receiver types as well?
         findUnannotatedTypeVarRefs(tvs, restype, fieldAccess.sym, node)
             .forEach(
                 resRef ->
@@ -288,35 +291,138 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     // Get all references to each typeVar in the return type and formal parameters and relate them
     // in the constraint graph; covariant in the return type, contravariant in the argument types.
     // Annotated type var references override the type var's inferred qualifier, so ignore them.
-    // TODO(b/116977632): generate constraints for the instantiation of type parameters, e.g.,
-    //    if type parameter T was instantiated List<String>, we not only need to capture constraints
-    //    for T == List<String> itself, but also for <String>.  This may be as simple as introducing
-    //    selectors into TypeVariableInferenceVar and then relating
-    //    T[0] < node[0] and arg[0] < T[0], for all generic parameters of T's instantiation
+    //
+    // Additionally generate equality constraints between inferred types that are instantiations of
+    // type parameters.  For instance, if a method type parameter <T> was instantiated List<String>
+    // for a given call site m(x), and T appears in the return type as Optional<T>, then the
+    // expression's inferred type will be Optional<List<String>> and we generate constraints to
+    // equate T[0] = m(x)[0, 0].  If m's parameter's type is T then the argument type's inferred
+    // type is List<String> and we also generate constraints to equate T[0] = x[0], which will
+    // allow the inference to conclude later that x[0] = m(x)[0, 0], meaning the nullness qualifier
+    // for x's <String> is the same as the one for m(x)'s <String>.
     for (TypeVariableSymbol typeVar : callee.getTypeParameters()) {
-      InferenceVariable typeVarIV = TypeVariableInferenceVar.create(typeVar, node);
-      for (InferenceVariable iv :
-          findUnannotatedTypeVarRefs(typeVar, callee.getReturnType(), callee, node)) {
-        qualifierConstraints.putEdge(typeVarIV, iv);
-      }
+      TypeVariableInferenceVar typeVarIV = TypeVariableInferenceVar.create(typeVar, node);
+      visitUnannotatedTypeVarRefsAndEquateInferredComponents(
+          typeVarIV,
+          callee.getReturnType(),
+          callee,
+          node,
+          iv -> qualifierConstraints.putEdge(typeVarIV, iv));
       Streams.forEachPair(
           formalParameters.stream(),
           node.getArguments().stream(),
-          (formal, actual) -> {
-            for (InferenceVariable iv :
-                findUnannotatedTypeVarRefs(typeVar, formal.type(), formal.symbol(), actual)) {
-              qualifierConstraints.putEdge(iv, typeVarIV);
-            }
-          });
+          (formal, actual) ->
+              visitUnannotatedTypeVarRefsAndEquateInferredComponents(
+                  typeVarIV,
+                  formal.type(),
+                  formal.symbol(),
+                  actual,
+                  iv -> qualifierConstraints.putEdge(iv, typeVarIV)));
     }
     return super.visitMethodInvocation(node, unused);
   }
 
+  private static void visitTypeVarRefs(
+      TypeVariableSymbol typeVar,
+      Type declaredType,
+      ArrayDeque<Integer> partialSelector,
+      @Nullable Type inferredType,
+      TypeComponentConsumer consumer) {
+    List<Type> declaredTypeArguments = declaredType.getTypeArguments();
+    List<Type> inferredTypeArguments =
+        inferredType != null ? inferredType.getTypeArguments() : ImmutableList.of();
+    for (int i = 0; i < declaredTypeArguments.size(); i++) {
+      partialSelector.push(i);
+      visitTypeVarRefs(
+          typeVar,
+          declaredTypeArguments.get(i),
+          partialSelector,
+          i < inferredTypeArguments.size() ? inferredTypeArguments.get(i) : null,
+          consumer);
+      partialSelector.pop();
+    }
+    if (declaredType.tsym.equals(typeVar)) {
+      consumer.accept(declaredType, partialSelector, inferredType);
+    }
+  }
+
+  @FunctionalInterface
+  private interface TypeComponentConsumer {
+    void accept(
+        Type declaredType, ArrayDeque<Integer> declaredTypeSelector, @Nullable Type inferredType);
+  }
+
   private static ImmutableSet<InferenceVariable> findUnannotatedTypeVarRefs(
-      TypeVariableSymbol typeVar, Type type, @Nullable Symbol decl, Tree sourceNode) {
+      TypeVariableSymbol typeVar, Type declaredType, @Nullable Symbol decl, Tree sourceNode) {
     ImmutableSet.Builder<InferenceVariable> result = ImmutableSet.builder();
-    findUnannotatedTypeVarRefs(typeVar, sourceNode, type, decl, new ArrayDeque<>(), result);
+    visitTypeVarRefs(
+        typeVar,
+        declaredType,
+        new ArrayDeque<>(),
+        null,
+        (typeVarRef, selector, unused) -> {
+          if (!extractExplicitNullness(typeVarRef, selector.isEmpty() ? decl : null).isPresent()) {
+            result.add(TypeArgInferenceVar.create(ImmutableList.copyOf(selector), sourceNode));
+          }
+        });
     return result.build();
+  }
+
+  private void visitUnannotatedTypeVarRefsAndEquateInferredComponents(
+      TypeVariableInferenceVar typeVar,
+      Type type,
+      @Nullable Symbol decl,
+      Tree sourceNode,
+      Consumer<TypeArgInferenceVar> consumer) {
+    visitTypeVarRefs(
+        typeVar.typeVar(),
+        type,
+        new ArrayDeque<>(),
+        ((JCExpression) sourceNode).type,
+        (declaredType, selector, inferredType) -> {
+          if (!extractExplicitNullness(type, selector.isEmpty() ? decl : null).isPresent()) {
+            consumer.accept(TypeArgInferenceVar.create(ImmutableList.copyOf(selector), sourceNode));
+          }
+
+          if (inferredType == null) {
+            return;
+          }
+
+          List<Type> typeArguments = inferredType.getTypeArguments();
+          int depth = selector.size();
+          for (int i = 0; i < typeArguments.size(); ++i) {
+            selector.push(i);
+            visitTypeComponents(
+                typeArguments.get(i),
+                selector,
+                sourceNode,
+                typeArg -> {
+                  TypeVariableInferenceVar typeVarComponent =
+                      typeVar.withSelector(
+                          typeArg
+                              .typeArgSelector()
+                              .subList(depth, typeArg.typeArgSelector().size()));
+                  qualifierConstraints.putEdge(typeVarComponent, typeArg);
+                  qualifierConstraints.putEdge(typeArg, typeVarComponent);
+                });
+            selector.pop();
+          }
+        });
+  }
+
+  private void visitTypeComponents(
+      Type type,
+      ArrayDeque<Integer> partialSelector,
+      Tree sourceNode,
+      Consumer<TypeArgInferenceVar> consumer) {
+    List<Type> typeArguments = type.getTypeArguments();
+    for (int i = 0; i < typeArguments.size(); ++i) {
+      partialSelector.push(i);
+      visitTypeComponents(typeArguments.get(i), partialSelector, sourceNode, consumer);
+      partialSelector.pop();
+    }
+
+    consumer.accept(TypeArgInferenceVar.create(ImmutableList.copyOf(partialSelector), sourceNode));
   }
 
   private static void findUnannotatedTypeVarRefs(

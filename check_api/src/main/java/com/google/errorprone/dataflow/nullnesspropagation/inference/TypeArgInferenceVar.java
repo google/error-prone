@@ -34,7 +34,7 @@ import com.sun.source.tree.Tree;
  */
 @AutoValue
 abstract class TypeArgInferenceVar implements InferenceVariable {
-  static InferenceVariable create(ImmutableList<Integer> typeArgSelector, Tree astNode) {
+  static TypeArgInferenceVar create(ImmutableList<Integer> typeArgSelector, Tree astNode) {
     return new AutoValue_TypeArgInferenceVar(typeArgSelector, astNode);
   }
 
