@@ -481,6 +481,9 @@ Collector.of() should not use state
 __[ComparableAndComparator](bugpattern/ComparableAndComparator)__<br>
 Class should not implement both `Comparable` and `Comparator`
 
+__[CompareToZero](bugpattern/CompareToZero)__<br>
+The result of #compareTo or #compare should only be compared to 0. It is an implementation detail whether a given type returns strictly the values {-1, 0, +1} or others.
+
 __[ComplexBooleanConstant](bugpattern/ComplexBooleanConstant)__<br>
 Non-trivial compile time constant boolean expressions shouldn&#39;t be used.
 
