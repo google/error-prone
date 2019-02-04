@@ -97,7 +97,11 @@ public final class MixedMutabilityReturnType extends BugChecker
           constructor().forClass("java.util.HashMap").withParameters(),
           staticMethod()
               .onClass("com.google.common.collect.Lists")
-              .namedAnyOf("newArrayList", "newHashSet", "newLinkedList")
+              .namedAnyOf("newArrayList", "newLinkedList")
+              .withParameters(),
+          staticMethod()
+              .onClass("com.google.common.collect.Sets")
+              .namedAnyOf("newHashSet", "newLinkedHashSet")
               .withParameters());
 
   private static final Matcher<ExpressionTree> IMMUTABLE =
@@ -114,9 +118,7 @@ public final class MixedMutabilityReturnType extends BugChecker
           isSubtypeOf(LinkedList.class),
           isSubtypeOf(HashMap.class),
           isSubtypeOf(HashBiMap.class),
-          isSubtypeOf(TreeMap.class),
-          staticMethod().onClass("com.google.common.collect.Lists"),
-          staticMethod().onClass("com.google.common.collect.Sets"));
+          isSubtypeOf(TreeMap.class));
 
   private static final Matcher<Tree> RETURNS_COLLECTION =
       anyOf(isSubtypeOf(Collection.class), isSubtypeOf(Map.class));
