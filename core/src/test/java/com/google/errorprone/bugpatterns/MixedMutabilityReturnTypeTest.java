@@ -133,6 +133,22 @@ public final class MixedMutabilityReturnTypeTest {
   }
 
   @Test
+  public void immutableEnumSetNotMisclassified() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Sets;",
+            "import java.util.Set;",
+            "class Test {",
+            "  enum E { A, B }",
+            "  Set<E> test() {",
+            "    return Sets.immutableEnumSet(E.A);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void simpleRefactoring() {
     refactoringHelper
         .addInputLines(
