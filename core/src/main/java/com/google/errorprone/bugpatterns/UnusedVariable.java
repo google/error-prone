@@ -23,13 +23,6 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.isVoidType;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -52,8 +45,6 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
@@ -96,54 +87,28 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCAssignOp;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Position;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
-/** Bugpattern to detect unused declarations. */
+/** Bugpattern to detect unused variables. */
 @BugPattern(
-    name = "Unused",
-    altNames = {"unused", "UnusedParameters"},
+    name = "UnusedVariable",
+    altNames = {"Unused", "unused", "UnusedParameters"},
     summary = "Unused.",
     providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING,
     documentSuppression = false)
-public final class Unused extends BugChecker implements CompilationUnitTreeMatcher {
-  private static final String GWT_JAVASCRIPT_OBJECT = "com.google.gwt.core.client.JavaScriptObject";
+public final class UnusedVariable extends BugChecker implements CompilationUnitTreeMatcher {
+
   private static final String EXEMPT_PREFIX = "unused";
-  private static final String JUNIT_PARAMS_VALUE = "value";
-  private static final String JUNIT_PARAMS_ANNOTATION_TYPE = "junitparams.Parameters";
 
-  private static final Supplier<Type> OBJECT = Suppliers.typeFromString("java.lang.Object");
-
-  /** Method signature of special methods. */
-  private static final Matcher<MethodTree> SPECIAL_METHODS =
-      anyOf(
-          allOf(
-              methodIsNamed("readObject"),
-              methodHasParameters(isSameType("java.io.ObjectInputStream"))),
-          allOf(
-              methodIsNamed("writeObject"),
-              methodHasParameters(isSameType("java.io.ObjectOutputStream"))),
-          allOf(methodIsNamed("readObjectNoData"), methodReturns(isVoidType())),
-          allOf(methodIsNamed("readResolve"), methodReturns(OBJECT)),
-          allOf(methodIsNamed("writeReplace"), methodReturns(OBJECT)));
-
-
-  private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
-      ImmutableSet.of(
-          "com.google.inject.Provides",
-          "com.google.inject.Inject",
-          "javax.inject.Inject");
 
   /**
    * The set of annotation full names which exempt annotated element from being reported as unused.
@@ -185,7 +150,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
   private static final ImmutableSet<String> LOGGER_VAR_NAME = ImmutableSet.of("logger");
   private final boolean reportInjectedFields;
 
-  public Unused(ErrorProneFlags flags) {
+  public UnusedVariable(ErrorProneFlags flags) {
     ImmutableSet.Builder<String> methodAnnotationsExemptingParameters =
         ImmutableSet.<String>builder()
             .add("org.robolectric.annotation.Implementation");
@@ -212,48 +177,12 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
 
     // We will skip reporting on the whole compilation if there are any native methods found.
     // Use a TreeScanner to find all local variables and fields.
-    // The only reason type is atomic here is that we need to set its value from inside the closure.
     if (hasNativeMethods(tree)) {
-      // Skipping the analysis of this file because it has native methods.
       return Description.NO_MATCH;
     }
-    AtomicBoolean ignoreUnusedMethods = new AtomicBoolean(false);
 
     // Use a TreeScanner to find all local variables and fields.
-    class PrivateFieldLocalVarFinder extends TreePathScanner<Void, Void> {
-
-      private boolean hasJUnitParamsParametersForMethodAnnotation(
-          Collection<? extends AnnotationTree> annotations) {
-        for (AnnotationTree tree : annotations) {
-          JCAnnotation annotation = (JCAnnotation) tree;
-          if (annotation.getAnnotationType().type != null
-              && annotation
-                  .getAnnotationType()
-                  .type
-                  .toString()
-                  .equals(JUNIT_PARAMS_ANNOTATION_TYPE)) {
-            if (annotation.getArguments().isEmpty()) {
-              // @Parameters, which uses implicit provider methods
-              return true;
-            }
-            for (JCExpression arg : annotation.getArguments()) {
-              if (arg.getKind() != Kind.ASSIGNMENT) {
-                // Implicit value annotation, e.g. @Parameters({"1"}); no exemption required.
-                return false;
-              }
-              JCExpression var = ((JCAssign) arg).getVariable();
-              if (var.getKind() == Kind.IDENTIFIER) {
-                // Anything that is not @Parameters(value = ...), e.g.
-                // @Parameters(source = ...) or @Parameters(method = ...)
-                if (!((IdentifierTree) var).getName().contentEquals(JUNIT_PARAMS_VALUE)) {
-                  return true;
-                }
-              }
-            }
-          }
-        }
-        return false;
-      }
+    class VariableFinder extends TreePathScanner<Void, Void> {
 
       private boolean exemptedBySuperType(Type type, VisitorState state) {
         return EXEMPTING_SUPER_TYPES.stream()
@@ -278,8 +207,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
         }
         super.visitVariable(variableTree, null);
         // Return if the element is exempted by an annotation.
-        if (exemptedByAnnotation(
-            variableTree.getModifiers().getAnnotations(), EXEMPTING_VARIABLE_ANNOTATIONS, state)) {
+        if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations(), state)) {
           return null;
         }
         switch (symbol.getKind()) {
@@ -371,55 +299,12 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
 
       @Override
       public Void visitMethod(MethodTree tree, Void unused) {
-        if (hasJUnitParamsParametersForMethodAnnotation(tree.getModifiers().getAnnotations())) {
-          // Since this method uses @Parameters, there will be another method that appears to
-          // be unused. Don't warn about unusedMethods at all in this case.
-          ignoreUnusedMethods.set(true);
-        }
-
-        if (isSuppressed(tree)) {
-          // @SuppressWarnings("unused") applies to the entire AST, not just the symbol it's bound
-          // to.  Skip the whole method.
-          return null;
-        }
-
-        if (isMethodSymbolEligibleForChecking(tree)) {
-          unusedElements.put(getSymbol(tree), getCurrentPath());
-        }
-        return super.visitMethod(tree, unused);
-      }
-
-      private boolean isMethodSymbolEligibleForChecking(MethodTree tree) {
-        if (exemptedByName(tree.getName())) {
-          return false;
-        }
-        // Assume the method is called if annotated with a called-reflectively annotation.
-        if (exemptedByAnnotation(
-            tree.getModifiers().getAnnotations(), EXEMPTING_METHOD_ANNOTATIONS, state)) {
-          return false;
-        }
-        // Skip constructors and special methods.
-        MethodSymbol methodSymbol = getSymbol(tree);
-        if (methodSymbol == null
-            || methodSymbol.getKind() == ElementKind.CONSTRUCTOR
-            || SPECIAL_METHODS.matches(tree, state)) {
-          return false;
-        }
-
-        // Ignore this method if the last parameter is a GWT JavaScriptObject.
-        if (!tree.getParameters().isEmpty()) {
-          Type lastParamType = getType(getLast(tree.getParameters()));
-          if (lastParamType != null && lastParamType.toString().equals(GWT_JAVASCRIPT_OBJECT)) {
-            return false;
-          }
-        }
-
-        return tree.getModifiers().getFlags().contains(Modifier.PRIVATE);
+        return isSuppressed(tree) ? null : super.visitMethod(tree, unused);
       }
     }
-    new PrivateFieldLocalVarFinder().scan(state.getPath(), null);
+    new VariableFinder().scan(state.getPath(), null);
 
-    class FilterUsedElements extends TreePathScanner<Void, Void> {
+    class FilterUsedVariables extends TreePathScanner<Void, Void> {
       private boolean leftHandSideAssignment = false;
       // When this greater than zero, the usage of identifiers are real.
       private int inArrayAccess = 0;
@@ -503,12 +388,6 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
         super.visitMemberReference(tree, null);
         MethodSymbol symbol = getSymbol(tree);
-        if (isUsed(symbol)) {
-          unusedElements.remove(symbol);
-        }
-        if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
-          usageSites.put(symbol, currentExpressionStatement);
-        }
         if (symbol != null) {
           symbol.getParameters().forEach(unusedElements::remove);
         }
@@ -580,17 +459,13 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
         inMethodCall++;
-        Symbol methodSymbol = getSymbol(tree);
-        if (methodSymbol != null) {
-          unusedElements.remove(methodSymbol);
-        }
         super.visitMethodInvocation(tree, null);
         inMethodCall--;
         return null;
       }
     }
 
-    new FilterUsedElements().scan(state.getPath(), null);
+    new FilterUsedVariables().scan(state.getPath(), null);
 
     for (TreePath unusedPath : unusedElements.values()) {
       Tree unused = unusedPath.getLeaf();
@@ -631,18 +506,6 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
                   .addAllFixes(fixes)
                   .build());
           break;
-        case METHOD:
-          if (ignoreUnusedMethods.get()) {
-            break;
-          }
-          String message =
-              String.format("Private method '%s' is never used.", ((MethodTree) unused).getName());
-          state.reportMatch(
-              buildDescription(unused)
-                  .addFix(SuggestedFixes.replaceIncludingComments(unusedPath, "", state))
-                  .setMessage(message)
-                  .build());
-          break;
         default:
           break;
       }
@@ -650,7 +513,7 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
     return Description.NO_MATCH;
   }
 
-  private static boolean hasNativeMethods(CompilationUnitTree tree) {
+  static boolean hasNativeMethods(CompilationUnitTree tree) {
     AtomicBoolean hasAnyNativeMethods = new AtomicBoolean(false);
     new TreeScanner<Void, Void>() {
       @Override
@@ -867,12 +730,11 @@ public final class Unused extends BugChecker implements CompilationUnitTreeMatch
    */
   private static boolean exemptedByAnnotation(
       List<? extends AnnotationTree> annotations,
-      Set<String> exemptingAnnotations,
       VisitorState state) {
     for (AnnotationTree annotation : annotations) {
       if (((JCAnnotation) annotation).type != null) {
         TypeSymbol tsym = ((JCAnnotation) annotation).type.tsym;
-        if (exemptingAnnotations.contains(tsym.getQualifiedName().toString())) {
+        if (EXEMPTING_VARIABLE_ANNOTATIONS.contains(tsym.getQualifiedName().toString())) {
           return true;
         }
       }
