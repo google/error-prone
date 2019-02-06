@@ -25,15 +25,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link Unused}. */
+/** Tests for {@link UnusedVariable}. */
 @RunWith(JUnit4.class)
-public class UnusedTest {
+public class UnusedVariableTest {
 
   private final CompilationTestHelper helper =
-      CompilationTestHelper.newInstance(Unused.class, getClass());
+      CompilationTestHelper.newInstance(UnusedVariable.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new Unused(ErrorProneFlags.empty()), getClass());
-
+      BugCheckerRefactoringTestHelper.newInstance(
+          new UnusedVariable(ErrorProneFlags.empty()), getClass());
 
 
   @Test
@@ -266,7 +266,6 @@ public class UnusedTest {
         .doTest();
   }
 
-
   @Test
   public void unuseds() {
     helper
@@ -329,10 +328,6 @@ public class UnusedTest {
             "    // Must not be reported as unused",
             "    notUseds.get(indexInMethodCall).publicOne = 0;",
             "  }",
-            "  // BUG: Diagnostic contains:",
-            "  private void notUsedMethod() {}",
-            "  // BUG: Diagnostic contains:",
-            "  private static void staticNotUsedMethod() {}",
             "  void memberSelectUpdate1() {",
             "    List<Unuseds> l = null;",
             "    // `u` should not be reported as unused.",
@@ -371,34 +366,7 @@ public class UnusedTest {
             "    private void test1() {",
             "      int local;",
             "    }",
-            "    @SuppressWarnings(value = \"unused\")",
-            "    private void test2() {",
-            "      int local;",
-            "    }",
             "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void exemptedMethods() {
-    helper
-        .addSourceLines(
-            "Unuseds.java",
-            "package unusedvars;",
-            "import java.io.IOException;",
-            "import java.io.ObjectStreamException;",
-            "public class Unuseds {",
-            "  private void readObject(java.io.ObjectInputStream in) throws IOException {",
-            "    in.hashCode();",
-            "  }",
-            "  private void writeObject(java.io.ObjectOutputStream out) throws IOException {",
-            "    out.writeInt(123);",
-            "  }",
-            "  private Object readResolve() {",
-            "    return null;",
-            "  }",
-            "  private void readObjectNoData() throws ObjectStreamException {}",
             "}")
         .doTest();
   }
@@ -467,9 +435,6 @@ public class UnusedTest {
             "  private int unused;",
             "  private int unusedInt;",
             "  private static final int UNUSED_CONSTANT = 5;",
-            "  private void unused1(int a, int unusedParam) {",
-            "    int unusedLocal = a;",
-            "  }",
             "}")
         .doTest();
   }
@@ -554,16 +519,6 @@ public class UnusedTest {
             "   * Comment for a field */",
             "  @SuppressWarnings(\"test\")",
             "  private Object field;",
-            "  /**",
-            "   * Method comment",
-            "   */private void test1() {",
-            "  }",
-            "  /** Method comment */",
-            "  private void test2() {",
-            "  }",
-            "  // Non javadoc comment",
-            "  private void test3() {",
-            "  }",
             "}")
         .addOutputLines(
             "UnusedWithComment.java", //
@@ -637,7 +592,7 @@ public class UnusedTest {
             "package unusedvars;",
             "public class UnusedWithComment {",
             "  private static final String foo = null, // foo",
-            "  // BUG: Diagnostic contains: Unused",
+            "  // BUG: Diagnostic contains:",
             "      bar = null;",
             "  public static String foo() { return foo; }",
             "}")
@@ -975,21 +930,6 @@ public class UnusedTest {
             "  ONE() {};",
             "  private Test() {",
             "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void onlyForMethodReference() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            "import java.util.function.Predicate;",
-            "class Test {",
-            "  private static boolean foo(int a) {",
-            "    return true;",
-            "  }",
-            "  Predicate<Integer> pred = Test::foo;",
             "}")
         .doTest();
   }
