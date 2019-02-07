@@ -35,18 +35,18 @@ safest use of the return value.
   }
 ```
 
-Even comparisons which are otherwise correct are significantly clearer to other
-readers of the code if turned into a comparison to `0`, e.g.:
+Even comparisons which are otherwise correct are clearer to other readers of the
+code if turned into a comparison to `0`, e.g.:
 
 ```java
-  boolean <T> greaterOrEqual(Comparator<T> comparator, T a, T b) {
-    return comparator.compare(a, b) > 1;
+  boolean <T> greaterThan(Comparator<T> comparator, T a, T b) {
+    return comparator.compare(a, b) >= 1;
   }
 ```
 
 ```java {.good}
-  boolean <T> greaterOrEqual(Comparator<T> comparator, T a, T b) {
-    return comparator.compare(a, b) >= 0;
+  boolean <T> greaterThan(Comparator<T> comparator, T a, T b) {
+    return comparator.compare(a, b) > 0;
   }
 ```
 

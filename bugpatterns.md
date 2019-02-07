@@ -829,11 +829,14 @@ Prefer `asSubclass` instead of casting the result of `newInstance`, to detect cl
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
 
-__[Unused](bugpattern/Unused)__<br>
+__[UnusedMethod](bugpattern/UnusedMethod)__<br>
 Unused.
 
 __[UnusedNestedClass](bugpattern/UnusedNestedClass)__<br>
 This nested class is unused, and can be removed.
+
+__[UnusedVariable](bugpattern/UnusedVariable)__<br>
+Unused.
 
 __[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
 Java assert is used in test. For testing purposes Assert.* matchers should be used.
