@@ -1,4 +1,6 @@
-Instances of an annotation interface generally return a random proxy class when `getClass()` is called on them; to get the actual annotation type use `annotationType()`.
+Instances of an annotation interface generally return a random proxy class when
+`getClass()` is called on them; to get the actual annotation type use
+`annotationType()`.
 
 In the following example, calling `getClass()` on the annotation instance
 returns a proxy class like `com.sun.proxy.$Proxy1`, while `annotationType()`

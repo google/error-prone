@@ -5,6 +5,6 @@ If you don’t check the return value of these methods, you will never find out 
 they threw an exception.
 
 Nested futures can also result in missed cancellation signals or suppressed
-exceptions - see [Avoiding Nested
-Futures](https://github.com/google/guava/wiki/ListenableFutureExplained#avoid-nested-futures)
+exceptions - see
+[Avoiding Nested Futures](https://github.com/google/guava/wiki/ListenableFutureExplained#avoid-nested-futures)
 for details.

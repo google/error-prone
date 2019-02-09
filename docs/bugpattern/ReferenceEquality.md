@@ -80,4 +80,3 @@ using the normal `equals` method.
 ### So how can I put a special "nothing" value in my map?
 
 Use `Optional<V>` as the value type of your map instead.
-

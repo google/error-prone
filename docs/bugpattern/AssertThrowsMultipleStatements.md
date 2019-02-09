@@ -6,7 +6,7 @@ This means that:
 
 *   Any set-up logic in the lambda will cause the test to incorrectly pass if it
     throws the expected exception.
-*   Any assertions that run after the statement that throws will never be 
+*   Any assertions that run after the statement that throws will never be
     executed.
 
 Don't do this:

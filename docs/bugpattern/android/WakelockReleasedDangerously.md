@@ -25,8 +25,8 @@ ineffectual and misleading.
 To prevent crashes like this, `WakeLock`s acquired with timeout should be
 released *only in a `try/catch(RuntimeException)` block*.
 
-This does not hold for `WakeLock`s that are [not reference
-counted](https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/android/os/PowerManager.java#1267).
+This does not hold for `WakeLock`s that are
+[not reference counted](https://android.googlesource.com/platform/frameworks/base/+/nougat-release/core/java/android/os/PowerManager.java#1267).
 `WakeLock`s are reference counted by default, but if
 `setReferenceCounted(false)` has been called on the `WakeLock` in question, the
 OS does not check whether the `WakeLock` has been released too many times, and

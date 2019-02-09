@@ -2,8 +2,8 @@ Passing an argument of type `Class` to `Class#instanceOf(Class)` is usually a
 mistake.
 
 Calling `clazz.instanceOf(obj)` for some `clazz` with type `Class<T>` is
-equivalent to `obj instanceof T`. The `instanceOf` method exists for cases
-where the type `T` is not known statically.
+equivalent to `obj instanceof T`. The `instanceOf` method exists for cases where
+the type `T` is not known statically.
 
 When a class literal is passed as the argument of `instanceOf`, the result will
 only be true if the class literal on left hand side is equal to `Class.class`.

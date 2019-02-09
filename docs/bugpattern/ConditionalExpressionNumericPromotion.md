@@ -12,8 +12,8 @@ For example:
 Despite the apparent intent to get a `Double` in one case, and an `Integer` in
 the other, the result is a `Double` in both cases.
 
-This is because the rules in [JLS §
-15.25.2](https://docs.oracle.com/javase/specs/jls/se9/html/jls-15.html#jls-15.25.2)
+This is because the rules in
+[JLS § 15.25.2](https://docs.oracle.com/javase/specs/jls/se9/html/jls-15.html#jls-15.25.2)
 state that differing numeric types will undergo binary numeric promotion. As
 such, the latter case is evaluated as:
 
