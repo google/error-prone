@@ -252,8 +252,6 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         sourceNode.getArguments().stream(),
         (formal, actual) -> {
           // formal parameter type (no l-val b/c that would wrongly constrain the method return)
-          // TODO(b/116977632): constraints for actual parameter type (i.e. after type variable
-          // substitution) without ignoring annotations directly on the parameter or vararg
           generateConstraintsForWrite(formal.type(), formal.symbol(), actual, /*lVal=*/ null);
         });
 
@@ -267,10 +265,10 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       JCFieldAccess fieldAccess = ((JCFieldAccess) node.getMethodSelect());
       for (TypeVariableSymbol tvs : fieldAccess.selected.type.tsym.getTypeParameters()) {
         Type rcvrtype = fieldAccess.selected.type.tsym.type;
+        // Note this should be a singleton set, one for each type parameter
         ImmutableSet<InferenceVariable> rcvrReferences =
             findUnannotatedTypeVarRefs(tvs, rcvrtype, /*decl=*/ null, fieldAccess.selected);
         Type restype = fieldAccess.sym.type.asMethodType().restype;
-        // TODO(b/116977632): Propagate constraints for instantiated receiver types as well?
         findUnannotatedTypeVarRefs(tvs, restype, fieldAccess.sym, node)
             .forEach(
                 resRef ->
