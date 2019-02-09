@@ -4,10 +4,10 @@ Object reference.
 
 Passing a primitive value to `Objects.hashCode` function results in boxing the
 primitive, then calling the boxed object's `hashCode`. You can get the same
-result by using, e.g.: `Long.hashCode(long)` to get the effective hash code
-of a primitive `long`. If you're calling this method outside of your own 
-`hashCode()` implementation, prefer to use the `BoxedClass.hashCode(primitive)`
-functions to avoid unwanted boxed.
+result by using, e.g.: `Long.hashCode(long)` to get the effective hash code of a
+primitive `long`. If you're calling this method outside of your own `hashCode()`
+implementation, prefer to use the `BoxedClass.hashCode(primitive)` functions to
+avoid unwanted boxed.
 
 If you're implementing a `hashCode` function for your **own** class that
 consists of a single primitive value, you may want to consider some of these

@@ -29,12 +29,12 @@ But also because of a few concrete advantages:
 1.  You get the `x` and `y` fields/accessors for free.
 2.  You get any other methods defined on `Point` for free.
 3.  Users can pass a `ColoredPoint` to anything that expects a `Point`. (This is
-    by far the primary advantage, since the first two are just one-time-only 
+    by far the primary advantage, since the first two are just one-time-only
     implementation helpers for the `Point` authors themselves.)
 
-Although these same advantages *can* be achieved via composition, it's no
-longer quite "for free"; the frequent need to call `myColoredPoint.asPoint()` is
-a pain that feels unjustified, and thus subclassing is often chosen.
+Although these same advantages *can* be achieved via composition, it's no longer
+quite "for free"; the frequent need to call `myColoredPoint.asPoint()` is a pain
+that feels unjustified, and thus subclassing is often chosen.
 
 Unfortunately, `equals` now creates a big problem. Two `Points` should be seen
 as interchangeable whenever they have the same `x` and `y` coordinates. But two

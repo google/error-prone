@@ -18,5 +18,5 @@ for example:
 package com.google.my.pkg;
 ```
 
-Note that package annotations must be located in a `package-info.java` file
-that must be built together with the package.
+Note that package annotations must be located in a `package-info.java` file that
+must be built together with the package.

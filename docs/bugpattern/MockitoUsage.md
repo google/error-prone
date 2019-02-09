@@ -1,5 +1,5 @@
-Calls to `Mockito.when` should always be accompanied by a call to a method
-like `thenReturn`.
+Calls to `Mockito.when` should always be accompanied by a call to a method like
+`thenReturn`.
 
 ```java
 when(mock.get()).thenReturn(answer); // correct

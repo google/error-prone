@@ -37,9 +37,9 @@ public class GameLibrary {
 }
 ```
 
-During the execution of `GameRunner.run`, the call to `playGame` may not
-hold the `this` reference live, and its finalizer may run, cleaning up the
-native resources while the native code is still executing.
+During the execution of `GameRunner.run`, the call to `playGame` may not hold
+the `this` reference live, and its finalizer may run, cleaning up the native
+resources while the native code is still executing.
 
 You can fix this by making the `static native` method not `static`, or by
 changing the `static native` method so that it is passed the enclosing instance
@@ -66,8 +66,6 @@ object instead.
 
 ## References
 
-*   [Boehm, "Destructors, finalizers, and synchronization." POPL
-    2003.](http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html) Section 3.4
-    discusses this problem.
-*   [Java Language Specification 12.6.2, "Interaction with the Memory
-    Model."](https://docs.oracle.com/javase/specs/jls/se9/html/jls-12.html#jls-12.6.2)
+*   [Boehm, "Destructors, finalizers, and synchronization." POPL 2003.](http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html)
+    Section 3.4 discusses this problem.
+*   [Java Language Specification 12.6.2, "Interaction with the Memory Model."](https://docs.oracle.com/javase/specs/jls/se9/html/jls-12.html#jls-12.6.2)

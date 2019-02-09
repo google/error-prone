@@ -19,9 +19,9 @@ This check detects circumstances where the equals method is called when the two
 objects in question can *never* be equal to each other. We check the following
 equality methods:
 
-* `java.lang.Object.equals(Object)`
-* `java.util.Objects.equals(Object, Object)`
-* `com.google.common.base.Objects.equal(Object, Object)`
+*   `java.lang.Object.equals(Object)`
+*   `java.util.Objects.equals(Object, Object)`
+*   `com.google.common.base.Objects.equal(Object, Object)`
 
 ## I'm trying to test to make sure my equals method works
 

@@ -1,5 +1,5 @@
-Class names from `java.lang` should never be reused. From [Java
-Puzzlers](http://www.javapuzzlers.com/java-puzzlers-sampler.pdf):
+Class names from `java.lang` should never be reused. From
+[Java Puzzlers](http://www.javapuzzlers.com/java-puzzlers-sampler.pdf):
 
 > Avoid reusing the names of platform classes, and never reuse class names from
 > `java.lang`, because these names are automatically imported everywhere.

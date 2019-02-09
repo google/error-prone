@@ -2,8 +2,8 @@ Some JDK APIs are obsolete and have preferred alternatives.
 
 ## `LinkedList`
 
-`LinkedList` almost never out-performs `ArrayList` or `ArrayDeque`[^1].
-If you are using `LinkedList` as a list, prefer `ArrayList`.  If you are using
+`LinkedList` almost never out-performs `ArrayList` or `ArrayDeque`[^1]. If you
+are using `LinkedList` as a list, prefer `ArrayList`. If you are using
 `LinkedList` as a stack or queue/deque, prefer `ArrayDeque`.
 
 Migration gotcha: `LinkedList` permits `null` elements; `ArrayDeque` rejects

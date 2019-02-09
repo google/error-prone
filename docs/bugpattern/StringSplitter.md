@@ -27,8 +27,7 @@ Prefer either:
     handling of empty strings and the trimming of whitespace with `trimResults`
     and `omitEmptyStrings`.
 
-*   [`String.split(String,
-    int)`](https://docs.oracle.com/javase/9/docs/api/java/lang/String.html#split-java.lang.String-int-)
+*   [`String.split(String, int)`](https://docs.oracle.com/javase/9/docs/api/java/lang/String.html#split-java.lang.String-int-)
     and setting an explicit 'limit' to `-1` to match the behaviour of
     `Splitter`.
 
