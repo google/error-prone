@@ -280,4 +280,21 @@ public class JdkObsoleteTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void noNPEWithMethodReferenceOnMethodInvocationResult() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void methodReferenceUsage() {",
+            "    // This line must not trigger a NullPointerException in the plugin",
+            "    Runnable r = m()::run;",
+            "  }",
+            "  private Runnable m() {",
+            "    return () -> {};",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

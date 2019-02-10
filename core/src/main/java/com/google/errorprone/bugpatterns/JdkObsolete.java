@@ -57,6 +57,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
@@ -215,7 +216,11 @@ public class JdkObsolete extends BugChecker
   private Description describeIfObsolete(
       @Nullable Tree tree, Iterable<Type> types, VisitorState state) {
     for (Type type : types) {
-      Obsolete obsolete = OBSOLETE.get(type.asElement().getQualifiedName().toString());
+      TypeSymbol element = type.asElement();
+      if (element == null) {
+        continue;
+      }
+      Obsolete obsolete = OBSOLETE.get(element.getQualifiedName().toString());
       if (obsolete == null) {
         continue;
       }
