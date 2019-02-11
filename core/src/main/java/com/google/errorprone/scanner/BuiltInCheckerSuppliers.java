@@ -233,6 +233,7 @@ import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
 import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
+import com.google.errorprone.bugpatterns.RxReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SelfComparison;
 import com.google.errorprone.bugpatterns.SelfEquals;
@@ -694,6 +695,7 @@ public class BuiltInCheckerSuppliers {
           ReachabilityFenceUsage.class,
           ReferenceEquality.class,
           RequiredModifiersChecker.class,
+          RxReturnValueIgnored.class,
           ShortCircuitBoolean.class,
           StringSplitter.class,
           StaticGuardedByInstance.class,
