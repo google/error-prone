@@ -70,7 +70,7 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
 
     // Ignore f-bounds.
     // e.g.: <T extends Enum<T>> T unsafeEnumDeserializer();
-    if (retType.bound != null && TypeParameterFinder.visit(retType.bound).contains(retType.tsym)) {
+    if (retType.getUpperBound() != null && TypeParameterFinder.visit(retType.getUpperBound()).contains(retType.tsym)) {
       return Description.NO_MATCH;
     }
 
@@ -141,8 +141,8 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
       if (!seen.add(type.tsym)) {
         return null;
       }
-      if (type.bound != null) {
-        type.bound.accept(this, null);
+      if (type.getUpperBound() != null) {
+        type.getUpperBound().accept(this, null);
       }
       return null;
     }
