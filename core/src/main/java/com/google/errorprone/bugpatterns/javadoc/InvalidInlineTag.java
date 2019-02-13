@@ -120,6 +120,7 @@ public final class InvalidInlineTag extends BugChecker
     private final ImmutableSet<String> parameters;
 
     private final Pattern misplacedCurly;
+    private final Pattern parensRatherThanCurly;
 
     private final Set<DocTree> fixedTags = new HashSet<>();
 
@@ -128,14 +129,13 @@ public final class InvalidInlineTag extends BugChecker
       this.state = state;
       this.validTags = validTags;
       this.parameters = parameters;
-      this.misplacedCurly =
-          Pattern.compile(
-              String.format(
-                  "@(%s)\\{",
-                  validTags.stream()
-                      .filter(tag -> tag.type() == TagType.INLINE)
-                      .map(JavadocTag::name)
-                      .collect(joining("|"))));
+      String validInlineTags =
+          validTags.stream()
+              .filter(tag -> tag.type() == TagType.INLINE)
+              .map(JavadocTag::name)
+              .collect(joining("|"));
+      this.misplacedCurly = Pattern.compile(String.format("@(%s)\\{", validInlineTags));
+      this.parensRatherThanCurly = Pattern.compile(String.format("\\(@(%s)", validInlineTags));
     }
 
     @Override
@@ -163,12 +163,14 @@ public final class InvalidInlineTag extends BugChecker
     @Override
     public Void visitText(TextTree node, Void unused) {
       handleMalformedTags(node);
+      handleIncorrectParens(node);
       handleDanglingParams(node);
       return super.visitText(node, null);
     }
 
     private void handleMalformedTags(TextTree node) {
-      Matcher matcher = misplacedCurly.matcher(node.getBody());
+      String body = node.getBody();
+      Matcher matcher = misplacedCurly.matcher(body);
       Comment comment = ((DCDocComment) getCurrentPath().getDocComment()).comment;
       while (matcher.find()) {
         int beforeAt = comment.getSourcePos(((DCText) node).pos + matcher.start());
@@ -184,6 +186,57 @@ public final class InvalidInlineTag extends BugChecker
                 .addFix(fix)
                 .build());
       }
+    }
+
+    private void handleIncorrectParens(TextTree node) {
+      String body = node.getBody();
+      Matcher matcher = parensRatherThanCurly.matcher(body);
+      Comment comment = ((DCDocComment) getCurrentPath().getDocComment()).comment;
+      while (matcher.find()) {
+        int beforeAt = comment.getSourcePos(((DCText) node).pos + matcher.start());
+        SuggestedFix.Builder fix = SuggestedFix.builder().replace(beforeAt, beforeAt + 1, "{");
+
+        Optional<Integer> found = findClosingBrace(body, matcher.start(1));
+        found.ifPresent(
+            pos -> {
+              int closing = comment.getSourcePos(((DCText) node).pos + pos);
+              fix.replace(closing, closing + 1, "}");
+            });
+
+        state.reportMatch(
+            buildDescription(
+                    getDiagnosticPosition(beforeAt, getCurrentPath().getTreePath().getLeaf()))
+                .setMessage(
+                    String.format(
+                        "Curly braces should be used for inline Javadoc tags: {%s ...}",
+                        matcher.group(1)))
+                .addFix(fix.build())
+                .build());
+      }
+    }
+
+    /** Looks for a matching closing brace, if one is found. */
+    private Optional<Integer> findClosingBrace(String body, int startPos) {
+      int parenDepth = 0;
+      for (int pos = startPos; pos < body.length(); ++pos) {
+        char c = body.charAt(pos);
+        switch (c) {
+          case '(':
+            parenDepth++;
+            continue;
+          case ')':
+            if (parenDepth == 0) {
+              return Optional.of(pos);
+            }
+            parenDepth--;
+            break;
+          case '}':
+            return Optional.empty();
+          default:
+            // fall out
+        }
+      }
+      return Optional.empty();
     }
 
     private void handleDanglingParams(TextTree node) {
