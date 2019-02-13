@@ -19,7 +19,6 @@ package com.google.errorprone.matchers;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -188,7 +187,6 @@ public final class JUnitMatchersTest {
   @BugPattern(
       name = "JUnitVersionMatcher",
       summary = "Matches on JUnit test classes, emits description with its JUnit version.",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.WARNING)
   public static class JUnitVersionMatcher extends BugChecker implements ClassTreeMatcher {
 

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -46,7 +45,6 @@ import com.sun.tools.javac.code.Type;
     name = "GuardedBy",
     altNames = "GuardedByChecker",
     summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
-    category = JDK,
     severity = ERROR)
 public class GuardedByChecker extends BugChecker
     implements VariableTreeMatcher, MethodTreeMatcher, LambdaExpressionTreeMatcher {

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -57,7 +56,6 @@ import javax.lang.model.type.TypeKind;
 @BugPattern(
     name = "NullableDereference",
     summary = "Dereference of possibly-null value",
-    category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.NO_FIX)
 public class NullableDereference extends BugChecker

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
@@ -54,7 +53,6 @@ import javax.lang.model.element.Name;
         "Constructors and methods with the same name should appear sequentially"
             + " with no other code in between. Please re-order or re-name methods.",
     generateExamplesFromTestCases = false,
-    category = JDK,
     severity = SUGGESTION,
     linkType = CUSTOM,
     tags = STYLE,

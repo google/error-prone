@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -37,7 +36,6 @@ import java.util.List;
 @BugPattern(
     name = "IterableAndIterator",
     summary = "Class should not implement both `Iterable` and `Iterator`",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public class IterableAndIterator extends BugChecker implements ClassTreeMatcher {

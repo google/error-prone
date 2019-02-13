@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
@@ -32,7 +31,6 @@ import com.sun.source.tree.ThrowTree;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "ThrowNull",
-    category = JDK,
     summary = "Throwing 'null' always results in a NullPointerException being thrown.",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

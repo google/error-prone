@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.base.Ascii;
@@ -49,7 +48,6 @@ import javax.lang.model.element.ElementKind;
     summary =
         "It is confusing to have a field and a parameter under the same scope that differ only in "
             + "capitalization.",
-    category = JDK,
     severity = WARNING,
     generateExamplesFromTestCases = false,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

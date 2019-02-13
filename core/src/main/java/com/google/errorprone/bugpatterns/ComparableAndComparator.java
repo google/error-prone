@@ -14,7 +14,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -39,7 +38,6 @@ import java.util.List;
 @BugPattern(
     name = "ComparableAndComparator",
     summary = "Class should not implement both `Comparable` and `Comparator`",
-    category = JDK,
     severity = WARNING)
 public class ComparableAndComparator extends BugChecker implements ClassTreeMatcher {
   private static final String COMPARABLE = Comparable.class.getCanonicalName();

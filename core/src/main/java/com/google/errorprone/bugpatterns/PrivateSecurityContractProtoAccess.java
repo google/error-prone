@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -40,7 +39,7 @@ import java.util.regex.Pattern;
         "Access to a private protocol buffer field is forbidden. This protocol buffer carries"
             + " a security contract, and can only be created using an approved library."
             + " Direct access to the fields is forbidden.",
-    category = ONE_OFF,
+
     severity = ERROR,
     linkType = NONE)
 public class PrivateSecurityContractProtoAccess extends BugChecker

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
@@ -39,7 +38,6 @@ import com.sun.source.tree.Tree;
 @BugPattern(
     name = "ArrayToString",
     summary = "Calling toString on an array does not provide useful information",
-    category = JDK,
     severity = ERROR)
 public class ArrayToString extends AbstractToString {
 

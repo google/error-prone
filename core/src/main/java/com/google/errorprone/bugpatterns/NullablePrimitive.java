@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -43,7 +42,6 @@ import java.util.List;
 @BugPattern(
     name = "NullablePrimitive",
     summary = "@Nullable should not be used for primitive types since they cannot be null",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

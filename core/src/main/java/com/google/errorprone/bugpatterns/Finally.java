@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -61,7 +60,6 @@ import com.sun.tools.javac.util.Name;
     summary =
         "If you return or throw from a finally, then values returned or thrown from the"
             + " try-catch block will be ignored. Consider using try-with-resources instead.",
-    category = JDK,
     severity = WARNING,
     generateExamplesFromTestCases = false,
     tags = StandardTags.FRAGILE_CODE)

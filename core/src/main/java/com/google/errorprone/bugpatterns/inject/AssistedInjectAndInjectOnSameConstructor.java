@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
-import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
@@ -43,7 +42,6 @@ import com.sun.source.tree.Tree;
 @BugPattern(
     name = "AssistedInjectAndInjectOnSameConstructor",
     summary = "@AssistedInject and @Inject cannot be used on the same constructor.",
-    category = INJECT,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AssistedInjectAndInjectOnSameConstructor extends BugChecker

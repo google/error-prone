@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static org.junit.Assert.assertThrows;
@@ -382,7 +381,6 @@ public class CompilationTestHelperTest {
       name = "ReturnTreeChecker",
       summary = "Method may return normally.",
       explanation = "Consider mutating some global state instead.",
-      category = JDK,
       severity = ERROR)
   public static class ReturnTreeChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
@@ -407,7 +405,6 @@ public class CompilationTestHelperTest {
       name = "PackageTreeChecker",
       summary = "Package declaration found",
       explanation = "Prefer to use the default package for everything.",
-      category = JDK,
       severity = ERROR)
   public static class PackageTreeChecker extends BugChecker implements CompilationUnitTreeMatcher {
     @Override
@@ -422,7 +419,6 @@ public class CompilationTestHelperTest {
   @BugPattern(
       name = "ThisCheckerCannotBeInstantiated",
       summary = "A checker that Error Prone can't instantiate.",
-      category = JDK,
       severity = ERROR)
   public static class ThisCheckerCannotBeInstantiated extends BugChecker
       implements CompilationUnitTreeMatcher {

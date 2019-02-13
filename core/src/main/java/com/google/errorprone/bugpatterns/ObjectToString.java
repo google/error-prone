@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.base.Optional;
@@ -45,7 +44,6 @@ import com.sun.tools.javac.util.Names;
     summary =
         "Calling toString on Objects that don't override toString() doesn't"
             + " provide useful information",
-    category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.NO_FIX)
 public class ObjectToString extends AbstractToString {

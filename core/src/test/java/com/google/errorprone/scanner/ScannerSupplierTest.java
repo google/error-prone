@@ -19,7 +19,6 @@ package com.google.errorprone.scanner;
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -616,7 +615,6 @@ public class ScannerSupplierTest {
   @BugPattern(
       name = "PackageLocation",
       summary = "",
-      category = JDK,
       severity = ERROR,
       suppressionAnnotations = {},
       disableable = false)

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -43,7 +42,6 @@ import com.sun.tools.javac.tree.JCTree;
 @BugPattern(
     name = "IsInstanceOfClass",
     summary = "The argument to Class#isInstance(Object) should not be a Class",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class IsInstanceOfClass extends BugChecker implements MethodInvocationTreeMatcher {

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -38,7 +37,6 @@ import java.util.List;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "NCopiesOfChar",
-    category = JDK,
     summary =
         "The first argument to nCopies is the number of copies, and the second is the item to copy",
     severity = ERROR,

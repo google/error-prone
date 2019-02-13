@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -48,7 +47,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "UnsynchronizedOverridesSynchronized",
     summary = "Unsynchronized method overrides a synchronized method.",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE,
     providesFix = REQUIRES_HUMAN_ATTENTION)

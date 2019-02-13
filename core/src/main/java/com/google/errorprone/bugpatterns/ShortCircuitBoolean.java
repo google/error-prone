@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -43,7 +42,6 @@ import java.util.Iterator;
  */
 @BugPattern(
     name = "ShortCircuitBoolean",
-    category = JDK,
     summary = "Prefer the short-circuiting boolean operators && and || to & and |.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE,

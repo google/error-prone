@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -42,7 +41,6 @@ import java.util.Objects;
 @BugPattern(
     name = "StaticQualifiedUsingExpression",
     summary = "A static variable or method should be qualified with a class name, not expression",
-    category = JDK,
     severity = WARNING,
     altNames = {"static", "static-access", "StaticAccessedFromInstance"},
     generateExamplesFromTestCases = false,

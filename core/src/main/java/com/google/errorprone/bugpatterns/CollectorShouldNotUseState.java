@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.contains;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -37,7 +36,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "CollectorShouldNotUseState",
     summary = "Collector.of() should not use state",
-    category = JDK,
     severity = WARNING)
 public class CollectorShouldNotUseState extends BugChecker implements MethodInvocationTreeMatcher {
 

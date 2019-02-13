@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static java.util.stream.Collectors.toCollection;
 
@@ -47,7 +46,6 @@ import javax.lang.model.element.Name;
  */
 @BugPattern(
     name = "HidingField",
-    category = JDK,
     summary = "Hiding fields of superclasses may cause confusion and errors",
     severity = WARNING,
     altNames = {"hiding", "OvershadowingSubclassFields"})

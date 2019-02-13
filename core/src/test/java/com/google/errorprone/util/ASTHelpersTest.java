@@ -19,7 +19,6 @@ package com.google.errorprone.util;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.truth.Truth8.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
@@ -32,7 +31,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Verify;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
@@ -690,7 +688,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
    */
   @BugPattern(
       name = "HasDirectAnnotationWithSimpleNameChecker",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() "
@@ -817,7 +814,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   /** A checker that reports the constant value of fields. */
-  @BugPattern(name = "ConstChecker", category = JDK, summary = "", severity = ERROR)
+  @BugPattern(name = "ConstChecker", summary = "", severity = ERROR)
   public static class ConstChecker extends BugChecker implements VariableTreeMatcher {
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -845,7 +842,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   /** A {@link BugChecker} that prints the result type of the first argument in method calls. */
   @BugPattern(
       name = "PrintResultTypeOfFirstArgument",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Prints the type of the first argument in method calls")
   public static class PrintResultTypeOfFirstArgument extends BugChecker
@@ -942,7 +938,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   /** A {@link BugChecker} that prints the target type of matched method invocations. */
   @BugPattern(
       name = "TargetTypeChecker",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Prints the target type")
   public static class TargetTypeChecker extends BugChecker implements MethodInvocationTreeMatcher {
@@ -990,7 +985,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   /** A {@link BugChecker} that prints the target type of a parameterized type. */
   @BugPattern(
       name = "TargetTypeCheckerParentTypeNotMatched",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Prints the target type for ParameterizedTypeTree, which is not handled explicitly.")
@@ -1107,7 +1101,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   /** A {@link BugChecker} that prints if the method can be overridden. */
   @BugPattern(
       name = "MethodCanBeOverriddenChecker",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Prints whether the method can be overridden.",
       providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

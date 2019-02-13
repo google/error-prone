@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -46,7 +45,6 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 @BugPattern(
     name = "ArrayHashCode",
     summary = "hashcode method on array does not hash array contents",
-    category = JDK,
     severity = ERROR,
     generateExamplesFromTestCases = false,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

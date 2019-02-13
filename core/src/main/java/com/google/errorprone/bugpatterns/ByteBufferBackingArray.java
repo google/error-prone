@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSameType;
@@ -53,7 +52,6 @@ import java.util.Optional;
     summary =
         "ByteBuffer.array() shouldn't be called unless ByteBuffer.arrayOffset() is used or "
             + "if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().",
-    category = JDK,
     severity = WARNING,
     generateExamplesFromTestCases = false)
 public class ByteBufferBackingArray extends BugChecker implements MethodInvocationTreeMatcher {

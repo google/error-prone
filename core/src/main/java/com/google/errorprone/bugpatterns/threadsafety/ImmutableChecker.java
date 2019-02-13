@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -64,7 +63,6 @@ import java.util.Optional;
 @BugPattern(
     name = "Immutable",
     summary = "Type declaration annotated with @Immutable is not immutable",
-    category = JDK,
     severity = ERROR,
     documentSuppression = false,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

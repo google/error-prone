@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -68,7 +67,6 @@ import java.util.Map;
  */
 @BugPattern(
     name = "ChainingConstructorIgnoresParameter",
-    category = JDK,
     severity = ERROR,
     summary =
         "The called constructor accepts a parameter with the same name and type as one of "

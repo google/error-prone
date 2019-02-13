@@ -58,7 +58,6 @@ import javax.annotation.Nullable;
     summary =
         "The actual and expected values appear to be swapped, which results in poor assertion "
             + "failure messages. The actual value should come first.",
-    category = TRUTH,
     severity = WARNING,
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -79,7 +78,6 @@ import java.util.stream.Stream;
 @BugPattern(
     name = "ModifiedButNotUsed",
     summary = "A collection or proto builder was created, but its values were never accessed.",
-    category = JDK,
     providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING)
 public class ModifiedButNotUsed extends BugChecker

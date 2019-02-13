@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -39,7 +38,6 @@ public final class NextStatementTest {
   /** A bugchecker to test the ability to notice the 'next statement' */
   @BugPattern(
       name = "CompoundAssignmentBeforeReturn",
-      category = JDK,
       summary = "This is a compound assignment before another statement in the same block",
       severity = ERROR)
   public static class CompoundBeforeAnythingChecker extends BugChecker

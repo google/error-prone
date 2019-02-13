@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
-import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
@@ -49,7 +48,6 @@ import com.sun.source.tree.MethodTree;
     summary =
         "Constructors on abstract classes are never directly @Injected, only the constructors"
             + " of their subclasses can be @Inject'ed.",
-    category = INJECT,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InjectOnConstructorOfAbstractClass extends BugChecker implements MethodTreeMatcher {

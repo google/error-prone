@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -41,7 +40,6 @@ import javax.lang.model.element.Name;
 @BugPattern(
     name = "ConstructorInvokesOverridable",
     summary = "Constructors should not invoke overridable methods.",
-    category = JDK,
     severity = WARNING)
 public class ConstructorInvokesOverridable extends ConstructorLeakChecker {
 

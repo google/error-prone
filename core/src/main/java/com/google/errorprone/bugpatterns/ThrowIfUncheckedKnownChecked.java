@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -43,7 +42,6 @@ import javax.lang.model.type.UnionType;
 @BugPattern(
     name = "ThrowIfUncheckedKnownChecked",
     summary = "throwIfUnchecked(knownCheckedException) is a no-op.",
-    category = GUAVA,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ThrowIfUncheckedKnownChecked extends BugChecker

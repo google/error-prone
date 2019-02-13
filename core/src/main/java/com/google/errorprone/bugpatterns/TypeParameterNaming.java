@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Ascii;
@@ -57,7 +56,6 @@ import javax.lang.model.element.Name;
     summary =
         "Type parameters must be a single letter with an optional numeric suffix,"
             + " or an UpperCamelCase name followed by the letter 'T'.",
-    category = JDK,
     severity = SUGGESTION,
     tags = StandardTags.STYLE,
     linkType = LinkType.CUSTOM,

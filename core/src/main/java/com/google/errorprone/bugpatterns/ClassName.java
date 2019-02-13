@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
@@ -38,7 +37,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "ClassName",
     summary = "The source file name should match the name of the top-level class it contains",
-    category = JDK,
     severity = ERROR,
     documentSuppression = false,
     linkType = CUSTOM,

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -46,7 +45,6 @@ public class ParameterTest {
    */
   @BugPattern(
       name = "IsFirstAssignableToSecond",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Print whether the type of the first argument is assignable to the second one")
   public static class IsFirstAssignableToSecond extends BugChecker
@@ -109,7 +107,6 @@ public class ParameterTest {
   /** A {@link BugChecker} that prints the name extracted for the first argument */
   @BugPattern(
       name = "PrintNameOfFirstArgument",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Print the name of the first argument")
   public static class PrintNameOfFirstArgument extends BugChecker
@@ -304,7 +301,6 @@ public class ParameterTest {
   /** A {@link BugChecker} that prints whether the first argument is constant */
   @BugPattern(
       name = "PrintIsConstantFirstArgument",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Print whether the first argument is constant")
   public static class PrintIsConstantFirstArgument extends BugChecker

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.BugPattern.StandardTags.REFACTORING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -42,7 +41,6 @@ import java.util.Optional;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "TryFailRefactoring",
-    category = JUNIT,
     summary = "Prefer assertThrows to try/fail",
     severity = SUGGESTION,
     tags = REFACTORING,

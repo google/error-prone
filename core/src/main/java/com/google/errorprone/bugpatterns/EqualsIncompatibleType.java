@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
@@ -55,7 +54,6 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "EqualsIncompatibleType",
     summary = "An equality test between objects with incompatible types always returns false",
-    category = JDK,
     severity = WARNING)
 public class EqualsIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<MethodInvocationTree> STATIC_EQUALS_MATCHER =

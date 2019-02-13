@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.inLoop;
 import static com.google.errorprone.matchers.Matchers.isPrimitiveOrVoidType;
@@ -448,7 +447,6 @@ public class MatchersTest {
   @BugPattern(
       name = "InLoopChecker",
       summary = "Checker that flags the given expression statement if the given matcher matches",
-      category = ONE_OFF,
       severity = ERROR)
   public static class InLoopChecker extends MatcherChecker {
     public InLoopChecker() {
@@ -463,7 +461,6 @@ public class MatchersTest {
   @BugPattern(
       name = "MethodTreeChecker",
       summary = "Checker that flags the given method declaration if the given matcher matches",
-      category = ONE_OFF,
       severity = ERROR)
   static class MethodTreeChecker extends BugChecker implements MethodTreeMatcher {
     private final Matcher<MethodTree> matcher;
@@ -482,7 +479,6 @@ public class MatchersTest {
   @BugPattern(
       name = "MethodInvocationTreeChecker",
       summary = "Checker that flags the given method invocation if the given matcher matches",
-      category = ONE_OFF,
       severity = ERROR)
   public static class NoAnnotatedCallsChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -499,7 +495,6 @@ public class MatchersTest {
   @BugPattern(
       name = "SameArgumentChecker",
       summary = "Checker that matches invocation if the first argument is repeated",
-      category = ONE_OFF,
       severity = ERROR)
   public static class SameArgumentChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -519,7 +514,6 @@ public class MatchersTest {
   @BugPattern(
       name = "NoAnnotatedDeclarationCallsChecker",
       summary = "Checker that flags the given method invocation if the given matcher matches",
-      category = ONE_OFF,
       severity = ERROR)
   public static class NoAnnotatedDeclarationCallsChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -536,7 +530,6 @@ public class MatchersTest {
   @BugPattern(
       name = "PackageNameChecker",
       summary = "Checks the name of the package",
-      category = ONE_OFF,
       severity = ERROR)
   public static class PackageNameChecker extends BugChecker implements ClassTreeMatcher {
     private static final Matcher<Tree> MATCHER = Matchers.packageStartsWith("test.foo");

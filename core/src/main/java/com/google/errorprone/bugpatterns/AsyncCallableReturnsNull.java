@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.util.concurrent.AsyncCallable;
@@ -26,7 +25,6 @@ import com.google.errorprone.BugPattern;
 @BugPattern(
     name = "AsyncCallableReturnsNull",
     summary = "AsyncCallable should not return a null Future, only a Future whose result is null.",
-    category = GUAVA,
     severity = ERROR)
 public final class AsyncCallableReturnsNull extends AbstractAsyncTypeReturnsNull {
   public AsyncCallableReturnsNull() {

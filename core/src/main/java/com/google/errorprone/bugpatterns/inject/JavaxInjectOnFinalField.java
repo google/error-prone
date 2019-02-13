@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
-import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.isFinalField;
 import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_JAVAX_INJECT;
@@ -35,7 +34,6 @@ import com.sun.source.tree.AnnotationTree;
 @BugPattern(
     name = "JavaxInjectOnFinalField",
     summary = "@javax.inject.Inject cannot be put on a final field.",
-    category = INJECT,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JavaxInjectOnFinalField extends BugChecker implements AnnotationTreeMatcher {

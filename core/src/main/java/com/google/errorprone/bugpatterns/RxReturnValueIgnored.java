@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -48,7 +47,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
         "Methods that return an ignored [Observable | Single | Flowable | Maybe ] generally "
             + "indicate errors.\n\nIf you don’t check the return value of these methods, the "
             + "observables may never execute. It also means the error case is not being handled",
-    category = JDK,
     severity = WARNING)
 public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<ExpressionTree> HAS_CIRV_ANNOTATION =

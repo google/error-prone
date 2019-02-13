@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.Signatures.prettyType;
@@ -43,7 +42,6 @@ import com.sun.tools.javac.tree.JCTree.JCBinary;
 @BugPattern(
     name = "NarrowingCompoundAssignment",
     summary = "Compound assignments may hide dangerous casts",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

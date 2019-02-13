@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
@@ -56,7 +55,6 @@ import javax.lang.model.element.ElementKind;
     summary =
         "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
             + "You probably meant to use \"yyyy\" (year) instead.",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MisusedWeekYear extends BugChecker

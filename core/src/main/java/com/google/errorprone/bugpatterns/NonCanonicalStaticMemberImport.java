@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -36,7 +35,6 @@ import com.sun.source.tree.ImportTree;
 @BugPattern(
     name = "NonCanonicalStaticMemberImport",
     summary = "Static import of member uses non-canonical name",
-    category = JDK,
     severity = WARNING,
     documentSuppression = false,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

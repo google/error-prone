@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -45,7 +44,6 @@ import javax.lang.model.type.TypeKind;
 @BugPattern(
     name = "ArraysAsListPrimitiveArray",
     summary = "Arrays.asList does not autobox primitive arrays, as one might expect.",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvocationTreeMatcher {

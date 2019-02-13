@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -41,7 +40,6 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "MixedArrayDimensions",
-    category = JDK,
     summary = "C-style array declarations should not be used",
     severity = SUGGESTION,
     linkType = CUSTOM,

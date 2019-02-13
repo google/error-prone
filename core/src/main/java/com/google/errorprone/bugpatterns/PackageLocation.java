@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.CharMatcher;
@@ -35,7 +34,6 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 @BugPattern(
     name = "PackageLocation",
     summary = "Package names should match the directory they are declared in",
-    category = JDK,
     severity = SUGGESTION,
     documentSuppression = false,
     suppressionAnnotations = SuppressPackageLocation.class,

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -50,7 +49,6 @@ import com.sun.tools.javac.code.TypeTag;
 @BugPattern(
     name = "BadComparable",
     summary = "Possible sign flip from narrowing conversion",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
@@ -47,7 +46,6 @@ import java.util.Optional;
 @BugPattern(
     name = "ImmutableAnnotationChecker",
     altNames = "Immutable",
-    category = JDK,
     summary = "Annotations should always be immutable",
     severity = WARNING,
     tags = StandardTags.LIKELY_ERROR,

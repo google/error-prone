@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -55,7 +54,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "WildcardImport",
     summary = "Wildcard imports, static or otherwise, should not be used",
-    category = JDK,
     severity = SUGGESTION,
     linkType = CUSTOM,
     documentSuppression = false,

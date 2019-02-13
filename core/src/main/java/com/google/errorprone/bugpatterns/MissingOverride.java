@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -40,7 +39,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "MissingOverride",
     summary = "method overrides method in supertype; expected @Override",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

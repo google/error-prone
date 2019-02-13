@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -45,7 +44,6 @@ import java.util.Optional;
 @BugPattern(
     name = "BigDecimalLiteralDouble",
     summary = "new BigDecimal(double) loses precision in this case.",
-    category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeMatcher {

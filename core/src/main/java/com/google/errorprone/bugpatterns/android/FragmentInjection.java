@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.android;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.errorprone.BugPattern.Category.ANDROID;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -59,7 +58,6 @@ import javax.lang.model.element.Modifier;
         "Classes extending PreferenceActivity must implement isValidFragment such that it does not"
             + " unconditionally return true to prevent vulnerability to fragment injection"
             + " attacks.",
-    category = ANDROID,
     severity = WARNING,
     tags = StandardTags.LIKELY_ERROR)
 public class FragmentInjection extends BugChecker implements ClassTreeMatcher {

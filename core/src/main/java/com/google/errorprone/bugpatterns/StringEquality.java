@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -28,7 +27,6 @@ import com.sun.source.tree.ExpressionTree;
 @BugPattern(
     name = "StringEquality",
     summary = "String comparison using reference equality instead of value equality",
-    category = JDK,
     severity = WARNING)
 public class StringEquality extends AbstractReferenceEquality {
 

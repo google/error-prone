@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -43,7 +42,6 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(
     name = "ArrayFillIncompatibleType",
     summary = "Arrays.fill(Object[], Object) called with incompatible types.",
-    category = JDK,
     severity = ERROR)
 public class ArrayFillIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> ARRAY_FILL_MATCHER =

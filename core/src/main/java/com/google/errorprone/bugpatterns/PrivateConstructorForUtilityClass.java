@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addMembers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -48,7 +47,6 @@ import com.sun.source.util.TreePath;
     summary =
         "Utility classes (only static members) are not designed to be instantiated and should"
             + " be made noninstantiable with a default constructor.",
-    category = JDK,
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class PrivateConstructorForUtilityClass extends BugChecker

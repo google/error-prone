@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns.inject.guice;
 
-import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_PROVIDES_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.INSIDE_GUICE_MODULE;
@@ -36,7 +35,6 @@ import com.sun.source.tree.AnnotationTree;
 @BugPattern(
     name = "ProvidesMethodOutsideOfModule",
     summary = "@Provides methods need to be declared in a Module to have any effect.",
-    category = GUICE,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ProvidesMethodOutsideOfModule extends BugChecker implements AnnotationTreeMatcher {

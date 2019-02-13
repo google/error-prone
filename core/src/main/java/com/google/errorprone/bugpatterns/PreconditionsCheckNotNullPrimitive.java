@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -66,7 +65,6 @@ import java.util.Set;
     summary =
         "First argument to `Preconditions.checkNotNull()` is a primitive rather "
             + "than an object reference",
-    category = GUAVA,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class PreconditionsCheckNotNullPrimitive extends BugChecker

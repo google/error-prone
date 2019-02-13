@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
@@ -42,7 +41,6 @@ import javax.lang.model.element.Modifier;
         "This annotation is missing required modifiers as specified by its "
             + "@RequiredModifiers annotation",
     linkType = NONE,
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.LIKELY_ERROR)
 public class RequiredModifiersChecker extends BugChecker implements AnnotationTreeMatcher {

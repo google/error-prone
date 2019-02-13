@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -41,7 +40,6 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 @BugPattern(
     name = "ArrayEquals",
     summary = "Reference equality used to compare arrays",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {

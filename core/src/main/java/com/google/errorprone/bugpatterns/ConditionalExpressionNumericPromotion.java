@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -42,7 +41,6 @@ import com.sun.tools.javac.code.Type;
             + "numeric promotion of the operands; when these operands are of reference types, "
             + "the expression's result may not be of the expected type.",
     severity = ERROR,
-    category = JDK,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ConditionalExpressionNumericPromotion extends BugChecker
     implements ConditionalExpressionTreeMatcher {

@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -35,7 +34,6 @@ import javax.lang.model.type.TypeKind;
 
 /** @author lowasser@google.com (Louis Wasserman) */
 @BugPattern(
-    category = Category.JDK,
     name = "StringBuilderInitWithChar",
     severity = ERROR,
     summary = "StringBuilder does not have a char constructor; this invokes the int constructor.",

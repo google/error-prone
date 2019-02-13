@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.Reachability.canCompleteNormally;
@@ -52,7 +51,6 @@ import javax.lang.model.element.ElementKind;
     summary =
         "Switch handles all enum values: an explicit default case is unnecessary and defeats error"
             + " checking for non-exhaustive switches.",
-    category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements SwitchTreeMatcher {

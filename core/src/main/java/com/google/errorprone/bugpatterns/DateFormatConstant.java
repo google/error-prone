@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariable;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -46,7 +45,6 @@ import javax.lang.model.element.Modifier;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "DateFormatConstant",
-    category = JDK,
     summary = "DateFormat is not thread-safe, and should not be used as a constant field.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE,

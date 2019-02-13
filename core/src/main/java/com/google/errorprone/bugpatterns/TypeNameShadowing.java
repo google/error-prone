@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
@@ -61,7 +60,6 @@ import java.util.stream.Collectors;
 @BugPattern(
     name = "TypeNameShadowing",
     summary = "Type parameter declaration shadows another named type",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

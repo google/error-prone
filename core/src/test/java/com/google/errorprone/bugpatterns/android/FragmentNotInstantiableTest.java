@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.android;
 
-import static com.google.errorprone.BugPattern.Category.ANDROID;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableSet;
@@ -35,7 +34,6 @@ public class FragmentNotInstantiableTest {
       summary =
           "Subclasses of CustomFragment must be instantiable via Class#newInstance():"
               + " the class must be public, static and have a public nullary constructor",
-      category = ANDROID,
       severity = WARNING)
   public static class CustomFragmentNotInstantiable extends FragmentNotInstantiable {
     public CustomFragmentNotInstantiable() {

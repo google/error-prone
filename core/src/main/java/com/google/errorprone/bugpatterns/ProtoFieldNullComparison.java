@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.PROTOBUF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -70,7 +69,6 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "ProtoFieldNullComparison",
     summary = "Protobuf fields cannot be null.",
-    category = PROTOBUF,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ProtoFieldNullComparison extends BugChecker implements CompilationUnitTreeMatcher {
