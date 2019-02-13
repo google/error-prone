@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.apidiff;
 
-import static com.google.errorprone.BugPattern.Category.ANDROID;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.HashMultimap;
@@ -41,7 +40,6 @@ import java.util.TreeSet;
     explanation =
         "Code that needs to be compatible with Android cannot use types or members that "
             + "only the latest or unreleased devices can handle",
-    category = ANDROID,
     severity = ERROR)
 // TODO(b/32513850): Allow Android N+ APIs, e.g., by computing API diff using android.jar
 public class AndroidJdkLibsChecker extends ApiDiffChecker {

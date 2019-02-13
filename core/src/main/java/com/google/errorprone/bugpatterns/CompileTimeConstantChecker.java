@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation;
@@ -72,7 +71,6 @@ import java.util.List;
         "Non-compile-time constant expression passed to parameter with "
             + "@CompileTimeConstant type annotation.",
     linkType = NONE,
-    category = GUAVA,
     severity = ERROR,
     disableable = false,
     suppressionAnnotations = {}

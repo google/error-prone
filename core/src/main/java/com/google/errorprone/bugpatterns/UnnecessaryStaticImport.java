@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
@@ -33,7 +32,7 @@ import com.sun.source.tree.ImportTree;
 @BugPattern(
     name = "UnnecessaryStaticImport",
     summary = "Using static imports for types is unnecessary",
-    category = JDK,
+
     severity = SUGGESTION,
     documentSuppression = false,
     tags = StandardTags.STYLE,

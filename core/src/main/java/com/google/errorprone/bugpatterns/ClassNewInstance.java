@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
@@ -59,7 +58,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "ClassNewInstance",
-    category = JDK,
     summary =
         "Class.newInstance() bypasses exception checking; prefer"
             + " getDeclaredConstructor().newInstance()",

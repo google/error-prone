@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -35,7 +34,6 @@ import com.sun.source.tree.MethodInvocationTree;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "ImmutableModification",
-    category = GUAVA,
     summary =
         "Modifying an immutable collection is guaranteed to throw an exception and leave the"
             + " collection unmodified",

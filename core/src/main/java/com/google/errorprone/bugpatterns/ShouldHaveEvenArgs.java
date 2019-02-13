@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.Category.TRUTH;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -42,7 +41,6 @@ import java.util.List;
 @BugPattern(
     name = "ShouldHaveEvenArgs",
     summary = "This method must be called with an even number of arguments.",
-    category = TRUTH,
     severity = ERROR)
 public class ShouldHaveEvenArgs extends BugChecker implements MethodInvocationTreeMatcher {
 

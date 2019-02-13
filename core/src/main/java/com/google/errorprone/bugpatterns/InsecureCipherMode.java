@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -37,7 +36,6 @@ import com.sun.tools.javac.tree.JCTree;
     altNames = {"InsecureCipherMode"},
     summary =
         "A standard cryptographic operation is used in a mode that is prone to vulnerabilities",
-    category = JDK,
     documentSuppression = false,
     severity = ERROR)
 public class InsecureCipherMode extends BugChecker implements MethodInvocationTreeMatcher {

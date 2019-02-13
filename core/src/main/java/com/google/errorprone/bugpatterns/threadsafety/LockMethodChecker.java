@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableList;
@@ -33,7 +32,6 @@ import java.util.Set;
     name = "LockMethodChecker",
     altNames = {"GuardedBy"},
     summary = "This method does not acquire the locks specified by its @LockMethod annotation",
-    category = JDK,
     severity = ERROR)
 public class LockMethodChecker extends AbstractLockMethodChecker {
 

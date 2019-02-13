@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit3TestClass;
@@ -42,7 +41,6 @@ import com.sun.source.tree.Tree;
     summary =
         "Some JUnit4 construct cannot be used in a JUnit3 context. Convert your class to JUnit4 "
             + "style to use them.",
-    category = JUNIT,
     severity = WARNING)
 public class JUnit4ClassUsedInJUnit3 extends BugChecker
     implements MethodInvocationTreeMatcher, AnnotationTreeMatcher {

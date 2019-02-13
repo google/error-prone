@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.TryFailThrowable.CaughtType.JAVA_LANG_ERROR;
 import static com.google.errorprone.bugpatterns.TryFailThrowable.CaughtType.JAVA_LANG_THROWABLE;
@@ -94,7 +93,6 @@ import java.util.List;
 @BugPattern(
     name = "TryFailThrowable",
     summary = "Catching Throwable/Error masks failures from fail() or assert*() in the try block",
-    category = JUNIT,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class TryFailThrowable extends BugChecker implements TryTreeMatcher {

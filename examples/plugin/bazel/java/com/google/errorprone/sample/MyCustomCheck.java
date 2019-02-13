@@ -17,7 +17,6 @@
 package com.google.errorprone.sample;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -49,7 +48,6 @@ import java.util.Objects;
 @AutoService(BugChecker.class)
 @BugPattern(
     name = "MyCustomCheck",
-    category = JDK,
     summary = "String formatting inside print method",
     severity = ERROR,
     linkType = CUSTOM,

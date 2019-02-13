@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -40,7 +39,6 @@ import javax.annotation.Nullable;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "ExpectedExceptionChecker",
-    category = JUNIT,
     summary =
         "Calls to ExpectedException#expect should always be followed by exactly one statement.",
     severity = WARNING,

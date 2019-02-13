@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingMethod;
@@ -33,7 +32,6 @@ import com.sun.source.tree.MethodInvocationTree;
 @BugPattern(
     name = "FuzzyEqualsShouldNotBeUsedInEqualsMethod",
     summary = "DoubleMath.fuzzyEquals should never be used in an Object.equals() method",
-    category = GUAVA,
     severity = ERROR)
 public class FuzzyEqualsShouldNotBeUsedInEqualsMethod extends BugChecker
     implements MethodInvocationTreeMatcher {

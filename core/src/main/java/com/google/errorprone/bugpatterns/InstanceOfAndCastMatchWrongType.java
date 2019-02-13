@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.base.Objects;
@@ -54,7 +53,6 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "InstanceOfAndCastMatchWrongType",
     summary = "Casting inside an if block should be plausibly consistent with the instanceof type",
-    category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeCastTreeMatcher {

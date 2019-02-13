@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -54,7 +53,6 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "SelfEquals",
     summary = "Testing an object for equality with itself will always be true.",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class SelfEquals extends BugChecker implements MethodInvocationTreeMatcher {

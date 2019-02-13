@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getFirst;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -43,7 +42,6 @@ import com.sun.tools.javac.util.Names;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "JavaLangClash",
-    category = JDK,
     summary = "Never reuse class names from java.lang",
     severity = WARNING,
     tags = StandardTags.STYLE)

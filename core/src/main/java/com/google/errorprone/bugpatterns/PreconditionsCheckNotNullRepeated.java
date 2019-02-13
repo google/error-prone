@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -43,7 +42,6 @@ import java.util.List;
     summary =
         "Including the first argument of checkNotNull in the failure message is not useful, "
             + "as it will always be `null`.",
-    category = GUAVA,
     severity = WARNING,
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public class PreconditionsCheckNotNullRepeated extends BugChecker

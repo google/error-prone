@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -55,7 +54,6 @@ import javax.lang.model.element.Modifier;
     summary =
         "Method annotated @ForOverride must be protected or package-private and only invoked from "
             + "declaring class, or from an override of the method",
-    category = GUAVA,
     severity = ERROR)
 public class ForOverrideChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher {

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -50,7 +49,6 @@ import com.sun.tools.javac.code.Symbol;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "LoopConditionChecker",
-    category = JDK,
     summary = "Loop condition is never modified in loop body.",
     severity = ERROR)
 public class LoopConditionChecker extends BugChecker

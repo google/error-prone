@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
@@ -44,7 +43,6 @@ import javax.lang.model.element.ElementKind;
     name = "CheckReturnValue",
     altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
     summary = "Ignored return value of method that is annotated with @CheckReturnValue",
-    category = JDK,
     severity = ERROR)
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {

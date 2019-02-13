@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.annotations;
@@ -44,7 +43,6 @@ import javax.lang.model.element.Modifier;
 /** @author dorir@google.com (Dori Reuveni) */
 @BugPattern(
     name = "MutableConstantField",
-    category = JDK,
     summary =
         "Constant field declarations should use the immutable type (such as ImmutableList) instead"
             + " of the general collection interface type (such as List)",

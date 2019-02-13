@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
@@ -36,7 +35,6 @@ import java.util.Objects;
 @BugPattern(
     name = "ComplexBooleanConstant",
     summary = "Non-trivial compile time constant boolean expressions shouldn't be used.",
-    category = JDK,
     severity = WARNING,
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatcher {

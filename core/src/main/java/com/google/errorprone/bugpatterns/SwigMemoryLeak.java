@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -35,7 +34,6 @@ import javax.lang.model.element.Name;
 @BugPattern(
     name = "SwigMemoryLeak",
     summary = "SWIG generated code that can't call a C++ destructor will leak memory",
-    category = JDK,
     severity = WARNING)
 public class SwigMemoryLeak extends BugChecker implements LiteralTreeMatcher {
   private static final Matcher<MethodTree> ENCLOSING_CLASS_HAS_FINALIZER =

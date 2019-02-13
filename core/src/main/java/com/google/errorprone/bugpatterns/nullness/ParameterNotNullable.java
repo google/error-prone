@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
@@ -47,7 +46,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "ParameterNotNullable",
     summary = "Method parameters that aren't checked for null shouldn't be annotated @Nullable",
-    category = JDK,
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ParameterNotNullable extends BugChecker

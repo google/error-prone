@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -50,7 +49,6 @@ import java.util.concurrent.atomic.AtomicInteger;
     summary =
         "Thread.join needs to be surrounded by a loop until it succeeds, "
             + "as in Uninterruptibles.joinUninterruptibly.",
-    category = JDK,
     severity = SeverityLevel.WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ThreadJoinLoop extends BugChecker implements MethodInvocationTreeMatcher {

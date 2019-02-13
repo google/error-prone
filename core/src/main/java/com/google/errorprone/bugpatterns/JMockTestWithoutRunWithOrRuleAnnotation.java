@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JMOCK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -46,7 +45,6 @@ import com.sun.source.tree.VariableTree;
     summary =
         "jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must "
             + "have a @Rule JUnit annotation",
-    category = JMOCK,
     severity = ERROR)
 public class JMockTestWithoutRunWithOrRuleAnnotation extends BugChecker
     implements VariableTreeMatcher {

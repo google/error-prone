@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.containsTestMethod;
@@ -58,7 +57,6 @@ import javax.lang.model.element.Modifier;
     summary =
         "This looks like a test method but is not run; please add @Test and @Ignore, or, if this"
             + " is a helper method, reduce its visibility.",
-    category = JUNIT,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {

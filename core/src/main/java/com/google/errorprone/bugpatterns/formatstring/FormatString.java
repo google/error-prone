@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.formatstring;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -37,11 +36,7 @@ import java.util.Deque;
 import java.util.Locale;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
-@BugPattern(
-    name = "FormatString",
-    summary = "Invalid printf-style format string",
-    category = JDK,
-    severity = ERROR)
+@BugPattern(name = "FormatString", summary = "Invalid printf-style format string", severity = ERROR)
 public class FormatString extends BugChecker implements MethodInvocationTreeMatcher {
 
   // TODO(cushon): add support for additional printf methods, maybe with an annotation

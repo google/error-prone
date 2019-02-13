@@ -16,7 +16,6 @@
 
 package com.google.errorprone.util;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static java.util.stream.Collectors.toList;
@@ -42,7 +41,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class ReachabilityTest {
 
   /** Reports an error if the first case in a switch falls through to the second. */
-  @BugPattern(name = "FirstCaseFallsThrough", category = JDK, summary = "", severity = ERROR)
+  @BugPattern(name = "FirstCaseFallsThrough", summary = "", severity = ERROR)
   public static class FirstCaseFallsThrough extends BugChecker implements SwitchTreeMatcher {
 
     @Override

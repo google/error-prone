@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.TRUTH;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -47,7 +46,6 @@ import java.util.regex.Pattern;
     summary =
         "isEqualTo should not be used to test an object for equality with itself; the"
             + " assertion will never fail.",
-    category = TRUTH,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeMatcher {

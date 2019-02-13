@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_CLASS_ANNOTATION;
@@ -44,7 +43,6 @@ import java.util.List;
 @BugPattern(
     name = "JUnit4TearDownNotRun",
     summary = "tearDown() method will not be run; please add JUnit's @After annotation",
-    category = JUNIT,
     severity = ERROR)
 public class JUnit4TearDownNotRun extends AbstractJUnit4InitMethodNotRun {
   @Override

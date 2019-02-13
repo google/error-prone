@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns.inject.guice;
 
-import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -39,7 +38,6 @@ import com.sun.source.tree.VariableTree;
     summary =
         "Although Guice allows injecting final fields, doing so is disallowed because the injected "
             + "value may not be visible to other threads.",
-    category = GUICE,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InjectOnFinalField extends BugChecker implements VariableTreeMatcher {

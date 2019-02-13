@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.android;
 
-import static com.google.errorprone.BugPattern.Category.ANDROID;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -43,7 +42,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "MislabeledAndroidString",
     summary = "Certain resources in `android.R.string` have names that do not match their content",
-    category = ANDROID,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MislabeledAndroidString extends BugChecker implements MemberSelectTreeMatcher {

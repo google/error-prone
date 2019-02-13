@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -46,7 +45,6 @@ public class MethodMatchersTest {
   /** A bugchecker to test constructor matching. */
   @BugPattern(
       name = "ConstructorDeleter",
-      category = JDK,
       summary = "Deletes constructors",
       severity = ERROR,
       providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -132,11 +130,7 @@ public class MethodMatchersTest {
   }
 
   /** This is javadoc. */
-  @BugPattern(
-      name = "CrashyParameterMatcherTestChecker",
-      category = JDK,
-      summary = "",
-      severity = ERROR)
+  @BugPattern(name = "CrashyParameterMatcherTestChecker", summary = "", severity = ERROR)
   public static class CrashyerMatcherTestChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
 

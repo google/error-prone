@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Iterables;
@@ -50,7 +49,7 @@ import javax.lang.model.type.TypeKind;
     name = "JUnit3FloatingPointComparisonWithoutDelta",
     summary = "Floating-point comparison without error tolerance",
     // First sentence copied directly from JUnit 4.
-    category = JUNIT,
+
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker

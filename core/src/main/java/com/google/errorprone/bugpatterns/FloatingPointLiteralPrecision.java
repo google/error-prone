@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
@@ -37,7 +36,6 @@ import java.math.BigDecimal;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "FloatingPointLiteralPrecision",
-    category = JDK,
     summary = "Floating point literal loses precision",
     severity = WARNING,
     tags = StandardTags.STYLE,

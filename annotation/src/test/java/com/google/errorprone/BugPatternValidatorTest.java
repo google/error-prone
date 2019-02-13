@@ -19,7 +19,6 @@ package com.google.errorprone;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.LinkType;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import org.junit.Test;
@@ -40,7 +39,6 @@ public class BugPatternValidatorTest {
         name = "BasicBugPattern",
         summary = "Simplest possible BugPattern",
         explanation = "Simplest possible BugPattern ",
-        category = Category.ONE_OFF,
         severity = SeverityLevel.ERROR)
     final class BugPatternTestClass {}
 
@@ -54,7 +52,6 @@ public class BugPatternValidatorTest {
         name = "LinkTypeNoneAndNoLink",
         summary = "linkType none and no link",
         explanation = "linkType none and no link",
-        category = Category.ONE_OFF,
         severity = SeverityLevel.ERROR,
         linkType = LinkType.NONE)
     final class BugPatternTestClass {}
@@ -69,7 +66,6 @@ public class BugPatternValidatorTest {
         name = "LinkTypeNoneButIncludesLink",
         summary = "linkType none but includes link",
         explanation = "linkType none but includes link",
-        category = Category.ONE_OFF,
         severity = SeverityLevel.ERROR,
         linkType = LinkType.NONE,
         link = "http://foo")
@@ -85,7 +81,6 @@ public class BugPatternValidatorTest {
         name = "LinkTypeCustomAndIncludesLink",
         summary = "linkType custom and includes link",
         explanation = "linkType custom and includes link",
-        category = Category.ONE_OFF,
         severity = SeverityLevel.ERROR,
         linkType = LinkType.CUSTOM,
         link = "http://foo")
@@ -101,7 +96,6 @@ public class BugPatternValidatorTest {
         name = "LinkTypeCustomButNoLink",
         summary = "linkType custom but no link",
         explanation = "linkType custom but no link",
-        category = Category.ONE_OFF,
         severity = SeverityLevel.ERROR,
         linkType = LinkType.CUSTOM)
     final class BugPatternTestClass {}
@@ -116,7 +110,6 @@ public class BugPatternValidatorTest {
         name = "Unsuppressible",
         summary = "An unsuppressible BugPattern",
         explanation = "An unsuppressible BugPattern",
-        category = Category.ONE_OFF,
         severity = SeverityLevel.ERROR,
         suppressionAnnotations = {},
         disableable = false)
@@ -132,7 +125,6 @@ public class BugPatternValidatorTest {
         name = "customSuppressionAnnotation",
         summary = "Uses a custom suppression annotation",
         explanation = "Uses a custom suppression annotation",
-        category = Category.ONE_OFF,
         severity = SeverityLevel.ERROR,
         suppressionAnnotations = CustomSuppressionAnnotation.class)
     final class BugPatternTestClass {}
@@ -147,7 +139,6 @@ public class BugPatternValidatorTest {
         name = "customSuppressionAnnotation",
         summary = "Uses multiple custom suppression annotations",
         explanation = "Uses multiple custom suppression annotations",
-        category = Category.ONE_OFF,
         severity = SeverityLevel.ERROR,
         suppressionAnnotations = {
           CustomSuppressionAnnotation.class,
@@ -166,7 +157,6 @@ public class BugPatternValidatorTest {
         summary = "Specifies multiple custom suppression annotations including @SuppressWarnings",
         explanation =
             "Specifies multiple custom suppression annotations including @SuppressWarnings",
-        category = Category.ONE_OFF,
         severity = SeverityLevel.ERROR,
         suppressionAnnotations = {CustomSuppressionAnnotation.class, SuppressWarnings.class})
     final class BugPatternTestClass {}

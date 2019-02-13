@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -45,7 +44,6 @@ public class ArgumentSelectionDefectCheckerTest {
    */
   @BugPattern(
       name = "ArgumentSelectionDefectWithStringEquality",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Run the ArgumentSelectionDefectChecker checker using string equality for edit distance")
@@ -142,7 +140,6 @@ public class ArgumentSelectionDefectCheckerTest {
    */
   @BugPattern(
       name = "ArgumentSelectionDefectWithIgnoredFormalsHeuristic",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Run the ArgumentSelectionDefectChecker checker with a heuristic that ignores formal "
@@ -208,7 +205,6 @@ public class ArgumentSelectionDefectCheckerTest {
    */
   @BugPattern(
       name = "ArgumentSelectionDefectWithPenaltyThreshold",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Run the ArgumentSelectionDefectChecker checker with the penalty threshold heuristic")
@@ -260,7 +256,6 @@ public class ArgumentSelectionDefectCheckerTest {
    */
   @BugPattern(
       name = "ArgumentSelectionDefectWithNameInCommentsHeuristic",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Run the ArgumentSelectionDefectChecker checker using string equality for edit distance")
@@ -303,7 +298,6 @@ public class ArgumentSelectionDefectCheckerTest {
   /** A {@link BugChecker} which returns true if parameter names are available */
   @BugPattern(
       name = "ParameterNamesAvailableChecker",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Returns true if parameter names are available on a method call")
   public static class ParameterNamesAvailableChecker extends BugChecker

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.time;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -78,7 +77,6 @@ import javax.annotation.Nullable;
     summary =
         "An value that appears to be represented in one unit is used where another appears to be "
             + "required (e.g., seconds where nanos are needed)",
-    category = JDK,
     severity = WARNING,
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public final class TimeUnitMismatch extends BugChecker

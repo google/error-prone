@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
-import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_AT_INJECT;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
@@ -44,7 +43,6 @@ import com.sun.source.tree.Tree;
 @BugPattern(
     name = "AutoFactoryAtInject",
     summary = "@AutoFactory and @Inject should not be used in the same type.",
-    category = INJECT,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMatcher {

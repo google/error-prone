@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -125,7 +124,6 @@ import java.util.Set;
     summary =
         "@NoAllocation was specified on this method, but something was found that would"
             + " trigger an allocation",
-    category = JDK,
     severity = ERROR)
 public class NoAllocationChecker extends BugChecker
     implements AssignmentTreeMatcher,

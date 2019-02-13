@@ -20,7 +20,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -49,7 +48,6 @@ public class CommentsTest {
    */
   @BugPattern(
       name = "ComputeEndPosition",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Calls computeEndPosition and prints results")
   public static class ComputeEndPosition extends BugChecker implements MethodInvocationTreeMatcher {
@@ -121,7 +119,6 @@ public class CommentsTest {
   /** A {@link BugChecker} that prints the contents of comments around arguments */
   @BugPattern(
       name = "PrintCommentsForArguments",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Prints comments occurring around arguments. Matches calls to methods named "
@@ -468,7 +465,6 @@ public class CommentsTest {
   /** A {@link BugChecker} that prints the source code at comment positions */
   @BugPattern(
       name = "PrintTextAtCommentPosition",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Prints the source code text which is under the comment position. Matches calls to "

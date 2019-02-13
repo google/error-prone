@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -37,7 +36,6 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "EqualsNaN",
     summary = "== NaN always returns false; use the isNaN methods instead",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {

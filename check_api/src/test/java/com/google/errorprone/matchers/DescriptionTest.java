@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
@@ -72,7 +71,6 @@ public class DescriptionTest {
       name = "DeadException",
       summary = "Exception created but not thrown",
       explanation = "",
-      category = JDK,
       severity = ERROR)
   public static class MyChecker extends BugChecker {
     Description getDescription() {
@@ -107,7 +105,6 @@ public class DescriptionTest {
       name = "CustomLinkChecker",
       summary = "Exception created but not thrown",
       explanation = "",
-      category = JDK,
       severity = ERROR,
       linkType = CUSTOM,
       link = "https://www.google.com/")

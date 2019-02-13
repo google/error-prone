@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -44,7 +43,6 @@ import javax.lang.model.element.Modifier;
     name = "ReturnValueIgnored",
     altNames = {"ResultOfMethodCallIgnored", "CheckReturnValue"},
     summary = "Return value of this method must be used",
-    category = JDK,
     severity = ERROR)
 public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   /**

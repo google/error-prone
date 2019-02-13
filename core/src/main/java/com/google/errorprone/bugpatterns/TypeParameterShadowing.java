@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.base.Objects;
@@ -57,7 +56,6 @@ import javax.lang.model.element.Name;
 @BugPattern(
     name = "TypeParameterShadowing",
     summary = "Type parameter declaration overrides another type parameter already declared",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

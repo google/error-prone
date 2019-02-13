@@ -14,7 +14,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 
@@ -35,7 +34,6 @@ import com.sun.tools.javac.code.Type;
     name = "ComparableType",
     summary =
         " Implementing 'Comparable<T>' where T is not compatible with the implementing class.",
-    category = JDK,
     severity = ERROR)
 public class ComparableType extends BugChecker implements ClassTreeMatcher {
 

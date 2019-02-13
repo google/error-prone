@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -38,7 +37,6 @@ import com.sun.tools.javac.code.Symbol;
 @BugPattern(
     name = "MockitoInternalUsage",
     summary = "org.mockito.internal.* is a private API and should not be used by clients",
-    category = Category.MOCKITO,
     severity = SeverityLevel.WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MockitoInternalUsage extends BugChecker implements MemberSelectTreeMatcher {

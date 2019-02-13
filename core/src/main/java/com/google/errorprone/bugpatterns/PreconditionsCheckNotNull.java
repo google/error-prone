@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -40,7 +39,6 @@ import java.util.List;
 @BugPattern(
     name = "PreconditionsCheckNotNull",
     summary = "Literal passed as first argument to Preconditions.checkNotNull() can never be null",
-    category = GUAVA,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class PreconditionsCheckNotNull extends BugChecker implements MethodInvocationTreeMatcher {

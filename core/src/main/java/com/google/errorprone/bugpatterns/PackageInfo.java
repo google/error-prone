@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -29,7 +28,6 @@ import com.sun.source.tree.CompilationUnitTree;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "PackageInfo",
-    category = JDK,
     summary = "Declaring types inside package-info.java files is very bad form",
     severity = ERROR)
 public class PackageInfo extends BugChecker implements CompilationUnitTreeMatcher {

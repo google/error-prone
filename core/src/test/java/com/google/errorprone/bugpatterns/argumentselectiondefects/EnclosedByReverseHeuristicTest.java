@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -42,7 +41,6 @@ public class EnclosedByReverseHeuristicTest {
   /** A {@link BugChecker} which runs the EnclosedByReverseHeuristic and prints the result */
   @BugPattern(
       name = "EnclosedByReverseHeuristic",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Run the EnclosedByReverseHeuristic and print result")
   public static class EnclosedByReverseHeuristicChecker extends BugChecker

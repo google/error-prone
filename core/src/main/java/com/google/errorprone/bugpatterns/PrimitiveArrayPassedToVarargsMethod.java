@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -41,7 +40,6 @@ import com.sun.tools.javac.util.List;
 @BugPattern(
     name = "PrimitiveArrayPassedToVarargsMethod",
     summary = "Passing a primitive array to a varargs method is usually wrong",
-    category = JDK,
     severity = WARNING)
 public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
     implements MethodInvocationTreeMatcher {

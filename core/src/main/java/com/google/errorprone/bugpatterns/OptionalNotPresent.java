@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -41,7 +40,6 @@ import java.util.Iterator;
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
     name = "OptionalNotPresent",
-    category = JDK,
     summary =
         "One should not call optional.get() inside an if statement that checks "
             + "!optional.isPresent",

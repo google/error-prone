@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Verify.verify;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
@@ -48,7 +47,6 @@ import java.util.function.Predicate;
 /** @author dorir@google.com (Dori Reuveni) */
 @BugPattern(
     name = "MutableMethodReturnType",
-    category = JDK,
     summary =
         "Method return type should use the immutable type (such as ImmutableList) instead of"
             + " the general collection interface type (such as List)",

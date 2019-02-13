@@ -21,7 +21,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -46,7 +45,6 @@ public class CreatesDuplicateCallHeuristicTest {
   /** A {@link BugChecker} which runs the CreatesDuplicateCallHeuristic and prints the result */
   @BugPattern(
       name = "CreatesDuplicateCallHeuristicChecker",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Runs CreateDuplicateCallHeursitic and prints the result")
   public static class CreatesDuplicateCallHeuristicChecker extends BugChecker

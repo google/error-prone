@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -42,7 +41,6 @@ import javax.lang.model.element.Name;
     summary =
         "Constructors should not pass the 'this' reference out in method invocations,"
             + " since the object may not be fully constructed.",
-    category = JDK,
     severity = WARNING)
 public class ConstructorLeaksThis extends ConstructorLeakChecker {
 

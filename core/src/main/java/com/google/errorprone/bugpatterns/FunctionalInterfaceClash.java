@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -54,7 +53,6 @@ import java.util.Deque;
 @BugPattern(
     name = "FunctionalInterfaceClash",
     summary = "Overloads will be ambiguous when passing lambda arguments.",
-    category = JDK,
     severity = WARNING)
 public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMatcher {
   @Override

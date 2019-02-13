@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Ascii;
@@ -41,7 +40,6 @@ import javax.lang.model.element.Modifier;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "ConstantField",
-    category = JDK,
     summary = "Field name is CONSTANT_CASE, but field is not static and final",
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION

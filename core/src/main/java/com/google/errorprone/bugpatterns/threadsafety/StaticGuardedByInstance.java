@@ -21,7 +21,6 @@ import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -44,7 +43,6 @@ import java.util.Map.Entry;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "StaticGuardedByInstance",
-    category = Category.JDK,
     summary = "Writes to static fields should not be guarded by instance locks",
     severity = SeverityLevel.WARNING,
     tags = StandardTags.FRAGILE_CODE)

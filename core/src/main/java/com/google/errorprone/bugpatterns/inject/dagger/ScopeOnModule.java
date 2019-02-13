@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject.dagger;
 
-import static com.google.errorprone.BugPattern.Category.DAGGER;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -38,7 +37,6 @@ import java.util.List;
 @BugPattern(
     name = "ScopeOnModule",
     summary = "Scopes on modules have no function and will soon be an error.",
-    category = DAGGER,
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class ScopeOnModule extends BugChecker implements ClassTreeMatcher {

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.common.base.Predicates.notNull;
-import static com.google.errorprone.BugPattern.Category.DAGGER;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
@@ -50,7 +49,6 @@ import com.sun.source.util.SimpleTreeVisitor;
     name = "AndroidInjectionBeforeSuper",
     summary =
         "AndroidInjection.inject() should always be invoked before calling super.lifecycleMethod()",
-    category = DAGGER,
     severity = ERROR)
 public final class AndroidInjectionBeforeSuper extends BugChecker implements MethodTreeMatcher {
 

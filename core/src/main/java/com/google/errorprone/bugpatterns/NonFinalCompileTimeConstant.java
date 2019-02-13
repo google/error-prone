@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.sun.tools.javac.code.Flags.EFFECTIVELY_FINAL;
@@ -40,7 +39,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 @BugPattern(
     name = "NonFinalCompileTimeConstant",
     summary = "@CompileTimeConstant parameters should be final or effectively final",
-    category = JDK,
     severity = ERROR)
 public class NonFinalCompileTimeConstant extends BugChecker implements MethodTreeMatcher {
 

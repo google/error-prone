@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -239,7 +238,6 @@ public class ErrorProneJavaCompilerTest {
       name = "ArrayEquals",
       summary = "Reference equality used to compare arrays",
       explanation = "",
-      category = JDK,
       severity = ERROR,
       disableable = false)
   public static class UnsuppressibleArrayEquals extends ArrayEquals {}
@@ -368,7 +366,6 @@ public class ErrorProneJavaCompilerTest {
           "You appear to be using methods; prefer to implement all program logic inside the main"
               + " function by flipping bits in a single long[].",
       explanation = "",
-      category = JDK,
       severity = ERROR,
       disableable = false,
       providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

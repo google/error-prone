@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -57,7 +56,6 @@ import java.util.List;
 @BugPattern(
     name = "FuturesGetCheckedIllegalExceptionType",
     summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
-    category = GUAVA,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class FuturesGetCheckedIllegalExceptionType extends BugChecker

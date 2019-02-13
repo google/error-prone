@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.MOCKITO;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -39,7 +38,6 @@ import java.util.List;
 @BugPattern(
     name = "MockitoUsage",
     summary = "Missing method call for verify(mock) here",
-    category = MOCKITO,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatcher {

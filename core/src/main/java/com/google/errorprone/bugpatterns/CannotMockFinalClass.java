@@ -28,7 +28,6 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.variableType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -51,7 +50,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "CannotMockFinalClass",
     summary = "Mockito cannot mock final classes",
-    category = Category.MOCKITO,
     severity = SeverityLevel.WARNING)
 public class CannotMockFinalClass extends BugChecker
     implements MethodInvocationTreeMatcher, VariableTreeMatcher {

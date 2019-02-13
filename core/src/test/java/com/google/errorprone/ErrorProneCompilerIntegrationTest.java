@@ -241,12 +241,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @BugPattern(
-      name = "ConstructorMatcher",
-      explanation = "",
-      category = ONE_OFF,
-      severity = ERROR,
-      summary = "")
+  @BugPattern(name = "ConstructorMatcher", explanation = "", severity = ERROR, summary = "")
   public static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -272,12 +267,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @BugPattern(
-      name = "SuperCallMatcher",
-      explanation = "",
-      category = ONE_OFF,
-      severity = ERROR,
-      summary = "")
+  @BugPattern(name = "SuperCallMatcher", explanation = "", severity = ERROR, summary = "")
   static class SuperCallMatcher extends BugChecker implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -589,7 +579,6 @@ public class ErrorProneCompilerIntegrationTest {
       name = "CPSChecker",
       summary = "Using 'return' is considered harmful",
       explanation = "Please refactor your code into continuation passing style.",
-      category = ONE_OFF,
       severity = ERROR)
   public static class CPSChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
@@ -628,7 +617,6 @@ public class ErrorProneCompilerIntegrationTest {
   @BugPattern(
       name = "ForbiddenString",
       summary = "Please don't return this const value",
-      category = ONE_OFF,
       severity = ERROR)
   public static class ForbiddenString extends BugChecker implements ReturnTreeMatcher {
     private final String forbiddenString;

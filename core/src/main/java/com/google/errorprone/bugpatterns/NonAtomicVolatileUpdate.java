@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -49,7 +48,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "NonAtomicVolatileUpdate",
     summary = "This update of a volatile variable is non-atomic",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public class NonAtomicVolatileUpdate extends BugChecker

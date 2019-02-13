@@ -16,7 +16,6 @@
 
 package com.google.errorprone.scanner;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -103,7 +102,6 @@ public class ScannerTest {
   @BugPattern(
       name = "ShouldNotUseFoo",
       summary = "Code should not use Foo.",
-      category = JDK,
       severity = ERROR,
       suppressionAnnotations = OkToUseFoo.class)
   public static class ShouldNotUseFoo extends BugChecker implements IdentifierTreeMatcher {

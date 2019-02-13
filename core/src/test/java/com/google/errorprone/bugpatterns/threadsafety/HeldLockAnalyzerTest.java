@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -250,12 +249,7 @@ public class HeldLockAnalyzerTest {
   }
 
   /** A customized {@link GuardedByChecker} that prints more test-friendly diagnostics. */
-  @BugPattern(
-      name = "GuardedByLockSet",
-      summary = "",
-      explanation = "",
-      category = JDK,
-      severity = ERROR)
+  @BugPattern(name = "GuardedByLockSet", summary = "", explanation = "", severity = ERROR)
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
 
     @Override

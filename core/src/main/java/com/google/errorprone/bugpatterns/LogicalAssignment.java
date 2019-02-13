@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -42,7 +41,6 @@ import com.sun.tools.javac.tree.JCTree;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "LogicalAssignment",
-    category = JDK,
     summary =
         "Assignment where a boolean expression was expected;"
             + " use == if this assignment wasn't expected or add parentheses for clarity.",

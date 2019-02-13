@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -73,7 +72,6 @@ import java.util.Scanner;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "DefaultCharset",
-    category = JDK,
     summary =
         "Implicit use of the platform default charset, which can result in differing behaviour"
             + " between JVM executions or incorrect behavior if the encoding of the data source"

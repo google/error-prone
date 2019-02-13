@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
@@ -46,7 +45,6 @@ import javax.lang.model.element.Modifier;
 // TODO(cushon): this should subsume ImmutableModification and LocalizableWrongToString
 @BugPattern(
     name = "DoNotCall",
-    category = JDK,
     summary = "This method should not be called.",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

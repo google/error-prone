@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
@@ -59,7 +58,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "DoubleCheckedLocking",
     summary = "Double-checked locking on non-volatile fields is unsafe",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

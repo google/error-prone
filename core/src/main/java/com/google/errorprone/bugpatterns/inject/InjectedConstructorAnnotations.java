@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
-import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
@@ -43,7 +42,6 @@ import com.sun.source.tree.MethodTree;
 @BugPattern(
     name = "InjectedConstructorAnnotations",
     summary = "Injected constructors cannot be optional nor have binding annotations",
-    category = INJECT,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InjectedConstructorAnnotations extends BugChecker implements MethodTreeMatcher {

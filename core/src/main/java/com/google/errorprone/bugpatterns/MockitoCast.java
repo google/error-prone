@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.errorprone.BugPattern.Category.MOCKITO;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
@@ -57,7 +56,6 @@ import javax.lang.model.element.ElementKind;
 /** @author Liam Miller-Cushon (cushon@google.com) */
 @BugPattern(
     name = "MockitoCast",
-    category = MOCKITO,
     summary = "A bug in Mockito will cause this test to fail at runtime with a ClassCastException",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

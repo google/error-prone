@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.assertionWithCondition;
 import static com.google.errorprone.matchers.Matchers.booleanLiteral;
@@ -36,7 +35,6 @@ import com.sun.source.tree.AssertTree;
     summary =
         "Assertions may be disabled at runtime and do not guarantee that execution will "
             + "halt here; consider throwing an exception instead",
-    category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AssertFalse extends BugChecker implements AssertTreeMatcher {

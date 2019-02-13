@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
-import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.isFirstConstructorOfMultiInjectedClass;
 import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_GUICE_INJECT;
@@ -45,7 +44,6 @@ import com.sun.source.tree.Tree;
     summary =
         "This class has more than one @Inject-annotated constructor. Please remove the @Inject"
             + " annotation from all but one of them.",
-    category = INJECT,
     severity = ERROR,
     altNames = {"inject-constructors", "InjectMultipleAtInjectConstructors"})
 public class MoreThanOneInjectableConstructor extends BugChecker implements AnnotationTreeMatcher {
