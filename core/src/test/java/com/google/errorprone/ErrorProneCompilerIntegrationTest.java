@@ -621,7 +621,6 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(output).doesNotContain("Using 'return' is considered harmful");
   }
 
-
   /**
    * Trivial bug checker for testing command line flags. Forbids methods from returning the string
    * provided by "-XepOpt:Forbidden=<VALUE>" flag.

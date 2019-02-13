@@ -335,7 +335,6 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       return super.visitCompoundAssignment(node, init);
     }
 
-
     @Override
     public Void visitUnary(UnaryTree node, InitializationContext init) {
       if (UNARY_ASSIGNMENT.contains(node.getKind())) {
