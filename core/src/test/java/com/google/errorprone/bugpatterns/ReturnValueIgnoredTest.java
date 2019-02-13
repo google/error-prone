@@ -120,6 +120,32 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
+  public void javaTime() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.time.Duration;",
+            "import java.time.LocalDate;",
+            "import java.time.ZoneId;",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Duration.ZERO.plusDays(2);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Duration.ZERO.toDays();",
+            // We ignore parse() methods on java.time types
+            "    Duration.parse(\"PT20.345S\");",
+            "    LocalDate.parse(\"2007-12-03\");",
+            // We ignore of() methods on java.time types
+            "    LocalDate.of(1985, 5, 31);",
+            // We ignore ZoneId.of() -- it's effectively a parse() method
+            "    ZoneId.of(\"America/New_York\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void issue876() {
     compilationHelper
         .addSourceLines(
