@@ -71,7 +71,7 @@ import javax.lang.model.element.Name;
  */
 @BugPattern(
     name = "AnnotationPosition",
-    summary = "Annotations should be positioned after Javadocs, but before modifiers..",
+    summary = "Annotations should be positioned after Javadocs, but before modifiers.",
     severity = WARNING,
     tags = STYLE,
     linkType = CUSTOM,
