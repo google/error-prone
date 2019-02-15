@@ -13,10 +13,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Classes under `org.mockito.internal.*` are internal implementation details and are
-not part of Mockito's public API. Mockito team does not support them, and they
-may change at any time. Depending on them may break your code when you upgrade
-to new versions of Mockito.
+Classes under `org.mockito.internal.*` are internal implementation details and
+are not part of Mockito's public API. Mockito team does not support them, and
+they may change at any time. Depending on them may break your code when you
+upgrade to new versions of Mockito.
 
 This checker ensures that your code will not break with future Mockito upgrades.
 Mockito's public API is documented at

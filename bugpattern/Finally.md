@@ -15,16 +15,15 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: finally, ThrowFromFinallyBlock_
 
 ## The problem
-Terminating a finally block abruptly preempts the outcome of the try and
-catch blocks, and will cause the result of any previously executed return or
-throw statements to be ignored. Finally blocks should be written so they always
+Terminating a finally block abruptly preempts the outcome of the try and catch
+blocks, and will cause the result of any previously executed return or throw
+statements to be ignored. Finally blocks should be written so they always
 complete normally.
 
-Consider the following code. In the case where `doWork` throws
-`SomeException`, the finally block will still be executed. If closing the
-input stream *also* fails, then the exception that was thrown in the catch
-block will be prempted by the exception thrown by `close()`, and the first
-exception will be lost.
+Consider the following code. In the case where `doWork` throws `SomeException`,
+the finally block will still be executed. If closing the input stream *also*
+fails, then the exception that was thrown in the catch block will be prempted by
+the exception thrown by `close()`, and the first exception will be lost.
 
 ```java
 InputStream in = openInputStream();

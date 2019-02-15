@@ -25,8 +25,8 @@ bind(CoffeeMaker.class).to(RealCoffeeMaker.class);
 ```
 
 However, in other circumstances, you want to bind a simple value (an integer,
-String, double, etc.). You should use a Qualifier annotation to allow you to
-get the *right* Integer back:
+String, double, etc.). You should use a Qualifier annotation to allow you to get
+the *right* Integer back:
 
 ```java
 bindConstant().annotatedWith(HttpPort.class).to(80);

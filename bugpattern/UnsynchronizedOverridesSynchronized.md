@@ -45,8 +45,8 @@ Note that there are many ways to implement a thread-safe method without using
 the `synchronized` modifier (e.g. `synchronized` statements using explicit
 locks, or other locking constructs). When overriding a `synchronized` method
 with a method that is thread-safe but does not have the `synchronized` modifier,
-consider adding `@SuppressWarnings("UnsynchronizedOverridesSynchronized")`
-and an explanation.
+consider adding `@SuppressWarnings("UnsynchronizedOverridesSynchronized")` and
+an explanation.
 
 ```java
 class MyCounter extends Counter {

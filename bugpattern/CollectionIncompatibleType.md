@@ -65,8 +65,8 @@ static analysis.
 The specific restriction we would like to express for the two types is not
 assignability, but "compatibility". Informally, we mean that it must at least be
 *possible* for some instance to be of both types. Formally, we require that a
-"casting conversion" exist between the types as defined by [JLS 5.5.1]
-(https://docs.oracle.com/javase/specs/jls/se7/html/jls-5.html#jls-5.5.1).
+"casting conversion" exist between the types as defined by
+[JLS 5.5.1](https://docs.oracle.com/javase/specs/jls/se7/html/jls-5.html#jls-5.5.1).
 
 The result is that the method can be defined as `contains(Object)`, permitting
 the "good" call above, but that Error Prone will give errors for incompatible

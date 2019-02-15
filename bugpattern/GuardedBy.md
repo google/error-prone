@@ -147,7 +147,7 @@ void m() {
 }
 ```
 
-Note: there are a couple more annotations called `@GuardedBy`, including 
+Note: there are a couple more annotations called `@GuardedBy`, including
 `javax.annotation.concurrent.GuardedBy` and
 `org.checkerframework.checker.lock.qual.GuardedBy`. The check recognizes those
 versions of the annotation, but we recommend using

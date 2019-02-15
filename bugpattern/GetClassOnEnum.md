@@ -14,8 +14,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 ## The problem
 Enum values that declare methods are a subclass of the actual enum type, so
-calling `getClass()` returns a synthetic subclass of the enum. To retrieve
-the type of the enum, use `getDeclaringClass()`.
+calling `getClass()` returns a synthetic subclass of the enum. To retrieve the
+type of the enum, use `getDeclaringClass()`.
 
 In the following example, `Binop.MULT.getClass()` returns the anonymous class
 `Binop$2`, while `Binop.MULT.getDeclaringClass()` returns the class `Binop`.

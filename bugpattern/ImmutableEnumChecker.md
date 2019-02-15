@@ -52,9 +52,9 @@ To make enums immutable, ensure:
 
     *   If the type you're using inside the enum is not considered immutable,
         and you can't annotate the type because it's outside the project,
-        consider using an immutable replacement of the type, or [suppress this
-        check on the enum](#suppression) with a comment about why the fields in
-        question are immutable.
+        consider using an immutable replacement of the type, or
+        [suppress this check on the enum](#suppression) with a comment about why
+        the fields in question are immutable.
 
 TIP: annotating the declaration of the enum class with `@Immutable` is
 unnecessary -- Error Prone assumes enums are immutable by default.

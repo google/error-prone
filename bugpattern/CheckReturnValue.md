@@ -15,9 +15,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: ResultOfMethodCallIgnored, ReturnValueIgnored_
 
 ## The problem
-The `@CheckReturnValue` annotation (available in JSR-305[^jsr] or in [Error
-Prone][epcrv]) marks methods whose return values should be checked. This error
-is triggered when one of these methods is called but the result is not used.
+The `@CheckReturnValue` annotation (available in JSR-305[^jsr] or in
+[Error Prone][epcrv]) marks methods whose return values should be checked. This
+error is triggered when one of these methods is called but the result is not
+used.
 
 [^jsr]: Of note, the JSR-305 project was [never fully approved][jsr305], so the
     JSR-305 version of the annotation is not actually official and causes

@@ -53,8 +53,7 @@ synchronized (Test.class) {
 ```
 
 To update a static counter from an instance method, consider using
-[`AtomicInteger`]
-(https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicInteger.html)
+[`AtomicInteger`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicInteger.html)
 instead of incrementing a static `int` field.
 
 ## Suppression

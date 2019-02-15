@@ -22,10 +22,10 @@ static class A {
 }
 ```
 
-The method reference `A::c` of the instance method `c` has an implicit
-first parameter for the `this` pointer. So both methods that `A::c` could
-resolve to are compatible with `BiFunction<A, D, B>`, and the method
-reference is ambiguous.
+The method reference `A::c` of the instance method `c` has an implicit first
+parameter for the `this` pointer. So both methods that `A::c` could resolve to
+are compatible with `BiFunction<A, D, B>`, and the method reference is
+ambiguous.
 
 ```java
 void f(BiFunction<A, D, B> f) { ... }

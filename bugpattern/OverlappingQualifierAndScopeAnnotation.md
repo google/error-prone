@@ -51,8 +51,8 @@ day, as the `@Provides` method applies the `DayScoped` scoping only to the
 `@DayScoped Allowance`. Instead, the default constructor of `Allowance` is used
 to create a new instance every time a `Spender` is created.
 
-If `@DayScope` wasn't a `Qualifier`, the provider method would do the
-right thing: the un-annotated `Announce` binding would be scoped to DayScope,
+If `@DayScope` wasn't a `Qualifier`, the provider method would do the right
+thing: the un-annotated `Announce` binding would be scoped to DayScope,
 implemented by a single `DailyAllowance` instance per day.
 
 ## Suppression

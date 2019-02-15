@@ -13,8 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Creating a side-effect-free anonymous class and never using it is usually
-a mistake.
+Creating a side-effect-free anonymous class and never using it is usually a
+mistake.
 
 For example:
 

@@ -751,6 +751,9 @@ Comparison using reference equality instead of value equality
 __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
+__[RxReturnValueIgnored](bugpattern/RxReturnValueIgnored)__<br>
+Returned Rx objects must be checked. Ignoring a returned Rx value means it is never scheduled for execution
+
 __[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
 Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 

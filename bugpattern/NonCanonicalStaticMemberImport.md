@@ -21,10 +21,10 @@ followed by the name of the member class. The canonical name of a field or
 method is the canonical name of the type it is declared in, followed by a `.`,
 followed by the name of the field or method.
 
-Fully-qualified names are not necessarily canonical.  Consider some field `f`
+Fully-qualified names are not necessarily canonical. Consider some field `f`
 declared in a class `C`. There may be another class `D` that extends `C` and
-inherits `f`.  Therefore `f` can be accessed using the fully-qualified name `D.f`.
-Since `f` is not declared in `D`, this name is not canonical.
+inherits `f`. Therefore `f` can be accessed using the fully-qualified name
+`D.f`. Since `f` is not declared in `D`, this name is not canonical.
 
 The JLS §7.5.3 requires all single static imports to *start* with a canonical
 type name, but the fully-qualified name of the imported member is not required

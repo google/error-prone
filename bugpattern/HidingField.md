@@ -16,9 +16,9 @@ _Alternate names: hiding, OvershadowingSubclassFields_
 
 ## The problem
 If a class has a field of the same name as any field visible to it on any of its
-superclasses or superinterfaces, the subclass' field is said to "[hide]
-(https://docs.oracle.com/javase/tutorial/java/IandI/hidevariables.html)" the
-superclass' field.
+superclasses or superinterfaces, the subclass' field is said to
+"[hide](https://docs.oracle.com/javase/tutorial/java/IandI/hidevariables.html)"
+the superclass' field.
 
 When this circumstance occurs, users of the class declaring the hiding field
 can't interact with the fields from the superclass.

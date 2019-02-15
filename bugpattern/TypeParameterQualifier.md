@@ -28,8 +28,8 @@ Is identical to the following:
 static <T extends Message> T populate(Message.Builder builder) {}
 ```
 
-The use of `T.Builder` is unnecessary and misleading, so referring to the
-type by its canonical name should always be preferred.
+The use of `T.Builder` is unnecessary and misleading, so referring to the type
+by its canonical name should always be preferred.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeParameterQualifier")` to the enclosing element.

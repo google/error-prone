@@ -15,10 +15,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-A method's type parameters should always be referenced in the declaration of
-one or more formal parameters. Type parameters that are only used in the return
-type are a source of type-unsafety.  First, operations on the type will be
-unchecked after the type parameter is erased. For example:
+A method's type parameters should always be referenced in the declaration of one
+or more formal parameters. Type parameters that are only used in the return type
+are a source of type-unsafety. First, operations on the type will be unchecked
+after the type parameter is erased. For example:
 
     static <T> T doCast(Object o) {
       return (T) o; // this will always succeed, since T is erased
