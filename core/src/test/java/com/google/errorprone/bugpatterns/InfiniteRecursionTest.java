@@ -51,6 +51,38 @@ public class InfiniteRecursionTest {
   }
 
   @Test
+  public void positiveStatic() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  static void f(int x) {}",
+            "  static void f() {",
+            "    // BUG: Diagnostic contains:",
+            "    Test.f();",
+            "  }",
+            "  static void instanceF() {",
+            "    // BUG: Diagnostic contains:",
+            "    new Test().instanceF();",
+            "  }",
+            "  static void subclassF() {",
+            "    // BUG: Diagnostic contains:",
+            "    Subclass.subclassF();",
+            "  }",
+            "  static int g() {",
+            "    return 0;",
+            "  }",
+            "  static int g(int x) {",
+            "    // BUG: Diagnostic contains:",
+            "    return Test.g(x);",
+            "  }",
+            "",
+            "  class Subclass extends Test {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(

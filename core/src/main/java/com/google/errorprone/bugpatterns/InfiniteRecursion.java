@@ -68,24 +68,26 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
       return NO_MATCH;
     }
     ExpressionTree select = ((MethodInvocationTree) expr).getMethodSelect();
-    switch (select.getKind()) {
-      case IDENTIFIER:
-        break;
-      case MEMBER_SELECT:
-        ExpressionTree receiver = ((MemberSelectTree) select).getExpression();
-        if (receiver.getKind() != Kind.IDENTIFIER) {
-          return NO_MATCH;
-        }
-        if (!((IdentifierTree) receiver).getName().contentEquals("this")) {
-          return NO_MATCH;
-        }
-        break;
-      default:
-        return NO_MATCH;
-    }
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null || !sym.equals(ASTHelpers.getSymbol(expr))) {
       return NO_MATCH;
+    }
+    if (!sym.isStatic()) {
+      switch (select.getKind()) {
+        case IDENTIFIER:
+          break;
+        case MEMBER_SELECT:
+          ExpressionTree receiver = ((MemberSelectTree) select).getExpression();
+          if (receiver.getKind() != Kind.IDENTIFIER) {
+            return NO_MATCH;
+          }
+          if (!((IdentifierTree) receiver).getName().contentEquals("this")) {
+            return NO_MATCH;
+          }
+          break;
+        default:
+          return NO_MATCH;
+      }
     }
     return describeMatch(statement);
   }
