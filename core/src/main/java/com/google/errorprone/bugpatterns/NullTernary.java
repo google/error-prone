@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -34,8 +33,7 @@ import com.sun.source.tree.Tree.Kind;
     summary =
         "This conditional expression may evaluate to null, which will result in an NPE when the"
             + " result is unboxed.",
-    severity = ERROR,
-    category = JDK)
+    severity = ERROR)
 public class NullTernary extends BugChecker implements ConditionalExpressionTreeMatcher {
 
   @Override
