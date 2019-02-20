@@ -18,7 +18,6 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -179,7 +178,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(4);
   }
 
-  @BugPattern(name = "", explanation = "", summary = "", severity = ERROR, category = ONE_OFF)
+  @BugPattern(name = "", explanation = "", summary = "", severity = ERROR)
   public static class Throwing extends BugChecker implements ExpressionStatementTreeMatcher {
     @Override
     public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
@@ -502,12 +501,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
   }
 
-  @BugPattern(
-      name = "CrashOnReturn",
-      explanation = "",
-      summary = "",
-      severity = ERROR,
-      category = ONE_OFF)
+  @BugPattern(name = "CrashOnReturn", explanation = "", summary = "", severity = ERROR)
   public static class CrashOnReturn extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Joiner;
@@ -49,8 +48,7 @@ import java.util.Set;
 @BugPattern(
     name = "CompatibleWithAnnotationMisuse",
     summary = "@CompatibleWith's value is not a type argument.",
-    severity = ERROR,
-    category = JDK)
+    severity = ERROR)
 public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMatcher {
 
   private static final Matcher<AnnotationTree> IS_COMPATIBLE_WITH_ANNOTATION =
