@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.CharMatcher;
@@ -28,12 +27,13 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "PackageLocation",
     summary = "Package names should match the directory they are declared in",
-    category = JDK,
     severity = SUGGESTION,
     documentSuppression = false,
     suppressionAnnotations = SuppressPackageLocation.class,
@@ -54,8 +54,12 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
       return Description.NO_MATCH;
     }
 
-    String packageName = tree.getPackageName().toString();
-    String actualFileName = ASTHelpers.getFileNameFromUri(tree.getSourceFile().toUri());
+    PackageSymbol packageSymbol = ((JCCompilationUnit) state.getPath().getCompilationUnit()).packge;
+    if (packageSymbol == null) {
+      return Description.NO_MATCH;
+    }
+    String packageName = packageSymbol.fullname.toString();
+    String actualFileName = ASTHelpers.getFileName(tree);
     if (actualFileName == null) {
       return Description.NO_MATCH;
     }

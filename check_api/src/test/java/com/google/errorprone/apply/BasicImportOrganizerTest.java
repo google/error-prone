@@ -15,7 +15,7 @@
  */
 package com.google.errorprone.apply;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
@@ -51,43 +51,43 @@ public class BasicImportOrganizerTest {
   public void testStaticFirstOrdering() {
     BasicImportOrganizer organizer = new BasicImportOrganizer(StaticOrder.STATIC_FIRST);
     ImportOrganizer.OrganizedImports organized = organizer.organizeImports(IMPORTS);
-    assertEquals(
-        "import static android.foo.bar;\n"
-            + "import static com.android.blah.blah;\n"
-            + "import static java.ping.pong;\n"
-            + "import static javax.pong.ping;\n"
-            + "import static net.wilma.flintstone;\n"
-            + "import static unknown.fred.flintstone;\n"
-            + "\n"
-            + "import android.foo;\n"
-            + "import com.android.blah;\n"
-            + "import java.ping;\n"
-            + "import javax.pong;\n"
-            + "import net.wilma;\n"
-            + "import unknown.barney;\n"
-            + "import unknown.fred;\n",
-        organized.asImportBlock());
+    assertThat(organized.asImportBlock())
+        .isEqualTo(
+            "import static android.foo.bar;\n"
+                + "import static com.android.blah.blah;\n"
+                + "import static java.ping.pong;\n"
+                + "import static javax.pong.ping;\n"
+                + "import static net.wilma.flintstone;\n"
+                + "import static unknown.fred.flintstone;\n"
+                + "\n"
+                + "import android.foo;\n"
+                + "import com.android.blah;\n"
+                + "import java.ping;\n"
+                + "import javax.pong;\n"
+                + "import net.wilma;\n"
+                + "import unknown.barney;\n"
+                + "import unknown.fred;\n");
   }
 
   @Test
   public void testStaticLastOrdering() {
     BasicImportOrganizer organizer = new BasicImportOrganizer(StaticOrder.STATIC_LAST);
     ImportOrganizer.OrganizedImports organized = organizer.organizeImports(IMPORTS);
-    assertEquals(
-        "import android.foo;\n"
-            + "import com.android.blah;\n"
-            + "import java.ping;\n"
-            + "import javax.pong;\n"
-            + "import net.wilma;\n"
-            + "import unknown.barney;\n"
-            + "import unknown.fred;\n"
-            + "\n"
-            + "import static android.foo.bar;\n"
-            + "import static com.android.blah.blah;\n"
-            + "import static java.ping.pong;\n"
-            + "import static javax.pong.ping;\n"
-            + "import static net.wilma.flintstone;\n"
-            + "import static unknown.fred.flintstone;\n",
-        organized.asImportBlock());
+    assertThat(organized.asImportBlock())
+        .isEqualTo(
+            "import android.foo;\n"
+                + "import com.android.blah;\n"
+                + "import java.ping;\n"
+                + "import javax.pong;\n"
+                + "import net.wilma;\n"
+                + "import unknown.barney;\n"
+                + "import unknown.fred;\n"
+                + "\n"
+                + "import static android.foo.bar;\n"
+                + "import static com.android.blah.blah;\n"
+                + "import static java.ping.pong;\n"
+                + "import static javax.pong.ping;\n"
+                + "import static net.wilma.flintstone;\n"
+                + "import static unknown.fred.flintstone;\n");
   }
 }

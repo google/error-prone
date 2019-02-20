@@ -59,9 +59,23 @@ public class FutureReturnValueIgnoredTest {
         .doTest();
   }
 
-  @Ignore("requires JDK 9")
   @Test
   public void testCompletableFutureReturnValue() {
+    compilationHelper
+        .addSourceLines(
+            "test.java",
+            "import java.util.concurrent.CompletableFuture;",
+            "class Test {",
+            "  void f(CompletableFuture<?> cf) {",
+            "    cf.exceptionally(t -> null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("requires JDK 9")
+  @Test
+  public void testCompletableFutureReturnValueJdk9() {
     compilationHelper
         .addSourceLines(
             "test.java",

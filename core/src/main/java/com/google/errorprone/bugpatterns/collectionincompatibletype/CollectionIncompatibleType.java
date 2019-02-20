@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.addSuppressWarnings;
 
@@ -64,7 +63,6 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "CollectionIncompatibleType",
     summary = "Incompatible type as argument to Object-accepting Java collections method",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {

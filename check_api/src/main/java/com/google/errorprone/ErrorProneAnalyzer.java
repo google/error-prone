@@ -143,7 +143,7 @@ public class ErrorProneAnalyzer implements TaskListener {
         };
     JavaFileObject originalSource = log.useSource(compilation.getSourceFile());
     try {
-      if (shouldExcludeSourceFile(compilation.getSourceFile())) {
+      if (shouldExcludeSourceFile(compilation)) {
         return;
       }
       if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
@@ -180,10 +180,10 @@ public class ErrorProneAnalyzer implements TaskListener {
   }
 
   /** Returns true if the given source file should be excluded from analysis. */
-  private boolean shouldExcludeSourceFile(JavaFileObject sourceFile) {
+  private boolean shouldExcludeSourceFile(CompilationUnitTree tree) {
     Pattern excludedPattern = errorProneOptions.getExcludedPattern();
     return excludedPattern != null
-        && excludedPattern.matcher(ASTHelpers.getFileNameFromUri(sourceFile.toUri())).matches();
+        && excludedPattern.matcher(ASTHelpers.getFileName(tree)).matches();
   }
 
   /** Returns true if all declarations inside the given compilation unit have been visited. */

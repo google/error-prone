@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -24,8 +23,8 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.StreamSupport.stream;
 
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -45,7 +44,6 @@ import java.util.Map;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "AmbiguousMethodReference",
-    category = JDK,
     summary = "Method reference is ambiguous",
     severity = WARNING)
 public class AmbiguousMethodReference extends BugChecker implements ClassTreeMatcher {
@@ -59,7 +57,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
 
     // collect declared and inherited methods, grouped by reference descriptor
     Map<String, List<MethodSymbol>> methods =
-        stream(members.spliterator(), false)
+        Streams.stream(members)
             .filter(MethodSymbol.class::isInstance)
             .map(MethodSymbol.class::cast)
             .filter(m -> m.isConstructor() || m.owner.equals(origin))

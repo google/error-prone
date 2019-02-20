@@ -11,8 +11,9 @@ public class Foo<T> {
 }
 ```
 
-In some cases, the type variable being declared has no relation to the type variable being shadowed.
-It may be appropriate to rename the shadowing type variable:
+In some cases, the type variable being declared has no relation to the type
+variable being shadowed. It may be appropriate to rename the shadowing type
+variable:
 
 ```java
 class Logger<T> {
@@ -21,9 +22,9 @@ class Logger<T> {
 }
 ```
 
-Depending on the nature of the surrounding code, you might be able to remove the generic declaration
-on a method, or convert the generic method into a static method that doesn't inherit the surrounding
-type parameter:
+Depending on the nature of the surrounding code, you might be able to remove the
+generic declaration on a method, or convert the generic method into a static
+method that doesn't inherit the surrounding type parameter:
 
 ```java
 class Holder<T> {
@@ -37,8 +38,8 @@ class Holder<T> {
 }
 ```
 
-If an inner class declaration shadows a type variable, you may be able to remove the type variable,
-make it a static inner class, or rename the type variable:
+If an inner class declaration shadows a type variable, you may be able to remove
+the type variable, make it a static inner class, or rename the type variable:
 
 ```java
 class BoxingBox<T> {
@@ -54,4 +55,3 @@ class BoxingBox<T> {
   }
 }
 ```
-

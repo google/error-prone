@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject.guice;
 
-import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_INJECT_ANNOTATION;
@@ -46,7 +45,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
         "This method is not annotated with @Inject, but it overrides a "
             + "method that is annotated with @com.google.inject.Inject. Guice will inject this "
             + "method, and it is recommended to annotate it explicitly.",
-    category = GUICE,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class OverridesGuiceInjectableMethod extends BugChecker implements MethodTreeMatcher {

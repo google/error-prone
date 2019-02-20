@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
@@ -33,6 +32,7 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 
+import com.google.common.base.Ascii;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -53,7 +53,6 @@ import javax.lang.model.element.Modifier;
     summary =
         "Test method will not be run; please correct method signature "
             + "(Should be public, non-static, and method name should begin with \"test\").",
-    category = JUNIT,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
@@ -108,7 +107,7 @@ public class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
       if (matcher.lookingAt()) {
         fixedName = matcher.replaceFirst("test");
       } else if (wouldRunInJUnit4.matches(methodTree, state)) {
-        fixedName = "test" + fixedName.substring(0, 1).toUpperCase() + fixedName.substring(1);
+        fixedName = "test" + Ascii.toUpperCase(fixedName.substring(0, 1)) + fixedName.substring(1);
       } else {
         return NO_MATCH;
       }

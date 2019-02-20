@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
@@ -50,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +58,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "ClassNewInstance",
-    category = JDK,
     summary =
         "Class.newInstance() bypasses exception checking; prefer"
             + " getDeclaredConstructor().newInstance()",
@@ -261,12 +258,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
           type.isUnion()
               ? ((Type.UnionClassType) type).getAlternativeTypes()
               : Collections.singleton(type)) {
-        Iterator<Type> it = toHandle.iterator();
-        while (it.hasNext()) {
-          if (ASTHelpers.isSubtype(it.next(), precise, state)) {
-            it.remove();
-          }
-        }
+        toHandle.removeIf((Type elem) -> ASTHelpers.isSubtype(elem, precise, state));
       }
     }
     return new UnhandledResult<>(ImmutableSet.copyOf(toHandle), newHandles.build());

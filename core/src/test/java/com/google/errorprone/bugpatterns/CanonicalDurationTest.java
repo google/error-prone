@@ -42,6 +42,7 @@ public class CanonicalDurationTest {
             "    java.time.Duration.ofSeconds(86400);",
             "    Duration.ofSeconds(CONST);",
             "    Duration.ofMillis(0);",
+            "    Duration.ofMillis(4611686018427387904L);",
             "    Duration.ofDays(1);",
             "  }",
             "}")
@@ -56,6 +57,7 @@ public class CanonicalDurationTest {
             "    java.time.Duration.ofDays(1);",
             "    Duration.ofSeconds(CONST);",
             "    Duration.ofMillis(0);",
+            "    Duration.ofMillis(4611686018427387904L);",
             "    Duration.ofDays(1);",
             "  }",
             "}")

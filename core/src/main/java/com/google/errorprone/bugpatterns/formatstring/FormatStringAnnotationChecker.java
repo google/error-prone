@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.formatstring;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -43,7 +42,6 @@ import java.util.List;
 @BugPattern(
     name = "FormatStringAnnotation",
     summary = "Invalid format string passed to formatting method.",
-    category = JDK,
     severity = ERROR
     )
 public final class FormatStringAnnotationChecker extends BugChecker
@@ -125,7 +123,7 @@ public final class FormatStringAnnotationChecker extends BugChecker
               .setMessage(
                   "A parameter can only be annotated @FormatString in a method annotated "
                       + "@FormatMethod: "
-                      + param)
+                      + state.getSourceForNode(param))
               .build();
         }
         if (!isStringParam) {

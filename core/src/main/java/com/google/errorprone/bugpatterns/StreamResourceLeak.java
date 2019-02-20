@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -50,7 +49,6 @@ import java.util.Objects;
 @BugPattern(
     name = "StreamResourceLeak",
     altNames = "FilesLinesLeak",
-    category = JDK,
     summary =
         "Streams that encapsulate a closeable resource should be closed using"
             + " try-with-resources",
@@ -93,7 +91,7 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker
             initPos,
             String.format(
                 ";\ntry (%s stream = %s) {\n%s =",
-                streamType, state.getSourceForNode(tree), var.getName().toString()));
+                streamType, state.getSourceForNode(tree), var.getName()));
       } else {
         // the non-variable case, e.g. `return Files.lines(p).count()`
         // -> try (Stream<Stream> stream = Files.lines(p)) { return stream.count(); }`

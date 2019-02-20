@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject.dagger;
 
-import static com.google.errorprone.BugPattern.Category.DAGGER;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -31,7 +30,6 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,15 +37,12 @@ import java.util.List;
 @BugPattern(
     name = "ScopeOnModule",
     summary = "Scopes on modules have no function and will soon be an error.",
-    category = DAGGER,
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class ScopeOnModule extends BugChecker implements ClassTreeMatcher {
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    ClassSymbol classSymbol = getSymbol(classTree);
-    if (!hasAnnotation(classSymbol, "dagger.Module", state)
-        && !hasAnnotation(classSymbol, "dagger.producers.ProducerModule", state)) {
+    if (!DaggerAnnotations.isAnyModule().matches(classTree, state)) {
       return Description.NO_MATCH;
     }
 

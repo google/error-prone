@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATION;
@@ -45,6 +44,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.ChildMultiMatcher;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -72,8 +72,10 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Name;
@@ -83,7 +85,6 @@ import javax.lang.model.element.Name;
     name = "MissingFail",
     altNames = "missing-fail",
     summary = "Not calling fail() when expecting an exception masks bugs",
-    category = JUNIT,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MissingFail extends BugChecker implements TryTreeMatcher {
@@ -225,34 +226,42 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       List<? extends StatementTree> tryStatements = tree.getBlock().getStatements();
       StatementTree lastTryStatement = tryStatements.get(tryStatements.size() - 1);
 
-      String failCall = String.format("\nfail(\"Expected %s\");", exceptionToString(tree));
-      SuggestedFix.Builder fixBuilder =
-          SuggestedFix.builder().postfixWith(lastTryStatement, failCall);
-
-      // Make sure that when the fail import is added it doesn't conflict with existing ones.
-      fixBuilder.removeStaticImport("junit.framework.Assert.fail");
-      fixBuilder.removeStaticImport("junit.framework.TestCase.fail");
-      fixBuilder.addStaticImport("org.junit.Assert.fail");
-
-      return describeMatch(lastTryStatement, fixBuilder.build());
+      Optional<Fix> assertThrowsFix =
+          AssertThrowsUtils.tryFailToAssertThrows(tree, tryStatements, state);
+      Fix failFix = addFailCall(tree, lastTryStatement, state);
+      return buildDescription(lastTryStatement).addFix(assertThrowsFix).addFix(failFix).build();
     } else {
       return Description.NO_MATCH;
     }
+  }
+
+  public static Fix addFailCall(TryTree tree, StatementTree lastTryStatement, VisitorState state) {
+    String failCall = String.format("\nfail(\"Expected %s\");", exceptionToString(tree, state));
+    SuggestedFix.Builder fixBuilder =
+        SuggestedFix.builder().postfixWith(lastTryStatement, failCall);
+
+    // Make sure that when the fail import is added it doesn't conflict with existing ones.
+    fixBuilder.removeStaticImport("junit.framework.Assert.fail");
+    fixBuilder.removeStaticImport("junit.framework.TestCase.fail");
+    fixBuilder.addStaticImport("org.junit.Assert.fail");
+
+    return fixBuilder.build();
   }
 
   /**
    * Returns a string describing the exception type caught by the given try tree's catch
    * statement(s), defaulting to {@code "Exception"} if more than one exception type is caught.
    */
-  private String exceptionToString(TryTree tree) {
+  private static String exceptionToString(TryTree tree, VisitorState state) {
     if (tree.getCatches().size() != 1) {
       return "Exception";
     }
-    String exceptionType = tree.getCatches().iterator().next().getParameter().getType().toString();
-    if (exceptionType.contains("|")) {
+    Tree exceptionType = tree.getCatches().iterator().next().getParameter().getType();
+    Type type = ASTHelpers.getType(exceptionType);
+    if (type != null && type.isUnion()) {
       return "Exception";
     }
-    return exceptionType;
+    return state.getSourceForNode(exceptionType);
   }
 
   private boolean tryTreeMatches(TryTree tree, VisitorState state) {
@@ -285,6 +294,10 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
         && (hasFieldAssignmentInCatch(tree, state)
             || hasBooleanAssertVariableInCatch(tree, state)
             || lastTryStatementIsAssert(tree, state))) {
+      return false;
+    }
+
+    if (tree.getBlock().getStatements().isEmpty()) {
       return false;
     }
 
@@ -447,7 +460,10 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     public boolean matches(TryTree tryTree, VisitorState state) {
       MethodTree enclosingMethodTree =
           ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
-
+      if (enclosingMethodTree == null) {
+        // e.g. a class initializer
+        return true;
+      }
       Name name = enclosingMethodTree.getName();
       return JUnitMatchers.looksLikeJUnit3SetUp.matches(enclosingMethodTree, state)
           || JUnitMatchers.looksLikeJUnit3TearDown.matches(enclosingMethodTree, state)

@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -28,6 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.sun.tools.javac.code.TypeTag.BOT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Futures;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -56,7 +56,6 @@ import java.util.List;
 @BugPattern(
     name = "FuturesGetCheckedIllegalExceptionType",
     summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
-    category = GUAVA,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
@@ -75,7 +74,8 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
       return describeUncheckedExceptionTypeMatch(
           tree,
           SuggestedFix.builder()
-              .replace(tree, "getUnchecked(" + tree.getArguments().get(0) + ")")
+              .replace(
+                  tree, "getUnchecked(" + state.getSourceForNode(tree.getArguments().get(0)) + ")")
               .addStaticImport(Futures.class.getName() + ".getUnchecked")
               .build());
     }
@@ -106,7 +106,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
           }
 
           List<Type> typeArguments = ((ClassType) argType).getTypeArguments();
-          Type exceptionType = typeArguments.isEmpty() ? null : typeArguments.get(0);
+          Type exceptionType = Iterables.getFirst(typeArguments, null);
           return types.isSubtype(exceptionType, runtimeExceptionType);
         }
       };

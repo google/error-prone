@@ -206,11 +206,21 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
         return Optional.empty();
       }
     }
+
+    // Use of `var` causes the start position of the variable type tree node to be < 0.
+    // Note that the .isImplicitlyTyped() method on JCVariableDecl returns the wrong answer after
+    // type attribution has occurred.
+    Tree varType = varTree.getType();
+    boolean isImplicitlyTyped = ((JCTree) varType).getStartPosition() < 0;
     if (needsList[0]) {
-      fix.replace((varTree).getType(), "List<String>").addImport("java.util.List");
+      if (!isImplicitlyTyped) {
+        fix.replace(varType, "List<String>").addImport("java.util.List");
+      }
       replaceWithSplitter(fix, tree, methodAndArgument, state, "splitToList", needsMutableList[0]);
     } else {
-      fix.replace((varTree).getType(), "Iterable<String>");
+      if (!isImplicitlyTyped) {
+        fix.replace(varType, "Iterable<String>");
+      }
       replaceWithSplitter(fix, tree, methodAndArgument, state, "split", needsMutableList[0]);
     }
     return Optional.of(fix.build());

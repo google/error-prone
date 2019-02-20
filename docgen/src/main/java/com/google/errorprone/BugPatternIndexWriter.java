@@ -16,6 +16,9 @@
 
 package com.google.errorprone;
 
+import static com.google.common.primitives.Booleans.trueFirst;
+import static java.util.Comparator.comparing;
+
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -76,9 +79,7 @@ public class BugPatternIndexWriter {
     // (Default, Severity) -> [Pattern...]
     SortedSetMultimap<IndexEntry, MiniDescription> sorted =
         TreeMultimap.create(
-            Comparator.comparing(IndexEntry::onByDefault)
-                .reversed()
-                .thenComparing(IndexEntry::severity),
+            comparing(IndexEntry::onByDefault, trueFirst()).thenComparing(IndexEntry::severity),
             Comparator.comparing(MiniDescription::name));
     for (BugPatternInstance pattern : patterns) {
       sorted.put(

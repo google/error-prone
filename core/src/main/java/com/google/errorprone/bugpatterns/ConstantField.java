@@ -16,9 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
+import com.google.common.base.Ascii;
 import com.google.common.base.CaseFormat;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -40,7 +40,6 @@ import javax.lang.model.element.Modifier;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "ConstantField",
-    category = JDK,
     summary = "Field name is CONSTANT_CASE, but field is not static and final",
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
@@ -61,7 +60,7 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
     if (sym.isStatic() && sym.getModifiers().contains(Modifier.FINAL)) {
       return checkImmutable(tree, state, sym, name);
     }
-    if (!name.equals(name.toUpperCase())) {
+    if (!name.equals(Ascii.toUpperCase(name))) {
       return Description.NO_MATCH;
     }
 
@@ -118,7 +117,7 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
       default:
         break;
     }
-    if (name.toUpperCase().equals(name)) {
+    if (Ascii.toUpperCase(name).equals(name)) {
       return Description.NO_MATCH;
     }
     if (state.getTypes().unboxedTypeOrType(type).isPrimitive()
@@ -139,9 +138,9 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
   private static String upperCaseReplace(String name) {
     String constName;
     if (name.contains("_")) {
-      constName = name.toUpperCase();
+      constName = Ascii.toUpperCase(name);
     } else {
-      constName = NamingConventions.convertToLowerUnderscore(name).toUpperCase();
+      constName = Ascii.toUpperCase(NamingConventions.convertToLowerUnderscore(name));
     }
 
     // C++-style constants like kFooBar should become FOO_BAR, not K_FOO_BAR

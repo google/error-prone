@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -41,7 +40,6 @@ import java.util.Objects;
     summary =
         "== must be used in equals method to check equality to itself"
             + " or an infinite loop will occur.",
-    category = JDK,
     severity = ERROR)
 public class EqualsReference extends BugChecker implements MethodTreeMatcher {
 
@@ -62,7 +60,7 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
   private static class TreeScannerEquals extends TreeScanner<Void, VarSymbol> {
 
     private boolean hasIllegalEquals = false;
-    private MethodTree methodTree;
+    private final MethodTree methodTree;
 
     public TreeScannerEquals(MethodTree currMethodTree) {
       methodTree = currMethodTree;

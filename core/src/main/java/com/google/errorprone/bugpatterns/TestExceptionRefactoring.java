@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.BugPattern.StandardTags.REFACTORING;
 
@@ -31,7 +30,6 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "TestExceptionRefactoring",
-    category = JUNIT,
     summary = "Prefer assertThrows to @Test(expected=...)",
     severity = SUGGESTION,
     tags = REFACTORING,

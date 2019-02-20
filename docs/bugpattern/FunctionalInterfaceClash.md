@@ -34,8 +34,7 @@ void doIt(Function<String, String> f);
 void doIt(Consumer<String> c);
 ```
 
-[JLS
-15.12.2.1](https://docs.oracle.com/javase/specs/jls/se8/html/jls-15.html#jls-15.12.2.1)
+[JLS 15.12.2.1](https://docs.oracle.com/javase/specs/jls/se8/html/jls-15.html#jls-15.12.2.1)
 says that lambdas whose body is a statement expression are compatible with
 functional interfaces whose function type is void-returning _or_ value
 returning:

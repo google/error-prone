@@ -53,8 +53,7 @@ public abstract class CodeTransformerTestHelper {
 
   public JavaFileObject transform(JavaFileObject original) {
     JavaCompiler compiler = JavacTool.create();
-    DiagnosticCollector<JavaFileObject> diagnosticsCollector =
-        new DiagnosticCollector<JavaFileObject>();
+    DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
     StandardJavaFileManager fileManager =
         compiler.getStandardFileManager(diagnosticsCollector, Locale.ENGLISH, UTF_8);
     JavacTaskImpl task =

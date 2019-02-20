@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.apidiff;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.io.Resources;
@@ -31,7 +30,6 @@ import java.io.UncheckedIOException;
     explanation =
         "Code that needs to be compatible with Java 7 cannot use types or members"
             + " that are only present in the JDK 8 class libraries",
-    category = JDK,
     severity = ERROR,
     suppressionAnnotations = {
       SuppressWarnings.class
@@ -45,8 +43,8 @@ public class Java7ApiChecker extends ApiDiffChecker {
       ApiDiffProto.Diff.Builder diffBuilder = ApiDiffProto.Diff.newBuilder();
       byte[] diffData =
           Resources.toByteArray(Resources.getResource(Java7ApiChecker.class, "7to8diff.binarypb"));
-      diffBuilder.mergeFrom(diffData);
       diffBuilder
+          .mergeFrom(diffData)
           .addClassDiff(
               ApiDiffProto.ClassDiff.newBuilder()
                   .setMemberDiff(

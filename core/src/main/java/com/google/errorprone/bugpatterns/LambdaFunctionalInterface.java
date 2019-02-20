@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -52,7 +51,6 @@ import javax.lang.model.element.Modifier;
     name = "LambdaFunctionalInterface",
     summary =
         "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
-    category = JDK,
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class LambdaFunctionalInterface extends BugChecker implements MethodTreeMatcher {

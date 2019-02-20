@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.PROTOBUF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -29,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -69,7 +69,6 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "ProtoFieldNullComparison",
     summary = "Protobuf fields cannot be null.",
-    category = PROTOBUF,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ProtoFieldNullComparison extends BugChecker implements CompilationUnitTreeMatcher {
@@ -130,21 +129,29 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     return tree.getKind() == Kind.NULL_LITERAL;
   }
 
-  private final Matcher<ExpressionTree> protoReceiver;
-  private final boolean trackAssignments;
+  /** Matcher for generated protobufs. */
+  private static final Matcher<ExpressionTree> PROTO_RECEIVER =
+      instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, PROTO_LITE_SUPER_CLASS);
+
+  /** Only track assignments of variables matching this. */
+  private final Matcher<ExpressionTree> trackAssignments;
+
   private final boolean matchListGetters;
   private final boolean matchTestAssertions;
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
-    boolean matchLite = flags.getBoolean("ProtoFieldNullComparison:MatchLite").orElse(false);
-    protoReceiver =
-        matchLite
-            ? instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, PROTO_LITE_SUPER_CLASS)
-            : instanceMethod().onDescendantOf(PROTO_SUPER_CLASS);
-    trackAssignments = flags.getBoolean("ProtoFieldNullComparison:TrackAssignments").orElse(false);
+    boolean trackServerProtoAssignments =
+        flags.getBoolean("ProtoFieldNullComparison:TrackServerProtoAssignments").orElse(false);
     matchListGetters = flags.getBoolean("ProtoFieldNullComparison:MatchListGetters").orElse(false);
     matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
+
+    ImmutableList.Builder<String> toTrack =
+        ImmutableList.<String>builder().add(PROTO_LITE_SUPER_CLASS);
+    if (trackServerProtoAssignments) {
+      toTrack.add(PROTO_SUPER_CLASS);
+    }
+    trackAssignments = instanceMethod().onDescendantOfAny(toTrack.build());
   }
 
   @Override
@@ -174,11 +181,11 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
     @Override
     public Void visitVariable(VariableTree variable, Void unused) {
-      if (trackAssignments) {
-        Symbol symbol = ASTHelpers.getSymbol(variable);
-        if (isEffectivelyFinal(symbol) && variable.getInitializer() != null) {
-          effectivelyFinalValues.put(symbol, variable.getInitializer());
-        }
+      Symbol symbol = ASTHelpers.getSymbol(variable);
+      if (variable.getInitializer() != null
+          && isEffectivelyFinal(symbol)
+          && trackAssignments.matches(variable.getInitializer(), state)) {
+        effectivelyFinalValues.put(symbol, variable.getInitializer());
       }
       return isSuppressed(variable) ? null : super.visitVariable(variable, null);
     }
@@ -232,7 +239,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
     private Optional<Fixer> getFixer(ExpressionTree tree, VisitorState state) {
       ExpressionTree resolvedTree = getEffectiveTree(tree);
-      if (resolvedTree == null || !protoReceiver.matches(resolvedTree, state)) {
+      if (resolvedTree == null || !PROTO_RECEIVER.matches(resolvedTree, state)) {
         return Optional.empty();
       }
       return Arrays.stream(GetterTypes.values())
@@ -338,10 +345,10 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         String countMethod = methodName + "Count";
         return String.format(
             "%s.%s() %s %s",
-            getReceiver(methodInvocation).toString(),
+            getReceiver(methodInvocation),
             countMethod,
             negated ? "<=" : ">",
-            getOnlyElement(methodInvocation.getArguments()).toString());
+            getOnlyElement(methodInvocation.getArguments()));
       }
     },
     /** {@code proto.getRepeatedFieldList()} */

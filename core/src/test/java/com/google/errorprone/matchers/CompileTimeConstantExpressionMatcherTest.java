@@ -16,8 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertWithMessage;
 
 import com.google.common.truth.Truth;
 import com.google.errorprone.CompilationTestHelper;
@@ -58,7 +57,7 @@ public class CompileTimeConstantExpressionMatcherTest {
       "}"
     };
 
-    Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
+    Map<String, Boolean> expectedMatches = new HashMap<>();
     expectedMatches.put("s1", true);
     expectedMatches.put("int2", true);
     expectedMatches.put("int3", true);
@@ -79,7 +78,7 @@ public class CompileTimeConstantExpressionMatcherTest {
       "  }",
       "}"
     };
-    Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
+    Map<String, Boolean> expectedMatches = new HashMap<>();
     expectedMatches.put("s1", true);
     // Even though s2 has the compile-time constant value "null", it's not
     // a literal.  I don't know how to distinguish this, but I doubt this is
@@ -106,7 +105,7 @@ public class CompileTimeConstantExpressionMatcherTest {
       "  }",
       "}"
     };
-    Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
+    Map<String, Boolean> expectedMatches = new HashMap<>();
     expectedMatches.put("s1", false);
     expectedMatches.put("int2", false);
     expectedMatches.put("int3", false);
@@ -134,7 +133,7 @@ public class CompileTimeConstantExpressionMatcherTest {
       "  }",
       "}"
     };
-    Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
+    Map<String, Boolean> expectedMatches = new HashMap<>();
     expectedMatches.put("s1", true);
     expectedMatches.put("s2", false);
     expectedMatches.put("s3", false);
@@ -167,7 +166,7 @@ public class CompileTimeConstantExpressionMatcherTest {
       "  }",
       "}"
     };
-    Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
+    Map<String, Boolean> expectedMatches = new HashMap<>();
     expectedMatches.put("s1", true);
     expectedMatches.put("s2", false);
     expectedMatches.put("s3", false);
@@ -199,7 +198,7 @@ public class CompileTimeConstantExpressionMatcherTest {
       "}"
     };
 
-    Map<String, Boolean> expectedMatches = new HashMap<String, Boolean>();
+    Map<String, Boolean> expectedMatches = new HashMap<>();
     expectedMatches.put("bool1", false);
     expectedMatches.put("bool2", false);
     expectedMatches.put("bool3", true);
@@ -218,9 +217,13 @@ public class CompileTimeConstantExpressionMatcherTest {
             if (expectedMatches.containsKey(lhs.toString())) {
               boolean matches = matcher.matches(t.getExpression(), state);
               if (expectedMatches.get(lhs.toString())) {
-                assertTrue("Matcher should match expression" + t.getExpression(), matches);
+                assertWithMessage("Matcher should match expression" + t.getExpression())
+                    .that(matches)
+                    .isTrue();
               } else {
-                assertFalse("Matcher should not match expression" + t.getExpression(), matches);
+                assertWithMessage("Matcher should not match expression" + t.getExpression())
+                    .that(matches)
+                    .isFalse();
               }
             }
             return super.visitAssignment(t, state);

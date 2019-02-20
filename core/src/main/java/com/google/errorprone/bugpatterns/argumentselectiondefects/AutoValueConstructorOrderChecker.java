@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -43,12 +42,11 @@ import java.util.function.Function;
 @BugPattern(
     name = "AutoValueConstructorOrderChecker",
     summary = "Arguments to AutoValue constructor are in the wrong order",
-    category = GUAVA,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AutoValueConstructorOrderChecker extends BugChecker implements NewClassTreeMatcher {
 
-  private ArgumentChangeFinder argumentChangeFinder =
+  private final ArgumentChangeFinder argumentChangeFinder =
       ArgumentChangeFinder.builder()
           .setDistanceFunction(buildDistanceFunction())
           .addHeuristic(allArgumentsMustMatch())

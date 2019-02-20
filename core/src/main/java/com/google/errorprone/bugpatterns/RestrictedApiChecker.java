@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -45,7 +44,6 @@ import javax.lang.model.type.MirroredTypesException;
 @BugPattern(
     name = "RestrictedApiChecker",
     summary = " Check for non-whitelisted callers to RestrictedApiChecker.",
-    category = Category.ONE_OFF,
     severity = SeverityLevel.ERROR,
     suppressionAnnotations = {},
     disableable = false,
@@ -109,7 +107,7 @@ public class RestrictedApiChecker extends BugChecker
     }
     if (!restriction.allowedOnPath().isEmpty()) {
       JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
-      String path = ASTHelpers.getFileNameFromUri(compilationUnit.getSourceFile().toUri());
+      String path = ASTHelpers.getFileName(compilationUnit);
       if (Pattern.matches(restriction.allowedOnPath(), path)) {
         return Description.NO_MATCH;
       }

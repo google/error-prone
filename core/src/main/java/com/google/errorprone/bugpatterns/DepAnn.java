@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.sun.tools.javac.code.Flags.DEPRECATED;
 
@@ -44,7 +43,6 @@ import com.sun.tools.javac.code.Symbol;
     name = "DepAnn",
     altNames = "dep-ann",
     summary = "Deprecated item is not annotated with @Deprecated",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class DepAnn extends BugChecker

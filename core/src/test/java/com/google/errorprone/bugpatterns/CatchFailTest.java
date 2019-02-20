@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -185,6 +186,31 @@ public class CatchFailTest {
             "  }",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void deleteEmptyTry() {
+    testHelper
+        .addInputLines(
+            "in/Foo.java",
+            "import org.junit.Test;",
+            "class Foo {",
+            "  @Test public void f() {",
+            "    try {",
+            "    } catch (Exception expected) {",
+            "      org.junit.Assert.fail(\"oh no \");",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Foo.java",
+            "import org.junit.Test;",
+            "class Foo {",
+            "  @Test public void f() {",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 

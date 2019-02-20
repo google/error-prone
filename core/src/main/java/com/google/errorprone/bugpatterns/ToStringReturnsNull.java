@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
@@ -40,7 +39,6 @@ import com.sun.source.util.TreeScanner;
 @BugPattern(
     name = "ToStringReturnsNull",
     summary = "An implementation of Object.toString() should never return null.",
-    category = JDK,
     severity = WARNING)
 public class ToStringReturnsNull extends BugChecker implements MethodTreeMatcher {
 

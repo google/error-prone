@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
@@ -41,7 +40,6 @@ import com.sun.source.tree.MethodInvocationTree;
     summary =
         "Calling getClass() on an object of type Class returns the Class object for "
             + "java.lang.Class; you probably meant to operate on the object directly",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class GetClassOnClass extends BugChecker implements MethodInvocationTreeMatcher {
@@ -53,7 +51,7 @@ public class GetClassOnClass extends BugChecker implements MethodInvocationTreeM
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (getClassMethodMatcher.matches(tree, state)) {
-      String methodInvoker = ASTHelpers.getReceiver(tree).toString();
+      String methodInvoker = state.getSourceForNode(ASTHelpers.getReceiver(tree));
       Fix removeGetClass = SuggestedFix.replace(tree, methodInvoker);
       Fix changeToClassDotClass = SuggestedFix.replace(tree, "Class.class");
       return buildDescription(tree).addFix(removeGetClass).addFix(changeToClassDotClass).build();

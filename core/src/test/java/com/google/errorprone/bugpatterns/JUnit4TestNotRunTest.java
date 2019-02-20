@@ -525,4 +525,39 @@ public class JUnit4TestNotRunTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void junit4Theory_isTestAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "TestTheories.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.experimental.theories.Theories;",
+            "import org.junit.experimental.theories.Theory;",
+            "@RunWith(Theories.class)",
+            "public class TestTheories {",
+            "  @Theory public void testMyTheory() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void annotationOnSuperMethod() {
+    compilationHelper
+        .addSourceLines(
+            "TestSuper.java",
+            "import org.junit.Test;",
+            "public class TestSuper {",
+            "  @Test public void testToOverride() {}",
+            "}")
+        .addSourceLines(
+            "TestSub.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class TestSub extends TestSuper {",
+            "  @Override public void testToOverride() {}",
+            "}")
+        .doTest();
+  }
 }

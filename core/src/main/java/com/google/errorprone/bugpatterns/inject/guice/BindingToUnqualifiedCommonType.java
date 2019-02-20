@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns.inject.guice;
 
-import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_PROVIDES_ANNOTATION;
@@ -54,7 +53,6 @@ import java.math.BigDecimal;
     name = "BindingToUnqualifiedCommonType",
     summary =
         "This code declares a binding for a common value type without a Qualifier annotation.",
-    category = GUICE,
     severity = WARNING)
 public class BindingToUnqualifiedCommonType extends BugChecker
     implements MethodTreeMatcher, MethodInvocationTreeMatcher {

@@ -107,4 +107,19 @@ public class UnnecessaryParenthesesTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodReference() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  Predicate<Test> foo(Predicate<Test> a) {",
+            "    // BUG: Diagnostic contains:",
+            "    return foo((this::equals));",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

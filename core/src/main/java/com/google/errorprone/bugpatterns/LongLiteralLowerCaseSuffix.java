@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -41,7 +40,6 @@ import java.util.regex.Pattern;
 @BugPattern(
     name = "LongLiteralLowerCaseSuffix",
     summary = "Prefer 'L' to 'l' for the suffix to long literals",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {

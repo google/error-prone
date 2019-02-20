@@ -15,7 +15,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -43,7 +42,6 @@ import java.util.List;
     summary =
         "Modifying a collection while iterating over it in a loop may cause a"
             + " ConcurrentModificationException to be thrown.",
-    category = JDK,
     severity = WARNING)
 public class ModifyCollectionInEnhancedForLoop extends BugChecker
     implements MethodInvocationTreeMatcher {

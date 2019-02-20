@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -55,7 +54,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "WildcardImport",
     summary = "Wildcard imports, static or otherwise, should not be used",
-    category = JDK,
     severity = SUGGESTION,
     linkType = CUSTOM,
     documentSuppression = false,
@@ -205,7 +203,8 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     }
     for (Map.Entry<Symbol, List<TypeToImport>> entry : toFix.entrySet()) {
       final Symbol owner = entry.getKey();
-      if (entry.getValue().size() > MAX_MEMBER_IMPORTS) {
+      if (entry.getKey().getKind() != ElementKind.PACKAGE
+          && entry.getValue().size() > MAX_MEMBER_IMPORTS) {
         qualifiedNameFix(fix, owner, state);
       } else {
         for (TypeToImport toImport : entry.getValue()) {

@@ -16,20 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.io.ByteStreams;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.JUnit4;
@@ -39,10 +29,8 @@ import org.junit.runners.ParentRunner;
 @RunWith(JUnit4.class)
 public class JUnit4SetUpNotRunTest {
 
-  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
-
   private CompilationTestHelper compilationHelper;
-  private BugCheckerRefactoringTestHelper refactoringTestHelper =
+  private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(new JUnit4SetUpNotRun(), getClass());
 
   @Before
@@ -107,17 +95,7 @@ public class JUnit4SetUpNotRunTest {
   }
 
   @Test
-  public void noBeforeOnClasspath() throws Exception {
-    File libJar = tempFolder.newFile("lib.jar");
-    try (FileOutputStream fis = new FileOutputStream(libJar);
-        JarOutputStream jos = new JarOutputStream(fis)) {
-      addClassToJar(jos, RunWith.class);
-      addClassToJar(jos, JUnit4.class);
-      addClassToJar(jos, BlockJUnit4ClassRunner.class);
-      addClassToJar(jos, ParentRunner.class);
-      addClassToJar(jos, SuperTest.class);
-      addClassToJar(jos, SuperTest.class.getEnclosingClass());
-    }
+  public void noBeforeOnClasspath() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -128,15 +106,13 @@ public class JUnit4SetUpNotRunTest {
             "class Test extends SuperTest {",
             "  @Override public void setUp() {}",
             "}")
-        .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .withClasspath(
+            RunWith.class,
+            JUnit4.class,
+            BlockJUnit4ClassRunner.class,
+            ParentRunner.class,
+            SuperTest.class,
+            SuperTest.class.getEnclosingClass())
         .doTest();
-  }
-
-  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
-    String entryPath = clazz.getName().replace('.', '/') + ".class";
-    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
-      jos.putNextEntry(new JarEntry(entryPath));
-      ByteStreams.copy(is, jos);
-    }
   }
 }

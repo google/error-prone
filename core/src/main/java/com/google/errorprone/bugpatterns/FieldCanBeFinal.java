@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -57,7 +56,6 @@ import javax.lang.model.element.Modifier;
 /** @author Liam Miller-Cushon (cushon@google.com) */
 @BugPattern(
     name = "FieldCanBeFinal",
-    category = JDK,
     summary = "This field is only assigned during initialization; consider making it final",
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -143,11 +141,8 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     }
 
     private VariableAssignments getDeclaration(VarSymbol sym) {
-      VariableAssignments info = assignments.get(sym);
-      if (info == null) {
-        info = new VariableAssignments(sym);
-        assignments.put(sym, info);
-      }
+      VariableAssignments info =
+          assignments.computeIfAbsent(sym, (VarSymbol k) -> new VariableAssignments(k));
       return info;
     }
 
@@ -337,7 +332,6 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       writes.recordAssignment(node.getVariable(), init);
       return super.visitCompoundAssignment(node, init);
     }
-
 
     @Override
     public Void visitUnary(UnaryTree node, InitializationContext init) {

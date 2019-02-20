@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
@@ -29,9 +30,9 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
+import com.google.common.base.Ascii;
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
@@ -107,9 +108,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[BadShiftAmount]")));
-    assertTrue(
-        "Error should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
   }
 
   @Test
@@ -127,9 +128,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[NonAtomicVolatileUpdate]")));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
   }
 
   @Test
@@ -172,9 +173,9 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(4);
   }
 
@@ -205,9 +206,9 @@ public class ErrorProneCompilerIntegrationTest {
                 CoreMatchers.<String>allOf(
                     containsString("IllegalStateException: test123"),
                     containsString("unhandled exception was thrown by the Error Prone"))));
-    assertTrue(
-        "Error should be reported. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Error should be reported. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
   }
 
   /** Regression test for Issue 188, error-prone doesn't work with annotation processors. */
@@ -240,12 +241,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @BugPattern(
-      name = "ConstructorMatcher",
-      explanation = "",
-      category = ONE_OFF,
-      severity = ERROR,
-      summary = "")
+  @BugPattern(name = "ConstructorMatcher", explanation = "", severity = ERROR, summary = "")
   public static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -264,19 +260,14 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         not(hasItem(diagnosticMessage(containsString("[ConstructorMatcher]"))));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @BugPattern(
-      name = "SuperCallMatcher",
-      explanation = "",
-      category = ONE_OFF,
-      severity = ERROR,
-      summary = "")
+  @BugPattern(name = "SuperCallMatcher", explanation = "", severity = ERROR, summary = "")
   static class SuperCallMatcher extends BugChecker implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -309,9 +300,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         not(hasItem(diagnosticMessage(containsString("[SuperCallMatcher]"))));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
@@ -353,9 +344,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[EmptyIf]")));
-    assertTrue(
-        "Error should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
   }
@@ -372,9 +363,9 @@ public class ErrorProneCompilerIntegrationTest {
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
-    assertTrue(
-        "Warning should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     // Should reset to default severity (ERROR)
     exitCode =
@@ -396,9 +387,9 @@ public class ErrorProneCompilerIntegrationTest {
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[EmptyIf]")));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
-    assertTrue(
-        "Error should be found. " + diagnosticHelper.describe(),
-        matcher.matches(diagnosticHelper.getDiagnostics()));
+    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
+        .isTrue();
 
     diagnosticHelper.clearDiagnostics();
     exitCode =
@@ -412,16 +403,15 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void suppressGeneratedWarning() {
     String[] generatedFile = {
+      "import java.util.List;",
       "@javax.annotation.Generated(\"Foo\")",
       "class Generated {",
-      "  public Generated() {",
-      "    if (true);",
-      "  }",
+      "  public Generated() {}",
       "}"
     };
 
     {
-      String[] args = {"-Xep:EmptyIf:WARN"};
+      String[] args = {"-Xep:RemoveUnusedImports:WARN"};
       Result exitCode =
           compiler.compile(
               args,
@@ -430,21 +420,21 @@ public class ErrorProneCompilerIntegrationTest {
       outputStream.flush();
       assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
       assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(ENGLISH))
-          .contains("[EmptyIf]");
+          .contains("[RemoveUnusedImports]");
       assertThat(outputStream.toString(), exitCode, is(Result.OK));
     }
 
     diagnosticHelper.clearDiagnostics();
 
     {
-      String[] args = {"-Xep:EmptyIf:WARN", "-XepDisableWarningsInGeneratedCode"};
+      String[] args = {"-Xep:RemoveUnusedImports:WARN", "-XepDisableWarningsInGeneratedCode"};
       Result exitCode =
           compiler.compile(
               args,
               Arrays.asList(
                   compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
       outputStream.flush();
-      assertThat(diagnosticHelper.getDiagnostics()).hasSize(0);
+      assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
       assertThat(outputStream.toString(), exitCode, is(Result.OK));
     }
   }
@@ -485,7 +475,7 @@ public class ErrorProneCompilerIntegrationTest {
               Arrays.asList(
                   compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
       outputStream.flush();
-      assertThat(diagnosticHelper.getDiagnostics()).hasSize(0);
+      assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
       assertThat(outputStream.toString(), exitCode, is(Result.OK));
     }
   }
@@ -589,7 +579,6 @@ public class ErrorProneCompilerIntegrationTest {
       name = "CPSChecker",
       summary = "Using 'return' is considered harmful",
       explanation = "Please refactor your code into continuation passing style.",
-      category = ONE_OFF,
       severity = ERROR)
   public static class CPSChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
@@ -621,7 +610,6 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(output).doesNotContain("Using 'return' is considered harmful");
   }
 
-
   /**
    * Trivial bug checker for testing command line flags. Forbids methods from returning the string
    * provided by "-XepOpt:Forbidden=<VALUE>" flag.
@@ -629,7 +617,6 @@ public class ErrorProneCompilerIntegrationTest {
   @BugPattern(
       name = "ForbiddenString",
       summary = "Please don't return this const value",
-      category = ONE_OFF,
       severity = ERROR)
   public static class ForbiddenString extends BugChecker implements ReturnTreeMatcher {
     private final String forbiddenString;
@@ -640,7 +627,8 @@ public class ErrorProneCompilerIntegrationTest {
 
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
-      if (this.forbiddenString.equalsIgnoreCase(constValue(tree.getExpression()).toString())) {
+      if (Ascii.equalsIgnoreCase(
+          this.forbiddenString, constValue(tree.getExpression()).toString())) {
         return describeMatch(tree);
       } else {
         return NO_MATCH;

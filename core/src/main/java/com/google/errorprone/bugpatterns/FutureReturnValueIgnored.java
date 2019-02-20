@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Multimaps.toMultimap;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -72,7 +71,6 @@ import javax.lang.model.type.TypeKind;
     summary =
         "Return value of methods returning Future must be checked. Ignoring returned Futures "
             + "suppresses exceptions thrown from the code that completes the Future.",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
@@ -102,7 +100,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
               .namedAnyOf("addListener", "addListeners"),
           instanceMethod()
               .onExactClass("java.util.concurrent.CompletableFuture")
-              .namedAnyOf("completeAsync", "orTimeout", "completeOnTimeout"));
+              .namedAnyOf("exceptionally", "completeAsync", "orTimeout", "completeOnTimeout"));
 
   private static final Matcher<ExpressionTree> MATCHER =
       new Matcher<ExpressionTree>() {

@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -62,7 +61,6 @@ public class DiagnosticKindTest {
       name = "ErrorChecker",
       summary = "This is an error!",
       explanation = "Don't do this!",
-      category = JDK,
       severity = SeverityLevel.ERROR)
   public static class ErrorChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
@@ -89,7 +87,6 @@ public class DiagnosticKindTest {
       name = "WarningChecker",
       summary = "This is a warning!",
       explanation = "Please don't do this!",
-      category = JDK,
       severity = SeverityLevel.WARNING)
   public static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
@@ -117,7 +114,6 @@ public class DiagnosticKindTest {
       name = "SuggestionChecker",
       summary = "This is a suggestion!",
       explanation = "Don't do this. Or do it. I'm a suggestion, not a cop.",
-      category = JDK,
       severity = SeverityLevel.SUGGESTION)
   public static class SuggestionChecker extends BugChecker implements ReturnTreeMatcher {
     @Override

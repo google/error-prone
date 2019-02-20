@@ -1635,4 +1635,29 @@ public class GuardedByCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void newClassBase() {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Foo {",
+            "  private final Object mu = new Object();",
+            "  @GuardedBy(\"mu\") int x;",
+            "}")
+        .addSourceLines(
+            "Bar.java",
+            "public class Bar {",
+            "  void bar (Foo f) {",
+            "    // BUG: Diagnostic contains: should be guarded by 'f.mu'",
+            "    f.x = 10;",
+            "  }",
+            "  void bar () {",
+            "    // TODO(b/112275411): handle new class expressions",
+            "    new Foo().x = 11;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

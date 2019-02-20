@@ -16,11 +16,11 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.BOTTOM;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
-import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,55 +35,55 @@ import org.junit.runners.JUnit4;
 public class NullnessTest {
   @Test
   public void testLeastUpperBound() {
-    assertEquals(NULLABLE, NULLABLE.leastUpperBound(NULLABLE));
-    assertEquals(NULLABLE, NULLABLE.leastUpperBound(NULL));
-    assertEquals(NULLABLE, NULLABLE.leastUpperBound(NONNULL));
-    assertEquals(NULLABLE, NULLABLE.leastUpperBound(BOTTOM));
+    assertThat(NULLABLE.leastUpperBound(NULLABLE)).isEqualTo(NULLABLE);
+    assertThat(NULLABLE.leastUpperBound(NULL)).isEqualTo(NULLABLE);
+    assertThat(NULLABLE.leastUpperBound(NONNULL)).isEqualTo(NULLABLE);
+    assertThat(NULLABLE.leastUpperBound(BOTTOM)).isEqualTo(NULLABLE);
 
-    assertEquals(NULLABLE, NULL.leastUpperBound(NULLABLE));
-    assertEquals(NULL, NULL.leastUpperBound(NULL));
-    assertEquals(NULLABLE, NULL.leastUpperBound(NONNULL));
-    assertEquals(NULL, NULL.leastUpperBound(BOTTOM));
+    assertThat(NULL.leastUpperBound(NULLABLE)).isEqualTo(NULLABLE);
+    assertThat(NULL.leastUpperBound(NULL)).isEqualTo(NULL);
+    assertThat(NULL.leastUpperBound(NONNULL)).isEqualTo(NULLABLE);
+    assertThat(NULL.leastUpperBound(BOTTOM)).isEqualTo(NULL);
 
-    assertEquals(NULLABLE, NONNULL.leastUpperBound(NULLABLE));
-    assertEquals(NULLABLE, NONNULL.leastUpperBound(NULL));
-    assertEquals(NONNULL, NONNULL.leastUpperBound(NONNULL));
-    assertEquals(NONNULL, NONNULL.leastUpperBound(BOTTOM));
+    assertThat(NONNULL.leastUpperBound(NULLABLE)).isEqualTo(NULLABLE);
+    assertThat(NONNULL.leastUpperBound(NULL)).isEqualTo(NULLABLE);
+    assertThat(NONNULL.leastUpperBound(NONNULL)).isEqualTo(NONNULL);
+    assertThat(NONNULL.leastUpperBound(BOTTOM)).isEqualTo(NONNULL);
 
-    assertEquals(NULLABLE, BOTTOM.leastUpperBound(NULLABLE));
-    assertEquals(NULL, BOTTOM.leastUpperBound(NULL));
-    assertEquals(NONNULL, BOTTOM.leastUpperBound(NONNULL));
-    assertEquals(BOTTOM, BOTTOM.leastUpperBound(BOTTOM));
+    assertThat(BOTTOM.leastUpperBound(NULLABLE)).isEqualTo(NULLABLE);
+    assertThat(BOTTOM.leastUpperBound(NULL)).isEqualTo(NULL);
+    assertThat(BOTTOM.leastUpperBound(NONNULL)).isEqualTo(NONNULL);
+    assertThat(BOTTOM.leastUpperBound(BOTTOM)).isEqualTo(BOTTOM);
   }
 
   @Test
   public void testGreatestLowerBound() {
-    assertEquals(NULLABLE, NULLABLE.greatestLowerBound(NULLABLE));
-    assertEquals(NULL, NULLABLE.greatestLowerBound(NULL));
-    assertEquals(NONNULL, NULLABLE.greatestLowerBound(NONNULL));
-    assertEquals(BOTTOM, NULLABLE.greatestLowerBound(BOTTOM));
+    assertThat(NULLABLE.greatestLowerBound(NULLABLE)).isEqualTo(NULLABLE);
+    assertThat(NULLABLE.greatestLowerBound(NULL)).isEqualTo(NULL);
+    assertThat(NULLABLE.greatestLowerBound(NONNULL)).isEqualTo(NONNULL);
+    assertThat(NULLABLE.greatestLowerBound(BOTTOM)).isEqualTo(BOTTOM);
 
-    assertEquals(NULL, NULL.greatestLowerBound(NULLABLE));
-    assertEquals(NULL, NULL.greatestLowerBound(NULL));
-    assertEquals(BOTTOM, NULL.greatestLowerBound(NONNULL));
-    assertEquals(BOTTOM, NULL.greatestLowerBound(BOTTOM));
+    assertThat(NULL.greatestLowerBound(NULLABLE)).isEqualTo(NULL);
+    assertThat(NULL.greatestLowerBound(NULL)).isEqualTo(NULL);
+    assertThat(NULL.greatestLowerBound(NONNULL)).isEqualTo(BOTTOM);
+    assertThat(NULL.greatestLowerBound(BOTTOM)).isEqualTo(BOTTOM);
 
-    assertEquals(NONNULL, NONNULL.greatestLowerBound(NULLABLE));
-    assertEquals(BOTTOM, NONNULL.greatestLowerBound(NULL));
-    assertEquals(NONNULL, NONNULL.greatestLowerBound(NONNULL));
-    assertEquals(BOTTOM, NONNULL.greatestLowerBound(BOTTOM));
+    assertThat(NONNULL.greatestLowerBound(NULLABLE)).isEqualTo(NONNULL);
+    assertThat(NONNULL.greatestLowerBound(NULL)).isEqualTo(BOTTOM);
+    assertThat(NONNULL.greatestLowerBound(NONNULL)).isEqualTo(NONNULL);
+    assertThat(NONNULL.greatestLowerBound(BOTTOM)).isEqualTo(BOTTOM);
 
-    assertEquals(BOTTOM, BOTTOM.greatestLowerBound(NULLABLE));
-    assertEquals(BOTTOM, BOTTOM.greatestLowerBound(NULL));
-    assertEquals(BOTTOM, BOTTOM.greatestLowerBound(NONNULL));
-    assertEquals(BOTTOM, BOTTOM.greatestLowerBound(BOTTOM));
+    assertThat(BOTTOM.greatestLowerBound(NULLABLE)).isEqualTo(BOTTOM);
+    assertThat(BOTTOM.greatestLowerBound(NULL)).isEqualTo(BOTTOM);
+    assertThat(BOTTOM.greatestLowerBound(NONNULL)).isEqualTo(BOTTOM);
+    assertThat(BOTTOM.greatestLowerBound(BOTTOM)).isEqualTo(BOTTOM);
   }
 
   @Test
   public void testDeducedValueWhenNotEqual() {
-    assertEquals(NULLABLE, NULLABLE.deducedValueWhenNotEqual());
-    assertEquals(NONNULL, NULL.deducedValueWhenNotEqual());
-    assertEquals(NULLABLE, NONNULL.deducedValueWhenNotEqual());
-    assertEquals(BOTTOM, BOTTOM.deducedValueWhenNotEqual());
+    assertThat(NULLABLE.deducedValueWhenNotEqual()).isEqualTo(NULLABLE);
+    assertThat(NULL.deducedValueWhenNotEqual()).isEqualTo(NONNULL);
+    assertThat(NONNULL.deducedValueWhenNotEqual()).isEqualTo(NULLABLE);
+    assertThat(BOTTOM.deducedValueWhenNotEqual()).isEqualTo(BOTTOM);
   }
 }

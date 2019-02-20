@@ -18,8 +18,7 @@ package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -60,8 +59,7 @@ import javax.lang.model.element.ElementKind;
     name = "InjectOnMemberAndConstructor",
     summary =
         "Members shouldn't be annotated with @Inject if constructor is already annotated @Inject",
-    category = INJECT,
-    severity = WARNING,
+    severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InjectOnMemberAndConstructor extends BugChecker implements ClassTreeMatcher {
 

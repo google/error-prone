@@ -21,7 +21,11 @@ import com.google.common.base.Splitter;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultiset;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.SuppressionInfo.SuppressedState;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
@@ -48,80 +52,191 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import javax.annotation.Nullable;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 public class VisitorState {
 
   private final DescriptionListener descriptionListener;
-  public final Context context;
-  private final TreePath path;
+  private final StatisticsCollector statisticsCollector;
   private final Map<String, SeverityLevel> severityMap;
   private final ErrorProneOptions errorProneOptions;
   private final LoadingCache<String, Optional<Type>> typeCache;
+  public final Context context;
+
+  private final TreePath path;
+  private final SuppressionInfo.SuppressedState suppressedState;
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
-  private static final DescriptionListener NULL_LISTENER =
-      new DescriptionListener() {
-        @Override
-        public void onDescribed(Description description) {}
-      };
+  private static final DescriptionListener NULL_LISTENER = description -> {};
 
-  public VisitorState(Context context) {
-    this(context, NULL_LISTENER);
+  /**
+   * Return a VisitorState that has no Error Prone configuration, and can't report results.
+   *
+   * <p>If using this method, consider moving to using utility methods not needing VisitorSate
+   */
+  public static VisitorState createForUtilityPurposes(Context context) {
+    return new VisitorState(
+        context,
+        NULL_LISTENER,
+        ImmutableMap.of(),
+        ErrorProneOptions.empty(),
+        // Can't use this VisitorState to report results, so no-op collector.
+        StatisticsCollector.createNoOpCollector(),
+        null,
+        null,
+        SuppressedState.UNSUPPRESSED);
   }
 
+  /**
+   * Return a VisitorState that has no Error Prone configuration, but can report findings to {@code
+   * listener}.
+   */
+  public static VisitorState createForCustomFindingCollection(
+      Context context, DescriptionListener listener) {
+    return new VisitorState(
+        context,
+        listener,
+        ImmutableMap.of(),
+        ErrorProneOptions.empty(),
+        StatisticsCollector.createCollector(),
+        null,
+        null,
+        SuppressedState.UNSUPPRESSED);
+  }
+
+  /**
+   * Return a VisitorState configured for a new compilation, including Error Prone configuration.
+   */
+  public static VisitorState createConfiguredForCompilation(
+      Context context,
+      DescriptionListener listener,
+      Map<String, SeverityLevel> severityMap,
+      ErrorProneOptions errorProneOptions) {
+    return new VisitorState(
+        context,
+        listener,
+        severityMap,
+        errorProneOptions,
+        StatisticsCollector.createCollector(),
+        null,
+        null,
+        SuppressedState.UNSUPPRESSED);
+  }
+
+  /**
+   * Return a VisitorState that has no Error Prone configuration, and can't report results.
+   *
+   * @deprecated If VisitorState is needed, use {@link #createForUtilityPurposes}, otherwise just
+   *     use utility methods in ASTHelpers that don't need VisitorSate.
+   */
+  @Deprecated
+  public VisitorState(Context context) {
+    this(
+        context,
+        NULL_LISTENER,
+        ImmutableMap.of(),
+        ErrorProneOptions.empty(),
+        // Can't use this VisitorState to report results, so no-op collector.
+        StatisticsCollector.createNoOpCollector(),
+        null,
+        null,
+        SuppressedState.UNSUPPRESSED);
+  }
+
+  /**
+   * Return a VisitorState that has no Error Prone configuration, but can report findings to {@code
+   * listener}.
+   *
+   * @deprecated Use the equivalent factory method {@link #createForCustomFindingCollection}.
+   */
+  @Deprecated
   public VisitorState(Context context, DescriptionListener listener) {
     this(
         context,
         listener,
-        Collections.<String, SeverityLevel>emptyMap(),
-        ErrorProneOptions.empty());
+        ImmutableMap.of(),
+        ErrorProneOptions.empty(),
+        StatisticsCollector.createCollector(),
+        null,
+        null,
+        SuppressedState.UNSUPPRESSED);
   }
 
+  /**
+   * Return a VisitorState configured for a new compilation, including Error Prone configuration.
+   *
+   * @deprecated Use the equivalent factory method {@link #createConfiguredForCompilation}.
+   */
+  @Deprecated
   public VisitorState(
       Context context,
       DescriptionListener listener,
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions) {
-    this(context, null, listener, severityMap, errorProneOptions, null);
+    this(
+        context,
+        listener,
+        severityMap,
+        errorProneOptions,
+        StatisticsCollector.createCollector(),
+        null,
+        null,
+        SuppressedState.UNSUPPRESSED);
   }
 
   private VisitorState(
       Context context,
-      TreePath path,
       DescriptionListener descriptionListener,
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions,
-      LoadingCache<String, Optional<Type>> typeCache) {
+      StatisticsCollector statisticsCollector,
+      LoadingCache<String, Optional<Type>> typeCache,
+      TreePath path,
+      SuppressedState suppressedState) {
     this.context = context;
-    this.path = path;
     this.descriptionListener = descriptionListener;
     this.severityMap = severityMap;
     this.errorProneOptions = errorProneOptions;
-    if (typeCache != null) {
-      this.typeCache = typeCache;
-    } else {
-      this.typeCache =
-          CacheBuilder.newBuilder()
-              .concurrencyLevel(1) // resolving symbols in javac is not is not thread-safe
-              .build(
-                  new CacheLoader<String, Optional<Type>>() {
-                    @Override
-                    public Optional<Type> load(String key) throws Exception {
-                      return Optional.fromNullable(getTypeFromStringInternal(key));
-                    }
-                  });
-    }
+    this.statisticsCollector = statisticsCollector;
+
+    this.suppressedState = suppressedState;
+    this.path = path;
+    this.typeCache =
+        typeCache != null
+            ? typeCache
+            : CacheBuilder.newBuilder()
+                .concurrencyLevel(1) // resolving symbols in javac is not thread-safe
+                .build(
+                    CacheLoader.from(key -> Optional.fromNullable(getTypeFromStringInternal(key))));
   }
 
   public VisitorState withPath(TreePath path) {
     return new VisitorState(
-        context, path, descriptionListener, severityMap, errorProneOptions, typeCache);
+        context,
+        descriptionListener,
+        severityMap,
+        errorProneOptions,
+        statisticsCollector,
+        typeCache,
+        path,
+        suppressedState);
+  }
+
+  public VisitorState withPathAndSuppression(TreePath path, SuppressedState suppressedState) {
+    return new VisitorState(
+        context,
+        descriptionListener,
+        severityMap,
+        errorProneOptions,
+        statisticsCollector,
+        typeCache,
+        path,
+        suppressedState);
   }
 
   public TreePath getPath() {
@@ -158,7 +273,45 @@ public class VisitorState {
     if (override != null) {
       description = description.applySeverityOverride(override);
     }
+    statisticsCollector.incrementCounter(statsKey(description.checkName + "-findings"));
+
+    // TODO(glorioso): I believe it is correct to still emit regular findings since the
+    // Scanner configured the visitor state to explicitly scan suppressed nodes, but perhaps
+    // we can add a 'suppressed' field to Description to allow the description listener to bucket
+    // them out.
     descriptionListener.onDescribed(description);
+  }
+
+  private String statsKey(String key) {
+    return suppressedState == SuppressedState.SUPPRESSED ? key + "-suppressed" : key;
+  }
+
+  /**
+   * Increment the counter for a combination of {@code bugChecker}'s canonical name and {@code key}
+   * by 1.
+   *
+   * <p>e.g.: a key of {@code foo} becomes {@code FooChecker-foo}.
+   */
+  public void incrementCounter(BugChecker bugChecker, String key) {
+    incrementCounter(bugChecker, key, 1);
+  }
+
+  /**
+   * Increment the counter for a combination of {@code bugChecker}'s canonical name and {@code key}
+   * by {@code count}.
+   *
+   * <p>e.g.: a key of {@code foo} becomes {@code FooChecker-foo}.
+   */
+  public void incrementCounter(BugChecker bugChecker, String key, int count) {
+    statisticsCollector.incrementCounter(statsKey(bugChecker.canonicalName() + "-" + key), count);
+  }
+
+  /**
+   * Returns a copy of all of the counters previously added to this VisitorState with {@link
+   * #incrementCounter}.
+   */
+  public ImmutableMultiset<String> counters() {
+    return statisticsCollector.counters();
   }
 
   public Name getName(String nameStr) {
@@ -176,6 +329,7 @@ public class VisitorState {
    * @param typeStr the JLS 13.1 binary name of the class, e.g. {@code "java.util.Map$Entry"}
    * @return the {@link Type}, or null if it cannot be found
    */
+  @Nullable
   public Type getTypeFromString(String typeStr) {
     try {
       return typeCache.get(typeStr).orNull();
@@ -184,13 +338,12 @@ public class VisitorState {
     }
   }
 
+  @Nullable
   private Type getTypeFromStringInternal(String typeStr) {
     validateTypeStr(typeStr);
-    if (isPrimitiveType(typeStr)) {
-      return getPrimitiveType(typeStr);
-    }
-    if (isVoidType(typeStr)) {
-      return getVoidType();
+    Type primitiveOrVoidType = getPrimitiveOrVoidType(typeStr);
+    if (primitiveOrVoidType != null) {
+      return primitiveOrVoidType;
     }
     // Fast path if the type's symbol is available.
     ClassSymbol classSymbol = (ClassSymbol) getSymbolFromString(typeStr);
@@ -205,6 +358,7 @@ public class VisitorState {
    * @return the Symbol object, or null if it cannot be found
    */
   // TODO(cushon): deal with binary compat issues and return ClassSymbol
+  @Nullable
   public Symbol getSymbolFromString(String symStr) {
     symStr = inferBinaryName(symStr);
     Name name = getName(symStr);
@@ -225,6 +379,7 @@ public class VisitorState {
     return null;
   }
 
+  @Nullable
   public ClassSymbol getSymbolFromString(ModuleSymbol msym, Name name) {
     ClassSymbol result = getSymtab().getClass(msym, name);
     if (result == null || result.kind == Kind.ERR || !result.exists()) {
@@ -296,6 +451,7 @@ public class VisitorState {
    *
    * @return the path, or {@code null} if there is no match
    */
+  @Nullable
   @SafeVarargs
   public final TreePath findPathToEnclosing(Class<? extends Tree>... classes) {
     TreePath enclosingPath = getPath();
@@ -315,6 +471,7 @@ public class VisitorState {
    *
    * @return the node, or {@code null} if there is no match
    */
+  @Nullable
   @SuppressWarnings("unchecked") // findPathToEnclosing guarantees that the type is from |classes|
   @SafeVarargs
   public final <T extends Tree> T findEnclosing(Class<? extends T>... classes) {
@@ -327,6 +484,7 @@ public class VisitorState {
    *
    * @return the source file as a sequence of characters, or null if it is not available
    */
+  @Nullable
   public CharSequence getSourceCode() {
     try {
       return getPath().getCompilationUnit().getSourceFile().getCharContent(false);
@@ -344,6 +502,7 @@ public class VisitorState {
    *
    * @return the source code that represents the node.
    */
+  @Nullable
   public String getSourceForNode(Tree tree) {
     JCTree node = (JCTree) tree;
     int start = node.getStartPosition();
@@ -360,7 +519,7 @@ public class VisitorState {
    * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
    * be used if a fix is already going to be emitted.
    */
-  public java.util.List<ErrorProneToken> getTokensForNode(Tree tree) {
+  public List<ErrorProneToken> getTokensForNode(Tree tree) {
     return ErrorProneTokens.getTokens(getSourceForNode(tree), context);
   }
 
@@ -377,56 +536,44 @@ public class VisitorState {
   private static void validateTypeStr(String typeStr) {
     if (typeStr.contains("[") || typeStr.contains("]")) {
       throw new IllegalArgumentException(
-          "Cannot convert array types, please build them using " + "getType()");
+          String.format(
+              "Cannot convert array types (%s), please build them using getType()", typeStr));
     }
     if (typeStr.contains("<") || typeStr.contains(">")) {
       throw new IllegalArgumentException(
-          "Cannot convert generic types, please build them using getType()");
+          String.format(
+              "Cannot convert generic types (%s), please build them using getType()", typeStr));
     }
   }
 
   /**
-   * Given a string that represents a primitive type (e.g., "int"), return the corresponding Type.
+   * Given a string that represents a type, if it's a primitive type (e.g., "int") or "void", return
+   * the corresponding Type, or null otherwise.
    */
-  private Type getPrimitiveType(String typeStr) {
-    if (typeStr.equals("byte")) {
-      return getSymtab().byteType;
-    } else if (typeStr.equals("short")) {
-      return getSymtab().shortType;
-    } else if (typeStr.equals("int")) {
-      return getSymtab().intType;
-    } else if (typeStr.equals("long")) {
-      return getSymtab().longType;
-    } else if (typeStr.equals("float")) {
-      return getSymtab().floatType;
-    } else if (typeStr.equals("double")) {
-      return getSymtab().doubleType;
-    } else if (typeStr.equals("boolean")) {
-      return getSymtab().booleanType;
-    } else if (typeStr.equals("char")) {
-      return getSymtab().charType;
-    } else {
-      throw new IllegalStateException("Type string " + typeStr + " expected to be primitive");
+  @Nullable
+  private Type getPrimitiveOrVoidType(String typeStr) {
+    switch (typeStr) {
+      case "byte":
+        return getSymtab().byteType;
+      case "short":
+        return getSymtab().shortType;
+      case "int":
+        return getSymtab().intType;
+      case "long":
+        return getSymtab().longType;
+      case "float":
+        return getSymtab().floatType;
+      case "double":
+        return getSymtab().doubleType;
+      case "boolean":
+        return getSymtab().booleanType;
+      case "char":
+        return getSymtab().charType;
+      case "void":
+        return getSymtab().voidType;
+      default:
+        return null;
     }
-  }
-
-  private Type getVoidType() {
-    return getSymtab().voidType;
-  }
-
-  private static boolean isPrimitiveType(String typeStr) {
-    return typeStr.equals("byte")
-        || typeStr.equals("short")
-        || typeStr.equals("int")
-        || typeStr.equals("long")
-        || typeStr.equals("float")
-        || typeStr.equals("double")
-        || typeStr.equals("boolean")
-        || typeStr.equals("char");
-  }
-
-  private static boolean isVoidType(String typeStr) {
-    return typeStr.equals("void");
   }
 
   /** Returns true if the compilation is targeting Android. */

@@ -88,7 +88,7 @@ abstract class UMatches extends UExpression {
   static <T> T makeMatcher(Class<T> klass) {
     try {
       return klass.newInstance();
-    } catch (IllegalAccessException | InstantiationException e) {
+    } catch (ReflectiveOperationException e) {
       throw new RuntimeException(e);
     }
   }

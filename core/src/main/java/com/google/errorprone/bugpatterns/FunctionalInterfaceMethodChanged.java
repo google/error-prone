@@ -20,7 +20,6 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -48,7 +47,6 @@ import javax.lang.model.element.Modifier;
 
 /** @author Louis Wasserman */
 @BugPattern(
-    category = Category.JDK,
     name = "FunctionalInterfaceMethodChanged",
     summary =
         "Casting a lambda to this @FunctionalInterface can cause a behavior change from casting to"

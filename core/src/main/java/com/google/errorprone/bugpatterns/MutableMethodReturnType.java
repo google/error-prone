@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.common.base.Verify.verify;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
@@ -32,12 +32,11 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -48,7 +47,6 @@ import java.util.function.Predicate;
 /** @author dorir@google.com (Dori Reuveni) */
 @BugPattern(
     name = "MutableMethodReturnType",
-    category = JDK,
     summary =
         "Method return type should use the immutable type (such as ImmutableList) instead of"
             + " the general collection interface type (such as List)",
@@ -102,9 +100,10 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
 
     Type newReturnType = state.getTypeFromString(immutableReturnType.get());
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+    Tree typeTree = ASTHelpers.getErasedTypeTree(methodTree.getReturnType());
+    verify(typeTree != null, "Could not find return type of %s", methodTree);
     fixBuilder.replace(
-        getTypeTree(methodTree.getReturnType()),
-        SuggestedFixes.qualifyType(state, fixBuilder, newReturnType.asElement()));
+        typeTree, SuggestedFixes.qualifyType(state, fixBuilder, newReturnType.asElement()));
     SuggestedFix fix = fixBuilder.build();
 
     return describeMatch(methodTree.getReturnType(), fix);
@@ -161,25 +160,20 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
 
             return null;
           }
+
+          @Override
+          public Void visitClass(ClassTree tree, Void unused) {
+            // Don't continue into nested classes.
+            return null;
+          }
+
+          @Override
+          public Void visitLambdaExpression(LambdaExpressionTree tree, Void unused) {
+            // Don't continue into nested lambdas.
+            return null;
+          }
         },
         null /* unused */);
     return returnTypes.build();
   }
-
-  private static Tree getTypeTree(Tree tree) {
-    return tree.accept(GET_TYPE_TREE_VISITOR, null /* unused */);
-  }
-
-  private static final SimpleTreeVisitor<Tree, Void> GET_TYPE_TREE_VISITOR =
-      new SimpleTreeVisitor<Tree, Void>() {
-        @Override
-        public Tree visitIdentifier(IdentifierTree tree, Void unused) {
-          return tree;
-        }
-
-        @Override
-        public Tree visitParameterizedType(ParameterizedTypeTree tree, Void unused) {
-          return tree.getType();
-        }
-      };
 }

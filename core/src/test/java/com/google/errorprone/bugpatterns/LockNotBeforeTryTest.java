@@ -187,4 +187,123 @@ public final class LockNotBeforeTryTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void twoRegions() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "class Test {",
+            "  private void test(ReentrantLock lock) {",
+            "    lock.lock();",
+            "    System.out.println(\"hi\");",
+            "    lock.unlock();",
+            "    lock.lock();",
+            "    try {",
+            "      System.out.println(\"hi\");",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "class Test {",
+            "  private void test(ReentrantLock lock) {",
+            "    lock.lock();",
+            "    try {",
+            "      System.out.println(\"hi\");",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "    lock.lock();",
+            "    try {",
+            "      System.out.println(\"hi\");",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unclosed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "class Test {",
+            "  private void test(ReentrantLock lock) {",
+            "    // BUG: Diagnostic contains:",
+            "    lock.lock();",
+            "    System.out.println(\"hi\");",
+            "    lock.lock();",
+            "    try {",
+            "      System.out.println(\"hi\");",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void receiverless() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test implements java.util.concurrent.locks.Lock {",
+            "  private void test() {",
+            "    lock();",
+            "    try {",
+            "    } finally {",
+            "      unlock();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void receiverless2() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.locks.Lock;",
+            "abstract class Test implements Lock {",
+            "  private void test(Lock l) {",
+            "    lock();",
+            "    l.lock();",
+            "    try {",
+            "    } finally {",
+            "      unlock();",
+            "      l.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonInvocationExpression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "abstract class Test {",
+            "  private void test(ReentrantLock lock) {",
+            "    String s;",
+            "    // BUG: Diagnostic contains:",
+            "    lock.lock();",
+            "    s = lock.toString();",
+            "    lock.unlock();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

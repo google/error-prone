@@ -44,7 +44,7 @@ public class AdjustedPosition implements DiagnosticPosition {
 
   @Override
   public int getPreferredPosition() {
-    throw new UnsupportedOperationException();
+    return position.getPreferredPosition();
   }
 
   @Override

@@ -16,7 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.BugPattern.Category.ONE_OFF;
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.inLoop;
 import static com.google.errorprone.matchers.Matchers.isPrimitiveOrVoidType;
@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.isVoidType;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.BugPattern;
@@ -380,6 +381,28 @@ public class MatchersTest {
   }
 
   @Test
+  public void sameArgumentGoesOutOfBounds() {
+    AssertionError thrown =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                CompilationTestHelper.newInstance(SameArgumentChecker.class, getClass())
+                    .addSourceLines(
+                        "test/SameArgumentCheckerTest.java",
+                        "package test;",
+                        "public class SameArgumentCheckerTest {",
+                        "  public void matches(Object... args) {",
+                        "  }",
+                        "  public void callsMatch() {",
+                        "    Object obj = new Object();",
+                        "    matches(obj, \"some arg\");",
+                        "  }",
+                        "}")
+                    .doTest());
+    assertThat(thrown).hasMessageThat().contains("IndexOutOfBoundsException");
+  }
+
+  @Test
   public void packageNameChecker() {
     CompilationTestHelper.newInstance(PackageNameChecker.class, getClass())
         .addSourceLines(
@@ -424,7 +447,6 @@ public class MatchersTest {
   @BugPattern(
       name = "InLoopChecker",
       summary = "Checker that flags the given expression statement if the given matcher matches",
-      category = ONE_OFF,
       severity = ERROR)
   public static class InLoopChecker extends MatcherChecker {
     public InLoopChecker() {
@@ -439,7 +461,6 @@ public class MatchersTest {
   @BugPattern(
       name = "MethodTreeChecker",
       summary = "Checker that flags the given method declaration if the given matcher matches",
-      category = ONE_OFF,
       severity = ERROR)
   static class MethodTreeChecker extends BugChecker implements MethodTreeMatcher {
     private final Matcher<MethodTree> matcher;
@@ -458,7 +479,6 @@ public class MatchersTest {
   @BugPattern(
       name = "MethodInvocationTreeChecker",
       summary = "Checker that flags the given method invocation if the given matcher matches",
-      category = ONE_OFF,
       severity = ERROR)
   public static class NoAnnotatedCallsChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -471,11 +491,29 @@ public class MatchersTest {
     }
   }
 
+  /** Simple checker to make sure sameArgument doesn't throw IndexOutOfBoundsException. */
+  @BugPattern(
+      name = "SameArgumentChecker",
+      summary = "Checker that matches invocation if the first argument is repeated",
+      severity = ERROR)
+  public static class SameArgumentChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      // intentionally go above arg size.
+      for (int i = 1; i <= tree.getArguments().size(); i++) {
+        if (Matchers.sameArgument(0, i).matches(tree, state)) {
+          return describeMatch(tree);
+        }
+      }
+      return Description.NO_MATCH;
+    }
+  }
+
   /** Checker that makes sure symbolHasAnnotation matches on MethodInvocationTree. */
   @BugPattern(
       name = "NoAnnotatedDeclarationCallsChecker",
       summary = "Checker that flags the given method invocation if the given matcher matches",
-      category = ONE_OFF,
       severity = ERROR)
   public static class NoAnnotatedDeclarationCallsChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -492,7 +530,6 @@ public class MatchersTest {
   @BugPattern(
       name = "PackageNameChecker",
       summary = "Checks the name of the package",
-      category = ONE_OFF,
       severity = ERROR)
   public static class PackageNameChecker extends BugChecker implements ClassTreeMatcher {
     private static final Matcher<Tree> MATCHER = Matchers.packageStartsWith("test.foo");

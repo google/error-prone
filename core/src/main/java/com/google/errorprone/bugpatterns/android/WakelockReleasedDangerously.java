@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -66,7 +65,6 @@ import com.sun.tools.javac.code.Types;
             + " `release`, even after checking `isHeld()`. If so, it will throw a RuntimeException."
             + " Please wrap in a try/catch block.",
     severity = SeverityLevel.WARNING,
-    category = Category.ANDROID,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class WakelockReleasedDangerously extends BugChecker implements MethodInvocationTreeMatcher {
 

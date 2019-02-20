@@ -25,7 +25,6 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
-import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
 import static org.checkerframework.javacutil.TreeUtils.enclosingOfClass;
 
@@ -88,14 +87,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
 import org.checkerframework.dataflow.analysis.Analysis;
 import org.checkerframework.dataflow.cfg.CFGBuilder;
 import org.checkerframework.dataflow.cfg.ControlFlowGraph;
@@ -207,12 +199,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
     @Override
     public boolean apply(MethodInfo methodInfo) {
-      // Any method explicitly annotated with @Nullable is assumed to be capable of returning
-      // null.
-      for (String annotation : methodInfo.annotations()) {
-        if (annotation.endsWith(".Nullable") || annotation.endsWith(".NullableDecl")) {
-          return false;
-        }
+      // Any method explicitly annotated is trusted to behave as advertised.
+      Optional<Nullness> fromAnnotations =
+          NullnessAnnotations.fromAnnotations(methodInfo.annotations());
+      if (fromAnnotations.isPresent()) {
+        return fromAnnotations.get() == NONNULL;
       }
 
       if (methodInfo.method().equals("valueOf")
@@ -265,21 +256,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     AccessPathStore.Builder<Nullness> result = AccessPathStore.<Nullness>empty().toBuilder();
     for (LocalVariableNode param : parameters) {
       Nullness declared =
-          Nullness.fromAnnotationsOn((Symbol) param.getElement()).orElse(defaultAssumption);
+          NullnessAnnotations.fromAnnotationsOn((Symbol) param.getElement())
+              .orElse(defaultAssumption);
       result.setInformation(AccessPath.fromLocalVariable(param), declared);
     }
     return result.build();
   }
 
-  private Nullness getInferredNullness(MethodInvocationNode node, ClassAndMethod callee) {
-    // Baseline nullness information about this method, in case inference is unsuccessful.
-    Nullness baselineNullness = methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
-    if (!callee.isGenericResult) {
-      // We only care about inference results for generic methods that return one of their type
-      // parameters.
-      return baselineNullness;
-    }
-
+  private Optional<Nullness> getInferredNullness(MethodInvocationNode node) {
     // Method has a generic result, so ask inference to infer a qualifier for that type parameter
     if (inferenceResults == null) {
       // inferenceResults are per-procedure; if it is null that means this is the first query within
@@ -305,7 +289,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
                   "Call `%s` is not contained in an lambda, initializer or method.",
                   node));
     }
-    return inferenceResults.getExprNullness(node.getTree()).orElse(baselineNullness);
+    return inferenceResults.getExprNullness(node.getTree());
   }
 
   /**
@@ -422,7 +406,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         node.getType().getAnnotationMirrors().stream()
             .map(Object::toString)
             .collect(ImmutableList.toImmutableList());
-    return Nullness.fromAnnotations(annotations)
+    return NullnessAnnotations.fromAnnotations(annotations)
         .orElseGet(
             () -> hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand()));
   }
@@ -689,6 +673,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return false;
   }
 
+  @Nullable
   private static ClassAndField tryGetFieldSymbol(Tree tree) {
     Symbol symbol = tryGetSymbol(tree);
     if (symbol instanceof VarSymbol) {
@@ -697,6 +682,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return null;
   }
 
+  @Nullable
   static ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree, Types types) {
     Symbol symbol = tryGetSymbol(tree.getMethodSelect());
     if (symbol instanceof MethodSymbol) {
@@ -709,7 +695,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * We can't use ASTHelpers here. It's in core, which depends on jdk8, so we can't make jdk8 depend
    * back on core.
    */
-
+  @Nullable
   private static Symbol tryGetSymbol(Tree tree) {
     if (tree instanceof JCIdent) {
       return ((JCIdent) tree).sym;
@@ -724,7 +710,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   Nullness fieldNullness(
-      ClassAndField accessed, @Nullable AccessPath path, AccessPathValues<Nullness> store) {
+      @Nullable ClassAndField accessed,
+      @Nullable AccessPath path,
+      AccessPathValues<Nullness> store) {
     if (accessed == null) {
       return defaultAssumption;
     }
@@ -752,34 +740,33 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         return initializer;
       }
     }
+    return standardFieldNullness(accessed, path, store);
+  }
 
+  /** Determines field nullness based on store and annotations. */
+  // TODO(kmb): Reverse subtyping between this class and TrustingNullnessPropagation to avoid this
+  Nullness standardFieldNullness(
+      ClassAndField accessed, @Nullable AccessPath path, AccessPathValues<Nullness> store) {
     // First, check the store for a dataflow-computed nullness value and return it if it exists
-    // Otherwise, check for nullness annotations on the field declaration
-    // If there are none, check for nullness annotations on generic type declarations
+    // Otherwise, check for nullness annotations on the field's symbol (including type annotations)
+    // If there are none, check for nullness annotations on generic type bounds, if any
     // If there are none, fall back to the defaultAssumption
 
     Nullness dataflowResult = (path == null) ? BOTTOM : store.valueOfAccessPath(path, BOTTOM);
-
     if (dataflowResult != BOTTOM) {
       return dataflowResult;
     }
 
-    Optional<Nullness> declaredNullness =
-        Nullness.fromAnnotations(
-            MoreAnnotations.getDeclarationAndTypeAttributes(accessed.symbol)
-                .map(Object::toString)
-                .collect(ImmutableList.toImmutableList()));
+    Optional<Nullness> declaredNullness = NullnessAnnotations.fromAnnotationsOn(accessed.symbol);
     return declaredNullness.orElseGet(
-        () ->
-            Nullness.fromAnnotations(inheritedAnnotations(accessed.symbol.type))
-                .orElse(defaultAssumption));
+        () -> NullnessAnnotations.getUpperBound(accessed.symbol.type).orElse(defaultAssumption));
   }
 
   private Nullness returnValueNullness(MethodInvocationNode node, @Nullable ClassAndMethod callee) {
     if (callee == null) {
       return defaultAssumption;
     }
-    Optional<Nullness> declaredNullness = Nullness.fromAnnotations(callee.annotations);
+    Optional<Nullness> declaredNullness = NullnessAnnotations.fromAnnotations(callee.annotations);
     if (declaredNullness.isPresent()) {
       return declaredNullness.get();
     }
@@ -787,58 +774,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (AccessPath.isAutoValueAccessor(node.getTree())) {
       return NONNULL;
     }
-    // If there is no nullness annotation on the callee method declaration, look for applicable
-    // annotations inherited from elsewhere.
-    ImmutableList<String> annotations =
-        ImmutableList.<String>builder()
-            .addAll(inheritedAnnotations(node.getTarget().getMethod().getReturnType()))
-            .addAll(
-                node.getType().getAnnotationMirrors().stream()
-                    .map(Object::toString)
-                    .collect(ImmutableList.toImmutableList()))
-            .build();
 
-    return getInferredNullness(node, callee)
-        .greatestLowerBound(Nullness.fromAnnotations(annotations).orElse(NULLABLE));
-  }
-
-  /**
-   * Gathers all type annotations that are applicable to this TypeMirror and its bounds but are not
-   * applied syntactically to its declaration. This includes:
-   *
-   * <ul>
-   *   <li>annotations on type parameters at type use, e.g. {@code List<@Nullable String> xs = ...}
-   *   <li>annotations on generic type declarations, e.g. {@code class MyClass<@Nullable T> {...} }
-   *   <li>bounds on the above, e.g. {@code class MyClass<T extends @Nullable MyOtherClass> {...} }
-   * </ul>
-   */
-  private static ImmutableList<String> inheritedAnnotations(TypeMirror type) {
-    ImmutableSet.Builder<AnnotationMirror> inheritedAnnotations = ImmutableSet.builder();
-
-    // Annotations on type parameters at use-site
-    inheritedAnnotations.addAll(type.getAnnotationMirrors());
-
-    if (type.getKind() == TypeKind.TYPEVAR) {
-      TypeVariable typeVar = (TypeVariable) type;
-      // Annotations on bounds at type variable declaration
-      inheritedAnnotations.addAll(typeVar.getUpperBound().getAnnotationMirrors());
-      if (typeVar.asElement().getKind() == TYPE_PARAMETER) {
-        Element genericElt = ((TypeParameterElement) typeVar.asElement()).getGenericElement();
-        if (genericElt.getKind().isClass() || genericElt.getKind().isInterface()) {
-          ((TypeElement) genericElt)
-              .getTypeParameters().stream()
-                  .filter(
-                      typeParam ->
-                          typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
-                  .findFirst()
-                  // Annotations at class/interface type variable declaration
-                  .ifPresent(decl -> inheritedAnnotations.addAll(decl.getAnnotationMirrors()));
-        }
-      }
+    Nullness assumedNullness = methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
+    if (!callee.isGenericResult) {
+      // We only care about inference results for methods that return a type variable.
+      return assumedNullness;
     }
-    return inheritedAnnotations.build().stream()
-        .map(Object::toString)
-        .collect(ImmutableList.toImmutableList());
+    // Method has a generic result, so ask inference to infer a qualifier for that type parameter
+    return getInferredNullness(node).orElse(assumedNullness);
   }
 
   @Nullable
@@ -1056,10 +999,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
     static ClassAndMethod make(MethodSymbol methodSymbol, @Nullable Types types) {
       // TODO(b/71812955): consider just wrapping methodSymbol instead of copying everything out.
-      // TODO(b/71812955): for type variables, check for type annotations on the referenced variable
       ImmutableList<String> annotations =
           MoreAnnotations.getDeclarationAndTypeAttributes(methodSymbol)
-              .map(c -> c.getAnnotationType().asElement().toString())
+              .map(Object::toString)
               .collect(toImmutableList());
 
       ClassSymbol clazzSymbol = (ClassSymbol) methodSymbol.owner;
@@ -1075,17 +1017,10 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     /**
-     * Returns {@code true} for {@link MethodSymbol}s of generic methods where one of the method's
-     * type parameters <b>is</b> the result type, {@code false} otherwise.
+     * Returns {@code true} for {@link MethodSymbol}s whose result type is a generic type variable.
      */
     private static boolean hasGenericResult(MethodSymbol methodSymbol) {
-      Type resultType = methodSymbol.getReturnType();
-      for (TypeVariableSymbol var : methodSymbol.getTypeParameters()) {
-        if (resultType.tsym.equals(var)) {
-          return true;
-        }
-      }
-      return false;
+      return methodSymbol.getReturnType().tsym instanceof TypeVariableSymbol;
     }
 
     private static boolean knownNonNullMethod(
@@ -1229,16 +1164,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * methods must guarantee non-nullness if {@code true} <b>and nullness if {@code false}</b>.
    */
   private static final ImmutableSetMultimap<MemberName, Integer> NONNULL_IFF_TRUE_PARAMETERS =
-      new ImmutableSetMultimap.Builder<MemberName, Integer>()
-          .put(member(Objects.class, "nonNull"), 0)
-          .build();
+      ImmutableSetMultimap.of(member(Objects.class, "nonNull"), 0);
 
   /**
    * Maps from null test methods to indices of arguments that are comapred against null. These
    * methods must guarantee nullness if {@code true} <b>and non-nullness if {@code false}</b>.
    */
   private static final ImmutableSetMultimap<MemberName, Integer> NULL_IFF_TRUE_PARAMETERS =
-      new ImmutableSetMultimap.Builder<MemberName, Integer>()
-          .put(member(Objects.class, "isNull"), 0)
-          .build();
+      ImmutableSetMultimap.of(member(Objects.class, "isNull"), 0);
 }

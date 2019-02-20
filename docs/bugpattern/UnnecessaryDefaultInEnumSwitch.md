@@ -4,10 +4,10 @@ below the switch from any of the non-default statement groups.
 
 TIP: Removing the unnecessary default allows Error Prone to enforce that the
 switch continues to handle all cases, even if new values are added to the enum,
-see: [MissingCasesInEnumSwitch](MissingCasesInEnumSwitch.md). After the unnecessary
-default is removed, Error Prone will report an error if new enum constants are
-added in the future, to remind you to either handle the cases explicitly or
-restore the default case.
+see: [MissingCasesInEnumSwitch](MissingCasesInEnumSwitch.md). After the
+unnecessary default is removed, Error Prone will report an error if new enum
+constants are added in the future, to remind you to either handle the cases
+explicitly or restore the default case.
 
 ## When the default can be removed
 

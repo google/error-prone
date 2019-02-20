@@ -1,5 +1,5 @@
-Creating a side-effect-free anonymous class and never using it is usually
-a mistake.
+Creating a side-effect-free anonymous class and never using it is usually a
+mistake.
 
 For example:
 

@@ -17,7 +17,6 @@
 package com.google.errorprone.util;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -41,7 +40,6 @@ public class FindIdentifiersTest {
   /** A {@link BugChecker} that prints all identifiers in scope at a call to String.format(). */
   @BugPattern(
       name = "PrintIdents",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Prints all identifiers in scope at a call to String.format()")
   public static class PrintIdents extends BugChecker implements MethodInvocationTreeMatcher {
@@ -630,7 +628,6 @@ public class FindIdentifiersTest {
    */
   @BugPattern(
       name = "PrintUnusedVariables",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Prints all unused variabled in scope at a call to String.format()")
   public static class PrintUnusedVariables extends BugChecker
@@ -767,7 +764,6 @@ public class FindIdentifiersTest {
   /** A {@link BugChecker} that prints all fields in receiver class on method invocations. */
   @BugPattern(
       name = "PrintFields",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Prints all fields in receivers of method invocations")
   public static class PrintFields extends BugChecker implements MethodInvocationTreeMatcher {

@@ -60,14 +60,11 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
       @Nullable AccessPath path,
       AccessPathValues<Nullness> store) {
     if (accessed == null) {
-      return Nullness.NONNULL; // optimistically assume non-null if we can't resolve
+      return defaultAssumption; // optimistically assume non-null if we can't resolve
     }
-    // In the absence of annotations or dataflow information, this will do the right thing for
-    // things like primitives, array length, .class, etc.  The defaultAssumption for this trusting
-    // analysis is Nullness.NONNULL, as described in the class-level javadoc.
-    Nullness defaultValue =
-        Nullness.fromAnnotationsOn(accessed.symbol).orElse(this.defaultAssumption);
-    return (path == null) ? defaultValue : store.valueOfAccessPath(path, defaultValue);
+
+    // TODO(kmb): Reverse subtyping between this class and NullnessPropagationTransfer to avoid this
+    return standardFieldNullness(accessed, path, store);
   }
 
   /** Return {@code true} for methods not explicitly annotated Nullable. */
@@ -76,7 +73,7 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
 
     @Override
     public boolean apply(MethodInfo input) {
-      return Nullness.fromAnnotations(input.annotations()).orElse(Nullness.NONNULL)
+      return NullnessAnnotations.fromAnnotations(input.annotations()).orElse(Nullness.NONNULL)
           == Nullness.NONNULL;
     }
   }

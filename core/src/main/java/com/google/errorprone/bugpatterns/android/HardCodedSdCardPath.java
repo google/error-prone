@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.android;
 
-import static com.google.errorprone.BugPattern.Category.ANDROID;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
@@ -42,7 +41,6 @@ import java.util.Map;
     name = "HardCodedSdCardPath",
     altNames = {"SdCardPath"},
     summary = "Hardcoded reference to /sdcard",
-    category = ANDROID,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class HardCodedSdCardPath extends BugChecker implements LiteralTreeMatcher {

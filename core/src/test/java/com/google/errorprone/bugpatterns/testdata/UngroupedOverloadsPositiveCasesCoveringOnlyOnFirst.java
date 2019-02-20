@@ -19,12 +19,11 @@ package com.google.errorprone.bugpatterns.testdata;
 /** @author hanuszczak@google.com (Łukasz Hanuszczak) */
 public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
 
-  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
+  // BUG: Diagnostic contains: Constructors and methods with the same name should appear
   public void foo(int x) {
     System.out.println(x);
   }
 
-  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
   public void bar() {
     foo();
   }
@@ -37,7 +36,6 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
     foo(x);
   }
 
-  // BUG: Diagnostic contains: Overloads of 'quux' are not grouped together
   private void quux() {
     norf();
   }

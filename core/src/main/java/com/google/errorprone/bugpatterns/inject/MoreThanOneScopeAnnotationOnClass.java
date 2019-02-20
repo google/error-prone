@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
-import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.IS_DAGGER_COMPONENT;
@@ -47,7 +46,6 @@ import java.util.List;
     name = "InjectMoreThanOneScopeAnnotationOnClass",
     altNames = "MoreThanOneScopeAnnotationOnClass",
     summary = "A class can be annotated with at most one scope annotation.",
-    category = INJECT,
     severity = ERROR)
 public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements ClassTreeMatcher {
 

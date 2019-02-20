@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
@@ -39,7 +38,6 @@ import java.util.regex.Pattern;
 @BugPattern(
     name = "PreconditionsInvalidPlaceholder",
     summary = "Preconditions only accepts the %s placeholder in error message strings",
-    category = GUAVA,
     severity = WARNING,
     tags = StandardTags.LIKELY_ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

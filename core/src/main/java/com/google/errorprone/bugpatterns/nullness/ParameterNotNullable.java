@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
@@ -47,7 +46,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "ParameterNotNullable",
     summary = "Method parameters that aren't checked for null shouldn't be annotated @Nullable",
-    category = JDK,
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ParameterNotNullable extends BugChecker
@@ -85,7 +83,10 @@ public class ParameterNotNullable extends BugChecker
     VariableTree paramDecl = findDeclaration(state, dereferenced);
     for (AnnotationTree anno : paramDecl.getModifiers().getAnnotations()) {
       String annoType = ASTHelpers.getSymbol(anno).type.toString();
-      if (annoType.endsWith(".Nullable") || annoType.endsWith(".NullableDecl")) {
+      if (annoType.endsWith(".Nullable")
+          || annoType.endsWith(".NullableDecl")
+          || annoType.endsWith(".CheckForNull")
+          || annoType.endsWith(".RecentlyNullable")) {
         return buildDescription(dereferencedExpression)
             .setMessage("Nullable parameter not checked for null")
             .addFix(SuggestedFix.delete(anno))

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -64,7 +63,6 @@ import java.util.Optional;
 @BugPattern(
     name = "Immutable",
     summary = "Type declaration annotated with @Immutable is not immutable",
-    category = JDK,
     severity = ERROR,
     documentSuppression = false,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -334,7 +332,7 @@ public class ImmutableChecker extends BugChecker
    */
   private Type immutableSupertype(Symbol sym, VisitorState state) {
     for (Type superType : state.getTypes().closure(sym.type)) {
-      if (superType.equals(sym.type)) {
+      if (superType.tsym.equals(sym.type.tsym)) {
         continue;
       }
       // Don't use getImmutableAnnotation here: subtypes of trusted types are

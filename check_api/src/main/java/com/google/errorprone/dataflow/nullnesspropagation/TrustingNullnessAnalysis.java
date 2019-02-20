@@ -125,6 +125,6 @@ public final class TrustingNullnessAnalysis implements Serializable {
   }
 
   public static boolean hasNullableAnnotation(Symbol symbol) {
-    return Nullness.fromAnnotationsOn(symbol).orElse(null) == Nullness.NULLABLE;
+    return NullnessAnnotations.fromAnnotationsOn(symbol).orElse(null) == Nullness.NULLABLE;
   }
 }

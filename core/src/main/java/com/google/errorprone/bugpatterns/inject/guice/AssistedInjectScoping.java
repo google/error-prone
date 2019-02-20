@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject.guice;
 
-import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_ANNOTATION;
@@ -56,7 +55,6 @@ import com.sun.source.tree.MethodTree;
 @BugPattern(
     name = "GuiceAssistedInjectScoping",
     summary = "Scope annotation on implementation class of AssistedInject factory is not allowed",
-    category = GUICE,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AssistedInjectScoping extends BugChecker implements ClassTreeMatcher {

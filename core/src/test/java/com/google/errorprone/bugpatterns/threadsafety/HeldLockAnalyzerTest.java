@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -250,18 +249,13 @@ public class HeldLockAnalyzerTest {
   }
 
   /** A customized {@link GuardedByChecker} that prints more test-friendly diagnostics. */
-  @BugPattern(
-      name = "GuardedByLockSet",
-      summary = "",
-      explanation = "",
-      category = JDK,
-      severity = ERROR)
+  @BugPattern(name = "GuardedByLockSet", summary = "", explanation = "", severity = ERROR)
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
 
     @Override
     protected Description checkGuardedAccess(
         Tree tree, GuardedByExpression guard, HeldLockSet live, VisitorState state) {
-      List<String> toSort = new ArrayList<String>();
+      List<String> toSort = new ArrayList<>();
       for (GuardedByExpression node : live.allLocks()) {
         toSort.add(node.debugPrint());
       }

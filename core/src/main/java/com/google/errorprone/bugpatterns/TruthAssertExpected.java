@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
+import com.google.common.base.Ascii;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -40,7 +41,11 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.List;
 import javax.annotation.Nullable;
 
 /**
@@ -53,7 +58,6 @@ import javax.annotation.Nullable;
     summary =
         "The actual and expected values appear to be swapped, which results in poor assertion "
             + "failure messages. The actual value should come first.",
-    category = TRUTH,
     severity = WARNING,
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -90,7 +94,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
           return false;
         }
         Type throwable = Suppliers.typeFromClass(Throwable.class).get(state);
-        return identifier.getName().toString().toLowerCase().contains("expected")
+        return Ascii.toLowerCase(identifier.getName().toString()).contains("expected")
             && !ASTHelpers.isSubtype(ASTHelpers.getType(identifier), throwable, state);
       };
 
@@ -122,14 +126,29 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
    * Matches expressions that look like they should be considered constant, i.e. {@code
    * ImmutableList.of(1, 2)}, {@code Long.valueOf(10L)}.
    */
-  private static final Matcher<ExpressionTree> CONSTANT_CREATOR =
-      allOf(
-          anyOf(staticMethod(), Matchers.constructor()),
-          (tree, state) -> {
-            MethodInvocationTree methodTree = (MethodInvocationTree) tree;
-            return methodTree.getArguments().stream()
-                .allMatch(argument -> ASTHelpers.constValue(argument) != null);
-          });
+  static boolean isConstantCreator(ExpressionTree tree, VisitorState state) {
+    List<? extends ExpressionTree> arguments =
+        tree.accept(
+            new SimpleTreeVisitor<List<? extends ExpressionTree>, Void>() {
+              @Override
+              public List<? extends ExpressionTree> visitNewClass(NewClassTree node, Void unused) {
+                return node.getArguments();
+              }
+
+              @Override
+              public List<? extends ExpressionTree> visitMethodInvocation(
+                  MethodInvocationTree node, Void unused) {
+                MethodSymbol symbol = ASTHelpers.getSymbol(node);
+                if (symbol == null || !symbol.isStatic()) {
+                  return null;
+                }
+                return node.getArguments();
+              }
+            },
+            null);
+    return arguments != null
+        && arguments.stream().allMatch(argument -> ASTHelpers.constValue(argument) != null);
+  }
 
   /** Matcher for a reversible assertion that appears to be the wrong way around. */
   private static final Matcher<ExpressionTree> MATCH =
@@ -144,7 +163,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
       return Description.NO_MATCH;
     }
     ExpressionTree assertion = findReceiverMatching(tree, state, ASSERT_ON_EXPECTED);
-    if (!(assertion instanceof MethodInvocationTree) || !(tree instanceof MethodInvocationTree)) {
+    if (!(assertion instanceof MethodInvocationTree)) {
       return Description.NO_MATCH;
     }
     ExpressionTree assertedArgument =
@@ -154,7 +173,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
     // compile-time constant.
     if (ASTHelpers.constValue(terminatingArgument) != null
         || Matchers.staticFieldAccess().matches(terminatingArgument, state)
-        || CONSTANT_CREATOR.matches(terminatingArgument, state)) {
+        || isConstantCreator(terminatingArgument, state)) {
       return Description.NO_MATCH;
     }
     SuggestedFix fix = SuggestedFix.swap(assertedArgument, terminatingArgument);

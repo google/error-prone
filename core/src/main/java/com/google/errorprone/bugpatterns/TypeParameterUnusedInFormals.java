@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -41,7 +40,6 @@ import java.util.Set;
         "Declaring a type parameter that is only used in the return type is a misuse of"
             + " generics: operations on the type parameter are unchecked, it hides unsafe casts at"
             + " invocations of the method, and it interacts badly with method overload resolution.",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public class TypeParameterUnusedInFormals extends BugChecker implements MethodTreeMatcher {

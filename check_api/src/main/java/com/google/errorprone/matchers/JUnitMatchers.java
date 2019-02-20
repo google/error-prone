@@ -37,10 +37,11 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.nestingKind;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -49,6 +50,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree;
@@ -72,17 +74,27 @@ public class JUnitMatchers {
   private static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
   private static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
 
-  public static final Matcher<MethodTree> hasJUnitAnnotation =
-      anyOf(
-          /* @Test, @Before, and @After are inherited by methods that override a base method with the
-           * annotation.  @BeforeClass and @AfterClass can only be applied to static methods, so they
-           * cannot be inherited. */
-          hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
-          hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION),
-          hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
-          hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
-          hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION),
-          hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
+  /**
+   * Checks if a method, or any overridden method, is annotated with any annotation from the
+   * org.junit package.
+   */
+  public static boolean hasJUnitAnnotation(MethodTree tree, VisitorState state) {
+    MethodSymbol methodSym = getSymbol(tree);
+    if (methodSym == null) {
+      return false;
+    }
+    if (hasJUnitAttr(methodSym)) {
+      return true;
+    }
+    return findSuperMethods(methodSym, state.getTypes()).stream()
+        .anyMatch(JUnitMatchers::hasJUnitAttr);
+  }
+
+  /** Checks if a method symbol has any attribute from the org.junit package. */
+  private static boolean hasJUnitAttr(MethodSymbol methodSym) {
+    return methodSym.getRawAttributes().stream()
+        .anyMatch(attr -> attr.type.tsym.getQualifiedName().toString().startsWith("org.junit."));
+  }
 
   public static final Matcher<MethodTree> hasJUnit4BeforeAnnotations =
       anyOf(
@@ -207,42 +219,44 @@ public class JUnitMatchers {
           "org.mockito.runners.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
 
   /**
-   * Matches an argument of type Class<T>, where T is a subtype of one of the test runners listed in
-   * the TEST_RUNNERS field.
+   * Matches an argument of type {@code Class<T>}, where T is a subtype of one of the test runners
+   * listed in the TEST_RUNNERS field.
    *
    * <p>TODO(eaftan): Support checking for an annotation that tells us whether this test runner
    * expects tests to be annotated with @Test.
    */
-  private static final Matcher<ExpressionTree> isJUnit4TestRunner =
-      new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree t, VisitorState state) {
-          Type type = ((JCTree) t).type;
-          // Expect a class type.
-          if (!(type instanceof ClassType)) {
-            return false;
-          }
-          // Expect one type argument, the type of the JUnit class runner to use.
-          com.sun.tools.javac.util.List<Type> typeArgs = ((ClassType) type).getTypeArguments();
-          if (typeArgs.size() != 1) {
-            return false;
-          }
-          Type runnerType = typeArgs.get(0);
-          for (String testRunner : TEST_RUNNERS) {
-            Symbol parent = state.getSymbolFromString(testRunner);
-            if (parent == null) {
-              continue;
-            }
-            if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
-              return true;
-            }
-          }
+  public static Matcher<ExpressionTree> isJUnit4TestRunnerOfType(Iterable<String> runnerTypes) {
+    return new Matcher<ExpressionTree>() {
+      @Override
+      public boolean matches(ExpressionTree t, VisitorState state) {
+        Type type = ((JCTree) t).type;
+        // Expect a class type.
+        if (!(type instanceof ClassType)) {
           return false;
         }
-      };
+        // Expect one type argument, the type of the JUnit class runner to use.
+        com.sun.tools.javac.util.List<Type> typeArgs = type.getTypeArguments();
+        if (typeArgs.size() != 1) {
+          return false;
+        }
+        Type runnerType = typeArgs.get(0);
+        for (String testRunner : runnerTypes) {
+          Symbol parent = state.getSymbolFromString(testRunner);
+          if (parent == null) {
+            continue;
+          }
+          if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
+            return true;
+          }
+        }
+        return false;
+      }
+    };
+  }
 
   public static final MultiMatcher<ClassTree, AnnotationTree> hasJUnit4TestRunner =
-      annotations(AT_LEAST_ONE, hasArgumentWithValue("value", isJUnit4TestRunner));
+      annotations(
+          AT_LEAST_ONE, hasArgumentWithValue("value", isJUnit4TestRunnerOfType(TEST_RUNNERS)));
 
   /**
    * Matches classes which have attributes of only JUnit4 test classes.
@@ -276,7 +290,7 @@ public class JUnitMatchers {
             new TreeScanner<Boolean, Void>() {
               @Override
               public Boolean visitMethodInvocation(MethodInvocationTree node, Void unused) {
-                String name = ASTHelpers.getSymbol(node).getSimpleName().toString();
+                String name = getSymbol(node).getSimpleName().toString();
                 return name.contains("assert")
                     || name.contains("verify")
                     || name.contains("check")

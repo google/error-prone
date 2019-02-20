@@ -74,7 +74,7 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
       try {
         return flagsConstructor.get().newInstance(getFlags());
       } catch (ReflectiveOperationException e) {
-        // Invoking flags constructor failed, do nothing and try default constructor.
+        throw new LinkageError("Could not instantiate BugChecker.", e);
       }
     }
     // If no flags constructor, invoke default constructor.
@@ -121,9 +121,9 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
     return flags;
   }
 
-  /** Returns the name of the first check, or {@code null}. */
+  /** Returns the name of the first check, or {@code ""}. */
   @Override
   public String toString() {
-    return getFirst(getAllChecks().keySet(), null);
+    return getFirst(getAllChecks().keySet(), "");
   }
 }

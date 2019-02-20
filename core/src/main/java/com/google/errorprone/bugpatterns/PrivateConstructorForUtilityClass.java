@@ -15,10 +15,11 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addMembers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.METHOD;
@@ -46,7 +47,6 @@ import com.sun.source.util.TreePath;
     summary =
         "Utility classes (only static members) are not designed to be instantiated and should"
             + " be made noninstantiable with a default constructor.",
-    category = JDK,
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class PrivateConstructorForUtilityClass extends BugChecker
@@ -57,7 +57,8 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
     if (!classTree.getKind().equals(CLASS)
         || classTree.getExtendsClause() != null
         || !classTree.getImplementsClause().isEmpty()
-        || isInPrivateScope(state)) {
+        || isInPrivateScope(state)
+        || hasAnnotation(getSymbol(classTree), "org.junit.runner.RunWith", state)) {
       return NO_MATCH;
     }
 
@@ -109,7 +110,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
     TreePath treePath = state.getPath();
     do {
       Tree currentLeaf = treePath.getLeaf();
-      if (ClassTree.class.isInstance(currentLeaf)) {
+      if (currentLeaf instanceof ClassTree) {
         ClassTree currentClassTree = (ClassTree) currentLeaf;
         if (currentClassTree.getModifiers().getFlags().contains(PRIVATE)) {
           return true;

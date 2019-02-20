@@ -40,7 +40,7 @@ public final class UndefinedEqualsTest {
             "import java.util.Queue;",
             "class Test {",
             "  void f(Queue a, Queue b) {",
-            "  // BUG: Diagnostic contains: java.util.Queue does not have",
+            "  // BUG: Diagnostic contains: Queue does not have",
             "    a.equals(b);",
             "  }",
             "}")
@@ -56,7 +56,7 @@ public final class UndefinedEqualsTest {
             "import java.util.Objects;",
             "class Test {",
             "  void f(Collection a, Collection b) {",
-            "     // BUG: Diagnostic contains: java.util.Collection does not have",
+            "     // BUG: Diagnostic contains: Collection does not have",
             "    Objects.equals(a,b);",
             "  }",
             "}")
@@ -74,11 +74,11 @@ public final class UndefinedEqualsTest {
             "import static org.junit.Assert.assertNotEquals;",
             "class Test {",
             "  void test(List myList, List otherList) {",
-            "    // BUG: Diagnostic contains: java.lang.Iterable does not have",
+            "    // BUG: Diagnostic contains: Iterable does not have",
             "    assertEquals(Iterables.skip(myList, 1), Iterables.skip(myList, 2));",
-            "    // BUG: Diagnostic contains: java.lang.Iterable does not have",
+            "    // BUG: Diagnostic contains: Iterable does not have",
             "    assertNotEquals(Iterables.skip(myList, 1), Iterables.skip(myList, 2));",
-            "    // BUG: Diagnostic contains: java.lang.Iterable does not have",
+            "    // BUG: Diagnostic contains: Iterable does not have",
             "    assertEquals(\"foo\", Iterables.skip(myList, 1), Iterables.skip(myList, 2));",
             "  }",
             "}")
@@ -93,7 +93,7 @@ public final class UndefinedEqualsTest {
             "import java.util.Queue;",
             "class Test {",
             "  <T> void f(Queue<String> a, Queue<T> b) {",
-            "    // BUG: Diagnostic contains: java.util.Queue does not have",
+            "    // BUG: Diagnostic contains: Queue does not have",
             "    a.equals(b);",
             "  }",
             "}")
@@ -109,10 +109,29 @@ public final class UndefinedEqualsTest {
             "import java.util.Queue;",
             "class Test {",
             "  <T> void f(Queue<String> a, Queue<T> b) {",
-            "    // BUG: Diagnostic contains: java.util.Queue does not have",
+            "    // BUG: Diagnostic contains: Queue does not have",
             "    assertThat(a).isEqualTo(b);",
-            "    // BUG: Diagnostic contains: java.util.Queue does not have",
+            "    // BUG: Diagnostic contains: Queue does not have",
             "    assertThat(a).isNotEqualTo(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveSparseArray() {
+    compilationHelper
+        .addSourceLines(
+            "SparseArray.java", //
+            "package android.util;",
+            "public class SparseArray <T> {}")
+        .addSourceLines(
+            "Test.java",
+            "import android.util.SparseArray;",
+            "class Test {",
+            "  <T> boolean f(SparseArray<T> a, SparseArray<T> b) {",
+            "    // BUG: Diagnostic contains: SparseArray does not have",
+            "    return a.equals(b);",
             "  }",
             "}")
         .doTest();

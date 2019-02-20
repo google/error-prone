@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.forEachPair;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -46,7 +45,6 @@ import java.util.stream.Stream;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "ParameterComment",
-    category = JDK,
     summary = "Non-standard parameter comment; prefer `/* paramName= */ arg`",
     severity = SUGGESTION,
     tags = StandardTags.STYLE,

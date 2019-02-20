@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
@@ -25,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.DoNotCall;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -33,10 +31,13 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import javax.lang.model.element.Modifier;
 
@@ -44,19 +45,21 @@ import javax.lang.model.element.Modifier;
 // TODO(cushon): this should subsume ImmutableModification and LocalizableWrongToString
 @BugPattern(
     name = "DoNotCall",
-    category = JDK,
     summary = "This method should not be called.",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class DoNotCallChecker extends BugChecker
     implements MethodTreeMatcher, MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
+
+  private static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
     if (symbol == null) {
       return NO_MATCH;
     }
-    if (hasAnnotation(tree, DoNotCall.class, state)) {
+    if (hasAnnotation(tree, DO_NOT_CALL, state)) {
       if (symbol.getModifiers().contains(Modifier.PRIVATE)) {
         return buildDescription(tree)
             .setMessage("A private method that should not be called should simply be removed.")
@@ -77,7 +80,7 @@ public class DoNotCallChecker extends BugChecker
           .build();
     }
     return findSuperMethods(symbol, state.getTypes()).stream()
-        .filter(s -> hasAnnotation(s, DoNotCall.class, state))
+        .filter(s -> hasAnnotation(s, DO_NOT_CALL, state))
         .findAny()
         .map(
             s -> {
@@ -90,7 +93,7 @@ public class DoNotCallChecker extends BugChecker
                   .setMessage(message)
                   .addFix(
                       SuggestedFix.builder()
-                          .addImport(DoNotCall.class.getName())
+                          .addImport(DO_NOT_CALL)
                           .prefixWith(tree, "@DoNotCall ")
                           .build())
                   .build();
@@ -100,25 +103,37 @@ public class DoNotCallChecker extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    return checkTree(tree, ASTHelpers.getSymbol(tree));
+    return checkTree(tree, ASTHelpers.getSymbol(tree), state);
   }
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    return checkTree(tree, ASTHelpers.getSymbol(tree));
+    return checkTree(tree, ASTHelpers.getSymbol(tree), state);
   }
 
-  private Description checkTree(Tree tree, MethodSymbol sym) {
-    DoNotCall doNotCall = ASTHelpers.getAnnotation(sym, DoNotCall.class);
-    if (doNotCall == null) {
+  private Description checkTree(Tree tree, MethodSymbol sym, VisitorState state) {
+    if (!hasAnnotation(sym, DO_NOT_CALL, state)) {
       return NO_MATCH;
     }
+    String doNotCall = getDoNotCallValue(sym);
     StringBuilder message = new StringBuilder("This method should not be called");
-    if (doNotCall.value().isEmpty()) {
+    if (doNotCall.isEmpty()) {
       message.append(", see its documentation for details.");
     } else {
-      message.append(": ").append(doNotCall.value());
+      message.append(": ").append(doNotCall);
     }
     return buildDescription(tree).setMessage(message.toString()).build();
+  }
+
+  private static String getDoNotCallValue(Symbol symbol) {
+    for (Attribute.Compound a : symbol.getRawAttributes()) {
+      if (!a.type.tsym.getQualifiedName().contentEquals(DO_NOT_CALL)) {
+        continue;
+      }
+      return MoreAnnotations.getValue(a, "value")
+          .flatMap(MoreAnnotations::asStringValue)
+          .orElse("");
+    }
+    throw new IllegalStateException();
   }
 }

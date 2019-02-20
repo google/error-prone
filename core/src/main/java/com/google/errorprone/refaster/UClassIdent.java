@@ -49,7 +49,7 @@ abstract class UClassIdent extends UIdent {
   }
 
   public static UClassIdent create(ClassSymbol sym) {
-    return create(sym.outermostClass().getQualifiedName(), sym.getQualifiedName());
+    return create(ASTHelpers.outermostClass(sym).getQualifiedName(), sym.getQualifiedName());
   }
 
   private static UClassIdent create(CharSequence topLevelClass, CharSequence name) {

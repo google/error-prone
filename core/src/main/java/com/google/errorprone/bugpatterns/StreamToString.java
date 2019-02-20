@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Optional;
@@ -33,7 +32,6 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(
     name = "StreamToString",
     summary = "Calling toString on a Stream does not provide useful information",
-    category = JDK,
     severity = ERROR)
 public class StreamToString extends AbstractToString {
 

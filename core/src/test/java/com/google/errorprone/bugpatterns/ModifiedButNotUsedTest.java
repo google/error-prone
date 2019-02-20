@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +59,7 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  public void sideEffectFreeRefactoring() throws Exception {
+  public void sideEffectFreeRefactoring() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -72,7 +73,36 @@ public final class ModifiedButNotUsedTest {
             "    bar.add(sideEffects());",
             "    List<Integer> baz;",
             "    baz = new ArrayList<>();",
+            "    baz.add(sideEffects());",
+            "  }",
+            "  int sideEffects() { return 1; }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "  }",
+            "  int sideEffects() { return 1; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void sideEffectPreservingRefactoring() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "    List<Integer> bar = new ArrayList<>();",
             "    bar.add(sideEffects());",
+            "    List<Integer> baz;",
+            "    baz = new ArrayList<>();",
+            "    baz.add(sideEffects());",
             "  }",
             "  int sideEffects() { return 1; }",
             "}")
@@ -87,6 +117,7 @@ public final class ModifiedButNotUsedTest {
             "  }",
             "  int sideEffects() { return 1; }",
             "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
@@ -197,7 +228,7 @@ public final class ModifiedButNotUsedTest {
 
   @Test
   @Ignore("b/74365407 test proto sources are broken")
-  public void protoSideEffects() throws Exception {
+  public void protoSideEffects() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -222,6 +253,7 @@ public final class ModifiedButNotUsedTest {
             "  }",
             "  TestFieldProtoMessage sideEffects() { throw new UnsupportedOperationException(); }",
             "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
@@ -256,6 +288,76 @@ public final class ModifiedButNotUsedTest {
             "    // BUG: Diagnostic contains:",
             "    ImmutableList.Builder<Integer> b = ImmutableList.<Integer>builder().add(1);",
             "    b.add(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  @Ignore("b/74365407 test proto sources are broken")
+  public void protoUnusedExpression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void foo(TestProtoMessage proto) {",
+            "    // BUG: Diagnostic contains:",
+            "    proto.toBuilder().setMessage(TestFieldProtoMessage.newBuilder()).build();",
+            "    // BUG: Diagnostic contains:",
+            "    proto.toBuilder().setMessage(TestFieldProtoMessage.newBuilder());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  @Ignore("b/74365407 test proto sources are broken")
+  public void protoUnusedButNotModified() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void foo(TestProtoMessage proto) throws Exception {",
+            // Consider mergeFrom as a use, given it throws a checked exception.
+            "    TestProtoMessage.newBuilder().mergeFrom(new byte[0]).build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  @Ignore("b/74365407 test proto sources are broken")
+  public void protoUnusedExpressionViaBuilderGetter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void foo(TestProtoMessage proto) {",
+            "    // BUG: Diagnostic contains:",
+            "    proto.toBuilder().getMessageBuilder().clearField().build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void collectionUnusedExpression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  void foo() {",
+            "    // BUG: Diagnostic contains:",
+            "    ImmutableList.<Integer>builder().add(1).build();",
+            "    // BUG: Diagnostic contains:",
+            "    ImmutableList.<Integer>builder().add(1);",
             "  }",
             "}")
         .doTest();

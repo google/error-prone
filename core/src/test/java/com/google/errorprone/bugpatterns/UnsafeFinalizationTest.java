@@ -16,8 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
-import java.lang.reflect.Method;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -152,9 +154,7 @@ public class UnsafeFinalizationTest {
 
   @Test
   public void negativeFence() {
-    if (isJdk8OrEarlier()) {
-      return;
-    }
+    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "MyAwesomeGame.java",
@@ -184,14 +184,18 @@ public class UnsafeFinalizationTest {
         .doTest();
   }
 
-  static boolean isJdk8OrEarlier() {
-    try {
-      Method versionMethod = Runtime.class.getMethod("version");
-      Object version = versionMethod.invoke(null);
-      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
-      return majorVersion <= 8;
-    } catch (ReflectiveOperationException e) {
-      return true;
-    }
+  @Test
+  public void negativeInterface() {
+    compilationTestHelper
+        .addSourceLines(
+            "I.java",
+            "interface I {",
+            "  int duration = 1;",
+            "  default void f() throws Exception {",
+            "    // a native static method",
+            "    Thread.sleep(duration);",
+            "  }",
+            "}")
+        .doTest();
   }
 }

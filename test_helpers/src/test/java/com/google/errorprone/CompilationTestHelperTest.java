@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static org.junit.Assert.assertThrows;
@@ -67,7 +66,7 @@ public class CompilationTestHelperTest {
                         "  }",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Saw unexpected error on line 3");
+    assertThat(expected).hasMessageThat().contains("Saw unexpected error on line 3");
   }
 
   @Test
@@ -84,7 +83,7 @@ public class CompilationTestHelperTest {
                         "  public void doIt() {}",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
 
   @Test
@@ -102,7 +101,7 @@ public class CompilationTestHelperTest {
                         "}")
                     .expectErrorMessage("X", Predicates.containsPattern(""))
                     .doTest());
-    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
 
   @Test
@@ -150,7 +149,7 @@ public class CompilationTestHelperTest {
                         "  }",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
 
   @Test
@@ -170,7 +169,7 @@ public class CompilationTestHelperTest {
                         "}")
                     .expectErrorMessage("X", Predicates.containsPattern(""))
                     .doTest());
-    assertThat(expected.getMessage()).contains("Did not see an error on line 3");
+    assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
 
   @Test
@@ -247,7 +246,8 @@ public class CompilationTestHelperTest {
                         "    return}",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage())
+    assertThat(expected)
+        .hasMessageThat()
         .contains("Test program failed to compile with non Error Prone error");
   }
 
@@ -269,7 +269,7 @@ public class CompilationTestHelperTest {
                     .expectResult(Result.ERROR)
                     .addSourceLines("Test.java", "public class Test {}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Expected compilation result ERROR, but was OK");
+    assertThat(expected).hasMessageThat().contains("Expected compilation result ERROR, but was OK");
   }
 
   @Test
@@ -306,7 +306,7 @@ public class CompilationTestHelperTest {
                         "  }",
                         "}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
+    assertThat(expected).hasMessageThat().contains("Expected no diagnostics produced, but found 1");
   }
 
   @Test
@@ -327,7 +327,7 @@ public class CompilationTestHelperTest {
                         "}")
                     .expectErrorMessage("X", Predicates.containsPattern(""))
                     .doTest());
-    assertThat(expected.getMessage()).contains("Expected no diagnostics produced, but found 1");
+    assertThat(expected).hasMessageThat().contains("Expected no diagnostics produced, but found 1");
   }
 
   @Test
@@ -374,14 +374,13 @@ public class CompilationTestHelperTest {
                     .addSourceLines(
                         "Test.java", " // BUG: Diagnostic matches: X", "public class Test {}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("No expected error message with key [X]");
+    assertThat(expected).hasMessageThat().contains("No expected error message with key [X]");
   }
 
   @BugPattern(
       name = "ReturnTreeChecker",
       summary = "Method may return normally.",
       explanation = "Consider mutating some global state instead.",
-      category = JDK,
       severity = ERROR)
   public static class ReturnTreeChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
@@ -399,14 +398,13 @@ public class CompilationTestHelperTest {
                 CompilationTestHelper.newInstance(PackageTreeChecker.class, getClass())
                     .addSourceLines("test/Test.java", "package test;", "public class Test {}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Package declaration found");
+    assertThat(expected).hasMessageThat().contains("Package declaration found");
   }
 
   @BugPattern(
       name = "PackageTreeChecker",
       summary = "Package declaration found",
       explanation = "Prefer to use the default package for everything.",
-      category = JDK,
       severity = ERROR)
   public static class PackageTreeChecker extends BugChecker implements CompilationUnitTreeMatcher {
     @Override
@@ -421,7 +419,6 @@ public class CompilationTestHelperTest {
   @BugPattern(
       name = "ThisCheckerCannotBeInstantiated",
       summary = "A checker that Error Prone can't instantiate.",
-      category = JDK,
       severity = ERROR)
   public static class ThisCheckerCannotBeInstantiated extends BugChecker
       implements CompilationUnitTreeMatcher {
@@ -448,6 +445,40 @@ public class CompilationTestHelperTest {
                         "// BUG: Diagnostic contains:",
                         "public class Test {}")
                     .doTest());
-    assertThat(expected.getMessage()).contains("Could not instantiate BugChecker");
+    assertThat(expected).hasMessageThat().contains("Could not instantiate BugChecker");
+  }
+
+  /** Test classes used for withClassPath tests */
+  public static class WithClassPath extends WithClassPathSuper {}
+
+  public static class WithClassPathSuper {}
+
+  @Test
+  public void withClassPath_success() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + WithClassPath.class.getCanonicalName() + ";",
+            "class Test extends WithClassPath {}")
+        .withClasspath(
+            CompilationTestHelperTest.class, WithClassPath.class, WithClassPathSuper.class)
+        .doTest();
+  }
+
+  @Test
+  public void withClassPath_failure() {
+    // disable checkWellFormed
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + WithClassPath.class.getCanonicalName() + ";",
+            "// BUG: Diagnostic contains: cannot access "
+                + WithClassPathSuper.class.getCanonicalName(),
+            "class Test extends WithClassPath {}")
+        .withClasspath(CompilationTestHelperTest.class, WithClassPath.class)
+        .ignoreJavacErrors()
+        .matchAllDiagnostics()
+        .expectResult(Result.ERROR)
+        .doTest();
   }
 }

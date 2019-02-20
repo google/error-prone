@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
-import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
@@ -39,7 +38,6 @@ import com.sun.source.tree.ClassTree;
     summary =
         "@AssistedInject and @Inject should not be used on different constructors in the same"
             + " class.",
-    category = INJECT,
     severity = WARNING)
 public class AssistedInjectAndInjectOnConstructors extends BugChecker implements ClassTreeMatcher {
 

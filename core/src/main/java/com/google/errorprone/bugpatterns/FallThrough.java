@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -38,7 +37,6 @@ import java.util.regex.Pattern;
 @BugPattern(
     name = "FallThrough",
     altNames = "fallthrough",
-    category = JDK,
     summary = "Switch case may fall through",
     severity = WARNING)
 public class FallThrough extends BugChecker implements SwitchTreeMatcher {

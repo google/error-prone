@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -46,7 +45,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "AssertEqualsArgumentOrderChecker",
     summary = "Arguments are swapped in assertEquals-like call",
-    category = JUNIT,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class AssertEqualsArgumentOrderChecker extends BugChecker

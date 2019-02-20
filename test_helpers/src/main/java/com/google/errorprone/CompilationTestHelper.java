@@ -18,15 +18,15 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.ByteStreams;
 import com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.api.JavacTool;
@@ -34,6 +34,7 @@ import com.sun.tools.javac.main.Main.Result;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -45,6 +46,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import javax.annotation.Nullable;
 import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -67,9 +72,10 @@ public class CompilationTestHelper {
   private final ByteArrayOutputStream outputStream;
   private final ErrorProneInMemoryFileManager fileManager;
   private final List<JavaFileObject> sources = new ArrayList<>();
-  private List<String> args = ImmutableList.of();
+  private ImmutableList<String> extraArgs = ImmutableList.of();
+  @Nullable private ImmutableList<Class<?>> overrideClasspath;
   private boolean expectNoDiagnostics = false;
-  private Optional<Result> expectedResult = Optional.absent();
+  private Optional<Result> expectedResult = Optional.empty();
   private boolean checkWellFormed = true;
   private LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic =
       LookForCheckNameInDiagnostic.YES;
@@ -92,6 +98,7 @@ public class CompilationTestHelper {
    * @param scannerSupplier the {@link ScannerSupplier} to test
    * @param clazz the class to use to locate file resources
    */
+  @CheckReturnValue
   public static CompilationTestHelper newInstance(ScannerSupplier scannerSupplier, Class<?> clazz) {
     return new CompilationTestHelper(scannerSupplier, null, clazz);
   }
@@ -102,6 +109,7 @@ public class CompilationTestHelper {
    * @param checker the {@link BugChecker} to test
    * @param clazz the class to use to locate file resources
    */
+  @CheckReturnValue
   public static CompilationTestHelper newInstance(
       Class<? extends BugChecker> checker, Class<?> clazz) {
     ScannerSupplier scannerSupplier = ScannerSupplier.fromBugCheckerClasses(checker);
@@ -116,21 +124,44 @@ public class CompilationTestHelper {
   // TODO(cushon): test compilations should be isolated so they can't pick things up from the
   // ambient classpath.
   static List<String> disableImplicitProcessing(List<String> args) {
-    if (args.indexOf("-processor") != -1 || args.indexOf("-processorpath") != -1) {
+    if (args.contains("-processor") || args.contains("-processorpath")) {
       return args;
     }
     return ImmutableList.<String>builder().addAll(args).add("-proc:none").build();
   }
 
   /**
-   * Creates a list of arguments to pass to the compiler, including the list of source files to
-   * compile. Uses DEFAULT_ARGS as the base and appends the extraArgs passed in.
+   * Creates a list of arguments to pass to the compiler. Uses DEFAULT_ARGS as the base and appends
+   * the overridden classpath, if provided, and any extraArgs that were provided.
    */
-  private static List<String> buildArguments(List<String> extraArgs) {
-    return ImmutableList.<String>builder()
-        .addAll(DEFAULT_ARGS)
-        .addAll(disableImplicitProcessing(extraArgs))
-        .build();
+  private static List<String> buildArguments(
+      @Nullable List<Class<?>> overrideClasspath, List<String> extraArgs) {
+    ImmutableList.Builder<String> result = ImmutableList.<String>builder().addAll(DEFAULT_ARGS);
+    getOverrideClasspath(overrideClasspath)
+        .ifPresent((Path jar) -> result.add("-cp").add(jar.toString()));
+    return result.addAll(disableImplicitProcessing(extraArgs)).build();
+  }
+
+  private static Optional<Path> getOverrideClasspath(@Nullable List<Class<?>> overrideClasspath) {
+    if (overrideClasspath == null) {
+      return Optional.empty();
+    }
+    try {
+      Path tempJarFile = Files.createTempFile(/* prefix = */ null, /* suffix = */ ".jar");
+      try (OutputStream os = Files.newOutputStream(tempJarFile);
+          JarOutputStream jos = new JarOutputStream(os)) {
+        for (Class<?> clazz : overrideClasspath) {
+          String entryPath = clazz.getName().replace('.', '/') + ".class";
+          jos.putNextEntry(new JarEntry(entryPath));
+          try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
+            ByteStreams.copy(is, jos);
+          }
+        }
+      }
+      return Optional.of(tempJarFile);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   /**
@@ -141,13 +172,14 @@ public class CompilationTestHelper {
    * foo", we expect to see a diagnostic on that line containing "foo". For each line of the test
    * file that does <i>not</i> contain the bug marker pattern, we expect no diagnostic to be
    * generated. You can also use "// BUG: Diagnostic matches: X" in tandem with {@code
-   * expectErrorMessage("X", "foo")} to allow you to programatically construct the error message.
+   * expectErrorMessage("X", "foo")} to allow you to programmatically construct the error message.
    *
    * @param path a path for the source file
    * @param lines the content of the source file
    */
   // TODO(eaftan): We could eliminate this path parameter and just infer the path from the
   // package and class name
+  @CheckReturnValue
   public CompilationTestHelper addSourceLines(String path, String... lines) {
     this.sources.add(fileManager.forSourceLines(path, lines));
     return this;
@@ -160,8 +192,22 @@ public class CompilationTestHelper {
    *
    * @param path the path to the source file
    */
+  @CheckReturnValue
   public CompilationTestHelper addSourceFile(String path) {
     this.sources.add(fileManager.forResource(path));
+    return this;
+  }
+
+  /**
+   * Sets the classpath for the test compilation, overriding the default of using the runtime
+   * classpath of the test execution. This is useful to verify correct behavior when the classpath
+   * is incomplete.
+   *
+   * @param classes the class(es) to use as the classpath
+   */
+  @CheckReturnValue
+  public CompilationTestHelper withClasspath(Class<?>... classes) {
+    this.overrideClasspath = ImmutableList.copyOf(classes);
     return this;
   }
 
@@ -169,8 +215,9 @@ public class CompilationTestHelper {
    * Sets custom command-line arguments for the compilation. These will be appended to the default
    * compilation arguments.
    */
+  @CheckReturnValue
   public CompilationTestHelper setArgs(List<String> args) {
-    this.args = args;
+    this.extraArgs = ImmutableList.copyOf(args);
     return this;
   }
 
@@ -179,6 +226,7 @@ public class CompilationTestHelper {
    * source file contains bug markers. Useful for testing that a check is actually disabled when the
    * proper command-line argument is passed.
    */
+  @CheckReturnValue
   public CompilationTestHelper expectNoDiagnostics() {
     this.expectNoDiagnostics = true;
     return this;
@@ -189,6 +237,7 @@ public class CompilationTestHelper {
    * javac errors. This behaviour can be disabled to test the interaction between Error Prone checks
    * and javac diagnostics.
    */
+  @CheckReturnValue
   public CompilationTestHelper ignoreJavacErrors() {
     this.checkWellFormed = false;
     return this;
@@ -199,6 +248,7 @@ public class CompilationTestHelper {
    * tested. This behaviour can be disabled to test the interaction between Error Prone checks and
    * javac diagnostics.
    */
+  @CheckReturnValue
   public CompilationTestHelper matchAllDiagnostics() {
     this.lookForCheckNameInDiagnostic = LookForCheckNameInDiagnostic.NO;
     return this;
@@ -208,6 +258,7 @@ public class CompilationTestHelper {
    * Tells the compilation helper to expect a specific result from the compilation, e.g. success or
    * failure.
    */
+  @CheckReturnValue
   public CompilationTestHelper expectResult(Result result) {
     expectedResult = Optional.of(result);
     return this;
@@ -227,6 +278,7 @@ public class CompilationTestHelper {
    *
    * <p>Error message keys that don't match any diagnostics will cause test to fail.
    */
+  @CheckReturnValue
   public CompilationTestHelper expectErrorMessage(String key, Predicate<? super String> matcher) {
     diagnosticHelper.expectErrorMessage(key, matcher);
     return this;
@@ -236,8 +288,7 @@ public class CompilationTestHelper {
   // TODO(eaftan): any way to ensure that this is actually called?
   public void doTest() {
     Preconditions.checkState(!sources.isEmpty(), "No source files to compile");
-    List<String> allArgs = buildArguments(args);
-    Result result = compile(sources, allArgs.toArray(new String[allArgs.size()]));
+    Result result = compile();
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticHelper.getDiagnostics()) {
       if (diagnostic.getCode().contains("error.prone.crash")) {
         fail(diagnostic.getMessage(Locale.ENGLISH));
@@ -254,13 +305,13 @@ public class CompilationTestHelper {
       assertWithMessage(
               String.format(
                   "Expected compilation result to be "
-                      + expectedResult.or(Result.OK)
+                      + expectedResult.orElse(Result.OK)
                       + ", but was %s. No diagnostics were emitted."
                       + " OutputStream from Compiler follows.\n\n%s",
                   result,
-                  outputStream.toString()))
+                  outputStream))
           .that(result)
-          .isEqualTo(expectedResult.or(Result.OK));
+          .isEqualTo(expectedResult.orElse(Result.OK));
     } else {
       for (JavaFileObject source : sources) {
         try {
@@ -270,9 +321,9 @@ public class CompilationTestHelper {
           throw new UncheckedIOException(e);
         }
       }
-      assertTrue(
-          "Unused error keys: " + diagnosticHelper.getUnusedLookupKeys(),
-          diagnosticHelper.getUnusedLookupKeys().isEmpty());
+      assertWithMessage("Unused error keys: " + diagnosticHelper.getUnusedLookupKeys())
+          .that(diagnosticHelper.getUnusedLookupKeys().isEmpty())
+          .isTrue();
     }
 
     if (expectedResult.isPresent()) {
@@ -282,15 +333,16 @@ public class CompilationTestHelper {
                   expectedResult.get(),
                   result,
                   Joiner.on('\n').join(diagnosticHelper.getDiagnostics()),
-                  outputStream.toString()))
+                  outputStream))
           .that(result)
           .isEqualTo(expectedResult.get());
     }
   }
 
-  private Result compile(Iterable<JavaFileObject> sources, String[] args) {
+  private Result compile() {
+    List<String> processedArgs = buildArguments(overrideClasspath, extraArgs);
     if (checkWellFormed) {
-      checkWellFormed(sources, args);
+      checkWellFormed(sources, processedArgs);
     }
     createAndInstallTempFolderForOutput(fileManager);
     return compiler
@@ -300,7 +352,7 @@ public class CompilationTestHelper {
                     /*autoFlush=*/ true),
                 fileManager,
                 diagnosticHelper.collector,
-                /* options= */ ImmutableList.copyOf(args),
+                /* options= */ ImmutableList.copyOf(processedArgs),
                 /* classes= */ ImmutableList.of(),
                 sources)
             .call()
@@ -330,13 +382,13 @@ public class CompilationTestHelper {
             });
   }
 
-  private void checkWellFormed(Iterable<JavaFileObject> sources, String[] args) {
+  private void checkWellFormed(Iterable<JavaFileObject> sources, List<String> args) {
     createAndInstallTempFolderForOutput(fileManager);
     JavaCompiler compiler = JavacTool.create();
     OutputStream outputStream = new ByteArrayOutputStream();
-    String[] remainingArgs = null;
+    List<String> remainingArgs = null;
     try {
-      remainingArgs = ErrorProneOptions.processArgs(args).getRemainingArgs();
+      remainingArgs = Arrays.asList(ErrorProneOptions.processArgs(args).getRemainingArgs());
     } catch (InvalidCommandLineOptionException e) {
       fail("Exception during argument processing: " + e);
     }
@@ -347,14 +399,13 @@ public class CompilationTestHelper {
                 /*autoFlush=*/ true),
             fileManager,
             null,
-            buildArguments(Arrays.asList(remainingArgs)),
+            remainingArgs,
             null,
             sources);
     boolean result = task.call();
     assertWithMessage(
             String.format(
-                "Test program failed to compile with non Error Prone error: %s",
-                outputStream.toString()))
+                "Test program failed to compile with non Error Prone error: %s", outputStream))
         .that(result)
         .isTrue();
   }

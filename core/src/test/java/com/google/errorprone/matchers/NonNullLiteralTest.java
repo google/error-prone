@@ -16,7 +16,7 @@
 
 package com.google.errorprone.matchers;
 
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertWithMessage;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
@@ -118,13 +118,17 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
     return new Scanner() {
       @Override
       public Void visitLiteral(LiteralTree node, VisitorState visitorState) {
-        assertTrue(node.toString(), !shouldMatch ^ toMatch.matches(node, visitorState));
+        assertWithMessage(node.toString())
+            .that(!shouldMatch ^ toMatch.matches(node, visitorState))
+            .isTrue();
         return super.visitLiteral(node, visitorState);
       }
 
       @Override
       public Void visitMemberSelect(MemberSelectTree node, VisitorState visitorState) {
-        assertTrue(node.toString(), !shouldMatch ^ toMatch.matches(node, visitorState));
+        assertWithMessage(node.toString())
+            .that(!shouldMatch ^ toMatch.matches(node, visitorState))
+            .isTrue();
         return super.visitMemberSelect(node, visitorState);
       }
 

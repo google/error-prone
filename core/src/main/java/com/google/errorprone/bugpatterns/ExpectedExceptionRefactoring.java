@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.BugPattern.StandardTags.REFACTORING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -41,7 +40,6 @@ import javax.annotation.Nullable;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "ExpectedExceptionRefactoring",
-    category = JUNIT,
     summary = "Prefer assertThrows to ExpectedException",
     severity = SUGGESTION,
     tags = REFACTORING,

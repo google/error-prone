@@ -26,10 +26,6 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class CompileTimeConstantCheckerTest {
 
-  public static final String ERROR_MESSAGE =
-      "[CompileTimeConstant] Non-compile-time constant expression passed "
-          + "to parameter with @CompileTimeConstant type annotation";
-
   private CompilationTestHelper compilationHelper;
 
   @Before
@@ -48,7 +44,7 @@ public class CompileTimeConstantCheckerTest {
             "public class CompileTimeConstantTestCase {",
             "  public static void m(@CompileTimeConstant String s) { }",
             "  @SuppressWarnings(\"CompileTimeConstant\")",
-            " // BUG: Diagnostic contains: Non-compile-time constant expression passed",
+            "  // BUG: Diagnostic contains: Non-compile-time constant expression passed",
             "  public static void r(String x) { m(x); }",
             "}")
         .doTest();
@@ -336,6 +332,77 @@ public class CompileTimeConstantCheckerTest {
             "    x = x + \"!\";",
             "    // BUG: Diagnostic contains: . Did you mean to make 'x' final?",
             "    m(x); ",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_override() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "abstract class CompileTimeConstantTestCase {",
+            "  abstract void m(String y);",
+            "  static class C extends CompileTimeConstantTestCase {",
+            "    // BUG: Diagnostic contains: Method with @CompileTimeConstant parameter",
+            "    @Override void m(@CompileTimeConstant String s) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_methodReference() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.function.Consumer;",
+            "public class CompileTimeConstantTestCase {",
+            "  public static void m(@CompileTimeConstant String s) { }",
+            "  public static Consumer<String> r(String x) {",
+            "    // BUG: Diagnostic contains: References to methods with @CompileTimeConstant",
+            "    return CompileTimeConstantTestCase::m;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_lambdaExpression() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.function.Consumer;",
+            "public class CompileTimeConstantTestCase {",
+            "  // BUG: Diagnostic contains: Lambda expressions with @CompileTimeConstant",
+            "  Consumer<String> c = (@CompileTimeConstant String s) -> {};",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_lambdaExpressionWithoutExplicitFormalParameters() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  @FunctionalInterface",
+            "  interface I {",
+            "    void f(@CompileTimeConstant String x);",
+            "  }",
+            "  void f(String s) {",
+            "    I i = x -> {};",
+            "    // BUG: Diagnostic contains: Non-compile-time constant expression passed",
+            "    i.f(s);",
             "  }",
             "}")
         .doTest();

@@ -19,15 +19,15 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
+import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CatchTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -65,10 +65,11 @@ import javax.lang.model.element.Modifier;
         "This catch block catches an exception and re-throws another, but swallows the caught"
             + " exception rather than setting it as a cause. This can make debugging harder.",
     severity = WARNING,
-    tags = StandardTags.STYLE,
+    tags = STYLE,
     linkType = CUSTOM,
     link = "https://google.github.io/styleguide/javaguide.html#s6.2-caught-exceptions",
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    providesFix = REQUIRES_HUMAN_ATTENTION,
+    documentSuppression = false)
 public final class UnusedException extends BugChecker implements CatchTreeMatcher {
 
   private static final ImmutableSet<Modifier> VISIBILITY_MODIFIERS =
@@ -76,6 +77,9 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
 
   @Override
   public Description matchCatch(CatchTree tree, VisitorState state) {
+    if (isSuppressed(tree.getParameter())) {
+      return Description.NO_MATCH;
+    }
     VarSymbol exceptionSymbol = ASTHelpers.getSymbol(tree.getParameter());
     AtomicBoolean symbolUsed = new AtomicBoolean(false);
     ((JCTree) tree)

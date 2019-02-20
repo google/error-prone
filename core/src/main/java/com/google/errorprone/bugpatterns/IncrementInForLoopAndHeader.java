@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
@@ -43,7 +42,6 @@ import java.util.stream.Collectors;
 @BugPattern(
     name = "IncrementInForLoopAndHeader",
     summary = "This for loop increments the same variable in the header and in the body",
-    category = JDK,
     severity = WARNING)
 public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTreeMatcher {
 

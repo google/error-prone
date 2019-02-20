@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
@@ -31,7 +30,6 @@ import com.sun.source.tree.ClassTree;
 @BugPattern(
     name = "ClassNamedLikeTypeParameter",
     summary = "This class's name looks like a Type Parameter.",
-    category = JDK,
     severity = SUGGESTION,
     tags = StandardTags.STYLE)
 public class ClassNamedLikeTypeParameter extends BugChecker implements ClassTreeMatcher {

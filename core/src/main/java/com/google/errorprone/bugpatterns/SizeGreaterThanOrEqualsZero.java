@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -63,7 +62,6 @@ import java.util.regex.Pattern;
     name = "SizeGreaterThanOrEqualsZero",
     summary =
         "Comparison of a size >= 0 is always true, did you intend to check for " + "non-emptiness?",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTreeMatcher {
@@ -246,7 +244,9 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     String expSrc = state.getSourceForNode(protoGetSize);
     java.util.regex.Matcher protoGetCountMatcher = PROTO_COUNT_METHOD_PATTERN.matcher(expSrc);
     if (!protoGetCountMatcher.find()) {
-      throw new AssertionError(protoGetSize + " does not contain a get<RepeatedField>Count method");
+      throw new AssertionError(
+          state.getSourceForNode(protoGetSize)
+              + " does not contain a get<RepeatedField>Count method");
     }
     return describeMatch(
         tree,

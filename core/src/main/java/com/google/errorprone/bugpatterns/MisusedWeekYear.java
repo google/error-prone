@@ -16,10 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -36,7 +37,11 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol;
+import java.util.Optional;
+import javax.lang.model.element.ElementKind;
 
 /**
  * Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date. Otherwise
@@ -50,7 +55,6 @@ import com.sun.tools.javac.tree.JCTree;
     summary =
         "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
             + "You probably meant to use \"yyyy\" (year) instead.",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MisusedWeekYear extends BugChecker
@@ -59,7 +63,7 @@ public class MisusedWeekYear extends BugChecker
   private static final String JAVA_SIMPLE_DATE_FORMAT = "java.text.SimpleDateFormat";
   private static final String ICU_SIMPLE_DATE_FORMAT = "com.ibm.icu.text.SimpleDateFormat";
 
-  private static final Matcher<NewClassTree> simpleDateFormatConstructorMatcher =
+  private static final Matcher<NewClassTree> PATTERN_CTOR_MATCHER =
       Matchers.<NewClassTree>anyOf(
           constructor().forClass(JAVA_SIMPLE_DATE_FORMAT).withParameters("java.lang.String"),
           constructor()
@@ -88,60 +92,78 @@ public class MisusedWeekYear extends BugChecker
               .forClass(ICU_SIMPLE_DATE_FORMAT)
               .withParameters("java.lang.String", "com.ibm.icu.util.ULocale"));
 
-  private static final Matcher<ExpressionTree> applyPatternMatcher =
-      Matchers.<ExpressionTree>anyOf(
+  /** Matches methods that take a pattern as the first argument. */
+  private static final Matcher<ExpressionTree> PATTERN_MATCHER =
+      anyOf(
           instanceMethod().onExactClass(JAVA_SIMPLE_DATE_FORMAT).named("applyPattern"),
           instanceMethod().onExactClass(JAVA_SIMPLE_DATE_FORMAT).named("applyLocalizedPattern"),
           instanceMethod().onExactClass(ICU_SIMPLE_DATE_FORMAT).named("applyPattern"),
-          instanceMethod().onExactClass(ICU_SIMPLE_DATE_FORMAT).named("applyLocalizedPattern"));
+          instanceMethod().onExactClass(ICU_SIMPLE_DATE_FORMAT).named("applyLocalizedPattern"),
+          staticMethod().onClass("java.time.format.DateTimeFormatter").named("ofPattern"));
 
-  /**
-   * Match uses of SimpleDateFormat.applyPattern and SimpleDateFormat.applyLocalizedPattern in which
-   * the pattern passed in contains YYYY but not ww, signifying that it was not intended to be a
-   * week date. If the pattern is a string literal, suggest replacing the YYYY with yyyy. If the
-   * pattern is a constant, don't give a suggested fix since the fix is nonlocal.
-   */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!applyPatternMatcher.matches(tree, state)) {
+    if (!PATTERN_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
-    return constructDescription(tree, tree.getArguments().get(0));
+    return constructDescription(tree, tree.getArguments().get(0), state);
   }
 
-  /**
-   * Match uses of the SimpleDateFormat constructor in which the pattern passed in contains YYYY but
-   * not ww, signifying that it was not intended to be a week date. If the pattern is a string
-   * literal, suggest replacing the YYYY with yyyy. If the pattern is a constant, don't give a
-   * suggested fix since the fix is nonlocal.
-   */
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (!simpleDateFormatConstructorMatcher.matches(tree, state)) {
+    if (!PATTERN_CTOR_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-
-    return constructDescription(tree, tree.getArguments().get(0));
+    return constructDescription(tree, tree.getArguments().get(0), state);
   }
 
   /**
-   * Given the {@link ExpressionTree} representing the pattern argument to the various methods in
+   * Matches patterns containing YYYY but not ww, signifying that it was not intended to be a week
+   * date. If the pattern is a string literal, suggest replacing the YYYY with yyyy.
+   *
+   * <p>Given the {@link ExpressionTree} representing the pattern argument to the various methods in
    * SimpleDateFormat that accept a pattern, construct the description for this matcher to return.
    * May be {@link Description#NO_MATCH} if the pattern does not have a constant value, does not use
    * the week year format specifier, or is in proper week date format.
    */
-  private Description constructDescription(Tree tree, ExpressionTree patternArg) {
-    String pattern = (String) ASTHelpers.constValue((JCTree) patternArg);
+  private Description constructDescription(
+      Tree tree, ExpressionTree patternArg, VisitorState state) {
+    String pattern = (String) ASTHelpers.constValue(patternArg);
     if (pattern != null && pattern.contains("Y") && !pattern.contains("w")) {
-      if (patternArg.getKind() == Kind.STRING_LITERAL) {
-        String replacement = patternArg.toString().replace('Y', 'y');
-        return describeMatch(tree, SuggestedFix.replace(patternArg, replacement));
-      } else {
-        return describeMatch(tree);
-      }
+      Description.Builder description = buildDescription(tree);
+      getFix(patternArg, state).ifPresent(description::addFix);
+      return description.build();
     }
 
     return Description.NO_MATCH;
+  }
+
+  private Optional<SuggestedFix> getFix(ExpressionTree patternArg, VisitorState state) {
+    if (patternArg.getKind() == Kind.STRING_LITERAL) {
+      String replacement = state.getSourceForNode(patternArg).replace('Y', 'y');
+      return Optional.of(SuggestedFix.replace(patternArg, replacement));
+    }
+    Symbol sym = ASTHelpers.getSymbol(patternArg);
+    if (sym instanceof Symbol.VarSymbol && sym.getKind() == ElementKind.FIELD) {
+      SuggestedFix[] fix = {null};
+      new TreeScanner<Void, Void>() {
+        @Override
+        public Void visitVariable(VariableTree node, Void aVoid) {
+          if (sym.equals(ASTHelpers.getSymbol(node))
+              && node.getInitializer() != null
+              && node.getInitializer().getKind() == Kind.STRING_LITERAL) {
+            String source = state.getSourceForNode(node.getInitializer());
+            String replacement = source.replace('Y', 'y');
+            if (!source.equals(replacement)) {
+              fix[0] = SuggestedFix.replace(node.getInitializer(), replacement);
+            }
+          }
+          return super.visitVariable(node, aVoid);
+        }
+      }.scan(state.getPath().getCompilationUnit(), null);
+      return Optional.ofNullable(fix[0]);
+    }
+    return Optional.empty();
   }
 }

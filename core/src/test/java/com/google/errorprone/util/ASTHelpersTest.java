@@ -17,23 +17,20 @@
 package com.google.errorprone.util;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.truth.Truth8.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Verify;
 import com.google.common.collect.Iterables;
-import com.google.common.io.ByteStreams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
@@ -77,10 +74,6 @@ import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -89,15 +82,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.After;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -167,12 +155,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   }
 
   private Matcher<LiteralTree> literalHasStartPosition(final int startPosition) {
-    return new Matcher<LiteralTree>() {
-      @Override
-      public boolean matches(LiteralTree tree, VisitorState state) {
-        JCLiteral literal = (JCLiteral) tree;
-        return literal.getStartPosition() == startPosition;
-      }
+    return (LiteralTree tree, VisitorState state) -> {
+      JCLiteral literal = (JCLiteral) tree;
+      return literal.getStartPosition() == startPosition;
     };
   }
 
@@ -247,21 +232,15 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   private Matcher<ExpressionTree> expressionHasReceiverAndType(
       final String expectedReceiver, final String expectedType) {
     return Matchers.allOf(
-        new Matcher<ExpressionTree>() {
-          @Override
-          public boolean matches(ExpressionTree t, VisitorState state) {
-            ExpressionTree receiver = ASTHelpers.getReceiver(t);
-            return expectedReceiver != null
-                ? receiver.toString().equals(expectedReceiver)
-                : receiver == null;
-          }
+        (ExpressionTree t, VisitorState state) -> {
+          ExpressionTree receiver = ASTHelpers.getReceiver(t);
+          return expectedReceiver != null
+              ? receiver.toString().equals(expectedReceiver)
+              : receiver == null;
         },
-        new Matcher<ExpressionTree>() {
-          @Override
-          public boolean matches(ExpressionTree t, VisitorState state) {
-            Type type = ASTHelpers.getReceiverType(t);
-            return state.getTypeFromString(expectedType).equals(type);
-          }
+        (ExpressionTree t, VisitorState state) -> {
+          Type type = ASTHelpers.getReceiverType(t);
+          return ASTHelpers.isSameType(state.getTypeFromString(expectedType), type, state);
         });
   }
 
@@ -405,7 +384,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
           @Override
           public Void visitAnnotation(AnnotationTree tree, VisitorState state) {
             setAssertionsComplete();
-            assertEquals("B.MyAnnotation", ASTHelpers.getType(tree.getAnnotationType()).toString());
+            assertThat(ASTHelpers.getType(tree.getAnnotationType()).toString())
+                .isEqualTo("B.MyAnnotation");
             return super.visitAnnotation(tree, state);
           }
         };
@@ -422,7 +402,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
           @Override
           public Void visitVariable(VariableTree tree, VisitorState state) {
             setAssertionsComplete();
-            assertEquals("B.C", ASTHelpers.getType(tree.getType()).toString());
+            assertThat(ASTHelpers.getType(tree.getType()).toString()).isEqualTo("B.C");
             return super.visitVariable(tree, state);
           }
         };
@@ -451,6 +431,52 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             return super.visitReturn(tree, state);
           }
         };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  /* Tests for ASTHelpers#isCheckedExceptionType */
+
+  private TestScanner isCheckedExceptionTypeScanner(boolean expectChecked) {
+    return new TestScanner() {
+      @Override
+      public Void visitMethod(MethodTree tree, VisitorState state) {
+        setAssertionsComplete();
+        List<? extends ExpressionTree> throwz = tree.getThrows();
+
+        for (ExpressionTree expr : throwz) {
+          Type exType = ASTHelpers.getType(expr);
+          assertThat(ASTHelpers.isCheckedExceptionType(exType, state)).isEqualTo(expectChecked);
+        }
+        return super.visitMethod(tree, state);
+      }
+    };
+  }
+
+  @Test
+  public void testIsCheckedExceptionType_yes() {
+    writeFile(
+        "A.java",
+        "import java.text.ParseException;",
+        "public class A {",
+        "  static class MyException extends Exception {}",
+        "  void foo() throws Exception, ParseException {}",
+        "}");
+    TestScanner scanner = isCheckedExceptionTypeScanner(true);
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void testIsCheckedExceptionType_no() {
+    writeFile(
+        "A.java",
+        "public class A {",
+        "  static class MyException extends RuntimeException {}",
+        "  void foo() throws RuntimeException, IllegalArgumentException, MyException,",
+        "      Error, VerifyError {}",
+        "}");
+    TestScanner scanner = isCheckedExceptionTypeScanner(false);
     tests.add(scanner);
     assertCompiles(scanner);
   }
@@ -550,7 +576,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             if (!"super()".equals(tree.toString())) { // ignore synthetic super call
               setAssertionsComplete();
               Type type = ASTHelpers.getType(tree);
-              assertThat(type instanceof TypeVar).isTrue();
+              assertThat(type).isInstanceOf(TypeVar.class);
               assertThat(((TypeVar) type).isCaptured()).isTrue();
               assertThat(ASTHelpers.getUpperBound(type, state.getTypes()).toString())
                   .isEqualTo("java.lang.Number");
@@ -662,7 +688,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
    */
   @BugPattern(
       name = "HasDirectAnnotationWithSimpleNameChecker",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() "
@@ -691,27 +716,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     }
   }
 
-  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
-
-  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
-    String entryPath = clazz.getName().replace('.', '/') + ".class";
-    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
-      jos.putNextEntry(new JarEntry(entryPath));
-      ByteStreams.copy(is, jos);
-    }
-  }
-
   @Test
-  public void testHasDirectAnnotationWithSimpleNameWithoutAnnotationOnClasspath()
-      throws IOException {
-    File libJar = tempFolder.newFile("lib.jar");
-    try (FileOutputStream fis = new FileOutputStream(libJar);
-        JarOutputStream jos = new JarOutputStream(fis)) {
-      addClassToJar(jos, CustomCRVTest.class);
-      addClassToJar(jos, ASTHelpersTest.class);
-      addClassToJar(jos, CompilerBasedAbstractTest.class);
-    }
-
+  public void testHasDirectAnnotationWithSimpleNameWithoutAnnotationOnClasspath() {
     CompilationTestHelper.newInstance(HasDirectAnnotationWithSimpleNameChecker.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -721,7 +727,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "    com.google.errorprone.util.ASTHelpersTest.CustomCRVTest.hello();",
             "  }",
             "}")
-        .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .withClasspath(CustomCRVTest.class, ASTHelpersTest.class, CompilerBasedAbstractTest.class)
         .doTest();
   }
 
@@ -797,16 +803,18 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
     <T extends Tree> void assertMatch(T node, VisitorState visitorState, Matcher<T> matcher) {
       VisitorState state = visitorState.withPath(getCurrentPath());
-      assertTrue(matcher.matches(node, state));
+      assertThat(matcher.matches(node, state)).isTrue();
     }
 
     public void verifyAssertionsComplete() {
-      assertTrue("Expected the visitor to call setAssertionsComplete().", assertionsComplete);
+      assertWithMessage("Expected the visitor to call setAssertionsComplete().")
+          .that(assertionsComplete)
+          .isTrue();
     }
   }
 
   /** A checker that reports the constant value of fields. */
-  @BugPattern(name = "ConstChecker", category = JDK, summary = "", severity = ERROR)
+  @BugPattern(name = "ConstChecker", summary = "", severity = ERROR)
   public static class ConstChecker extends BugChecker implements VariableTreeMatcher {
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -834,7 +842,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   /** A {@link BugChecker} that prints the result type of the first argument in method calls. */
   @BugPattern(
       name = "PrintResultTypeOfFirstArgument",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Prints the type of the first argument in method calls")
   public static class PrintResultTypeOfFirstArgument extends BugChecker
@@ -931,7 +938,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   /** A {@link BugChecker} that prints the target type of matched method invocations. */
   @BugPattern(
       name = "TargetTypeChecker",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Prints the target type")
   public static class TargetTypeChecker extends BugChecker implements MethodInvocationTreeMatcher {
@@ -959,10 +965,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void targetType_methodHandle() {
-    if (!isJdk8OrEarlier()) {
-      // JDK >= 9 complains about splitting java.lang.invoke
-      return;
-    }
+    assumeFalse(RuntimeVersion.isAtLeast9()); // JDK >= 9 complains about splitting java.lang.invoke
     CompilationTestHelper.newInstance(TargetTypeChecker.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -982,7 +985,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   /** A {@link BugChecker} that prints the target type of a parameterized type. */
   @BugPattern(
       name = "TargetTypeCheckerParentTypeNotMatched",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary =
           "Prints the target type for ParameterizedTypeTree, which is not handled explicitly.")
@@ -994,7 +996,10 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
       TargetType targetType = ASTHelpers.targetType(state);
       return buildDescription(tree)
           .setMessage(
-              "Target type of " + tree + " is " + (targetType != null ? targetType.type() : null))
+              "Target type of "
+                  + state.getSourceForNode(tree)
+                  + " is "
+                  + (targetType != null ? targetType.type() : null))
           .build();
     }
   }
@@ -1004,7 +1009,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     // Make sure that the method isn't implemented in the visitor; that would make this test
     // meaningless.
     List<String> methodNames =
-        Stream.of(TargetTypeVisitor.class.getDeclaredMethods())
+        Arrays.stream(TargetTypeVisitor.class.getDeclaredMethods())
             .map(Method::getName)
             .collect(Collectors.toList());
     assertThat(methodNames).doesNotContain("visitParameterizedType");
@@ -1096,7 +1101,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   /** A {@link BugChecker} that prints if the method can be overridden. */
   @BugPattern(
       name = "MethodCanBeOverriddenChecker",
-      category = Category.ONE_OFF,
       severity = SeverityLevel.ERROR,
       summary = "Prints whether the method can be overridden.",
       providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -1208,16 +1212,5 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         };
     tests.add(scanner);
     assertCompiles(scanner);
-  }
-
-  private static boolean isJdk8OrEarlier() {
-    try {
-      Method versionMethod = Runtime.class.getMethod("version");
-      Object version = versionMethod.invoke(null);
-      int majorVersion = (int) version.getClass().getMethod("major").invoke(version);
-      return majorVersion <= 8;
-    } catch (ReflectiveOperationException e) {
-      return true;
-    }
   }
 }

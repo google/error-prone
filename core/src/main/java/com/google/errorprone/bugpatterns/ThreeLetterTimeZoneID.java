@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -33,15 +32,14 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
+import java.time.Duration;
 import java.time.ZoneId;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 /** @author awturner@google.com (Andy Turner) */
 @BugPattern(
     name = "ThreeLetterTimeZoneID",
     summary = ThreeLetterTimeZoneID.SUMMARY,
-    category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocationTreeMatcher {
@@ -105,8 +103,8 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
       if (timeZone.observesDaylightTime()) {
         // Make sure that the offset is a whole number of hours; otherwise, there is no Etc/GMT+X
         // zone. Custom time zones don't need to be handled.
-        long hours = TimeUnit.MILLISECONDS.toHours(timeZone.getRawOffset());
-        long millis = TimeUnit.HOURS.toMillis(hours);
+        long hours = Duration.ofMillis(timeZone.getRawOffset()).toHours();
+        long millis = Duration.ofHours(hours).toMillis();
         if (millis == timeZone.getRawOffset()) {
           // This is a "X Standard Time" zone, but it observes daylight savings.
           // Suggest the equivalent zone, as well as a fixed zone at the non-daylight savings

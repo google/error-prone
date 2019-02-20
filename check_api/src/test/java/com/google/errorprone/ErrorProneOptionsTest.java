@@ -59,7 +59,7 @@ public class ErrorProneOptionsTest {
               assertThrows(
                   InvalidCommandLineOptionException.class,
                   () -> ErrorProneOptions.processArgs(Arrays.asList(arg)));
-          assertThat(expected.getMessage()).contains("invalid flag");
+          assertThat(expected).hasMessageThat().contains("invalid flag");
         });
   }
 
@@ -67,8 +67,7 @@ public class ErrorProneOptionsTest {
   public void handlesErrorProneSeverityFlags() {
     String[] args1 = {"-Xep:Check1"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args1);
-    Map<String, Severity> expectedSeverityMap =
-        ImmutableMap.<String, Severity>builder().put("Check1", Severity.DEFAULT).build();
+    Map<String, Severity> expectedSeverityMap = ImmutableMap.of("Check1", Severity.DEFAULT);
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
 
     String[] args2 = {"-Xep:Check1", "-Xep:Check2:OFF", "-Xep:Check3:WARN"};
@@ -122,8 +121,7 @@ public class ErrorProneOptionsTest {
   public void lastSeverityFlagWins() {
     String[] args = {"-Xep:Check1:ERROR", "-Xep:Check1:OFF"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
-    Map<String, Severity> expectedSeverityMap =
-        ImmutableMap.<String, Severity>builder().put("Check1", Severity.OFF).build();
+    Map<String, Severity> expectedSeverityMap = ImmutableMap.of("Check1", Severity.OFF);
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
   }
 
@@ -161,6 +159,13 @@ public class ErrorProneOptionsTest {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepCompilingTestOnlyCode"});
     assertThat(options.isTestOnlyTarget()).isTrue();
+  }
+
+  @Test
+  public void recognizesVisitSuppressedCode() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepIgnoreSuppressionAnnotations"});
+    assertThat(options.isIgnoreSuppressionAnnotations()).isTrue();
   }
 
   @Test

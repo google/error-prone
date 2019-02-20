@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -34,11 +33,7 @@ import com.sun.source.tree.MethodInvocationTree;
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-@BugPattern(
-    name = "SelfComparison",
-    summary = "An object is compared to itself",
-    category = JDK,
-    severity = ERROR)
+@BugPattern(name = "SelfComparison", summary = "An object is compared to itself", severity = ERROR)
 public class SelfComparison extends BugChecker implements MethodInvocationTreeMatcher {
 
   /**

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.annotations.DoNotCall;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -155,6 +156,27 @@ public class DoNotCallCheckerTest {
             "  // BUG: Diagnostic contains: private method",
             "  @DoNotCall private void f() {}",
             "}")
+        .doTest();
+  }
+
+  /** Test class containing a method annotated with @DNC. */
+  public static class DNCTest {
+    @DoNotCall
+    public static final void f() {}
+  }
+
+  @Test
+  public void noDNConClasspath() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    // BUG: Diagnostic contains: This method should not be called",
+            "    com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f();",
+            "  }",
+            "}")
+        .withClasspath(DNCTest.class, DoNotCallCheckerTest.class)
         .doTest();
   }
 }

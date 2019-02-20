@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableList;
@@ -36,7 +35,6 @@ import com.sun.tools.javac.tree.JCTree;
 @BugPattern(
     name = "UnusedAnonymousClass",
     summary = "Instance created but never used",
-    category = JDK,
     severity = ERROR)
 public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatcher {
 

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.android;
 
-import static com.google.errorprone.BugPattern.Category.ANDROID;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -41,7 +40,6 @@ import com.sun.source.tree.Tree;
     name = "StaticOrDefaultInterfaceMethod",
     summary =
         "Static and default interface methods are not natively supported on older Android devices. ",
-    category = ANDROID,
     severity = ERROR,
     documentSuppression = false // for slightly customized suppression documentation
     )

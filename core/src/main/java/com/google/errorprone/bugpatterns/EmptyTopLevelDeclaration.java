@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
@@ -34,7 +33,6 @@ import java.util.List;
 @BugPattern(
     name = "EmptyTopLevelDeclaration",
     summary = "Empty top-level type declaration",
-    category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class EmptyTopLevelDeclaration extends BugChecker implements CompilationUnitTreeMatcher {

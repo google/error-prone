@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.Signatures.prettyType;
@@ -37,7 +36,6 @@ import com.sun.tools.javac.code.Type;
  */
 @BugPattern(
     name = "PredicateIncompatibleType",
-    category = JDK,
     summary =
         "Using ::equals or ::isInstance as an incompatible Predicate;"
             + " the predicate will always return false",

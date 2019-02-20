@@ -134,7 +134,7 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     return annotation != null && symbol.attribute(annotation) != null;
   }
 
-  // public since this is also used by CompileTimeConstantTypeAnnotationChecker.
+  // public since this is also used by CompileTimeConstantChecker.
   public static boolean hasCompileTimeConstantAnnotation(VisitorState state, Symbol symbol) {
     return hasAttribute(symbol, COMPILE_TIME_CONSTANT_ANNOTATION, state);
   }

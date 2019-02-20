@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.android;
 
-import static com.google.errorprone.BugPattern.Category.ANDROID;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anything;
@@ -52,7 +51,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 @BugPattern(
     name = "IsLoggableTagLength",
     summary = "Log tag too long, cannot exceed 23 characters.",
-    category = ANDROID,
     severity = ERROR)
 public class IsLoggableTagLength extends BugChecker implements MethodInvocationTreeMatcher {
 

@@ -15,10 +15,10 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
-import com.google.errorprone.BugPattern.ProvidesFix;
-import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -35,9 +35,8 @@ import java.util.Objects;
 @BugPattern(
     name = "ComplexBooleanConstant",
     summary = "Non-trivial compile time constant boolean expressions shouldn't be used.",
-    category = Category.JDK,
-    severity = SeverityLevel.ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING,
+    providesFix = REQUIRES_HUMAN_ATTENTION)
 public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatcher {
 
   @Override

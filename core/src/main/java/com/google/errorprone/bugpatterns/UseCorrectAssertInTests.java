@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.matchers.Matchers.contains;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.sun.source.tree.Tree.Kind.LOGICAL_COMPLEMENT;
@@ -52,7 +51,6 @@ import com.sun.tools.javac.tree.TreeInfo;
 @BugPattern(
     name = "UseCorrectAssertInTests",
     summary = "Java assert is used in test. For testing purposes Assert.* matchers should be used.",
-    category = JDK,
     severity = SeverityLevel.WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMatcher {

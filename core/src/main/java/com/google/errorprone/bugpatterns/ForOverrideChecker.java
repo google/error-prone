@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -55,7 +54,6 @@ import javax.lang.model.element.Modifier;
     summary =
         "Method annotated @ForOverride must be protected or package-private and only invoked from "
             + "declaring class, or from an override of the method",
-    category = GUAVA,
     severity = ERROR)
 public class ForOverrideChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher {
@@ -93,8 +91,8 @@ public class ForOverrideChecker extends BugChecker
     List<MethodSymbol> overriddenMethods = getOverriddenMethods(state, method);
 
     for (Symbol overriddenMethod : overriddenMethods) {
-      Type declaringClass = overriddenMethod.outermostClass().asType();
-      if (!declaringClass.equals(currentClass)) {
+      Type declaringClass = ASTHelpers.outermostClass(overriddenMethod).asType();
+      if (!ASTHelpers.isSameType(declaringClass, currentClass, state)) {
         String customMessage =
             MESSAGE_BASE
                 + "must not be invoked directly "
@@ -194,8 +192,9 @@ public class ForOverrideChecker extends BugChecker
     // package-private visibility, but interface methods have implicit public visibility.
     Type currType = state.getTypes().supertype(method.owner.type);
     while (currType != null
-        && !currType.equals(state.getSymtab().objectType)
-        && !currType.equals(Type.noType)) {
+        && currType.tsym != null
+        && !currType.tsym.equals(state.getSymtab().objectType.tsym)
+        && !ASTHelpers.isSameType(currType, Type.noType, state)) {
       Symbol sym = currType.tsym.members().findFirst(method.name);
       if (sym instanceof MethodSymbol) {
         list.add((MethodSymbol) sym);

@@ -26,6 +26,23 @@ import java.lang.annotation.Target;
 /**
  * Specify an error-prone {@link Matcher} to further restrict what expressions are matched by the
  * annotated parameter.
+ *
+ * <p><b>Note:</b> The {@code @Matches} annotation should <b>only</b> go on the
+ * {@code @BeforeTemplate}. For example:
+ *
+ * <pre>{@code
+ * class SingletonList {
+ *   {@literal @}BeforeTemplate
+ *   public <E> List<E> before({@literal @}Matches(IsNonNullMatcher.class) E e) {
+ *     return Collections.singletonList(e);
+ *   }
+ *
+ *   {@literal @}AfterTemplate
+ *   public <E> List<E> after(E e) {
+ *     return ImmutableList.of(e);
+ *   }
+ * }
+ * }</pre>
  */
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)

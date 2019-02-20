@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
@@ -40,6 +39,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.comp.AttrContext;
@@ -60,7 +60,6 @@ import java.util.stream.Collectors;
 @BugPattern(
     name = "TypeNameShadowing",
     summary = "Type parameter declaration shadows another named type",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -88,8 +87,9 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
    */
   private static Iterable<Symbol> typesInEnclosingScope(
       Env<AttrContext> env, PackageSymbol javaLang) {
-    // Collect all visible type names declared in this source file by ascending lexical scopes
-    // and excluding TypeVariableSymbols (otherwise, every type parameter spuriously shadows itself)
+    // Collect all visible type names declared in this source file by ascending lexical scopes,
+    // collecting all members, filtering to keep type symbols and exclude TypeVariableSymbols
+    // (otherwise, every type parameter spuriously shadows itself)
     Iterable<Symbol> localSymbolsInScope =
         Streams.stream(env)
             .map(
@@ -99,7 +99,10 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
                         : ctx.info.getLocalElements())
             .flatMap(
                 symbols ->
-                    Streams.stream(symbols).filter(sym -> !(sym instanceof TypeVariableSymbol)))
+                    Streams.stream(symbols)
+                        .filter(
+                            sym ->
+                                sym instanceof TypeSymbol && !(sym instanceof TypeVariableSymbol)))
             .collect(ImmutableList.toImmutableList());
 
     // Concatenate with all visible type names declared in other source files:

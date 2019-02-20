@@ -18,18 +18,20 @@ package com.google.errorprone.scanner;
 
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions;
-import com.google.errorprone.SuppressionHelper;
+import com.google.errorprone.SuppressionInfo;
+import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,34 +42,20 @@ import java.util.Set;
  * @author alexeagle@google.com (Alex Eagle)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@CheckReturnValue
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
-  private Set<String> suppressions = new HashSet<>();
-  private Set<Class<? extends Annotation>> customSuppressions = new HashSet<>();
-  private boolean inGeneratedCode = false;
-  // This must be lazily initialized, because the list of custom suppression annotations will
-  // not be available until after the subclass's constructor has run.
-  private SuppressionHelper suppressionHelper;
-
-  private void initSuppressionHelper() {
-    if (suppressionHelper == null) {
-      suppressionHelper = new SuppressionHelper(getCustomSuppressionAnnotations());
-    }
-  }
+  private SuppressionInfo currentSuppressions = SuppressionInfo.EMPTY;
 
   /** Scan a tree from a position identified by a TreePath. */
   @Override
   public Void scan(TreePath path, VisitorState state) {
-    SuppressionHelper.SuppressionInfo prevSuppressionInfo =
-        updateSuppressions(path.getLeaf(), state);
-
+    SuppressionInfo prevSuppressionInfo = updateSuppressions(path.getLeaf(), state);
     try {
       return super.scan(path, state);
     } finally {
       // Restore old suppression state.
-      suppressions = prevSuppressionInfo.suppressWarningsStrings;
-      customSuppressions = prevSuppressionInfo.customSuppressions;
-      inGeneratedCode = prevSuppressionInfo.inGeneratedCode;
+      currentSuppressions = prevSuppressionInfo;
     }
   }
 
@@ -78,14 +66,12 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       return null;
     }
 
-    SuppressionHelper.SuppressionInfo prevSuppressionInfo = updateSuppressions(tree, state);
+    SuppressionInfo prevSuppressionInfo = updateSuppressions(tree, state);
     try {
       return super.scan(tree, state);
     } finally {
       // Restore old suppression state.
-      suppressions = prevSuppressionInfo.suppressWarningsStrings;
-      customSuppressions = prevSuppressionInfo.customSuppressions;
-      inGeneratedCode = prevSuppressionInfo.inGeneratedCode;
+      currentSuppressions = prevSuppressionInfo;
     }
   }
 
@@ -93,49 +79,37 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    * Updates current suppression state with information for the given {@code tree}. Returns the
    * previous suppression state so that it can be restored when going up the tree.
    */
-  private SuppressionHelper.SuppressionInfo updateSuppressions(Tree tree, VisitorState state) {
-    SuppressionHelper.SuppressionInfo prevSuppressionInfo =
-        new SuppressionHelper.SuppressionInfo(suppressions, customSuppressions, inGeneratedCode);
-
-    initSuppressionHelper();
-
-    Symbol sym = ASTHelpers.getDeclaredSymbol(tree);
-    if (sym != null) {
-      SuppressionHelper.SuppressionInfo newSuppressions =
-          suppressionHelper.extendSuppressionSets(
-              sym,
-              state.getSymtab().suppressWarningsType,
-              suppressions,
-              customSuppressions,
-              inGeneratedCode,
-              state);
-      if (newSuppressions.suppressWarningsStrings != null) {
-        suppressions = newSuppressions.suppressWarningsStrings;
+  private SuppressionInfo updateSuppressions(Tree tree, VisitorState state) {
+    SuppressionInfo prevSuppressionInfo = currentSuppressions;
+    if (tree instanceof CompilationUnitTree) {
+      currentSuppressions =
+          currentSuppressions.forCompilationUnit((CompilationUnitTree) tree, state);
+    } else {
+      Symbol sym = ASTHelpers.getDeclaredSymbol(tree);
+      if (sym != null) {
+        currentSuppressions =
+            currentSuppressions.withExtendedSuppressions(
+                sym, state, getCustomSuppressionAnnotations());
       }
-      if (newSuppressions.customSuppressions != null) {
-        customSuppressions = newSuppressions.customSuppressions;
-      }
-      inGeneratedCode = newSuppressions.inGeneratedCode;
     }
-
     return prevSuppressionInfo;
   }
 
   /**
-   * Returns true if this checker should be suppressed on the current tree path.
+   * Returns if this checker should be suppressed on the current tree path.
    *
    * @param suppressible holds information about the suppressibility of a checker
+   * @param errorProneOptions Options object configuring whether or not to suppress non-errors in
+   *     generated code.
    */
-  protected boolean isSuppressed(Suppressible suppressible, ErrorProneOptions errorProneOptions) {
-    initSuppressionHelper();
+  protected SuppressedState isSuppressed(
+      Suppressible suppressible, ErrorProneOptions errorProneOptions) {
 
-    return SuppressionHelper.isSuppressed(
-        suppressible,
-        suppressions,
-        customSuppressions,
-        severityMap().get(suppressible.canonicalName()),
-        inGeneratedCode,
-        errorProneOptions.disableWarningsInGeneratedCode());
+    boolean suppressedInGeneratedCode =
+        errorProneOptions.disableWarningsInGeneratedCode()
+            && severityMap().get(suppressible.canonicalName()) != SeverityLevel.ERROR;
+
+    return currentSuppressions.suppressedState(suppressible, suppressedInGeneratedCode);
   }
 
   /**

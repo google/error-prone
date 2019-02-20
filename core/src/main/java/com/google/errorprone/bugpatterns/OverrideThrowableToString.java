@@ -16,22 +16,20 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Warns against overriding toString() in a Throwable class and suggests getMessage()
@@ -42,37 +40,29 @@ import java.util.Optional;
     name = "OverrideThrowableToString",
     summary =
         "To return a custom message with a Throwable class, one should "
-            + "override getMessage() instead of toString() for Throwable.",
-    category = JDK,
+            + "override getMessage() instead of toString().",
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
-public class OverrideThrowableToString extends BugChecker implements ClassTreeMatcher {
+public final class OverrideThrowableToString extends BugChecker implements ClassTreeMatcher {
 
   @Override
-  public Description matchClass(ClassTree classTree, VisitorState visitorState) {
-    Symbol throwableClass = visitorState.getSymbolFromString("java.lang.Throwable");
-    if (Objects.equals(ASTHelpers.getSymbol(classTree.getExtendsClause()), throwableClass)) {
-      Optional<? extends Tree> methodTree =
-          classTree.getMembers().stream()
-              .filter(
-                  m ->
-                      m instanceof MethodTree
-                          && ((MethodTree) m).getName().contentEquals("toString"))
-              .findFirst();
-      if (methodTree.isPresent()) {
-        SuggestedFix.Builder builder = SuggestedFix.builder();
-        MethodTree tree = (MethodTree) methodTree.get();
-        if (!tree.getParameters().isEmpty()) {
-          return Description.NO_MATCH;
-        }
-        String newTree =
-            tree.getModifiers().toString().replaceAll("@Override[(][)]", "@Override")
-                + "String getMessage()\n"
-                + visitorState.getSourceForNode(tree.getBody());
-        builder.replace(tree, newTree);
-        return describeMatch(classTree, builder.build());
-      }
+  public Description matchClass(ClassTree classTree, VisitorState state) {
+    if (!ASTHelpers.isSubtype(
+        ASTHelpers.getType(classTree), state.getSymtab().throwableType, state)) {
+      return Description.NO_MATCH;
     }
-    return Description.NO_MATCH;
+    ImmutableList<MethodTree> methods =
+        classTree.getMembers().stream()
+            .filter(m -> m instanceof MethodTree)
+            .map(m -> (MethodTree) m)
+            .collect(toImmutableList());
+    if (methods.stream().anyMatch(m -> m.getName().contentEquals("getMessage"))) {
+      return Description.NO_MATCH;
+    }
+    return methods.stream()
+        .filter(m -> Matchers.toStringMethodDeclaration().matches(m, state))
+        .findFirst()
+        .map(m -> describeMatch(classTree, SuggestedFixes.renameMethod(m, "getMessage", state)))
+        .orElse(Description.NO_MATCH);
   }
 }

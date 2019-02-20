@@ -184,6 +184,22 @@ public class Suppliers {
         }
       };
 
+  public static final Supplier<Type> LONG_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().longType;
+        }
+      };
+
+  public static final Supplier<Type> DOUBLE_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().doubleType;
+        }
+      };
+
   public static final Supplier<Type> CHAR_TYPE =
       new Supplier<Type>() {
         @Override

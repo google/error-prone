@@ -37,7 +37,7 @@ public class BranchedSuggestedFixesTest {
             .build()
             .getFixes();
 
-    assertThat(fixes.size()).isEqualTo(2);
+    assertThat(fixes).hasSize(2);
     assertThat(fixes.get(0).getImportsToAdd()).containsExactly("import A", "import B");
     assertThat(fixes.get(1).getImportsToAdd()).containsExactly("import A", "import C");
   }

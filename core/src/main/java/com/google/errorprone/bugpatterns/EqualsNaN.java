@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -37,7 +36,6 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "EqualsNaN",
     summary = "== NaN always returns false; use the isNaN methods instead",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {
@@ -74,13 +72,14 @@ public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {
     return Description.NO_MATCH;
   }
 
-  private CharSequence toString(JCTree tree, VisitorState state) {
+  @SuppressWarnings("TreeToString")
+  private static CharSequence toString(JCTree tree, VisitorState state) {
     CharSequence source = state.getSourceForNode(tree);
     return (source == null) ? tree.toString() : source;
   }
 
   @Nullable
-  private String matchNaN(ExpressionTree tree) {
+  private static String matchNaN(ExpressionTree tree) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym != null
         && sym.owner != null

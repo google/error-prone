@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.android;
 
-import static com.google.errorprone.BugPattern.Category.ANDROID;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
@@ -32,7 +31,6 @@ import com.sun.source.tree.MethodInvocationTree;
 @BugPattern(
     name = "RectIntersectReturnValueIgnored",
     summary = "Return value of android.graphics.Rect.intersect() must be checked",
-    category = ANDROID,
     severity = ERROR)
 public final class RectIntersectReturnValueIgnored extends AbstractReturnValueIgnored {
   @Override

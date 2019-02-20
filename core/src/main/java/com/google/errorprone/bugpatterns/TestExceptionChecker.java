@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -39,7 +38,6 @@ import java.util.List;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "TestExceptionChecker",
-    category = JUNIT,
     summary =
         "Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in"
             + " the test method throws the expected exception",
@@ -69,7 +67,7 @@ public class TestExceptionChecker extends AbstractTestExceptionChecker {
             .collect(toImmutableList());
     if (!fixes.isEmpty()) {
       description.addAllFixes(fixes);
-    } else {
+    } else if (!statements.isEmpty()) {
       description.addFix(
           buildFix(
               state,

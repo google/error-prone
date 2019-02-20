@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -46,7 +45,6 @@ import javax.lang.model.type.TypeKind;
     name = "IntLongMath",
     summary = "Expression of type int may overflow before being assigned to a long",
     severity = WARNING,
-    category = JDK,
     tags = FRAGILE_CODE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class IntLongMath extends BugChecker
@@ -87,7 +85,7 @@ public class IntLongMath extends BugChecker
   }
 
   Description check(Type targetType, ExpressionTree init) {
-    if (init == null) {
+    if (init == null || targetType == null) {
       return NO_MATCH;
     }
     if (ASTHelpers.constValue(init) != null) {

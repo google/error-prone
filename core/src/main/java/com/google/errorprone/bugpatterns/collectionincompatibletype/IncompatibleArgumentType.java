@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.extractTypeArgAsMemberOfSupertype;
 
@@ -50,7 +49,6 @@ import javax.lang.model.element.TypeParameterElement;
 @BugPattern(
     name = "IncompatibleArgumentType",
     summary = "Passing argument to a generic method with an incompatible type.",
-    category = JDK,
     severity = ERROR)
 public class IncompatibleArgumentType extends BugChecker implements MethodInvocationTreeMatcher {
 
@@ -83,7 +81,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     // The unbound MethodSymbol for bar(), with type parameters <A> and <B>
     MethodSymbol declaredMethod = ASTHelpers.getSymbol(methodInvocationTree);
     if (arguments.isEmpty() || declaredMethod == null) {
-      return null;
+      return Description.NO_MATCH;
     }
 
     List<RequiredType> requiredTypesAtCallSite =

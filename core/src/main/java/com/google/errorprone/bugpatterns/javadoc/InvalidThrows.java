@@ -46,7 +46,8 @@ import com.sun.tools.javac.code.Type;
     summary = "The documented method doesn't actually throw this checked exception.",
     severity = WARNING,
     tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
+    documentSuppression = false)
 public final class InvalidThrows extends BugChecker implements MethodTreeMatcher {
 
   @Override

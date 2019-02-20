@@ -103,7 +103,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
       return NO_MATCH;
     }
     Symbol finalizeSym = getFinalizer(state, enclosing.enclClass());
-    if (finalizeSym.equals(enclosing)) {
+    if (finalizeSym == null || finalizeSym.equals(enclosing)) {
       // Don't check native methods called from within the implementation of finalize.
       return NO_MATCH;
     }

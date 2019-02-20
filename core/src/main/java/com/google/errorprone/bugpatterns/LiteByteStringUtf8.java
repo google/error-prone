@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.PROTOBUF;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -33,7 +32,6 @@ import com.sun.source.tree.MethodInvocationTree;
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
     name = "LiteByteStringUtf8",
-    category = PROTOBUF,
     summary =
         "This pattern will silently corrupt certain byte sequences from the serialized protocol "
             + "message. Use ByteString or byte[] directly",

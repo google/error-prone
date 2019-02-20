@@ -24,14 +24,26 @@ import static java.util.Locale.ENGLISH;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Streams;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.google.errorprone.BugPattern.ProvidesFix;
+import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
+import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -39,9 +51,13 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.stream.Stream;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
@@ -185,7 +201,7 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of(
                     "-Xplugin:ErrorProne"
                         + " -XepPatchChecks:MissingOverride -XepPatchLocation:"
-                        + patchDir.toString(),
+                        + patchDir,
                     "-XDcompilePolicy=byfile"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(fileA, fileB));
@@ -297,5 +313,77 @@ public class ErrorProneJavacPluginTest {
     assertThat(diagnostics).hasSize(2);
     assertThat(diagnostics.get(0)).contains("[CollectionIncompatibleType]");
     assertThat(diagnostics.get(1)).contains("[DeadException]");
+  }
+
+  /** A bugpattern for testing. */
+  @BugPattern(
+      name = "TestCompilesWithFix",
+      summary = "",
+      severity = SeverityLevel.ERROR,
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  public static class TestCompilesWithFix extends BugChecker implements ReturnTreeMatcher {
+
+    @Override
+    public Description matchReturn(ReturnTree tree, VisitorState state) {
+      // add a no-op fix to exercise compilesWithFix
+      SuggestedFix fix = SuggestedFix.postfixWith(tree, "//");
+      return SuggestedFixes.compilesWithFix(fix, state)
+          ? describeMatch(tree, fix)
+          : Description.NO_MATCH;
+    }
+  }
+
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
+
+  @Test
+  public void compilesWithFix() throws IOException {
+    File libJar = tempFolder.newFile("lib.jar");
+    try (FileOutputStream fis = new FileOutputStream(libJar);
+        JarOutputStream jos = new JarOutputStream(fis)) {
+      jos.putNextEntry(new JarEntry("META-INF/services/" + BugChecker.class.getName()));
+      jos.write(TestCompilesWithFix.class.getName().getBytes(UTF_8));
+    }
+
+    FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    Path source = fileSystem.getPath("Test.java");
+    Files.write(
+        source,
+        ImmutableList.of(
+            "import java.util.HashSet;",
+            "import java.util.Set;",
+            "class Test {",
+            "  void f() {",
+            "    return;",
+            "  }",
+            "}"),
+        UTF_8);
+    JavacFileManager fileManager = new JavacFileManager(new Context(), false, UTF_8);
+    fileManager.setLocation(
+        StandardLocation.ANNOTATION_PROCESSOR_PATH,
+        Streams.concat(
+                Stream.of(libJar),
+                Streams.stream(
+                        Splitter.on(File.pathSeparatorChar)
+                            .split(StandardSystemProperty.JAVA_CLASS_PATH.value()))
+                    .map(File::new))
+            .collect(toImmutableList()));
+    DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
+    JavacTask task =
+        JavacTool.create()
+            .getTask(
+                null,
+                fileManager,
+                diagnosticCollector,
+                ImmutableList.of(
+                    "-Xplugin:ErrorProne -XepDisableAllChecks -Xep:TestCompilesWithFix:ERROR",
+                    "-XDcompilePolicy=byfile"),
+                ImmutableList.of(),
+                fileManager.getJavaFileObjects(source));
+    assertThat(task.call()).isFalse();
+    Diagnostic<? extends JavaFileObject> diagnostic =
+        diagnosticCollector.getDiagnostics().stream()
+            .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
+            .collect(onlyElement());
+    assertThat(diagnostic.getMessage(ENGLISH)).contains("[TestCompilesWithFix]");
   }
 }

@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.formatstring;
 import static com.google.common.collect.Iterables.getOnlyElement;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -34,8 +33,8 @@ import edu.umd.cs.findbugs.formatStringChecker.Formatter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayDeque;
 import java.util.Calendar;
@@ -118,15 +117,12 @@ public class FormatStringValidation {
     Iterable<Object> instances =
         Iterables.transform(
             args,
-            new Function<ExpressionTree, Object>() {
-              @Override
-              public Object apply(ExpressionTree input) {
-                try {
-                  return getInstance(input, state);
-                } catch (Throwable t) {
-                  // ignore symbol completion failures
-                  return null;
-                }
+            (ExpressionTree input) -> {
+              try {
+                return getInstance(input, state);
+              } catch (Throwable t) {
+                // ignore symbol completion failures
+                return null;
               }
             });
 
@@ -205,8 +201,11 @@ public class FormatStringValidation {
     if (isSubtype(types, type, state.getTypeFromString(Calendar.class.getName()))) {
       return new GregorianCalendar();
     }
+    if (isSubtype(types, type, state.getTypeFromString(Instant.class.getName()))) {
+      return Instant.now();
+    }
     if (isSubtype(types, type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
-      return LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
+      return ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
     }
     return new Object();
   }

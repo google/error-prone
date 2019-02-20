@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
@@ -41,7 +40,6 @@ import javax.lang.model.element.Name;
     summary =
         "Synchronizing on non-final fields is not safe: if the field is ever updated,"
             + " different threads may end up locking on different objects.",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public class SynchronizeOnNonFinalField extends BugChecker

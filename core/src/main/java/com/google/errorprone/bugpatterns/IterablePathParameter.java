@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -44,7 +43,6 @@ import javax.lang.model.element.ElementKind;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "IterablePathParameter",
-    category = JDK,
     summary = "Path implements Iterable<Path>; prefer Collection<Path> for clarity",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

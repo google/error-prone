@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -56,7 +55,6 @@ import java.util.function.Function;
 @BugPattern(
     name = "ArgumentSelectionDefectChecker",
     summary = "Arguments are in the wrong order or could be commented for clarity.",
-    category = JDK,
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ArgumentSelectionDefectChecker extends BugChecker

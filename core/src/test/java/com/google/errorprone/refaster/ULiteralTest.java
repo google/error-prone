@@ -16,7 +16,7 @@
 
 package com.google.errorprone.refaster;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
@@ -36,56 +36,56 @@ public class ULiteralTest extends AbstractUTreeTest {
   public void nullLiteral() {
     ULiteral lit = ULiteral.nullLit();
     assertUnifiesAndInlines("null", lit);
-    assertEquals(Kind.NULL_LITERAL, lit.getKind());
+    assertThat(lit.getKind()).isEqualTo(Kind.NULL_LITERAL);
   }
 
   @Test
   public void stringLiteral() {
     ULiteral lit = ULiteral.stringLit("foo");
     assertUnifiesAndInlines("\"foo\"", lit);
-    assertEquals(Kind.STRING_LITERAL, lit.getKind());
+    assertThat(lit.getKind()).isEqualTo(Kind.STRING_LITERAL);
   }
 
   @Test
   public void intLiteral() {
     ULiteral lit = ULiteral.intLit(123);
     assertUnifiesAndInlines("123", lit);
-    assertEquals(Kind.INT_LITERAL, lit.getKind());
+    assertThat(lit.getKind()).isEqualTo(Kind.INT_LITERAL);
   }
 
   @Test
   public void longLiteral() {
     ULiteral lit = ULiteral.longLit(123L);
     assertUnifiesAndInlines("123L", lit);
-    assertEquals(Kind.LONG_LITERAL, lit.getKind());
+    assertThat(lit.getKind()).isEqualTo(Kind.LONG_LITERAL);
   }
 
   @Test
   public void charLiteral() {
     ULiteral lit = ULiteral.create(Kind.CHAR_LITERAL, '%');
     assertUnifiesAndInlines("'%'", lit);
-    assertEquals(Kind.CHAR_LITERAL, lit.getKind());
+    assertThat(lit.getKind()).isEqualTo(Kind.CHAR_LITERAL);
   }
 
   @Test
   public void doubleLiteral() {
     ULiteral lit = ULiteral.doubleLit(1.23);
     assertUnifiesAndInlines("1.23", lit);
-    assertEquals(Kind.DOUBLE_LITERAL, lit.getKind());
+    assertThat(lit.getKind()).isEqualTo(Kind.DOUBLE_LITERAL);
   }
 
   @Test
   public void floatLiteral() {
     ULiteral lit = ULiteral.floatLit(1.23F);
     assertUnifiesAndInlines("1.23F", lit);
-    assertEquals(Kind.FLOAT_LITERAL, lit.getKind());
+    assertThat(lit.getKind()).isEqualTo(Kind.FLOAT_LITERAL);
   }
 
   @Test
   public void booleanLiteral() {
     ULiteral lit = ULiteral.booleanLit(false);
     assertUnifiesAndInlines("false", lit);
-    assertEquals(Kind.BOOLEAN_LITERAL, lit.getKind());
+    assertThat(lit.getKind()).isEqualTo(Kind.BOOLEAN_LITERAL);
   }
 
   @Test

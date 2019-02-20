@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -48,7 +47,6 @@ import java.util.List;
 /** @author Nick Glorioso (glorioso@google.com) */
 @BugPattern(
     name = "QualifierOrScopeOnInjectMethod",
-    category = Category.INJECT,
     summary =
         "Qualifiers/Scope annotations on @Inject methods don't have any effect."
             + " Move the qualifier annotation to the binding location.",

@@ -16,10 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -35,13 +35,14 @@ import com.sun.tools.javac.code.Type;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
+import javax.lang.model.element.Modifier;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 @BugPattern(
     name = "ReturnValueIgnored",
     altNames = {"ResultOfMethodCallIgnored", "CheckReturnValue"},
     summary = "Return value of this method must be used",
-    category = JDK,
     severity = ERROR)
 public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   /**
@@ -66,6 +67,57 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    */
   private static final Matcher<ExpressionTree> RETURNS_SAME_TYPE =
       allOf(methodReceiverHasType(typesToCheck), methodReturnsSameTypeAsReceiver());
+
+  /**
+   * This matcher allows the following methods in {@code java.time}:
+   *
+   * <ul>
+   *   <li>any methods named {@code parse}
+   *   <li>any static method named {@code of}
+   *   <li>any static method named {@code from}
+   *   <li>any instance method starting with {@code append} on {@link
+   *       java.time.format.DateTimeFormatterBuilder}
+   *   <li>{@link java.time.temporal.ChronoField#checkValidIntValue}
+   *   <li>{@link java.time.temporal.ChronoField#checkValidValue}
+   * </ul>
+   */
+  private static final Matcher<ExpressionTree> ALLOWED_JAVA_TIME_METHODS =
+      anyOf(
+          staticMethod().anyClass().named("parse"),
+          instanceMethod().anyClass().named("parse"),
+          staticMethod().anyClass().named("of"),
+          staticMethod().anyClass().named("from"),
+          staticMethod().onClass("java.time.ZoneId").named("ofOffset"),
+          instanceMethod()
+              .onExactClass("java.time.format.DateTimeFormatterBuilder")
+              .withNameMatching(Pattern.compile("^append.*")),
+          instanceMethod()
+              .onExactClass("java.time.temporal.ChronoField")
+              .named("checkValidIntValue"),
+          instanceMethod().onExactClass("java.time.temporal.ChronoField").named("checkValidValue"));
+
+  /**
+   * {@link java.time} types are immutable. The only methods we allow ignoring the return value on
+   * are the {@code parse}-style APIs since folks often use it for validation.
+   */
+  private static final Matcher<ExpressionTree> JAVA_TIME_TYPES =
+      (tree, state) -> {
+        if (packageStartsWith("java.time").matches(tree, state)) {
+          return false;
+        }
+        Symbol symbol = ASTHelpers.getSymbol(tree);
+        if (symbol instanceof MethodSymbol) {
+          MethodSymbol methodSymbol = (MethodSymbol) symbol;
+          if (methodSymbol.owner.packge().getQualifiedName().toString().startsWith("java.time")
+              && methodSymbol.getModifiers().contains(Modifier.PUBLIC)) {
+            if (ALLOWED_JAVA_TIME_METHODS.matches(tree, state)) {
+              return false;
+            }
+            return true;
+          }
+        }
+        return false;
+      };
 
   /**
    * Methods in {@link java.util.function} are pure, and their returnvalues should not be discarded.
@@ -97,7 +149,8 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
 
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return anyOf(RETURNS_SAME_TYPE, FUNCTIONAL_METHOD, STREAM_METHOD, ARRAYS_METHODS);
+    return anyOf(
+        RETURNS_SAME_TYPE, FUNCTIONAL_METHOD, STREAM_METHOD, ARRAYS_METHODS, JAVA_TIME_TYPES);
   }
 
   /** Matches method invocations that return the same type as the receiver object. */

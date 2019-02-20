@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -40,7 +39,6 @@ import java.util.List;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "IndexOfChar",
-    category = JDK,
     summary =
         "The first argument to indexOf is a Unicode code point, and the second is the index to"
             + " start the search from",

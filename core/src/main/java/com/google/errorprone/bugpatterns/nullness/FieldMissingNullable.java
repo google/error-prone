@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
@@ -52,7 +51,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "FieldMissingNullable",
     summary = "Fields that can be null should be annotated @Nullable",
-    category = JDK,
     severity = SUGGESTION,
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public class FieldMissingNullable extends BugChecker

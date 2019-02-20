@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -66,7 +65,6 @@ import java.util.Set;
     summary =
         "First argument to `Preconditions.checkNotNull()` is a primitive rather "
             + "than an object reference",
-    category = GUAVA,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class PreconditionsCheckNotNullPrimitive extends BugChecker
@@ -106,7 +104,8 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
 
     // Assignment, return, etc.
     if (parent.getKind() != Kind.EXPRESSION_STATEMENT) {
-      return describeMatch(arg1, SuggestedFix.replace(methodInvocationTree, arg1.toString()));
+      return describeMatch(
+          arg1, SuggestedFix.replace(methodInvocationTree, state.getSourceForNode(arg1)));
     }
 
     // Comparison to null
@@ -114,11 +113,11 @@ public class PreconditionsCheckNotNullPrimitive extends BugChecker
       BinaryTree binaryExpr = (BinaryTree) arg1;
       if (binaryExpr.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
         return describeMatch(
-            arg1, SuggestedFix.replace(arg1, binaryExpr.getRightOperand().toString()));
+            arg1, SuggestedFix.replace(arg1, state.getSourceForNode(binaryExpr.getRightOperand())));
       }
       if (binaryExpr.getRightOperand().getKind() == Kind.NULL_LITERAL) {
         return describeMatch(
-            arg1, SuggestedFix.replace(arg1, binaryExpr.getLeftOperand().toString()));
+            arg1, SuggestedFix.replace(arg1, state.getSourceForNode(binaryExpr.getLeftOperand())));
       }
     }
 

@@ -16,8 +16,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers.FIRST;
 
 import com.google.common.collect.Iterables;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
@@ -40,10 +42,12 @@ import org.junit.runners.JUnit4;
 public class MissingFailTest {
 
   private CompilationTestHelper compilationHelper;
+  private BugCheckerRefactoringTestHelper refactoringHelper;
 
   @Before
   public void setUp() {
     compilationHelper = CompilationTestHelper.newInstance(MissingFail.class, getClass());
+    refactoringHelper = BugCheckerRefactoringTestHelper.newInstance(new MissingFail(), getClass());
   }
 
   @Test
@@ -91,9 +95,12 @@ public class MissingFailTest {
             "}")
         .doTest();
 
-    assertThat(getOnlyFix(scanner).getImportsToAdd())
-        .containsExactly("import static org.junit.Assert.fail");
-    assertThat(getOnlyFix(scanner).getImportsToRemove())
+    Description warning = Iterables.getOnlyElement(scanner.suggestedChanges);
+    assertThat(warning.fixes).hasSize(2);
+    // Fix that adds fail comes after assertThrows fix.
+    Fix fix2 = warning.fixes.get(1);
+    assertThat(fix2.getImportsToAdd()).containsExactly("import static org.junit.Assert.fail");
+    assertThat(fix2.getImportsToRemove())
         .containsExactly(
             "import static junit.framework.TestCase.fail",
             "import static junit.framework.Assert.fail");
@@ -119,7 +126,10 @@ public class MissingFailTest {
             "}")
         .doTest();
 
-    assertThat(getOnlyFix(scanner).getReplacements(new NoopEndPosTable()))
+    Description warning = Iterables.getOnlyElement(scanner.suggestedChanges);
+    // Fix that adds fail comes after assertThrows fix.
+    Fix fix2 = warning.fixes.get(1);
+    assertThat(fix2.getReplacements(new NoopEndPosTable()))
         .containsExactly(Replacement.create(0, 0, "\nfail(\"Expected Exception\");"));
   }
 
@@ -162,9 +172,140 @@ public class MissingFailTest {
         .doTest();
   }
 
-  private Fix getOnlyFix(TestScanner scanner) {
-    Description warning = Iterables.getOnlyElement(scanner.suggestedChanges);
-    return Iterables.getOnlyElement(warning.fixes);
+  @Test
+  public void assertThrowsCatchBlock() {
+    refactoringHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.io.IOException;",
+            "import java.nio.file.*;",
+            "import org.junit.Test;",
+            "class ExceptionTest {",
+            "  @Test",
+            "  public void f() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    try {",
+            "      Files.readAllBytes(p);",
+            "      Files.readAllBytes(p);",
+            "    } catch (IOException e) {",
+            "      assertThat(e).hasMessageThat().contains(\"NOSUCH\");",
+            "    }",
+            "  }",
+            "  @Test",
+            "  public void g() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    try {",
+            "      Files.readAllBytes(p);",
+            "    } catch (IOException e) {",
+            "      assertThat(e).hasMessageThat().contains(\"NOSUCH\");",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import static org.junit.Assert.assertThrows;",
+            "import java.io.IOException;",
+            "import java.nio.file.*;",
+            "import org.junit.Test;",
+            "class ExceptionTest {",
+            "  @Test",
+            "  public void f() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    IOException e = assertThrows(IOException.class, () -> {",
+            "      Files.readAllBytes(p);",
+            "      Files.readAllBytes(p);",
+            "    });",
+            "    assertThat(e).hasMessageThat().contains(\"NOSUCH\");",
+            "  }",
+            "  @Test",
+            "  public void g() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));",
+            "    assertThat(e).hasMessageThat().contains(\"NOSUCH\");",
+            "  }",
+            "}")
+        .setFixChooser(FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void assertThrowsEmptyCatch() {
+    refactoringHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import java.io.IOException;",
+            "import java.nio.file.*;",
+            "import org.junit.Test;",
+            "class ExceptionTest {",
+            "  @Test",
+            "  public void test() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    try {",
+            "      Files.readAllBytes(p);",
+            "    } catch (IOException expected) {",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            "import static org.junit.Assert.assertThrows;",
+            "import java.io.IOException;",
+            "import java.nio.file.*;",
+            "import org.junit.Test;",
+            "class ExceptionTest {",
+            "  @Test",
+            "  public void test() throws Exception {",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    assertThrows(IOException.class, () -> Files.readAllBytes(p));",
+            "  }",
+            "}")
+        .setFixChooser(FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void emptyTry() {
+    refactoringHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import java.io.IOException;",
+            "import org.junit.Test;",
+            "abstract class ExceptionTest {",
+            "  abstract AutoCloseable c();",
+            "  @Test",
+            "  public void test() {",
+            "    try (AutoCloseable c = c()) {",
+            "    } catch (Exception expected) {",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void noEnclosingMethod() {
+    refactoringHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import java.io.IOException;",
+            "import org.junit.Test;",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "abstract class ExceptionTest {",
+            "  abstract void c();",
+            "  {",
+            "    try {",
+            "      c();",
+            "    } catch (Exception expected) {",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
   }
 
   private static class TestScanner extends Scanner {

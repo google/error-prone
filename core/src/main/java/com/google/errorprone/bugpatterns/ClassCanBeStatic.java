@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -40,7 +39,6 @@ import javax.lang.model.element.NestingKind;
 @BugPattern(
     name = "ClassCanBeStatic",
     summary = "Inner class is non-static but does not reference enclosing class",
-    category = JDK,
     severity = WARNING,
     tags = {StandardTags.STYLE, StandardTags.PERFORMANCE},
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)

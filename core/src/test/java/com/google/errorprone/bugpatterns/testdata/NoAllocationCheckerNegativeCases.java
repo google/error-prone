@@ -193,6 +193,17 @@ public class NoAllocationCheckerNegativeCases {
     throw new IntegerException(i++);
   }
 
+  @NoAllocation
+  public void callGenericMethod() {
+    String foo = "foo";
+    String bar = genericMethod(foo);
+  }
+
+  @NoAllocation
+  private static <T> T genericMethod(T value) {
+    return value;
+  }
+
   // All of the positive cases with @NoAllocation removed are below.
   public int[] newArray(int size) {
     return new int[size];
@@ -477,5 +488,58 @@ public class NoAllocationCheckerNegativeCases {
         }
       }
     };
+  }
+
+  public interface NoAllocationInterface {
+    @NoAllocation
+    void method();
+  }
+
+  public static class NoAllocationImplementingClass implements NoAllocationInterface {
+    @Override
+    @NoAllocation
+    public void method() {}
+  }
+
+  public static class NoAllocationImplementingClassWithSuppression
+      implements NoAllocationInterface {
+    @Override
+    @SuppressWarnings("NoAllocation")
+    public void method() {}
+  }
+
+  public abstract static class NoAllocationAbstractClass {
+    @NoAllocation
+    abstract void method();
+  }
+
+  public static class NoAllocationConcreteClass extends NoAllocationAbstractClass {
+    @Override
+    @NoAllocation
+    void method() {}
+  }
+
+  public static class NoAllocationConcreteClassWithSuppression extends NoAllocationAbstractClass {
+    @Override
+    @SuppressWarnings("NoAllocation")
+    void method() {}
+  }
+
+  public static class NoAllocationParentClass implements NoAllocationInterface {
+    @Override
+    @NoAllocation
+    public void method() {}
+  }
+
+  public static class NoAllocationSubclass extends NoAllocationParentClass {
+    @Override
+    @NoAllocation
+    public void method() {}
+  }
+
+  public static class NoAllocationSubclassWithSuppression extends NoAllocationParentClass {
+    @Override
+    @SuppressWarnings("NoAllocation")
+    public void method() {}
   }
 }

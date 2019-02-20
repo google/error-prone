@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns.inject.guice;
 
-import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
@@ -64,7 +63,6 @@ import javax.lang.model.element.TypeElement;
     summary =
         "A constructor cannot have two @Assisted parameters of the same type unless they are "
             + "disambiguated with named @Assisted annotations.",
-    category = GUICE,
     severity = ERROR)
 public class AssistedParameters extends BugChecker implements MethodTreeMatcher {
 

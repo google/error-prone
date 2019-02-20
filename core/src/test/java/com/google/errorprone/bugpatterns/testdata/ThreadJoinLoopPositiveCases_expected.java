@@ -32,6 +32,10 @@ class ThreadJoinLoopPositiveCases {
     Uninterruptibles.joinUninterruptibly(thread);
   }
 
+  public void emptyCatchStatements(Thread thread) {
+    Uninterruptibles.joinUninterruptibly(thread);
+  }
+
   public void whileLoop(Thread thread) {
     Uninterruptibles.joinUninterruptibly(thread);
   }

@@ -16,7 +16,7 @@
 
 package com.google.errorprone.refaster;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
@@ -60,6 +60,6 @@ public class UTypeVarIdentTest extends AbstractUTreeTest {
         TypeWithExpression.create(
             new ClassType(listType, List.<Type>of(symtab.stringType), listType.tsym)));
     assertInlines("List<String>", UTypeVarIdent.create("E"));
-    assertEquals(ImmutableSet.of("java.util.List"), inliner.getImportsToAdd());
+    assertThat(inliner.getImportsToAdd()).isEqualTo(ImmutableSet.of("java.util.List"));
   }
 }

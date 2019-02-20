@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JUNIT;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_CLASS_ANNOTATION;
@@ -46,7 +45,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "JUnit4ClassAnnotationNonStatic",
     summary = "This method should be static",
-    category = JUNIT,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class JUnit4ClassAnnotationNonStatic extends BugChecker implements MethodTreeMatcher {

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.util;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.HashBasedTable;
@@ -96,7 +95,7 @@ public final class ASTHelpersFindSuperMethodsTest extends CompilerBasedAbstractT
   public void findSuperMethods_findsSingleMethod() {
     MethodSymbol barOfNorf = scanner.getMethod("Norf", "bar");
     MethodSymbol barOfQuux = scanner.getMethod("Quux", "bar");
-    assertThat(findSuperMethods(barOfNorf)).isEqualTo(ImmutableList.of(barOfQuux));
+    assertThat(findSuperMethods(barOfNorf)).containsExactly(barOfQuux);
   }
 
   @Test
@@ -106,7 +105,8 @@ public final class ASTHelpersFindSuperMethodsTest extends CompilerBasedAbstractT
     MethodSymbol fooOfBar = scanner.getMethod("Bar", "foo");
     MethodSymbol fooOfQuux = scanner.getMethod("Foo", "foo");
     assertThat(findSuperMethods(fooOfNorf))
-        .isEqualTo(ImmutableList.of(fooOfBaz, fooOfBar, fooOfQuux));
+        .containsExactly(fooOfBaz, fooOfBar, fooOfQuux)
+        .inOrder();
   }
 
   @Test
@@ -147,7 +147,7 @@ public final class ASTHelpersFindSuperMethodsTest extends CompilerBasedAbstractT
   }
 
   private ImmutableList<MethodSymbol> findSuperMethods(MethodSymbol method) {
-    return ASTHelpers.findSuperMethods(method, getTypes()).stream().collect(toImmutableList());
+    return ImmutableList.copyOf(ASTHelpers.findSuperMethods(method, getTypes()));
   }
 
   private Optional<MethodSymbol> findSuperMethod(MethodSymbol method) {

@@ -16,13 +16,25 @@
 
 package com.google.errorprone.util;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.Streams;
 import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.TargetType;
 import com.sun.tools.javac.code.TypeAnnotationPosition;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** Annotation-related utilities. */
 public final class MoreAnnotations {
@@ -41,7 +53,7 @@ public final class MoreAnnotations {
    * annotation information with types for symbols completed from class files, so that approach
    * doesn't work across compilation boundaries.
    */
-  public static Stream<Attribute.Compound> getDeclarationAndTypeAttributes(Symbol sym) {
+  public static Stream<Compound> getDeclarationAndTypeAttributes(Symbol sym) {
     Symbol typeAnnotationOwner;
     switch (sym.getKind()) {
       case PARAMETER:
@@ -51,9 +63,13 @@ public final class MoreAnnotations {
         typeAnnotationOwner = sym;
     }
     return Streams.concat(
-        sym.getRawAttributes().stream(),
-        typeAnnotationOwner.getRawTypeAttributes().stream()
-            .filter(anno -> isAnnotationOnType(sym, anno.position)));
+            sym.getRawAttributes().stream(),
+            typeAnnotationOwner.getRawTypeAttributes().stream()
+                .filter(anno -> isAnnotationOnType(sym, anno.position)))
+        .collect(
+            groupingBy(c -> c.type.asElement().getQualifiedName(), LinkedHashMap::new, toList()))
+        .values().stream()
+        .map(c -> c.get(0));
   }
 
   private static boolean isAnnotationOnType(Symbol sym, TypeAnnotationPosition position) {
@@ -65,6 +81,7 @@ public final class MoreAnnotations {
         return position.type == TargetType.LOCAL_VARIABLE;
       case FIELD:
         return position.type == TargetType.FIELD;
+      case CONSTRUCTOR:
       case METHOD:
         return position.type == TargetType.METHOD_RETURN;
       case PARAMETER:
@@ -75,9 +92,77 @@ public final class MoreAnnotations {
           default:
             return false;
         }
+      case CLASS:
+        // There are no type annotations on the top-level type of the class being declared, only
+        // on other types in the signature (e.g. `class Foo extends Bar<@A Baz> {}`).
+        return false;
       default:
-        throw new AssertionError(sym.getKind());
+        throw new AssertionError(
+            "unsupported element kind in MoreAnnotation#isAnnotationOnType: " + sym.getKind());
     }
+  }
+
+  /**
+   * Returns the value of the annotation element-value pair with the given name if it is not
+   * explicitly set.
+   */
+  public static Optional<Attribute> getValue(Attribute.Compound attribute, String name) {
+    return attribute.getElementValues().entrySet().stream()
+        .filter(e -> e.getKey().getSimpleName().contentEquals(name))
+        .map(Map.Entry::getValue)
+        .findFirst();
+  }
+
+  /** Converts the given attribute to an integer value. */
+  public static Optional<Integer> asIntegerValue(Attribute a) {
+    class Visitor extends SimpleAnnotationValueVisitor8<Integer, Void> {
+      @Override
+      public Integer visitInt(int i, Void unused) {
+        return i;
+      }
+    }
+    return Optional.ofNullable(a.accept(new Visitor(), null));
+  }
+
+  /** Converts the given attribute to an string value. */
+  public static Optional<String> asStringValue(Attribute a) {
+    class Visitor extends SimpleAnnotationValueVisitor8<String, Void> {
+      @Override
+      public String visitString(String s, Void unused) {
+        return s;
+      }
+    }
+    return Optional.ofNullable(a.accept(new Visitor(), null));
+  }
+
+  /** Converts the given attribute to an enum value. */
+  public static <T extends Enum<T>> Optional<T> asEnumValue(Class<T> clazz, Attribute a) {
+    class Visitor extends SimpleAnnotationValueVisitor8<T, Void> {
+      @Override
+      public T visitEnumConstant(VariableElement c, Void unused) {
+        return Enum.valueOf(clazz, c.getSimpleName().toString());
+      }
+    }
+    return Optional.ofNullable(a.accept(new Visitor(), null));
+  }
+
+  /** Converts the given attribute to one or more strings. */
+  public static Stream<String> asStrings(Attribute v) {
+    return MoreObjects.firstNonNull(
+        v.accept(
+            new SimpleAnnotationValueVisitor8<Stream<String>, Void>() {
+              @Override
+              public Stream<String> visitString(String s, Void unused) {
+                return Stream.of(s);
+              }
+
+              @Override
+              public Stream<String> visitArray(List<? extends AnnotationValue> list, Void unused) {
+                return list.stream().flatMap(a -> a.accept(this, null)).filter(x -> x != null);
+              }
+            },
+            null),
+        Stream.empty());
   }
 
   private MoreAnnotations() {}

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -39,7 +38,6 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(
     name = "NonRuntimeAnnotation",
     summary = "Calling getAnnotation on an annotation that is not retained at runtime.",
-    category = JDK,
     severity = ERROR)
 public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {
 

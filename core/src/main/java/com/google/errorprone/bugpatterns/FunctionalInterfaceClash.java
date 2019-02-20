@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -47,16 +46,13 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.List;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "FunctionalInterfaceClash",
-    summary = "Overloads will be ambiguous when passing lambda arguments",
-    category = JDK,
+    summary = "Overloads will be ambiguous when passing lambda arguments.",
     severity = WARNING)
 public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMatcher {
   @Override
@@ -67,9 +63,6 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     Multimap<String, MethodSymbol> methods = HashMultimap.create();
     for (Symbol sym : types.membersClosure(getType(tree), /*skipInterface=*/ false).getSymbols()) {
       if (!(sym instanceof MethodSymbol)) {
-        continue;
-      }
-      if (isBugCheckerSuppressed((MethodSymbol) sym)) {
         continue;
       }
       MethodSymbol msym = (MethodSymbol) sym;
@@ -98,7 +91,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
 
       // Ignore inherited methods that are overridden in the original class. Note that we have to
       // handle transitive inheritance explicitly to handle cases where the visibility of an
-      // overridded method is expanded somewhere in the type hierarchy.
+      // overridden method is expanded somewhere in the type hierarchy.
       Deque<MethodSymbol> worklist = new ArrayDeque<>();
       worklist.push(msym);
       clash.remove(msym);
@@ -113,21 +106,24 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
       }
 
       if (!clash.isEmpty()) {
-
         // ignore if there are overridden clashing methods in class
         if (ASTHelpers.findSuperMethod(msym, types).isPresent()
             && clash.stream()
                 .anyMatch(
                     methodSymbol -> ASTHelpers.findSuperMethod(methodSymbol, types).isPresent())) {
-          return NO_MATCH;
+          continue;
+        }
+
+        if (isSuppressed(member)) {
+          continue;
         }
 
         String message =
             "When passing lambda arguments to this function, callers will need a cast to"
                 + " disambiguate with: "
                 + clash.stream()
-                    .map(m -> Signatures.prettyMethodSignature(origin, m))
-                    .collect(joining("\n    "));
+                    .map(m -> "\n    " + Signatures.prettyMethodSignature(origin, m))
+                    .collect(joining(""));
         state.reportMatch(buildDescription(member).setMessage(message).build());
       }
     }
@@ -175,11 +171,5 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
           .completionError((DiagnosticPosition) state.getPath().getLeaf(), e);
       return false;
     }
-  }
-
-  private boolean isBugCheckerSuppressed(MethodSymbol method) {
-    SuppressWarnings suppression = ASTHelpers.getAnnotation(method, SuppressWarnings.class);
-    return suppression != null
-        && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
   }
 }

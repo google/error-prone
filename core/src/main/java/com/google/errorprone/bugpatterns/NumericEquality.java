@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -28,7 +27,6 @@ import com.sun.tools.javac.code.Symbol;
 @BugPattern(
     name = "NumericEquality",
     summary = "Numeric comparison using reference equality instead of value equality",
-    category = JDK,
     severity = ERROR)
 public class NumericEquality extends AbstractReferenceEquality {
 

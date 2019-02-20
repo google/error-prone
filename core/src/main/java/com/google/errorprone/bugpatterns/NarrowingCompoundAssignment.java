@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.Signatures.prettyType;
@@ -32,6 +31,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.OperatorPrecedence;
 import com.sun.source.tree.CompoundAssignmentTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
@@ -42,7 +42,6 @@ import com.sun.tools.javac.tree.JCTree.JCBinary;
 @BugPattern(
     name = "NarrowingCompoundAssignment",
     summary = "Compound assignments may hide dangerous casts",
-    category = JDK,
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -159,10 +158,15 @@ public class NarrowingCompoundAssignment extends BugChecker
 
     // Add parens to the rhs if necessary to preserve the current precedence
     // e.g. 's -= 1 - 2' -> 's = s - (1 - 2)'
-    if (tree.getExpression() instanceof JCBinary) {
-      Kind rhsKind = tree.getExpression().getKind();
-      if (!OperatorPrecedence.from(rhsKind)
-          .isHigher(OperatorPrecedence.from(regularAssignmentKind))) {
+    OperatorPrecedence rhsPrecedence =
+        tree.getExpression() instanceof JCBinary
+            ? OperatorPrecedence.from(tree.getExpression().getKind())
+            : tree.getExpression() instanceof ConditionalExpressionTree
+                ? OperatorPrecedence.TERNARY
+                : null;
+
+    if (rhsPrecedence != null) {
+      if (!rhsPrecedence.isHigher(OperatorPrecedence.from(regularAssignmentKind))) {
         expr = String.format("(%s)", expr);
       }
     }

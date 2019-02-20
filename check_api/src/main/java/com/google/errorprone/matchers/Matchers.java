@@ -21,6 +21,7 @@ import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableList;
@@ -64,7 +65,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -319,7 +319,8 @@ public class Matchers {
     return new Matcher<MethodInvocationTree>() {
       @Override
       public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
-        return expressionTreeMatcher.matches(ASTHelpers.getReceiver(methodInvocationTree), state);
+        ExpressionTree receiver = ASTHelpers.getReceiver(methodInvocationTree);
+        return receiver != null && expressionTreeMatcher.matches(receiver, state);
       }
     };
   }
@@ -458,7 +459,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(Tree t, VisitorState state) {
-        return state.getTypes().isArray(((JCTree) t).type);
+        Type type = getType(t);
+        return type != null && state.getTypes().isArray(type);
       }
     };
   }
@@ -468,8 +470,10 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(Tree t, VisitorState state) {
-        Type type = ((JCTree) t).type;
-        return state.getTypes().isArray(type) && state.getTypes().elemtype(type).isPrimitive();
+        Type type = getType(t);
+        return type != null
+            && state.getTypes().isArray(type)
+            && state.getTypes().elemtype(type).isPrimitive();
       }
     };
   }
@@ -479,7 +483,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(Tree t, VisitorState state) {
-        return ((JCTree) t).type.isPrimitive();
+        Type type = getType(t);
+        return type != null && type.isPrimitive();
       }
     };
   }
@@ -489,7 +494,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(T t, VisitorState state) {
-        return ((JCTree) t).type.isPrimitiveOrVoid();
+        Type type = getType(t);
+        return type != null && type.isPrimitiveOrVoid();
       }
     };
   }
@@ -499,7 +505,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(T t, VisitorState state) {
-        return state.getTypes().isSameType(((JCTree) t).type, state.getSymtab().voidType);
+        Type type = getType(t);
+        return type != null && state.getTypes().isSameType(type, state.getSymtab().voidType);
       }
     };
   }
@@ -511,7 +518,8 @@ public class Matchers {
     return new Matcher<T>() {
       @Override
       public boolean matches(Tree t, VisitorState state) {
-        return state.getTypes().unboxedTypeOrType(((JCTree) t).type).isPrimitive();
+        Type type = getType(t);
+        return type != null && state.getTypes().unboxedTypeOrType(type).isPrimitive();
       }
     };
   }
@@ -728,8 +736,12 @@ public class Matchers {
   }
 
   /**
-   * Matches a MethodInvocation AST node when the arguments at the two given indices are both the
-   * same identifier.
+   * Matches a {@link MethodInvocation} when the arguments at the two given indices are both the
+   * same variable, as determined by {@link ASTHelpers#sameVariable}.
+   *
+   * @param index1 the index of the first actual parameter to test
+   * @param index2 the index of the second actual parameter to test
+   * @throws IndexOutOfBoundsException if the given indices are invalid
    */
   public static Matcher<? super MethodInvocationTree> sameArgument(
       final int index1, final int index2) {
@@ -1252,7 +1264,7 @@ public class Matchers {
    * Converts the given matcher to one that can be applied to any tree but is only executed when run
    * on a tree of {@code type} and returns {@code false} for all other tree types.
    */
-  public static <S extends Tree, T extends Tree> Matcher<T> toType(
+  public static <S extends T, T extends Tree> Matcher<T> toType(
       final Class<S> type, final Matcher<? super S> matcher) {
     return new Matcher<T>() {
       @Override

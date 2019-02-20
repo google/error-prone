@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -57,7 +56,6 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(
     name = "SelfAssignment",
     summary = "Variable assigned to itself",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class SelfAssignment extends BugChecker
@@ -116,11 +114,11 @@ public class SelfAssignment extends BugChecker
   }
 
   public Description describeForVarDecl(VariableTree tree, VisitorState state) {
-    String varDeclStr = tree.toString();
+    String varDeclStr = state.getSourceForNode(tree);
     int equalsIndex = varDeclStr.indexOf('=');
     if (equalsIndex < 0) {
       throw new IllegalStateException(
-          "Expected variable declaration to have an initializer: " + tree);
+          "Expected variable declaration to have an initializer: " + state.getSourceForNode(tree));
     }
     varDeclStr = varDeclStr.substring(0, equalsIndex - 1) + ";";
 
@@ -157,7 +155,7 @@ public class SelfAssignment extends BugChecker
     // if this is a method invocation, they must be calling checkNotNull()
     if (assignmentTree.getExpression().getKind() == METHOD_INVOCATION) {
       // change the default fix to be "checkNotNull(x)" instead of "x = checkNotNull(x)"
-      fix = SuggestedFix.replace(assignmentTree, rhs.toString());
+      fix = SuggestedFix.replace(assignmentTree, state.getSourceForNode(rhs));
       // new rhs is first argument to checkNotNull()
       rhs = stripNullCheck(rhs, state);
     }

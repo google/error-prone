@@ -15,7 +15,9 @@
  */
 package com.google.errorprone.apply;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.primitives.Booleans.falseFirst;
+import static com.google.common.truth.Truth.assertThat;
+import static java.util.Comparator.comparing;
 
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.errorprone.apply.ImportOrganizer.Import;
@@ -32,12 +34,12 @@ import org.junit.runners.JUnit4;
 public class OrganizedImportsTest {
 
   private static final Comparator<Import> IMPORT_COMPARATOR =
-      Comparator.comparing(Import::isStatic).thenComparing(Import::getType);
+      comparing(Import::isStatic, falseFirst()).thenComparing(Import::getType);
 
   @Test
   public void emptyList() {
     ImportOrganizer.OrganizedImports organizedImports = new ImportOrganizer.OrganizedImports();
-    assertEquals("", organizedImports.asImportBlock());
+    assertThat(organizedImports.asImportBlock()).isEmpty();
   }
 
   private ImmutableSortedSet<Import> buildSortedImportSet(Import... element) {
@@ -50,7 +52,7 @@ public class OrganizedImportsTest {
     groups.put("first", buildSortedImportSet(Import.importOf("import first")));
     ImportOrganizer.OrganizedImports organizedImports =
         new ImportOrganizer.OrganizedImports().addGroups(groups, groups.keySet());
-    assertEquals("import first;\n", organizedImports.asImportBlock());
+    assertThat(organizedImports.asImportBlock()).isEqualTo("import first;\n");
   }
 
   @Test
@@ -60,7 +62,7 @@ public class OrganizedImportsTest {
     groups.put("second", buildSortedImportSet(Import.importOf("import second")));
     ImportOrganizer.OrganizedImports organizedImports =
         new ImportOrganizer.OrganizedImports().addGroups(groups, groups.keySet());
-    assertEquals("import first;\n\nimport second;\n", organizedImports.asImportBlock());
+    assertThat(organizedImports.asImportBlock()).isEqualTo("import first;\n\nimport second;\n");
   }
 
   @Test
@@ -70,6 +72,6 @@ public class OrganizedImportsTest {
     groups.put("second", buildSortedImportSet(Import.importOf("import second")));
     ImportOrganizer.OrganizedImports organizedImports =
         new ImportOrganizer.OrganizedImports().addGroups(groups, groups.keySet());
-    assertEquals(2, organizedImports.getImportCount());
+    assertThat(organizedImports.getImportCount()).isEqualTo(2);
   }
 }

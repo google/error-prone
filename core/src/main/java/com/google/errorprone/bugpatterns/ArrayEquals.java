@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -41,7 +40,6 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 @BugPattern(
     name = "ArrayEquals",
     summary = "Reference equality used to compare arrays",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
@@ -62,11 +60,11 @@ public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatch
     String arg1;
     String arg2;
     if (instanceEqualsMatcher.matches(t, state)) {
-      arg1 = ((JCFieldAccess) t.getMethodSelect()).getExpression().toString();
-      arg2 = t.getArguments().get(0).toString();
+      arg1 = state.getSourceForNode(((JCFieldAccess) t.getMethodSelect()).getExpression());
+      arg2 = state.getSourceForNode(t.getArguments().get(0));
     } else if (staticEqualsMatcher.matches(t, state)) {
-      arg1 = t.getArguments().get(0).toString();
-      arg2 = t.getArguments().get(1).toString();
+      arg1 = state.getSourceForNode(t.getArguments().get(0));
+      arg2 = state.getSourceForNode(t.getArguments().get(1));
     } else {
       return NO_MATCH;
     }

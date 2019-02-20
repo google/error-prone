@@ -17,22 +17,13 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.ByteStreams;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -1397,28 +1388,12 @@ public class ImmutableCheckerTest {
         .doTest();
   }
 
-  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
-
   /** Test class annotated with @Immutable. */
   @Immutable(containerOf = {"T"})
   public static class ClassPathTest<T> {}
 
-  static void addClassToJar(JarOutputStream jos, Class<?> clazz) throws IOException {
-    String entryPath = clazz.getName().replace('.', '/') + ".class";
-    try (InputStream is = clazz.getClassLoader().getResourceAsStream(entryPath)) {
-      jos.putNextEntry(new JarEntry(entryPath));
-      ByteStreams.copy(is, jos);
-    }
-  }
-
   @Test
-  public void incompleteClassPath() throws Exception {
-    File libJar = tempFolder.newFile("lib.jar");
-    try (FileOutputStream fis = new FileOutputStream(libJar);
-        JarOutputStream jos = new JarOutputStream(fis)) {
-      addClassToJar(jos, ImmutableCheckerTest.ClassPathTest.class);
-      addClassToJar(jos, ImmutableCheckerTest.class);
-    }
+  public void incompleteClassPath() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -1427,7 +1402,7 @@ public class ImmutableCheckerTest {
             "  // BUG: Diagnostic contains: 'Test' has non-final field 'x'",
             "  int x;",
             "}")
-        .setArgs(Arrays.asList("-cp", libJar.toString()))
+        .withClasspath(ImmutableCheckerTest.ClassPathTest.class, ImmutableCheckerTest.class)
         .doTest();
   }
 
@@ -1577,6 +1552,53 @@ public class ImmutableCheckerTest {
             "import com.google.errorprone.annotations.ImmutableTypeParameter;",
             " // BUG: Diagnostic contains: only supported on immutable classes",
             "class A<@ImmutableTypeParameter T> {}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameter_notAllTypeVarsInstantiated() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  public final <A> void f1(A transform) {}",
+            "  public <B, @ImmutableTypeParameter C> C f2(Function<B, C> fn) {",
+            "    return null;",
+            "  }",
+            "  public final <D, E> void f3(Function<D, E> fn) {",
+            "    // BUG: Diagnostic contains: instantiation of 'C' is mutable",
+            "    // 'E' is a mutable type variable",
+            "    f1(f2(fn));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // javac does not instantiate type variables when they are not used, so we cannot check whether
+  // their instantiations are immutable.
+  @Ignore
+  @Test
+  public void immutableTypeParameter_notAllTypeVarsInstantiated_shouldFail() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  public final <A> void f1(A transform) {}",
+            "  public <@ImmutableTypeParameter B, C> C f2(Function<B, C> fn) {",
+            "    return null;",
+            "  }",
+            "  public final <D, E> void f3(Function<D, E> fn) {",
+            "    // BUG: Diagnostic contains: instantiation of 'B' is mutable",
+            "    // 'D' is a mutable type variable",
+            "    f1(f2(fn));",
+            "  }",
+            "}")
         .doTest();
   }
 

@@ -18,8 +18,6 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-import static com.google.errorprone.BugPattern.Category.JDK;
-import static com.google.errorprone.BugPattern.Category.ONE_OFF;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -32,7 +30,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.Category;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -61,7 +58,7 @@ import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.net.URI;
-import java.util.stream.Stream;
+import java.util.Arrays;
 import javax.lang.model.element.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,7 +85,6 @@ public class SuggestedFixesTest {
   /** Test checker that adds or removes modifiers. */
   @BugPattern(
       name = "EditModifiers",
-      category = ONE_OFF,
       summary = "Edits modifiers",
       severity = ERROR,
       providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
@@ -121,7 +117,7 @@ public class SuggestedFixesTest {
               ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class), EditModifiers.class);
       SuggestedFix.Builder fix = SuggestedFix.builder();
       Modifier[] mods =
-          Stream.of(editModifiers.value())
+          Arrays.stream(editModifiers.value())
               .map(v -> Verify.verifyNotNull(MODIFIERS_BY_NAME.get(v), v))
               .toArray(Modifier[]::new);
       switch (editModifiers.kind()) {
@@ -259,7 +255,6 @@ public class SuggestedFixesTest {
 
   /** Test checker that casts returned expression. */
   @BugPattern(
-      category = ONE_OFF,
       name = "CastReturn",
       severity = ERROR,
       summary = "Adds casts to returned expressions",
@@ -283,7 +278,6 @@ public class SuggestedFixesTest {
 
   /** Test checker that casts returned expression. */
   @BugPattern(
-      category = ONE_OFF,
       name = "CastReturn",
       severity = ERROR,
       summary = "Adds casts to returned expressions",
@@ -422,7 +416,6 @@ public class SuggestedFixesTest {
   /** A test check that adds an annotation to all return types. */
   @BugPattern(
       name = "AddAnnotation",
-      category = Category.JDK,
       summary = "Add an annotation",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)
@@ -583,7 +576,6 @@ public class SuggestedFixesTest {
   /** A test check that replaces all methods' return types with a given type. */
   @BugPattern(
       name = "ReplaceReturnType",
-      category = Category.JDK,
       summary = "Change the method return type",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)
@@ -617,7 +609,6 @@ public class SuggestedFixesTest {
   /** A test check that replaces all methods' return types with a given type. */
   @BugPattern(
       name = "ReplaceReturnTypeString",
-      category = Category.JDK,
       summary = "Change the method return type",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)
@@ -699,7 +690,6 @@ public class SuggestedFixesTest {
   /** A test check that qualifies javadoc link. */
   @BugPattern(
       name = "JavadocQualifier",
-      category = Category.JDK,
       summary = "all javadoc links should be qualified",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)
@@ -753,7 +743,6 @@ public class SuggestedFixesTest {
 
   @BugPattern(
       name = "SuppressMe",
-      category = ONE_OFF,
       summary = "",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)
@@ -809,7 +798,6 @@ public class SuggestedFixesTest {
 
   @BugPattern(
       name = "SuppressMeWithComment",
-      category = ONE_OFF,
       summary = "",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)
@@ -903,7 +891,6 @@ public class SuggestedFixesTest {
   /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
   @BugPattern(
       name = "CompilesWithFixChecker",
-      category = JDK,
       summary = "",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)
@@ -943,7 +930,6 @@ public class SuggestedFixesTest {
   /** A test bugchecker that deletes an exception from throws. */
   @BugPattern(
       name = "RemovesExceptionChecker",
-      category = JDK,
       summary = "",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)
@@ -1045,7 +1031,6 @@ public class SuggestedFixesTest {
   /** Test checker that renames variables. */
   @BugPattern(
       name = "RenamesVariableChecker",
-      category = JDK,
       summary = "",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)
@@ -1248,7 +1233,6 @@ public class SuggestedFixesTest {
   /** Test checker that removes and adds modifiers in the same fix. */
   @BugPattern(
       name = "RemoveAddModifier",
-      category = JDK,
       summary = "",
       severity = ERROR,
       providesFix = REQUIRES_HUMAN_ATTENTION)

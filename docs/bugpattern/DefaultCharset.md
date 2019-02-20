@@ -1,6 +1,6 @@
-A [`Charset`][charset] is a mapping between sequences of [16-bit Unicode code
-units][codeunit] and sequences of bytes. Charsets are used when encoding
-characters into bytes and decoding bytes into characters.
+A [`Charset`][charset] is a mapping between sequences of
+[16-bit Unicode code units][codeunit] and sequences of bytes. Charsets are used
+when encoding characters into bytes and decoding bytes into characters.
 
 [charset]: https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html
 [codeunit]: http://unicode.org/glossary/#code_unit

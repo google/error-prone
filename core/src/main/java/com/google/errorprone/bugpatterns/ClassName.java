@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
@@ -38,7 +37,6 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "ClassName",
     summary = "The source file name should match the name of the top-level class it contains",
-    category = JDK,
     severity = ERROR,
     documentSuppression = false,
     linkType = CUSTOM,
@@ -51,8 +49,7 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
     if (tree.getTypeDecls().isEmpty() || tree.getPackageName() == null) {
       return Description.NO_MATCH;
     }
-    String filename =
-        Files.getNameWithoutExtension(ASTHelpers.getFileNameFromUri(tree.getSourceFile().toUri()));
+    String filename = Files.getNameWithoutExtension(ASTHelpers.getFileName(tree));
     List<String> names = new ArrayList<>();
     for (Tree member : tree.getTypeDecls()) {
       if (member instanceof ClassTree) {

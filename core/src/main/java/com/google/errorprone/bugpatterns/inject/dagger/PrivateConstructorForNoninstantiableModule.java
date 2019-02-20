@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.inject.dagger;
 
-import static com.google.errorprone.BugPattern.Category.DAGGER;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.isBindingDeclarationMethod;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -45,7 +44,6 @@ import com.sun.source.tree.Tree;
 @BugPattern(
     name = "PrivateConstructorForNoninstantiableModule",
     summary = "Add a private constructor to modules that will not be instantiated by Dagger.",
-    category = DAGGER,
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class PrivateConstructorForNoninstantiableModule extends BugChecker

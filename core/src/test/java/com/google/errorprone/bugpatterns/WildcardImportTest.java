@@ -16,10 +16,16 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.stream.Collectors.joining;
+
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -529,6 +535,41 @@ public class WildcardImportTest {
             "        return false;",
             "    }",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void manyTypesFix() {
+
+    ImmutableList<Character> alphabet =
+        Stream.iterate('A', x -> (char) (x + 1)).limit(26).collect(toImmutableList());
+
+    for (Character ch : alphabet) {
+      testHelper =
+          testHelper
+              .addInputLines(
+                  String.format("e/%s.java", ch),
+                  String.format("package e; public class %s {}", ch))
+              .expectUnchanged();
+    }
+
+    testHelper
+        .addInputLines(
+            "p/Test.java",
+            "package p;",
+            "import e.*;",
+            "public class Test {",
+            Streams.mapWithIndex(alphabet.stream(), (a, x) -> String.format("%s x%d;\n", a, x))
+                .collect(joining("\n")),
+            "}")
+        .addOutputLines(
+            "p/Test.java",
+            "package p;",
+            alphabet.stream().map(x -> String.format("import e.%s;", x)).collect(joining("\n")),
+            "public class Test {",
+            Streams.mapWithIndex(alphabet.stream(), (a, x) -> String.format("%s x%d;\n", a, x))
+                .collect(joining("\n")),
             "}")
         .doTest();
   }

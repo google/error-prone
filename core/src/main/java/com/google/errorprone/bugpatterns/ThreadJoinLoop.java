@@ -15,7 +15,9 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -23,24 +25,23 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
+import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
-import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
@@ -48,21 +49,21 @@ import java.util.Objects;
     summary =
         "Thread.join needs to be surrounded by a loop until it succeeds, "
             + "as in Uninterruptibles.joinUninterruptibly.",
-    category = JDK,
     severity = SeverityLevel.WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ThreadJoinLoop extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final MethodNameMatcher MATCH_THREAD_JOIN =
-      Matchers.instanceMethod().onDescendantOf("java.lang.Thread").named("join");
+      instanceMethod().onDescendantOf("java.lang.Thread").named("join");
 
   @Override
   public Description matchMethodInvocation(
-      MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
+      MethodInvocationTree methodInvocationTree, VisitorState state) {
     String threadString;
     if (methodInvocationTree.getMethodSelect() instanceof MemberSelectTree) {
       threadString =
-          ((MemberSelectTree) methodInvocationTree.getMethodSelect()).getExpression().toString();
+          state.getSourceForNode(
+              ((MemberSelectTree) methodInvocationTree.getMethodSelect()).getExpression());
     } else {
       threadString = "this";
     }
@@ -71,79 +72,77 @@ public class ThreadJoinLoop extends BugChecker implements MethodInvocationTreeMa
     if (!methodInvocationTree.getArguments().isEmpty()) {
       return Description.NO_MATCH;
     }
-    if (MATCH_THREAD_JOIN.matches(methodInvocationTree, visitorState)) {
-      TreePath treePath =
-          ASTHelpers.findPathFromEnclosingNodeToTopLevel(visitorState.getPath(), TryTree.class);
-      if (treePath == null) {
-        return Description.NO_MATCH;
-      }
-      TreePath pathToLoop =
-          ASTHelpers.findPathFromEnclosingNodeToTopLevel(treePath, WhileLoopTree.class);
+    if (!MATCH_THREAD_JOIN.matches(methodInvocationTree, state)) {
+      return Description.NO_MATCH;
+    }
+    TreePath tryTreePath =
+        ASTHelpers.findPathFromEnclosingNodeToTopLevel(state.getPath(), TryTree.class);
+    if (tryTreePath == null) {
+      return Description.NO_MATCH;
+    }
+    WhileLoopTree pathToLoop = ASTHelpers.findEnclosingNode(tryTreePath, WhileLoopTree.class);
 
-      // checks to make sure that if there is a while loop with only one statement (the try catch
-      // block)
-      boolean hasWhileLoopOneStatement = false;
-      if (pathToLoop != null) {
-        Tree statements = ((WhileLoopTree) pathToLoop.getLeaf()).getStatement();
-        if (statements instanceof BlockTree) {
-          if (((BlockTree) statements).getStatements().size() == 1) {
-            hasWhileLoopOneStatement = true;
-          }
-        }
+    // checks to make sure that if there is a while loop with only one statement (the try catch
+    // block)
+    boolean hasWhileLoopOneStatement = false;
+    if (pathToLoop != null) {
+      Tree statements = pathToLoop.getStatement();
+      if (statements instanceof BlockTree && ((BlockTree) statements).getStatements().size() == 1) {
+        hasWhileLoopOneStatement = true;
       }
+    }
 
-      Type interruptedType = visitorState.getSymtab().interruptedExceptionType;
-      Type exceptionType = visitorState.getSymtab().exceptionType;
-      TryTree tryTree = (TryTree) treePath.getLeaf();
-      // scans the try tree block for any other actions so that we do not accidentally delete
-      // important actions when replacing
-      TreeScannerMethodInvocations treeScanner = new TreeScannerMethodInvocations();
-      treeScanner.scan(tryTree.getBlock(), methodInvocationTree.toString());
-      if (treeScanner.count > 0) {
-        return Description.NO_MATCH;
-      }
-      if (tryTree.getFinallyBlock() != null) {
-        return Description.NO_MATCH;
-      }
-      List<? extends CatchTree> catches = tryTree.getCatches();
-      for (CatchTree tree : catches) {
-        Type typeSym = ASTHelpers.getType(tree.getParameter().getType());
-        if (Objects.equals(interruptedType, typeSym) || Objects.equals(exceptionType, typeSym)) {
-          List<? extends StatementTree> statementTrees = tree.getBlock().getStatements();
-          // replaces the while loop with the try block or replaces just the try block
-          if (statementTrees.isEmpty()
-              || (statementTrees.size() == 1 && statementTrees.get(0).toString().equals(";"))) {
-            SuggestedFix.Builder builder = SuggestedFix.builder();
-            builder.replace(
-                hasWhileLoopOneStatement ? pathToLoop.getLeaf() : tryTree,
-                "Uninterruptibles.joinUninterruptibly(" + threadString + ");");
-            builder.addImport("com.google.common.util.concurrent.Uninterruptibles");
-            return describeMatch(methodInvocationTree, builder.build());
-          }
+    // Scans the try tree block for any other method invocations so that we do not accidentally
+    // delete important actions when replacing.
+    TryTree tryTree = (TryTree) tryTreePath.getLeaf();
+    if (hasOtherInvocationsOrAssignments(methodInvocationTree, tryTree, state)) {
+      return Description.NO_MATCH;
+    }
+    if (tryTree.getFinallyBlock() != null) {
+      return Description.NO_MATCH;
+    }
+    Type interruptedType = state.getSymtab().interruptedExceptionType;
+    for (CatchTree tree : tryTree.getCatches()) {
+      Type typeSym = getType(tree.getParameter().getType());
+      if (ASTHelpers.isCastable(typeSym, interruptedType, state)) {
+        // replaces the while loop with the try block or replaces just the try block
+        if (tree.getBlock().getStatements().stream()
+            .allMatch(s -> s instanceof EmptyStatementTree)) {
+          SuggestedFix.Builder fix = SuggestedFix.builder();
+          String uninterruptibles =
+              SuggestedFixes.qualifyType(
+                  state, fix, "com.google.common.util.concurrent.Uninterruptibles");
+          fix.replace(
+              hasWhileLoopOneStatement ? pathToLoop : tryTree,
+              String.format("%s.joinUninterruptibly(%s);", uninterruptibles, threadString));
+          return describeMatch(methodInvocationTree, fix.build());
         }
       }
     }
     return Description.NO_MATCH;
   }
 
-  private static class TreeScannerMethodInvocations extends TreeScanner<Void, String> {
-
-    private int count = 0;
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree tree, String methodString) {
-      if (!tree.toString().contains(methodString)) {
-        count++;
+  private static boolean hasOtherInvocationsOrAssignments(
+      MethodInvocationTree methodInvocationTree, TryTree tryTree, VisitorState state) {
+    AtomicInteger count = new AtomicInteger(0);
+    Type threadType = state.getTypeFromString("java.lang.Thread");
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        if (!tree.equals(methodInvocationTree)) {
+          count.incrementAndGet();
+        }
+        return super.visitMethodInvocation(tree, null);
       }
-      return null;
-    }
 
-    @Override
-    public Void visitAssignment(AssignmentTree tree, String methodString) {
-      if (ASTHelpers.getType(tree.getVariable()).toString().equals("java.lang.Thread")) {
-        count++;
+      @Override
+      public Void visitAssignment(AssignmentTree tree, Void unused) {
+        if (isSubtype(getType(tree.getVariable()), threadType, state)) {
+          count.incrementAndGet();
+        }
+        return super.visitAssignment(tree, null);
       }
-      return null;
-    }
+    }.scan(tryTree.getBlock(), null);
+    return count.get() > 0;
   }
 }

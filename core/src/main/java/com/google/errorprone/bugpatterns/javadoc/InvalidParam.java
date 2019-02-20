@@ -55,7 +55,8 @@ import java.util.Set;
     summary = "This @param tag doesn't refer to a parameter of the method.",
     severity = WARNING,
     tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
+    documentSuppression = false)
 public final class InvalidParam extends BugChecker implements ClassTreeMatcher, MethodTreeMatcher {
 
   @Override
@@ -123,8 +124,7 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
         Set<String> undocumentedParameters = Sets.difference(paramNames, documentedParamNames);
         Optional<String> bestMatch =
             getBestMatch(paramTree.getName().toString(), undocumentedParameters);
-        String message =
-            String.format("Parameter name `%s` is unknown.", paramTree.getName().toString());
+        String message = String.format("Parameter name `%s` is unknown.", paramTree.getName());
         state.reportMatch(
             bestMatch
                 .map(

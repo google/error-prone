@@ -132,6 +132,7 @@ public class Description {
    * Construct the link text to include in the compiler error message. Returns null if there is no
    * link.
    */
+  @Nullable
   private static String linkTextForDiagnostic(String linkUrl) {
     return isNullOrEmpty(linkUrl) ? null : "  (see " + linkUrl + ")";
   }
@@ -185,7 +186,7 @@ public class Description {
      * decreasing preference. Adding an empty fix is a no-op.
      *
      * @param fix a suggested fix for this problem
-     * @throws IllegalArgumentException if {@code fix} is {@code null}
+     * @throws NullPointerException if {@code fix} is {@code null}
      */
     public Builder addFix(Fix fix) {
       checkNotNull(fix, "fix must not be null");
@@ -200,7 +201,7 @@ public class Description {
      * added in order of decreasing preference. Adding an empty fix is a no-op.
      *
      * @param fix a suggested fix for this problem
-     * @throws IllegalArgumentException if {@code fix} is {@code null}
+     * @throws NullPointerException if {@code fix} is {@code null}
      */
     public Builder addFix(Optional<? extends Fix> fix) {
       checkNotNull(fix, "fix must not be null");
@@ -212,7 +213,7 @@ public class Description {
      * Add each fix in order.
      *
      * @param fixes a list of suggested fixes for this problem
-     * @throws IllegalArgumentException if {@code fixes} or any of its elements are {@code null}
+     * @throws NullPointerException if {@code fixes} or any of its elements are {@code null}
      */
     public Builder addAllFixes(List<? extends Fix> fixes) {
       checkNotNull(fixes, "fixes must not be null");

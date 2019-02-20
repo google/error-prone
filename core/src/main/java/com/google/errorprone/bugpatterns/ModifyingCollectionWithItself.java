@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.ReplacementVariableFinder.fixesByReplacingExpressionWithLocallyDeclaredField;
 import static com.google.errorprone.bugpatterns.ReplacementVariableFinder.fixesByReplacingExpressionWithMethodParameter;
@@ -53,7 +52,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "ModifyingCollectionWithItself",
     summary = "Using a collection function with itself as the argument.",
-    category = JDK,
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ModifyingCollectionWithItself extends BugChecker
@@ -162,7 +160,7 @@ public class ModifyingCollectionWithItself extends BugChecker
     if (parent instanceof ExpressionStatementTree) {
       Fix fix;
       if (instanceMethod().anyClass().named("removeAll").matches(methodInvocationTree, state)) {
-        fix = SuggestedFix.replace(methodInvocationTree, lhs + ".clear()");
+        fix = SuggestedFix.replace(methodInvocationTree, state.getSourceForNode(lhs) + ".clear()");
       } else {
         fix = SuggestedFix.delete(parent);
       }

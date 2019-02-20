@@ -17,7 +17,6 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static org.junit.Assert.fail;
 
@@ -172,7 +171,7 @@ public class BugCheckerRefactoringTestHelperTest {
           .expectUnchanged()
           .doTest();
     } catch (AssertionError e) {
-      assertThat(e.getMessage()).contains("compilation failed unexpectedly");
+      assertThat(e).hasMessageThat().contains("compilation failed unexpectedly");
       return;
     }
     fail("compilation succeeded unexpectedly");
@@ -192,7 +191,6 @@ public class BugCheckerRefactoringTestHelperTest {
       name = "ReturnNullRefactoring",
       summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
       explanation = "For test purposes only.",
-      category = JDK,
       severity = SUGGESTION,
       providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
   public static class ReturnNullRefactoring extends BugChecker implements ReturnTreeMatcher {
@@ -206,7 +204,6 @@ public class BugCheckerRefactoringTestHelperTest {
       name = "RemoveAnnotationRefactoring",
       summary = "Mock refactoring that removes all annotations declared in package bar ",
       explanation = "For test purposes only.",
-      category = JDK,
       severity = SUGGESTION,
       providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
   public static class RemoveAnnotationRefactoring extends BugChecker
@@ -229,7 +226,7 @@ public class BugCheckerRefactoringTestHelperTest {
           .expectUnchanged()
           .doTest();
     } catch (AssertionError e) {
-      assertThat(e.getMessage()).contains("error: cannot find symbol");
+      assertThat(e).hasMessageThat().contains("error: cannot find symbol");
       return;
     }
     fail("compilation succeeded unexpectedly");
@@ -255,7 +252,6 @@ public class BugCheckerRefactoringTestHelperTest {
       name = "ImportArrayList",
       summary = "Mock refactoring that imports an ArrayList",
       explanation = "For test purposes only.",
-      category = JDK,
       severity = SUGGESTION,
       providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
   public static class ImportArrayList extends BugChecker implements CompilationUnitTreeMatcher {

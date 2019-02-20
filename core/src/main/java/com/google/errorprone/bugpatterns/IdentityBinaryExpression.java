@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.JDK;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.toType;
@@ -42,7 +41,6 @@ import java.util.Optional;
 @BugPattern(
     name = "IdentityBinaryExpression",
     altNames = "SelfEquality",
-    category = JDK,
     summary = "A binary expression where both operands are the same is usually incorrect.",
     severity = ERROR)
 public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMatcher {
@@ -53,6 +51,7 @@ public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMa
           staticMethod().anyClass().namedAnyOf("assertTrue", "assertFalse", "assertThat"));
 
   @Override
+  @SuppressWarnings("TreeToString")
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     if (constValue(tree.getLeftOperand()) != null) {
       switch (tree.getKind()) {
@@ -105,6 +104,7 @@ public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMa
       default:
         return NO_MATCH;
     }
+    // toString rather than getSourceForNode is intentional.
     if (!tree.getLeftOperand().toString().equals(tree.getRightOperand().toString())) {
       return NO_MATCH;
     }

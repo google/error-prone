@@ -52,8 +52,7 @@ public class CompilerBasedTest {
 
   protected void compile(TreeScanner scanner, JavaFileObject fileObject) {
     JavaCompiler compiler = JavacTool.create();
-    DiagnosticCollector<JavaFileObject> diagnosticsCollector =
-        new DiagnosticCollector<JavaFileObject>();
+    DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
     StandardJavaFileManager fileManager =
         compiler.getStandardFileManager(diagnosticsCollector, Locale.ENGLISH, UTF_8);
     JavacTaskImpl task =

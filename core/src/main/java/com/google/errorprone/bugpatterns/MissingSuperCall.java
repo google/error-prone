@@ -44,8 +44,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
@@ -87,7 +87,7 @@ public class MissingSuperCall extends BugChecker
 
   private static final Matcher<AnnotationTree> ANNOTATION_MATCHER =
       anyOf(
-          Stream.of(AnnotationType.values())
+          Arrays.stream(AnnotationType.values())
               .map(anno -> isType(anno.fullyQualifiedName()))
               .collect(ImmutableList.toImmutableList()));
 
@@ -176,7 +176,7 @@ public class MissingSuperCall extends BugChecker
 
   /** Scans a tree looking for calls to a method that is overridden by the given one. */
   private static class FindSuperTreeScanner extends TreeScanner<Boolean, Void> {
-    private String overridingMethodName;
+    private final String overridingMethodName;
 
     private FindSuperTreeScanner(String overridingMethodName) {
       this.overridingMethodName = overridingMethodName;
@@ -240,7 +240,7 @@ public class MissingSuperCall extends BugChecker
    * "java.util.function.Function#apply".
    */
   private static String getMethodName(MethodSymbol methodSym) {
-    return String.format("%s#%s", methodSym.owner.toString(), methodSym.getSimpleName());
+    return String.format("%s#%s", methodSym.owner, methodSym.getSimpleName());
   }
 
   private static boolean isSuper(ExpressionTree tree) {

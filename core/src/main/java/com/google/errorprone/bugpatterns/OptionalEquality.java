@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUAVA;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableSet;
@@ -30,7 +29,6 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(
     name = "OptionalEquality",
     summary = "Comparison using reference equality instead of value equality",
-    category = GUAVA,
     severity = ERROR)
 public class OptionalEquality extends AbstractReferenceEquality {
 

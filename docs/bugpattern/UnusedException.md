@@ -23,3 +23,15 @@ Prefer wrapping the original exception instead,
     throw new IllegalStateException(e); // GOOD
   }
 ```
+
+Suppress false positives with `@SuppressWarnings("UnusedException")` on the
+ignored exception. Consider also adding a comment to explain why the exception
+should not be propagated.
+
+```java
+  try {
+    ...
+  } catch (@SuppressWarnings("UnusedException") IOException e) {
+    throw new IllegalStateException();
+  }
+```
