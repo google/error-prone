@@ -61,7 +61,6 @@ public class ErrorProneOptions {
   private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
       "-XepDisableWarningsInGeneratedCode";
   private static final String COMPILING_TEST_ONLY_CODE = "-XepCompilingTestOnlyCode";
-  private static final String EXCLUDED_PATHS_PREFIX = "-XepExcludedPaths:";
   private static final String REPORT_FILE_PREFIX = "-XepReportFile:";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
