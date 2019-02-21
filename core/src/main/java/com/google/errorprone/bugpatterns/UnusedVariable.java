@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.nullToEmpty;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
@@ -32,11 +33,16 @@ import static com.sun.source.tree.Tree.Kind.POSTFIX_INCREMENT;
 import static com.sun.source.tree.Tree.Kind.PREFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.PREFIX_INCREMENT;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Ascii;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -88,25 +94,29 @@ import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 import com.sun.tools.javac.util.Position;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
-/** Bugpattern to detect unused variables. */
+/** Bugpattern to detect unused declarations. */
 @BugPattern(
     name = "UnusedVariable",
-    altNames = {"Unused", "unused", "UnusedParameters"},
+    altNames = {"unused", "UnusedParameters"},
     summary = "Unused.",
     providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING,
     documentSuppression = false)
 public final class UnusedVariable extends BugChecker implements CompilationUnitTreeMatcher {
-
   private static final String EXEMPT_PREFIX = "unused";
 
 
@@ -163,9 +173,21 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    // We will skip reporting on the whole compilation if there are any native methods found.
+    // Use a TreeScanner to find all local variables and fields.
+    if (hasNativeMethods(tree)) {
+      return Description.NO_MATCH;
+    }
+
+    VariableFinder variableFinder = new VariableFinder(state);
+    variableFinder.scan(state.getPath(), null);
+
     // Map of symbols to variable declarations. Initially this is a map of all of the local variable
     // and fields. As we go we remove those variables which are used.
-    Map<Symbol, TreePath> unusedElements = new HashMap<>();
+    Map<Symbol, TreePath> unusedElements = variableFinder.unusedElements;
+
+    // Whether a symbol should only be checked for reassignments (e.g. public methods' parameters).
+    Set<Symbol> onlyCheckForReassignments = variableFinder.onlyCheckForReassignments;
 
     // Map of symbols to their usage sites. In this map we also include the definition site in
     // addition to all the trees where symbol is used. This map is designed to keep the usage sites
@@ -173,347 +195,112 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     //
     // We populate this map when analyzing the unused variables and then use it to generate
     // appropriate fixes for them.
-    ListMultimap<Symbol, TreePath> usageSites = ArrayListMultimap.create();
+    ListMultimap<Symbol, TreePath> usageSites = variableFinder.usageSites;
 
-    // We will skip reporting on the whole compilation if there are any native methods found.
-    // Use a TreeScanner to find all local variables and fields.
-    if (hasNativeMethods(tree)) {
-      return Description.NO_MATCH;
+    FilterUsedVariables filterUsedVariables = new FilterUsedVariables(unusedElements, usageSites);
+    filterUsedVariables.scan(state.getPath(), null);
+
+    // Keeps track of whether a symbol was _ever_ used (between reassignments).
+    Set<Symbol> isEverUsed = filterUsedVariables.isEverUsed;
+    List<UnusedSpec> unusedSpecs = filterUsedVariables.unusedSpecs;
+
+    // Add the left-over unused variables...
+    for (Map.Entry<Symbol, TreePath> entry : unusedElements.entrySet()) {
+      unusedSpecs.add(
+          UnusedSpec.of(entry.getKey(), entry.getValue(), usageSites.get(entry.getKey()), null));
     }
 
-    // Use a TreeScanner to find all local variables and fields.
-    class VariableFinder extends TreePathScanner<Void, Void> {
+    ImmutableListMultimap<Symbol, UnusedSpec> unusedSpecsBySymbol =
+        Multimaps.index(unusedSpecs, UnusedSpec::symbol);
 
-      private boolean exemptedBySuperType(Type type, VisitorState state) {
-        return EXEMPTING_SUPER_TYPES.stream()
-            .anyMatch(t -> isSubtype(type, Suppliers.typeFromString(t).get(state), state));
+    for (Map.Entry<Symbol, Collection<UnusedSpec>> entry : unusedSpecsBySymbol.asMap().entrySet()) {
+      Symbol unusedSymbol = entry.getKey();
+      Collection<UnusedSpec> specs = entry.getValue();
+
+      ImmutableList<TreePath> allUsageSites =
+          specs.stream().flatMap(u -> u.usageSites().stream()).collect(toImmutableList());
+      if (!unusedElements.containsKey(unusedSymbol)) {
+        isEverUsed.add(unusedSymbol);
       }
-
-      @Override
-      public Void visitVariable(VariableTree variableTree, Void unused) {
-        if (exemptedByName(variableTree.getName())) {
-          return null;
-        }
-        if (isSuppressed(variableTree)) {
-          return null;
-        }
-        VarSymbol symbol = getSymbol(variableTree);
-        if (symbol == null) {
-          return null;
-        }
-        if (symbol.getKind() == ElementKind.FIELD
-            && exemptedFieldBySuperType(getType(variableTree), state)) {
-          return null;
-        }
-        super.visitVariable(variableTree, null);
-        // Return if the element is exempted by an annotation.
-        if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations(), state)) {
-          return null;
-        }
-        switch (symbol.getKind()) {
-          case FIELD:
-            // We are only interested in private fields and those which are not special.
-            if (isFieldEligibleForChecking(variableTree, symbol)) {
-              unusedElements.put(symbol, getCurrentPath());
-              usageSites.put(symbol, getCurrentPath());
-            }
-            break;
-          case LOCAL_VARIABLE:
-            unusedElements.put(symbol, getCurrentPath());
-            usageSites.put(symbol, getCurrentPath());
-            break;
-          case PARAMETER:
-            // ignore the receiver parameter
-            if (variableTree.getName().contentEquals("this")) {
-              return null;
-            }
-            if (isParameterSubjectToAnalysis(symbol)) {
-              unusedElements.put(symbol, getCurrentPath());
-            }
-            break;
-          default:
-            break;
-        }
-        return null;
+      SuggestedFix makeFirstAssignmentDeclaration =
+          makeAssignmentDeclaration(unusedSymbol, specs, allUsageSites, state);
+      // Don't complain if this is a public method and we only overwrote it once.
+      if (onlyCheckForReassignments.contains(unusedSymbol) && specs.size() <= 1) {
+        continue;
       }
-
-      private boolean exemptedFieldBySuperType(Type type, VisitorState state) {
-        return EXEMPTING_FIELD_SUPER_TYPES.stream()
-            .anyMatch(t -> isSubtype(type, state.getTypeFromString(t), state));
+      Tree unused = specs.iterator().next().variableTree().getLeaf();
+      VarSymbol symbol = (VarSymbol) unusedSymbol;
+      ImmutableList<SuggestedFix> fixes;
+      if (symbol.getKind() == ElementKind.PARAMETER
+          && !onlyCheckForReassignments.contains(unusedSymbol)
+          && !isEverUsed.contains(unusedSymbol)) {
+        fixes = buildUnusedParameterFixes(symbol, allUsageSites, state);
+      } else {
+        fixes = buildUnusedVarFixes(symbol, allUsageSites, state);
       }
-
-      private boolean isFieldEligibleForChecking(VariableTree variableTree, VarSymbol symbol) {
-        if (reportInjectedFields
-            && variableTree.getModifiers().getFlags().isEmpty()
-            && ASTHelpers.hasDirectAnnotationWithSimpleName(variableTree, "Inject")) {
-          return true;
-        }
-        return variableTree.getModifiers().getFlags().contains(Modifier.PRIVATE)
-            && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString())
-            && !isLoggerField(variableTree);
-      }
-
-      private boolean isLoggerField(VariableTree variableTree) {
-        return variableTree.getModifiers().getFlags().containsAll(LOGGER_REQUIRED_MODIFIERS)
-            && LOGGER_TYPE_NAME.contains(variableTree.getType().toString())
-            && LOGGER_VAR_NAME.contains(variableTree.getName().toString());
-      }
-
-      /** Returns whether {@code sym} can be removed without updating call sites in other files. */
-      private boolean isParameterSubjectToAnalysis(Symbol sym) {
-        checkArgument(sym.getKind() == ElementKind.PARAMETER);
-        Symbol enclosingMethod = sym.owner;
-
-        for (String annotationName : methodAnnotationsExemptingParameters) {
-          if (ASTHelpers.hasAnnotation(enclosingMethod, annotationName, state)) {
-            return false;
-          }
-        }
-
-
-        return enclosingMethod.getModifiers().contains(Modifier.PRIVATE);
-      }
-
-      @Override
-      public Void visitTry(TryTree node, Void unused) {
-        // Skip resources, as while these may not be referenced, they are used.
-        scan(node.getBlock(), null);
-        scan(node.getCatches(), null);
-        scan(node.getFinallyBlock(), null);
-        return null;
-      }
-
-      @Override
-      public Void visitClass(ClassTree tree, Void unused) {
-        if (isSuppressed(tree) || exemptedBySuperType(getType(tree), state)) {
-          return null;
-        }
-        return super.visitClass(tree, null);
-      }
-
-      @Override
-      public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-        // skip lambda parameters
-        return scan(node.getBody(), null);
-      }
-
-      @Override
-      public Void visitMethod(MethodTree tree, Void unused) {
-        return isSuppressed(tree) ? null : super.visitMethod(tree, unused);
-      }
-    }
-    new VariableFinder().scan(state.getPath(), null);
-
-    class FilterUsedVariables extends TreePathScanner<Void, Void> {
-      private boolean leftHandSideAssignment = false;
-      // When this greater than zero, the usage of identifiers are real.
-      private int inArrayAccess = 0;
-      // This is true when we are processing a `return` statement. Elements used in return statement
-      // must not be considered unused.
-      private boolean inReturnStatement = false;
-      // When this greater than zero, the usage of identifiers are real because they are in a method
-      // call.
-      private int inMethodCall = 0;
-
-      private TreePath currentExpressionStatement = null;
-
-      private boolean isInExpressionStatementTree() {
-        Tree parent = getCurrentPath().getParentPath().getLeaf();
-        return parent != null && parent.getKind() == Kind.EXPRESSION_STATEMENT;
-      }
-
-      private boolean isUsed(@Nullable Symbol symbol) {
-        return symbol != null
-            && (!leftHandSideAssignment
-                || inReturnStatement
-                || inArrayAccess > 0
-                || inMethodCall > 0)
-            && unusedElements.containsKey(symbol);
-      }
-
-      @Override
-      public Void visitExpressionStatement(ExpressionStatementTree tree, Void unused) {
-        currentExpressionStatement = getCurrentPath();
-        super.visitExpressionStatement(tree, null);
-        currentExpressionStatement = null;
-        return null;
-      }
-
-      @Override
-      public Void visitIdentifier(IdentifierTree tree, Void unused) {
-        Symbol symbol = getSymbol(tree);
-        // Filtering out identifier symbol from vars map. These are real usages of identifiers.
-        if (isUsed(symbol)) {
-          unusedElements.remove(symbol);
-        }
-        if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
-          usageSites.put(symbol, currentExpressionStatement);
-        }
-        return null;
-      }
-
-      @Override
-      public Void visitAssignment(AssignmentTree tree, Void unused) {
-        // If a variable is used in the left hand side of an assignment that does not count as a
-        // usage.
-        if (isInExpressionStatementTree()) {
-          leftHandSideAssignment = true;
-          scan(tree.getVariable(), null);
-          leftHandSideAssignment = false;
-          scan(tree.getExpression(), null);
-        } else {
-          super.visitAssignment(tree, null);
-        }
-        return null;
-      }
-
-      @Override
-      public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
-        Symbol symbol = getSymbol(memberSelectTree);
-        if (isUsed(symbol)) {
-          unusedElements.remove(symbol);
-        } else if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
-          usageSites.put(symbol, currentExpressionStatement);
-        }
-        // Clear leftHandSideAssignment and descend down the tree to catch any variables in the
-        // receiver of this member select, which _are_ considered used.
-        boolean wasLeftHandAssignment = leftHandSideAssignment;
-        leftHandSideAssignment = false;
-        super.visitMemberSelect(memberSelectTree, null);
-        leftHandSideAssignment = wasLeftHandAssignment;
-        return null;
-      }
-
-      @Override
-      public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
-        super.visitMemberReference(tree, null);
-        MethodSymbol symbol = getSymbol(tree);
-        if (symbol != null) {
-          symbol.getParameters().forEach(unusedElements::remove);
-        }
-        return null;
-      }
-
-      @Override
-      public Void visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
-        if (isInExpressionStatementTree()) {
-          leftHandSideAssignment = true;
-          scan(tree.getVariable(), null);
-          leftHandSideAssignment = false;
-          scan(tree.getExpression(), null);
-        } else {
-          super.visitCompoundAssignment(tree, null);
-        }
-        return null;
-      }
-
-      @Override
-      public Void visitArrayAccess(ArrayAccessTree node, Void unused) {
-        inArrayAccess++;
-        super.visitArrayAccess(node, null);
-        inArrayAccess--;
-        return null;
-      }
-
-      @Override
-      public Void visitReturn(ReturnTree node, Void unused) {
-        inReturnStatement = true;
-        scan(node.getExpression(), null);
-        inReturnStatement = false;
-        return null;
-      }
-
-      @Override
-      public Void visitUnary(UnaryTree tree, Void unused) {
-        // If unary expression is inside another expression, then this is a real usage of unary
-        // operand.
-        // Example:
-        //   array[i++] = 0; // 'i' has a real usage here. 'array' might not have.
-        //   list.get(i++);
-        // But if it is like this:
-        //   i++;
-        // Then it is possible that this is not a real usage of 'i'.
-        if (isInExpressionStatementTree()
-            && (tree.getKind() == POSTFIX_DECREMENT
-                || tree.getKind() == POSTFIX_INCREMENT
-                || tree.getKind() == PREFIX_DECREMENT
-                || tree.getKind() == PREFIX_INCREMENT)) {
-          leftHandSideAssignment = true;
-          scan(tree.getExpression(), null);
-          leftHandSideAssignment = false;
-        } else {
-          super.visitUnary(tree, null);
-        }
-        return null;
-      }
-
-      @Override
-      public Void visitErroneous(ErroneousTree tree, Void unused) {
-        return scan(tree.getErrorTrees(), null);
-      }
-
-      /**
-       * Looks at method invocations and removes the invoked private methods from {@code
-       * #unusedElements}.
-       */
-      @Override
-      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        inMethodCall++;
-        super.visitMethodInvocation(tree, null);
-        inMethodCall--;
-        return null;
-      }
-    }
-
-    new FilterUsedVariables().scan(state.getPath(), null);
-
-    for (TreePath unusedPath : unusedElements.values()) {
-      Tree unused = unusedPath.getLeaf();
-      switch (unused.getKind()) {
-        case VARIABLE:
-          VariableTree unusedVar = (VariableTree) unused;
-          String element;
-          VarSymbol symbol = getSymbol(unusedVar);
-          switch (symbol.getKind()) {
-            case FIELD:
-              element = "Field";
-              break;
-            case LOCAL_VARIABLE:
-              element = "Local variable";
-              break;
-            case PARAMETER:
-              element = "Parameter";
-              break;
-            default:
-              element = "Variable";
-              break;
-          }
-          ImmutableList<SuggestedFix> fixes;
-          switch (symbol.getKind()) {
-            case LOCAL_VARIABLE:
-            case FIELD:
-              fixes = buildUnusedVarFixes(symbol, usageSites.get(symbol), state);
-              break;
-            case PARAMETER:
-              fixes = buildUnusedParameterFixes(symbol, usageSites.get(symbol), state);
-              break;
-            default:
-              fixes = ImmutableList.of();
-          }
-          state.reportMatch(
-              buildDescription(unused)
-                  .setMessage(String.format("%s '%s' is never read.", element, unusedVar.getName()))
-                  .addAllFixes(fixes)
-                  .build());
-          break;
-        default:
-          break;
-      }
+      state.reportMatch(
+          buildDescription(unused)
+              .setMessage(
+                  String.format(
+                      "%s %s '%s' is never read.",
+                      unused instanceof VariableTree ? "The" : "The assignment to this",
+                      describeVariable(symbol),
+                      symbol.name))
+              .addAllFixes(
+                  fixes.stream()
+                      .map(
+                          f ->
+                              SuggestedFix.builder()
+                                  .merge(makeFirstAssignmentDeclaration)
+                                  .merge(f)
+                                  .build())
+                      .collect(toImmutableList()))
+              .build());
     }
     return Description.NO_MATCH;
   }
 
-  static boolean hasNativeMethods(CompilationUnitTree tree) {
+  private static SuggestedFix makeAssignmentDeclaration(
+      Symbol unusedSymbol,
+      Collection<UnusedSpec> specs,
+      ImmutableList<TreePath> allUsageSites,
+      VisitorState state) {
+    if (unusedSymbol.getKind() != ElementKind.LOCAL_VARIABLE) {
+      return SuggestedFix.builder().build();
+    }
+    Optional<VariableTree> removedVariableTree =
+        allUsageSites.stream()
+            .filter(tp -> tp.getLeaf() instanceof VariableTree)
+            .findFirst()
+            .map(tp -> (VariableTree) tp.getLeaf());
+    Optional<AssignmentTree> reassignment =
+        specs.stream()
+            .map(UnusedSpec::terminatingAssignment)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .filter(a -> allUsageSites.stream().noneMatch(tp -> tp.getLeaf().equals(a)))
+            .findFirst();
+    if (!removedVariableTree.isPresent() || !reassignment.isPresent()) {
+      return SuggestedFix.builder().build();
+    }
+    return SuggestedFix.prefixWith(
+        reassignment.get(), state.getSourceForNode(removedVariableTree.get().getType()) + " ");
+  }
+
+  private static String describeVariable(VarSymbol symbol) {
+    switch (symbol.getKind()) {
+      case FIELD:
+        return "field";
+      case LOCAL_VARIABLE:
+        return "local variable";
+      case PARAMETER:
+        return "parameter";
+      default:
+        return "variable";
+    }
+  }
+
+  private static boolean hasNativeMethods(CompilationUnitTree tree) {
     AtomicBoolean hasAnyNativeMethods = new AtomicBoolean(false);
     new TreeScanner<Void, Void>() {
       @Override
@@ -585,6 +372,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     for (TreePath usagePath : usagePaths) {
       StatementTree statement = (StatementTree) usagePath.getLeaf();
       if (statement.getKind() == Kind.VARIABLE) {
+        if (getSymbol(statement).getKind() == ElementKind.PARAMETER) {
+          continue;
+        }
         VariableTree variableTree = (VariableTree) statement;
         ExpressionTree initializer = variableTree.getInitializer();
         if (hasSideEffect(initializer) && TOP_LEVEL_EXPRESSIONS.contains(initializer.getKind())) {
@@ -729,8 +519,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
    * exemptingAnnotations}.
    */
   private static boolean exemptedByAnnotation(
-      List<? extends AnnotationTree> annotations,
-      VisitorState state) {
+      List<? extends AnnotationTree> annotations, VisitorState state) {
     for (AnnotationTree annotation : annotations) {
       if (((JCAnnotation) annotation).type != null) {
         TypeSymbol tsym = ((JCAnnotation) annotation).type.tsym;
@@ -744,5 +533,430 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private static boolean exemptedByName(Name name) {
     return Ascii.toLowerCase(name.toString()).startsWith(EXEMPT_PREFIX);
+  }
+
+  private class VariableFinder extends TreePathScanner<Void, Void> {
+    private final Map<Symbol, TreePath> unusedElements = new HashMap<>();
+
+    private final Set<Symbol> onlyCheckForReassignments = new HashSet<>();
+
+    private final ListMultimap<Symbol, TreePath> usageSites = ArrayListMultimap.create();
+
+    private final VisitorState state;
+
+    private VariableFinder(VisitorState state) {
+      this.state = state;
+    }
+
+    @Override
+    public Void visitVariable(VariableTree variableTree, Void unused) {
+      if (exemptedByName(variableTree.getName())) {
+        return null;
+      }
+      if (isSuppressed(variableTree)) {
+        return null;
+      }
+      VarSymbol symbol = getSymbol(variableTree);
+      if (symbol == null) {
+        return null;
+      }
+      if (symbol.getKind() == ElementKind.FIELD
+          && exemptedFieldBySuperType(getType(variableTree), state)) {
+        return null;
+      }
+      super.visitVariable(variableTree, null);
+      // Return if the element is exempted by an annotation.
+      if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations(), state)) {
+        return null;
+      }
+      switch (symbol.getKind()) {
+        case FIELD:
+          // We are only interested in private fields and those which are not special.
+          if (isFieldEligibleForChecking(variableTree, symbol)) {
+            unusedElements.put(symbol, getCurrentPath());
+            usageSites.put(symbol, getCurrentPath());
+          }
+          break;
+        case LOCAL_VARIABLE:
+          unusedElements.put(symbol, getCurrentPath());
+          usageSites.put(symbol, getCurrentPath());
+          break;
+        case PARAMETER:
+          // ignore the receiver parameter
+          if (variableTree.getName().contentEquals("this")) {
+            return null;
+          }
+          unusedElements.put(symbol, getCurrentPath());
+          if (!isParameterSubjectToAnalysis(symbol)) {
+            onlyCheckForReassignments.add(symbol);
+          }
+          break;
+        default:
+          break;
+      }
+      return null;
+    }
+
+    private boolean exemptedFieldBySuperType(Type type, VisitorState state) {
+      return EXEMPTING_FIELD_SUPER_TYPES.stream()
+          .anyMatch(t -> isSubtype(type, state.getTypeFromString(t), state));
+    }
+
+    private boolean isFieldEligibleForChecking(VariableTree variableTree, VarSymbol symbol) {
+      if (reportInjectedFields
+          && variableTree.getModifiers().getFlags().isEmpty()
+          && ASTHelpers.hasDirectAnnotationWithSimpleName(variableTree, "Inject")) {
+        return true;
+      }
+      return variableTree.getModifiers().getFlags().contains(Modifier.PRIVATE)
+          && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString())
+          && !isLoggerField(variableTree);
+    }
+
+    private boolean isLoggerField(VariableTree variableTree) {
+      return variableTree.getModifiers().getFlags().containsAll(LOGGER_REQUIRED_MODIFIERS)
+          && LOGGER_TYPE_NAME.contains(variableTree.getType().toString())
+          && LOGGER_VAR_NAME.contains(variableTree.getName().toString());
+    }
+
+    /** Returns whether {@code sym} can be removed without updating call sites in other files. */
+    private boolean isParameterSubjectToAnalysis(Symbol sym) {
+      checkArgument(sym.getKind() == ElementKind.PARAMETER);
+      Symbol enclosingMethod = sym.owner;
+
+      for (String annotationName : methodAnnotationsExemptingParameters) {
+        if (ASTHelpers.hasAnnotation(enclosingMethod, annotationName, state)) {
+          return false;
+        }
+      }
+
+
+      return enclosingMethod.getModifiers().contains(Modifier.PRIVATE);
+    }
+
+    @Override
+    public Void visitTry(TryTree node, Void unused) {
+      // Skip resources, as while these may not be referenced, they are used.
+      scan(node.getBlock(), null);
+      scan(node.getCatches(), null);
+      scan(node.getFinallyBlock(), null);
+      return null;
+    }
+
+    @Override
+    public Void visitClass(ClassTree tree, Void unused) {
+      if (isSuppressed(tree)) {
+        return null;
+      }
+      if (EXEMPTING_SUPER_TYPES.stream()
+          .anyMatch(t -> isSubtype(getType(tree), Suppliers.typeFromString(t).get(state), state))) {
+        return null;
+      }
+      return super.visitClass(tree, null);
+    }
+
+    @Override
+    public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+      // skip lambda parameters
+      return scan(node.getBody(), null);
+    }
+
+    @Override
+    public Void visitMethod(MethodTree tree, Void unused) {
+      return isSuppressed(tree) ? null : super.visitMethod(tree, unused);
+    }
+  }
+
+  private static final class FilterUsedVariables extends TreePathScanner<Void, Void> {
+    private boolean leftHandSideAssignment = false;
+    // When this greater than zero, the usage of identifiers are real.
+    private int inArrayAccess = 0;
+    // This is true when we are processing a `return` statement. Elements used in return statement
+    // must not be considered unused.
+    private boolean inReturnStatement = false;
+    // When this greater than zero, the usage of identifiers are real because they are in a method
+    // call.
+    private int inMethodCall = 0;
+
+    private final Set<Symbol> hasBeenAssigned = new HashSet<>();
+
+    private TreePath currentExpressionStatement = null;
+
+    private final Map<Symbol, TreePath> unusedElements;
+
+    private final ListMultimap<Symbol, TreePath> usageSites;
+
+    // Keeps track of whether a symbol was _ever_ used (between reassignments).
+    private final Set<Symbol> isEverUsed = new HashSet<>();
+
+    private final List<UnusedSpec> unusedSpecs = new ArrayList<>();
+
+    private final ImmutableMap<Symbol, TreePath> declarationSites;
+
+    private FilterUsedVariables(
+        Map<Symbol, TreePath> unusedElements, ListMultimap<Symbol, TreePath> usageSites) {
+      this.unusedElements = unusedElements;
+      this.usageSites = usageSites;
+      this.declarationSites = ImmutableMap.copyOf(unusedElements);
+    }
+
+    private boolean isInExpressionStatementTree() {
+      Tree parent = getCurrentPath().getParentPath().getLeaf();
+      return parent != null && parent.getKind() == Kind.EXPRESSION_STATEMENT;
+    }
+
+    private boolean isUsed(@Nullable Symbol symbol) {
+      return symbol != null
+          && (!leftHandSideAssignment || inReturnStatement || inArrayAccess > 0 || inMethodCall > 0)
+          && unusedElements.containsKey(symbol);
+    }
+
+    @Override
+    public Void visitVariable(VariableTree tree, Void unused) {
+      VarSymbol symbol = getSymbol(tree);
+      if (hasBeenAssigned(tree, symbol)) {
+        hasBeenAssigned.add(symbol);
+      }
+      return super.visitVariable(tree, null);
+    }
+
+    private boolean hasBeenAssigned(VariableTree tree, VarSymbol symbol) {
+      if (symbol == null) {
+        return false;
+      }
+      // Parameters and enhanced for loop variables are always considered assigned.
+      if (symbol.getKind() == ElementKind.PARAMETER) {
+        return true;
+      }
+      if (getCurrentPath().getParentPath().getLeaf() instanceof EnhancedForLoopTree) {
+        return true;
+      }
+      // Otherwise it's assigned if the VariableTree has an initializer.
+      if (unusedElements.containsKey(symbol) && tree.getInitializer() != null) {
+        return true;
+      }
+      return false;
+    }
+
+    @Override
+    public Void visitExpressionStatement(ExpressionStatementTree tree, Void unused) {
+      currentExpressionStatement = getCurrentPath();
+      super.visitExpressionStatement(tree, null);
+      currentExpressionStatement = null;
+      return null;
+    }
+
+    @Override
+    public Void visitIdentifier(IdentifierTree tree, Void unused) {
+      Symbol symbol = getSymbol(tree);
+      // Filtering out identifier symbol from vars map. These are real usages of identifiers.
+      if (isUsed(symbol)) {
+        unusedElements.remove(symbol);
+      }
+      if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
+        usageSites.put(symbol, currentExpressionStatement);
+      }
+      return null;
+    }
+
+    @Override
+    public Void visitAssignment(AssignmentTree tree, Void unused) {
+      scan(tree.getExpression(), null);
+      // If a variable is used in the left hand side of an assignment that does not count as a
+      // usage.
+      if (isInExpressionStatementTree()) {
+        handleReassignment(tree);
+        leftHandSideAssignment = true;
+        scan(tree.getVariable(), null);
+        leftHandSideAssignment = false;
+      } else {
+        super.visitAssignment(tree, null);
+      }
+      return null;
+    }
+
+    /**
+     * Deals with assignment trees; works out if the assignment definitely overwrites the variable
+     * in all ways that could be observed as we scan forwards.
+     */
+    private void handleReassignment(AssignmentTree tree) {
+      Tree parent = getCurrentPath().getParentPath().getLeaf();
+      if (!(parent instanceof StatementTree)) {
+        return;
+      }
+      if (tree.getVariable().getKind() != Kind.IDENTIFIER) {
+        return;
+      }
+      if (ASTHelpers.findEnclosingNode(getCurrentPath(), ForLoopTree.class) != null) {
+        return;
+      }
+      Symbol symbol = getSymbol(tree.getVariable());
+      // Check if it was actually assigned to at this depth (or is a parameter).
+      if (!((hasBeenAssigned.contains(symbol) && symbol.getKind() == ElementKind.LOCAL_VARIABLE)
+          || symbol.getKind() == ElementKind.PARAMETER)) {
+        return;
+      }
+      if (!declarationSites.containsKey(symbol)) {
+        return;
+      }
+      hasBeenAssigned.add(symbol);
+      TreePath assignmentSite = declarationSites.get(symbol);
+      if (scopeDepth(assignmentSite) != Iterables.size(getCurrentPath().getParentPath())) {
+        return;
+      }
+      if (unusedElements.containsKey(symbol)) {
+        unusedSpecs.add(UnusedSpec.of(symbol, assignmentSite, usageSites.get(symbol), tree));
+      } else {
+        isEverUsed.add(symbol);
+      }
+      unusedElements.put(symbol, getCurrentPath());
+      usageSites.removeAll(symbol);
+      usageSites.put(symbol, getCurrentPath().getParentPath());
+    }
+
+    // This is a crude proxy for when a variable is unconditionally overwritten. It doesn't match
+    // all cases, but it catches a reassignment at the same depth.
+    private static int scopeDepth(TreePath assignmentSite) {
+      if (assignmentSite.getParentPath().getLeaf() instanceof EnhancedForLoopTree) {
+        return Iterables.size(assignmentSite) + 1;
+      }
+      if (assignmentSite.getLeaf() instanceof VariableTree) {
+        VarSymbol symbol = getSymbol((VariableTree) assignmentSite.getLeaf());
+        if (symbol.getKind() == ElementKind.PARAMETER) {
+          return Iterables.size(assignmentSite) + 1;
+        }
+      }
+      return Iterables.size(assignmentSite);
+    }
+
+    @Override
+    public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
+      Symbol symbol = getSymbol(memberSelectTree);
+      if (isUsed(symbol)) {
+        unusedElements.remove(symbol);
+      } else if (currentExpressionStatement != null && unusedElements.containsKey(symbol)) {
+        usageSites.put(symbol, currentExpressionStatement);
+      }
+      // Clear leftHandSideAssignment and descend down the tree to catch any variables in the
+      // receiver of this member select, which _are_ considered used.
+      boolean wasLeftHandAssignment = leftHandSideAssignment;
+      leftHandSideAssignment = false;
+      super.visitMemberSelect(memberSelectTree, null);
+      leftHandSideAssignment = wasLeftHandAssignment;
+      return null;
+    }
+
+    @Override
+    public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
+      super.visitMemberReference(tree, null);
+      MethodSymbol symbol = getSymbol(tree);
+      if (symbol != null) {
+        symbol.getParameters().forEach(unusedElements::remove);
+      }
+      return null;
+    }
+
+    @Override
+    public Void visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
+      if (isInExpressionStatementTree()) {
+        leftHandSideAssignment = true;
+        scan(tree.getVariable(), null);
+        leftHandSideAssignment = false;
+        scan(tree.getExpression(), null);
+      } else {
+        super.visitCompoundAssignment(tree, null);
+      }
+      return null;
+    }
+
+    @Override
+    public Void visitArrayAccess(ArrayAccessTree node, Void unused) {
+      inArrayAccess++;
+      super.visitArrayAccess(node, null);
+      inArrayAccess--;
+      return null;
+    }
+
+    @Override
+    public Void visitReturn(ReturnTree node, Void unused) {
+      inReturnStatement = true;
+      scan(node.getExpression(), null);
+      inReturnStatement = false;
+      return null;
+    }
+
+    @Override
+    public Void visitUnary(UnaryTree tree, Void unused) {
+      // If unary expression is inside another expression, then this is a real usage of unary
+      // operand.
+      // Example:
+      //   array[i++] = 0; // 'i' has a real usage here. 'array' might not have.
+      //   list.get(i++);
+      // But if it is like this:
+      //   i++;
+      // Then it is possible that this is not a real usage of 'i'.
+      if (isInExpressionStatementTree()
+          && (tree.getKind() == POSTFIX_DECREMENT
+              || tree.getKind() == POSTFIX_INCREMENT
+              || tree.getKind() == PREFIX_DECREMENT
+              || tree.getKind() == PREFIX_INCREMENT)) {
+        leftHandSideAssignment = true;
+        scan(tree.getExpression(), null);
+        leftHandSideAssignment = false;
+      } else {
+        super.visitUnary(tree, null);
+      }
+      return null;
+    }
+
+    @Override
+    public Void visitErroneous(ErroneousTree tree, Void unused) {
+      return scan(tree.getErrorTrees(), null);
+    }
+
+    /**
+     * Looks at method invocations and removes the invoked private methods from {@code
+     * #unusedElements}.
+     */
+    @Override
+    public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+      inMethodCall++;
+      super.visitMethodInvocation(tree, null);
+      inMethodCall--;
+      return null;
+    }
+  }
+
+  @AutoValue
+  abstract static class UnusedSpec {
+    /** {@link Symbol} of the unsued element. */
+    abstract Symbol symbol();
+
+    /** {@link VariableTree} for the original declaration site. */
+    abstract TreePath variableTree();
+
+    /**
+     * All the usage sites of this variable that we claim are unused (including the initial
+     * declaration/assignment).
+     */
+    abstract ImmutableList<TreePath> usageSites();
+
+    /**
+     * If this usage chain was terminated by an unconditional reassignment, the corresponding {@link
+     * AssignmentTree}.
+     */
+    abstract Optional<AssignmentTree> terminatingAssignment();
+
+    private static UnusedSpec of(
+        Symbol symbol,
+        TreePath variableTree,
+        Iterable<TreePath> treePaths,
+        @Nullable AssignmentTree assignmentTree) {
+      return new AutoValue_UnusedVariable_UnusedSpec(
+          symbol,
+          variableTree,
+          ImmutableList.copyOf(treePaths),
+          Optional.ofNullable(assignmentTree));
+    }
   }
 }

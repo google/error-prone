@@ -411,7 +411,7 @@ public class UnusedVariableTest {
             "Unuseds.java",
             "package unusedvars;",
             "public class Unuseds {",
-            "  // BUG: Diagnostic contains: Parameter 'j' is never read",
+            "  // BUG: Diagnostic contains: The parameter 'j' is never read",
             "  private int usedPrivateMethodWithUnusedParam(int i, int j) {",
             "    return i * 2;",
             "  }",
@@ -990,6 +990,200 @@ public class UnusedVariableTest {
             "class Test {",
             "  void foo() {",
             "    if (hashCode() > 0) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedAssignment() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    Integer a = 1;",
+            "    a.hashCode();",
+            "    // BUG: Diagnostic contains: assignment to",
+            "    a = 2;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedAssignmentAfterUse() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    int a = 1;",
+            "    System.out.println(a);",
+            "    a = 2;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    int a = 1;",
+            "    System.out.println(a);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedAssignmentWithFinalUse() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    int a = 1;",
+            "    a = 2;",
+            "    a = 3;",
+            "    System.out.println(a);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    int a = 3;",
+            "    System.out.println(a);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assignmentUsedInExpression() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public int test() {",
+            "    int a = 1;",
+            "    a = a * 2;",
+            "    return a;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assignmentToParameter() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test(int a) {",
+            "    a = 2;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test(int a) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assignmentToParameter_thenUsed() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public int test(int a) {",
+            "    a = 2;",
+            "    return a;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assignmentToEnhancedForLoop() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test(Iterable<Integer> as) {",
+            "    for (int a : as) {",
+            "      System.out.println(a);",
+            "      a = 2;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test(Iterable<Integer> as) {",
+            "    for (int a : as) {",
+            "      System.out.println(a);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assignmentWithinForLoop() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public void test() {",
+            "    for (int a = 0; a < 10; a = a + 1) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assignmentSeparateFromDeclaration_noComplaint() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    int a;",
+            "    a = 1;",
+            "    System.out.println(a);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedAssignment_negatives() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public int frobnicate() {",
+            "    int a = 1;",
+            "    if (hashCode() == 0) {",
+            "      a = 2;",
+            "    }",
+            "    return a;",
             "  }",
             "}")
         .doTest();
