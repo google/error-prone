@@ -18,13 +18,21 @@ package com.google.errorprone.bugpatterns.apidiff;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.CLASS;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BaseErrorProneJavaCompiler;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.apidiff.ApiDiff.ClassMemberKey;
+import com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.Diff;
 import com.google.errorprone.bugpatterns.apidiff.CompilationBuilderHelpers.CompilationBuilder;
 import com.google.errorprone.bugpatterns.apidiff.CompilationBuilderHelpers.CompilationResult;
 import com.google.errorprone.bugpatterns.apidiff.CompilationBuilderHelpers.SourceBuilder;
@@ -33,6 +41,8 @@ import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -52,12 +62,35 @@ public class ApiDiffCheckerTest {
   private final JavacFileManager fileManager =
       new JavacFileManager(new Context(), false, StandardCharsets.UTF_8);
 
+  @Retention(CLASS)
+  @Target({ANNOTATION_TYPE, CONSTRUCTOR, FIELD, METHOD, TYPE})
+  public @interface RequiresNewApiVersion {}
+
+  private final CompilationTestHelper compilationHelper;
+
   /** An {@link ApiDiffChecker} for testing. */
   @BugPattern(name = "SampleChecker", severity = SeverityLevel.ERROR, summary = "")
   private static class SampleApiDiffChecker extends ApiDiffChecker {
     SampleApiDiffChecker(ApiDiff apiDiff) {
       super(apiDiff);
     }
+  }
+
+  /** An {@link ApiDiffChecker} that recognizes only {@link RequiresNewApiVersion} annotations. */
+  @BugPattern(
+      name = "AnnotationChecker",
+      severity = SeverityLevel.ERROR,
+      summary = "",
+      suppressionAnnotations = {RequiresNewApiVersion.class, SuppressWarnings.class})
+  public static class AnnotationOnlyApiDiffChecker extends ApiDiffChecker {
+    public AnnotationOnlyApiDiffChecker() {
+      super(ApiDiff.fromProto(Diff.getDefaultInstance()), RequiresNewApiVersion.class);
+    }
+  }
+
+  public ApiDiffCheckerTest() {
+    compilationHelper =
+        CompilationTestHelper.newInstance(AnnotationOnlyApiDiffChecker.class, getClass());
   }
 
   @Test
@@ -378,5 +411,90 @@ public class ApiDiffCheckerTest {
     assertThat(result.diagnostics()).hasSize(1);
     assertThat(getOnlyElement(result.diagnostics()).getMessage(Locale.ENGLISH))
         .contains("lib.A#f() is not available in <anonymous Test$1>");
+  }
+
+  @Test
+  public void positiveAnnotatedClass() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java",
+            "package my.lib;",
+            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "@RequiresNewApiVersion",
+            "public final class Lib {}")
+        .addSourceLines(
+            "Test.java",
+            "import my.lib.Lib;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: Lib",
+            "  Lib l;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveAnnotatedClassSuppressedBySameAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java",
+            "package my.lib;",
+            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "@RequiresNewApiVersion",
+            "public final class Lib {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "import my.lib.Lib;",
+            "class Test {",
+            "  @RequiresNewApiVersion",
+            "  Lib l;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveAnnotatedMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java",
+            "package my.lib;",
+            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "public final class Lib {",
+            "  @RequiresNewApiVersion",
+            "  public void foo() {}",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import my.lib.Lib;",
+            "class Test {",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: foo",
+            "    new Lib().foo();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveAnnotatedField() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java",
+            "package my.lib;",
+            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "public final class Lib {",
+            "  @RequiresNewApiVersion",
+            "  public static final int FOO = 1;",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import my.lib.Lib;",
+            "class Test {",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: FOO",
+            "    System.out.println(Lib.FOO);",
+            "  }",
+            "}")
+        .doTest();
   }
 }

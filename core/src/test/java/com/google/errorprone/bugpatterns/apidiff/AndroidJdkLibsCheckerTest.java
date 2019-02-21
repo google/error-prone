@@ -146,5 +146,4 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
             "}")
         .doTest();
   }
-
 }
