@@ -19,22 +19,25 @@ package com.google.errorprone.testdata;
 public class MultipleTopLevelClassesWithErrors {}
 
 final class Poo1 {
-  public void poo() {
+  public int poo() {
     int i = 10;
     i = i;
+    return i;
   }
 
   class Poo2 {
-    public void poo() {
+    public int poo() {
       int i = 10;
       i = i;
+      return i;
     }
   }
 }
 
 final class Poo3 {
-  public void poo() {
+  public int poo() {
     int i = 10;
     i = i;
+    return i;
   }
 }
