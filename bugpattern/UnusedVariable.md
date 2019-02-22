@@ -12,7 +12,7 @@ providesFix: REQUIRES_HUMAN_ATTENTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-_Alternate names: Unused, unused, UnusedParameters_
+_Alternate names: unused, UnusedParameters_
 
 ## The problem
 

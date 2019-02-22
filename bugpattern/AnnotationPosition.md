@@ -1,6 +1,6 @@
 ---
 title: AnnotationPosition
-summary: Annotations should be positioned after Javadocs, but before modifiers..
+summary: Annotations should be positioned after Javadocs, but before modifiers.
 layout: bugpattern
 tags: Style
 severity: WARNING

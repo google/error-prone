@@ -942,7 +942,7 @@ __[AnnotateFormatMethod](bugpattern/AnnotateFormatMethod)__<br>
 This method passes a pair of parameters through to String.format, but the enclosing method wasn&#39;t annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.
 
 __[AnnotationPosition](bugpattern/AnnotationPosition)__<br>
-Annotations should be positioned after Javadocs, but before modifiers..
+Annotations should be positioned after Javadocs, but before modifiers.
 
 __[AssertFalse](bugpattern/AssertFalse)__<br>
 Assertions may be disabled at runtime and do not guarantee that execution will halt here; consider throwing an exception instead
