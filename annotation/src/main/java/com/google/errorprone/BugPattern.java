@@ -146,43 +146,6 @@ public @interface BugPattern {
   }
 
   /**
-   * The class of bug this bug checker detects.
-   *
-   * @deprecated This category field hasn't provided much value, as the 'problem domain' of each
-   *     BugChecker is evident from the checker itself. We've introduced {@link #tags} as a means to
-   *     apply general tags to checks.
-   */
-  @Deprecated
-  Category category() default Category.ONE_OFF;
-
-  public enum Category {
-    /** General Java or JDK errors. */
-    JDK,
-    /** Errors specific to Google Guava. */
-    GUAVA,
-    /** Errors specific to Google Guice. */
-    GUICE,
-    /** Errors specific to Dagger. */
-    DAGGER,
-    /** Errors specific to JUnit. */
-    JUNIT,
-    /** One-off matchers that are not general errors. */
-    ONE_OFF,
-    /** JSR-330 errors not specific to Guice. */
-    INJECT,
-    /** Errors specific to Mockito. */
-    MOCKITO,
-    /** Errors specific to JMock. */
-    JMOCK,
-    /** Errors specific to Android. */
-    ANDROID,
-    /** Errors specific to Protocol Buffers. */
-    PROTOBUF,
-    /** Errors specific to Truth. */
-    TRUTH;
-  }
-
-  /**
    * A short summary of the problem that this checker detects. Used for the default compiler error
    * message and for the short description in the generated docs. Should not end with a period, to
    * match javac warning/error style.
